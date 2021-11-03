@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -29,7 +30,7 @@ namespace UnitTests.Middleware
             await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Equal(id, request.PrimaryId);
+            request.PrimaryId.Should().Be(id);
         }
 
         [Fact]
@@ -44,7 +45,7 @@ namespace UnitTests.Middleware
             await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Equal(id, request.PrimaryId);
+            request.PrimaryId.Should().Be(id);
         }
 
         [Fact]
@@ -58,7 +59,7 @@ namespace UnitTests.Middleware
             await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Null(request.PrimaryId);
+            request.PrimaryId.Should().BeNull();
         }
 
         [Fact]
@@ -76,7 +77,7 @@ namespace UnitTests.Middleware
 
         private Task RunMiddlewareTask(InvokeConfiguration holder)
         {
-            IControllerResourceMapping controllerResourceMapping = holder.ControllerResourceMapping.Object;
+            IControllerResourceMapping controllerResourceMapping = holder.ControllerResourceMappingMock.Object;
             HttpContext httpContext = holder.HttpContext;
             IJsonApiOptions options = holder.Options;
             JsonApiRequest request = holder.Request;
@@ -84,7 +85,7 @@ namespace UnitTests.Middleware
             return holder.MiddleWare.InvokeAsync(httpContext, controllerResourceMapping, options, request, NullLogger<JsonApiMiddleware>.Instance);
         }
 
-        private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", string action = "", string id = null, Type relType = null)
+        private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", string action = "", string? id = null, Type? relType = null)
         {
             if (path.First() != '/')
             {
@@ -97,9 +98,9 @@ namespace UnitTests.Middleware
             }, new HttpContextAccessor());
 
             const string forcedNamespace = "api/v1";
-            var mockMapping = new Mock<IControllerResourceMapping>();
+            var controllerResourceMappingMock = new Mock<IControllerResourceMapping>();
             var resourceType = new ResourceType(resourceName, typeof(object), typeof(string));
-            mockMapping.Setup(mapping => mapping.TryGetResourceTypeForController(It.IsAny<Type>())).Returns(resourceType);
+            controllerResourceMappingMock.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(resourceType);
 
             IJsonApiOptions options = CreateOptions(forcedNamespace);
             var request = new JsonApiRequest();
@@ -111,14 +112,7 @@ namespace UnitTests.Middleware
 
             DefaultHttpContext httpContext = CreateHttpContext(path, relType != null, action, id);
 
-            return new InvokeConfiguration
-            {
-                MiddleWare = middleware,
-                ControllerResourceMapping = mockMapping,
-                Options = options,
-                Request = request,
-                HttpContext = httpContext
-            };
+            return new InvokeConfiguration(middleware, httpContext, controllerResourceMappingMock, options, request);
         }
 
         private static IJsonApiOptions CreateOptions(string forcedNamespace)
@@ -131,7 +125,7 @@ namespace UnitTests.Middleware
             return options;
         }
 
-        private static DefaultHttpContext CreateHttpContext(string path, bool isRelationship = false, string action = "", string id = null)
+        private static DefaultHttpContext CreateHttpContext(string path, bool isRelationship = false, string action = "", string? id = null)
         {
             var httpContext = new DefaultHttpContext
             {
@@ -172,11 +166,21 @@ namespace UnitTests.Middleware
 
         private sealed class InvokeConfiguration
         {
-            public JsonApiMiddleware MiddleWare { get; init; }
-            public HttpContext HttpContext { get; init; }
-            public Mock<IControllerResourceMapping> ControllerResourceMapping { get; init; }
-            public IJsonApiOptions Options { get; init; }
-            public JsonApiRequest Request { get; init; }
+            public JsonApiMiddleware MiddleWare { get; }
+            public HttpContext HttpContext { get; }
+            public Mock<IControllerResourceMapping> ControllerResourceMappingMock { get; }
+            public IJsonApiOptions Options { get; }
+            public JsonApiRequest Request { get; }
+
+            public InvokeConfiguration(JsonApiMiddleware middleWare, HttpContext httpContext, Mock<IControllerResourceMapping> controllerResourceMappingMock,
+                IJsonApiOptions options, JsonApiRequest request)
+            {
+                MiddleWare = middleWare;
+                HttpContext = httpContext;
+                ControllerResourceMappingMock = controllerResourceMappingMock;
+                Options = options;
+                Request = request;
+            }
         }
     }
 }

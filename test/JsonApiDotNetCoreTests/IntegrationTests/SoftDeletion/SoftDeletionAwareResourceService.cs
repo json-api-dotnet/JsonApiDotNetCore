@@ -39,7 +39,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
         // To optimize performance, the default resource service does not always fetch all resources on write operations.
         // We do that here, to assure a 404 error is thrown for soft-deleted resources.
 
-        public override async Task<TResource> CreateAsync(TResource resource, CancellationToken cancellationToken)
+        public override async Task<TResource?> CreateAsync(TResource resource, CancellationToken cancellationToken)
         {
             if (_targetedFields.Relationships.Any(relationship => IsSoftDeletable(relationship.RightType.ClrType)))
             {
@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             return await base.CreateAsync(resource, cancellationToken);
         }
 
-        public override async Task<TResource> UpdateAsync(TId id, TResource resource, CancellationToken cancellationToken)
+        public override async Task<TResource?> UpdateAsync(TId id, TResource resource, CancellationToken cancellationToken)
         {
             if (_targetedFields.Relationships.Any(relationship => IsSoftDeletable(relationship.RightType.ClrType)))
             {
@@ -59,9 +59,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             return await base.UpdateAsync(id, resource, cancellationToken);
         }
 
-        public override async Task SetRelationshipAsync(TId leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)
+        public override async Task SetRelationshipAsync(TId leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken)
         {
-            if (IsSoftDeletable(_request.Relationship.RightType.ClrType))
+            if (IsSoftDeletable(_request.Relationship!.RightType.ClrType))
             {
                 await AssertRightResourcesExistAsync(rightValue, cancellationToken);
             }
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
                 _ = await GetPrimaryResourceByIdAsync(leftId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
             }
 
-            if (IsSoftDeletable(_request.Relationship.RightType.ClrType))
+            if (IsSoftDeletable(_request.Relationship!.RightType.ClrType))
             {
                 await AssertRightResourcesExistAsync(rightResourceIds, cancellationToken);
             }

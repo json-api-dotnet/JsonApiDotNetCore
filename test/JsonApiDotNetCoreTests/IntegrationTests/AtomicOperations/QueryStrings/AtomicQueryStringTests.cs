@@ -69,12 +69,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
             error.Detail.Should().Be("The parameter 'include' cannot be used at this endpoint.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("include");
         }
 
@@ -108,12 +109,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
             error.Detail.Should().Be("The parameter 'filter' cannot be used at this endpoint.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("filter");
         }
 
@@ -147,12 +149,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
             error.Detail.Should().Be("The parameter 'sort' cannot be used at this endpoint.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("sort");
         }
 
@@ -186,12 +189,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
             error.Detail.Should().Be("The parameter 'page[number]' cannot be used at this endpoint.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("page[number]");
         }
 
@@ -225,12 +229,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
             error.Detail.Should().Be("The parameter 'page[size]' cannot be used at this endpoint.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("page[size]");
         }
 
@@ -264,12 +269,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
             error.Detail.Should().Be("The parameter 'fields[recordCompanies]' cannot be used at this endpoint.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("fields[recordCompanies]");
         }
 
@@ -297,7 +303,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(musicTracks[2].StringId);
         }
 
@@ -334,7 +340,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -343,6 +349,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings
             error.Detail.Should().Be("Query string parameter 'isRecentlyReleased' is unknown. " +
                 "Set 'AllowUnknownQueryStringParameters' to 'true' in options to ignore unknown parameters.");
 
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("isRecentlyReleased");
         }
     }

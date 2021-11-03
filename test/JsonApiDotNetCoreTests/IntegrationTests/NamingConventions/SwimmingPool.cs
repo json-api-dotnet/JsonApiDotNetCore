@@ -12,9 +12,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
         public bool IsIndoor { get; set; }
 
         [HasMany]
-        public IList<WaterSlide> WaterSlides { get; set; }
+        public IList<WaterSlide> WaterSlides { get; set; } = new List<WaterSlide>();
 
         [HasMany]
-        public IList<DivingBoard> DivingBoards { get; set; }
+        public IList<DivingBoard> DivingBoards { get; set; } = new List<DivingBoard>();
     }
 }

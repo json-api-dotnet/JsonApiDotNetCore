@@ -8,8 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
 {
     public sealed class MusicTracksController : JsonApiController<MusicTrack, Guid>
     {
-        public MusicTracksController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<MusicTrack, Guid> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public MusicTracksController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<MusicTrack, Guid> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

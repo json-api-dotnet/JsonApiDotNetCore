@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
     public sealed class Performer : Identifiable<int>
     {
         [Attr]
-        public string ArtistName { get; set; }
+        public string? ArtistName { get; set; }
 
         [Attr]
         public DateTimeOffset BornAt { get; set; }

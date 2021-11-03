@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
     public sealed class Town : Identifiable<int>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Attr]
         public double Latitude { get; set; }
@@ -18,6 +18,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
         public double Longitude { get; set; }
 
         [HasMany]
-        public ISet<Civilian> Civilians { get; set; }
+        public ISet<Civilian> Civilians { get; set; } = new HashSet<Civilian>();
     }
 }

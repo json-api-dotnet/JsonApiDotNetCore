@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 using Microsoft.EntityFrameworkCore;
 
 // @formatter:wrap_chained_method_calls chop_always
@@ -9,10 +8,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class InheritanceDbContext : DbContext
     {
-        public DbSet<Human> Humans { get; set; }
-        public DbSet<Man> Men { get; set; }
-        public DbSet<CompanyHealthInsurance> CompanyHealthInsurances { get; set; }
-        public DbSet<ContentItem> ContentItems { get; set; }
+        public DbSet<Human> Humans => Set<Human>();
+        public DbSet<Man> Men => Set<Man>();
+        public DbSet<CompanyHealthInsurance> CompanyHealthInsurances => Set<CompanyHealthInsurance>();
+        public DbSet<ContentItem> ContentItems => Set<ContentItem>();
 
         public InheritanceDbContext(DbContextOptions<InheritanceDbContext> options)
             : base(options)

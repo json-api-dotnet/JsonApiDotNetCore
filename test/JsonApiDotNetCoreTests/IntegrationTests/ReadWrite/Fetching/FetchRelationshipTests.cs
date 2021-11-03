@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
             responseDocument.Data.SingleValue.Id.Should().Be(workItem.Assignee.StringId);
             responseDocument.Data.SingleValue.Attributes.Should().BeNull();
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
 
             ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
             item1.Type.Should().Be("workItems");
@@ -149,7 +149,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
 
             ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(0).StringId);
             item1.Type.Should().Be("workTags");
@@ -212,7 +212,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -239,7 +239,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);

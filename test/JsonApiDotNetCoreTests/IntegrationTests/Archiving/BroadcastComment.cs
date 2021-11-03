@@ -9,12 +9,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
     public sealed class BroadcastComment : Identifiable<int>
     {
         [Attr]
-        public string Text { get; set; }
+        public string Text { get; set; } = null!;
 
         [Attr]
         public DateTimeOffset CreatedAt { get; set; }
 
         [HasOne]
-        public TelevisionBroadcast AppliesTo { get; set; }
+        public TelevisionBroadcast AppliesTo { get; set; } = null!;
     }
 }

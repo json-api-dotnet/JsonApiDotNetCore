@@ -38,7 +38,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
             calendar.DefaultAppointmentDurationInMinutes = default;
             calendar.ShowWeekNumbers = true;
             calendar.Appointments = _fakers.Appointment.Generate(1).ToHashSet();
-            calendar.Appointments.Single().Title = null;
+            calendar.Appointments.Single().Description = null;
             calendar.Appointments.Single().StartTime = default;
             calendar.Appointments.Single().EndTime = 1.January(2001);
 
@@ -56,24 +56,24 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Included.ShouldHaveCount(1);
 
             if (expectNullValueInDocument)
             {
-                responseDocument.Data.SingleValue.Attributes.Should().ContainKey("timeZone");
-                responseDocument.Included[0].Attributes.Should().ContainKey("title");
+                responseDocument.Data.SingleValue.Attributes.ShouldContainKey("timeZone");
+                responseDocument.Included[0].Attributes.ShouldContainKey("description");
             }
             else
             {
                 responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("timeZone");
-                responseDocument.Included[0].Attributes.Should().NotContainKey("title");
+                responseDocument.Included[0].Attributes.Should().NotContainKey("description");
             }
 
             if (expectDefaultValueInDocument)
             {
-                responseDocument.Data.SingleValue.Attributes.Should().ContainKey("defaultAppointmentDurationInMinutes");
-                responseDocument.Included[0].Attributes.Should().ContainKey("startTime");
+                responseDocument.Data.SingleValue.Attributes.ShouldContainKey("defaultAppointmentDurationInMinutes");
+                responseDocument.Included[0].Attributes.ShouldContainKey("startTime");
             }
             else
             {

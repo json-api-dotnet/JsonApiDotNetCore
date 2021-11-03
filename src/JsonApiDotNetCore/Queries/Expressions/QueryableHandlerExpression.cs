@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return $"handler('{_parameterValue}')";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

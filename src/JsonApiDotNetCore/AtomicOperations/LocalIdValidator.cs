@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (operation.Request.WriteOperation == WriteOperationKind.CreateResource)
             {
-                DeclareLocalId(operation.Resource, operation.Request.PrimaryResourceType);
+                DeclareLocalId(operation.Resource, operation.Request.PrimaryResourceType!);
             }
             else
             {
@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             if (operation.Request.WriteOperation == WriteOperationKind.CreateResource)
             {
-                AssignLocalId(operation, operation.Request.PrimaryResourceType);
+                AssignLocalId(operation, operation.Request.PrimaryResourceType!);
             }
         }
 

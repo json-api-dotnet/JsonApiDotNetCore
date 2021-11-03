@@ -7,7 +7,7 @@ using JsonApiDotNetCore.QueryStrings;
 namespace JsonApiDotNetCore.Controllers.Annotations
 {
     /// <summary>
-    /// Used on an ASP.NET Core controller class to indicate which query string parameters are blocked.
+    /// Used on an ASP.NET controller class to indicate which query string parameters are blocked.
     /// </summary>
     /// <example><![CDATA[
     /// [DisableQueryString(JsonApiQueryStringParameters.Sort | JsonApiQueryStringParameters.Page)]

@@ -13,14 +13,16 @@ namespace JsonApiDotNetCore.Resources.Annotations
     [PublicAPI]
     public abstract class ResourceFieldAttribute : Attribute
     {
-        private string _publicName;
+        // These are definitely assigned after building the resource graph, which is why their public equivalents are declared as non-nullable.
+        private string? _publicName;
+        private PropertyInfo? _property;
 
         /// <summary>
         /// The publicly exposed name of this JSON:API field. When not explicitly assigned, the configured naming convention is applied on the property name.
         /// </summary>
         public string PublicName
         {
-            get => _publicName;
+            get => _publicName!;
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
@@ -35,14 +37,72 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// <summary>
         /// The resource property that this attribute is declared on.
         /// </summary>
-        public PropertyInfo Property { get; internal set; }
-
-        public override string ToString()
+        public PropertyInfo Property
         {
-            return PublicName ?? (Property != null ? Property.Name : base.ToString());
+            get => _property!;
+            internal set
+            {
+                ArgumentGuard.NotNull(value, nameof(value));
+                _property = value;
+            }
         }
 
-        public override bool Equals(object obj)
+        /// <summary>
+        /// Gets the value of this field on the specified resource instance. Throws if the property is write-only or if the field does not belong to the
+        /// specified resource instance.
+        /// </summary>
+        public object? GetValue(object resource)
+        {
+            ArgumentGuard.NotNull(resource, nameof(resource));
+
+            if (Property.GetMethod == null)
+            {
+                throw new InvalidOperationException($"Property '{Property.DeclaringType?.Name}.{Property.Name}' is write-only.");
+            }
+
+            try
+            {
+                return Property.GetValue(resource);
+            }
+            catch (TargetException exception)
+            {
+                throw new InvalidOperationException(
+                    $"Unable to get property value of '{Property.DeclaringType!.Name}.{Property.Name}' on instance of type '{resource.GetType().Name}'.",
+                    exception);
+            }
+        }
+
+        /// <summary>
+        /// Sets the value of this field on the specified resource instance. Throws if the property is read-only or if the field does not belong to the specified
+        /// resource instance.
+        /// </summary>
+        public void SetValue(object resource, object? newValue)
+        {
+            ArgumentGuard.NotNull(resource, nameof(resource));
+
+            if (Property.SetMethod == null)
+            {
+                throw new InvalidOperationException($"Property '{Property.DeclaringType?.Name}.{Property.Name}' is read-only.");
+            }
+
+            try
+            {
+                Property.SetValue(resource, newValue);
+            }
+            catch (TargetException exception)
+            {
+                throw new InvalidOperationException(
+                    $"Unable to set property value of '{Property.DeclaringType!.Name}.{Property.Name}' on instance of type '{resource.GetType().Name}'.",
+                    exception);
+            }
+        }
+
+        public override string? ToString()
+        {
+            return _publicName ?? (_property != null ? _property.Name : base.ToString());
+        }
+
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {
@@ -56,12 +116,12 @@ namespace JsonApiDotNetCore.Resources.Annotations
 
             var other = (ResourceFieldAttribute)obj;
 
-            return PublicName == other.PublicName && Property == other.Property;
+            return _publicName == other._publicName && _property == other._property;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(PublicName, Property);
+            return HashCode.Combine(_publicName, _property);
         }
     }
 }

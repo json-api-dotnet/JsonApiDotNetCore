@@ -33,6 +33,7 @@ namespace ReportsExample.Services
             {
                 new()
                 {
+                    Id = 1,
                     Title = "Status Report",
                     Statistics = new ReportStatistics
                     {

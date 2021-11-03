@@ -14,11 +14,11 @@ namespace JsonApiDotNetCore.Resources
     public abstract class Identifiable<TId> : IIdentifiable<TId>
     {
         /// <inheritdoc />
-        public virtual TId Id { get; set; }
+        public virtual TId Id { get; set; } = default!;
 
         /// <inheritdoc />
         [NotMapped]
-        public string StringId
+        public string? StringId
         {
             get => GetStringId(Id);
             set => Id = GetTypedId(value);
@@ -26,22 +26,22 @@ namespace JsonApiDotNetCore.Resources
 
         /// <inheritdoc />
         [NotMapped]
-        public string LocalId { get; set; }
+        public string? LocalId { get; set; }
 
         /// <summary>
         /// Converts an outgoing typed resource identifier to string format for use in a JSON:API response.
         /// </summary>
-        protected virtual string GetStringId(TId value)
+        protected virtual string? GetStringId(TId value)
         {
-            return EqualityComparer<TId>.Default.Equals(value, default) ? null : value.ToString();
+            return EqualityComparer<TId>.Default.Equals(value, default) ? null : value!.ToString();
         }
 
         /// <summary>
         /// Converts an incoming 'id' element from a JSON:API request to the typed resource identifier.
         /// </summary>
-        protected virtual TId GetTypedId(string value)
+        protected virtual TId GetTypedId(string? value)
         {
-            return value == null ? default : (TId)RuntimeTypeConverter.ConvertType(value, typeof(TId));
+            return value == null ? default! : (TId)RuntimeTypeConverter.ConvertType(value, typeof(TId))!;
         }
     }
 }

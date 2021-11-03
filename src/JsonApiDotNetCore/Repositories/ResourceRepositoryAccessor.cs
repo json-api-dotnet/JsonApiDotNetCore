@@ -33,24 +33,24 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<TResource>> GetAsync<TResource>(QueryLayer layer, CancellationToken cancellationToken)
+        public async Task<IReadOnlyCollection<TResource>> GetAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = ResolveReadRepository(typeof(TResource));
-            return (IReadOnlyCollection<TResource>)await repository.GetAsync(layer, cancellationToken);
+            return (IReadOnlyCollection<TResource>)await repository.GetAsync(queryLayer, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<IIdentifiable>> GetAsync(ResourceType resourceType, QueryLayer layer, CancellationToken cancellationToken)
+        public async Task<IReadOnlyCollection<IIdentifiable>> GetAsync(ResourceType resourceType, QueryLayer queryLayer, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             dynamic repository = ResolveReadRepository(resourceType);
-            return (IReadOnlyCollection<IIdentifiable>)await repository.GetAsync(layer, cancellationToken);
+            return (IReadOnlyCollection<IIdentifiable>)await repository.GetAsync(queryLayer, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<int> CountAsync<TResource>(FilterExpression topFilter, CancellationToken cancellationToken)
+        public async Task<int> CountAsync<TResource>(FilterExpression? topFilter, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = ResolveReadRepository(typeof(TResource));
@@ -74,7 +74,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<TResource> GetForUpdateAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
+        public async Task<TResource?> GetForUpdateAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
@@ -98,7 +98,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task SetRelationshipAsync<TResource>(TResource leftResource, object rightValue, CancellationToken cancellationToken)
+        public async Task SetRelationshipAsync<TResource>(TResource leftResource, object? rightValue, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetWriteRepository(typeof(TResource));

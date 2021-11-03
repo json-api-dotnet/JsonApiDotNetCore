@@ -13,6 +13,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Handles a JSON:API request to retrieve a single relationship.
         /// </summary>
-        Task<object> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken);
+        Task<object?> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken);
     }
 }

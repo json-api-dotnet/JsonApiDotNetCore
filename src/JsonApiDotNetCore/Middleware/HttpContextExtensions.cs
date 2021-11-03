@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Middleware
         {
             ArgumentGuard.NotNull(httpContext, nameof(httpContext));
 
-            string value = httpContext.Items[IsJsonApiRequestKey] as string;
+            string? value = httpContext.Items[IsJsonApiRequestKey] as string;
             return value == bool.TrueString;
         }
 

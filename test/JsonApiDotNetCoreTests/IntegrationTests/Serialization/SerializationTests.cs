@@ -566,7 +566,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            string[] meetingIds = meeting.Attendees.Select(attendee => attendee.StringId).OrderBy(id => id).ToArray();
+            string[] meetingIds = meeting.Attendees.Select(attendee => attendee.StringId!).OrderBy(id => id).ToArray();
 
             responseDocument.Should().BeJson(@"{
   ""links"": {

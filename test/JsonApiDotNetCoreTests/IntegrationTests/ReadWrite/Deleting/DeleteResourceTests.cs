@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                WorkItem workItemsInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
+                WorkItem? workItemsInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
 
                 workItemsInDatabase.Should().BeNull();
             });
@@ -69,7 +69,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -104,7 +104,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                RgbColor colorsInDatabase = await dbContext.RgbColors.FirstWithIdOrDefaultAsync(existingColor.Id);
+                RgbColor? colorsInDatabase = await dbContext.RgbColors.FirstWithIdOrDefaultAsync(existingColor.Id);
 
                 colorsInDatabase.Should().BeNull();
 
@@ -139,13 +139,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                WorkItemGroup groupsInDatabase = await dbContext.Groups.FirstWithIdOrDefaultAsync(existingGroup.Id);
+                WorkItemGroup? groupsInDatabase = await dbContext.Groups.FirstWithIdOrDefaultAsync(existingGroup.Id);
 
                 groupsInDatabase.Should().BeNull();
 
-                RgbColor colorInDatabase = await dbContext.RgbColors.FirstWithIdOrDefaultAsync(existingGroup.Color.Id);
+                RgbColor? colorInDatabase = await dbContext.RgbColors.FirstWithIdOrDefaultAsync(existingGroup.Color.Id);
 
-                colorInDatabase.Should().NotBeNull();
+                colorInDatabase.ShouldNotBeNull();
                 colorInDatabase.Group.Should().BeNull();
             });
         }
@@ -175,7 +175,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                WorkItem workItemInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
+                WorkItem? workItemInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Should().BeNull();
 
@@ -211,13 +211,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                WorkItem workItemInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
+                WorkItem? workItemInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Should().BeNull();
 
-                WorkTag tagInDatabase = await dbContext.WorkTags.FirstWithIdOrDefaultAsync(existingWorkItem.Tags.ElementAt(0).Id);
+                WorkTag? tagInDatabase = await dbContext.WorkTags.FirstWithIdOrDefaultAsync(existingWorkItem.Tags.ElementAt(0).Id);
 
-                tagInDatabase.Should().NotBeNull();
+                tagInDatabase.ShouldNotBeNull();
             });
         }
     }

@@ -29,9 +29,9 @@ public class OrderLine : Identifiable<int>
 
 public class OrderLineController : JsonApiController<OrderLine, int>
 {
-    public OrderLineController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<OrderLine, int> resourceService)
-        : base(options, loggerFactory, resourceService)
+    public OrderLineController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService<OrderLine, int> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }
@@ -65,9 +65,9 @@ It is possible to bypass the default routing convention for a controller.
 [Route("v1/custom/route/lines-in-order"), DisableRoutingConvention]
 public class OrderLineController : JsonApiController<OrderLine, int>
 {
-    public OrderLineController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<OrderLine, int> resourceService)
-        : base(options, loggerFactory, resourceService)
+    public OrderLineController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService<OrderLine, int> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }

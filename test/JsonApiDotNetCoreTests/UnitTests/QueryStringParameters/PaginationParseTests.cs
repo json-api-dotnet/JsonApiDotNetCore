@@ -10,6 +10,8 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
+using JsonApiDotNetCore.Serialization.Objects;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
@@ -78,12 +80,15 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             // Assert
             InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
-            exception.QueryParameterName.Should().Be("page[number]");
-            exception.Errors.Should().HaveCount(1);
-            exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Errors[0].Title.Should().Be("The specified paging is invalid.");
-            exception.Errors[0].Detail.Should().Be(errorMessage);
-            exception.Errors[0].Source.Parameter.Should().Be("page[number]");
+            exception.ParameterName.Should().Be("page[number]");
+            exception.Errors.ShouldHaveCount(1);
+
+            ErrorObject error = exception.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified paging is invalid.");
+            error.Detail.Should().Be(errorMessage);
+            error.Source.ShouldNotBeNull();
+            error.Source.Parameter.Should().Be("page[number]");
         }
 
         [Theory]
@@ -111,12 +116,15 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             // Assert
             InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
-            exception.QueryParameterName.Should().Be("page[size]");
-            exception.Errors.Should().HaveCount(1);
-            exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Errors[0].Title.Should().Be("The specified paging is invalid.");
-            exception.Errors[0].Detail.Should().Be(errorMessage);
-            exception.Errors[0].Source.Parameter.Should().Be("page[size]");
+            exception.ParameterName.Should().Be("page[size]");
+            exception.Errors.ShouldHaveCount(1);
+
+            ErrorObject error = exception.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified paging is invalid.");
+            error.Detail.Should().Be(errorMessage);
+            error.Source.ShouldNotBeNull();
+            error.Source.Parameter.Should().Be("page[size]");
         }
 
         [Theory]
@@ -130,7 +138,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
         [InlineData("posts:4,3", "posts:10,20", "|posts", "Page number: 3, size: 20|Page number: 4, size: 10")]
         [InlineData("posts:4,posts.comments:5,3", "posts:10,posts.comments:15,20", "|posts|posts.comments",
             "Page number: 3, size: 20|Page number: 4, size: 10|Page number: 5, size: 15")]
-        public void Reader_Read_Pagination_Succeeds(string pageNumber, string pageSize, string scopeTreesExpected, string valueTreesExpected)
+        public void Reader_Read_Pagination_Succeeds(string? pageNumber, string? pageSize, string scopeTreesExpected, string valueTreesExpected)
         {
             // Act
             if (pageNumber != null)
@@ -147,7 +155,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
 
             // Assert
             string[] scopeTreesExpectedArray = scopeTreesExpected.Split("|");
-            ResourceFieldChainExpression[] scopeTrees = constraints.Select(expressionInScope => expressionInScope.Scope).ToArray();
+            ResourceFieldChainExpression?[] scopeTrees = constraints.Select(expressionInScope => expressionInScope.Scope).ToArray();
 
             scopeTrees.Should().HaveSameCount(scopeTreesExpectedArray);
             scopeTrees.Select(tree => tree?.ToString() ?? "").Should().BeEquivalentTo(scopeTreesExpectedArray, options => options.WithStrictOrdering());

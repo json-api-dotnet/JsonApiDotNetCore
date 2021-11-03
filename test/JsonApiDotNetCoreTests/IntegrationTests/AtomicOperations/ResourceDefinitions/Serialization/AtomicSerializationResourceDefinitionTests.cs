@@ -91,18 +91,28 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(2);
+            responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newCompanies[0].Name.ToUpperInvariant());
-            responseDocument.Results[0].Data.SingleValue.Attributes["countryOfResidence"].Should().Be(newCompanies[0].CountryOfResidence.ToUpperInvariant());
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newCompanies[0].Name.ToUpperInvariant()));
 
-            responseDocument.Results[1].Data.SingleValue.Attributes["name"].Should().Be(newCompanies[1].Name.ToUpperInvariant());
-            responseDocument.Results[1].Data.SingleValue.Attributes["countryOfResidence"].Should().Be(newCompanies[1].CountryOfResidence.ToUpperInvariant());
+                string countryOfResidence = newCompanies[0].CountryOfResidence!.ToUpperInvariant();
+                resource.Attributes.ShouldContainKey("countryOfResidence").With(value => value.Should().Be(countryOfResidence));
+            });
+
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newCompanies[1].Name.ToUpperInvariant()));
+
+                string countryOfResidence = newCompanies[1].CountryOfResidence!.ToUpperInvariant();
+                resource.Attributes.ShouldContainKey("countryOfResidence").With(value => value.Should().Be(countryOfResidence));
+            });
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<RecordCompany> companiesInDatabase = await dbContext.RecordCompanies.ToListAsync();
-                companiesInDatabase.Should().HaveCount(2);
+                companiesInDatabase.ShouldHaveCount(2);
 
                 companiesInDatabase[0].Name.Should().Be(newCompanies[0].Name.ToUpperInvariant());
                 companiesInDatabase[0].CountryOfResidence.Should().Be(newCompanies[0].CountryOfResidence);
@@ -174,7 +184,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(1);
+            responseDocument.Results.ShouldHaveCount(1);
 
             hitCounter.HitExtensibilityPoints.Should().BeEmpty();
         }
@@ -233,20 +243,28 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            string country0 = existingCompanies[0].CountryOfResidence.ToUpperInvariant();
-            string country1 = existingCompanies[1].CountryOfResidence.ToUpperInvariant();
+            responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results.Should().HaveCount(2);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(existingCompanies[0].Name));
 
-            responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(existingCompanies[0].Name);
-            responseDocument.Results[0].Data.SingleValue.Attributes["countryOfResidence"].Should().Be(country0);
-            responseDocument.Results[1].Data.SingleValue.Attributes["name"].Should().Be(existingCompanies[1].Name);
-            responseDocument.Results[1].Data.SingleValue.Attributes["countryOfResidence"].Should().Be(country1);
+                string countryOfResidence = existingCompanies[0].CountryOfResidence!.ToUpperInvariant();
+                resource.Attributes.ShouldContainKey("countryOfResidence").With(value => value.Should().Be(countryOfResidence));
+            });
+
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(existingCompanies[1].Name));
+
+                string countryOfResidence = existingCompanies[1].CountryOfResidence!.ToUpperInvariant();
+                resource.Attributes.ShouldContainKey("countryOfResidence").With(value => value.Should().Be(countryOfResidence));
+            });
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<RecordCompany> companiesInDatabase = await dbContext.RecordCompanies.ToListAsync();
-                companiesInDatabase.Should().HaveCount(2);
+                companiesInDatabase.ShouldHaveCount(2);
 
                 companiesInDatabase[0].Name.Should().Be(existingCompanies[0].Name);
                 companiesInDatabase[0].CountryOfResidence.Should().Be(existingCompanies[0].CountryOfResidence);
@@ -317,7 +335,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(1);
+            responseDocument.Results.ShouldHaveCount(1);
 
             hitCounter.HitExtensibilityPoints.Should().BeEmpty();
         }

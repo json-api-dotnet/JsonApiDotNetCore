@@ -156,9 +156,10 @@ Then in the controller, you should inherit from the base controller and pass the
 ```c#
 public class ArticlesController : BaseJsonApiController<Article, int>
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        ICreateService<Article, int> create, IDeleteService<Article, int> delete)
-        : base(options, loggerFactory, create: create, delete: delete)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, ICreateService<Article, int> create,
+        IDeleteService<Article, int> delete)
+        : base(options, resourceGraph, loggerFactory, create: create, delete: delete)
     {
     }
 

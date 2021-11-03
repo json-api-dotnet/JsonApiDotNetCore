@@ -9,15 +9,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
     public sealed class Scholarship : Identifiable<int>
     {
         [Attr]
-        public string ProgramName { get; set; }
+        public string ProgramName { get; set; } = null!;
 
         [Attr]
         public decimal Amount { get; set; }
 
         [HasMany]
-        public IList<Student> Participants { get; set; }
+        public IList<Student> Participants { get; set; } = new List<Student>();
 
         [HasOne]
-        public Student PrimaryContact { get; set; }
+        public Student PrimaryContact { get; set; } = null!;
     }
 }

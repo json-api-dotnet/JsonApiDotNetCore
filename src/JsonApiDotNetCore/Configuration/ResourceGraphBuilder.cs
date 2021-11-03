@@ -42,8 +42,8 @@ namespace JsonApiDotNetCore.Configuration
 
             foreach (RelationshipAttribute relationship in _resourceTypes.SelectMany(resourceType => resourceType.Relationships))
             {
-                relationship.LeftType = resourceGraph.GetResourceType(relationship.LeftClrType);
-                relationship.RightType = resourceGraph.GetResourceType(relationship.RightClrType);
+                relationship.LeftType = resourceGraph.GetResourceType(relationship.LeftClrType!);
+                relationship.RightType = resourceGraph.GetResourceType(relationship.RightClrType!);
             }
 
             return resourceGraph;
@@ -66,9 +66,9 @@ namespace JsonApiDotNetCore.Configuration
 
         private static bool IsImplicitManyToManyJoinEntity(IEntityType entityType)
         {
-#pragma warning disable EF1001 // Internal EF Core API usage.
+#pragma warning disable EF1001 // Internal Entity Framework Core API usage.
             return entityType is EntityType { IsImplicitlyCreatedJoinEntityType: true };
-#pragma warning restore EF1001 // Internal EF Core API usage.
+#pragma warning restore EF1001 // Internal Entity Framework Core API usage.
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.Configuration
         /// The name under which the resource is publicly exposed by the API. If nothing is specified, the naming convention is applied on the pluralized CLR
         /// type name.
         /// </param>
-        public ResourceGraphBuilder Add<TResource>(string publicName = null)
+        public ResourceGraphBuilder Add<TResource>(string? publicName = null)
             where TResource : class, IIdentifiable<int>
         {
             return Add<TResource, int>(publicName);
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCore.Configuration
         /// The name under which the resource is publicly exposed by the API. If nothing is specified, the naming convention is applied on the pluralized CLR
         /// type name.
         /// </param>
-        public ResourceGraphBuilder Add<TResource, TId>(string publicName = null)
+        public ResourceGraphBuilder Add<TResource, TId>(string? publicName = null)
             where TResource : class, IIdentifiable<TId>
         {
             return Add(typeof(TResource), typeof(TId), publicName);
@@ -119,7 +119,7 @@ namespace JsonApiDotNetCore.Configuration
         /// The name under which the resource is publicly exposed by the API. If nothing is specified, the naming convention is applied on the pluralized CLR
         /// type name.
         /// </param>
-        public ResourceGraphBuilder Add(Type resourceClrType, Type idClrType = null, string publicName = null)
+        public ResourceGraphBuilder Add(Type resourceClrType, Type? idClrType = null, string? publicName = null)
         {
             ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
 
@@ -131,7 +131,7 @@ namespace JsonApiDotNetCore.Configuration
             if (resourceClrType.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
                 string effectivePublicName = publicName ?? FormatResourceName(resourceClrType);
-                Type effectiveIdType = idClrType ?? _typeLocator.TryGetIdType(resourceClrType);
+                Type? effectiveIdType = idClrType ?? _typeLocator.LookupIdType(resourceClrType);
 
                 if (effectiveIdType == null)
                 {
@@ -155,7 +155,7 @@ namespace JsonApiDotNetCore.Configuration
             IReadOnlyCollection<RelationshipAttribute> relationships = GetRelationships(resourceClrType);
             IReadOnlyCollection<EagerLoadAttribute> eagerLoads = GetEagerLoads(resourceClrType);
 
-            var linksAttribute = (ResourceLinksAttribute)resourceClrType.GetCustomAttribute(typeof(ResourceLinksAttribute));
+            var linksAttribute = (ResourceLinksAttribute?)resourceClrType.GetCustomAttribute(typeof(ResourceLinksAttribute));
 
             return linksAttribute == null
                 ? new ResourceType(publicName, resourceClrType, idClrType, attributes, relationships, eagerLoads)
@@ -169,12 +169,10 @@ namespace JsonApiDotNetCore.Configuration
 
             foreach (PropertyInfo property in resourceClrType.GetProperties())
             {
-                var attribute = (AttrAttribute)property.GetCustomAttribute(typeof(AttrAttribute));
-
                 // Although strictly not correct, 'id' is added to the list of attributes for convenience.
                 // For example, it enables to filter on ID, without the need to special-case existing logic.
                 // And when using sparse fields, it silently adds 'id' to the set of attributes to retrieve.
-                if (property.Name == nameof(Identifiable<object>.Id) && attribute == null)
+                if (property.Name == nameof(Identifiable<object>.Id))
                 {
                     var idAttr = new AttrAttribute
                     {
@@ -187,12 +185,14 @@ namespace JsonApiDotNetCore.Configuration
                     continue;
                 }
 
+                var attribute = (AttrAttribute?)property.GetCustomAttribute(typeof(AttrAttribute));
+
                 if (attribute == null)
                 {
                     continue;
                 }
 
-                attribute.PublicName ??= FormatPropertyName(property);
+                SetPublicName(attribute, property);
                 attribute.Property = property;
 
                 if (!attribute.HasExplicitCapabilities)
@@ -213,12 +213,12 @@ namespace JsonApiDotNetCore.Configuration
 
             foreach (PropertyInfo property in properties)
             {
-                var relationship = (RelationshipAttribute)property.GetCustomAttribute(typeof(RelationshipAttribute));
+                var relationship = (RelationshipAttribute?)property.GetCustomAttribute(typeof(RelationshipAttribute));
 
                 if (relationship != null)
                 {
                     relationship.Property = property;
-                    relationship.PublicName ??= FormatPropertyName(property);
+                    SetPublicName(relationship, property);
                     relationship.LeftClrType = resourceClrType;
                     relationship.RightClrType = GetRelationshipType(relationship, property);
 
@@ -227,6 +227,12 @@ namespace JsonApiDotNetCore.Configuration
             }
 
             return relationships;
+        }
+
+        private void SetPublicName(ResourceFieldAttribute field, PropertyInfo property)
+        {
+            // ReSharper disable once ConstantNullCoalescingCondition
+            field.PublicName ??= FormatPropertyName(property);
         }
 
         private Type GetRelationshipType(RelationshipAttribute relationship, PropertyInfo property)
@@ -246,18 +252,18 @@ namespace JsonApiDotNetCore.Configuration
 
             foreach (PropertyInfo property in properties)
             {
-                var attribute = (EagerLoadAttribute)property.GetCustomAttribute(typeof(EagerLoadAttribute));
+                var eagerLoad = (EagerLoadAttribute?)property.GetCustomAttribute(typeof(EagerLoadAttribute));
 
-                if (attribute == null)
+                if (eagerLoad == null)
                 {
                     continue;
                 }
 
                 Type innerType = TypeOrElementType(property.PropertyType);
-                attribute.Children = GetEagerLoads(innerType, recursionDepth + 1);
-                attribute.Property = property;
+                eagerLoad.Children = GetEagerLoads(innerType, recursionDepth + 1);
+                eagerLoad.Property = property;
 
-                attributes.Add(attribute);
+                attributes.Add(eagerLoad);
             }
 
             return attributes;

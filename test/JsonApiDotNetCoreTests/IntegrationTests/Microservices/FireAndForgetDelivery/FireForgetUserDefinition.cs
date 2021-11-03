@@ -13,7 +13,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
     {
         private readonly MessageBroker _messageBroker;
         private readonly ResourceDefinitionHitCounter _hitCounter;
-        private DomainUser _userToDelete;
+        private DomainUser? _userToDelete;
 
         public FireForgetUserDefinition(IResourceGraph resourceGraph, FireForgetDbContext dbContext, MessageBroker messageBroker,
             ResourceDefinitionHitCounter hitCounter)
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             return _messageBroker.PostMessageAsync(message, cancellationToken);
         }
 
-        protected override Task<DomainUser> GetUserToDeleteAsync(Guid userId, CancellationToken cancellationToken)
+        protected override Task<DomainUser?> GetUserToDeleteAsync(Guid userId, CancellationToken cancellationToken)
         {
             return Task.FromResult(_userToDelete);
         }

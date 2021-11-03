@@ -7,8 +7,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 {
     public sealed class DepartmentsController : JsonApiController<Department, int>
     {
-        public DepartmentsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Department, int> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public DepartmentsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<Department, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

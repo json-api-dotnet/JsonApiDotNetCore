@@ -11,12 +11,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 {
-    public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
+    public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
-        private readonly SupportFakers _fakers = new();
+        private readonly IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext> _testContext;
+        private readonly MetaFakers _fakers = new();
 
-        public ResourceMetaTests(IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
+        public ResourceMetaTests(IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -58,10 +58,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(3);
-            responseDocument.Data.ManyValue[0].Meta.Should().ContainKey("hasHighPriority");
+            responseDocument.Data.ManyValue.ShouldHaveCount(3);
+            responseDocument.Data.ManyValue[0].Meta.ShouldContainKey("hasHighPriority");
             responseDocument.Data.ManyValue[1].Meta.Should().BeNull();
-            responseDocument.Data.ManyValue[2].Meta.Should().ContainKey("hasHighPriority");
+            responseDocument.Data.ManyValue[2].Meta.ShouldContainKey("hasHighPriority");
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -96,9 +96,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Meta.Should().ContainKey("hasHighPriority");
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Included.ShouldHaveCount(1);
+            responseDocument.Included[0].Meta.ShouldContainKey("hasHighPriority");
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {

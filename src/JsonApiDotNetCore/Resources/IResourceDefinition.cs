@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Resources
         /// <returns>
         /// The new filter, or <c>null</c> to disable the existing filter.
         /// </returns>
-        FilterExpression OnApplyFilter(FilterExpression existingFilter);
+        FilterExpression? OnApplyFilter(FilterExpression? existingFilter);
 
         /// <summary>
         /// Enables to extend, replace or remove a sort order that is being applied on a set of this resource type. Tip: Use
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Resources
         /// <returns>
         /// The new sort order, or <c>null</c> to disable the existing sort order and sort by ID.
         /// </returns>
-        SortExpression OnApplySort(SortExpression existingSort);
+        SortExpression? OnApplySort(SortExpression? existingSort);
 
         /// <summary>
         /// Enables to extend, replace or remove pagination that is being applied on a set of this resource type.
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Resources
         /// The changed pagination, or <c>null</c> to use the first page with default size from options. To disable paging, set
         /// <see cref="PaginationExpression.PageSize" /> to <c>null</c>.
         /// </returns>
-        PaginationExpression OnApplyPagination(PaginationExpression existingPagination);
+        PaginationExpression? OnApplyPagination(PaginationExpression? existingPagination);
 
         /// <summary>
         /// Enables to extend, replace or remove a sparse fieldset that is being applied on a set of this resource type. Tip: Use
@@ -86,7 +86,7 @@ namespace JsonApiDotNetCore.Resources
         /// <returns>
         /// The new sparse fieldset, or <c>null</c> to discard the existing sparse fieldset and select all viewable fields.
         /// </returns>
-        SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet);
+        SparseFieldSetExpression? OnApplySparseFieldSet(SparseFieldSetExpression? existingSparseFieldSet);
 
         /// <summary>
         /// Enables to adapt the Entity Framework Core <see cref="IQueryable{T}" /> query, based on custom query string parameters. Note this only works on
@@ -113,13 +113,13 @@ namespace JsonApiDotNetCore.Resources
         /// ]]></code>
         /// </example>
 #pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type
-        QueryStringParameterHandlers<TResource> OnRegisterQueryableHandlersForQueryStringParameters();
+        QueryStringParameterHandlers<TResource>? OnRegisterQueryableHandlersForQueryStringParameters();
 #pragma warning restore AV1130 // Return type in method signature should be a collection interface instead of a concrete type
 
         /// <summary>
         /// Enables to add JSON:API meta information, specific to this resource.
         /// </summary>
-        IDictionary<string, object> GetMeta(TResource resource);
+        IDictionary<string, object?>? GetMeta(TResource resource);
 
         /// <summary>
         /// Executes after the original version of the resource has been retrieved from the underlying data store, as part of a write request.
@@ -172,7 +172,7 @@ namespace JsonApiDotNetCore.Resources
         /// <returns>
         /// The replacement resource identifier, or <c>null</c> to clear the relationship. Returns <paramref name="rightResourceId" /> by default.
         /// </returns>
-        Task<IIdentifiable> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
+        Task<IIdentifiable?> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable? rightResourceId,
             WriteOperationKind writeOperation, CancellationToken cancellationToken);
 
         /// <summary>

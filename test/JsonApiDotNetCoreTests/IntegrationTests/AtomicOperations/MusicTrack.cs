@@ -14,29 +14,28 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
         public override Guid Id { get; set; }
 
         [Attr]
-        [Required]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         [Attr]
         [Range(1, 24 * 60)]
         public decimal? LengthInSeconds { get; set; }
 
         [Attr]
-        public string Genre { get; set; }
+        public string? Genre { get; set; }
 
         [Attr]
         public DateTimeOffset ReleasedAt { get; set; }
 
         [HasOne]
-        public Lyric Lyric { get; set; }
+        public Lyric? Lyric { get; set; }
 
         [HasOne]
-        public RecordCompany OwnedBy { get; set; }
+        public RecordCompany? OwnedBy { get; set; }
 
         [HasMany]
-        public IList<Performer> Performers { get; set; }
+        public IList<Performer> Performers { get; set; } = new List<Performer>();
 
         [HasMany]
-        public IList<Playlist> OccursIn { get; set; }
+        public IList<Playlist> OccursIn { get; set; } = new List<Playlist>();
     }
 }

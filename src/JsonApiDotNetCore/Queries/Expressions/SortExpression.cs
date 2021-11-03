@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return string.Join(",", Elements.Select(child => child.ToString()));
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

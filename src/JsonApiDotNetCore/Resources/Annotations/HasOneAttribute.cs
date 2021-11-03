@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         {
             if (InverseNavigationProperty != null)
             {
-                Type elementType = CollectionConverter.TryGetCollectionElementType(InverseNavigationProperty.PropertyType);
+                Type? elementType = CollectionConverter.FindCollectionElementType(InverseNavigationProperty.PropertyType);
                 return elementType == null;
             }
 

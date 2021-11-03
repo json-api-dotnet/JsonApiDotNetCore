@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace JsonApiDotNetCore.Serialization.Request
 {
@@ -36,7 +37,7 @@ namespace JsonApiDotNetCore.Serialization.Request
         }
 
         /// <inheritdoc />
-        public async Task<object> ReadAsync(HttpRequest httpRequest)
+        public async Task<object?> ReadAsync(HttpRequest httpRequest)
         {
             ArgumentGuard.NotNull(httpRequest, nameof(httpRequest));
 
@@ -55,7 +56,7 @@ namespace JsonApiDotNetCore.Serialization.Request
             return await reader.ReadToEndAsync();
         }
 
-        private object GetModel(string requestBody)
+        private object? GetModel(string requestBody)
         {
             AssertHasRequestBody(requestBody);
 
@@ -81,7 +82,11 @@ namespace JsonApiDotNetCore.Serialization.Request
                 using IDisposable _ =
                     CodeTimingSessionManager.Current.Measure("JsonSerializer.Deserialize", MeasurementSettings.ExcludeJsonSerializationInPercentages);
 
-                return JsonSerializer.Deserialize<Document>(requestBody, _options.SerializerReadOptions);
+                var document = JsonSerializer.Deserialize<Document>(requestBody, _options.SerializerReadOptions);
+
+                AssertHasDocument(document, requestBody);
+
+                return document;
             }
             catch (JsonException exception)
             {
@@ -92,7 +97,16 @@ namespace JsonApiDotNetCore.Serialization.Request
             }
         }
 
-        private object ConvertDocumentToModel(Document document, string requestBody)
+        private void AssertHasDocument([SysNotNull] Document? document, string requestBody)
+        {
+            if (document == null)
+            {
+                throw new InvalidRequestBodyException(_options.IncludeRequestBodyInErrors ? requestBody : null, "Expected an object, instead of 'null'.", null,
+                    null);
+            }
+        }
+
+        private object? ConvertDocumentToModel(Document document, string requestBody)
         {
             try
             {

@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         /// </item>
         /// <item>
         /// <description>
-        /// <code><![CDATA[IEnumerable<OperationContainer>]]></code>
+        /// <code><![CDATA[IEnumerable<OperationContainer?>]]></code>
         /// </description>
         /// </item>
         /// <item>
@@ -42,6 +42,6 @@ namespace JsonApiDotNetCore.Serialization.Response
         /// </item>
         /// </list>
         /// </summary>
-        Document Convert(object model);
+        Document Convert(object? model);
     }
 }

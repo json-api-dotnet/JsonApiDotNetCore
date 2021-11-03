@@ -11,6 +11,6 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Identifies the currently active transaction.
         /// </summary>
-        string TransactionId { get; }
+        string? TransactionId { get; }
     }
 }

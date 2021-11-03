@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         private readonly LambdaScopeFactory _lambdaScopeFactory;
 
         public QueryableBuilder(Expression source, Type elementType, Type extensionType, LambdaParameterNameFactory nameFactory,
-            IResourceFactory resourceFactory, IModel entityModel, LambdaScopeFactory lambdaScopeFactory = null)
+            IResourceFactory resourceFactory, IModel entityModel, LambdaScopeFactory? lambdaScopeFactory = null)
         {
             ArgumentGuard.NotNull(source, nameof(source));
             ArgumentGuard.NotNull(elementType, nameof(elementType));
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return builder.ApplySkipTake(pagination);
         }
 
-        protected virtual Expression ApplyProjection(Expression source, IDictionary<ResourceFieldAttribute, QueryLayer> projection, ResourceType resourceType)
+        protected virtual Expression ApplyProjection(Expression source, IDictionary<ResourceFieldAttribute, QueryLayer?> projection, ResourceType resourceType)
         {
             using LambdaScope lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 

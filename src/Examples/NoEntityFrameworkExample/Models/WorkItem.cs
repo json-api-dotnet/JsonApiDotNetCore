@@ -12,7 +12,7 @@ namespace NoEntityFrameworkExample.Models
         public bool IsBlocked { get; set; }
 
         [Attr]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         [Attr]
         public long DurationInHours { get; set; }

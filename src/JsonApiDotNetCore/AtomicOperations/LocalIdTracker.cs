@@ -94,7 +94,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         private sealed class LocalIdState
         {
             public string ResourceType { get; }
-            public string ServerId { get; set; }
+            public string? ServerId { get; set; }
 
             public LocalIdState(string resourceType)
             {

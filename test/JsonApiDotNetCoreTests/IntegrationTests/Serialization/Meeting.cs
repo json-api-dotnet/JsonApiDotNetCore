@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -11,7 +12,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     public sealed class Meeting : Identifiable<Guid>
     {
         [Attr]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         [Attr]
         public DateTimeOffset StartTime { get; set; }
@@ -21,6 +22,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
 
         [Attr]
         [NotMapped]
+        [AllowNull]
         public MeetingLocation Location
         {
             get =>
@@ -40,6 +42,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
         public double Longitude { get; set; }
 
         [HasMany]
-        public IList<MeetingAttendee> Attendees { get; set; }
+        public IList<MeetingAttendee> Attendees { get; set; } = new List<MeetingAttendee>();
     }
 }

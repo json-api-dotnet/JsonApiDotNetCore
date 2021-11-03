@@ -56,7 +56,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -97,7 +97,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.ServiceUnavailable);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
@@ -110,11 +110,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(1);
+            messageBroker.SentMessages.ShouldHaveCount(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                DomainUser user = await dbContext.Users.FirstWithIdOrDefaultAsync(existingUser.Id);
+                DomainUser? user = await dbContext.Users.FirstWithIdOrDefaultAsync(existingUser.Id);
                 user.Should().BeNull();
             });
         }

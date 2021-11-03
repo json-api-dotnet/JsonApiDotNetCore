@@ -10,12 +10,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
 {
-    public sealed class LoggingTests : IClassFixture<IntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext>>
+    public sealed class LoggingTests : IClassFixture<IntegrationTestContext<TestableStartup<LoggingDbContext>, LoggingDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> _testContext;
-        private readonly AuditFakers _fakers = new();
+        private readonly IntegrationTestContext<TestableStartup<LoggingDbContext>, LoggingDbContext> _testContext;
+        private readonly LoggingFakers _fakers = new();
 
-        public LoggingTests(IntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> testContext)
+        public LoggingTests(IntegrationTestContext<TestableStartup<LoggingDbContext>, LoggingDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            loggerFactory.Logger.Messages.Should().NotBeEmpty();
+            loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
                 message.Text.StartsWith("Received POST request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
@@ -89,7 +89,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            loggerFactory.Logger.Messages.Should().NotBeEmpty();
+            loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
                 message.Text.StartsWith("Sending 200 response for GET request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
@@ -113,7 +113,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            loggerFactory.Logger.Messages.Should().NotBeEmpty();
+            loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Information &&
                 message.Text.Contains("Failed to deserialize request body."));

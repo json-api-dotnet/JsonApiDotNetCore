@@ -40,7 +40,7 @@ namespace UnitTests.Internal
             resourceGraphBuilder.Add(typeof(NonResource));
 
             // Assert
-            loggerFactory.Logger.Messages.Should().HaveCount(1);
+            loggerFactory.Logger.Messages.ShouldHaveCount(1);
 
             FakeLoggerFactory.FakeLogMessage message = loggerFactory.Logger.Messages.ElementAt(0);
             message.LogLevel.Should().Be(LogLevel.Warning);
@@ -77,8 +77,8 @@ namespace UnitTests.Internal
 
         private sealed class ResourceWithoutId : IIdentifiable
         {
-            public string StringId { get; set; }
-            public string LocalId { get; set; }
+            public string? StringId { get; set; }
+            public string? LocalId { get; set; }
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]

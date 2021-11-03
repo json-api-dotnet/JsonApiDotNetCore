@@ -12,6 +12,7 @@ using JsonApiDotNetCore.Serialization.JsonConverters;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
 using Microsoft.Extensions.Logging.Abstractions;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Serialization
@@ -40,6 +41,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             const float floatValue = (float)1 / 3;
             const float nullableFloatValue = (float)3 / 5;
             const string stringValue = "text";
+            const string? nullableStringValue = "nullable";
             var guidValue = Guid.NewGuid();
             var nullableGuidValue = Guid.NewGuid();
             DateTime dateTimeValue = 12.July(1982);
@@ -73,7 +75,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
                 Data = new SingleOrManyData<ResourceObject>(new ResourceObject
                 {
                     Type = "resourceWithVariousDataTypes",
-                    Attributes = new Dictionary<string, object>
+                    Attributes = new Dictionary<string, object?>
                     {
                         ["boolean"] = booleanValue,
                         ["nullableBoolean"] = nullableBooleanValue,
@@ -86,6 +88,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
                         ["float"] = floatValue,
                         ["nullableFloat"] = nullableFloatValue,
                         ["string"] = stringValue,
+                        ["nullableString"] = nullableStringValue,
                         ["guid"] = guidValue,
                         ["nullableGuid"] = nullableGuidValue,
                         ["dateTime"] = dateTimeValue,
@@ -103,10 +106,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             };
 
             // Act
-            var model = (ResourceWithVariousDataTypes)documentAdapter.Convert(document);
+            var model = (ResourceWithVariousDataTypes?)documentAdapter.Convert(document);
 
             // Assert
-            model.Should().NotBeNull();
+            model.ShouldNotBeNull();
 
             model.Boolean.Should().Be(booleanValue);
             model.NullableBoolean.Should().Be(nullableBooleanValue);
@@ -119,6 +122,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             model.Float.Should().Be(floatValue);
             model.NullableFloat.Should().Be(nullableFloatValue);
             model.String.Should().Be(stringValue);
+            model.NullableString.Should().Be(nullableStringValue);
             model.Guid.Should().Be(guidValue);
             model.NullableGuid.Should().Be(nullableGuidValue);
             model.DateTime.Should().Be(dateTimeValue);
@@ -130,10 +134,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             model.Enum.Should().Be(enumValue);
             model.NullableEnum.Should().Be(nullableEnumValue);
 
-            model.ComplexObject.Should().NotBeNull();
+            model.ComplexObject.ShouldNotBeNull();
             model.ComplexObject.Value.Should().Be(complexObject.Value);
 
-            model.ComplexObjectList.Should().HaveCount(2);
+            model.ComplexObjectList.ShouldHaveCount(2);
             model.ComplexObjectList[0].Value.Should().Be(complexObjectList[0].Value);
             model.ComplexObjectList[1].Value.Should().Be(complexObjectList[1].Value);
         }
@@ -159,7 +163,8 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             const decimal nullableDecimalValue = default;
             const float floatValue = default;
             const float nullableFloatValue = default;
-            const string stringValue = default;
+            const string stringValue = default!;
+            const string? nullableStringValue = default;
             Guid guidValue = default;
             Guid nullableGuidValue = default;
             DateTime dateTimeValue = default;
@@ -176,7 +181,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
                 Data = new SingleOrManyData<ResourceObject>(new ResourceObject
                 {
                     Type = "resourceWithVariousDataTypes",
-                    Attributes = new Dictionary<string, object>
+                    Attributes = new Dictionary<string, object?>
                     {
                         ["boolean"] = booleanValue,
                         ["nullableBoolean"] = nullableBooleanValue,
@@ -189,6 +194,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
                         ["float"] = floatValue,
                         ["nullableFloat"] = nullableFloatValue,
                         ["string"] = stringValue,
+                        ["nullableString"] = nullableStringValue,
                         ["guid"] = guidValue,
                         ["nullableGuid"] = nullableGuidValue,
                         ["dateTime"] = dateTimeValue,
@@ -206,10 +212,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             };
 
             // Act
-            var model = (ResourceWithVariousDataTypes)documentAdapter.Convert(document);
+            var model = (ResourceWithVariousDataTypes?)documentAdapter.Convert(document);
 
             // Assert
-            model.Should().NotBeNull();
+            model.ShouldNotBeNull();
 
             model.Boolean.Should().Be(booleanValue);
             model.NullableBoolean.Should().Be(nullableBooleanValue);
@@ -222,6 +228,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             model.Float.Should().Be(floatValue);
             model.NullableFloat.Should().Be(nullableFloatValue);
             model.String.Should().Be(stringValue);
+            model.NullableString.Should().Be(nullableStringValue);
             model.Guid.Should().Be(guidValue);
             model.NullableGuid.Should().Be(nullableGuidValue);
             model.DateTime.Should().Be(dateTimeValue);
@@ -304,7 +311,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             public float? NullableFloat { get; set; }
 
             [Attr]
-            public string String { get; set; }
+            public string String { get; set; } = string.Empty;
+
+            [Attr]
+            public string? NullableString { get; set; }
 
             [Attr]
             public Guid Guid { get; set; }
@@ -337,16 +347,16 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             public DayOfWeek? NullableEnum { get; set; }
 
             [Attr]
-            public ComplexObject ComplexObject { get; set; }
+            public ComplexObject? ComplexObject { get; set; }
 
             [Attr]
-            public IList<ComplexObject> ComplexObjectList { get; set; }
+            public IList<ComplexObject>? ComplexObjectList { get; set; }
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         public sealed class ComplexObject
         {
-            public string Value { get; set; }
+            public string? Value { get; set; }
         }
     }
 }

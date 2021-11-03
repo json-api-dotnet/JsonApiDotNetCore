@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Configuration
         private readonly ServiceDiscoveryFacade _serviceDiscoveryFacade;
         private readonly ServiceProvider _intermediateProvider;
 
-        public Action<MvcOptions> ConfigureMvcOptions { get; set; }
+        public Action<MvcOptions>? ConfigureMvcOptions { get; set; }
 
         public JsonApiApplicationBuilder(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
         {
@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Executes the action provided by the user to configure <see cref="JsonApiOptions" />.
         /// </summary>
-        public void ConfigureJsonApiOptions(Action<JsonApiOptions> configureOptions)
+        public void ConfigureJsonApiOptions(Action<JsonApiOptions>? configureOptions)
         {
             configureOptions?.Invoke(_options);
         }
@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Executes the action provided by the user to configure <see cref="ServiceDiscoveryFacade" />.
         /// </summary>
-        public void ConfigureAutoDiscovery(Action<ServiceDiscoveryFacade> configureAutoDiscovery)
+        public void ConfigureAutoDiscovery(Action<ServiceDiscoveryFacade>? configureAutoDiscovery)
         {
             configureAutoDiscovery?.Invoke(_serviceDiscoveryFacade);
         }
@@ -74,8 +74,10 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Configures and builds the resource graph with resources from the provided sources and adds it to the DI container.
         /// </summary>
-        public void AddResourceGraph(ICollection<Type> dbContextTypes, Action<ResourceGraphBuilder> configureResourceGraph)
+        public void ConfigureResourceGraph(ICollection<Type> dbContextTypes, Action<ResourceGraphBuilder>? configureResourceGraph)
         {
+            ArgumentGuard.NotNull(dbContextTypes, nameof(dbContextTypes));
+
             _serviceDiscoveryFacade.DiscoverResources();
 
             foreach (Type dbContextType in dbContextTypes)
@@ -94,7 +96,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Configures built-in ASP.NET Core MVC components. Most of this configuration can be adjusted for the developers' need.
+        /// Configures built-in ASP.NET MVC components. Most of this configuration can be adjusted for the developers' need.
         /// </summary>
         public void ConfigureMvc()
         {
@@ -127,6 +129,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public void ConfigureServiceContainer(ICollection<Type> dbContextTypes)
         {
+            ArgumentGuard.NotNull(dbContextTypes, nameof(dbContextTypes));
+
             if (dbContextTypes.Any())
             {
                 _services.AddScoped(typeof(DbContextResolver<>));

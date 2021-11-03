@@ -26,7 +26,7 @@ namespace Benchmarks.Serialization
 
         private static IEnumerable<OperationContainer> CreateResponseOperations(IJsonApiRequest request)
         {
-            var resource1 = new ResourceA
+            var resource1 = new OutgoingResource
             {
                 Id = 1,
                 Attribute01 = true,
@@ -41,7 +41,7 @@ namespace Benchmarks.Serialization
                 Attribute10 = DayOfWeek.Sunday
             };
 
-            var resource2 = new ResourceA
+            var resource2 = new OutgoingResource
             {
                 Id = 2,
                 Attribute01 = false,
@@ -56,7 +56,7 @@ namespace Benchmarks.Serialization
                 Attribute10 = DayOfWeek.Monday
             };
 
-            var resource3 = new ResourceA
+            var resource3 = new OutgoingResource
             {
                 Id = 3,
                 Attribute01 = true,
@@ -71,7 +71,7 @@ namespace Benchmarks.Serialization
                 Attribute10 = DayOfWeek.Tuesday
             };
 
-            var resource4 = new ResourceA
+            var resource4 = new OutgoingResource
             {
                 Id = 4,
                 Attribute01 = false,
@@ -86,7 +86,7 @@ namespace Benchmarks.Serialization
                 Attribute10 = DayOfWeek.Wednesday
             };
 
-            var resource5 = new ResourceA
+            var resource5 = new OutgoingResource
             {
                 Id = 5,
                 Attribute01 = true,
@@ -122,10 +122,10 @@ namespace Benchmarks.Serialization
 
         protected override JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph)
         {
-            return new()
+            return new JsonApiRequest
             {
                 Kind = EndpointKind.AtomicOperations,
-                PrimaryResourceType = resourceGraph.GetResourceType<ResourceA>()
+                PrimaryResourceType = resourceGraph.GetResourceType<OutgoingResource>()
             };
         }
 

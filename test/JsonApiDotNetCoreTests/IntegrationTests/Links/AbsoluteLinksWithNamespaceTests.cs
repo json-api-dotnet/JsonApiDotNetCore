@@ -17,6 +17,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
         : IClassFixture<IntegrationTestContext<AbsoluteLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext>>
     {
         private const string HostPrefix = "http://localhost";
+        private const string PathPrefix = "/api";
 
         private readonly IntegrationTestContext<AbsoluteLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext> _testContext;
         private readonly LinksFakers _fakers = new();
@@ -49,7 +50,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/api/photoAlbums/{album.StringId}";
+            string route = $"{PathPrefix}/photoAlbums/{album.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -57,6 +58,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.Related.Should().BeNull();
             responseDocument.Links.First.Should().BeNull();
@@ -64,10 +66,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Links.Self.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Data.SingleValue.Relationships["photos"].Links.Self.Should().Be($"{HostPrefix}{route}/relationships/photos");
-            responseDocument.Data.SingleValue.Relationships["photos"].Links.Related.Should().Be($"{HostPrefix}{route}/photos");
+
+            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photos").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Links.ShouldNotBeNull();
+                value.Links.Self.Should().Be($"{HostPrefix}{route}/relationships/photos");
+                value.Links.Related.Should().Be($"{HostPrefix}{route}/photos");
+            });
         }
 
         [Fact]
@@ -84,7 +93,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            const string route = "/api/photoAlbums?include=photos";
+            string route = $"{PathPrefix}/photoAlbums?include=photos";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -92,6 +101,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.Related.Should().BeNull();
             responseDocument.Links.First.Should().Be($"{HostPrefix}{route}");
@@ -99,19 +109,41 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
-            string albumLink = $"{HostPrefix}/api/photoAlbums/{album.StringId}";
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
-            responseDocument.Data.ManyValue[0].Links.Self.Should().Be(albumLink);
-            responseDocument.Data.ManyValue[0].Relationships["photos"].Links.Self.Should().Be($"{albumLink}/relationships/photos");
-            responseDocument.Data.ManyValue[0].Relationships["photos"].Links.Related.Should().Be($"{albumLink}/photos");
+            responseDocument.Data.ManyValue[0].With(resource =>
+            {
+                string albumLink = $"{HostPrefix}{PathPrefix}/photoAlbums/{album.StringId}";
 
-            string photoLink = $"{HostPrefix}/api/photos/{album.Photos.ElementAt(0).StringId}";
+                resource.Links.ShouldNotBeNull();
+                resource.Links.Self.Should().Be(albumLink);
 
-            responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Links.Self.Should().Be(photoLink);
-            responseDocument.Included[0].Relationships["album"].Links.Self.Should().Be($"{photoLink}/relationships/album");
-            responseDocument.Included[0].Relationships["album"].Links.Related.Should().Be($"{photoLink}/album");
+                resource.Relationships.ShouldContainKey("photos").With(value =>
+                {
+                    value.ShouldNotBeNull();
+                    value.Links.ShouldNotBeNull();
+                    value.Links.Self.Should().Be($"{albumLink}/relationships/photos");
+                    value.Links.Related.Should().Be($"{albumLink}/photos");
+                });
+            });
+
+            responseDocument.Included.ShouldHaveCount(1);
+
+            responseDocument.Included[0].With(resource =>
+            {
+                string photoLink = $"{HostPrefix}{PathPrefix}/photos/{album.Photos.ElementAt(0).StringId}";
+
+                resource.Links.ShouldNotBeNull();
+                resource.Links.Self.Should().Be(photoLink);
+
+                resource.Relationships.ShouldContainKey("album").With(value =>
+                {
+                    value.ShouldNotBeNull();
+                    value.Links.ShouldNotBeNull();
+                    value.Links.Self.Should().Be($"{photoLink}/relationships/album");
+                    value.Links.Related.Should().Be($"{photoLink}/album");
+                });
+            });
         }
 
         [Fact]
@@ -127,7 +159,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/api/photos/{photo.StringId}/album";
+            string route = $"{PathPrefix}/photos/{photo.StringId}/album";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -135,6 +167,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.Related.Should().BeNull();
             responseDocument.Links.First.Should().BeNull();
@@ -142,12 +175,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
-            string albumLink = $"{HostPrefix}/api/photoAlbums/{photo.Album.StringId}";
+            string albumLink = $"{HostPrefix}{PathPrefix}/photoAlbums/{photo.Album.StringId}";
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Links.Self.Should().Be(albumLink);
-            responseDocument.Data.SingleValue.Relationships["photos"].Links.Self.Should().Be($"{albumLink}/relationships/photos");
-            responseDocument.Data.SingleValue.Relationships["photos"].Links.Related.Should().Be($"{albumLink}/photos");
+
+            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photos").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Links.ShouldNotBeNull();
+                value.Links.Self.Should().Be($"{albumLink}/relationships/photos");
+                value.Links.Related.Should().Be($"{albumLink}/photos");
+            });
         }
 
         [Fact]
@@ -163,7 +203,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/api/photoAlbums/{album.StringId}/photos";
+            string route = $"{PathPrefix}/photoAlbums/{album.StringId}/photos";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -171,6 +211,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.Related.Should().BeNull();
             responseDocument.Links.First.Should().Be($"{HostPrefix}{route}");
@@ -178,12 +219,23 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
-            string photoLink = $"{HostPrefix}/api/photos/{album.Photos.ElementAt(0).StringId}";
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
-            responseDocument.Data.ManyValue[0].Links.Self.Should().Be(photoLink);
-            responseDocument.Data.ManyValue[0].Relationships["album"].Links.Self.Should().Be($"{photoLink}/relationships/album");
-            responseDocument.Data.ManyValue[0].Relationships["album"].Links.Related.Should().Be($"{photoLink}/album");
+            responseDocument.Data.ManyValue[0].With(resource =>
+            {
+                string photoLink = $"{HostPrefix}{PathPrefix}/photos/{album.Photos.ElementAt(0).StringId}";
+
+                resource.Links.ShouldNotBeNull();
+                resource.Links.Self.Should().Be(photoLink);
+
+                resource.Relationships.ShouldContainKey("album").With(value =>
+                {
+                    value.ShouldNotBeNull();
+                    value.Links.ShouldNotBeNull();
+                    value.Links.Self.Should().Be($"{photoLink}/relationships/album");
+                    value.Links.Related.Should().Be($"{photoLink}/album");
+                });
+            });
         }
 
         [Fact]
@@ -199,7 +251,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/api/photos/{photo.StringId}/relationships/album";
+            string route = $"{PathPrefix}/photos/{photo.StringId}/relationships/album";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -207,14 +259,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.Related.Should().Be($"{HostPrefix}/api/photos/{photo.StringId}/album");
+            responseDocument.Links.Related.Should().Be($"{HostPrefix}{PathPrefix}/photos/{photo.StringId}/album");
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Links.Should().BeNull();
             responseDocument.Data.SingleValue.Relationships.Should().BeNull();
         }
@@ -232,7 +285,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/api/photoAlbums/{album.StringId}/relationships/photos";
+            string route = $"{PathPrefix}/photoAlbums/{album.StringId}/relationships/photos";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -240,14 +293,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.Related.Should().Be($"{HostPrefix}/api/photoAlbums/{album.StringId}/photos");
+            responseDocument.Links.Related.Should().Be($"{HostPrefix}{PathPrefix}/photoAlbums/{album.StringId}/photos");
             responseDocument.Links.First.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Links.Should().BeNull();
             responseDocument.Data.ManyValue[0].Relationships.Should().BeNull();
         }
@@ -257,6 +311,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
         {
             // Arrange
             Photo existingPhoto = _fakers.Photo.Generate();
+
+            string newAlbumName = _fakers.PhotoAlbum.Generate().Name;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -269,6 +325,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
                 data = new
                 {
                     type = "photoAlbums",
+                    attributes = new
+                    {
+                        name = newAlbumName
+                    },
                     relationships = new
                     {
                         photos = new
@@ -286,7 +346,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
                 }
             };
 
-            const string route = "/api/photoAlbums?include=photos";
+            string route = $"{PathPrefix}/photoAlbums?include=photos";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -294,6 +354,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.Related.Should().BeNull();
             responseDocument.Links.First.Should().BeNull();
@@ -301,18 +362,38 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
-            string albumLink = $"{HostPrefix}/api/photoAlbums/{responseDocument.Data.SingleValue.Id}";
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
+
+            string albumLink = $"{HostPrefix}{PathPrefix}/photoAlbums/{responseDocument.Data.SingleValue.Id}";
 
             responseDocument.Data.SingleValue.Links.Self.Should().Be(albumLink);
-            responseDocument.Data.SingleValue.Relationships["photos"].Links.Self.Should().Be($"{albumLink}/relationships/photos");
-            responseDocument.Data.SingleValue.Relationships["photos"].Links.Related.Should().Be($"{albumLink}/photos");
 
-            string photoLink = $"{HostPrefix}/api/photos/{existingPhoto.StringId}";
+            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photos").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Links.ShouldNotBeNull();
+                value.Links.Self.Should().Be($"{albumLink}/relationships/photos");
+                value.Links.Related.Should().Be($"{albumLink}/photos");
+            });
 
-            responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Links.Self.Should().Be(photoLink);
-            responseDocument.Included[0].Relationships["album"].Links.Self.Should().Be($"{photoLink}/relationships/album");
-            responseDocument.Included[0].Relationships["album"].Links.Related.Should().Be($"{photoLink}/album");
+            responseDocument.Included.ShouldHaveCount(1);
+
+            responseDocument.Included[0].With(resource =>
+            {
+                string photoLink = $"{HostPrefix}{PathPrefix}/photos/{existingPhoto.StringId}";
+
+                resource.Links.ShouldNotBeNull();
+                resource.Links.Self.Should().Be(photoLink);
+
+                resource.Relationships.ShouldContainKey("album").With(value =>
+                {
+                    value.ShouldNotBeNull();
+                    value.Links.ShouldNotBeNull();
+                    value.Links.Self.Should().Be($"{photoLink}/relationships/album");
+                    value.Links.Related.Should().Be($"{photoLink}/album");
+                });
+            });
         }
 
         [Fact]
@@ -348,7 +429,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
                 }
             };
 
-            string route = $"/api/photos/{existingPhoto.StringId}?include=album";
+            string route = $"{PathPrefix}/photos/{existingPhoto.StringId}?include=album";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -356,6 +437,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.Related.Should().BeNull();
             responseDocument.Links.First.Should().BeNull();
@@ -363,19 +445,37 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
-            string photoLink = $"{HostPrefix}/api/photos/{existingPhoto.StringId}";
+            string photoLink = $"{HostPrefix}{PathPrefix}/photos/{existingPhoto.StringId}";
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Links.Self.Should().Be(photoLink);
-            responseDocument.Data.SingleValue.Relationships["album"].Links.Self.Should().Be($"{photoLink}/relationships/album");
-            responseDocument.Data.SingleValue.Relationships["album"].Links.Related.Should().Be($"{photoLink}/album");
 
-            string albumLink = $"{HostPrefix}/api/photoAlbums/{existingAlbum.StringId}";
+            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("album").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Links.ShouldNotBeNull();
+                value.Links.Self.Should().Be($"{photoLink}/relationships/album");
+                value.Links.Related.Should().Be($"{photoLink}/album");
+            });
 
-            responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Links.Self.Should().Be(albumLink);
-            responseDocument.Included[0].Relationships["photos"].Links.Self.Should().Be($"{albumLink}/relationships/photos");
-            responseDocument.Included[0].Relationships["photos"].Links.Related.Should().Be($"{albumLink}/photos");
+            responseDocument.Included.ShouldHaveCount(1);
+
+            responseDocument.Included[0].With(resource =>
+            {
+                string albumLink = $"{HostPrefix}{PathPrefix}/photoAlbums/{existingAlbum.StringId}";
+
+                resource.Links.ShouldNotBeNull();
+                resource.Links.Self.Should().Be(albumLink);
+
+                resource.Relationships.ShouldContainKey("photos").With(value =>
+                {
+                    value.ShouldNotBeNull();
+                    value.Links.ShouldNotBeNull();
+                    value.Links.Self.Should().Be($"{albumLink}/relationships/photos");
+                    value.Links.Related.Should().Be($"{albumLink}/photos");
+                });
+            });
         }
     }
 }

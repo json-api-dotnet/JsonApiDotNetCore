@@ -6,8 +6,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class FireForgetDbContext : DbContext
     {
-        public DbSet<DomainUser> Users { get; set; }
-        public DbSet<DomainGroup> Groups { get; set; }
+        public DbSet<DomainUser> Users => Set<DomainUser>();
+        public DbSet<DomainGroup> Groups => Set<DomainGroup>();
 
         public FireForgetDbContext(DbContextOptions<FireForgetDbContext> options)
             : base(options)

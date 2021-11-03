@@ -74,7 +74,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         private static IImmutableSet<IncludeElementExpression> ConvertChainsToElements(IEnumerable<ResourceFieldChainExpression> chains)
         {
-            var rootNode = new MutableIncludeNode(null);
+            var rootNode = new MutableIncludeNode(null!);
 
             foreach (ResourceFieldChainExpression chain in chains)
             {
@@ -99,13 +99,13 @@ namespace JsonApiDotNetCore.Queries.Expressions
             }
         }
 
-        private sealed class IncludeToChainsConverter : QueryExpressionVisitor<object, object>
+        private sealed class IncludeToChainsConverter : QueryExpressionVisitor<object?, object?>
         {
             private readonly Stack<RelationshipAttribute> _parentRelationshipStack = new();
 
             public List<ResourceFieldChainExpression> Chains { get; } = new();
 
-            public override object VisitInclude(IncludeExpression expression, object argument)
+            public override object? VisitInclude(IncludeExpression expression, object? argument)
             {
                 foreach (IncludeElementExpression element in expression.Elements)
                 {
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return null;
             }
 
-            public override object VisitIncludeElement(IncludeElementExpression expression, object argument)
+            public override object? VisitIncludeElement(IncludeElementExpression expression, object? argument)
             {
                 if (!expression.Children.Any())
                 {

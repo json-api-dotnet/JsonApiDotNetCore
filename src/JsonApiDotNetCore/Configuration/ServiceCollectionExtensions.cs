@@ -19,9 +19,9 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Configures JsonApiDotNetCore by registering resources manually.
         /// </summary>
-        public static IServiceCollection AddJsonApi(this IServiceCollection services, Action<JsonApiOptions> options = null,
-            Action<ServiceDiscoveryFacade> discovery = null, Action<ResourceGraphBuilder> resources = null, IMvcCoreBuilder mvcBuilder = null,
-            ICollection<Type> dbContextTypes = null)
+        public static IServiceCollection AddJsonApi(this IServiceCollection services, Action<JsonApiOptions>? options = null,
+            Action<ServiceDiscoveryFacade>? discovery = null, Action<ResourceGraphBuilder>? resources = null, IMvcCoreBuilder? mvcBuilder = null,
+            ICollection<Type>? dbContextTypes = null)
         {
             ArgumentGuard.NotNull(services, nameof(services));
 
@@ -33,22 +33,22 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Configures JsonApiDotNetCore by registering resources from an Entity Framework Core model.
         /// </summary>
-        public static IServiceCollection AddJsonApi<TDbContext>(this IServiceCollection services, Action<JsonApiOptions> options = null,
-            Action<ServiceDiscoveryFacade> discovery = null, Action<ResourceGraphBuilder> resources = null, IMvcCoreBuilder mvcBuilder = null)
+        public static IServiceCollection AddJsonApi<TDbContext>(this IServiceCollection services, Action<JsonApiOptions>? options = null,
+            Action<ServiceDiscoveryFacade>? discovery = null, Action<ResourceGraphBuilder>? resources = null, IMvcCoreBuilder? mvcBuilder = null)
             where TDbContext : DbContext
         {
             return AddJsonApi(services, options, discovery, resources, mvcBuilder, typeof(TDbContext).AsArray());
         }
 
-        private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> configureOptions,
-            Action<ServiceDiscoveryFacade> configureAutoDiscovery, Action<ResourceGraphBuilder> configureResourceGraph, IMvcCoreBuilder mvcBuilder,
+        private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions>? configureOptions,
+            Action<ServiceDiscoveryFacade>? configureAutoDiscovery, Action<ResourceGraphBuilder>? configureResources, IMvcCoreBuilder? mvcBuilder,
             ICollection<Type> dbContextTypes)
         {
             using var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
 
             applicationBuilder.ConfigureJsonApiOptions(configureOptions);
             applicationBuilder.ConfigureAutoDiscovery(configureAutoDiscovery);
-            applicationBuilder.AddResourceGraph(dbContextTypes, configureResourceGraph);
+            applicationBuilder.ConfigureResourceGraph(dbContextTypes, configureResources);
             applicationBuilder.ConfigureMvc();
             applicationBuilder.DiscoverInjectables();
             applicationBuilder.ConfigureServiceContainer(dbContextTypes);
@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Configuration
         private static void RegisterForConstructedType(IServiceCollection services, Type implementationType, IEnumerable<Type> openGenericInterfaces)
         {
             bool seenCompatibleInterface = false;
-            ResourceDescriptor resourceDescriptor = TryGetResourceTypeFromServiceImplementation(implementationType);
+            ResourceDescriptor? resourceDescriptor = ResolveResourceTypeFromServiceImplementation(implementationType);
 
             if (resourceDescriptor != null)
             {
@@ -118,15 +118,14 @@ namespace JsonApiDotNetCore.Configuration
             }
         }
 
-        private static ResourceDescriptor TryGetResourceTypeFromServiceImplementation(Type serviceType)
+        private static ResourceDescriptor? ResolveResourceTypeFromServiceImplementation(Type? serviceType)
         {
-            foreach (Type @interface in serviceType.GetInterfaces())
+            if (serviceType != null)
             {
-                Type firstGenericArgument = @interface.IsGenericType ? @interface.GenericTypeArguments.First() : null;
-
-                if (firstGenericArgument != null)
+                foreach (Type @interface in serviceType.GetInterfaces())
                 {
-                    ResourceDescriptor resourceDescriptor = TypeLocator.TryGetResourceDescriptor(firstGenericArgument);
+                    Type? firstGenericArgument = @interface.IsGenericType ? @interface.GenericTypeArguments.First() : null;
+                    ResourceDescriptor? resourceDescriptor = TypeLocator.ResolveResourceDescriptor(firstGenericArgument);
 
                     if (resourceDescriptor != null)
                     {

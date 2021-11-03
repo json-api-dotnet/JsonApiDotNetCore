@@ -9,11 +9,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ReadWriteDbContext : DbContext
     {
-        public DbSet<WorkItem> WorkItems { get; set; }
-        public DbSet<WorkTag> WorkTags { get; set; }
-        public DbSet<WorkItemGroup> Groups { get; set; }
-        public DbSet<RgbColor> RgbColors { get; set; }
-        public DbSet<UserAccount> UserAccounts { get; set; }
+        public DbSet<WorkItem> WorkItems => Set<WorkItem>();
+        public DbSet<WorkTag> WorkTags => Set<WorkTag>();
+        public DbSet<WorkItemGroup> Groups => Set<WorkItemGroup>();
+        public DbSet<RgbColor> RgbColors => Set<RgbColor>();
+        public DbSet<UserAccount> UserAccounts => Set<UserAccount>();
 
         public ReadWriteDbContext(DbContextOptions<ReadWriteDbContext> options)
             : base(options)
@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
         {
             builder.Entity<WorkItem>()
                 .HasOne(workItem => workItem.Assignee)
-                .WithMany(userAccount => userAccount.AssignedItems);
+                .WithMany(userAccount => userAccount!.AssignedItems);
 
             builder.Entity<WorkItem>()
                 .HasMany(workItem => workItem.Subscribers)
@@ -32,12 +32,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
 
             builder.Entity<WorkItemGroup>()
                 .HasOne(workItemGroup => workItemGroup.Color)
-                .WithOne(color => color.Group)
+                .WithOne(color => color!.Group!)
                 .HasForeignKey<RgbColor>("GroupId");
 
             builder.Entity<WorkItem>()
                 .HasOne(workItem => workItem.Parent)
-                .WithMany(workItem => workItem.Children);
+                .WithMany(workItem => workItem!.Children);
 
             builder.Entity<WorkItem>()
                 .HasMany(workItem => workItem.RelatedFrom)

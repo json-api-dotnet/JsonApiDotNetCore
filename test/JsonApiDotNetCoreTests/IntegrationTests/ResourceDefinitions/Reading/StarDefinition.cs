@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             _hitCounter = hitCounter;
         }
 
-        public override SortExpression OnApplySort(SortExpression existingSort)
+        public override SortExpression OnApplySort(SortExpression? existingSort)
         {
             _hitCounter.TrackInvocation<Star>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort);
 
@@ -36,7 +36,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             });
         }
 
-        public override PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
+        public override PaginationExpression OnApplyPagination(PaginationExpression? existingPagination)
         {
             _hitCounter.TrackInvocation<Star>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination);
 
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             return new PaginationExpression(PageNumber.ValueOne, maxPageSize);
         }
 
-        public override SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+        public override SparseFieldSetExpression? OnApplySparseFieldSet(SparseFieldSetExpression? existingSparseFieldSet)
         {
             _hitCounter.TrackInvocation<Star>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet);
 

@@ -8,9 +8,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class EagerLoadingDbContext : DbContext
     {
-        public DbSet<State> States { get; set; }
-        public DbSet<Street> Streets { get; set; }
-        public DbSet<Building> Buildings { get; set; }
+        public DbSet<State> States => Set<State>();
+        public DbSet<Street> Streets => Set<Street>();
+        public DbSet<Building> Buildings => Set<Building>();
+        public DbSet<Door> Doors => Set<Door>();
 
         public EagerLoadingDbContext(DbContextOptions<EagerLoadingDbContext> options)
             : base(options)
@@ -23,13 +24,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
                 .HasOne(building => building.PrimaryDoor)
                 .WithOne()
                 .HasForeignKey<Building>("PrimaryDoorId")
+                // The PrimaryDoor relationship property is declared as nullable, because the Door type is not publicly exposed,
+                // so we don't want ModelState validation to fail when it isn't provided by the client. But because
+                // BuildingRepository ensures a value is assigned on Create, we can make it a required relationship in the database.
                 .IsRequired();
 
             builder.Entity<Building>()
                 .HasOne(building => building.SecondaryDoor)
                 .WithOne()
-                .HasForeignKey<Building>("SecondaryDoorId")
-                .IsRequired(false);
+                .HasForeignKey<Building>("SecondaryDoorId");
         }
     }
 }

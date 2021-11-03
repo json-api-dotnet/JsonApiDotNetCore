@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// Transforms <see cref="PaginationExpression" /> into <see cref="Queryable.Skip{TSource}" /> and <see cref="Queryable.Take{TSource}" /> calls.
     /// </summary>
     [PublicAPI]
-    public class SkipTakeClauseBuilder : QueryClauseBuilder<object>
+    public class SkipTakeClauseBuilder : QueryClauseBuilder<object?>
     {
         private readonly Expression _source;
         private readonly Type _extensionType;
@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return Visit(expression, null);
         }
 
-        public override Expression VisitPagination(PaginationExpression expression, object argument)
+        public override Expression VisitPagination(PaginationExpression expression, object? argument)
         {
             Expression skipTakeExpression = _source;
 

@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore
         /// <summary>
         /// Whether the specified source type implements or equals the specified interface.
         /// </summary>
-        public static bool IsOrImplementsInterface(this Type source, Type interfaceType)
+        public static bool IsOrImplementsInterface(this Type? source, Type interfaceType)
         {
             ArgumentGuard.NotNull(interfaceType, nameof(interfaceType));
 

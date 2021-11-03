@@ -9,15 +9,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
     public sealed class Comment : Identifiable<int>
     {
         [Attr]
-        public string Text { get; set; }
+        public string Text { get; set; } = null!;
 
         [Attr]
         public DateTime CreatedAt { get; set; }
 
         [HasOne]
-        public WebAccount Author { get; set; }
+        public WebAccount Author { get; set; } = null!;
 
         [HasOne]
-        public BlogPost Parent { get; set; }
+        public BlogPost Parent { get; set; } = null!;
     }
 }

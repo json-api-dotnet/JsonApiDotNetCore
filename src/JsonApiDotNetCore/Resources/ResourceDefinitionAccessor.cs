@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public FilterExpression OnApplyFilter(ResourceType resourceType, FilterExpression existingFilter)
+        public FilterExpression? OnApplyFilter(ResourceType resourceType, FilterExpression? existingFilter)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public SortExpression OnApplySort(ResourceType resourceType, SortExpression existingSort)
+        public SortExpression? OnApplySort(ResourceType resourceType, SortExpression? existingSort)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public PaginationExpression OnApplyPagination(ResourceType resourceType, PaginationExpression existingPagination)
+        public PaginationExpression? OnApplyPagination(ResourceType resourceType, PaginationExpression? existingPagination)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
@@ -65,7 +65,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public SparseFieldSetExpression OnApplySparseFieldSet(ResourceType resourceType, SparseFieldSetExpression existingSparseFieldSet)
+        public SparseFieldSetExpression? OnApplySparseFieldSet(ResourceType resourceType, SparseFieldSetExpression? existingSparseFieldSet)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
@@ -74,7 +74,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public object GetQueryableHandlerForQueryStringParameter(Type resourceClrType, string parameterName)
+        public object? GetQueryableHandlerForQueryStringParameter(Type resourceClrType, string parameterName)
         {
             ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
             ArgumentGuard.NotNullNorEmpty(parameterName, nameof(parameterName));
@@ -82,11 +82,19 @@ namespace JsonApiDotNetCore.Resources
             dynamic resourceDefinition = ResolveResourceDefinition(resourceClrType);
             dynamic handlers = resourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters();
 
-            return handlers != null && handlers.ContainsKey(parameterName) ? handlers[parameterName] : null;
+            if (handlers != null)
+            {
+                if (handlers.ContainsKey(parameterName))
+                {
+                    return handlers[parameterName];
+                }
+            }
+
+            return null;
         }
 
         /// <inheritdoc />
-        public IDictionary<string, object> GetMeta(ResourceType resourceType, IIdentifiable resourceInstance)
+        public IDictionary<string, object?>? GetMeta(ResourceType resourceType, IIdentifiable resourceInstance)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
@@ -105,8 +113,8 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public async Task<IIdentifiable> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
-            IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        public async Task<IIdentifiable?> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
+            IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(leftResource, nameof(leftResource));

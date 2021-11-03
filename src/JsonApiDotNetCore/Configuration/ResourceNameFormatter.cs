@@ -8,9 +8,9 @@ namespace JsonApiDotNetCore.Configuration
 {
     internal sealed class ResourceNameFormatter
     {
-        private readonly JsonNamingPolicy _namingPolicy;
+        private readonly JsonNamingPolicy? _namingPolicy;
 
-        public ResourceNameFormatter(JsonNamingPolicy namingPolicy)
+        public ResourceNameFormatter(JsonNamingPolicy? namingPolicy)
         {
             _namingPolicy = namingPolicy;
         }
@@ -20,6 +20,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public string FormatResourceName(Type resourceClrType)
         {
+            ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
+
             if (resourceClrType.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute attribute)
             {
                 return attribute.PublicName;

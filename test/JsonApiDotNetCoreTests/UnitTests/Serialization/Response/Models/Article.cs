@@ -8,12 +8,12 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response.Models
     public sealed class Article : Identifiable<int>
     {
         [Attr]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         [HasOne]
-        public Person Reviewer { get; set; }
+        public Person? Reviewer { get; set; }
 
         [HasOne]
-        public Person Author { get; set; }
+        public Person Author { get; set; } = null!;
     }
 }

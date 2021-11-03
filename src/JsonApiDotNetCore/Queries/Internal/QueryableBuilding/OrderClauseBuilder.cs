@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// <see cref="Queryable.OrderBy{TSource, TKey}(IQueryable{TSource}, System.Linq.Expressions.Expression{System.Func{TSource,TKey}})" /> calls.
     /// </summary>
     [PublicAPI]
-    public class OrderClauseBuilder : QueryClauseBuilder<Expression>
+    public class OrderClauseBuilder : QueryClauseBuilder<Expression?>
     {
         private readonly Expression _source;
         private readonly Type _extensionType;
@@ -33,21 +33,21 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return Visit(expression, null);
         }
 
-        public override Expression VisitSort(SortExpression expression, Expression argument)
+        public override Expression VisitSort(SortExpression expression, Expression? argument)
         {
-            Expression sortExpression = null;
+            Expression? sortExpression = null;
 
             foreach (SortElementExpression sortElement in expression.Elements)
             {
                 sortExpression = Visit(sortElement, sortExpression);
             }
 
-            return sortExpression;
+            return sortExpression!;
         }
 
-        public override Expression VisitSortElement(SortElementExpression expression, Expression previousExpression)
+        public override Expression VisitSortElement(SortElementExpression expression, Expression? previousExpression)
         {
-            Expression body = expression.Count != null ? Visit(expression.Count, null) : Visit(expression.TargetAttribute, null);
+            Expression body = expression.Count != null ? Visit(expression.Count, null) : Visit(expression.TargetAttribute!, null);
 
             LambdaExpression lambda = Expression.Lambda(body, LambdaScope.Parameter);
 

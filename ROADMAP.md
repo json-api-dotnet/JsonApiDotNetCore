@@ -21,7 +21,7 @@ The need for breaking changes has blocked several efforts in the v4.x release, s
 - [x] Optimized delete to-many [#1030](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1030)
 - [x] Support System.Text.Json [#664](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/664) [#999](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/999) [1077](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1077) [1078](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1078)
 - [x] Optimize IIdentifiable to ResourceObject conversion [#1028](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1028) [#1024](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1024) [#233](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/233)
-- [ ] Nullable reference types [#1029](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1029)
+- [x] Nullable reference types [#1029](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1029)
 
 Aside from the list above, we have interest in the following topics. It's too soon yet to decide whether they'll make it into v5.x or in a later major version.
 

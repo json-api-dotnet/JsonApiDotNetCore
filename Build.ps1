@@ -8,7 +8,7 @@ function CheckLastExitCode {
 
 function RunInspectCode {
     $outputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
-    dotnet jb inspectcode JsonApiDotNetCore.sln --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=SolutionPersonal -dsl=ProjectPersonal
+    dotnet jb inspectcode JsonApiDotNetCore.sln --no-build --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=SolutionPersonal -dsl=ProjectPersonal
     CheckLastExitCode
 
     [xml]$xml = Get-Content "$outputPath"

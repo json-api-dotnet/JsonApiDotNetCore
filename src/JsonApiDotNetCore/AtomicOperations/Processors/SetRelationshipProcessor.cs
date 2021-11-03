@@ -25,22 +25,22 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         }
 
         /// <inheritdoc />
-        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
+        public virtual async Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(operation, nameof(operation));
 
             var leftId = (TId)operation.Resource.GetTypedId();
-            object rightValue = GetRelationshipRightValue(operation);
+            object? rightValue = GetRelationshipRightValue(operation);
 
-            await _service.SetRelationshipAsync(leftId, operation.Request.Relationship.PublicName, rightValue, cancellationToken);
+            await _service.SetRelationshipAsync(leftId, operation.Request.Relationship!.PublicName, rightValue, cancellationToken);
 
             return null;
         }
 
-        private object GetRelationshipRightValue(OperationContainer operation)
+        private object? GetRelationshipRightValue(OperationContainer operation)
         {
-            RelationshipAttribute relationship = operation.Request.Relationship;
-            object rightValue = relationship.GetValue(operation.Resource);
+            RelationshipAttribute relationship = operation.Request.Relationship!;
+            object? rightValue = relationship.GetValue(operation.Resource);
 
             if (relationship is HasManyAttribute)
             {

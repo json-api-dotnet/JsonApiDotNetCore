@@ -22,14 +22,18 @@ namespace JsonApiDotNetCore.Controllers
 
         protected IActionResult Error(IEnumerable<ErrorObject> errors)
         {
-            ArgumentGuard.NotNull(errors, nameof(errors));
+            IReadOnlyList<ErrorObject>? errorList = ToErrorList(errors);
+            ArgumentGuard.NotNullNorEmpty(errorList, nameof(errors));
 
-            ErrorObject[] errorArray = errors.ToArray();
-
-            return new ObjectResult(errorArray)
+            return new ObjectResult(errorList)
             {
-                StatusCode = (int)ErrorObject.GetResponseStatusCode(errorArray)
+                StatusCode = (int)ErrorObject.GetResponseStatusCode(errorList)
             };
+        }
+
+        private static IReadOnlyList<ErrorObject>? ToErrorList(IEnumerable<ErrorObject>? errors)
+        {
+            return errors?.ToArray();
         }
     }
 }

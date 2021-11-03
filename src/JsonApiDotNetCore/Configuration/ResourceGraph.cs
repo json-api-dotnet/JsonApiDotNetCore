@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Configuration
     [PublicAPI]
     public sealed class ResourceGraph : IResourceGraph
     {
-        private static readonly Type ProxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
+        private static readonly Type? ProxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
 
         private readonly IReadOnlySet<ResourceType> _resourceTypeSet;
         private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = new();
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public ResourceType GetResourceType(string publicName)
         {
-            ResourceType resourceType = TryGetResourceType(publicName);
+            ResourceType? resourceType = FindResourceType(publicName);
 
             if (resourceType == null)
             {
@@ -52,17 +52,17 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public ResourceType TryGetResourceType(string publicName)
+        public ResourceType? FindResourceType(string publicName)
         {
             ArgumentGuard.NotNull(publicName, nameof(publicName));
 
-            return _resourceTypesByPublicName.TryGetValue(publicName, out ResourceType resourceType) ? resourceType : null;
+            return _resourceTypesByPublicName.TryGetValue(publicName, out ResourceType? resourceType) ? resourceType : null;
         }
 
         /// <inheritdoc />
         public ResourceType GetResourceType(Type resourceClrType)
         {
-            ResourceType resourceType = TryGetResourceType(resourceClrType);
+            ResourceType? resourceType = FindResourceType(resourceClrType);
 
             if (resourceType == null)
             {
@@ -73,12 +73,12 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public ResourceType TryGetResourceType(Type resourceClrType)
+        public ResourceType? FindResourceType(Type resourceClrType)
         {
             ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
 
-            Type typeToFind = IsLazyLoadingProxyForResourceType(resourceClrType) ? resourceClrType.BaseType : resourceClrType;
-            return _resourceTypesByClrType.TryGetValue(typeToFind!, out ResourceType resourceType) ? resourceType : null;
+            Type typeToFind = IsLazyLoadingProxyForResourceType(resourceClrType) ? resourceClrType.BaseType! : resourceClrType;
+            return _resourceTypesByClrType.TryGetValue(typeToFind, out ResourceType? resourceType) ? resourceType : null;
         }
 
         private bool IsLazyLoadingProxyForResourceType(Type resourceClrType)
@@ -94,7 +94,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector)
+        public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(selector, nameof(selector));
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector)
+        public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(selector, nameof(selector));
@@ -112,7 +112,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector)
+        public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(selector, nameof(selector));
@@ -120,7 +120,7 @@ namespace JsonApiDotNetCore.Configuration
             return FilterFields<TResource, RelationshipAttribute>(selector);
         }
 
-        private IReadOnlyCollection<TField> FilterFields<TResource, TField>(Expression<Func<TResource, dynamic>> selector)
+        private IReadOnlyCollection<TField> FilterFields<TResource, TField>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable
             where TField : ResourceFieldAttribute
         {
@@ -129,7 +129,7 @@ namespace JsonApiDotNetCore.Configuration
 
             foreach (string memberName in ToMemberNames(selector))
             {
-                TField matchingField = source.FirstOrDefault(field => field.Property.Name == memberName);
+                TField? matchingField = source.FirstOrDefault(field => field.Property.Name == memberName);
 
                 if (matchingField == null)
                 {
@@ -160,7 +160,7 @@ namespace JsonApiDotNetCore.Configuration
             return (IReadOnlyCollection<TKind>)resourceType.Fields;
         }
 
-        private IEnumerable<string> ToMemberNames<TResource>(Expression<Func<TResource, dynamic>> selector)
+        private IEnumerable<string> ToMemberNames<TResource>(Expression<Func<TResource, dynamic?>> selector)
         {
             Expression selectorBody = RemoveConvert(selector.Body);
 

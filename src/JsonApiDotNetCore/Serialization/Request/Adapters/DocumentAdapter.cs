@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         }
 
         /// <inheritdoc />
-        public object Convert(Document document)
+        public object? Convert(Document document)
         {
             ArgumentGuard.NotNull(document, nameof(document));
 

@@ -7,8 +7,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
 {
     public sealed class PerformersController : JsonApiController<Performer, int>
     {
-        public PerformersController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Performer, int> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public PerformersController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<Performer, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

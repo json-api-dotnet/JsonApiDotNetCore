@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -32,12 +33,12 @@ namespace UnitTests.Extensions
             // Act
             services.AddJsonApi<TestDbContext>();
 
+            // Assert
             ServiceProvider provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetRequiredService<IResourceGraph>();
             ResourceType personType = resourceGraph.GetResourceType<Person>();
 
-            // Assert
-            Assert.Equal("people", personType.PublicName);
+            personType.PublicName.Should().Be("people");
         }
 
         [Fact]
@@ -51,16 +52,17 @@ namespace UnitTests.Extensions
 
             // Assert
             ServiceProvider provider = services.BuildServiceProvider();
-            Assert.IsType<ResourceServiceOfInt32>(provider.GetRequiredService(typeof(IResourceService<ResourceOfInt32, int>)));
-            Assert.IsType<ResourceServiceOfInt32>(provider.GetRequiredService(typeof(IResourceCommandService<ResourceOfInt32, int>)));
-            Assert.IsType<ResourceServiceOfInt32>(provider.GetRequiredService(typeof(IResourceQueryService<ResourceOfInt32, int>)));
-            Assert.IsType<ResourceServiceOfInt32>(provider.GetRequiredService(typeof(IGetAllService<ResourceOfInt32, int>)));
-            Assert.IsType<ResourceServiceOfInt32>(provider.GetRequiredService(typeof(IGetByIdService<ResourceOfInt32, int>)));
-            Assert.IsType<ResourceServiceOfInt32>(provider.GetRequiredService(typeof(IGetSecondaryService<ResourceOfInt32, int>)));
-            Assert.IsType<ResourceServiceOfInt32>(provider.GetRequiredService(typeof(IGetRelationshipService<ResourceOfInt32, int>)));
-            Assert.IsType<ResourceServiceOfInt32>(provider.GetRequiredService(typeof(ICreateService<ResourceOfInt32, int>)));
-            Assert.IsType<ResourceServiceOfInt32>(provider.GetRequiredService(typeof(IUpdateService<ResourceOfInt32, int>)));
-            Assert.IsType<ResourceServiceOfInt32>(provider.GetRequiredService(typeof(IDeleteService<ResourceOfInt32, int>)));
+
+            provider.GetRequiredService(typeof(IResourceService<ResourceOfInt32, int>)).Should().BeOfType<ResourceServiceOfInt32>();
+            provider.GetRequiredService(typeof(IResourceCommandService<ResourceOfInt32, int>)).Should().BeOfType<ResourceServiceOfInt32>();
+            provider.GetRequiredService(typeof(IResourceQueryService<ResourceOfInt32, int>)).Should().BeOfType<ResourceServiceOfInt32>();
+            provider.GetRequiredService(typeof(IGetAllService<ResourceOfInt32, int>)).Should().BeOfType<ResourceServiceOfInt32>();
+            provider.GetRequiredService(typeof(IGetByIdService<ResourceOfInt32, int>)).Should().BeOfType<ResourceServiceOfInt32>();
+            provider.GetRequiredService(typeof(IGetSecondaryService<ResourceOfInt32, int>)).Should().BeOfType<ResourceServiceOfInt32>();
+            provider.GetRequiredService(typeof(IGetRelationshipService<ResourceOfInt32, int>)).Should().BeOfType<ResourceServiceOfInt32>();
+            provider.GetRequiredService(typeof(ICreateService<ResourceOfInt32, int>)).Should().BeOfType<ResourceServiceOfInt32>();
+            provider.GetRequiredService(typeof(IUpdateService<ResourceOfInt32, int>)).Should().BeOfType<ResourceServiceOfInt32>();
+            provider.GetRequiredService(typeof(IDeleteService<ResourceOfInt32, int>)).Should().BeOfType<ResourceServiceOfInt32>();
         }
 
         [Fact]
@@ -74,16 +76,17 @@ namespace UnitTests.Extensions
 
             // Assert
             ServiceProvider provider = services.BuildServiceProvider();
-            Assert.IsType<ResourceServiceOfGuid>(provider.GetRequiredService(typeof(IResourceService<ResourceOfGuid, Guid>)));
-            Assert.IsType<ResourceServiceOfGuid>(provider.GetRequiredService(typeof(IResourceCommandService<ResourceOfGuid, Guid>)));
-            Assert.IsType<ResourceServiceOfGuid>(provider.GetRequiredService(typeof(IResourceQueryService<ResourceOfGuid, Guid>)));
-            Assert.IsType<ResourceServiceOfGuid>(provider.GetRequiredService(typeof(IGetAllService<ResourceOfGuid, Guid>)));
-            Assert.IsType<ResourceServiceOfGuid>(provider.GetRequiredService(typeof(IGetByIdService<ResourceOfGuid, Guid>)));
-            Assert.IsType<ResourceServiceOfGuid>(provider.GetRequiredService(typeof(IGetSecondaryService<ResourceOfGuid, Guid>)));
-            Assert.IsType<ResourceServiceOfGuid>(provider.GetRequiredService(typeof(IGetRelationshipService<ResourceOfGuid, Guid>)));
-            Assert.IsType<ResourceServiceOfGuid>(provider.GetRequiredService(typeof(ICreateService<ResourceOfGuid, Guid>)));
-            Assert.IsType<ResourceServiceOfGuid>(provider.GetRequiredService(typeof(IUpdateService<ResourceOfGuid, Guid>)));
-            Assert.IsType<ResourceServiceOfGuid>(provider.GetRequiredService(typeof(IDeleteService<ResourceOfGuid, Guid>)));
+
+            provider.GetRequiredService(typeof(IResourceService<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceServiceOfGuid>();
+            provider.GetRequiredService(typeof(IResourceCommandService<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceServiceOfGuid>();
+            provider.GetRequiredService(typeof(IResourceQueryService<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceServiceOfGuid>();
+            provider.GetRequiredService(typeof(IGetAllService<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceServiceOfGuid>();
+            provider.GetRequiredService(typeof(IGetByIdService<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceServiceOfGuid>();
+            provider.GetRequiredService(typeof(IGetSecondaryService<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceServiceOfGuid>();
+            provider.GetRequiredService(typeof(IGetRelationshipService<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceServiceOfGuid>();
+            provider.GetRequiredService(typeof(ICreateService<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceServiceOfGuid>();
+            provider.GetRequiredService(typeof(IUpdateService<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceServiceOfGuid>();
+            provider.GetRequiredService(typeof(IDeleteService<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceServiceOfGuid>();
         }
 
         [Fact]
@@ -96,7 +99,7 @@ namespace UnitTests.Extensions
             Action action = () => services.AddResourceService<int>();
 
             // Assert
-            Assert.Throws<InvalidConfigurationException>(action);
+            action.Should().ThrowExactly<InvalidConfigurationException>();
         }
 
         [Fact]
@@ -110,9 +113,10 @@ namespace UnitTests.Extensions
 
             // Assert
             ServiceProvider provider = services.BuildServiceProvider();
-            Assert.IsType<ResourceRepositoryOfInt32>(provider.GetRequiredService(typeof(IResourceRepository<ResourceOfInt32, int>)));
-            Assert.IsType<ResourceRepositoryOfInt32>(provider.GetRequiredService(typeof(IResourceReadRepository<ResourceOfInt32, int>)));
-            Assert.IsType<ResourceRepositoryOfInt32>(provider.GetRequiredService(typeof(IResourceWriteRepository<ResourceOfInt32, int>)));
+
+            provider.GetRequiredService(typeof(IResourceRepository<ResourceOfInt32, int>)).Should().BeOfType<ResourceRepositoryOfInt32>();
+            provider.GetRequiredService(typeof(IResourceReadRepository<ResourceOfInt32, int>)).Should().BeOfType<ResourceRepositoryOfInt32>();
+            provider.GetRequiredService(typeof(IResourceWriteRepository<ResourceOfInt32, int>)).Should().BeOfType<ResourceRepositoryOfInt32>();
         }
 
         [Fact]
@@ -126,9 +130,10 @@ namespace UnitTests.Extensions
 
             // Assert
             ServiceProvider provider = services.BuildServiceProvider();
-            Assert.IsType<ResourceRepositoryOfGuid>(provider.GetRequiredService(typeof(IResourceRepository<ResourceOfGuid, Guid>)));
-            Assert.IsType<ResourceRepositoryOfGuid>(provider.GetRequiredService(typeof(IResourceReadRepository<ResourceOfGuid, Guid>)));
-            Assert.IsType<ResourceRepositoryOfGuid>(provider.GetRequiredService(typeof(IResourceWriteRepository<ResourceOfGuid, Guid>)));
+
+            provider.GetRequiredService(typeof(IResourceRepository<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceRepositoryOfGuid>();
+            provider.GetRequiredService(typeof(IResourceReadRepository<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceRepositoryOfGuid>();
+            provider.GetRequiredService(typeof(IResourceWriteRepository<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceRepositoryOfGuid>();
         }
 
         [Fact]
@@ -142,7 +147,8 @@ namespace UnitTests.Extensions
 
             // Assert
             ServiceProvider provider = services.BuildServiceProvider();
-            Assert.IsType<ResourceDefinitionOfInt32>(provider.GetRequiredService(typeof(IResourceDefinition<ResourceOfInt32, int>)));
+
+            provider.GetRequiredService(typeof(IResourceDefinition<ResourceOfInt32, int>)).Should().BeOfType<ResourceDefinitionOfInt32>();
         }
 
         [Fact]
@@ -156,7 +162,8 @@ namespace UnitTests.Extensions
 
             // Assert
             ServiceProvider provider = services.BuildServiceProvider();
-            Assert.IsType<ResourceDefinitionOfGuid>(provider.GetRequiredService(typeof(IResourceDefinition<ResourceOfGuid, Guid>)));
+
+            provider.GetRequiredService(typeof(IResourceDefinition<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceDefinitionOfGuid>();
         }
 
         [Fact]
@@ -173,9 +180,9 @@ namespace UnitTests.Extensions
             // Assert
             ServiceProvider provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetRequiredService<IResourceGraph>();
+            ResourceType resourceType = resourceGraph.GetResourceType(typeof(ResourceOfInt32));
 
-            ResourceType intResourceType = resourceGraph.GetResourceType(typeof(ResourceOfInt32));
-            Assert.Equal("resourceOfInt32s", intResourceType.PublicName);
+            resourceType.PublicName.Should().Be("resourceOfInt32s");
         }
 
         private sealed class ResourceOfInt32 : Identifiable<int>
@@ -200,17 +207,17 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task<object> GetSecondaryAsync(int id, string relationshipName, CancellationToken cancellationToken)
+            public Task<object?> GetSecondaryAsync(int id, string relationshipName, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task<object> GetRelationshipAsync(int id, string relationshipName, CancellationToken cancellationToken)
+            public Task<object?> GetRelationshipAsync(int id, string relationshipName, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task<ResourceOfInt32> CreateAsync(ResourceOfInt32 resource, CancellationToken cancellationToken)
+            public Task<ResourceOfInt32?> CreateAsync(ResourceOfInt32 resource, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -221,12 +228,12 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task<ResourceOfInt32> UpdateAsync(int id, ResourceOfInt32 resource, CancellationToken cancellationToken)
+            public Task<ResourceOfInt32?> UpdateAsync(int id, ResourceOfInt32 resource, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task SetRelationshipAsync(int leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)
+            public Task SetRelationshipAsync(int leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -256,17 +263,17 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task<object> GetSecondaryAsync(Guid id, string relationshipName, CancellationToken cancellationToken)
+            public Task<object?> GetSecondaryAsync(Guid id, string relationshipName, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task<object> GetRelationshipAsync(Guid id, string relationshipName, CancellationToken cancellationToken)
+            public Task<object?> GetRelationshipAsync(Guid id, string relationshipName, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task<ResourceOfGuid> CreateAsync(ResourceOfGuid resource, CancellationToken cancellationToken)
+            public Task<ResourceOfGuid?> CreateAsync(ResourceOfGuid resource, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -277,12 +284,12 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task<ResourceOfGuid> UpdateAsync(Guid id, ResourceOfGuid resource, CancellationToken cancellationToken)
+            public Task<ResourceOfGuid?> UpdateAsync(Guid id, ResourceOfGuid resource, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task SetRelationshipAsync(Guid leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)
+            public Task SetRelationshipAsync(Guid leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -302,12 +309,12 @@ namespace UnitTests.Extensions
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class ResourceRepositoryOfInt32 : IResourceRepository<ResourceOfInt32, int>
         {
-            public Task<IReadOnlyCollection<ResourceOfInt32>> GetAsync(QueryLayer layer, CancellationToken cancellationToken)
+            public Task<IReadOnlyCollection<ResourceOfInt32>> GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task<int> CountAsync(FilterExpression topFilter, CancellationToken cancellationToken)
+            public Task<int> CountAsync(FilterExpression? topFilter, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -322,7 +329,7 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task<ResourceOfInt32> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
+            public Task<ResourceOfInt32?> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -337,7 +344,7 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task SetRelationshipAsync(ResourceOfInt32 leftResource, object rightValue, CancellationToken cancellationToken)
+            public Task SetRelationshipAsync(ResourceOfInt32 leftResource, object? rightValue, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -357,12 +364,12 @@ namespace UnitTests.Extensions
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class ResourceRepositoryOfGuid : IResourceRepository<ResourceOfGuid, Guid>
         {
-            public Task<IReadOnlyCollection<ResourceOfGuid>> GetAsync(QueryLayer layer, CancellationToken cancellationToken)
+            public Task<IReadOnlyCollection<ResourceOfGuid>> GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task<int> CountAsync(FilterExpression topFilter, CancellationToken cancellationToken)
+            public Task<int> CountAsync(FilterExpression? topFilter, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -377,7 +384,7 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task<ResourceOfGuid> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
+            public Task<ResourceOfGuid?> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -392,7 +399,7 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task SetRelationshipAsync(ResourceOfGuid leftResource, object rightValue, CancellationToken cancellationToken)
+            public Task SetRelationshipAsync(ResourceOfGuid leftResource, object? rightValue, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -417,22 +424,22 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public FilterExpression OnApplyFilter(FilterExpression existingFilter)
+            public FilterExpression OnApplyFilter(FilterExpression? existingFilter)
             {
                 throw new NotImplementedException();
             }
 
-            public SortExpression OnApplySort(SortExpression existingSort)
+            public SortExpression OnApplySort(SortExpression? existingSort)
             {
                 throw new NotImplementedException();
             }
 
-            public PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
+            public PaginationExpression OnApplyPagination(PaginationExpression? existingPagination)
             {
                 throw new NotImplementedException();
             }
 
-            public SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+            public SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression? existingSparseFieldSet)
             {
                 throw new NotImplementedException();
             }
@@ -442,7 +449,7 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public IDictionary<string, object> GetMeta(ResourceOfInt32 resource)
+            public IDictionary<string, object?> GetMeta(ResourceOfInt32 resource)
             {
                 throw new NotImplementedException();
             }
@@ -452,8 +459,8 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task<IIdentifiable> OnSetToOneRelationshipAsync(ResourceOfInt32 leftResource, HasOneAttribute hasOneRelationship,
-                IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+            public Task<IIdentifiable?> OnSetToOneRelationshipAsync(ResourceOfInt32 leftResource, HasOneAttribute hasOneRelationship,
+                IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -505,22 +512,22 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public FilterExpression OnApplyFilter(FilterExpression existingFilter)
+            public FilterExpression OnApplyFilter(FilterExpression? existingFilter)
             {
                 throw new NotImplementedException();
             }
 
-            public SortExpression OnApplySort(SortExpression existingSort)
+            public SortExpression OnApplySort(SortExpression? existingSort)
             {
                 throw new NotImplementedException();
             }
 
-            public PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
+            public PaginationExpression OnApplyPagination(PaginationExpression? existingPagination)
             {
                 throw new NotImplementedException();
             }
 
-            public SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+            public SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression? existingSparseFieldSet)
             {
                 throw new NotImplementedException();
             }
@@ -530,7 +537,7 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public IDictionary<string, object> GetMeta(ResourceOfGuid resource)
+            public IDictionary<string, object?> GetMeta(ResourceOfGuid resource)
             {
                 throw new NotImplementedException();
             }
@@ -540,8 +547,8 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task<IIdentifiable> OnSetToOneRelationshipAsync(ResourceOfGuid leftResource, HasOneAttribute hasOneRelationship,
-                IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+            public Task<IIdentifiable?> OnSetToOneRelationshipAsync(ResourceOfGuid leftResource, HasOneAttribute hasOneRelationship,
+                IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -588,9 +595,9 @@ namespace UnitTests.Extensions
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         private sealed class TestDbContext : DbContext
         {
-            public DbSet<ResourceOfInt32> ResourcesOfInt32 { get; set; }
-            public DbSet<ResourceOfGuid> ResourcesOfGuid { get; set; }
-            public DbSet<Person> People { get; set; }
+            public DbSet<ResourceOfInt32> ResourcesOfInt32 => Set<ResourceOfInt32>();
+            public DbSet<ResourceOfGuid> ResourcesOfGuid => Set<ResourceOfGuid>();
+            public DbSet<Person> People => Set<Person>();
 
             public TestDbContext(DbContextOptions<TestDbContext> options)
                 : base(options)

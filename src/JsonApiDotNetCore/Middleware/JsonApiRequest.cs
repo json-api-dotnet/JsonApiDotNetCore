@@ -12,16 +12,16 @@ namespace JsonApiDotNetCore.Middleware
         public EndpointKind Kind { get; set; }
 
         /// <inheritdoc />
-        public string PrimaryId { get; set; }
+        public string? PrimaryId { get; set; }
 
         /// <inheritdoc />
-        public ResourceType PrimaryResourceType { get; set; }
+        public ResourceType? PrimaryResourceType { get; set; }
 
         /// <inheritdoc />
-        public ResourceType SecondaryResourceType { get; set; }
+        public ResourceType? SecondaryResourceType { get; set; }
 
         /// <inheritdoc />
-        public RelationshipAttribute Relationship { get; set; }
+        public RelationshipAttribute? Relationship { get; set; }
 
         /// <inheritdoc />
         public bool IsCollection { get; set; }
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Middleware
         public WriteOperationKind? WriteOperation { get; set; }
 
         /// <inheritdoc />
-        public string TransactionId { get; set; }
+        public string? TransactionId { get; set; }
 
         /// <inheritdoc />
         public void CopyFrom(IJsonApiRequest other)

@@ -9,7 +9,9 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
@@ -50,12 +52,15 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             // Assert
             InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
-            exception.QueryParameterName.Should().Be(parameterName);
-            exception.Errors.Should().HaveCount(1);
-            exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Errors[0].Title.Should().Be("The specified filter is invalid.");
-            exception.Errors[0].Detail.Should().Be(errorMessage);
-            exception.Errors[0].Source.Parameter.Should().Be(parameterName);
+            exception.ParameterName.Should().Be(parameterName);
+            exception.Errors.ShouldHaveCount(1);
+
+            ErrorObject error = exception.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified filter is invalid.");
+            error.Detail.Should().Be(errorMessage);
+            error.Source.ShouldNotBeNull();
+            error.Source.Parameter.Should().Be(parameterName);
         }
 
         [Theory]
@@ -92,7 +97,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
 
             // Assert
-            ResourceFieldChainExpression scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
+            ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
             scope.Should().BeNull();
 
             QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();

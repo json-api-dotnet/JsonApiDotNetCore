@@ -43,8 +43,8 @@ namespace MultiDbContextTests
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
-            responseDocument.Data.ManyValue[0].Attributes["nameA"].Should().Be("SampleA");
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("nameA").With(value => value.Should().Be("SampleA"));
         }
 
         [Fact]
@@ -59,8 +59,8 @@ namespace MultiDbContextTests
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
-            responseDocument.Data.ManyValue[0].Attributes["nameB"].Should().Be("SampleB");
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("nameB").With(value => value.Should().Be("SampleB"));
         }
 
         protected override HttpClient CreateClient()

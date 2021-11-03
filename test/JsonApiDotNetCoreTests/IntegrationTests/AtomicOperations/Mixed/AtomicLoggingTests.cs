@@ -79,15 +79,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing an operation in this request.");
             error.Detail.Should().Be("Simulated failure.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
 
-            loggerFactory.Logger.Messages.Should().NotBeEmpty();
+            loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Error &&
                 message.Text.Contains("Simulated failure.", StringComparison.Ordinal));
@@ -122,9 +123,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
-            loggerFactory.Logger.Messages.Should().NotBeEmpty();
+            loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Information &&
                 message.Text.Contains("Failed to deserialize request body", StringComparison.Ordinal));

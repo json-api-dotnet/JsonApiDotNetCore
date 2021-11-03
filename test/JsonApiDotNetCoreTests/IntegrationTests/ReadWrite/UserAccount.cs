@@ -9,12 +9,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
     public sealed class UserAccount : Identifiable<long>
     {
         [Attr]
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = null!;
 
         [Attr]
-        public string LastName { get; set; }
+        public string LastName { get; set; } = null!;
 
         [HasMany]
-        public ISet<WorkItem> AssignedItems { get; set; }
+        public ISet<WorkItem> AssignedItems { get; set; } = new HashSet<WorkItem>();
     }
 }

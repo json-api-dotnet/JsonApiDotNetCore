@@ -78,8 +78,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </remarks>
         public LinkTypes RelationshipLinks { get; }
 
-        public ResourceType(string publicName, Type clrType, Type identityClrType, IReadOnlyCollection<AttrAttribute> attributes = null,
-            IReadOnlyCollection<RelationshipAttribute> relationships = null, IReadOnlyCollection<EagerLoadAttribute> eagerLoads = null,
+        public ResourceType(string publicName, Type clrType, Type identityClrType, IReadOnlyCollection<AttrAttribute>? attributes = null,
+            IReadOnlyCollection<RelationshipAttribute>? relationships = null, IReadOnlyCollection<EagerLoadAttribute>? eagerLoads = null,
             LinkTypes topLevelLinks = LinkTypes.NotConfigured, LinkTypes resourceLinks = LinkTypes.NotConfigured,
             LinkTypes relationshipLinks = LinkTypes.NotConfigured)
         {
@@ -107,60 +107,60 @@ namespace JsonApiDotNetCore.Configuration
 
         public AttrAttribute GetAttributeByPublicName(string publicName)
         {
-            AttrAttribute attribute = TryGetAttributeByPublicName(publicName);
+            AttrAttribute? attribute = FindAttributeByPublicName(publicName);
             return attribute ?? throw new InvalidOperationException($"Attribute '{publicName}' does not exist on resource type '{PublicName}'.");
         }
 
-        public AttrAttribute TryGetAttributeByPublicName(string publicName)
+        public AttrAttribute? FindAttributeByPublicName(string publicName)
         {
             ArgumentGuard.NotNull(publicName, nameof(publicName));
 
-            return _fieldsByPublicName.TryGetValue(publicName, out ResourceFieldAttribute field) && field is AttrAttribute attribute ? attribute : null;
+            return _fieldsByPublicName.TryGetValue(publicName, out ResourceFieldAttribute? field) && field is AttrAttribute attribute ? attribute : null;
         }
 
         public AttrAttribute GetAttributeByPropertyName(string propertyName)
         {
-            AttrAttribute attribute = TryGetAttributeByPropertyName(propertyName);
+            AttrAttribute? attribute = FindAttributeByPropertyName(propertyName);
 
             return attribute ??
                 throw new InvalidOperationException($"Attribute for property '{propertyName}' does not exist on resource type '{ClrType.Name}'.");
         }
 
-        public AttrAttribute TryGetAttributeByPropertyName(string propertyName)
+        public AttrAttribute? FindAttributeByPropertyName(string propertyName)
         {
             ArgumentGuard.NotNull(propertyName, nameof(propertyName));
 
-            return _fieldsByPropertyName.TryGetValue(propertyName, out ResourceFieldAttribute field) && field is AttrAttribute attribute ? attribute : null;
+            return _fieldsByPropertyName.TryGetValue(propertyName, out ResourceFieldAttribute? field) && field is AttrAttribute attribute ? attribute : null;
         }
 
         public RelationshipAttribute GetRelationshipByPublicName(string publicName)
         {
-            RelationshipAttribute relationship = TryGetRelationshipByPublicName(publicName);
+            RelationshipAttribute? relationship = FindRelationshipByPublicName(publicName);
             return relationship ?? throw new InvalidOperationException($"Relationship '{publicName}' does not exist on resource type '{PublicName}'.");
         }
 
-        public RelationshipAttribute TryGetRelationshipByPublicName(string publicName)
+        public RelationshipAttribute? FindRelationshipByPublicName(string publicName)
         {
             ArgumentGuard.NotNull(publicName, nameof(publicName));
 
-            return _fieldsByPublicName.TryGetValue(publicName, out ResourceFieldAttribute field) && field is RelationshipAttribute relationship
+            return _fieldsByPublicName.TryGetValue(publicName, out ResourceFieldAttribute? field) && field is RelationshipAttribute relationship
                 ? relationship
                 : null;
         }
 
         public RelationshipAttribute GetRelationshipByPropertyName(string propertyName)
         {
-            RelationshipAttribute relationship = TryGetRelationshipByPropertyName(propertyName);
+            RelationshipAttribute? relationship = FindRelationshipByPropertyName(propertyName);
 
             return relationship ??
                 throw new InvalidOperationException($"Relationship for property '{propertyName}' does not exist on resource type '{ClrType.Name}'.");
         }
 
-        public RelationshipAttribute TryGetRelationshipByPropertyName(string propertyName)
+        public RelationshipAttribute? FindRelationshipByPropertyName(string propertyName)
         {
             ArgumentGuard.NotNull(propertyName, nameof(propertyName));
 
-            return _fieldsByPropertyName.TryGetValue(propertyName, out ResourceFieldAttribute field) && field is RelationshipAttribute relationship
+            return _fieldsByPropertyName.TryGetValue(propertyName, out ResourceFieldAttribute? field) && field is RelationshipAttribute relationship
                 ? relationship
                 : null;
         }
@@ -170,7 +170,7 @@ namespace JsonApiDotNetCore.Configuration
             return PublicName;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

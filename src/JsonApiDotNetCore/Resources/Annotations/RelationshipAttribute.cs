@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// <summary>
         /// The CLR type in which this relationship is declared.
         /// </summary>
-        internal Type LeftClrType { get; set; }
+        internal Type? LeftClrType { get; set; }
 
         /// <summary>
         /// The CLR type this relationship points to. In the case of a <see cref="HasManyAttribute" /> relationship, this value will be the collection element
@@ -29,11 +29,11 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// public ISet<Tag> Tags { get; set; } // RightClrType: typeof(Tag)
         /// ]]></code>
         /// </example>
-        internal Type RightClrType { get; set; }
+        internal Type? RightClrType { get; set; }
 
         /// <summary>
-        /// The <see cref="PropertyInfo" /> of the EF Core inverse navigation, which may or may not exist. Even if it exists, it may not be exposed as a JSON:API
-        /// relationship.
+        /// The <see cref="PropertyInfo" /> of the Entity Framework Core inverse navigation, which may or may not exist. Even if it exists, it may not be exposed
+        /// as a JSON:API relationship.
         /// </summary>
         /// <example>
         /// <code><![CDATA[
@@ -50,18 +50,18 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// }
         /// ]]></code>
         /// </example>
-        public PropertyInfo InverseNavigationProperty { get; set; }
+        public PropertyInfo? InverseNavigationProperty { get; set; }
 
         /// <summary>
         /// The containing resource type in which this relationship is declared.
         /// </summary>
-        public ResourceType LeftType { get; internal set; }
+        public ResourceType LeftType { get; internal set; } = null!;
 
         /// <summary>
         /// The resource type this relationship points to. In the case of a <see cref="HasManyAttribute" /> relationship, this value will be the collection
         /// element type.
         /// </summary>
-        public ResourceType RightType { get; internal set; }
+        public ResourceType RightType { get; internal set; } = null!;
 
         /// <summary>
         /// Configures which links to show in the <see cref="Serialization.Objects.RelationshipLinks" /> object for this relationship. Defaults to
@@ -79,27 +79,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public bool CanInclude { get; set; } = true;
 
-        /// <summary>
-        /// Gets the value of the resource property this attribute was declared on.
-        /// </summary>
-        public object GetValue(object resource)
-        {
-            ArgumentGuard.NotNull(resource, nameof(resource));
-
-            return Property.GetValue(resource);
-        }
-
-        /// <summary>
-        /// Sets the value of the resource property this attribute was declared on.
-        /// </summary>
-        public void SetValue(object resource, object newValue)
-        {
-            ArgumentGuard.NotNull(resource, nameof(resource));
-
-            Property.SetValue(resource, newValue);
-        }
-
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

@@ -14,14 +14,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
         private readonly ISystemClock _systemClock;
 
         [Attr]
-        public string Address { get; set; }
+        public string Address { get; set; } = null!;
 
         [Attr(Capabilities = AttrCapabilities.AllowView)]
         [NotMapped]
         public bool IsOpen => IsWithinOperatingHours();
 
         [HasMany]
-        public IList<GiftCertificate> GiftCertificates { get; set; }
+        public IList<GiftCertificate> GiftCertificates { get; set; } = new List<GiftCertificate>();
 
         public PostOffice(InjectionDbContext injectionDbContext)
         {

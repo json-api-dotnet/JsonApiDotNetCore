@@ -9,12 +9,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
     public sealed class WorkTag : Identifiable<int>
     {
         [Attr]
-        public string Text { get; set; }
+        public string Text { get; set; } = null!;
 
         [Attr]
         public bool IsBuiltIn { get; set; }
 
         [HasMany]
-        public ISet<WorkItem> WorkItems { get; set; }
+        public ISet<WorkItem> WorkItems { get; set; } = new HashSet<WorkItem>();
     }
 }

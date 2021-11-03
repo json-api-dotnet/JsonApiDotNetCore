@@ -17,13 +17,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
             _hitCounter = hitCounter;
         }
 
-        public override IDictionary<string, object> GetMeta(SupportTicket resource)
+        public override IDictionary<string, object?>? GetMeta(SupportTicket resource)
         {
             _hitCounter.TrackInvocation<SupportTicket>(ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta);
 
-            if (resource.Description != null && resource.Description.StartsWith("Critical:", StringComparison.Ordinal))
+            if (!string.IsNullOrEmpty(resource.Description) && resource.Description.StartsWith("Critical:", StringComparison.Ordinal))
             {
-                return new Dictionary<string, object>
+                return new Dictionary<string, object?>
                 {
                     ["hasHighPriority"] = true
                 };

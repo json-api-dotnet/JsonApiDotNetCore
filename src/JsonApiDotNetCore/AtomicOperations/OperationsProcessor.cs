@@ -48,14 +48,14 @@ namespace JsonApiDotNetCore.AtomicOperations
         }
 
         /// <inheritdoc />
-        public virtual async Task<IList<OperationContainer>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
+        public virtual async Task<IList<OperationContainer?>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(operations, nameof(operations));
 
             _localIdValidator.Validate(operations);
             _localIdTracker.Reset();
 
-            var results = new List<OperationContainer>();
+            var results = new List<OperationContainer?>();
 
             await using IOperationsTransaction transaction = await _operationsTransactionFactory.BeginTransactionAsync(cancellationToken);
 
@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
                     await transaction.BeforeProcessOperationAsync(cancellationToken);
 
-                    OperationContainer result = await ProcessOperationAsync(operation, cancellationToken);
+                    OperationContainer? result = await ProcessOperationAsync(operation, cancellationToken);
                     results.Add(result);
 
                     await transaction.AfterProcessOperationAsync(cancellationToken);
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             return results;
         }
 
-        protected virtual async Task<OperationContainer> ProcessOperationAsync(OperationContainer operation, CancellationToken cancellationToken)
+        protected virtual async Task<OperationContainer?> ProcessOperationAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -119,7 +119,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (operation.Request.WriteOperation == WriteOperationKind.CreateResource)
             {
-                DeclareLocalId(operation.Resource, operation.Request.PrimaryResourceType);
+                DeclareLocalId(operation.Resource, operation.Request.PrimaryResourceType!);
             }
             else
             {

@@ -9,9 +9,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
     public sealed class State : Identifiable<int>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [HasMany]
-        public IList<City> Cities { get; set; }
+        public IList<City> Cities { get; set; } = new List<City>();
     }
 }

@@ -11,8 +11,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
     [Route("{countryCode}/shops")]
     public sealed class WebShopsController : JsonApiController<WebShop, int>
     {
-        public WebShopsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<WebShop, int> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public WebShopsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<WebShop, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

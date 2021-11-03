@@ -8,6 +8,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
     public sealed class Policy : Identifiable<int>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
     }
 }

@@ -27,9 +27,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             _captureStore = captureStore;
         }
 
-        public override async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken)
+        public override async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
         {
-            IReadOnlyCollection<TResource> resources = await base.GetAsync(layer, cancellationToken);
+            IReadOnlyCollection<TResource> resources = await base.GetAsync(queryLayer, cancellationToken);
 
             _captureStore.Add(resources);
 

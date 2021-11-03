@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             _nameFactory = nameFactory;
         }
 
-        public LambdaScope CreateScope(Type elementType, Expression accessorExpression = null)
+        public LambdaScope CreateScope(Type elementType, Expression? accessorExpression = null)
         {
             ArgumentGuard.NotNull(elementType, nameof(elementType));
 

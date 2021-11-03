@@ -10,6 +10,6 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         /// <summary>
         /// Validates and converts the specified <paramref name="document" />.
         /// </summary>
-        object Convert(Document document, RequestAdapterState state);
+        object? Convert(Document document, RequestAdapterState state);
     }
 }

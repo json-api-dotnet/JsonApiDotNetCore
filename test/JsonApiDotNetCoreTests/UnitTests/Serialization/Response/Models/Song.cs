@@ -8,6 +8,6 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response.Models
     public sealed class Song : Identifiable<int>
     {
         [Attr]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
     }
 }

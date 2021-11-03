@@ -17,11 +17,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             _hitCounter = hitCounter;
         }
 
-        public override IDictionary<string, object> GetMeta(MusicTrack resource)
+        public override IDictionary<string, object?> GetMeta(MusicTrack resource)
         {
             _hitCounter.TrackInvocation<MusicTrack>(ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta);
 
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 ["Copyright"] = $"(C) {resource.ReleasedAt.Year}. All rights reserved."
             };

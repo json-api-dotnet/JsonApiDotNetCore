@@ -9,6 +9,9 @@ namespace JsonApiDotNetCore.Configuration
 
         public ResourceDescriptor(Type resourceClrType, Type idClrType)
         {
+            ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
+            ArgumentGuard.NotNull(idClrType, nameof(idClrType));
+
             ResourceClrType = resourceClrType;
             IdClrType = idClrType;
         }

@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <example>
         /// <code>options.Namespace = "api/v1";</code>
         /// </example>
-        string Namespace { get; }
+        string? Namespace { get; }
 
         /// <summary>
         /// Specifies the default query string capabilities that can be used on exposed JSON:API attributes. Defaults to <see cref="AttrCapabilities.All" />.
@@ -90,20 +90,20 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// The page size (10 by default) that is used when not specified in query string. Set to <c>null</c> to not use paging by default.
         /// </summary>
-        PageSize DefaultPageSize { get; }
+        PageSize? DefaultPageSize { get; }
 
         /// <summary>
         /// The maximum page size that can be used, or <c>null</c> for unconstrained (default).
         /// </summary>
-        PageSize MaximumPageSize { get; }
+        PageSize? MaximumPageSize { get; }
 
         /// <summary>
         /// The maximum page number that can be used, or <c>null</c> for unconstrained (default).
         /// </summary>
-        PageNumber MaximumPageNumber { get; }
+        PageNumber? MaximumPageNumber { get; }
 
         /// <summary>
-        /// Whether or not to enable ASP.NET Core model state validation. False by default.
+        /// Whether or not to enable ASP.NET ModelState validation. True by default.
         /// </summary>
         bool ValidateModelState { get; }
 

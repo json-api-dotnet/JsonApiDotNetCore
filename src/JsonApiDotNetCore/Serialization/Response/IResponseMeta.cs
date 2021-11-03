@@ -13,6 +13,6 @@ namespace JsonApiDotNetCore.Serialization.Response
         /// <summary>
         /// Gets the global top-level JSON:API meta information to add to the response.
         /// </summary>
-        IReadOnlyDictionary<string, object> GetMeta();
+        IReadOnlyDictionary<string, object?>? GetMeta();
     }
 }

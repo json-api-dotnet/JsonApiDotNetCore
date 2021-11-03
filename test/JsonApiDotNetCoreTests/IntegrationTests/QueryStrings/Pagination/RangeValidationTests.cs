@@ -41,12 +41,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
             error.Detail.Should().Be("Page number cannot be negative or zero.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("page[number]");
         }
 
@@ -62,12 +63,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
             error.Detail.Should().Be("Page number cannot be negative or zero.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("page[number]");
         }
 
@@ -120,12 +122,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
             error.Detail.Should().Be("Page size cannot be negative.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("page[size]");
         }
 

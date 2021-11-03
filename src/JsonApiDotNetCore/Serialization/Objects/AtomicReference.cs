@@ -11,18 +11,18 @@ namespace JsonApiDotNetCore.Serialization.Objects
     {
         [JsonPropertyName("type")]
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         [JsonPropertyName("id")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [JsonPropertyName("lid")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Lid { get; set; }
+        public string? Lid { get; set; }
 
         [JsonPropertyName("relationship")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Relationship { get; set; }
+        public string? Relationship { get; set; }
     }
 }

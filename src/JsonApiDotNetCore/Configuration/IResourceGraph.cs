@@ -38,12 +38,12 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Attempts to get the metadata for the resource that is publicly exposed by the specified name. Returns <c>null</c> when not found.
         /// </summary>
-        ResourceType TryGetResourceType(string publicName);
+        ResourceType? FindResourceType(string publicName);
 
         /// <summary>
         /// Attempts to get metadata for the resource of the specified CLR type. Returns <c>null</c> when not found.
         /// </summary>
-        ResourceType TryGetResourceType(Type resourceClrType);
+        ResourceType? FindResourceType(Type resourceClrType);
 
         /// <summary>
         /// Gets the fields (attributes and relationships) for <typeparamref name="TResource" /> that are targeted by the selector.
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Configuration
         /// (TResource resource) => new { resource.Attribute1, resource.Relationship2 }
         /// ]]>
         /// </param>
-        IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector)
+        IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable;
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCore.Configuration
         /// (TResource resource) => new { resource.attribute1, resource.Attribute2 }
         /// ]]>
         /// </param>
-        IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector)
+        IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable;
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCore.Configuration
         /// (TResource resource) => new { resource.Relationship1, resource.Relationship2 }
         /// ]]>
         /// </param>
-        IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector)
+        IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable;
     }
 }

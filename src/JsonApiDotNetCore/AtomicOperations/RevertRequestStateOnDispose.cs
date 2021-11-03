@@ -10,12 +10,12 @@ namespace JsonApiDotNetCore.AtomicOperations
     internal sealed class RevertRequestStateOnDispose : IDisposable
     {
         private readonly IJsonApiRequest _sourceRequest;
-        private readonly ITargetedFields _sourceTargetedFields;
+        private readonly ITargetedFields? _sourceTargetedFields;
 
         private readonly IJsonApiRequest _backupRequest = new JsonApiRequest();
         private readonly ITargetedFields _backupTargetedFields = new TargetedFields();
 
-        public RevertRequestStateOnDispose(IJsonApiRequest request, ITargetedFields targetedFields)
+        public RevertRequestStateOnDispose(IJsonApiRequest request, ITargetedFields? targetedFields)
         {
             ArgumentGuard.NotNull(request, nameof(request));
 

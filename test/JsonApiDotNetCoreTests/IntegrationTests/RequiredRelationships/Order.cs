@@ -11,9 +11,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         public decimal Amount { get; set; }
 
         [HasOne]
-        public Customer Customer { get; set; }
+        public Customer Customer { get; set; } = null!;
 
         [HasOne]
-        public Shipment Shipment { get; set; }
+        public Shipment Shipment { get; set; } = null!;
     }
 }

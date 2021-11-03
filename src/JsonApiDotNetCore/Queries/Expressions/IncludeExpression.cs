@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return string.Join(",", chains.Select(child => child.ToString()).OrderBy(name => name));
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

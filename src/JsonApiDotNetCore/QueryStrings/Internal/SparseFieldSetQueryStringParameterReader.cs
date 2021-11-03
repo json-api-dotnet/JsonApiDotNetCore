@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly ImmutableDictionary<ResourceType, SparseFieldSetExpression>.Builder _sparseFieldTableBuilder =
             ImmutableDictionary.CreateBuilder<ResourceType, SparseFieldSetExpression>();
 
-        private string _lastParameterName;
+        private string? _lastParameterName;
 
         /// <inheritdoc />
         bool IQueryStringParameterReader.AllowEmptyValue => true;
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowView))
             {
-                throw new InvalidQueryStringParameterException(_lastParameterName, "Retrieving the requested attribute is not allowed.",
+                throw new InvalidQueryStringParameterException(_lastParameterName!, "Retrieving the requested attribute is not allowed.",
                     $"Retrieving the attribute '{attribute.PublicName}' is not allowed.");
             }
         }
@@ -87,7 +87,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private SparseFieldSetExpression GetSparseFieldSet(string parameterValue, ResourceType resourceType)
         {
-            SparseFieldSetExpression sparseFieldSet = _sparseFieldSetParser.Parse(parameterValue, resourceType);
+            SparseFieldSetExpression? sparseFieldSet = _sparseFieldSetParser.Parse(parameterValue, resourceType);
 
             if (sparseFieldSet == null)
             {

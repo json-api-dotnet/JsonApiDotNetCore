@@ -9,14 +9,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class SystemDirectory : Identifiable<int>
     {
-        [Required]
         [RegularExpression("^[0-9]+$")]
         public override int Id { get; set; }
 
-        [Attr]
-        [Required]
+        [Attr(PublicName = "directoryName")]
         [RegularExpression(@"^[\w\s]+$")]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Attr]
         [Required]
@@ -27,18 +25,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         public long SizeInBytes { get; set; }
 
         [HasMany]
-        public ICollection<SystemDirectory> Subdirectories { get; set; }
+        public ICollection<SystemDirectory> Subdirectories { get; set; } = new List<SystemDirectory>();
 
         [HasMany]
-        public ICollection<SystemFile> Files { get; set; }
+        public ICollection<SystemFile> Files { get; set; } = new List<SystemFile>();
 
         [HasOne]
-        public SystemDirectory Self { get; set; }
+        public SystemDirectory? Self { get; set; }
 
         [HasOne]
-        public SystemDirectory AlsoSelf { get; set; }
+        public SystemDirectory? AlsoSelf { get; set; }
 
         [HasOne]
-        public SystemDirectory Parent { get; set; }
+        public SystemDirectory? Parent { get; set; }
     }
 }

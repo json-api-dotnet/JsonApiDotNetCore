@@ -8,8 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
 {
     public sealed class WorkflowsController : JsonApiController<Workflow, Guid>
     {
-        public WorkflowsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Workflow, Guid> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public WorkflowsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<Workflow, Guid> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

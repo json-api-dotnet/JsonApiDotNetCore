@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Middleware
@@ -59,7 +60,7 @@ namespace UnitTests.Middleware
             var controllerResourceMappingMock = new Mock<IControllerResourceMapping>();
 
             ResourceType todoItemType = resourceGraph.GetResourceType<TodoItem>();
-            controllerResourceMappingMock.Setup(mapping => mapping.TryGetResourceTypeForController(It.IsAny<Type>())).Returns(todoItemType);
+            controllerResourceMappingMock.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(todoItemType);
 
             var httpContext = new DefaultHttpContext();
             SetupRoutes(httpContext, requestMethod, requestPath);
@@ -76,7 +77,7 @@ namespace UnitTests.Middleware
             request.Kind.Should().Be(expectKind);
             request.WriteOperation.Should().Be(expectWriteOperation);
             request.IsReadOnly.Should().Be(expectIsReadOnly);
-            request.PrimaryResourceType.Should().NotBeNull();
+            request.PrimaryResourceType.ShouldNotBeNull();
             request.PrimaryResourceType.PublicName.Should().Be("todoItems");
         }
 
@@ -129,17 +130,17 @@ namespace UnitTests.Middleware
         private sealed class Tag : Identifiable<int>
         {
             [HasMany]
-            public ISet<TodoItem> TodoItems { get; set; }
+            public ISet<TodoItem> TodoItems { get; set; } = new HashSet<TodoItem>();
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         private sealed class TodoItem : Identifiable<int>
         {
             [HasOne]
-            public Person Owner { get; set; }
+            public Person? Owner { get; set; }
 
             [HasMany]
-            public ISet<Tag> Tags { get; set; }
+            public ISet<Tag> Tags { get; set; } = new HashSet<Tag>();
         }
     }
 }

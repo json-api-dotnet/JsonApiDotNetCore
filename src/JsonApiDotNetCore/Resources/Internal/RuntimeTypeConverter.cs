@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Resources.Internal
     [PublicAPI]
     public static class RuntimeTypeConverter
     {
-        public static object ConvertType(object value, Type type)
+        public static object? ConvertType(object? value, Type type)
         {
             ArgumentGuard.NotNull(type, nameof(type));
 
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Resources.Internal
                 return value;
             }
 
-            string stringValue = value.ToString();
+            string? stringValue = value.ToString();
 
             if (string.IsNullOrEmpty(stringValue))
             {
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCore.Resources.Internal
             return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
         }
 
-        public static object GetDefaultValue(Type type)
+        public static object? GetDefaultValue(Type type)
         {
             return type.IsValueType ? Activator.CreateInstance(type) : null;
         }

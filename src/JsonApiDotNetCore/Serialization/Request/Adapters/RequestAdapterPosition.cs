@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             return _disposable;
         }
 
-        public string ToSourcePointer()
+        public string? ToSourcePointer()
         {
             if (!_stack.Any())
             {

@@ -9,9 +9,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
     public sealed class Customer : Identifiable<int>
     {
         [Attr]
-        public string EmailAddress { get; set; }
+        public string EmailAddress { get; set; } = null!;
 
         [HasMany]
-        public ISet<Order> Orders { get; set; }
+        public ISet<Order> Orders { get; set; } = new HashSet<Order>();
     }
 }

@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": false,
-      "launchUrl": "/api/reports",
+      "launchUrl": "api/v1/workItems",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -20,7 +20,7 @@
     "Kestrel": {
       "commandName": "Project",
       "launchBrowser": false,
-      "launchUrl": "/api/reports",
+      "launchUrl": "api/v1/workItems",
       "applicationUrl": "https://localhost:44349;http://localhost:14149",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

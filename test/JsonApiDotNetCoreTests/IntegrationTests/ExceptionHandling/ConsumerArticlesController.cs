@@ -7,8 +7,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 {
     public sealed class ConsumerArticlesController : JsonApiController<ConsumerArticle, int>
     {
-        public ConsumerArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<ConsumerArticle, int> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public ConsumerArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<ConsumerArticle, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

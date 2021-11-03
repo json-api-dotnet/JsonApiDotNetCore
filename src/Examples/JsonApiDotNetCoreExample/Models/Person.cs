@@ -9,12 +9,12 @@ namespace JsonApiDotNetCoreExample.Models
     public sealed class Person : Identifiable<int>
     {
         [Attr]
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
         [Attr]
-        public string LastName { get; set; }
+        public string LastName { get; set; } = null!;
 
         [HasMany]
-        public ISet<TodoItem> AssignedTodoItems { get; set; }
+        public ISet<TodoItem> AssignedTodoItems { get; set; } = new HashSet<TodoItem>();
     }
 }

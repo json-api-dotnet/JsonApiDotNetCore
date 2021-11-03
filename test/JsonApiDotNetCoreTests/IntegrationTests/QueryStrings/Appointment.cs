@@ -9,7 +9,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
     public sealed class Appointment : Identifiable<int>
     {
         [Attr]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
+
+        [Attr]
+        public string? Description { get; set; }
 
         [Attr]
         public DateTimeOffset StartTime { get; set; }

@@ -38,8 +38,10 @@ namespace JsonApiDotNetCore.Resources.Annotations
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class EagerLoadAttribute : Attribute
     {
-        public PropertyInfo Property { get; internal set; }
+        // These properties are definitely assigned after building the resource graph, which is why they are declared as non-nullable.
 
-        public IReadOnlyCollection<EagerLoadAttribute> Children { get; internal set; }
+        public PropertyInfo Property { get; internal set; } = null!;
+
+        public IReadOnlyCollection<EagerLoadAttribute> Children { get; internal set; } = null!;
     }
 }

@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
     /// <remarks>
     /// This enables queries to use <see cref="Car.Id" />, which is not mapped in the database.
     /// </remarks>
-    internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object>
+    internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object?>
     {
         private readonly AttrAttribute _regionIdAttribute;
         private readonly AttrAttribute _licensePlateAttribute;
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             _licensePlateAttribute = carType.GetAttributeByPropertyName(nameof(Car.LicensePlate));
         }
 
-        public override QueryExpression VisitComparison(ComparisonExpression expression, object argument)
+        public override QueryExpression? VisitComparison(ComparisonExpression expression, object? argument)
         {
             if (expression.Left is ResourceFieldChainExpression leftChain && expression.Right is LiteralConstantExpression rightConstant)
             {
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             return base.VisitComparison(expression, argument);
         }
 
-        public override QueryExpression VisitAny(AnyExpression expression, object argument)
+        public override QueryExpression? VisitAny(AnyExpression expression, object? argument)
         {
             PropertyInfo property = expression.TargetAttribute.Fields[^1].Property;
 
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             return base.VisitAny(expression, argument);
         }
 
-        public override QueryExpression VisitMatchText(MatchTextExpression expression, object argument)
+        public override QueryExpression? VisitMatchText(MatchTextExpression expression, object? argument)
         {
             PropertyInfo property = expression.TargetAttribute.Fields[^1].Property;
 
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                     StringId = carStringId
                 };
 
-                FilterExpression keyComparison = CreateEqualityComparisonOnCompositeKey(existingCarIdChain, tempCar.RegionId, tempCar.LicensePlate);
+                FilterExpression keyComparison = CreateEqualityComparisonOnCompositeKey(existingCarIdChain, tempCar.RegionId, tempCar.LicensePlate!);
                 outerTermsBuilder.Add(keyComparison);
             }
 
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             return new LogicalExpression(LogicalOperator.And, regionIdComparison, licensePlateComparison);
         }
 
-        public override QueryExpression VisitSort(SortExpression expression, object argument)
+        public override QueryExpression VisitSort(SortExpression expression, object? argument)
         {
             ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>(expression.Elements.Count);
 
@@ -123,10 +123,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             {
                 if (IsSortOnCarId(sortElement))
                 {
-                    ResourceFieldChainExpression regionIdSort = ReplaceLastAttributeInChain(sortElement.TargetAttribute, _regionIdAttribute);
+                    ResourceFieldChainExpression regionIdSort = ReplaceLastAttributeInChain(sortElement.TargetAttribute!, _regionIdAttribute);
                     elementsBuilder.Add(new SortElementExpression(regionIdSort, sortElement.IsAscending));
 
-                    ResourceFieldChainExpression licensePlateSort = ReplaceLastAttributeInChain(sortElement.TargetAttribute, _licensePlateAttribute);
+                    ResourceFieldChainExpression licensePlateSort = ReplaceLastAttributeInChain(sortElement.TargetAttribute!, _licensePlateAttribute);
                     elementsBuilder.Add(new SortElementExpression(licensePlateSort, sortElement.IsAscending));
                 }
                 else

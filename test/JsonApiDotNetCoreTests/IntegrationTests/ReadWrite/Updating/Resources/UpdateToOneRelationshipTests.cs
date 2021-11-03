@@ -54,7 +54,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                     {
                         assignee = new
                         {
-                            data = (object)null
+                            data = (object?)null
                         }
                     }
                 }
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -130,7 +130,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                 colorInDatabase1.Group.Should().BeNull();
 
                 RgbColor colorInDatabase2 = colorsInDatabase.Single(color => color.Id == existingColor.Id);
-                colorInDatabase2.Group.Should().NotBeNull();
+                colorInDatabase2.Group.ShouldNotBeNull();
                 colorInDatabase2.Group.Id.Should().Be(existingGroup.Id);
             });
         }
@@ -154,7 +154,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                 data = new
                 {
                     type = "rgbColors",
-                    id = existingGroups[0].Color.StringId,
+                    id = existingGroups[0].Color!.StringId,
                     relationships = new
                     {
                         group = new
@@ -169,7 +169,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                 }
             };
 
-            string route = $"/rgbColors/{existingGroups[0].Color.StringId}";
+            string route = $"/rgbColors/{existingGroups[0].Color!.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -187,18 +187,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                 groupInDatabase1.Color.Should().BeNull();
 
                 WorkItemGroup groupInDatabase2 = groupsInDatabase.Single(group => group.Id == existingGroups[1].Id);
-                groupInDatabase2.Color.Should().NotBeNull();
-                groupInDatabase2.Color.Id.Should().Be(existingGroups[0].Color.Id);
+                groupInDatabase2.Color.ShouldNotBeNull();
+                groupInDatabase2.Color.Id.Should().Be(existingGroups[0].Color!.Id);
 
                 List<RgbColor> colorsInDatabase = await dbContext.RgbColors.Include(color => color.Group).ToListAsync();
 
-                RgbColor colorInDatabase1 = colorsInDatabase.Single(color => color.Id == existingGroups[0].Color.Id);
-                colorInDatabase1.Group.Should().NotBeNull();
+                RgbColor colorInDatabase1 = colorsInDatabase.Single(color => color.Id == existingGroups[0].Color!.Id);
+                colorInDatabase1.Group.ShouldNotBeNull();
                 colorInDatabase1.Group.Id.Should().Be(existingGroups[1].Id);
 
-                RgbColor colorInDatabase2 = colorsInDatabase.SingleOrDefault(color => color.Id == existingGroups[1].Color.Id);
-                colorInDatabase2.Should().NotBeNull();
-                colorInDatabase2!.Group.Should().BeNull();
+                RgbColor? colorInDatabase2 = colorsInDatabase.SingleOrDefault(color => color.Id == existingGroups[1].Color!.Id);
+                colorInDatabase2.ShouldNotBeNull();
+                colorInDatabase2.Group.Should().BeNull();
             });
         }
 
@@ -225,7 +225,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                     {
                         group = new
                         {
-                            data = (object)null
+                            data = (object?)null
                         }
                     }
                 }
@@ -243,7 +243,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                RgbColor colorInDatabase = await dbContext.RgbColors.Include(color => color.Group).FirstWithIdOrDefaultAsync(existingColor.Id);
+                RgbColor colorInDatabase = await dbContext.RgbColors.Include(color => color.Group).FirstWithIdAsync(existingColor.Id);
 
                 colorInDatabase.Group.Should().BeNull();
             });
@@ -289,7 +289,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -297,7 +297,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
                 WorkItem workItemInDatabase2 = await dbContext.WorkItems.Include(workItem => workItem.Assignee).FirstWithIdAsync(workItemId);
 
-                workItemInDatabase2.Assignee.Should().NotBeNull();
+                workItemInDatabase2.Assignee.ShouldNotBeNull();
                 workItemInDatabase2.Assignee.Id.Should().Be(existingUserAccounts[1].Id);
             });
         }
@@ -345,24 +345,24 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             string description = $"{existingWorkItem.Description}{ImplicitlyChangingWorkItemDefinition.Suffix}";
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("workItems");
             responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
-            responseDocument.Data.SingleValue.Attributes["description"].Should().Be(description);
-            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(description));
+            responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
 
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("userAccounts");
             responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
-            responseDocument.Included[0].Attributes["firstName"].Should().Be(existingUserAccount.FirstName);
-            responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccount.LastName);
-            responseDocument.Included[0].Relationships.Should().NotBeEmpty();
+            responseDocument.Included[0].Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(existingUserAccount.FirstName));
+            responseDocument.Included[0].Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(existingUserAccount.LastName));
+            responseDocument.Included[0].Relationships.ShouldNotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Assignee).FirstWithIdAsync(existingWorkItem.Id);
 
-                workItemInDatabase.Assignee.Should().NotBeNull();
+                workItemInDatabase.Assignee.ShouldNotBeNull();
                 workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
             });
         }
@@ -412,28 +412,79 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             string description = $"{existingWorkItem.Description}{ImplicitlyChangingWorkItemDefinition.Suffix}";
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("workItems");
             responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
-            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
-            responseDocument.Data.SingleValue.Attributes["description"].Should().Be(description);
-            responseDocument.Data.SingleValue.Relationships.Should().HaveCount(1);
-            responseDocument.Data.SingleValue.Relationships["assignee"].Data.SingleValue.Id.Should().Be(existingUserAccount.StringId);
+            responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(description));
+            responseDocument.Data.SingleValue.Relationships.ShouldHaveCount(1);
 
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("assignee").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.SingleValue.ShouldNotBeNull();
+                value.Data.SingleValue.Id.Should().Be(existingUserAccount.StringId);
+            });
+
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("userAccounts");
             responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
-            responseDocument.Included[0].Attributes.Should().HaveCount(1);
-            responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccount.LastName);
+            responseDocument.Included[0].Attributes.ShouldHaveCount(1);
+            responseDocument.Included[0].Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(existingUserAccount.LastName));
             responseDocument.Included[0].Relationships.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Assignee).FirstWithIdAsync(existingWorkItem.Id);
 
-                workItemInDatabase.Assignee.Should().NotBeNull();
+                workItemInDatabase.Assignee.ShouldNotBeNull();
                 workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
             });
+        }
+
+        [Fact]
+        public async Task Cannot_create_with_null_relationship()
+        {
+            // Arrange
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+            UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.AddInRange(existingWorkItem, existingUserAccount);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.StringId,
+                    relationships = new
+                    {
+                        assignee = (object?)null
+                    }
+                }
+            };
+
+            string route = $"/workItems/{existingWorkItem.StringId}";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.ShouldHaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
+            error.Detail.Should().BeNull();
+            error.Source.ShouldNotBeNull();
+            error.Source.Pointer.Should().Be("/data/relationships/assignee");
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
         }
 
         [Fact]
@@ -472,14 +523,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
             error.Detail.Should().BeNull();
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/relationships/assignee");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
         }
 
         [Fact]
@@ -526,14 +578,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected an object or 'null' in 'data' element, instead of an array.");
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object or 'null', instead of an array.");
             error.Detail.Should().BeNull();
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/relationships/assignee/data");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
         }
 
         [Fact]
@@ -575,14 +628,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
             error.Detail.Should().BeNull();
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/relationships/assignee/data");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
         }
 
         [Fact]
@@ -625,14 +679,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
             error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/relationships/assignee/data/type");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
         }
 
         [Fact]
@@ -674,14 +729,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
             error.Detail.Should().BeNull();
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/relationships/assignee/data");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
         }
 
         [Fact]
@@ -726,7 +782,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -776,14 +832,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
             error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
             error.Detail.Should().Be("Type 'rgbColors' is incompatible with type 'userAccounts' of relationship 'assignee'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/relationships/assignee/data/type");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
         }
 
         [Fact]
@@ -811,7 +868,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                     {
                         parent = new
                         {
-                            data = (object)null
+                            data = (object?)null
                         }
                     }
                 }
@@ -825,7 +882,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -875,13 +932,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Parent).FirstWithIdAsync(existingWorkItem.Id);
 
-                workItemInDatabase.Parent.Should().NotBeNull();
+                workItemInDatabase.Parent.ShouldNotBeNull();
                 workItemInDatabase.Parent.Id.Should().Be(existingWorkItem.Id);
             });
         }

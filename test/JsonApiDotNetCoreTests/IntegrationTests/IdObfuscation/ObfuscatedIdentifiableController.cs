@@ -15,8 +15,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
     {
         private readonly HexadecimalCodec _codec = new();
 
-        protected ObfuscatedIdentifiableController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<TResource, int> resourceService)
-            : base(options, loggerFactory, resourceService)
+        protected ObfuscatedIdentifiableController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<TResource, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
 

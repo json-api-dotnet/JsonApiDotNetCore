@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Resources
             try
             {
                 return hasSingleConstructorWithoutParameters
-                    ? (IIdentifiable)Activator.CreateInstance(type)
+                    ? (IIdentifiable)Activator.CreateInstance(type)!
                     : (IIdentifiable)ActivatorUtilities.CreateInstance(serviceProvider, type);
             }
 #pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException

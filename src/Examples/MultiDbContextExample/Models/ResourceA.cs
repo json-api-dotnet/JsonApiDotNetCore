@@ -8,6 +8,6 @@ namespace MultiDbContextExample.Models
     public sealed class ResourceA : Identifiable<int>
     {
         [Attr]
-        public string NameA { get; set; }
+        public string? NameA { get; set; }
     }
 }

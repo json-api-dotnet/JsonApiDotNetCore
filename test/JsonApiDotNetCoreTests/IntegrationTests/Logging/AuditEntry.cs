@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
     public sealed class AuditEntry : Identifiable<int>
     {
         [Attr]
-        public string UserName { get; set; }
+        public string UserName { get; set; } = null!;
 
         [Attr]
         public DateTimeOffset CreatedAt { get; set; }

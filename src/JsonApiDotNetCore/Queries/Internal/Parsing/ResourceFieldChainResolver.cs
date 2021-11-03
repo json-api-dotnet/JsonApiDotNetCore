@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// Resolves a chain of relationships that ends in a to-many relationship, for example: blogs.owner.articles.comments
         /// </summary>
         public IImmutableList<ResourceFieldAttribute> ResolveToManyChain(ResourceType resourceType, string path,
-            Action<ResourceFieldAttribute, ResourceType, string> validateCallback = null)
+            Action<ResourceFieldAttribute, ResourceType, string>? validateCallback = null)
         {
             ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
 
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// </example>
         /// </summary>
         public IImmutableList<ResourceFieldAttribute> ResolveRelationshipChain(ResourceType resourceType, string path,
-            Action<RelationshipAttribute, ResourceType, string> validateCallback = null)
+            Action<RelationshipAttribute, ResourceType, string>? validateCallback = null)
         {
             ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
             ResourceType nextResourceType = resourceType;
@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// <example>name</example>
         /// </summary>
         public IImmutableList<ResourceFieldAttribute> ResolveToOneChainEndingInAttribute(ResourceType resourceType, string path,
-            Action<ResourceFieldAttribute, ResourceType, string> validateCallback = null)
+            Action<ResourceFieldAttribute, ResourceType, string>? validateCallback = null)
         {
             ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
 
@@ -116,7 +116,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// </example>
         /// </summary>
         public IImmutableList<ResourceFieldAttribute> ResolveToOneChainEndingInToMany(ResourceType resourceType, string path,
-            Action<ResourceFieldAttribute, ResourceType, string> validateCallback = null)
+            Action<ResourceFieldAttribute, ResourceType, string>? validateCallback = null)
         {
             ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
 
@@ -153,7 +153,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// </example>
         /// </summary>
         public IImmutableList<ResourceFieldAttribute> ResolveToOneChainEndingInAttributeOrToOne(ResourceType resourceType, string path,
-            Action<ResourceFieldAttribute, ResourceType, string> validateCallback = null)
+            Action<ResourceFieldAttribute, ResourceType, string>? validateCallback = null)
         {
             ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
 
@@ -188,7 +188,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private RelationshipAttribute GetRelationship(string publicName, ResourceType resourceType, string path)
         {
-            RelationshipAttribute relationship = resourceType.TryGetRelationshipByPublicName(publicName);
+            RelationshipAttribute? relationship = resourceType.FindRelationshipByPublicName(publicName);
 
             if (relationship == null)
             {
@@ -230,7 +230,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private AttrAttribute GetAttribute(string publicName, ResourceType resourceType, string path)
         {
-            AttrAttribute attribute = resourceType.TryGetAttributeByPublicName(publicName);
+            AttrAttribute? attribute = resourceType.FindAttributeByPublicName(publicName);
 
             if (attribute == null)
             {
@@ -244,7 +244,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public ResourceFieldAttribute GetField(string publicName, ResourceType resourceType, string path)
         {
-            ResourceFieldAttribute field = resourceType.Fields.FirstOrDefault(nextField => nextField.PublicName == publicName);
+            ResourceFieldAttribute? field = resourceType.Fields.FirstOrDefault(nextField => nextField.PublicName == publicName);
 
             if (field == null)
             {

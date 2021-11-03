@@ -33,6 +33,6 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         /// </item>
         /// </list>
         /// </summary>
-        object Convert(Document document);
+        object? Convert(Document document);
     }
 }

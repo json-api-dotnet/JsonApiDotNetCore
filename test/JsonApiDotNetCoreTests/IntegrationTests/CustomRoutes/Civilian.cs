@@ -8,6 +8,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
     public sealed class Civilian : Identifiable<int>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
     }
 }

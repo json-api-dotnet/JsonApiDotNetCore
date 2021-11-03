@@ -14,9 +14,9 @@ namespace JsonApiDotNetCore.Resources
         private readonly ResourceType _resourceType;
         private readonly ITargetedFields _targetedFields;
 
-        private IDictionary<string, string> _initiallyStoredAttributeValues;
-        private IDictionary<string, string> _requestAttributeValues;
-        private IDictionary<string, string> _finallyStoredAttributeValues;
+        private IDictionary<string, string>? _initiallyStoredAttributeValues;
+        private IDictionary<string, string>? _requestAttributeValues;
+        private IDictionary<string, string>? _finallyStoredAttributeValues;
 
         public ResourceChangeTracker(IResourceGraph resourceGraph, ITargetedFields targetedFields)
         {
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Resources
 
             foreach (AttrAttribute attribute in attributes)
             {
-                object value = attribute.GetValue(resource);
+                object? value = attribute.GetValue(resource);
                 string json = JsonSerializer.Serialize(value);
                 result.Add(attribute.PublicName, json);
             }
@@ -68,26 +68,28 @@ namespace JsonApiDotNetCore.Resources
         /// <inheritdoc />
         public bool HasImplicitChanges()
         {
-            foreach (string key in _initiallyStoredAttributeValues.Keys)
+            if (_initiallyStoredAttributeValues != null && _requestAttributeValues != null && _finallyStoredAttributeValues != null)
             {
-                if (_requestAttributeValues.ContainsKey(key))
+                foreach (string key in _initiallyStoredAttributeValues.Keys)
                 {
-                    string requestValue = _requestAttributeValues[key];
-                    string actualValue = _finallyStoredAttributeValues[key];
-
-                    if (requestValue != actualValue)
+                    if (_requestAttributeValues.TryGetValue(key, out string? requestValue))
                     {
-                        return true;
+                        string actualValue = _finallyStoredAttributeValues[key];
+
+                        if (requestValue != actualValue)
+                        {
+                            return true;
+                        }
                     }
-                }
-                else
-                {
-                    string initiallyStoredValue = _initiallyStoredAttributeValues[key];
-                    string finallyStoredValue = _finallyStoredAttributeValues[key];
-
-                    if (initiallyStoredValue != finallyStoredValue)
+                    else
                     {
-                        return true;
+                        string initiallyStoredValue = _initiallyStoredAttributeValues[key];
+                        string finallyStoredValue = _finallyStoredAttributeValues[key];
+
+                        if (initiallyStoredValue != finallyStoredValue)
+                        {
+                            return true;
+                        }
                     }
                 }
             }

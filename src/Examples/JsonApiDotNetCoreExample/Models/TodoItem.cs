@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -10,10 +11,11 @@ namespace JsonApiDotNetCoreExample.Models
     public sealed class TodoItem : Identifiable<int>
     {
         [Attr]
-        public string Description { get; set; }
+        public string Description { get; set; } = null!;
 
         [Attr]
-        public TodoItemPriority Priority { get; set; }
+        [Required]
+        public TodoItemPriority? Priority { get; set; }
 
         [Attr(Capabilities = AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort | AttrCapabilities.AllowView)]
         public DateTimeOffset CreatedAt { get; set; }
@@ -22,12 +24,12 @@ namespace JsonApiDotNetCoreExample.Models
         public DateTimeOffset? LastModifiedAt { get; set; }
 
         [HasOne]
-        public Person Owner { get; set; }
+        public Person Owner { get; set; } = null!;
 
         [HasOne]
-        public Person Assignee { get; set; }
+        public Person? Assignee { get; set; }
 
         [HasMany]
-        public ISet<Tag> Tags { get; set; }
+        public ISet<Tag> Tags { get; set; } = new HashSet<Tag>();
     }
 }

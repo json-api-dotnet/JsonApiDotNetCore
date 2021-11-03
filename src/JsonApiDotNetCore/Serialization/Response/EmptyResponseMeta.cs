@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.Serialization.Response
     public sealed class EmptyResponseMeta : IResponseMeta
     {
         /// <inheritdoc />
-        public IReadOnlyDictionary<string, object> GetMeta()
+        public IReadOnlyDictionary<string, object?>? GetMeta()
         {
             return null;
         }

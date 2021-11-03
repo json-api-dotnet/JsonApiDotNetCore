@@ -10,9 +10,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
     public sealed class DomainGroup : Identifiable<Guid>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [HasMany]
-        public ISet<DomainUser> Users { get; set; }
+        public ISet<DomainUser> Users { get; set; } = new HashSet<DomainUser>();
     }
 }

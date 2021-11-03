@@ -3,20 +3,18 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateValidation
 {
-    public sealed class AtomicModelStateValidationTests
-        : IClassFixture<IntegrationTestContext<ModelStateValidationStartup<OperationsDbContext>, OperationsDbContext>>
+    public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
-        private readonly IntegrationTestContext<ModelStateValidationStartup<OperationsDbContext>, OperationsDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new();
 
-        public AtomicModelStateValidationTests(IntegrationTestContext<ModelStateValidationStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicModelStateValidationTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -54,18 +52,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(2);
+            responseDocument.Errors.ShouldHaveCount(2);
 
             ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error1.Title.Should().Be("Input validation failed.");
             error1.Detail.Should().Be("The Title field is required.");
+            error1.Source.ShouldNotBeNull();
             error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/title");
 
             ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error2.Title.Should().Be("Input validation failed.");
             error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
+            error2.Source.ShouldNotBeNull();
             error2.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/lengthInSeconds");
         }
 
@@ -123,15 +123,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(1);
+            responseDocument.Results.ShouldHaveCount(1);
 
-            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(newPlaylistId);
 
-                playlistInDatabase.Tracks.Should().HaveCount(1);
+                playlistInDatabase.Tracks.ShouldHaveCount(1);
                 playlistInDatabase.Tracks[0].Id.Should().Be(existingTrack.Id);
             });
         }
@@ -161,7 +161,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
                             id = existingTrack.StringId,
                             attributes = new
                             {
-                                title = (string)null,
+                                title = (string?)null,
                                 lengthInSeconds = -1
                             }
                         }
@@ -177,18 +177,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(2);
+            responseDocument.Errors.ShouldHaveCount(2);
 
             ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error1.Title.Should().Be("Input validation failed.");
             error1.Detail.Should().Be("The Title field is required.");
+            error1.Source.ShouldNotBeNull();
             error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/title");
 
             ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error2.Title.Should().Be("Input validation failed.");
             error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
+            error2.Source.ShouldNotBeNull();
             error2.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/lengthInSeconds");
         }
 
@@ -197,7 +199,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
         {
             // Arrange
             MusicTrack existingTrack = _fakers.MusicTrack.Generate();
-            string newTrackGenre = _fakers.MusicTrack.Generate().Genre;
+            string newTrackGenre = _fakers.MusicTrack.Generate().Genre!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -301,7 +303,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
             {
                 Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
 
-                playlistInDatabase.Tracks.Should().HaveCount(1);
+                playlistInDatabase.Tracks.ShouldHaveCount(1);
                 playlistInDatabase.Tracks[0].Id.Should().Be(existingTrack.Id);
             });
         }
@@ -355,7 +357,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
             {
                 MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.OwnedBy).FirstWithIdAsync(existingTrack.Id);
 
-                trackInDatabase.OwnedBy.Should().NotBeNull();
+                trackInDatabase.OwnedBy.ShouldNotBeNull();
                 trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
             });
         }
@@ -412,7 +414,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
             {
                 Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
 
-                playlistInDatabase.Tracks.Should().HaveCount(1);
+                playlistInDatabase.Tracks.ShouldHaveCount(1);
                 playlistInDatabase.Tracks[0].Id.Should().Be(existingTrack.Id);
             });
         }
@@ -434,7 +436,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
                             id = Unknown.StringId.For<Playlist, long>(),
                             attributes = new
                             {
-                                name = (string)null
+                                name = (string?)null
                             }
                         }
                     },
@@ -446,6 +448,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
                             type = "musicTracks",
                             attributes = new
                             {
+                                title = "some",
                                 lengthInSeconds = -1
                             }
                         }
@@ -461,25 +464,111 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(3);
+            responseDocument.Errors.ShouldHaveCount(2);
 
             ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error1.Title.Should().Be("Input validation failed.");
             error1.Detail.Should().Be("The Name field is required.");
+            error1.Source.ShouldNotBeNull();
             error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/name");
 
             ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error2.Title.Should().Be("Input validation failed.");
-            error2.Detail.Should().Be("The Title field is required.");
-            error2.Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/title");
+            error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
+            error2.Source.ShouldNotBeNull();
+            error2.Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/lengthInSeconds");
+        }
+
+        [Fact]
+        public async Task Does_not_exceed_MaxModelValidationErrors()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new object[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "playlists",
+                            attributes = new
+                            {
+                                name = (string?)null
+                            }
+                        }
+                    },
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "playlists",
+                            attributes = new
+                            {
+                                name = (string?)null
+                            }
+                        }
+                    },
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "musicTracks",
+                            attributes = new
+                            {
+                                lengthInSeconds = -1
+                            }
+                        }
+                    },
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "playlists",
+                            attributes = new
+                            {
+                                name = (string?)null
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.ShouldHaveCount(3);
+
+            ErrorObject error1 = responseDocument.Errors[0];
+            error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error1.Title.Should().Be("Input validation failed.");
+            error1.Detail.Should().Be("The maximum number of allowed model errors has been reached.");
+            error1.Source.Should().BeNull();
+
+            ErrorObject error2 = responseDocument.Errors[1];
+            error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error2.Title.Should().Be("Input validation failed.");
+            error2.Detail.Should().Be("The Name field is required.");
+            error2.Source.ShouldNotBeNull();
+            error2.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/name");
 
             ErrorObject error3 = responseDocument.Errors[2];
             error3.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error3.Title.Should().Be("Input validation failed.");
-            error3.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
-            error3.Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/lengthInSeconds");
+            error3.Detail.Should().Be("The Name field is required.");
+            error3.Source.ShouldNotBeNull();
+            error3.Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/name");
         }
     }
 }

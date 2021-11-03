@@ -7,8 +7,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 {
     public sealed class PoliciesController : JsonApiController<Policy, int>
     {
-        public PoliciesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Policy, int> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public PoliciesController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<Policy, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

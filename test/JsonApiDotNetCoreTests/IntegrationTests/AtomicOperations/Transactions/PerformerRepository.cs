@@ -13,12 +13,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class PerformerRepository : IResourceRepository<Performer, int>
     {
-        public Task<IReadOnlyCollection<Performer>> GetAsync(QueryLayer layer, CancellationToken cancellationToken)
+        public Task<IReadOnlyCollection<Performer>> GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync(FilterExpression topFilter, CancellationToken cancellationToken)
+        public Task<int> CountAsync(FilterExpression? topFilter, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
             throw new NotImplementedException();
         }
 
-        public Task<Performer> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
+        public Task<Performer?> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
             throw new NotImplementedException();
         }
 
-        public Task SetRelationshipAsync(Performer leftResource, object rightValue, CancellationToken cancellationToken)
+        public Task SetRelationshipAsync(Performer leftResource, object? rightValue, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

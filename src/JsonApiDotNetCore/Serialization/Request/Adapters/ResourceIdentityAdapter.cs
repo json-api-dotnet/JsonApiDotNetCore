@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -11,7 +12,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
     /// <summary>
     /// Base class for validating and converting objects that represent an identity.
     /// </summary>
-    public abstract class ResourceIdentityAdapter
+    public abstract class ResourceIdentityAdapter : BaseAdapter
     {
         private readonly IResourceGraph _resourceGraph;
         private readonly IResourceFactory _resourceFactory;
@@ -40,10 +41,10 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
         private ResourceType ResolveType(IResourceIdentity identity, ResourceIdentityRequirements requirements, RequestAdapterState state)
         {
-            AssertHasType(identity, state);
+            AssertHasType(identity.Type, state);
 
             using IDisposable _ = state.Position.PushElement("type");
-            ResourceType resourceType = _resourceGraph.TryGetResourceType(identity.Type);
+            ResourceType? resourceType = _resourceGraph.FindResourceType(identity.Type);
 
             AssertIsKnownResourceType(resourceType, identity.Type, state);
             AssertIsCompatibleResourceType(resourceType, requirements.ResourceType, requirements.RelationshipName, state);
@@ -51,15 +52,15 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             return resourceType;
         }
 
-        private static void AssertHasType(IResourceIdentity identity, RequestAdapterState state)
+        private static void AssertHasType([NotNull] string? identityType, RequestAdapterState state)
         {
-            if (identity.Type == null)
+            if (identityType == null)
             {
                 throw new ModelConversionException(state.Position, "The 'type' element is required.", null);
             }
         }
 
-        private static void AssertIsKnownResourceType(ResourceType resourceType, string typeName, RequestAdapterState state)
+        private static void AssertIsKnownResourceType([NotNull] ResourceType? resourceType, string typeName, RequestAdapterState state)
         {
             if (resourceType == null)
             {
@@ -67,7 +68,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             }
         }
 
-        private static void AssertIsCompatibleResourceType(ResourceType actual, ResourceType expected, string relationshipName, RequestAdapterState state)
+        private static void AssertIsCompatibleResourceType(ResourceType actual, ResourceType? expected, string? relationshipName, RequestAdapterState state)
         {
             if (expected != null && !expected.ClrType.IsAssignableFrom(actual.ClrType))
             {
@@ -126,7 +127,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
         private static void AssertHasIdOrLid(IResourceIdentity identity, ResourceIdentityRequirements requirements, RequestAdapterState state)
         {
-            string message = null;
+            string? message = null;
 
             if (requirements.IdValue != null && identity.Id == null)
             {
@@ -156,7 +157,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             }
         }
 
-        private static void AssertSameIdValue(IResourceIdentity identity, string expected, RequestAdapterState state)
+        private static void AssertSameIdValue(IResourceIdentity identity, string? expected, RequestAdapterState state)
         {
             if (expected != null && identity.Id != expected)
             {
@@ -167,7 +168,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             }
         }
 
-        private static void AssertSameLidValue(IResourceIdentity identity, string expected, RequestAdapterState state)
+        private static void AssertSameLidValue(IResourceIdentity identity, string? expected, RequestAdapterState state)
         {
             if (expected != null && identity.Lid != expected)
             {
@@ -194,7 +195,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             }
         }
 
-        protected static void AssertIsKnownRelationship(RelationshipAttribute relationship, string relationshipName, ResourceType resourceType,
+        protected static void AssertIsKnownRelationship([NotNull] RelationshipAttribute? relationship, string relationshipName, ResourceType resourceType,
             RequestAdapterState state)
         {
             if (relationship == null)

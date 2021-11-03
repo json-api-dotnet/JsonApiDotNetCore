@@ -9,9 +9,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
     public sealed class ArtGallery : Identifiable<int>
     {
         [Attr]
-        public string Theme { get; set; }
+        public string Theme { get; set; } = null!;
 
         [HasMany]
-        public ISet<Painting> Paintings { get; set; }
+        public ISet<Painting> Paintings { get; set; } = new HashSet<Painting>();
     }
 }

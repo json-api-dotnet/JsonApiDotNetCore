@@ -20,7 +20,7 @@ namespace Benchmarks.Deserialization
                     op = "add",
                     data = new
                     {
-                        type = "resourceAs",
+                        type = "incomingResources",
                         lid = "a-1",
                         attributes = new
                         {
@@ -41,7 +41,7 @@ namespace Benchmarks.Deserialization
                             {
                                 data = new
                                 {
-                                    type = "resourceAs",
+                                    type = "incomingResources",
                                     id = "101"
                                 }
                             },
@@ -49,7 +49,7 @@ namespace Benchmarks.Deserialization
                             {
                                 data = new
                                 {
-                                    type = "resourceAs",
+                                    type = "incomingResources",
                                     id = "102"
                                 }
                             },
@@ -57,7 +57,7 @@ namespace Benchmarks.Deserialization
                             {
                                 data = new
                                 {
-                                    type = "resourceAs",
+                                    type = "incomingResources",
                                     id = "103"
                                 }
                             },
@@ -65,7 +65,7 @@ namespace Benchmarks.Deserialization
                             {
                                 data = new
                                 {
-                                    type = "resourceAs",
+                                    type = "incomingResources",
                                     id = "104"
                                 }
                             },
@@ -73,7 +73,7 @@ namespace Benchmarks.Deserialization
                             {
                                 data = new
                                 {
-                                    type = "resourceAs",
+                                    type = "incomingResources",
                                     id = "105"
                                 }
                             },
@@ -83,7 +83,7 @@ namespace Benchmarks.Deserialization
                                 {
                                     new
                                     {
-                                        type = "resourceAs",
+                                        type = "incomingResources",
                                         id = "201"
                                     }
                                 }
@@ -94,7 +94,7 @@ namespace Benchmarks.Deserialization
                                 {
                                     new
                                     {
-                                        type = "resourceAs",
+                                        type = "incomingResources",
                                         id = "202"
                                     }
                                 }
@@ -105,7 +105,7 @@ namespace Benchmarks.Deserialization
                                 {
                                     new
                                     {
-                                        type = "resourceAs",
+                                        type = "incomingResources",
                                         id = "203"
                                     }
                                 }
@@ -116,7 +116,7 @@ namespace Benchmarks.Deserialization
                                 {
                                     new
                                     {
-                                        type = "resourceAs",
+                                        type = "incomingResources",
                                         id = "204"
                                     }
                                 }
@@ -127,7 +127,7 @@ namespace Benchmarks.Deserialization
                                 {
                                     new
                                     {
-                                        type = "resourceAs",
+                                        type = "incomingResources",
                                         id = "205"
                                     }
                                 }
@@ -140,7 +140,7 @@ namespace Benchmarks.Deserialization
                     op = "update",
                     data = new
                     {
-                        type = "resourceAs",
+                        type = "incomingResources",
                         id = "1",
                         attributes = new
                         {
@@ -161,7 +161,7 @@ namespace Benchmarks.Deserialization
                             {
                                 data = new
                                 {
-                                    type = "resourceAs",
+                                    type = "incomingResources",
                                     id = "101"
                                 }
                             },
@@ -169,7 +169,7 @@ namespace Benchmarks.Deserialization
                             {
                                 data = new
                                 {
-                                    type = "resourceAs",
+                                    type = "incomingResources",
                                     id = "102"
                                 }
                             },
@@ -177,7 +177,7 @@ namespace Benchmarks.Deserialization
                             {
                                 data = new
                                 {
-                                    type = "resourceAs",
+                                    type = "incomingResources",
                                     id = "103"
                                 }
                             },
@@ -185,7 +185,7 @@ namespace Benchmarks.Deserialization
                             {
                                 data = new
                                 {
-                                    type = "resourceAs",
+                                    type = "incomingResources",
                                     id = "104"
                                 }
                             },
@@ -193,7 +193,7 @@ namespace Benchmarks.Deserialization
                             {
                                 data = new
                                 {
-                                    type = "resourceAs",
+                                    type = "incomingResources",
                                     id = "105"
                                 }
                             },
@@ -203,7 +203,7 @@ namespace Benchmarks.Deserialization
                                 {
                                     new
                                     {
-                                        type = "resourceAs",
+                                        type = "incomingResources",
                                         id = "201"
                                     }
                                 }
@@ -214,7 +214,7 @@ namespace Benchmarks.Deserialization
                                 {
                                     new
                                     {
-                                        type = "resourceAs",
+                                        type = "incomingResources",
                                         id = "202"
                                     }
                                 }
@@ -225,7 +225,7 @@ namespace Benchmarks.Deserialization
                                 {
                                     new
                                     {
-                                        type = "resourceAs",
+                                        type = "incomingResources",
                                         id = "203"
                                     }
                                 }
@@ -236,7 +236,7 @@ namespace Benchmarks.Deserialization
                                 {
                                     new
                                     {
-                                        type = "resourceAs",
+                                        type = "incomingResources",
                                         id = "204"
                                     }
                                 }
@@ -247,7 +247,7 @@ namespace Benchmarks.Deserialization
                                 {
                                     new
                                     {
-                                        type = "resourceAs",
+                                        type = "incomingResources",
                                         id = "205"
                                     }
                                 }
@@ -260,7 +260,7 @@ namespace Benchmarks.Deserialization
                     op = "remove",
                     @ref = new
                     {
-                        type = "resourceAs",
+                        type = "incomingResources",
                         lid = "a-1"
                     }
                 }
@@ -268,15 +268,15 @@ namespace Benchmarks.Deserialization
         }).Replace("atomic__operations", "atomic:operations");
 
         [Benchmark]
-        public object DeserializeOperationsRequest()
+        public object? DeserializeOperationsRequest()
         {
-            var document = JsonSerializer.Deserialize<Document>(RequestBody, SerializerReadOptions);
+            var document = JsonSerializer.Deserialize<Document>(RequestBody, SerializerReadOptions)!;
             return DocumentAdapter.Convert(document);
         }
 
         protected override JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph)
         {
-            return new()
+            return new JsonApiRequest
             {
                 Kind = EndpointKind.AtomicOperations
             };

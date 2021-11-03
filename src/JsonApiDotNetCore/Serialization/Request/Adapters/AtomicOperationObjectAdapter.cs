@@ -44,14 +44,14 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
                 WriteOperation = writeOperation
             };
 
-            (ResourceIdentityRequirements requirements, IIdentifiable primaryResource) = ConvertRef(atomicOperationObject, state);
+            (ResourceIdentityRequirements requirements, IIdentifiable? primaryResource) = ConvertRef(atomicOperationObject, state);
 
             if (writeOperation is WriteOperationKind.CreateResource or WriteOperationKind.UpdateResource)
             {
                 primaryResource = _resourceDataInOperationsRequestAdapter.Convert(atomicOperationObject.Data, requirements, state);
             }
 
-            return new OperationContainer(primaryResource, state.WritableTargetedFields, state.Request);
+            return new OperationContainer(primaryResource!, state.WritableTargetedFields, state.Request);
         }
 
         private static void AssertNoHref(AtomicOperationObject atomicOperationObject, RequestAdapterState state)
@@ -69,7 +69,10 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             {
                 case AtomicOperationCode.Add:
                 {
-                    if (atomicOperationObject.Ref is { Relationship: null })
+                    // ReSharper disable once MergeIntoPattern
+                    // Justification: Merging this into a pattern crashes the command-line versions of CleanupCode/InspectCode.
+                    // Tracked at: https://youtrack.jetbrains.com/issue/RSRP-486717
+                    if (atomicOperationObject.Ref != null && atomicOperationObject.Ref.Relationship == null)
                     {
                         using IDisposable _ = state.Position.PushElement("ref");
                         throw new ModelConversionException(state.Position, "The 'relationship' element is required.", null);
@@ -95,13 +98,13 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             throw new NotSupportedException($"Unknown operation code '{atomicOperationObject.Code}'.");
         }
 
-        private (ResourceIdentityRequirements requirements, IIdentifiable primaryResource) ConvertRef(AtomicOperationObject atomicOperationObject,
+        private (ResourceIdentityRequirements requirements, IIdentifiable? primaryResource) ConvertRef(AtomicOperationObject atomicOperationObject,
             RequestAdapterState state)
         {
             ResourceIdentityRequirements requirements = CreateIdentityRequirements(state);
-            IIdentifiable primaryResource = null;
+            IIdentifiable? primaryResource = null;
 
-            AtomicReferenceResult refResult = atomicOperationObject.Ref != null
+            AtomicReferenceResult? refResult = atomicOperationObject.Ref != null
                 ? _atomicReferenceAdapter.Convert(atomicOperationObject.Ref, requirements, state)
                 : null;
 
@@ -116,7 +119,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
                     RelationshipName = refResult.Relationship?.PublicName
                 };
 
-                state.WritableRequest.PrimaryId = refResult.Resource.StringId;
+                state.WritableRequest!.PrimaryId = refResult.Resource.StringId;
                 state.WritableRequest.PrimaryResourceType = refResult.ResourceType;
                 state.WritableRequest.Relationship = refResult.Relationship;
                 state.WritableRequest.IsCollection = refResult.Relationship is HasManyAttribute;
@@ -145,11 +148,11 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         {
             if (refResult.Relationship != null)
             {
-                state.WritableRequest.SecondaryResourceType = refResult.Relationship.RightType;
+                state.WritableRequest!.SecondaryResourceType = refResult.Relationship.RightType;
 
-                state.WritableTargetedFields.Relationships.Add(refResult.Relationship);
+                state.WritableTargetedFields!.Relationships.Add(refResult.Relationship);
 
-                object rightValue = _relationshipDataAdapter.Convert(relationshipData, refResult.Relationship, true, state);
+                object? rightValue = _relationshipDataAdapter.Convert(relationshipData, refResult.Relationship, true, state);
                 refResult.Relationship.SetValue(refResult.Resource, rightValue);
             }
         }

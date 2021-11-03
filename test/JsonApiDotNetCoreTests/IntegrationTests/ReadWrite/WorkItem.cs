@@ -11,7 +11,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
     public sealed class WorkItem : Identifiable<int>
     {
         [Attr]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [Attr]
         public DateTimeOffset? DueAt { get; set; }
@@ -28,27 +28,27 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
         }
 
         [HasOne]
-        public UserAccount Assignee { get; set; }
+        public UserAccount? Assignee { get; set; }
 
         [HasMany]
-        public ISet<UserAccount> Subscribers { get; set; }
+        public ISet<UserAccount> Subscribers { get; set; } = new HashSet<UserAccount>();
 
         [HasMany]
-        public ISet<WorkTag> Tags { get; set; }
+        public ISet<WorkTag> Tags { get; set; } = new HashSet<WorkTag>();
 
         [HasOne]
-        public WorkItem Parent { get; set; }
+        public WorkItem? Parent { get; set; }
 
         [HasMany]
-        public IList<WorkItem> Children { get; set; }
+        public IList<WorkItem> Children { get; set; } = new List<WorkItem>();
 
         [HasMany]
-        public IList<WorkItem> RelatedFrom { get; set; }
+        public IList<WorkItem> RelatedFrom { get; set; } = new List<WorkItem>();
 
         [HasMany]
-        public IList<WorkItem> RelatedTo { get; set; }
+        public IList<WorkItem> RelatedTo { get; set; } = new List<WorkItem>();
 
         [HasOne]
-        public WorkItemGroup Group { get; set; }
+        public WorkItemGroup? Group { get; set; }
     }
 }

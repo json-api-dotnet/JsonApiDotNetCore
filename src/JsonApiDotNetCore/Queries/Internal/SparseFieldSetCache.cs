@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace JsonApiDotNetCore.Queries.Internal
     /// <inheritdoc />
     public sealed class SparseFieldSetCache : ISparseFieldSetCache
     {
+        private static readonly ConcurrentDictionary<ResourceType, SparseFieldSetExpression> ViewableFieldSetCache = new();
+
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly Lazy<IDictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>>> _lazySourceTable;
         private readonly IDictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>> _visitedTable;
@@ -75,11 +78,12 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             if (!_visitedTable.ContainsKey(resourceType))
             {
-                SparseFieldSetExpression inputExpression = _lazySourceTable.Value.ContainsKey(resourceType)
-                    ? new SparseFieldSetExpression(_lazySourceTable.Value[resourceType])
-                    : null;
+                SparseFieldSetExpression? inputExpression =
+                    _lazySourceTable.Value.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? inputFields)
+                        ? new SparseFieldSetExpression(inputFields)
+                        : null;
 
-                SparseFieldSetExpression outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
+                SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
 
                 IImmutableSet<ResourceFieldAttribute> outputFields = outputExpression == null
                     ? ImmutableHashSet<ResourceFieldAttribute>.Empty
@@ -100,7 +104,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             var inputExpression = new SparseFieldSetExpression(ImmutableHashSet.Create<ResourceFieldAttribute>(idAttribute));
 
             // Intentionally not cached, as we are fetching ID only (ignoring any sparse fieldset that came from query string).
-            SparseFieldSetExpression outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
+            SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
 
             ImmutableHashSet<AttrAttribute> outputAttributes = outputExpression == null
                 ? ImmutableHashSet<AttrAttribute>.Empty
@@ -117,15 +121,16 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             if (!_visitedTable.ContainsKey(resourceType))
             {
-                IImmutableSet<ResourceFieldAttribute> inputFields = _lazySourceTable.Value.ContainsKey(resourceType)
-                    ? _lazySourceTable.Value[resourceType]
-                    : GetResourceFields(resourceType);
+                SparseFieldSetExpression inputExpression =
+                    _lazySourceTable.Value.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? inputFields)
+                        ? new SparseFieldSetExpression(inputFields)
+                        : GetCachedViewableFieldSet(resourceType);
 
-                var inputExpression = new SparseFieldSetExpression(inputFields);
-                SparseFieldSetExpression outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
+                SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
 
-                IImmutableSet<ResourceFieldAttribute> outputFields =
-                    outputExpression == null ? GetResourceFields(resourceType) : inputFields.Intersect(outputExpression.Fields);
+                IImmutableSet<ResourceFieldAttribute> outputFields = outputExpression == null
+                    ? GetCachedViewableFieldSet(resourceType).Fields
+                    : inputExpression.Fields.Intersect(outputExpression.Fields);
 
                 _visitedTable[resourceType] = outputFields;
             }
@@ -133,10 +138,20 @@ namespace JsonApiDotNetCore.Queries.Internal
             return _visitedTable[resourceType];
         }
 
-        private IImmutableSet<ResourceFieldAttribute> GetResourceFields(ResourceType resourceType)
+        private static SparseFieldSetExpression GetCachedViewableFieldSet(ResourceType resourceType)
         {
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+            if (!ViewableFieldSetCache.TryGetValue(resourceType, out SparseFieldSetExpression? fieldSet))
+            {
+                IImmutableSet<ResourceFieldAttribute> viewableFields = GetViewableFields(resourceType);
+                fieldSet = new SparseFieldSetExpression(viewableFields);
+                ViewableFieldSetCache[resourceType] = fieldSet;
+            }
 
+            return fieldSet;
+        }
+
+        private static IImmutableSet<ResourceFieldAttribute> GetViewableFields(ResourceType resourceType)
+        {
             ImmutableHashSet<ResourceFieldAttribute>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
 
             foreach (AttrAttribute attribute in resourceType.Attributes.Where(attr => attr.Capabilities.HasFlag(AttrCapabilities.AllowView)))

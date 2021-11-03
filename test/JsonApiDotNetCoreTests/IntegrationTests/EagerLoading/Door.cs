@@ -6,6 +6,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
     public sealed class Door
     {
         public int Id { get; set; }
-        public string Color { get; set; }
+        public string Color { get; set; } = null!;
     }
 }

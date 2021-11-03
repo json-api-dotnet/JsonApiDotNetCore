@@ -10,8 +10,8 @@ namespace JsonApiDotNetCore.Queries.Expressions
     [PublicAPI]
     public class SortElementExpression : QueryExpression
     {
-        public ResourceFieldChainExpression TargetAttribute { get; }
-        public CountExpression Count { get; }
+        public ResourceFieldChainExpression? TargetAttribute { get; }
+        public CountExpression? Count { get; }
         public bool IsAscending { get; }
 
         public SortElementExpression(ResourceFieldChainExpression targetAttribute, bool isAscending)
@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             IsAscending = isAscending;
         }
 
-        public SortElementExpression(CountExpression count, in bool isAscending)
+        public SortElementExpression(CountExpression count, bool isAscending)
         {
             ArgumentGuard.NotNull(count, nameof(count));
 
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return builder.ToString();
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

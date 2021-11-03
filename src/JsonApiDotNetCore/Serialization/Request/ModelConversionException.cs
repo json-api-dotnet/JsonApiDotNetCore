@@ -11,12 +11,12 @@ namespace JsonApiDotNetCore.Serialization.Request
     [PublicAPI]
     public sealed class ModelConversionException : Exception
     {
-        public string GenericMessage { get; }
-        public string SpecificMessage { get; }
+        public string? GenericMessage { get; }
+        public string? SpecificMessage { get; }
         public HttpStatusCode? StatusCode { get; }
-        public string SourcePointer { get; }
+        public string? SourcePointer { get; }
 
-        public ModelConversionException(RequestAdapterPosition position, string genericMessage, string specificMessage, HttpStatusCode? statusCode = null)
+        public ModelConversionException(RequestAdapterPosition position, string? genericMessage, string? specificMessage, HttpStatusCode? statusCode = null)
             : base(genericMessage)
         {
             ArgumentGuard.NotNull(position, nameof(position));

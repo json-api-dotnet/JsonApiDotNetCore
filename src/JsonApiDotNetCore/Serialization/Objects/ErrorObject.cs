@@ -15,11 +15,11 @@ namespace JsonApiDotNetCore.Serialization.Objects
     {
         [JsonPropertyName("id")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string? Id { get; set; } = Guid.NewGuid().ToString();
 
         [JsonPropertyName("links")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public ErrorLinks Links { get; set; }
+        public ErrorLinks? Links { get; set; }
 
         [JsonIgnore]
         public HttpStatusCode StatusCode { get; set; }
@@ -34,23 +34,23 @@ namespace JsonApiDotNetCore.Serialization.Objects
 
         [JsonPropertyName("code")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Code { get; set; }
+        public string? Code { get; set; }
 
         [JsonPropertyName("title")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         [JsonPropertyName("detail")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Detail { get; set; }
+        public string? Detail { get; set; }
 
         [JsonPropertyName("source")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public ErrorSource Source { get; set; }
+        public ErrorSource? Source { get; set; }
 
         [JsonPropertyName("meta")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IDictionary<string, object> Meta { get; set; }
+        public IDictionary<string, object?>? Meta { get; set; }
 
         public ErrorObject(HttpStatusCode statusCode)
         {

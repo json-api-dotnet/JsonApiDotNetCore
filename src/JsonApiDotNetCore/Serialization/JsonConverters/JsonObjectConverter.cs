@@ -5,9 +5,9 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
 {
     public abstract class JsonObjectConverter<TObject> : JsonConverter<TObject>
     {
-        protected static TValue ReadSubTree<TValue>(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        protected static TValue? ReadSubTree<TValue>(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
-            if (typeof(TValue) != typeof(object) && options?.GetConverter(typeof(TValue)) is JsonConverter<TValue> converter)
+            if (typeof(TValue) != typeof(object) && options.GetConverter(typeof(TValue)) is JsonConverter<TValue> converter)
             {
                 return converter.Read(ref reader, typeof(TValue), options);
             }
@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
 
         protected static void WriteSubTree<TValue>(Utf8JsonWriter writer, TValue value, JsonSerializerOptions options)
         {
-            if (typeof(TValue) != typeof(object) && options?.GetConverter(typeof(TValue)) is JsonConverter<TValue> converter)
+            if (typeof(TValue) != typeof(object) && options.GetConverter(typeof(TValue)) is JsonConverter<TValue> converter)
             {
                 converter.Write(writer, value, options);
             }
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
 
         protected static JsonException GetEndOfStreamError()
         {
-            return new("Unexpected end of JSON stream.");
+            return new JsonException("Unexpected end of JSON stream.");
         }
     }
 }
