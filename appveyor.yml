@@ -43,6 +43,9 @@ for:
             git checkout $env:APPVEYOR_REPO_BRANCH -q
         }
         choco install docfx -y
+        if ($lastexitcode -ne 0) {
+            throw "docfx install failed with exit code $lastexitcode."
+        }
   after_build:
     - pwsh: |
         CD ./docs
