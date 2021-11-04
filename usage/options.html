@@ -93,7 +93,9 @@ You can also include the total number of resources in each response. Note that w
 options.MaximumPageSize = new PageSize(100);
 options.MaximumPageNumber = new PageNumber(50);
 options.IncludeTotalResourceCount = true;
-</code></pre><h2 id="relative-links">Relative Links</h2>
+</code></pre><p>To retrieve the total number of resources on secondary and relationship endpoints, the reverse of the relationship must to be available. For example, in <code>GET /customers/1/orders</code>, both the relationships <code>[HasMany] Customer.Orders</code> and <code>[HasOne] Order.Customer</code> must be defined.
+If <code>IncludeTotalResourceCount</code> is set to <code>false</code> (or the inverse relationship is unavailable on a non-primary endpoint), best-effort paging links are returned instead. This means no <code>last</code> link and the <code>next</code> link only occurs when the current page is full.</p>
+<h2 id="relative-links">Relative Links</h2>
 <p>All links are absolute by default. However, you can configure relative links.</p>
 <pre><code class="lang-c#">options.UseRelativeLinks = true;
 </code></pre><pre><code class="lang-json">{

@@ -251,7 +251,7 @@ public class LogicalExpression : FilterExpression</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Accept%60%602(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor%7B%60%600%2C%60%601%7D%2C%60%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L37">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L46">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Accept_" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Accept*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)">Accept&lt;TArgument, TResult&gt;(QueryExpressionVisitor&lt;TArgument, TResult&gt;, TArgument)</h4>
@@ -321,10 +321,62 @@ public class LogicalExpression : FilterExpression</code></pre>
   <div><span class="xref">JsonApiDotNetCore.Queries.Expressions.QueryExpression.Accept&lt;TArgument, TResult&gt;(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor&lt;TArgument, TResult&gt;, TArgument)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Compose_JsonApiDotNetCore_Queries_Expressions_LogicalOperator_JsonApiDotNetCore_Queries_Expressions_FilterExpression___.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Compose(JsonApiDotNetCore.Queries.Expressions.LogicalOperator%2CJsonApiDotNetCore.Queries.Expressions.FilterExpression%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L37">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Compose_" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Compose*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Compose_JsonApiDotNetCore_Queries_Expressions_LogicalOperator_JsonApiDotNetCore_Queries_Expressions_FilterExpression___" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Compose(JsonApiDotNetCore.Queries.Expressions.LogicalOperator,JsonApiDotNetCore.Queries.Expressions.FilterExpression[])">Compose(LogicalOperator, FilterExpression[])</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static FilterExpression Compose(LogicalOperator operator, params FilterExpression[] filters)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.LogicalOperator.html">LogicalOperator</a></td>
+        <td><span class="parametername">operator</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a>[]</td>
+        <td><span class="parametername">filters</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Equals_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L54">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L63">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Equals_" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Equals*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Equals_System_Object_" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Equals(System.Object)">Equals(Object)</h4>
@@ -373,7 +425,7 @@ public class LogicalExpression : FilterExpression</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Expressions_LogicalExpression_GetHashCode.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Expressions.LogicalExpression.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L71">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L80">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_GetHashCode_" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.GetHashCode*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_GetHashCode" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.GetHashCode">GetHashCode()</h4>
@@ -405,7 +457,7 @@ public class LogicalExpression : FilterExpression</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Expressions_LogicalExpression_ToString.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Expressions.LogicalExpression.ToString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L42">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L51">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_ToString_" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.ToString*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_ToString" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.ToString">ToString()</h4>

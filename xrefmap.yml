@@ -5789,6 +5789,22 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Accept(Of TArgument, TResult)(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor(Of TArgument, TResult), TArgument)
   nameWithType: LogicalExpression.Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult>, TArgument)
   nameWithType.vb: LogicalExpression.Accept(Of TArgument, TResult)(QueryExpressionVisitor(Of TArgument, TResult), TArgument)
+- uid: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Compose(JsonApiDotNetCore.Queries.Expressions.LogicalOperator,JsonApiDotNetCore.Queries.Expressions.FilterExpression[])
+  name: Compose(LogicalOperator, FilterExpression[])
+  href: api/JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html#JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Compose_JsonApiDotNetCore_Queries_Expressions_LogicalOperator_JsonApiDotNetCore_Queries_Expressions_FilterExpression___
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Compose(JsonApiDotNetCore.Queries.Expressions.LogicalOperator,JsonApiDotNetCore.Queries.Expressions.FilterExpression[])
+  name.vb: Compose(LogicalOperator, FilterExpression())
+  fullName: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Compose(JsonApiDotNetCore.Queries.Expressions.LogicalOperator, JsonApiDotNetCore.Queries.Expressions.FilterExpression[])
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Compose(JsonApiDotNetCore.Queries.Expressions.LogicalOperator, JsonApiDotNetCore.Queries.Expressions.FilterExpression())
+  nameWithType: LogicalExpression.Compose(LogicalOperator, FilterExpression[])
+  nameWithType.vb: LogicalExpression.Compose(LogicalOperator, FilterExpression())
+- uid: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Compose*
+  name: Compose
+  href: api/JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html#JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Compose_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Compose
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Compose
+  nameWithType: LogicalExpression.Compose
 - uid: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Equals(System.Object)
   name: Equals(Object)
   href: api/JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html#JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Equals_System_Object_
@@ -9982,6 +9998,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetPagination
   nameWithType: QueryLayerComposer.GetPagination
+- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetPrimaryFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
+  name: GetPrimaryFilterFromConstraints(ResourceType)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetPrimaryFilterFromConstraints_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetPrimaryFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetPrimaryFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: QueryLayerComposer.GetPrimaryFilterFromConstraints(ResourceType)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetPrimaryFilterFromConstraints*
+  name: GetPrimaryFilterFromConstraints
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetPrimaryFilterFromConstraints_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetPrimaryFilterFromConstraints
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetPrimaryFilterFromConstraints
+  nameWithType: QueryLayerComposer.GetPrimaryFilterFromConstraints
 - uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetProjectionForSparseAttributeSet(JsonApiDotNetCore.Configuration.ResourceType)
   name: GetProjectionForSparseAttributeSet(ResourceType)
   href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetProjectionForSparseAttributeSet_JsonApiDotNetCore_Configuration_ResourceType_
@@ -9995,6 +10024,22 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetProjectionForSparseAttributeSet
   nameWithType: QueryLayerComposer.GetProjectionForSparseAttributeSet
+- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSecondaryFilterFromConstraints*
+  name: GetSecondaryFilterFromConstraints
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSecondaryFilterFromConstraints_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSecondaryFilterFromConstraints
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSecondaryFilterFromConstraints
+  nameWithType: QueryLayerComposer.GetSecondaryFilterFromConstraints
+- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSecondaryFilterFromConstraints``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  name: GetSecondaryFilterFromConstraints<TId>(TId, HasManyAttribute)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSecondaryFilterFromConstraints__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSecondaryFilterFromConstraints``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  name.vb: GetSecondaryFilterFromConstraints(Of TId)(TId, HasManyAttribute)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSecondaryFilterFromConstraints<TId>(TId, JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSecondaryFilterFromConstraints(Of TId)(TId, JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  nameWithType: QueryLayerComposer.GetSecondaryFilterFromConstraints<TId>(TId, HasManyAttribute)
+  nameWithType.vb: QueryLayerComposer.GetSecondaryFilterFromConstraints(Of TId)(TId, HasManyAttribute)
 - uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSort(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.QueryExpression},JsonApiDotNetCore.Configuration.ResourceType)
   name: GetSort(IReadOnlyCollection<QueryExpression>, ResourceType)
   href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetSort_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_QueryExpression__JsonApiDotNetCore_Configuration_ResourceType_
@@ -10011,19 +10056,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetSort
   nameWithType: QueryLayerComposer.GetSort
-- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
-  name: GetTopFilterFromConstraints(ResourceType)
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetTopFilterFromConstraints_JsonApiDotNetCore_Configuration_ResourceType_
-  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
-  nameWithType: QueryLayerComposer.GetTopFilterFromConstraints(ResourceType)
-- uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints*
-  name: GetTopFilterFromConstraints
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_GetTopFilterFromConstraints_
-  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.GetTopFilterFromConstraints
-  nameWithType: QueryLayerComposer.GetTopFilterFromConstraints
 - uid: JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.WrapLayerForSecondaryEndpoint*
   name: WrapLayerForSecondaryEndpoint
   href: api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html#JsonApiDotNetCore_Queries_Internal_QueryLayerComposer_WrapLayerForSecondaryEndpoint_
@@ -10313,19 +10345,35 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryLayerForRelationship
   nameWithType: IQueryLayerComposer.ComposeSecondaryLayerForRelationship
-- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
-  name: GetTopFilterFromConstraints(ResourceType)
-  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetTopFilterFromConstraints_JsonApiDotNetCore_Configuration_ResourceType_
-  commentId: M:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
-  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
-  nameWithType: IQueryLayerComposer.GetTopFilterFromConstraints(ResourceType)
-- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints*
-  name: GetTopFilterFromConstraints
-  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetTopFilterFromConstraints_
-  commentId: Overload:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints
+- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetPrimaryFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
+  name: GetPrimaryFilterFromConstraints(ResourceType)
+  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetPrimaryFilterFromConstraints_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetPrimaryFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetPrimaryFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: IQueryLayerComposer.GetPrimaryFilterFromConstraints(ResourceType)
+- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetPrimaryFilterFromConstraints*
+  name: GetPrimaryFilterFromConstraints
+  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetPrimaryFilterFromConstraints_
+  commentId: Overload:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetPrimaryFilterFromConstraints
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints
-  nameWithType: IQueryLayerComposer.GetTopFilterFromConstraints
+  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetPrimaryFilterFromConstraints
+  nameWithType: IQueryLayerComposer.GetPrimaryFilterFromConstraints
+- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints*
+  name: GetSecondaryFilterFromConstraints
+  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetSecondaryFilterFromConstraints_
+  commentId: Overload:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints
+  nameWithType: IQueryLayerComposer.GetSecondaryFilterFromConstraints
+- uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  name: GetSecondaryFilterFromConstraints<TId>(TId, HasManyAttribute)
+  href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_GetSecondaryFilterFromConstraints__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_
+  commentId: M:JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  name.vb: GetSecondaryFilterFromConstraints(Of TId)(TId, HasManyAttribute)
+  fullName: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints<TId>(TId, JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  fullName.vb: JsonApiDotNetCore.Queries.IQueryLayerComposer.GetSecondaryFilterFromConstraints(Of TId)(TId, JsonApiDotNetCore.Resources.Annotations.HasManyAttribute)
+  nameWithType: IQueryLayerComposer.GetSecondaryFilterFromConstraints<TId>(TId, HasManyAttribute)
+  nameWithType.vb: IQueryLayerComposer.GetSecondaryFilterFromConstraints(Of TId)(TId, HasManyAttribute)
 - uid: JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint*
   name: WrapLayerForSecondaryEndpoint
   href: api/JsonApiDotNetCore.Queries.IQueryLayerComposer.html#JsonApiDotNetCore_Queries_IQueryLayerComposer_WrapLayerForSecondaryEndpoint_
@@ -11870,6 +11918,12 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.AddToToManyRelationshipAsync(Of TResource, TId)(TId, System.Collections.Generic.ISet(Of JsonApiDotNetCore.Resources.IIdentifiable), System.Threading.CancellationToken)
   nameWithType: IResourceRepositoryAccessor.AddToToManyRelationshipAsync<TResource, TId>(TId, ISet<IIdentifiable>, CancellationToken)
   nameWithType.vb: IResourceRepositoryAccessor.AddToToManyRelationshipAsync(Of TResource, TId)(TId, ISet(Of IIdentifiable), CancellationToken)
+- uid: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CountAsync(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.Expressions.FilterExpression,System.Threading.CancellationToken)
+  name: CountAsync(ResourceType, FilterExpression, CancellationToken)
+  href: api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_CountAsync_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Queries_Expressions_FilterExpression_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CountAsync(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.Expressions.FilterExpression,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CountAsync(JsonApiDotNetCore.Configuration.ResourceType, JsonApiDotNetCore.Queries.Expressions.FilterExpression, System.Threading.CancellationToken)
+  nameWithType: IResourceRepositoryAccessor.CountAsync(ResourceType, FilterExpression, CancellationToken)
 - uid: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CountAsync*
   name: CountAsync
   href: api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_CountAsync_
@@ -11877,15 +11931,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CountAsync
   nameWithType: IResourceRepositoryAccessor.CountAsync
-- uid: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CountAsync``1(JsonApiDotNetCore.Queries.Expressions.FilterExpression,System.Threading.CancellationToken)
-  name: CountAsync<TResource>(FilterExpression, CancellationToken)
-  href: api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_CountAsync__1_JsonApiDotNetCore_Queries_Expressions_FilterExpression_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CountAsync``1(JsonApiDotNetCore.Queries.Expressions.FilterExpression,System.Threading.CancellationToken)
-  name.vb: CountAsync(Of TResource)(FilterExpression, CancellationToken)
-  fullName: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CountAsync<TResource>(JsonApiDotNetCore.Queries.Expressions.FilterExpression, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CountAsync(Of TResource)(JsonApiDotNetCore.Queries.Expressions.FilterExpression, System.Threading.CancellationToken)
-  nameWithType: IResourceRepositoryAccessor.CountAsync<TResource>(FilterExpression, CancellationToken)
-  nameWithType.vb: IResourceRepositoryAccessor.CountAsync(Of TResource)(FilterExpression, CancellationToken)
 - uid: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.CreateAsync*
   name: CreateAsync
   href: api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_CreateAsync_
@@ -12202,6 +12247,12 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.AddToToManyRelationshipAsync(Of TResource, TId)(TId, System.Collections.Generic.ISet(Of JsonApiDotNetCore.Resources.IIdentifiable), System.Threading.CancellationToken)
   nameWithType: ResourceRepositoryAccessor.AddToToManyRelationshipAsync<TResource, TId>(TId, ISet<IIdentifiable>, CancellationToken)
   nameWithType.vb: ResourceRepositoryAccessor.AddToToManyRelationshipAsync(Of TResource, TId)(TId, ISet(Of IIdentifiable), CancellationToken)
+- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CountAsync(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.Expressions.FilterExpression,System.Threading.CancellationToken)
+  name: CountAsync(ResourceType, FilterExpression, CancellationToken)
+  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CountAsync_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Queries_Expressions_FilterExpression_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CountAsync(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.Expressions.FilterExpression,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CountAsync(JsonApiDotNetCore.Configuration.ResourceType, JsonApiDotNetCore.Queries.Expressions.FilterExpression, System.Threading.CancellationToken)
+  nameWithType: ResourceRepositoryAccessor.CountAsync(ResourceType, FilterExpression, CancellationToken)
 - uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CountAsync*
   name: CountAsync
   href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CountAsync_
@@ -12209,15 +12260,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CountAsync
   nameWithType: ResourceRepositoryAccessor.CountAsync
-- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CountAsync``1(JsonApiDotNetCore.Queries.Expressions.FilterExpression,System.Threading.CancellationToken)
-  name: CountAsync<TResource>(FilterExpression, CancellationToken)
-  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CountAsync__1_JsonApiDotNetCore_Queries_Expressions_FilterExpression_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CountAsync``1(JsonApiDotNetCore.Queries.Expressions.FilterExpression,System.Threading.CancellationToken)
-  name.vb: CountAsync(Of TResource)(FilterExpression, CancellationToken)
-  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CountAsync<TResource>(JsonApiDotNetCore.Queries.Expressions.FilterExpression, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CountAsync(Of TResource)(JsonApiDotNetCore.Queries.Expressions.FilterExpression, System.Threading.CancellationToken)
-  nameWithType: ResourceRepositoryAccessor.CountAsync<TResource>(FilterExpression, CancellationToken)
-  nameWithType.vb: ResourceRepositoryAccessor.CountAsync(Of TResource)(FilterExpression, CancellationToken)
 - uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync*
   name: CreateAsync
   href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CreateAsync_
