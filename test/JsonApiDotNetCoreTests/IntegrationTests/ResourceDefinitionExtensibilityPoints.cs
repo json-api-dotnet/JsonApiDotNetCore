@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests
@@ -7,6 +8,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
     /// Lists the various extensibility points on <see cref="IResourceDefinition{TResource,TId}" />.
     /// </summary>
     [Flags]
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public enum ResourceDefinitionExtensibilityPoints
     {
         None = 0,
