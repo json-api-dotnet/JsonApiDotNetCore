@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
     {
         private readonly IEncryptionService _encryptionService;
 
-        protected override ResourceDefinitionExtensibilityPoint ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoint.Serialization;
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Serialization;
 
         public StudentDefinition(IResourceGraph resourceGraph, IEncryptionService encryptionService, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph, hitCounter)

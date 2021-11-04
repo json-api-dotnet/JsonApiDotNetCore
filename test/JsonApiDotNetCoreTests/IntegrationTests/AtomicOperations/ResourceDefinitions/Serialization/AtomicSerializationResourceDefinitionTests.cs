@@ -123,10 +123,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnDeserialize),
-                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnDeserialize),
-                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnSerialize),
-                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnSerialize)
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoints.OnDeserialize),
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoints.OnDeserialize),
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoints.OnSerialize),
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoints.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 
@@ -275,10 +275,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnDeserialize),
-                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnDeserialize),
-                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnSerialize),
-                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnSerialize)
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoints.OnDeserialize),
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoints.OnDeserialize),
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoints.OnSerialize),
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoints.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 

@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class MusicTrackMetaDefinition : HitCountingResourceDefinition<MusicTrack, Guid>
     {
-        protected override ResourceDefinitionExtensibilityPoint ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoint.GetMeta;
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.GetMeta;
 
         public MusicTrackMetaDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph, hitCounter)

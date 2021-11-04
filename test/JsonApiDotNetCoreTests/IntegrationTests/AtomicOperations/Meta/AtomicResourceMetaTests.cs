@@ -111,8 +111,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(MusicTrack), ResourceDefinitionExtensibilityPoint.GetMeta),
-                (typeof(MusicTrack), ResourceDefinitionExtensibilityPoint.GetMeta)
+                (typeof(MusicTrack), ResourceDefinitionExtensibilityPoints.GetMeta),
+                (typeof(MusicTrack), ResourceDefinitionExtensibilityPoints.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -172,7 +172,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(TextLanguage), ResourceDefinitionExtensibilityPoint.GetMeta)
+                (typeof(TextLanguage), ResourceDefinitionExtensibilityPoints.GetMeta)
             }, options => options.WithStrictOrdering());
         }
     }

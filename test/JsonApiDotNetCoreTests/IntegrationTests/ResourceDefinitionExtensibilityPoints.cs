@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
     /// Lists the various extensibility points on <see cref="IResourceDefinition{TResource,TId}" />.
     /// </summary>
     [Flags]
-    public enum ResourceDefinitionExtensibilityPoint
+    public enum ResourceDefinitionExtensibilityPoints
     {
         OnApplyIncludes = 1,
         OnApplyFilter = 1 << 1,

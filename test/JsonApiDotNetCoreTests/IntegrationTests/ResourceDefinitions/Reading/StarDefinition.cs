@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class StarDefinition : HitCountingResourceDefinition<Star, int>
     {
-        protected override ResourceDefinitionExtensibilityPoint ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoint.Reading;
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Reading;
 
         public StarDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph, hitCounter)

@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
 
         private string? _beforeGroupName;
 
-        protected override ResourceDefinitionExtensibilityPoint ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoint.Writing;
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Writing;
 
         protected MessagingGroupDefinition(IResourceGraph resourceGraph, DbSet<DomainUser> userSet, DbSet<DomainGroup> groupSet,
             ResourceDefinitionHitCounter hitCounter)

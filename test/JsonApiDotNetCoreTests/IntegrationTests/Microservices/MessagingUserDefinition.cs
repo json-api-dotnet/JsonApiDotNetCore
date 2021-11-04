@@ -19,7 +19,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
         private string? _beforeLoginName;
         private string? _beforeDisplayName;
 
-        protected override ResourceDefinitionExtensibilityPoint ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoint.Writing;
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Writing;
 
         protected MessagingUserDefinition(IResourceGraph resourceGraph, DbSet<DomainUser> userSet, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph, hitCounter)

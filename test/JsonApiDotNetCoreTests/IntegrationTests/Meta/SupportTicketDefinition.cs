@@ -8,7 +8,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class SupportTicketDefinition : HitCountingResourceDefinition<SupportTicket, int>
     {
-        protected override ResourceDefinitionExtensibilityPoint ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoint.GetMeta;
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.GetMeta;
 
         public SupportTicketDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph, hitCounter)

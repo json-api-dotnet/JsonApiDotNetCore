@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
     {
         private readonly ResourceDefinitionHitCounter _hitCounter;
 
-        protected virtual ResourceDefinitionExtensibilityPoint ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoint.All;
+        protected virtual ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.All;
 
         protected HitCountingResourceDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph)
@@ -32,9 +32,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
 
         public override IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnApplyIncludes))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnApplyIncludes))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnApplyIncludes);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnApplyIncludes);
             }
 
             return base.OnApplyIncludes(existingIncludes);
@@ -42,9 +42,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
 
         public override FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnApplyFilter))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnApplyFilter))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnApplyFilter);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnApplyFilter);
             }
 
             return base.OnApplyFilter(existingFilter);
@@ -52,9 +52,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
 
         public override SortExpression? OnApplySort(SortExpression? existingSort)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnApplySort))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnApplySort))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnApplySort);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnApplySort);
             }
 
             return base.OnApplySort(existingSort);
@@ -62,9 +62,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
 
         public override PaginationExpression? OnApplyPagination(PaginationExpression? existingPagination)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnApplyPagination))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnApplyPagination))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnApplyPagination);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnApplyPagination);
             }
 
             return base.OnApplyPagination(existingPagination);
@@ -72,9 +72,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
 
         public override SparseFieldSetExpression? OnApplySparseFieldSet(SparseFieldSetExpression? existingSparseFieldSet)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet);
             }
 
             return base.OnApplySparseFieldSet(existingSparseFieldSet);
@@ -82,9 +82,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
 
         public override QueryStringParameterHandlers<TResource>? OnRegisterQueryableHandlersForQueryStringParameters()
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnRegisterQueryableHandlersForQueryStringParameters))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnRegisterQueryableHandlersForQueryStringParameters);
             }
 
             return base.OnRegisterQueryableHandlersForQueryStringParameters();
@@ -92,9 +92,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
 
         public override IDictionary<string, object?>? GetMeta(TResource resource)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.GetMeta))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.GetMeta))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.GetMeta);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.GetMeta);
             }
 
             return base.GetMeta(resource);
@@ -102,9 +102,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
 
         public override Task OnPrepareWriteAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnPrepareWriteAsync))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnPrepareWriteAsync);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync);
             }
 
             return base.OnPrepareWriteAsync(resource, writeOperation, cancellationToken);
@@ -113,9 +113,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
         public override Task<IIdentifiable?> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship,
             IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnSetToOneRelationshipAsync))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnSetToOneRelationshipAsync))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnSetToOneRelationshipAsync);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnSetToOneRelationshipAsync);
             }
 
             return base.OnSetToOneRelationshipAsync(leftResource, hasOneRelationship, rightResourceId, writeOperation, cancellationToken);
@@ -124,9 +124,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
         public override Task OnSetToManyRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnSetToManyRelationshipAsync))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnSetToManyRelationshipAsync);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync);
             }
 
             return base.OnSetToManyRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, writeOperation, cancellationToken);
@@ -135,9 +135,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
         public override Task OnAddToRelationshipAsync(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnAddToRelationshipAsync))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnAddToRelationshipAsync))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnAddToRelationshipAsync);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnAddToRelationshipAsync);
             }
 
             return base.OnAddToRelationshipAsync(leftResourceId, hasManyRelationship, rightResourceIds, cancellationToken);
@@ -146,9 +146,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
         public override Task OnRemoveFromRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnRemoveFromRelationshipAsync))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnRemoveFromRelationshipAsync))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnRemoveFromRelationshipAsync);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnRemoveFromRelationshipAsync);
             }
 
             return base.OnRemoveFromRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, cancellationToken);
@@ -156,9 +156,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
 
         public override Task OnWritingAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnWritingAsync))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnWritingAsync))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnWritingAsync);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnWritingAsync);
             }
 
             return base.OnWritingAsync(resource, writeOperation, cancellationToken);
@@ -166,9 +166,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
 
         public override Task OnWriteSucceededAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnWriteSucceededAsync))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnWriteSucceededAsync);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync);
             }
 
             return base.OnWriteSucceededAsync(resource, writeOperation, cancellationToken);
@@ -176,9 +176,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
 
         public override void OnDeserialize(TResource resource)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnDeserialize))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnDeserialize))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnDeserialize);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnDeserialize);
             }
 
             base.OnDeserialize(resource);
@@ -186,9 +186,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
 
         public override void OnSerialize(TResource resource)
         {
-            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoint.OnSerialize))
+            if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnSerialize))
             {
-                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint.OnSerialize);
+                _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnSerialize);
             }
 
             base.OnSerialize(resource);

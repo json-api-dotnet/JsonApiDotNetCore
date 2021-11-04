@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class RecordCompanyDefinition : HitCountingResourceDefinition<RecordCompany, short>
     {
-        protected override ResourceDefinitionExtensibilityPoint ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoint.Serialization;
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Serialization;
 
         public RecordCompanyDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph, hitCounter)

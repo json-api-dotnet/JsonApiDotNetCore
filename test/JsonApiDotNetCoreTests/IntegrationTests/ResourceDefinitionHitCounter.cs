@@ -9,9 +9,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
     /// </summary>
     public sealed class ResourceDefinitionHitCounter
     {
-        internal IList<(Type, ResourceDefinitionExtensibilityPoint)> HitExtensibilityPoints { get; } = new List<(Type, ResourceDefinitionExtensibilityPoint)>();
+        internal IList<(Type, ResourceDefinitionExtensibilityPoints)> HitExtensibilityPoints { get; } =
+            new List<(Type, ResourceDefinitionExtensibilityPoints)>();
 
-        internal void TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoint extensibilityPoint)
+        internal void TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints extensibilityPoint)
             where TResource : IIdentifiable
         {
             HitExtensibilityPoints.Add((typeof(TResource), extensibilityPoint));

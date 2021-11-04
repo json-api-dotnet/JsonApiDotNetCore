@@ -83,8 +83,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize)
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 
@@ -152,10 +152,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize)
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 
@@ -194,7 +194,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize)
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 
@@ -242,8 +242,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize)
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 
@@ -283,7 +283,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize)
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 
@@ -325,7 +325,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize)
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 
@@ -381,8 +381,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnDeserialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize)
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnDeserialize),
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 
@@ -450,7 +450,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize)
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 
@@ -511,8 +511,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnDeserialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize)
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnDeserialize),
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 
@@ -596,8 +596,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoint.OnSerialize)
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
+                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 

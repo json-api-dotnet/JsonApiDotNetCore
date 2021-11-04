@@ -105,10 +105,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet)
+                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet)
             }, options => options.WithStrictOrdering());
         }
 
@@ -184,10 +184,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet)
+                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet)
             }, options => options.WithStrictOrdering());
         }
     }
