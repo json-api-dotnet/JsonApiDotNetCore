@@ -65,9 +65,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(SupportTicket), ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta),
-                (typeof(SupportTicket), ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta),
-                (typeof(SupportTicket), ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta)
+                (typeof(SupportTicket), ResourceDefinitionExtensibilityPoints.GetMeta),
+                (typeof(SupportTicket), ResourceDefinitionExtensibilityPoints.GetMeta),
+                (typeof(SupportTicket), ResourceDefinitionExtensibilityPoints.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -102,7 +102,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(SupportTicket), ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta)
+                (typeof(SupportTicket), ResourceDefinitionExtensibilityPoints.GetMeta)
             }, options => options.WithStrictOrdering());
         }
     }

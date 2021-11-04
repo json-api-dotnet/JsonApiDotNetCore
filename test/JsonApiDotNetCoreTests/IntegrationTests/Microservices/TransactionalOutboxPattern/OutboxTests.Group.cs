@@ -54,8 +54,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
@@ -135,9 +136,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
@@ -204,8 +206,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -291,9 +294,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -343,7 +347,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -384,7 +389,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -461,9 +467,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -538,8 +545,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnAddToRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnAddToRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -603,8 +611,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRemoveFromRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnRemoveFromRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

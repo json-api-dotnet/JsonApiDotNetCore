@@ -37,6 +37,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             options.IncludeExceptionStackTraceInErrors = false;
             options.AllowClientGeneratedIds = true;
             options.IncludeJsonApiVersion = false;
+            options.IncludeTotalResourceCount = true;
 
             if (!options.SerializerOptions.Converters.Any(converter => converter is JsonTimeSpanConverter))
             {
@@ -111,7 +112,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetings?include=attendees"",
-    ""first"": ""http://localhost/meetings?include=attendees""
+    ""first"": ""http://localhost/meetings?include=attendees"",
+    ""last"": ""http://localhost/meetings?include=attendees""
   },
   ""data"": [
     {
@@ -164,7 +166,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
         ""self"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"""
       }
     }
-  ]
+  ],
+  ""meta"": {
+    ""total"": 1
+  }
 }");
         }
 
@@ -239,7 +244,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetings/?include=attendees"",
-    ""first"": ""http://localhost/meetings/?include=attendees""
+    ""first"": ""http://localhost/meetings/?include=attendees"",
+    ""last"": ""http://localhost/meetings/?include=attendees""
   },
   ""data"": [
     {
@@ -268,7 +274,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
       }
     }
   ],
-  ""included"": []
+  ""included"": [],
+  ""meta"": {
+    ""total"": 1
+  }
 }");
         }
 
@@ -458,7 +467,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees"",
-    ""first"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees""
+    ""first"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees"",
+    ""last"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees""
   },
   ""data"": [
     {
@@ -479,7 +489,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
         ""self"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"""
       }
     }
-  ]
+  ],
+  ""meta"": {
+    ""total"": 1
+  }
 }");
         }
 
@@ -508,7 +521,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees"",
     ""first"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees""
   },
-  ""data"": []
+  ""data"": [],
+  ""meta"": {
+    ""total"": 0
+  }
 }");
         }
 
@@ -572,7 +588,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
   ""links"": {
     ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees"",
     ""related"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees"",
-    ""first"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees""
+    ""first"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees"",
+    ""last"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees""
   },
   ""data"": [
     {
@@ -583,7 +600,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
       ""type"": ""meetingAttendees"",
       ""id"": """ + meetingIds[1] + @"""
     }
-  ]
+  ],
+  ""meta"": {
+    ""total"": 2
+  }
 }");
         }
 

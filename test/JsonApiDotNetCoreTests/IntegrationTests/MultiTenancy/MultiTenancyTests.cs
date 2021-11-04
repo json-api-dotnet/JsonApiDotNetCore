@@ -43,6 +43,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.UseRelativeLinks = true;
+            options.IncludeTotalResourceCount = true;
         }
 
         [Fact]
@@ -1017,8 +1018,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be(route);
             responseDocument.Links.Related.Should().BeNull();
-            responseDocument.Links.First.Should().Be(route);
-            responseDocument.Links.Last.Should().BeNull();
+            responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
+            responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 

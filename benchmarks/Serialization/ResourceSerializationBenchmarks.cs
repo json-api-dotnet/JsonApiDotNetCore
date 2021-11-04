@@ -129,7 +129,7 @@ namespace Benchmarks.Serialization
             RelationshipAttribute multi4 = resourceAType.GetRelationshipByPropertyName(nameof(OutgoingResource.Multi4));
             RelationshipAttribute multi5 = resourceAType.GetRelationshipByPropertyName(nameof(OutgoingResource.Multi5));
 
-            ImmutableArray<ResourceFieldAttribute> chain = ArrayFactory.Create<ResourceFieldAttribute>(single2, single3, multi4, multi5).ToImmutableArray();
+            ImmutableArray<ResourceFieldAttribute> chain = ImmutableArray.Create<ResourceFieldAttribute>(single2, single3, multi4, multi5);
             IEnumerable<ResourceFieldChainExpression> chains = new ResourceFieldChainExpression(chain).AsEnumerable();
 
             var converter = new IncludeChainConverter();

@@ -34,6 +34,15 @@ namespace JsonApiDotNetCore.Queries.Expressions
             Terms = terms;
         }
 
+        public static FilterExpression? Compose(LogicalOperator @operator, params FilterExpression?[] filters)
+        {
+            ArgumentGuard.NotNull(filters, nameof(filters));
+
+            ImmutableArray<FilterExpression> terms = filters.WhereNotNull().ToImmutableArray();
+
+            return terms.Length > 1 ? new LogicalExpression(@operator, terms) : terms.FirstOrDefault();
+        }
+
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
         {
             return visitor.VisitLogical(this, argument);

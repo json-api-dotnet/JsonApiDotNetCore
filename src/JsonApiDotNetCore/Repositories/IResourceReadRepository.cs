@@ -27,8 +27,8 @@ namespace JsonApiDotNetCore.Repositories
         Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Executes a read query using the specified top-level filter and returns the top-level count of matching resources.
+        /// Executes a read query using the specified filter and returns the count of matching resources.
         /// </summary>
-        Task<int> CountAsync(FilterExpression? topFilter, CancellationToken cancellationToken);
+        Task<int> CountAsync(FilterExpression? filter, CancellationToken cancellationToken);
     }
 }

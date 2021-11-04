@@ -27,8 +27,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Invokes <see cref="IResourceReadRepository{TResource,TId}.CountAsync" /> for the specified resource type.
         /// </summary>
-        Task<int> CountAsync<TResource>(FilterExpression? topFilter, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable;
+        Task<int> CountAsync(ResourceType resourceType, FilterExpression? filter, CancellationToken cancellationToken);
 
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.GetForCreateAsync" />.

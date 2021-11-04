@@ -12,27 +12,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
 {
-    public abstract class MessagingGroupDefinition : JsonApiResourceDefinition<DomainGroup, Guid>
+    public abstract class MessagingGroupDefinition : HitCountingResourceDefinition<DomainGroup, Guid>
     {
         private readonly DbSet<DomainUser> _userSet;
         private readonly DbSet<DomainGroup> _groupSet;
-        private readonly ResourceDefinitionHitCounter _hitCounter;
         private readonly List<OutgoingMessage> _pendingMessages = new();
 
         private string? _beforeGroupName;
 
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Writing;
+
         protected MessagingGroupDefinition(IResourceGraph resourceGraph, DbSet<DomainUser> userSet, DbSet<DomainGroup> groupSet,
             ResourceDefinitionHitCounter hitCounter)
-            : base(resourceGraph)
+            : base(resourceGraph, hitCounter)
         {
             _userSet = userSet;
             _groupSet = groupSet;
-            _hitCounter = hitCounter;
         }
 
-        public override Task OnPrepareWriteAsync(DomainGroup group, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        public override async Task OnPrepareWriteAsync(DomainGroup group, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync);
+            await base.OnPrepareWriteAsync(group, writeOperation, cancellationToken);
 
             if (writeOperation == WriteOperationKind.CreateResource)
             {
@@ -42,14 +42,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
             {
                 _beforeGroupName = group.Name;
             }
-
-            return Task.CompletedTask;
         }
 
         public override async Task OnSetToManyRelationshipAsync(DomainGroup group, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync);
+            await base.OnSetToManyRelationshipAsync(group, hasManyRelationship, rightResourceIds, writeOperation, cancellationToken);
 
             if (hasManyRelationship.Property.Name == nameof(DomainGroup.Users))
             {
@@ -90,7 +88,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
         public override async Task OnAddToRelationshipAsync(Guid groupId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
-            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnAddToRelationshipAsync);
+            await base.OnAddToRelationshipAsync(groupId, hasManyRelationship, rightResourceIds, cancellationToken);
 
             if (hasManyRelationship.Property.Name == nameof(DomainGroup.Users))
             {
@@ -121,10 +119,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
             }
         }
 
-        public override Task OnRemoveFromRelationshipAsync(DomainGroup group, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+        public override async Task OnRemoveFromRelationshipAsync(DomainGroup group, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
-            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnRemoveFromRelationshipAsync);
+            await base.OnRemoveFromRelationshipAsync(group, hasManyRelationship, rightResourceIds, cancellationToken);
 
             if (hasManyRelationship.Property.Name == nameof(DomainGroup.Users))
             {
@@ -137,8 +135,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
                     _pendingMessages.Add(message);
                 }
             }
-
-            return Task.CompletedTask;
         }
 
         protected async Task FinishWriteAsync(DomainGroup group, WriteOperationKind writeOperation, CancellationToken cancellationToken)

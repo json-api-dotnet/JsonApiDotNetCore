@@ -69,8 +69,8 @@ namespace JsonApiDotNetCore.Services
 
             if (_options.IncludeTotalResourceCount)
             {
-                FilterExpression? topFilter = _queryLayerComposer.GetTopFilterFromConstraints(_request.PrimaryResourceType);
-                _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync<TResource>(topFilter, cancellationToken);
+                FilterExpression? topFilter = _queryLayerComposer.GetPrimaryFilterFromConstraints(_request.PrimaryResourceType);
+                _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync(_request.PrimaryResourceType, topFilter, cancellationToken);
 
                 if (_paginationContext.TotalResourceCount == 0)
                 {
@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.Services
             QueryLayer queryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResourceType);
             IReadOnlyCollection<TResource> resources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
 
-            if (queryLayer.Pagination?.PageSize != null && queryLayer.Pagination.PageSize.Value == resources.Count)
+            if (queryLayer.Pagination?.PageSize?.Value == resources.Count)
             {
                 _paginationContext.IsPageFull = true;
             }
@@ -115,6 +115,14 @@ namespace JsonApiDotNetCore.Services
 
             AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
             AssertHasRelationship(_request.Relationship, relationshipName);
+
+            if (_options.IncludeTotalResourceCount && _request.IsCollection)
+            {
+                await RetrieveResourceCountForNonPrimaryEndpointAsync(id, (HasManyAttribute)_request.Relationship, cancellationToken);
+
+                // We cannot return early when _paginationContext.TotalResourceCount == 0, because we don't know whether
+                // the parent resource exists. In case the parent does not exist, an error is produced below.
+            }
 
             QueryLayer secondaryLayer = _queryLayerComposer.ComposeFromConstraints(_request.SecondaryResourceType!);
 
@@ -152,6 +160,14 @@ namespace JsonApiDotNetCore.Services
             AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
             AssertHasRelationship(_request.Relationship, relationshipName);
 
+            if (_options.IncludeTotalResourceCount && _request.IsCollection)
+            {
+                await RetrieveResourceCountForNonPrimaryEndpointAsync(id, (HasManyAttribute)_request.Relationship, cancellationToken);
+
+                // We cannot return early when _paginationContext.TotalResourceCount == 0, because we don't know whether
+                // the parent resource exists. In case the parent does not exist, an error is produced below.
+            }
+
             QueryLayer secondaryLayer = _queryLayerComposer.ComposeSecondaryLayerForRelationship(_request.SecondaryResourceType!);
 
             QueryLayer primaryLayer =
@@ -162,7 +178,24 @@ namespace JsonApiDotNetCore.Services
             TResource? primaryResource = primaryResources.SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
 
-            return _request.Relationship.GetValue(primaryResource);
+            object? rightValue = _request.Relationship.GetValue(primaryResource);
+
+            if (rightValue is ICollection rightResources && secondaryLayer.Pagination?.PageSize?.Value == rightResources.Count)
+            {
+                _paginationContext.IsPageFull = true;
+            }
+
+            return rightValue;
+        }
+
+        private async Task RetrieveResourceCountForNonPrimaryEndpointAsync(TId id, HasManyAttribute relationship, CancellationToken cancellationToken)
+        {
+            FilterExpression? secondaryFilter = _queryLayerComposer.GetSecondaryFilterFromConstraints(id, relationship);
+
+            if (secondaryFilter != null)
+            {
+                _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync(relationship.RightType, secondaryFilter, cancellationToken);
+            }
         }
 
         /// <inheritdoc />

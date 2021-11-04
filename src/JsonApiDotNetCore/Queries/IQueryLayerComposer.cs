@@ -12,9 +12,14 @@ namespace JsonApiDotNetCore.Queries
     public interface IQueryLayerComposer
     {
         /// <summary>
-        /// Builds a top-level filter from constraints, used to determine total resource count.
+        /// Builds a filter from constraints, used to determine total resource count on a primary collection endpoint.
         /// </summary>
-        FilterExpression? GetTopFilterFromConstraints(ResourceType primaryResourceType);
+        FilterExpression? GetPrimaryFilterFromConstraints(ResourceType primaryResourceType);
+
+        /// <summary>
+        /// Builds a filter from constraints, used to determine total resource count on a secondary collection endpoint.
+        /// </summary>
+        FilterExpression? GetSecondaryFilterFromConstraints<TId>(TId primaryId, HasManyAttribute hasManyRelationship);
 
         /// <summary>
         /// Collects constraints and builds a <see cref="QueryLayer" /> out of them, used to retrieve the actual resources.

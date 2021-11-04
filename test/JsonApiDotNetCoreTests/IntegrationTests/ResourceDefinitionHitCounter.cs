@@ -5,13 +5,14 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCoreTests.IntegrationTests
 {
     /// <summary>
-    /// This is used solely in our tests, so we can assert which calls were made.
+    /// Used to keep track of invocations on <see cref="IResourceDefinition{TResource,TId}" /> callback methods.
     /// </summary>
     public sealed class ResourceDefinitionHitCounter
     {
-        internal IList<(Type, ExtensibilityPoint)> HitExtensibilityPoints { get; } = new List<(Type, ExtensibilityPoint)>();
+        internal IList<(Type, ResourceDefinitionExtensibilityPoints)> HitExtensibilityPoints { get; } =
+            new List<(Type, ResourceDefinitionExtensibilityPoints)>();
 
-        internal void TrackInvocation<TResource>(ExtensibilityPoint extensibilityPoint)
+        internal void TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints extensibilityPoint)
             where TResource : IIdentifiable
         {
             HitExtensibilityPoints.Add((typeof(TResource), extensibilityPoint));
@@ -20,26 +21,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
         internal void Reset()
         {
             HitExtensibilityPoints.Clear();
-        }
-
-        internal enum ExtensibilityPoint
-        {
-            OnApplyIncludes,
-            OnApplyFilter,
-            OnApplySort,
-            OnApplyPagination,
-            OnApplySparseFieldSet,
-            OnRegisterQueryableHandlersForQueryStringParameters,
-            GetMeta,
-            OnPrepareWriteAsync,
-            OnSetToOneRelationshipAsync,
-            OnSetToManyRelationshipAsync,
-            OnAddToRelationshipAsync,
-            OnRemoveFromRelationshipAsync,
-            OnWritingAsync,
-            OnWriteSucceededAsync,
-            OnDeserialize,
-            OnSerialize
         }
     }
 }

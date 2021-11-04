@@ -48,11 +48,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
                     FilterExpression isUnarchived = new ComparisonExpression(ComparisonOperator.Equals, archivedAtChain, NullConstantExpression.Instance);
 
-                    return existingFilter == null ? isUnarchived : new LogicalExpression(LogicalOperator.And, existingFilter, isUnarchived);
+                    return LogicalExpression.Compose(LogicalOperator.And, existingFilter, isUnarchived);
                 }
             }
 
-            return base.OnApplyFilter(existingFilter);
+            return existingFilter;
         }
 
         private bool IsReturningCollectionOfTelevisionBroadcasts()
@@ -119,7 +119,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
                 _storedArchivedAt = broadcast.ArchivedAt;
             }
 
-            return base.OnPrepareWriteAsync(broadcast, writeOperation, cancellationToken);
+            return Task.CompletedTask;
         }
 
         public override async Task OnWritingAsync(TelevisionBroadcast broadcast, WriteOperationKind writeOperation, CancellationToken cancellationToken)

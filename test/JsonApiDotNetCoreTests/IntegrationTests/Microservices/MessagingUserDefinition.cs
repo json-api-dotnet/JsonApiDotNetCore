@@ -11,25 +11,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
 {
-    public abstract class MessagingUserDefinition : JsonApiResourceDefinition<DomainUser, Guid>
+    public abstract class MessagingUserDefinition : HitCountingResourceDefinition<DomainUser, Guid>
     {
         private readonly DbSet<DomainUser> _userSet;
-        private readonly ResourceDefinitionHitCounter _hitCounter;
         private readonly List<OutgoingMessage> _pendingMessages = new();
 
         private string? _beforeLoginName;
         private string? _beforeDisplayName;
 
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Writing;
+
         protected MessagingUserDefinition(IResourceGraph resourceGraph, DbSet<DomainUser> userSet, ResourceDefinitionHitCounter hitCounter)
-            : base(resourceGraph)
+            : base(resourceGraph, hitCounter)
         {
             _userSet = userSet;
-            _hitCounter = hitCounter;
         }
 
-        public override Task OnPrepareWriteAsync(DomainUser user, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        public override async Task OnPrepareWriteAsync(DomainUser user, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            _hitCounter.TrackInvocation<DomainUser>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync);
+            await base.OnPrepareWriteAsync(user, writeOperation, cancellationToken);
 
             if (writeOperation == WriteOperationKind.CreateResource)
             {
@@ -40,14 +40,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
                 _beforeLoginName = user.LoginName;
                 _beforeDisplayName = user.DisplayName;
             }
-
-            return Task.CompletedTask;
         }
 
-        public override Task<IIdentifiable?> OnSetToOneRelationshipAsync(DomainUser user, HasOneAttribute hasOneRelationship, IIdentifiable? rightResourceId,
-            WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        public override async Task<IIdentifiable?> OnSetToOneRelationshipAsync(DomainUser user, HasOneAttribute hasOneRelationship,
+            IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            _hitCounter.TrackInvocation<DomainUser>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync);
+            await base.OnSetToOneRelationshipAsync(user, hasOneRelationship, rightResourceId, writeOperation, cancellationToken);
 
             if (hasOneRelationship.Property.Name == nameof(DomainUser.Group))
             {
@@ -74,7 +72,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
                 }
             }
 
-            return Task.FromResult(rightResourceId);
+            return rightResourceId;
         }
 
         protected async Task FinishWriteAsync(DomainUser user, WriteOperationKind writeOperation, CancellationToken cancellationToken)

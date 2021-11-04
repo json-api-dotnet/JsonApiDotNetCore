@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
             throw new NotImplementedException();
         }
 
-        public Task<int> CountAsync(FilterExpression? topFilter, CancellationToken cancellationToken)
+        public Task<int> CountAsync(FilterExpression? filter, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

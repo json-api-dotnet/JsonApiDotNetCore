@@ -104,8 +104,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.Related.Should().BeNull();
-            responseDocument.Links.First.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.Last.Should().Be($"{HostPrefix}{route}");
+            responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
+            responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
@@ -214,8 +214,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.Related.Should().BeNull();
-            responseDocument.Links.First.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.Last.Should().BeNull();
+            responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
+            responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
@@ -296,8 +296,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
             responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.Related.Should().Be($"{HostPrefix}{PathPrefix}/photoAlbums/{album.StringId}/photos");
-            responseDocument.Links.First.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.Last.Should().BeNull();
+            responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
+            responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 

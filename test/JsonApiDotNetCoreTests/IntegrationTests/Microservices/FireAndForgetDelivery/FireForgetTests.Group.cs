@@ -48,9 +48,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             messageBroker.SentMessages.ShouldHaveCount(1);
@@ -126,10 +126,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             messageBroker.SentMessages.ShouldHaveCount(3);
@@ -192,9 +192,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             messageBroker.SentMessages.ShouldHaveCount(1);
@@ -276,10 +276,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             messageBroker.SentMessages.ShouldHaveCount(3);
@@ -325,8 +325,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             messageBroker.SentMessages.ShouldHaveCount(1);
@@ -363,8 +363,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             messageBroker.SentMessages.ShouldHaveCount(2);
@@ -437,10 +437,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             messageBroker.SentMessages.ShouldHaveCount(3);
@@ -511,9 +511,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnAddToRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnAddToRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             messageBroker.SentMessages.ShouldHaveCount(2);
@@ -573,9 +573,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRemoveFromRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnRemoveFromRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             messageBroker.SentMessages.ShouldHaveCount(1);
