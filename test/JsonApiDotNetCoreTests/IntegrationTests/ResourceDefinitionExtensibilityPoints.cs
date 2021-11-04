@@ -9,6 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests
     [Flags]
     public enum ResourceDefinitionExtensibilityPoints
     {
+        None = 0,
         OnApplyIncludes = 1,
         OnApplyFilter = 1 << 1,
         OnApplySort = 1 << 2,
