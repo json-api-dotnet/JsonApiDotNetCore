@@ -1,20 +1,19 @@
 namespace JsonApiDotNetCore.Resources
 {
     /// <summary>
-    /// When implemented by a class, indicates to JsonApiDotNetCore that the class represents a JSON:API resource. Note that JsonApiDotNetCore also assumes
-    /// that a property named 'Id' exists.
+    /// Defines the basic contract for a JSON:API resource. All resource classes must implement <see cref="IIdentifiable{TId}" />.
     /// </summary>
     public interface IIdentifiable
     {
         /// <summary>
         /// The value for element 'id' in a JSON:API request or response.
         /// </summary>
-        string StringId { get; set; }
+        string? StringId { get; set; }
 
         /// <summary>
         /// The value for element 'lid' in a JSON:API request.
         /// </summary>
-        string LocalId { get; set; }
+        string? LocalId { get; set; }
     }
 
     /// <summary>
@@ -26,7 +25,7 @@ namespace JsonApiDotNetCore.Resources
     public interface IIdentifiable<TId> : IIdentifiable
     {
         /// <summary>
-        /// The typed identifier as used by the underlying data store (usually numeric).
+        /// The typed identifier as used by the underlying data store (usually numeric or Guid).
         /// </summary>
         TId Id { get; set; }
     }

@@ -68,20 +68,20 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             ArgumentGuard.NotNull(chains, nameof(chains));
 
-            IImmutableList<IncludeElementExpression> elements = ConvertChainsToElements(chains);
+            IImmutableSet<IncludeElementExpression> elements = ConvertChainsToElements(chains);
             return elements.Any() ? new IncludeExpression(elements) : IncludeExpression.Empty;
         }
 
-        private static IImmutableList<IncludeElementExpression> ConvertChainsToElements(IEnumerable<ResourceFieldChainExpression> chains)
+        private static IImmutableSet<IncludeElementExpression> ConvertChainsToElements(IEnumerable<ResourceFieldChainExpression> chains)
         {
-            var rootNode = new MutableIncludeNode(null);
+            var rootNode = new MutableIncludeNode(null!);
 
             foreach (ResourceFieldChainExpression chain in chains)
             {
                 ConvertChainToElement(chain, rootNode);
             }
 
-            return rootNode.Children.Values.Select(child => child.ToExpression()).ToImmutableArray();
+            return rootNode.Children.Values.Select(child => child.ToExpression()).ToImmutableHashSet();
         }
 
         private static void ConvertChainToElement(ResourceFieldChainExpression chain, MutableIncludeNode rootNode)
@@ -99,13 +99,13 @@ namespace JsonApiDotNetCore.Queries.Expressions
             }
         }
 
-        private sealed class IncludeToChainsConverter : QueryExpressionVisitor<object, object>
+        private sealed class IncludeToChainsConverter : QueryExpressionVisitor<object?, object?>
         {
             private readonly Stack<RelationshipAttribute> _parentRelationshipStack = new();
 
             public List<ResourceFieldChainExpression> Chains { get; } = new();
 
-            public override object VisitInclude(IncludeExpression expression, object argument)
+            public override object? VisitInclude(IncludeExpression expression, object? argument)
             {
                 foreach (IncludeElementExpression element in expression.Elements)
                 {
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return null;
             }
 
-            public override object VisitIncludeElement(IncludeElementExpression expression, object argument)
+            public override object? VisitIncludeElement(IncludeElementExpression expression, object? argument)
             {
                 if (!expression.Children.Any())
                 {
@@ -161,7 +161,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             public IncludeElementExpression ToExpression()
             {
-                ImmutableArray<IncludeElementExpression> elementChildren = Children.Values.Select(child => child.ToExpression()).ToImmutableArray();
+                IImmutableSet<IncludeElementExpression> elementChildren = Children.Values.Select(child => child.ToExpression()).ToImmutableHashSet();
                 return new IncludeElementExpression(_relationship, elementChildren);
             }
         }

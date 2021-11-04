@@ -23,7 +23,7 @@ public class Startup
 resource definition on the container yourself:
 
 ```c#
-services.AddScoped<ResourceDefinition<Product>, ProductResource>();
+services.AddScoped<ResourceDefinition<Product, int>, ProductDefinition>();
 ```
 
 ## Customizing queries
@@ -31,7 +31,7 @@ services.AddScoped<ResourceDefinition<Product>, ProductResource>();
 _since v4.0_
 
 For various reasons (see examples below) you may need to change parts of the query, depending on resource type.
-`JsonApiResourceDefinition<TResource>` (which is an empty implementation of `IResourceDefinition<TResource>`) provides overridable methods that pass you the result of query string parameter parsing.
+`JsonApiResourceDefinition<TResource, TId>` (which is an empty implementation of `IResourceDefinition<TResource, TId>`) provides overridable methods that pass you the result of query string parameter parsing.
 The value returned by you determines what will be used to execute the query.
 
 An intermediate format (`QueryExpression` and derived types) is used, which enables us to separate JSON:API implementation 
@@ -45,7 +45,7 @@ For example, you may accept some sensitive data that should only be exposed to a
 **Note:** to exclude attributes unconditionally, use `[Attr(Capabilities = ~AttrCapabilities.AllowView)]` on a resource class property.
 
 ```c#
-public class UserDefinition : JsonApiResourceDefinition<User>
+public class UserDefinition : JsonApiResourceDefinition<User, int>
 {
     public UserDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -104,7 +104,7 @@ Content-Type: application/vnd.api+json
 You can define the default sort order if no `sort` query string parameter is provided.
 
 ```c#
-public class AccountDefinition : JsonApiResourceDefinition<Account>
+public class AccountDefinition : JsonApiResourceDefinition<Account, int>
 {
     public AccountDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -132,7 +132,7 @@ public class AccountDefinition : JsonApiResourceDefinition<Account>
 You may want to enforce pagination on large database tables.
 
 ```c#
-public class AccessLogDefinition : JsonApiResourceDefinition<AccessLog>
+public class AccessLogDefinition : JsonApiResourceDefinition<AccessLog, int>
 {
     public AccessLogDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -163,7 +163,7 @@ public class AccessLogDefinition : JsonApiResourceDefinition<AccessLog>
 The next example filters out `Account` resources that are suspended.
 
 ```c#
-public class AccountDefinition : JsonApiResourceDefinition<Account>
+public class AccountDefinition : JsonApiResourceDefinition<Account, int>
 {
     public AccountDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -172,11 +172,8 @@ public class AccountDefinition : JsonApiResourceDefinition<Account>
 
     public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
     {
-        var resourceContext = ResourceGraph.GetResourceContext<Account>();
-
-        var isSuspendedAttribute =
-            resourceContext.Attributes.Single(account =>
-                account.Property.Name == nameof(Account.IsSuspended));
+        var isSuspendedAttribute = ResourceType.Attributes.Single(account =>
+            account.Property.Name == nameof(Account.IsSuspended));
 
         var isNotSuspended = new ComparisonExpression(ComparisonOperator.Equals,
             new ResourceFieldChainExpression(isSuspendedAttribute),
@@ -195,7 +192,7 @@ public class AccountDefinition : JsonApiResourceDefinition<Account>
 In the example below, an error is returned when a user tries to include the manager of an employee.
 
 ```c#
-public class EmployeeDefinition : JsonApiResourceDefinition<Employee>
+public class EmployeeDefinition : JsonApiResourceDefinition<Employee, int>
 {
     public EmployeeDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -226,11 +223,11 @@ _since v3_
 You can define additional query string parameters with the LINQ expression that should be used.
 If the key is present in a query string, the supplied LINQ expression will be added to the database query.
 
-Note this directly influences the Entity Framework Core `IQueryable`. As opposed to using `OnApplyFilter`, this enables the full range of EF Core operators. 
+Note this directly influences the Entity Framework Core `IQueryable`. As opposed to using `OnApplyFilter`, this enables the full range of Entity Framework Core operators. 
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).
 
 ```c#
-public class ItemDefinition : JsonApiResourceDefinition<Item>
+public class ItemDefinition : JsonApiResourceDefinition<Item, int>
 {
     public ItemDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)

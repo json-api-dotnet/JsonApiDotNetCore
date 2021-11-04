@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Middleware
@@ -58,7 +59,8 @@ namespace UnitTests.Middleware
 
             var controllerResourceMappingMock = new Mock<IControllerResourceMapping>();
 
-            controllerResourceMappingMock.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(typeof(TodoItem));
+            ResourceType todoItemType = resourceGraph.GetResourceType<TodoItem>();
+            controllerResourceMappingMock.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(todoItemType);
 
             var httpContext = new DefaultHttpContext();
             SetupRoutes(httpContext, requestMethod, requestPath);
@@ -68,16 +70,15 @@ namespace UnitTests.Middleware
             var middleware = new JsonApiMiddleware(_ => Task.CompletedTask, new HttpContextAccessor());
 
             // Act
-            await middleware.InvokeAsync(httpContext, controllerResourceMappingMock.Object, options, request, resourceGraph,
-                NullLogger<JsonApiMiddleware>.Instance);
+            await middleware.InvokeAsync(httpContext, controllerResourceMappingMock.Object, options, request, NullLogger<JsonApiMiddleware>.Instance);
 
             // Assert
             request.IsCollection.Should().Be(expectIsCollection);
             request.Kind.Should().Be(expectKind);
             request.WriteOperation.Should().Be(expectWriteOperation);
             request.IsReadOnly.Should().Be(expectIsReadOnly);
-            request.PrimaryResource.Should().NotBeNull();
-            request.PrimaryResource.PublicName.Should().Be("todoItems");
+            request.PrimaryResourceType.ShouldNotBeNull();
+            request.PrimaryResourceType.PublicName.Should().Be("todoItems");
         }
 
         private static void SetupRoutes(HttpContext httpContext, string requestMethod, string requestPath)
@@ -121,25 +122,25 @@ namespace UnitTests.Middleware
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Itself)]
-        private sealed class Person : Identifiable
+        private sealed class Person : Identifiable<int>
         {
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        private sealed class Tag : Identifiable
+        private sealed class Tag : Identifiable<int>
         {
             [HasMany]
-            public ISet<TodoItem> TodoItems { get; set; }
+            public ISet<TodoItem> TodoItems { get; set; } = new HashSet<TodoItem>();
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        private sealed class TodoItem : Identifiable
+        private sealed class TodoItem : Identifiable<int>
         {
             [HasOne]
-            public Person Owner { get; set; }
+            public Person? Owner { get; set; }
 
             [HasMany]
-            public ISet<Tag> Tags { get; set; }
+            public ISet<Tag> Tags { get; set; } = new HashSet<Tag>();
         }
     }
 }

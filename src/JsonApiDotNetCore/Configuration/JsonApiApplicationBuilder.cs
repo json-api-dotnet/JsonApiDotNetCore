@@ -10,16 +10,15 @@ using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.JsonConverters;
+using JsonApiDotNetCore.Serialization.Request;
+using JsonApiDotNetCore.Serialization.Request.Adapters;
+using JsonApiDotNetCore.Serialization.Response;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -39,7 +38,7 @@ namespace JsonApiDotNetCore.Configuration
         private readonly ServiceDiscoveryFacade _serviceDiscoveryFacade;
         private readonly ServiceProvider _intermediateProvider;
 
-        public Action<MvcOptions> ConfigureMvcOptions { get; set; }
+        public Action<MvcOptions>? ConfigureMvcOptions { get; set; }
 
         public JsonApiApplicationBuilder(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
         {
@@ -59,7 +58,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Executes the action provided by the user to configure <see cref="JsonApiOptions" />.
         /// </summary>
-        public void ConfigureJsonApiOptions(Action<JsonApiOptions> configureOptions)
+        public void ConfigureJsonApiOptions(Action<JsonApiOptions>? configureOptions)
         {
             configureOptions?.Invoke(_options);
         }
@@ -67,7 +66,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Executes the action provided by the user to configure <see cref="ServiceDiscoveryFacade" />.
         /// </summary>
-        public void ConfigureAutoDiscovery(Action<ServiceDiscoveryFacade> configureAutoDiscovery)
+        public void ConfigureAutoDiscovery(Action<ServiceDiscoveryFacade>? configureAutoDiscovery)
         {
             configureAutoDiscovery?.Invoke(_serviceDiscoveryFacade);
         }
@@ -75,14 +74,16 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Configures and builds the resource graph with resources from the provided sources and adds it to the DI container.
         /// </summary>
-        public void AddResourceGraph(ICollection<Type> dbContextTypes, Action<ResourceGraphBuilder> configureResourceGraph)
+        public void ConfigureResourceGraph(ICollection<Type> dbContextTypes, Action<ResourceGraphBuilder>? configureResourceGraph)
         {
+            ArgumentGuard.NotNull(dbContextTypes, nameof(dbContextTypes));
+
             _serviceDiscoveryFacade.DiscoverResources();
 
             foreach (Type dbContextType in dbContextTypes)
             {
                 var dbContext = (DbContext)_intermediateProvider.GetRequiredService(dbContextType);
-                AddResourcesFromDbContext(dbContext, _resourceGraphBuilder);
+                _resourceGraphBuilder.Add(dbContext);
             }
 
             configureResourceGraph?.Invoke(_resourceGraphBuilder);
@@ -95,7 +96,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Configures built-in ASP.NET Core MVC components. Most of this configuration can be adjusted for the developers' need.
+        /// Configures built-in ASP.NET MVC components. Most of this configuration can be adjusted for the developers' need.
         /// </summary>
         public void ConfigureMvc()
         {
@@ -128,14 +129,16 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public void ConfigureServiceContainer(ICollection<Type> dbContextTypes)
         {
+            ArgumentGuard.NotNull(dbContextTypes, nameof(dbContextTypes));
+
             if (dbContextTypes.Any())
             {
                 _services.AddScoped(typeof(DbContextResolver<>));
 
                 foreach (Type dbContextType in dbContextTypes)
                 {
-                    Type contextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
-                    _services.AddScoped(typeof(IDbContextResolver), contextResolverType);
+                    Type dbContextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
+                    _services.AddScoped(typeof(IDbContextResolver), dbContextResolverType);
                 }
 
                 _services.AddScoped<IOperationsTransactionFactory, EntityFrameworkCoreTransactionFactory>();
@@ -156,6 +159,7 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
             _services.AddScoped<IPaginationContext, PaginationContext>();
             _services.AddScoped<IEvaluatedIncludeCache, EvaluatedIncludeCache>();
+            _services.AddScoped<ISparseFieldSetCache, SparseFieldSetCache>();
             _services.AddScoped<IQueryLayerComposer, QueryLayerComposer>();
             _services.AddScoped<IInverseNavigationResolver, InverseNavigationResolver>();
         }
@@ -173,18 +177,15 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
             _services.AddSingleton<IControllerResourceMapping>(sp => sp.GetRequiredService<IJsonApiRoutingConvention>());
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            _services.AddSingleton<IRequestScopedServiceProvider, RequestScopedServiceProvider>();
             _services.AddScoped<IJsonApiRequest, JsonApiRequest>();
             _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             _services.AddScoped<IJsonApiReader, JsonApiReader>();
             _services.AddScoped<ITargetedFields, TargetedFields>();
-            _services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
         }
 
         private void AddResourceLayer()
         {
-            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ResourceDefinitionInterfaces, typeof(JsonApiResourceDefinition<>),
-                typeof(JsonApiResourceDefinition<,>));
+            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ResourceDefinitionInterfaces, typeof(JsonApiResourceDefinition<,>));
 
             _services.AddScoped<IResourceDefinitionAccessor, ResourceDefinitionAccessor>();
             _services.AddScoped<IResourceFactory, ResourceFactory>();
@@ -192,24 +193,20 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddRepositoryLayer()
         {
-            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.RepositoryInterfaces, typeof(EntityFrameworkCoreRepository<>),
-                typeof(EntityFrameworkCoreRepository<,>));
+            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.RepositoryInterfaces, typeof(EntityFrameworkCoreRepository<,>));
 
             _services.AddScoped<IResourceRepositoryAccessor, ResourceRepositoryAccessor>();
         }
 
         private void AddServiceLayer()
         {
-            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ServiceInterfaces, typeof(JsonApiResourceService<>),
-                typeof(JsonApiResourceService<,>));
+            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ServiceInterfaces, typeof(JsonApiResourceService<,>));
         }
 
-        private void RegisterImplementationForOpenInterfaces(HashSet<Type> openGenericInterfaces, Type intImplementation, Type implementation)
+        private void RegisterImplementationForOpenInterfaces(HashSet<Type> openGenericInterfaces, Type implementationType)
         {
             foreach (Type openGenericInterface in openGenericInterfaces)
             {
-                Type implementationType = openGenericInterface.GetGenericArguments().Length == 1 ? intImplementation : implementation;
-
                 _services.TryAddScoped(openGenericInterface, implementationType);
             }
         }
@@ -250,18 +247,23 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddSerializationLayer()
         {
-            _services.AddScoped<IIncludedResourceObjectBuilder, IncludedResourceObjectBuilder>();
-            _services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();
-            _services.AddScoped<IJsonApiSerializerFactory, ResponseSerializerFactory>();
+            _services.AddScoped<IResourceIdentifierObjectAdapter, ResourceIdentifierObjectAdapter>();
+            _services.AddScoped<IRelationshipDataAdapter, RelationshipDataAdapter>();
+            _services.AddScoped<IResourceObjectAdapter, ResourceObjectAdapter>();
+            _services.AddScoped<IResourceDataAdapter, ResourceDataAdapter>();
+            _services.AddScoped<IAtomicReferenceAdapter, AtomicReferenceAdapter>();
+            _services.AddScoped<IResourceDataInOperationsRequestAdapter, ResourceDataInOperationsRequestAdapter>();
+            _services.AddScoped<IAtomicOperationObjectAdapter, AtomicOperationObjectAdapter>();
+            _services.AddScoped<IDocumentInResourceOrRelationshipRequestAdapter, DocumentInResourceOrRelationshipRequestAdapter>();
+            _services.AddScoped<IDocumentInOperationsRequestAdapter, DocumentInOperationsRequestAdapter>();
+            _services.AddScoped<IDocumentAdapter, DocumentAdapter>();
+
             _services.AddScoped<ILinkBuilder, LinkBuilder>();
             _services.AddScoped<IResponseMeta, EmptyResponseMeta>();
             _services.AddScoped<IMetaBuilder, MetaBuilder>();
-            _services.AddScoped(typeof(ResponseSerializer<>));
-            _services.AddScoped(typeof(AtomicOperationsResponseSerializer));
-            _services.AddScoped(sp => sp.GetRequiredService<IJsonApiSerializerFactory>().GetSerializer());
-            _services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
             _services.AddSingleton<IFingerprintGenerator, FingerprintGenerator>();
             _services.AddSingleton<IETagGenerator, ETagGenerator>();
+            _services.AddScoped<IResponseModelAdapter, ResponseModelAdapter>();
         }
 
         private void AddOperationsLayer()
@@ -276,24 +278,6 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IOperationsProcessor, OperationsProcessor>();
             _services.AddScoped<IOperationProcessorAccessor, OperationProcessorAccessor>();
             _services.AddScoped<ILocalIdTracker, LocalIdTracker>();
-        }
-
-        private void AddResourcesFromDbContext(DbContext dbContext, ResourceGraphBuilder builder)
-        {
-            foreach (IEntityType entityType in dbContext.Model.GetEntityTypes())
-            {
-                if (!IsImplicitManyToManyJoinEntity(entityType))
-                {
-                    builder.Add(entityType.ClrType);
-                }
-            }
-        }
-
-        private static bool IsImplicitManyToManyJoinEntity(IEntityType entityType)
-        {
-#pragma warning disable EF1001 // Internal EF Core API usage.
-            return entityType is EntityType { IsImplicitlyCreatedJoinEntityType: true };
-#pragma warning restore EF1001 // Internal EF Core API usage.
         }
 
         public void Dispose()

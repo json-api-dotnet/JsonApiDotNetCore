@@ -7,12 +7,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
     public sealed class DebitCard : ObfuscatedIdentifiable
     {
         [Attr]
-        public string OwnerName { get; set; }
+        public string OwnerName { get; set; } = null!;
 
         [Attr]
         public short PinCode { get; set; }
 
         [HasOne]
-        public BankAccount Account { get; set; }
+        public BankAccount Account { get; set; } = null!;
     }
 }

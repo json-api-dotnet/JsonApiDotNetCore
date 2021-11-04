@@ -6,10 +6,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class TelevisionDbContext : DbContext
     {
-        public DbSet<TelevisionNetwork> Networks { get; set; }
-        public DbSet<TelevisionStation> Stations { get; set; }
-        public DbSet<TelevisionBroadcast> Broadcasts { get; set; }
-        public DbSet<BroadcastComment> Comments { get; set; }
+        public DbSet<TelevisionNetwork> Networks => Set<TelevisionNetwork>();
+        public DbSet<TelevisionStation> Stations => Set<TelevisionStation>();
+        public DbSet<TelevisionBroadcast> Broadcasts => Set<TelevisionBroadcast>();
+        public DbSet<BroadcastComment> Comments => Set<BroadcastComment>();
 
         public TelevisionDbContext(DbContextOptions<TelevisionDbContext> options)
             : base(options)

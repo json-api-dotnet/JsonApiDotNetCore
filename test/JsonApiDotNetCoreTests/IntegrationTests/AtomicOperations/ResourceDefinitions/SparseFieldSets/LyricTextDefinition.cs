@@ -1,30 +1,27 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefinitions.SparseFieldSets
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class LyricTextDefinition : JsonApiResourceDefinition<Lyric, long>
+    public sealed class LyricTextDefinition : HitCountingResourceDefinition<Lyric, long>
     {
         private readonly LyricPermissionProvider _lyricPermissionProvider;
-        private readonly ResourceDefinitionHitCounter _hitCounter;
+
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet;
 
         public LyricTextDefinition(IResourceGraph resourceGraph, LyricPermissionProvider lyricPermissionProvider, ResourceDefinitionHitCounter hitCounter)
-            : base(resourceGraph)
+            : base(resourceGraph, hitCounter)
         {
             _lyricPermissionProvider = lyricPermissionProvider;
-            _hitCounter = hitCounter;
         }
 
-        public override SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+        public override SparseFieldSetExpression? OnApplySparseFieldSet(SparseFieldSetExpression? existingSparseFieldSet)
         {
-            _hitCounter.TrackInvocation<Lyric>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet);
+            base.OnApplySparseFieldSet(existingSparseFieldSet);
 
-            return _lyricPermissionProvider.CanViewText
-                ? base.OnApplySparseFieldSet(existingSparseFieldSet)
-                : existingSparseFieldSet.Excluding<Lyric>(lyric => lyric.Text, ResourceGraph);
+            return _lyricPermissionProvider.CanViewText ? existingSparseFieldSet : existingSparseFieldSet.Excluding<Lyric>(lyric => lyric.Text, ResourceGraph);
         }
     }
 }

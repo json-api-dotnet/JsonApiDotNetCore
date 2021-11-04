@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCore.Serialization.Request;
 
 namespace JsonApiDotNetCore.Serialization.JsonConverters
 {
@@ -28,6 +29,8 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
 
         public ResourceObjectConverter(IResourceGraph resourceGraph)
         {
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+
             _resourceGraph = resourceGraph;
         }
 
@@ -45,10 +48,10 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             {
                 // The 'attributes' element may occur before 'type', but we need to know the resource type before we can deserialize attributes
                 // into their corresponding CLR types.
-                Type = TryPeekType(ref reader)
+                Type = PeekType(ref reader)
             };
 
-            ResourceContext resourceContext = resourceObject.Type != null ? _resourceGraph.TryGetResourceContext(resourceObject.Type) : null;
+            ResourceType? resourceType = resourceObject.Type != null ? _resourceGraph.FindResourceType(resourceObject.Type) : null;
 
             while (reader.Read())
             {
@@ -60,7 +63,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                     }
                     case JsonTokenType.PropertyName:
                     {
-                        string propertyName = reader.GetString();
+                        string? propertyName = reader.GetString();
                         reader.Read();
 
                         switch (propertyName)
@@ -85,9 +88,9 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                             }
                             case "attributes":
                             {
-                                if (resourceContext != null)
+                                if (resourceType != null)
                                 {
-                                    resourceObject.Attributes = ReadAttributes(ref reader, options, resourceContext);
+                                    resourceObject.Attributes = ReadAttributes(ref reader, options, resourceType);
                                 }
                                 else
                                 {
@@ -98,7 +101,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                             }
                             case "relationships":
                             {
-                                resourceObject.Relationships = ReadSubTree<IDictionary<string, RelationshipObject>>(ref reader, options);
+                                resourceObject.Relationships = ReadSubTree<IDictionary<string, RelationshipObject?>>(ref reader, options);
                                 break;
                             }
                             case "links":
@@ -108,7 +111,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                             }
                             case "meta":
                             {
-                                resourceObject.Meta = ReadSubTree<IDictionary<string, object>>(ref reader, options);
+                                resourceObject.Meta = ReadSubTree<IDictionary<string, object?>>(ref reader, options);
                                 break;
                             }
                             default:
@@ -126,7 +129,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             throw GetEndOfStreamError();
         }
 
-        private static string TryPeekType(ref Utf8JsonReader reader)
+        private static string? PeekType(ref Utf8JsonReader reader)
         {
             // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-converters-how-to?pivots=dotnet-5-0#an-alternative-way-to-do-polymorphic-deserialization
             Utf8JsonReader readerClone = reader;
@@ -135,7 +138,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             {
                 if (readerClone.TokenType == JsonTokenType.PropertyName)
                 {
-                    string propertyName = readerClone.GetString();
+                    string? propertyName = readerClone.GetString();
                     readerClone.Read();
 
                     switch (propertyName)
@@ -156,9 +159,9 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             return null;
         }
 
-        private static IDictionary<string, object> ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceContext resourceContext)
+        private static IDictionary<string, object?> ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceType resourceType)
         {
-            var attributes = new Dictionary<string, object>();
+            var attributes = new Dictionary<string, object?>();
 
             while (reader.Read())
             {
@@ -170,17 +173,17 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                     }
                     case JsonTokenType.PropertyName:
                     {
-                        string attributeName = reader.GetString();
+                        string attributeName = reader.GetString() ?? string.Empty;
                         reader.Read();
 
-                        AttrAttribute attribute = resourceContext.TryGetAttributeByPublicName(attributeName);
-                        PropertyInfo property = attribute?.Property;
+                        AttrAttribute? attribute = resourceType.FindAttributeByPublicName(attributeName);
+                        PropertyInfo? property = attribute?.Property;
 
                         if (property != null)
                         {
-                            object attributeValue;
+                            object? attributeValue;
 
-                            if (property.Name == nameof(Identifiable.Id))
+                            if (property.Name == nameof(Identifiable<object>.Id))
                             {
                                 attributeValue = JsonInvalidAttributeInfo.Id;
                             }
@@ -202,10 +205,11 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                                 }
                             }
 
-                            attributes.Add(attributeName!, attributeValue);
+                            attributes.Add(attributeName, attributeValue);
                         }
                         else
                         {
+                            attributes.Add(attributeName, null);
                             reader.Skip();
                         }
 

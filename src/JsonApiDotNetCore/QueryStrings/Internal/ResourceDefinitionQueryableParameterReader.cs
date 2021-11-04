@@ -42,22 +42,22 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                 return false;
             }
 
-            object queryableHandler = GetQueryableHandler(parameterName);
+            object? queryableHandler = GetQueryableHandler(parameterName);
             return queryableHandler != null;
         }
 
         /// <inheritdoc />
         public virtual void Read(string parameterName, StringValues parameterValue)
         {
-            object queryableHandler = GetQueryableHandler(parameterName);
+            object queryableHandler = GetQueryableHandler(parameterName)!;
             var expressionInScope = new ExpressionInScope(null, new QueryableHandlerExpression(queryableHandler, parameterValue));
             _constraints.Add(expressionInScope);
         }
 
-        private object GetQueryableHandler(string parameterName)
+        private object? GetQueryableHandler(string parameterName)
         {
-            Type resourceType = (_request.SecondaryResource ?? _request.PrimaryResource).ResourceType;
-            object handler = _resourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(resourceType, parameterName);
+            Type resourceClrType = (_request.SecondaryResourceType ?? _request.PrimaryResourceType)!.ClrType;
+            object? handler = _resourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(resourceClrType, parameterName);
 
             if (handler != null && _request.Kind != EndpointKind.Primary)
             {

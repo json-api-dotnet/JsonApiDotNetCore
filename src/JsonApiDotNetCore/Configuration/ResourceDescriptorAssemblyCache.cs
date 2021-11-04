@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Configuration
     internal sealed class ResourceDescriptorAssemblyCache
     {
         private readonly TypeLocator _typeLocator = new();
-        private readonly Dictionary<Assembly, IReadOnlyCollection<ResourceDescriptor>> _resourceDescriptorsPerAssembly = new();
+        private readonly Dictionary<Assembly, IReadOnlyCollection<ResourceDescriptor>?> _resourceDescriptorsPerAssembly = new();
 
         public void RegisterAssembly(Assembly assembly)
         {
@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             EnsureAssembliesScanned();
 
-            return _resourceDescriptorsPerAssembly.SelectMany(pair => pair.Value).ToArray();
+            return _resourceDescriptorsPerAssembly.SelectMany(pair => pair.Value!).ToArray();
         }
 
         public IReadOnlyCollection<Assembly> GetAssemblies()
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             foreach (Type type in assembly.GetTypes())
             {
-                ResourceDescriptor resourceDescriptor = _typeLocator.TryGetResourceDescriptor(type);
+                ResourceDescriptor? resourceDescriptor = _typeLocator.ResolveResourceDescriptor(type);
 
                 if (resourceDescriptor != null)
                 {

@@ -8,8 +8,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
     {
         public int FormatVersion => 1;
 
-        public Guid UserId { get; set; }
-        public string UserLoginName { get; set; }
-        public string UserDisplayName { get; set; }
+        public Guid UserId { get; }
+        public string UserLoginName { get; }
+        public string? UserDisplayName { get; }
+
+        public UserCreatedContent(Guid userId, string userLoginName, string? userDisplayName)
+        {
+            UserId = userId;
+            UserLoginName = userLoginName;
+            UserDisplayName = userDisplayName;
+        }
     }
 }

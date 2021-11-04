@@ -43,7 +43,12 @@ for:
             # https://dotnet.github.io/docfx/tutorial/docfx_getting_started.html
             git checkout $env:APPVEYOR_REPO_BRANCH -q
         }
-        choco install docfx -y
+        # Pinning to previous version, because zip of v2.58.8 (released 2d ago) is corrupt.
+        # Tracked at https://github.com/dotnet/docfx/issues/7689
+        choco install docfx -y --version 2.58.5
+        if ($lastexitcode -ne 0) {
+            throw "docfx install failed with exit code $lastexitcode."
+        }
   after_build:
     - pwsh: |
         CD ./docs

@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly ImmutableArray<FilterExpression>.Builder _filtersInGlobalScope = ImmutableArray.CreateBuilder<FilterExpression>();
         private readonly Dictionary<ResourceFieldChainExpression, ImmutableArray<FilterExpression>.Builder> _filtersPerScope = new();
 
-        private string _lastParameterName;
+        private string? _lastParameterName;
 
         public FilterQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
             IJsonApiOptions options)
@@ -36,15 +36,15 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             ArgumentGuard.NotNull(options, nameof(options));
 
             _options = options;
-            _scopeParser = new QueryStringParameterScopeParser(resourceGraph, FieldChainRequirements.EndsInToMany);
-            _filterParser = new FilterParser(resourceGraph, resourceFactory, ValidateSingleField);
+            _scopeParser = new QueryStringParameterScopeParser(FieldChainRequirements.EndsInToMany);
+            _filterParser = new FilterParser(resourceFactory, ValidateSingleField);
         }
 
-        protected void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)
+        protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
         {
             if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowFilter))
             {
-                throw new InvalidQueryStringParameterException(_lastParameterName, "Filtering on the requested attribute is not allowed.",
+                throw new InvalidQueryStringParameterException(_lastParameterName!, "Filtering on the requested attribute is not allowed.",
                     $"Filtering on attribute '{attribute.PublicName}' is not allowed.");
             }
         }
@@ -104,20 +104,20 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                     (name, value) = LegacyConverter.Convert(name, value);
                 }
 
-                ResourceFieldChainExpression scope = GetScope(name);
+                ResourceFieldChainExpression? scope = GetScope(name);
                 FilterExpression filter = GetFilter(value, scope);
 
                 StoreFilterInScope(filter, scope);
             }
             catch (QueryParseException exception)
             {
-                throw new InvalidQueryStringParameterException(_lastParameterName, "The specified filter is invalid.", exception.Message, exception);
+                throw new InvalidQueryStringParameterException(_lastParameterName!, "The specified filter is invalid.", exception.Message, exception);
             }
         }
 
-        private ResourceFieldChainExpression GetScope(string parameterName)
+        private ResourceFieldChainExpression? GetScope(string parameterName)
         {
-            QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResource);
+            QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResourceType);
 
             if (parameterScope.Scope == null)
             {
@@ -127,13 +127,13 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             return parameterScope.Scope;
         }
 
-        private FilterExpression GetFilter(string parameterValue, ResourceFieldChainExpression scope)
+        private FilterExpression GetFilter(string parameterValue, ResourceFieldChainExpression? scope)
         {
-            ResourceContext resourceContextInScope = GetResourceContextForScope(scope);
-            return _filterParser.Parse(parameterValue, resourceContextInScope);
+            ResourceType resourceTypeInScope = GetResourceTypeForScope(scope);
+            return _filterParser.Parse(parameterValue, resourceTypeInScope);
         }
 
-        private void StoreFilterInScope(FilterExpression filter, ResourceFieldChainExpression scope)
+        private void StoreFilterInScope(FilterExpression filter, ResourceFieldChainExpression? scope)
         {
             if (scope == null)
             {

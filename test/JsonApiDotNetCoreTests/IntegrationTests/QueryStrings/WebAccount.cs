@@ -7,27 +7,30 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class WebAccount : Identifiable
+    public sealed class WebAccount : Identifiable<int>
     {
         [Attr]
-        public string UserName { get; set; }
+        public string UserName { get; set; } = null!;
 
         [Attr(Capabilities = ~AttrCapabilities.AllowView)]
-        public string Password { get; set; }
+        public string Password { get; set; } = null!;
 
         [Attr]
-        public string DisplayName { get; set; }
+        public string DisplayName { get; set; } = null!;
 
         [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort))]
         public DateTime? DateOfBirth { get; set; }
 
         [Attr]
-        public string EmailAddress { get; set; }
+        public string EmailAddress { get; set; } = null!;
 
         [HasMany]
-        public IList<BlogPost> Posts { get; set; }
+        public IList<BlogPost> Posts { get; set; } = new List<BlogPost>();
 
         [HasOne]
-        public AccountPreferences Preferences { get; set; }
+        public AccountPreferences Preferences { get; set; } = null!;
+
+        [HasMany]
+        public IList<LoginAttempt> LoginAttempts { get; set; } = new List<LoginAttempt>();
     }
 }

@@ -26,8 +26,9 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Creates an instance from a write-only service.
         /// </summary>
-        protected JsonApiCommandController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceCommandService<TResource, TId> commandService)
-            : base(options, loggerFactory, null, commandService)
+        protected JsonApiCommandController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceCommandService<TResource, TId> commandService)
+            : base(options, resourceGraph, loggerFactory, null, commandService)
         {
         }
 
@@ -55,7 +56,7 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object rightValue,
+        public override async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object? rightValue,
             CancellationToken cancellationToken)
         {
             return await base.PatchRelationshipAsync(id, relationshipName, rightValue, cancellationToken);
@@ -74,17 +75,6 @@ namespace JsonApiDotNetCore.Controllers
             CancellationToken cancellationToken)
         {
             return await base.DeleteRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
-        }
-    }
-
-    /// <inheritdoc />
-    public abstract class JsonApiCommandController<TResource> : JsonApiCommandController<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-        /// <inheritdoc />
-        protected JsonApiCommandController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceCommandService<TResource, int> commandService)
-            : base(options, loggerFactory, commandService)
-        {
         }
     }
 }

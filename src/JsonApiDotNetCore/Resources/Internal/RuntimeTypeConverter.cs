@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Resources.Internal
     [PublicAPI]
     public static class RuntimeTypeConverter
     {
-        public static object ConvertType(object value, Type type)
+        public static object? ConvertType(object? value, Type type)
         {
             ArgumentGuard.NotNull(type, nameof(type));
 
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Resources.Internal
                 return value;
             }
 
-            string stringValue = value.ToString();
+            string? stringValue = value.ToString();
 
             if (string.IsNullOrEmpty(stringValue))
             {
@@ -71,8 +71,7 @@ namespace JsonApiDotNetCore.Resources.Internal
                 // https://bradwilson.typepad.com/blog/2008/07/creating-nullab.html
                 return Convert.ChangeType(stringValue, nonNullableType);
             }
-            catch (Exception exception) when (exception is FormatException || exception is OverflowException || exception is InvalidCastException ||
-                exception is ArgumentException)
+            catch (Exception exception) when (exception is FormatException or OverflowException or InvalidCastException or ArgumentException)
             {
                 string runtimeTypeName = runtimeType.GetFriendlyTypeName();
                 string targetTypeName = type.GetFriendlyTypeName();
@@ -86,7 +85,7 @@ namespace JsonApiDotNetCore.Resources.Internal
             return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
         }
 
-        public static object GetDefaultValue(Type type)
+        public static object? GetDefaultValue(Type type)
         {
             return type.IsValueType ? Activator.CreateInstance(type) : null;
         }

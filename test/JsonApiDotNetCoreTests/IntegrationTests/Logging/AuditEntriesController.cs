@@ -5,10 +5,11 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
 {
-    public sealed class AuditEntriesController : JsonApiController<AuditEntry>
+    public sealed class AuditEntriesController : JsonApiController<AuditEntry, int>
     {
-        public AuditEntriesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<AuditEntry> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public AuditEntriesController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<AuditEntry, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

@@ -6,12 +6,12 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class TelevisionStation : Identifiable
+    public sealed class TelevisionStation : Identifiable<int>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [HasMany]
-        public ISet<TelevisionBroadcast> Broadcasts { get; set; }
+        public ISet<TelevisionBroadcast> Broadcasts { get; set; } = new HashSet<TelevisionBroadcast>();
     }
 }

@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore
         /// <summary>
         /// Whether the specified source type implements or equals the specified interface.
         /// </summary>
-        public static bool IsOrImplementsInterface(this Type source, Type interfaceType)
+        public static bool IsOrImplementsInterface(this Type? source, Type interfaceType)
         {
             ArgumentGuard.NotNull(interfaceType, nameof(interfaceType));
 
@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore
                 string genericArguments = type.GetGenericArguments().Select(GetFriendlyTypeName)
                     .Aggregate((firstType, secondType) => $"{firstType}, {secondType}");
 
-                return $"{type.Name[..type.Name.IndexOf("`", StringComparison.Ordinal)]}" + $"<{genericArguments}>";
+                return $"{type.Name[..type.Name.IndexOf("`", StringComparison.Ordinal)]}<{genericArguments}>";
             }
 
             return type.Name;

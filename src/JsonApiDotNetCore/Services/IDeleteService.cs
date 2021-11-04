@@ -6,12 +6,6 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Services
 {
-    /// <inheritdoc />
-    public interface IDeleteService<TResource> : IDeleteService<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-    }
-
     /// <summary />
     public interface IDeleteService<TResource, in TId>
         where TResource : class, IIdentifiable<TId>

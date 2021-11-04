@@ -1,15 +1,15 @@
 using System;
 using FluentAssertions;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Links
@@ -53,11 +53,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
         [InlineData(LinkTypes.All, LinkTypes.Related, LinkTypes.All)]
         [InlineData(LinkTypes.All, LinkTypes.Paging, LinkTypes.All)]
         [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.All)]
-        public void Applies_cascading_settings_for_top_level_links(LinkTypes linksInResourceContext, LinkTypes linksInOptions, LinkTypes expected)
+        public void Applies_cascading_settings_for_top_level_links(LinkTypes linksInResourceType, LinkTypes linksInOptions, LinkTypes expected)
         {
             // Arrange
-            var exampleResourceContext = new ResourceContext(nameof(ExampleResource), typeof(ExampleResource), typeof(int), Array.Empty<AttrAttribute>(),
-                Array.Empty<RelationshipAttribute>(), Array.Empty<EagerLoadAttribute>(), linksInResourceContext);
+            var exampleResourceType = new ResourceType(nameof(ExampleResource), typeof(ExampleResource), typeof(int), topLevelLinks: linksInResourceType);
 
             var options = new JsonApiOptions
             {
@@ -66,7 +65,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
             var request = new JsonApiRequest
             {
-                PrimaryResource = exampleResourceContext,
+                PrimaryResourceType = exampleResourceType,
                 PrimaryId = "1",
                 IsCollection = true,
                 Kind = EndpointKind.Relationship,
@@ -80,16 +79,13 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
                 TotalResourceCount = 10
             };
 
-            var resourceGraph = new ResourceGraph(exampleResourceContext.AsHashSet());
             var httpContextAccessor = new FakeHttpContextAccessor();
             var linkGenerator = new FakeLinkGenerator();
             var controllerResourceMapping = new FakeControllerResourceMapping();
-
-            var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, httpContextAccessor, linkGenerator,
-                controllerResourceMapping);
+            var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping);
 
             // Act
-            TopLevelLinks topLevelLinks = linkBuilder.GetTopLevelLinks();
+            TopLevelLinks? topLevelLinks = linkBuilder.GetTopLevelLinks();
 
             // Assert
             if (expected == LinkTypes.None)
@@ -98,9 +94,11 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             }
             else
             {
+                topLevelLinks.ShouldNotBeNull();
+
                 if (expected.HasFlag(LinkTypes.Self))
                 {
-                    topLevelLinks.Self.Should().NotBeNull();
+                    topLevelLinks.Self.ShouldNotBeNull();
                 }
                 else
                 {
@@ -109,7 +107,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
                 if (expected.HasFlag(LinkTypes.Related))
                 {
-                    topLevelLinks.Related.Should().NotBeNull();
+                    topLevelLinks.Related.ShouldNotBeNull();
                 }
                 else
                 {
@@ -118,10 +116,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
                 if (expected.HasFlag(LinkTypes.Paging))
                 {
-                    topLevelLinks.First.Should().NotBeNull();
-                    topLevelLinks.Last.Should().NotBeNull();
-                    topLevelLinks.Prev.Should().NotBeNull();
-                    topLevelLinks.Next.Should().NotBeNull();
+                    topLevelLinks.First.ShouldNotBeNull();
+                    topLevelLinks.Last.ShouldNotBeNull();
+                    topLevelLinks.Prev.ShouldNotBeNull();
+                    topLevelLinks.Next.ShouldNotBeNull();
                 }
                 else
                 {
@@ -150,11 +148,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
         [InlineData(LinkTypes.All, LinkTypes.None, LinkTypes.Self)]
         [InlineData(LinkTypes.All, LinkTypes.Self, LinkTypes.Self)]
         [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.Self)]
-        public void Applies_cascading_settings_for_resource_links(LinkTypes linksInResourceContext, LinkTypes linksInOptions, LinkTypes expected)
+        public void Applies_cascading_settings_for_resource_links(LinkTypes linksInResourceType, LinkTypes linksInOptions, LinkTypes expected)
         {
             // Arrange
-            var exampleResourceContext = new ResourceContext(nameof(ExampleResource), typeof(ExampleResource), typeof(int), Array.Empty<AttrAttribute>(),
-                Array.Empty<RelationshipAttribute>(), Array.Empty<EagerLoadAttribute>(), resourceLinks: linksInResourceContext);
+            var exampleResourceType = new ResourceType(nameof(ExampleResource), typeof(ExampleResource), typeof(int), resourceLinks: linksInResourceType);
 
             var options = new JsonApiOptions
             {
@@ -163,21 +160,19 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
             var request = new JsonApiRequest();
             var paginationContext = new PaginationContext();
-            var resourceGraph = new ResourceGraph(exampleResourceContext.AsHashSet());
             var httpContextAccessor = new FakeHttpContextAccessor();
             var linkGenerator = new FakeLinkGenerator();
             var controllerResourceMapping = new FakeControllerResourceMapping();
-
-            var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, httpContextAccessor, linkGenerator,
-                controllerResourceMapping);
+            var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping);
 
             // Act
-            ResourceLinks resourceLinks = linkBuilder.GetResourceLinks(nameof(ExampleResource), "id");
+            ResourceLinks? resourceLinks = linkBuilder.GetResourceLinks(exampleResourceType, "id");
 
             // Assert
             if (expected == LinkTypes.Self)
             {
-                resourceLinks.Self.Should().NotBeNull();
+                resourceLinks.ShouldNotBeNull();
+                resourceLinks.Self.ShouldNotBeNull();
             }
             else
             {
@@ -311,12 +306,11 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
         [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.Self, LinkTypes.All)]
         [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.Related, LinkTypes.All)]
         [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.All, LinkTypes.All)]
-        public void Applies_cascading_settings_for_relationship_links(LinkTypes linksInRelationshipAttribute, LinkTypes linksInResourceContext,
+        public void Applies_cascading_settings_for_relationship_links(LinkTypes linksInRelationshipAttribute, LinkTypes linksInResourceType,
             LinkTypes linksInOptions, LinkTypes expected)
         {
             // Arrange
-            var exampleResourceContext = new ResourceContext(nameof(ExampleResource), typeof(ExampleResource), typeof(int), Array.Empty<AttrAttribute>(),
-                Array.Empty<RelationshipAttribute>(), Array.Empty<EagerLoadAttribute>(), relationshipLinks: linksInResourceContext);
+            var exampleResourceType = new ResourceType(nameof(ExampleResource), typeof(ExampleResource), typeof(int), relationshipLinks: linksInResourceType);
 
             var options = new JsonApiOptions
             {
@@ -325,21 +319,19 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
             var request = new JsonApiRequest();
             var paginationContext = new PaginationContext();
-            var resourceGraph = new ResourceGraph(exampleResourceContext.AsHashSet());
             var httpContextAccessor = new FakeHttpContextAccessor();
             var linkGenerator = new FakeLinkGenerator();
             var controllerResourceMapping = new FakeControllerResourceMapping();
-
-            var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, httpContextAccessor, linkGenerator,
-                controllerResourceMapping);
+            var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping);
 
             var relationship = new HasOneAttribute
             {
-                Links = linksInRelationshipAttribute
+                Links = linksInRelationshipAttribute,
+                LeftType = exampleResourceType
             };
 
             // Act
-            RelationshipLinks relationshipLinks = linkBuilder.GetRelationshipLinks(relationship, new ExampleResource());
+            RelationshipLinks? relationshipLinks = linkBuilder.GetRelationshipLinks(relationship, "?");
 
             // Assert
             if (expected == LinkTypes.None)
@@ -348,9 +340,11 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             }
             else
             {
+                relationshipLinks.ShouldNotBeNull();
+
                 if (expected.HasFlag(LinkTypes.Self))
                 {
-                    relationshipLinks.Self.Should().NotBeNull();
+                    relationshipLinks.Self.ShouldNotBeNull();
                 }
                 else
                 {
@@ -359,7 +353,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
                 if (expected.HasFlag(LinkTypes.Related))
                 {
-                    relationshipLinks.Related.Should().NotBeNull();
+                    relationshipLinks.Related.ShouldNotBeNull();
                 }
                 else
                 {
@@ -368,13 +362,13 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             }
         }
 
-        private sealed class ExampleResource : Identifiable
+        private sealed class ExampleResource : Identifiable<int>
         {
         }
 
         private sealed class FakeHttpContextAccessor : IHttpContextAccessor
         {
-            public HttpContext HttpContext { get; set; } = new DefaultHttpContext
+            public HttpContext? HttpContext { get; set; } = new DefaultHttpContext
             {
                 Request =
                 {
@@ -386,12 +380,12 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
         private sealed class FakeControllerResourceMapping : IControllerResourceMapping
         {
-            public Type GetResourceTypeForController(Type controllerType)
+            public ResourceType GetResourceTypeForController(Type? controllerType)
             {
                 throw new NotImplementedException();
             }
 
-            public string GetControllerNameForResourceType(Type resourceType)
+            public string? GetControllerNameForResourceType(ResourceType? resourceType)
             {
                 return null;
             }
@@ -400,26 +394,26 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
         private sealed class FakeLinkGenerator : LinkGenerator
         {
             public override string GetPathByAddress<TAddress>(HttpContext httpContext, TAddress address, RouteValueDictionary values,
-                RouteValueDictionary ambientValues = null, PathString? pathBase = null, FragmentString fragment = new(), LinkOptions options = null)
+                RouteValueDictionary? ambientValues = null, PathString? pathBase = null, FragmentString fragment = new(), LinkOptions? options = null)
             {
                 throw new NotImplementedException();
             }
 
             public override string GetPathByAddress<TAddress>(TAddress address, RouteValueDictionary values, PathString pathBase = new(),
-                FragmentString fragment = new(), LinkOptions options = null)
+                FragmentString fragment = new(), LinkOptions? options = null)
             {
                 throw new NotImplementedException();
             }
 
             public override string GetUriByAddress<TAddress>(HttpContext httpContext, TAddress address, RouteValueDictionary values,
-                RouteValueDictionary ambientValues = null, string scheme = null, HostString? host = null, PathString? pathBase = null,
-                FragmentString fragment = new(), LinkOptions options = null)
+                RouteValueDictionary? ambientValues = null, string? scheme = null, HostString? host = null, PathString? pathBase = null,
+                FragmentString fragment = new(), LinkOptions? options = null)
             {
                 return "https://domain.com/some/path";
             }
 
             public override string GetUriByAddress<TAddress>(TAddress address, RouteValueDictionary values, string scheme, HostString host,
-                PathString pathBase = new(), FragmentString fragment = new(), LinkOptions options = null)
+                PathString pathBase = new(), FragmentString fragment = new(), LinkOptions? options = null)
             {
                 throw new NotImplementedException();
             }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Middleware
@@ -8,6 +9,6 @@ namespace JsonApiDotNetCore.Middleware
     /// </summary>
     public interface IExceptionHandler
     {
-        Document HandleException(Exception exception);
+        IReadOnlyList<ErrorObject> HandleException(Exception exception);
     }
 }

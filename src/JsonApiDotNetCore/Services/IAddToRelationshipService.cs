@@ -8,12 +8,6 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Services
 {
-    /// <inheritdoc />
-    public interface IAddToRelationshipService<TResource> : IAddToRelationshipService<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-    }
-
     /// <summary />
     [PublicAPI]
     public interface IAddToRelationshipService<TResource, in TId>

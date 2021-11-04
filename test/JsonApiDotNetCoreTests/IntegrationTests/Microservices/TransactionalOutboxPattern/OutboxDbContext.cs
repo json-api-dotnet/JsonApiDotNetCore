@@ -7,9 +7,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class OutboxDbContext : DbContext
     {
-        public DbSet<DomainUser> Users { get; set; }
-        public DbSet<DomainGroup> Groups { get; set; }
-        public DbSet<OutgoingMessage> OutboxMessages { get; set; }
+        public DbSet<DomainUser> Users => Set<DomainUser>();
+        public DbSet<DomainGroup> Groups => Set<DomainGroup>();
+        public DbSet<OutgoingMessage> OutboxMessages => Set<OutgoingMessage>();
 
         public OutboxDbContext(DbContextOptions<OutboxDbContext> options)
             : base(options)

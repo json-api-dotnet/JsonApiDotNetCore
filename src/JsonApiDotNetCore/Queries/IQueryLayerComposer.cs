@@ -12,36 +12,41 @@ namespace JsonApiDotNetCore.Queries
     public interface IQueryLayerComposer
     {
         /// <summary>
-        /// Builds a top-level filter from constraints, used to determine total resource count.
+        /// Builds a filter from constraints, used to determine total resource count on a primary collection endpoint.
         /// </summary>
-        FilterExpression GetTopFilterFromConstraints(ResourceContext resourceContext);
+        FilterExpression? GetPrimaryFilterFromConstraints(ResourceType primaryResourceType);
+
+        /// <summary>
+        /// Builds a filter from constraints, used to determine total resource count on a secondary collection endpoint.
+        /// </summary>
+        FilterExpression? GetSecondaryFilterFromConstraints<TId>(TId primaryId, HasManyAttribute hasManyRelationship);
 
         /// <summary>
         /// Collects constraints and builds a <see cref="QueryLayer" /> out of them, used to retrieve the actual resources.
         /// </summary>
-        QueryLayer ComposeFromConstraints(ResourceContext requestResource);
+        QueryLayer ComposeFromConstraints(ResourceType requestResourceType);
 
         /// <summary>
         /// Collects constraints and builds a <see cref="QueryLayer" /> out of them, used to retrieve one resource.
         /// </summary>
-        QueryLayer ComposeForGetById<TId>(TId id, ResourceContext resourceContext, TopFieldSelection fieldSelection);
+        QueryLayer ComposeForGetById<TId>(TId id, ResourceType primaryResourceType, TopFieldSelection fieldSelection);
 
         /// <summary>
         /// Collects constraints and builds the secondary layer for a relationship endpoint.
         /// </summary>
-        QueryLayer ComposeSecondaryLayerForRelationship(ResourceContext secondaryResourceContext);
+        QueryLayer ComposeSecondaryLayerForRelationship(ResourceType secondaryResourceType);
 
         /// <summary>
         /// Wraps a layer for a secondary endpoint into a primary layer, rewriting top-level includes.
         /// </summary>
-        QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceContext primaryResourceContext, TId primaryId,
-            RelationshipAttribute secondaryRelationship);
+        QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceType primaryResourceType, TId primaryId,
+            RelationshipAttribute relationship);
 
         /// <summary>
         /// Builds a query that retrieves the primary resource, including all of its attributes and all targeted relationships, during a create/update/delete
         /// request.
         /// </summary>
-        QueryLayer ComposeForUpdate<TId>(TId id, ResourceContext primaryResource);
+        QueryLayer ComposeForUpdate<TId>(TId id, ResourceType primaryResource);
 
         /// <summary>
         /// Builds a query for each targeted relationship with a filter to match on its right resource IDs.

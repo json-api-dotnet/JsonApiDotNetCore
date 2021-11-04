@@ -8,8 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
 {
     public sealed class TextLanguagesController : JsonApiController<TextLanguage, Guid>
     {
-        public TextLanguagesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<TextLanguage, Guid> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public TextLanguagesController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<TextLanguage, Guid> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

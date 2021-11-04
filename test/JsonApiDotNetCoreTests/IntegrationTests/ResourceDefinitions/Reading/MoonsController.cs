@@ -5,10 +5,10 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
-    public sealed class MoonsController : JsonApiController<Moon>
+    public sealed class MoonsController : JsonApiController<Moon, int>
     {
-        public MoonsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Moon> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public MoonsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<Moon, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

@@ -11,9 +11,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
     public class PaginationExpression : QueryExpression
     {
         public PageNumber PageNumber { get; }
-        public PageSize PageSize { get; }
+        public PageSize? PageSize { get; }
 
-        public PaginationExpression(PageNumber pageNumber, PageSize pageSize)
+        public PaginationExpression(PageNumber pageNumber, PageSize? pageSize)
         {
             ArgumentGuard.NotNull(pageNumber, nameof(pageNumber));
 
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return PageSize != null ? $"Page number: {PageNumber}, size: {PageSize}" : "(none)";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

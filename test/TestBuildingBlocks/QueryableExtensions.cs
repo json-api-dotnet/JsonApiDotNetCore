@@ -15,11 +15,11 @@ namespace TestBuildingBlocks
             return resources.FirstAsync(resource => Equals(resource.Id, id), cancellationToken);
         }
 
-        public static Task<TResource> FirstWithIdOrDefaultAsync<TResource, TId>(this IQueryable<TResource> resources, TId id,
+        public static async Task<TResource?> FirstWithIdOrDefaultAsync<TResource, TId>(this IQueryable<TResource> resources, TId id,
             CancellationToken cancellationToken = default)
             where TResource : IIdentifiable<TId>
         {
-            return resources.FirstOrDefaultAsync(resource => Equals(resource.Id, id), cancellationToken);
+            return await resources.FirstOrDefaultAsync(resource => Equals(resource.Id, id), cancellationToken);
         }
     }
 }

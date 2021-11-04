@@ -8,7 +8,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
     {
         public int FormatVersion => 1;
 
-        public Guid GroupId { get; set; }
-        public string GroupName { get; set; }
+        public Guid GroupId { get; }
+        public string GroupName { get; }
+
+        public GroupCreatedContent(Guid groupId, string groupName)
+        {
+            GroupId = groupId;
+            GroupName = groupName;
+        }
     }
 }

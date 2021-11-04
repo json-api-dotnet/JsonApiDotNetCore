@@ -9,6 +9,8 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
+using JsonApiDotNetCore.Serialization.Objects;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
@@ -61,11 +63,11 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
         [InlineData("fields[owner]", "", "Resource type 'owner' does not exist.")]
         [InlineData("fields[owner.posts]", "id", "Resource type 'owner.posts' does not exist.")]
         [InlineData("fields[blogPosts]", " ", "Unexpected whitespace.")]
-        [InlineData("fields[blogPosts]", "some", "Field 'some' does not exist on resource 'blogPosts'.")]
-        [InlineData("fields[blogPosts]", "id,owner.name", "Field 'owner.name' does not exist on resource 'blogPosts'.")]
+        [InlineData("fields[blogPosts]", "some", "Field 'some' does not exist on resource type 'blogPosts'.")]
+        [InlineData("fields[blogPosts]", "id,owner.name", "Field 'owner.name' does not exist on resource type 'blogPosts'.")]
         [InlineData("fields[blogPosts]", "id(", ", expected.")]
         [InlineData("fields[blogPosts]", "id,", "Field name expected.")]
-        [InlineData("fields[blogPosts]", "author.id,", "Field 'author.id' does not exist on resource 'blogPosts'.")]
+        [InlineData("fields[blogPosts]", "author.id,", "Field 'author.id' does not exist on resource type 'blogPosts'.")]
         public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
         {
             // Act
@@ -74,12 +76,15 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             // Assert
             InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
-            exception.QueryParameterName.Should().Be(parameterName);
-            exception.Errors.Should().HaveCount(1);
-            exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Errors[0].Title.Should().Be("The specified fieldset is invalid.");
-            exception.Errors[0].Detail.Should().Be(errorMessage);
-            exception.Errors[0].Source.Parameter.Should().Be(parameterName);
+            exception.ParameterName.Should().Be(parameterName);
+            exception.Errors.ShouldHaveCount(1);
+
+            ErrorObject error = exception.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified fieldset is invalid.");
+            error.Detail.Should().Be(errorMessage);
+            error.Source.ShouldNotBeNull();
+            error.Source.Parameter.Should().Be(parameterName);
         }
 
         [Theory]
@@ -95,7 +100,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
 
             // Assert
-            ResourceFieldChainExpression scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
+            ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
             scope.Should().BeNull();
 
             QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();

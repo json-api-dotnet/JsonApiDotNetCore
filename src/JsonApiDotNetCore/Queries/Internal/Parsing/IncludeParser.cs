@@ -14,20 +14,19 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     {
         private static readonly IncludeChainConverter IncludeChainConverter = new();
 
-        private readonly Action<RelationshipAttribute, ResourceContext, string> _validateSingleRelationshipCallback;
-        private ResourceContext _resourceContextInScope;
+        private readonly Action<RelationshipAttribute, ResourceType, string>? _validateSingleRelationshipCallback;
+        private ResourceType? _resourceTypeInScope;
 
-        public IncludeParser(IResourceGraph resourceGraph, Action<RelationshipAttribute, ResourceContext, string> validateSingleRelationshipCallback = null)
-            : base(resourceGraph)
+        public IncludeParser(Action<RelationshipAttribute, ResourceType, string>? validateSingleRelationshipCallback = null)
         {
             _validateSingleRelationshipCallback = validateSingleRelationshipCallback;
         }
 
-        public IncludeExpression Parse(string source, ResourceContext resourceContextInScope, int? maximumDepth)
+        public IncludeExpression Parse(string source, ResourceType resourceTypeInScope, int? maximumDepth)
         {
-            ArgumentGuard.NotNull(resourceContextInScope, nameof(resourceContextInScope));
+            ArgumentGuard.NotNull(resourceTypeInScope, nameof(resourceTypeInScope));
 
-            _resourceContextInScope = resourceContextInScope;
+            _resourceTypeInScope = resourceTypeInScope;
 
             Tokenize(source);
 
@@ -74,7 +73,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
-            return ChainResolver.ResolveRelationshipChain(_resourceContextInScope, path, _validateSingleRelationshipCallback);
+            return ChainResolver.ResolveRelationshipChain(_resourceTypeInScope!, path, _validateSingleRelationshipCallback);
         }
     }
 }

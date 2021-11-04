@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Middleware
             _logger = loggerFactory.CreateLogger<ExceptionHandler>();
         }
 
-        public Document HandleException(Exception exception)
+        public IReadOnlyList<ErrorObject> HandleException(Exception exception)
         {
             ArgumentGuard.NotNull(exception, nameof(exception));
 
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Middleware
 
             LogException(demystified);
 
-            return CreateErrorDocument(demystified);
+            return CreateErrorResponse(demystified);
         }
 
         private void LogException(Exception exception)
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Middleware
                 return LogLevel.None;
             }
 
-            if (exception is JsonApiException)
+            if (exception is JsonApiException and not FailedOperationException)
             {
                 return LogLevel.Information;
             }
@@ -67,10 +67,10 @@ namespace JsonApiDotNetCore.Middleware
         {
             ArgumentGuard.NotNull(exception, nameof(exception));
 
-            return exception.Message;
+            return exception is JsonApiException jsonApiException ? jsonApiException.GetSummary() : exception.Message;
         }
 
-        protected virtual Document CreateErrorDocument(Exception exception)
+        protected virtual IReadOnlyList<ErrorObject> CreateErrorResponse(Exception exception)
         {
             ArgumentGuard.NotNull(exception, nameof(exception));
 
@@ -84,27 +84,25 @@ namespace JsonApiDotNetCore.Middleware
                     Detail = exception.Message
                 }.AsArray();
 
-            foreach (ErrorObject error in errors)
+            if (_options.IncludeExceptionStackTraceInErrors && exception is not InvalidModelStateException)
             {
-                ApplyOptions(error, exception);
+                IncludeStackTraces(exception, errors);
             }
 
-            return new Document
-            {
-                Errors = errors.ToList()
-            };
+            return errors;
         }
 
-        private void ApplyOptions(ErrorObject error, Exception exception)
+        private void IncludeStackTraces(Exception exception, IReadOnlyList<ErrorObject> errors)
         {
-            Exception resultException = exception is InvalidModelStateException ? null : exception;
+            string[] stackTraceLines = exception.ToString().Split(Environment.NewLine);
 
-            if (resultException != null && _options.IncludeExceptionStackTraceInErrors)
+            if (stackTraceLines.Any())
             {
-                string[] stackTraceLines = resultException.ToString().Split(Environment.NewLine);
-
-                error.Meta ??= new Dictionary<string, object>();
-                error.Meta["StackTrace"] = stackTraceLines;
+                foreach (ErrorObject error in errors)
+                {
+                    error.Meta ??= new Dictionary<string, object?>();
+                    error.Meta["StackTrace"] = stackTraceLines;
+                }
             }
         }
     }

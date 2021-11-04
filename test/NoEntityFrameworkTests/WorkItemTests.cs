@@ -37,10 +37,15 @@ namespace NoEntityFrameworkTests
         [Fact]
         public async Task Can_get_WorkItems()
         {
+            var workItem = new WorkItem
+            {
+                Title = "Write some code."
+            };
+
             // Arrange
             await RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.WorkItems.Add(new WorkItem());
+                dbContext.WorkItems.Add(workItem);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -52,14 +57,17 @@ namespace NoEntityFrameworkTests
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().NotBeEmpty();
+            responseDocument.Data.ManyValue.ShouldNotBeEmpty();
         }
 
         [Fact]
         public async Task Can_get_WorkItem_by_ID()
         {
             // Arrange
-            var workItem = new WorkItem();
+            var workItem = new WorkItem
+            {
+                Title = "Write some code."
+            };
 
             await RunOnDatabaseAsync(async dbContext =>
             {
@@ -75,7 +83,7 @@ namespace NoEntityFrameworkTests
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(workItem.StringId);
         }
 
@@ -114,18 +122,22 @@ namespace NoEntityFrameworkTests
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Data.SingleValue.Attributes["isBlocked"].Should().Be(newWorkItem.IsBlocked);
-            responseDocument.Data.SingleValue.Attributes["title"].Should().Be(newWorkItem.Title);
-            responseDocument.Data.SingleValue.Attributes["durationInHours"].Should().Be(newWorkItem.DurationInHours);
-            responseDocument.Data.SingleValue.Attributes["projectId"].Should().Be(newWorkItem.ProjectId);
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Attributes.ShouldNotBeEmpty();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isBlocked").With(value => value.Should().Be(newWorkItem.IsBlocked));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newWorkItem.Title));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("durationInHours").With(value => value.Should().Be(newWorkItem.DurationInHours));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("projectId").With(value => value.Should().Be(newWorkItem.ProjectId));
         }
 
         [Fact]
         public async Task Can_delete_WorkItem()
         {
             // Arrange
-            var workItem = new WorkItem();
+            var workItem = new WorkItem
+            {
+                Title = "Write some code."
+            };
 
             await RunOnDatabaseAsync(async dbContext =>
             {

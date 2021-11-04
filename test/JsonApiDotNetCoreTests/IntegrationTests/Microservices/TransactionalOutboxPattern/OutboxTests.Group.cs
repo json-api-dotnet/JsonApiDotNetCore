@@ -49,21 +49,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(newGroupName);
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id);
+            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<GroupCreatedContent>();
                 content.GroupId.Should().Be(newGroupId);
@@ -130,22 +131,23 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(newGroupName);
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id);
+            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(3);
+                messages.ShouldHaveCount(3);
 
                 var content1 = messages[0].GetContentAs<GroupCreatedContent>();
                 content1.GroupId.Should().Be(newGroupId);
@@ -204,14 +206,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<GroupRenamedContent>();
                 content.GroupId.Should().Be(existingGroup.StringId);
@@ -291,15 +294,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(3);
+                messages.ShouldHaveCount(3);
 
                 var content1 = messages[0].GetContentAs<UserAddedToGroupContent>();
                 content1.UserId.Should().Be(existingUserWithoutGroup.Id);
@@ -343,13 +347,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<GroupDeletedContent>();
                 content.GroupId.Should().Be(existingGroup.StringId);
@@ -384,13 +389,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserRemovedFromGroupContent>();
                 content1.UserId.Should().Be(existingGroup.Users.ElementAt(0).Id);
@@ -461,15 +467,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(3);
+                messages.ShouldHaveCount(3);
 
                 var content1 = messages[0].GetContentAs<UserAddedToGroupContent>();
                 content1.UserId.Should().Be(existingUserWithoutGroup.Id);
@@ -538,14 +545,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnAddToRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnAddToRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserAddedToGroupContent>();
                 content1.UserId.Should().Be(existingUserWithoutGroup.Id);
@@ -603,14 +611,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRemoveFromRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnRemoveFromRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<UserRemovedFromGroupContent>();
                 content.UserId.Should().Be(existingUserWithSameGroup2.Id);

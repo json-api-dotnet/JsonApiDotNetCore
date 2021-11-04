@@ -7,23 +7,27 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Car : Identifiable<string>
+    public sealed class Car : Identifiable<string?>
     {
         [NotMapped]
-        public override string Id
+        public override string? Id
         {
-            get => $"{RegionId}:{LicensePlate}";
+            get => RegionId == default && LicensePlate == default ? null : $"{RegionId}:{LicensePlate}";
             set
             {
+                if (value == null)
+                {
+                    RegionId = default;
+                    LicensePlate = default;
+                    return;
+                }
+
                 string[] elements = value.Split(':');
 
-                if (elements.Length == 2)
+                if (elements.Length == 2 && long.TryParse(elements[0], out long regionId))
                 {
-                    if (int.TryParse(elements[0], out int regionId))
-                    {
-                        RegionId = regionId;
-                        LicensePlate = elements[1];
-                    }
+                    RegionId = regionId;
+                    LicensePlate = elements[1];
                 }
                 else
                 {
@@ -33,15 +37,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         }
 
         [Attr]
-        public string LicensePlate { get; set; }
+        public string? LicensePlate { get; set; }
 
         [Attr]
         public long RegionId { get; set; }
 
         [HasOne]
-        public Engine Engine { get; set; }
+        public Engine Engine { get; set; } = null!;
 
         [HasOne]
-        public Dealership Dealership { get; set; }
+        public Dealership? Dealership { get; set; }
     }
 }

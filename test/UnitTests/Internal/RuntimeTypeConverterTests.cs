@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using JsonApiDotNetCore.Resources.Internal;
 using Xunit;
 
@@ -11,14 +12,14 @@ namespace UnitTests.Internal
         public void Can_Convert_DateTimeOffsets()
         {
             // Arrange
-            var dto = new DateTimeOffset(new DateTime(2002, 2, 2), TimeSpan.FromHours(4));
-            string formattedString = dto.ToString("O");
+            var dateTimeOffset = new DateTimeOffset(new DateTime(2002, 2, 2), TimeSpan.FromHours(4));
+            string formattedString = dateTimeOffset.ToString("O");
 
             // Act
-            object result = RuntimeTypeConverter.ConvertType(formattedString, typeof(DateTimeOffset));
+            object? result = RuntimeTypeConverter.ConvertType(formattedString, typeof(DateTimeOffset));
 
             // Assert
-            Assert.Equal(dto, result);
+            result.Should().Be(dateTimeOffset);
         }
 
         [Fact]
@@ -31,7 +32,7 @@ namespace UnitTests.Internal
             Action action = () => RuntimeTypeConverter.ConvertType(formattedString, typeof(DateTimeOffset));
 
             // Assert
-            Assert.Throws<FormatException>(action);
+            action.Should().ThrowExactly<FormatException>();
         }
 
         [Fact]
@@ -41,42 +42,42 @@ namespace UnitTests.Internal
             const string formattedString = "1";
 
             // Act
-            object result = RuntimeTypeConverter.ConvertType(formattedString, typeof(TestEnum));
+            object? result = RuntimeTypeConverter.ConvertType(formattedString, typeof(TestEnum));
 
             // Assert
-            Assert.Equal(TestEnum.Test, result);
+            result.Should().Be(TestEnum.Test);
         }
 
         [Fact]
         public void ConvertType_Returns_Value_If_Type_Is_Same()
         {
             // Arrange
-            var val = new ComplexType();
-            Type type = val.GetType();
+            var complexType = new ComplexType();
+            Type type = complexType.GetType();
 
             // Act
-            object result = RuntimeTypeConverter.ConvertType(val, type);
+            object? result = RuntimeTypeConverter.ConvertType(complexType, type);
 
             // Assert
-            Assert.Equal(val, result);
+            result.Should().Be(complexType);
         }
 
         [Fact]
         public void ConvertType_Returns_Value_If_Type_Is_Assignable()
         {
             // Arrange
-            var val = new ComplexType();
+            var complexType = new ComplexType();
 
             Type baseType = typeof(BaseType);
             Type iType = typeof(IType);
 
             // Act
-            object baseResult = RuntimeTypeConverter.ConvertType(val, baseType);
-            object iResult = RuntimeTypeConverter.ConvertType(val, iType);
+            object? baseResult = RuntimeTypeConverter.ConvertType(complexType, baseType);
+            object? iResult = RuntimeTypeConverter.ConvertType(complexType, iType);
 
             // Assert
-            Assert.Equal(val, baseResult);
-            Assert.Equal(val, iResult);
+            baseResult.Should().Be(complexType);
+            iResult.Should().Be(complexType);
         }
 
         [Fact]
@@ -92,13 +93,13 @@ namespace UnitTests.Internal
                 { typeof(Guid), Guid.Empty }
             };
 
-            foreach (KeyValuePair<Type, object> pair in data)
+            foreach ((Type key, object value) in data)
             {
                 // Act
-                object result = RuntimeTypeConverter.ConvertType(string.Empty, pair.Key);
+                object? result = RuntimeTypeConverter.ConvertType(string.Empty, key);
 
                 // Assert
-                Assert.Equal(pair.Value, result);
+                result.Should().Be(value);
             }
         }
 
@@ -110,10 +111,10 @@ namespace UnitTests.Internal
             string stringSpan = timeSpan.ToString();
 
             // Act
-            object result = RuntimeTypeConverter.ConvertType(stringSpan, typeof(TimeSpan));
+            object? result = RuntimeTypeConverter.ConvertType(stringSpan, typeof(TimeSpan));
 
             // Assert
-            Assert.Equal(timeSpan, result);
+            result.Should().Be(timeSpan);
         }
 
         [Fact]
@@ -126,7 +127,7 @@ namespace UnitTests.Internal
             Action action = () => RuntimeTypeConverter.ConvertType(formattedString, typeof(TimeSpan));
 
             // Assert
-            Assert.Throws<FormatException>(action);
+            action.Should().ThrowExactly<FormatException>();
         }
 
         private enum TestEnum

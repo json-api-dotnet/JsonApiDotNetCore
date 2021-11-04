@@ -39,9 +39,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
         // To optimize performance, the default resource service does not always fetch all resources on write operations.
         // We do that here, to assure a 404 error is thrown for soft-deleted resources.
 
-        public override async Task<TResource> CreateAsync(TResource resource, CancellationToken cancellationToken)
+        public override async Task<TResource?> CreateAsync(TResource resource, CancellationToken cancellationToken)
         {
-            if (_targetedFields.Relationships.Any(relationship => IsSoftDeletable(relationship.RightType)))
+            if (_targetedFields.Relationships.Any(relationship => IsSoftDeletable(relationship.RightType.ClrType)))
             {
                 await AssertResourcesToAssignInRelationshipsExistAsync(resource, cancellationToken);
             }
@@ -49,9 +49,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             return await base.CreateAsync(resource, cancellationToken);
         }
 
-        public override async Task<TResource> UpdateAsync(TId id, TResource resource, CancellationToken cancellationToken)
+        public override async Task<TResource?> UpdateAsync(TId id, TResource resource, CancellationToken cancellationToken)
         {
-            if (_targetedFields.Relationships.Any(relationship => IsSoftDeletable(relationship.RightType)))
+            if (_targetedFields.Relationships.Any(relationship => IsSoftDeletable(relationship.RightType.ClrType)))
             {
                 await AssertResourcesToAssignInRelationshipsExistAsync(resource, cancellationToken);
             }
@@ -59,9 +59,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             return await base.UpdateAsync(id, resource, cancellationToken);
         }
 
-        public override async Task SetRelationshipAsync(TId leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)
+        public override async Task SetRelationshipAsync(TId leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken)
         {
-            if (IsSoftDeletable(_request.Relationship.RightType))
+            if (IsSoftDeletable(_request.Relationship!.RightType.ClrType))
             {
                 await AssertRightResourcesExistAsync(rightValue, cancellationToken);
             }
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
                 _ = await GetPrimaryResourceByIdAsync(leftId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
             }
 
-            if (IsSoftDeletable(_request.Relationship.RightType))
+            if (IsSoftDeletable(_request.Relationship!.RightType.ClrType))
             {
                 await AssertRightResourcesExistAsync(rightResourceIds, cancellationToken);
             }
@@ -107,22 +107,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             await _repositoryAccessor.UpdateAsync(resourceFromDatabase, resourceFromDatabase, cancellationToken);
         }
 
-        private static bool IsSoftDeletable(Type resourceType)
+        private static bool IsSoftDeletable(Type resourceClrType)
         {
-            return typeof(ISoftDeletable).IsAssignableFrom(resourceType);
-        }
-    }
-
-    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public class SoftDeletionAwareResourceService<TResource> : SoftDeletionAwareResourceService<TResource, int>, IResourceService<TResource>
-        where TResource : class, IIdentifiable<int>
-    {
-        public SoftDeletionAwareResourceService(ISystemClock systemClock, ITargetedFields targetedFields, IResourceRepositoryAccessor repositoryAccessor,
-            IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
-            : base(systemClock, targetedFields, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                resourceChangeTracker, resourceDefinitionAccessor)
-        {
+            return typeof(ISoftDeletable).IsAssignableFrom(resourceClrType);
         }
     }
 }

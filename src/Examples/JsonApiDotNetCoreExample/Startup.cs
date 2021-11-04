@@ -52,12 +52,12 @@ namespace JsonApiDotNetCoreExample
                     {
                         options.Namespace = "api/v1";
                         options.UseRelativeLinks = true;
-                        options.ValidateModelState = true;
                         options.IncludeTotalResourceCount = true;
                         options.SerializerOptions.WriteIndented = true;
                         options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 #if DEBUG
                         options.IncludeExceptionStackTraceInErrors = true;
+                        options.IncludeRequestBodyInErrors = true;
 #endif
                     }, discovery => discovery.AddCurrentAssembly(), mvcBuilder: mvcBuilder);
                 }

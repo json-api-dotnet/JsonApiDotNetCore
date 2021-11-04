@@ -6,10 +6,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
 {
     [ResourceLinks(TopLevelLinks = LinkTypes.None, ResourceLinks = LinkTypes.None, RelationshipLinks = LinkTypes.Related)]
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class PhotoLocation : Identifiable
+    public sealed class PhotoLocation : Identifiable<int>
     {
         [Attr]
-        public string PlaceName { get; set; }
+        public string? PlaceName { get; set; }
 
         [Attr]
         public double Latitude { get; set; }
@@ -18,9 +18,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
         public double Longitude { get; set; }
 
         [HasOne]
-        public Photo Photo { get; set; }
+        public Photo Photo { get; set; } = null!;
 
         [HasOne(Links = LinkTypes.None)]
-        public PhotoAlbum Album { get; set; }
+        public PhotoAlbum? Album { get; set; }
     }
 }

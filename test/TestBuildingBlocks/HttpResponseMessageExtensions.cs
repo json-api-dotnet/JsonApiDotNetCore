@@ -11,7 +11,7 @@ namespace TestBuildingBlocks
     {
         public static HttpResponseMessageAssertions Should(this HttpResponseMessage instance)
         {
-            return new(instance);
+            return new HttpResponseMessageAssertions(instance);
         }
 
         public sealed class HttpResponseMessageAssertions : ReferenceTypeAssertions<HttpResponseMessage, HttpResponseMessageAssertions>
@@ -30,7 +30,7 @@ namespace TestBuildingBlocks
                 if (Subject.StatusCode != statusCode)
                 {
                     string responseText = Subject.Content.ReadAsStringAsync().Result;
-                    Subject.StatusCode.Should().Be(statusCode, $"response body returned was:\n{responseText}");
+                    Subject.StatusCode.Should().Be(statusCode, string.IsNullOrEmpty(responseText) ? null : $"response body returned was:\n{responseText}");
                 }
 
                 return new AndConstraint<HttpResponseMessageAssertions>(this);

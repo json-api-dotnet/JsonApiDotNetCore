@@ -12,7 +12,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
     /// Used to simulate side effects that occur in the database while saving, typically caused by database triggers.
     /// </summary>
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class ImplicitlyChangingWorkItemDefinition : JsonApiResourceDefinition<WorkItem>
+    public sealed class ImplicitlyChangingWorkItemDefinition : JsonApiResourceDefinition<WorkItem, int>
     {
         internal const string Suffix = " (changed)";
 

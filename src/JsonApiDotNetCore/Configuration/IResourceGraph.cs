@@ -17,69 +17,74 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Gets the metadata for all registered resources.
         /// </summary>
-        IReadOnlySet<ResourceContext> GetResourceContexts();
+        IReadOnlySet<ResourceType> GetResourceTypes();
 
         /// <summary>
-        /// Gets the resource metadata for the resource that is publicly exposed by the specified name. Throws an <see cref="InvalidOperationException" /> when
-        /// not found.
+        /// Gets the metadata for the resource that is publicly exposed by the specified name. Throws an <see cref="InvalidOperationException" /> when not found.
         /// </summary>
-        ResourceContext GetResourceContext(string publicName);
+        ResourceType GetResourceType(string publicName);
 
         /// <summary>
-        /// Gets the resource metadata for the specified resource type. Throws an <see cref="InvalidOperationException" /> when not found.
+        /// Gets the metadata for the resource of the specified CLR type. Throws an <see cref="InvalidOperationException" /> when not found.
         /// </summary>
-        ResourceContext GetResourceContext(Type resourceType);
+        ResourceType GetResourceType(Type resourceClrType);
 
         /// <summary>
-        /// Gets the resource metadata for the specified resource type. Throws an <see cref="InvalidOperationException" /> when not found.
+        /// Gets the metadata for the resource of the specified CLR type. Throws an <see cref="InvalidOperationException" /> when not found.
         /// </summary>
-        ResourceContext GetResourceContext<TResource>()
+        ResourceType GetResourceType<TResource>()
             where TResource : class, IIdentifiable;
 
         /// <summary>
-        /// Attempts to get the resource metadata for the resource that is publicly exposed by the specified name. Returns <c>null</c> when not found.
+        /// Attempts to get the metadata for the resource that is publicly exposed by the specified name. Returns <c>null</c> when not found.
         /// </summary>
-        ResourceContext TryGetResourceContext(string publicName);
+        ResourceType? FindResourceType(string publicName);
 
         /// <summary>
-        /// Attempts to get the resource metadata for the specified resource type. Returns <c>null</c> when not found.
+        /// Attempts to get metadata for the resource of the specified CLR type. Returns <c>null</c> when not found.
         /// </summary>
-        ResourceContext TryGetResourceContext(Type resourceType);
+        ResourceType? FindResourceType(Type resourceClrType);
 
         /// <summary>
         /// Gets the fields (attributes and relationships) for <typeparamref name="TResource" /> that are targeted by the selector.
         /// </summary>
         /// <typeparam name="TResource">
-        /// The resource type for which to retrieve fields.
+        /// The resource CLR type for which to retrieve fields.
         /// </typeparam>
         /// <param name="selector">
-        /// Should be of the form: (TResource r) => new { r.Field1, r.Field2 }
+        /// Should be of the form: <![CDATA[
+        /// (TResource resource) => new { resource.Attribute1, resource.Relationship2 }
+        /// ]]>
         /// </param>
-        IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector)
+        IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable;
 
         /// <summary>
         /// Gets the attributes for <typeparamref name="TResource" /> that are targeted by the selector.
         /// </summary>
         /// <typeparam name="TResource">
-        /// The resource type for which to retrieve attributes.
+        /// The resource CLR type for which to retrieve attributes.
         /// </typeparam>
         /// <param name="selector">
-        /// Should be of the form: (TResource r) => new { r.Attribute1, r.Attribute2 }
+        /// Should be of the form: <![CDATA[
+        /// (TResource resource) => new { resource.attribute1, resource.Attribute2 }
+        /// ]]>
         /// </param>
-        IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector)
+        IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable;
 
         /// <summary>
         /// Gets the relationships for <typeparamref name="TResource" /> that are targeted by the selector.
         /// </summary>
         /// <typeparam name="TResource">
-        /// The resource type for which to retrieve relationships.
+        /// The resource CLR type for which to retrieve relationships.
         /// </typeparam>
         /// <param name="selector">
-        /// Should be of the form: (TResource r) => new { r.Relationship1, r.Relationship2 }
+        /// Should be of the form: <![CDATA[
+        /// (TResource resource) => new { resource.Relationship1, resource.Relationship2 }
+        /// ]]>
         /// </param>
-        IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector)
+        IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable;
     }
 }

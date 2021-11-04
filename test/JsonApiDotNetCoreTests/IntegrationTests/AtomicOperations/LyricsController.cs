@@ -7,8 +7,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
 {
     public sealed class LyricsController : JsonApiController<Lyric, long>
     {
-        public LyricsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Lyric, long> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public LyricsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<Lyric, long> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

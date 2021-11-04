@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
                     new
                     {
                         type = "domainUsers",
-                        id = existingUser.StringId
+                        id = existingUser.StringId!
                     },
                     new
                     {
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -94,8 +94,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnAddToRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnAddToRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

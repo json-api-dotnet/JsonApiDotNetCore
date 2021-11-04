@@ -33,28 +33,27 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<TResource>> GetAsync<TResource>(QueryLayer layer, CancellationToken cancellationToken)
+        public async Task<IReadOnlyCollection<TResource>> GetAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = ResolveReadRepository(typeof(TResource));
-            return (IReadOnlyCollection<TResource>)await repository.GetAsync(layer, cancellationToken);
+            return (IReadOnlyCollection<TResource>)await repository.GetAsync(queryLayer, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<IIdentifiable>> GetAsync(Type resourceType, QueryLayer layer, CancellationToken cancellationToken)
+        public async Task<IReadOnlyCollection<IIdentifiable>> GetAsync(ResourceType resourceType, QueryLayer queryLayer, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             dynamic repository = ResolveReadRepository(resourceType);
-            return (IReadOnlyCollection<IIdentifiable>)await repository.GetAsync(layer, cancellationToken);
+            return (IReadOnlyCollection<IIdentifiable>)await repository.GetAsync(queryLayer, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<int> CountAsync<TResource>(FilterExpression topFilter, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable
+        public async Task<int> CountAsync(ResourceType resourceType, FilterExpression? filter, CancellationToken cancellationToken)
         {
-            dynamic repository = ResolveReadRepository(typeof(TResource));
-            return (int)await repository.CountAsync(topFilter, cancellationToken);
+            dynamic repository = ResolveReadRepository(resourceType);
+            return (int)await repository.CountAsync(filter, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -74,7 +73,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<TResource> GetForUpdateAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
+        public async Task<TResource?> GetForUpdateAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
@@ -98,7 +97,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task SetRelationshipAsync<TResource>(TResource leftResource, object rightValue, CancellationToken cancellationToken)
+        public async Task SetRelationshipAsync<TResource>(TResource leftResource, object? rightValue, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
@@ -122,35 +121,28 @@ namespace JsonApiDotNetCore.Repositories
             await repository.RemoveFromToManyRelationshipAsync(leftResource, rightResourceIds, cancellationToken);
         }
 
-        protected virtual object ResolveReadRepository(Type resourceType)
+        protected object ResolveReadRepository(Type resourceClrType)
         {
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
+            ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
+            return ResolveReadRepository(resourceType);
+        }
 
-            if (resourceContext.IdentityType == typeof(int))
-            {
-                Type intRepositoryType = typeof(IResourceReadRepository<>).MakeGenericType(resourceContext.ResourceType);
-                object intRepository = _serviceProvider.GetService(intRepositoryType);
-
-                if (intRepository != null)
-                {
-                    return intRepository;
-                }
-            }
-
-            Type resourceDefinitionType = typeof(IResourceReadRepository<,>).MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
+        protected virtual object ResolveReadRepository(ResourceType resourceType)
+        {
+            Type resourceDefinitionType = typeof(IResourceReadRepository<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
             return _serviceProvider.GetRequiredService(resourceDefinitionType);
         }
 
-        private object GetWriteRepository(Type resourceType)
+        private object GetWriteRepository(Type resourceClrType)
         {
-            object writeRepository = ResolveWriteRepository(resourceType);
+            object writeRepository = ResolveWriteRepository(resourceClrType);
 
             if (_request.TransactionId != null)
             {
                 if (writeRepository is not IRepositorySupportsTransaction repository)
                 {
-                    ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
-                    throw new MissingTransactionSupportException(resourceContext.PublicName);
+                    ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
+                    throw new MissingTransactionSupportException(resourceType.PublicName);
                 }
 
                 if (repository.TransactionId != _request.TransactionId)
@@ -162,22 +154,11 @@ namespace JsonApiDotNetCore.Repositories
             return writeRepository;
         }
 
-        protected virtual object ResolveWriteRepository(Type resourceType)
+        protected virtual object ResolveWriteRepository(Type resourceClrType)
         {
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
+            ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
 
-            if (resourceContext.IdentityType == typeof(int))
-            {
-                Type intRepositoryType = typeof(IResourceWriteRepository<>).MakeGenericType(resourceContext.ResourceType);
-                object intRepository = _serviceProvider.GetService(intRepositoryType);
-
-                if (intRepository != null)
-                {
-                    return intRepository;
-                }
-            }
-
-            Type resourceDefinitionType = typeof(IResourceWriteRepository<,>).MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
+            Type resourceDefinitionType = typeof(IResourceWriteRepository<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
             return _serviceProvider.GetRequiredService(resourceDefinitionType);
         }
     }

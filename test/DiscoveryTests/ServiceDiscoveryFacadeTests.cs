@@ -11,15 +11,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace DiscoveryTests
 {
     public sealed class ServiceDiscoveryFacadeTests
     {
-        private static readonly NullLoggerFactory LoggerFactory = NullLoggerFactory.Instance;
+        private static readonly ILoggerFactory LoggerFactory = NullLoggerFactory.Instance;
         private readonly IServiceCollection _services = new ServiceCollection();
-        private readonly JsonApiOptions _options = new();
         private readonly ResourceGraphBuilder _resourceGraphBuilder;
 
         public ServiceDiscoveryFacadeTests()
@@ -28,8 +28,10 @@ namespace DiscoveryTests
             dbResolverMock.Setup(resolver => resolver.GetContext()).Returns(new Mock<DbContext>().Object);
             _services.AddScoped(_ => dbResolverMock.Object);
 
-            _services.AddSingleton<IJsonApiOptions>(_options);
-            _services.AddSingleton<ILoggerFactory>(LoggerFactory);
+            IJsonApiOptions options = new JsonApiOptions();
+
+            _services.AddSingleton(options);
+            _services.AddSingleton(LoggerFactory);
             _services.AddScoped(_ => new Mock<IJsonApiRequest>().Object);
             _services.AddScoped(_ => new Mock<ITargetedFields>().Object);
             _services.AddScoped(_ => new Mock<IResourceGraph>().Object);
@@ -40,7 +42,7 @@ namespace DiscoveryTests
             _services.AddScoped(_ => new Mock<IResourceRepositoryAccessor>().Object);
             _services.AddScoped(_ => new Mock<IResourceDefinitionAccessor>().Object);
 
-            _resourceGraphBuilder = new ResourceGraphBuilder(_options, LoggerFactory);
+            _resourceGraphBuilder = new ResourceGraphBuilder(options, LoggerFactory);
         }
 
         [Fact]
@@ -56,11 +58,11 @@ namespace DiscoveryTests
             // Assert
             IResourceGraph resourceGraph = _resourceGraphBuilder.Build();
 
-            ResourceContext personContext = resourceGraph.TryGetResourceContext(typeof(Person));
-            personContext.Should().NotBeNull();
+            ResourceType? personType = resourceGraph.FindResourceType(typeof(Person));
+            personType.ShouldNotBeNull();
 
-            ResourceContext todoItemContext = resourceGraph.TryGetResourceContext(typeof(TodoItem));
-            todoItemContext.Should().NotBeNull();
+            ResourceType? todoItemType = resourceGraph.FindResourceType(typeof(TodoItem));
+            todoItemType.ShouldNotBeNull();
         }
 
         [Fact]
@@ -76,8 +78,8 @@ namespace DiscoveryTests
             // Assert
             IResourceGraph resourceGraph = _resourceGraphBuilder.Build();
 
-            ResourceContext testContext = resourceGraph.TryGetResourceContext(typeof(TestResource));
-            testContext.Should().NotBeNull();
+            ResourceType? testResourceType = resourceGraph.FindResourceType(typeof(PrivateResource));
+            testResourceType.ShouldNotBeNull();
         }
 
         [Fact]
@@ -93,8 +95,8 @@ namespace DiscoveryTests
             // Assert
             ServiceProvider services = _services.BuildServiceProvider();
 
-            var resourceService = services.GetRequiredService<IResourceService<TestResource>>();
-            resourceService.Should().BeOfType<TestResourceService>();
+            var resourceService = services.GetRequiredService<IResourceService<PrivateResource, int>>();
+            resourceService.Should().BeOfType<PrivateResourceService>();
         }
 
         [Fact]
@@ -110,8 +112,8 @@ namespace DiscoveryTests
             // Assert
             ServiceProvider services = _services.BuildServiceProvider();
 
-            var resourceRepository = services.GetRequiredService<IResourceRepository<TestResource>>();
-            resourceRepository.Should().BeOfType<TestResourceRepository>();
+            var resourceRepository = services.GetRequiredService<IResourceRepository<PrivateResource, int>>();
+            resourceRepository.Should().BeOfType<PrivateResourceRepository>();
         }
 
         [Fact]
@@ -127,8 +129,8 @@ namespace DiscoveryTests
             // Assert
             ServiceProvider services = _services.BuildServiceProvider();
 
-            var resourceDefinition = services.GetRequiredService<IResourceDefinition<TestResource>>();
-            resourceDefinition.Should().BeOfType<TestResourceDefinition>();
+            var resourceDefinition = services.GetRequiredService<IResourceDefinition<PrivateResource, int>>();
+            resourceDefinition.Should().BeOfType<PrivateResourceDefinition>();
         }
     }
 }

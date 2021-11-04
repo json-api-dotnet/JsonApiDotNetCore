@@ -1,23 +1,21 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefinitions.Serialization
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class RecordCompanyDefinition : JsonApiResourceDefinition<RecordCompany, short>
+    public sealed class RecordCompanyDefinition : HitCountingResourceDefinition<RecordCompany, short>
     {
-        private readonly ResourceDefinitionHitCounter _hitCounter;
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Serialization;
 
         public RecordCompanyDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
-            : base(resourceGraph)
+            : base(resourceGraph, hitCounter)
         {
-            _hitCounter = hitCounter;
         }
 
         public override void OnDeserialize(RecordCompany resource)
         {
-            _hitCounter.TrackInvocation<RecordCompany>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnDeserialize);
+            base.OnDeserialize(resource);
 
             if (!string.IsNullOrEmpty(resource.Name))
             {
@@ -27,7 +25,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
 
         public override void OnSerialize(RecordCompany resource)
         {
-            _hitCounter.TrackInvocation<RecordCompany>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize);
+            base.OnSerialize(resource);
 
             if (!string.IsNullOrEmpty(resource.CountryOfResidence))
             {

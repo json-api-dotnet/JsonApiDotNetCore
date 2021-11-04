@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using JsonApiDotNetCore.Errors;
-using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.AtomicOperations
 {
@@ -32,11 +30,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (_idsTracked.ContainsKey(localId))
             {
-                throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
-                {
-                    Title = "Another local ID with the same name is already defined at this point.",
-                    Detail = $"Another local ID with name '{localId}' is already defined at this point."
-                });
+                throw new DuplicateLocalIdValueException(localId);
             }
         }
 
@@ -75,11 +69,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             if (item.ServerId == null)
             {
-                throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
-                {
-                    Title = "Local ID cannot be both defined and used within the same operation.",
-                    Detail = $"Local ID '{localId}' cannot be both defined and used within the same operation."
-                });
+                throw new LocalIdSingleOperationException(localId);
             }
 
             return item.ServerId;
@@ -89,11 +79,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (!_idsTracked.ContainsKey(localId))
             {
-                throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
-                {
-                    Title = "Server-generated value for local ID is not available at this point.",
-                    Detail = $"Server-generated value for local ID '{localId}' is not available at this point."
-                });
+                throw new UnknownLocalIdValueException(localId);
             }
         }
 
@@ -101,18 +87,14 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (declaredType != currentType)
             {
-                throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
-                {
-                    Title = "Type mismatch in local ID usage.",
-                    Detail = $"Local ID '{localId}' belongs to resource type '{declaredType}' instead of '{currentType}'."
-                });
+                throw new IncompatibleLocalIdTypeException(localId, declaredType, currentType);
             }
         }
 
         private sealed class LocalIdState
         {
             public string ResourceType { get; }
-            public string ServerId { get; set; }
+            public string? ServerId { get; set; }
 
             public LocalIdState(string resourceType)
             {

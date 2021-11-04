@@ -6,8 +6,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ErrorDbContext : DbContext
     {
-        public DbSet<ConsumerArticle> ConsumerArticles { get; set; }
-        public DbSet<ThrowingArticle> ThrowingArticles { get; set; }
+        public DbSet<ConsumerArticle> ConsumerArticles => Set<ConsumerArticle>();
+        public DbSet<ThrowingArticle> ThrowingArticles => Set<ThrowingArticle>();
 
         public ErrorDbContext(DbContextOptions<ErrorDbContext> options)
             : base(options)

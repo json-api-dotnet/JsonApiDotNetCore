@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <example>
         /// <code>options.Namespace = "api/v1";</code>
         /// </example>
-        string Namespace { get; }
+        string? Namespace { get; }
 
         /// <summary>
         /// Specifies the default query string capabilities that can be used on exposed JSON:API attributes. Defaults to <see cref="AttrCapabilities.All" />.
@@ -30,9 +30,14 @@ namespace JsonApiDotNetCore.Configuration
         bool IncludeJsonApiVersion { get; }
 
         /// <summary>
-        /// Whether or not <see cref="Exception" /> stack traces should be serialized in <see cref="ErrorObject.Meta" />. False by default.
+        /// Whether or not <see cref="Exception" /> stack traces should be included in <see cref="ErrorObject.Meta" />. False by default.
         /// </summary>
         bool IncludeExceptionStackTraceInErrors { get; }
+
+        /// <summary>
+        /// Whether or not the request body should be included in <see cref="Document.Meta" /> when it is invalid. False by default.
+        /// </summary>
+        bool IncludeRequestBodyInErrors { get; }
 
         /// <summary>
         /// Use relative links for all resources. False by default.
@@ -85,20 +90,20 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// The page size (10 by default) that is used when not specified in query string. Set to <c>null</c> to not use paging by default.
         /// </summary>
-        PageSize DefaultPageSize { get; }
+        PageSize? DefaultPageSize { get; }
 
         /// <summary>
         /// The maximum page size that can be used, or <c>null</c> for unconstrained (default).
         /// </summary>
-        PageSize MaximumPageSize { get; }
+        PageSize? MaximumPageSize { get; }
 
         /// <summary>
         /// The maximum page number that can be used, or <c>null</c> for unconstrained (default).
         /// </summary>
-        PageNumber MaximumPageNumber { get; }
+        PageNumber? MaximumPageNumber { get; }
 
         /// <summary>
-        /// Whether or not to enable ASP.NET Core model state validation. False by default.
+        /// Whether or not to enable ASP.NET ModelState validation. True by default.
         /// </summary>
         bool ValidateModelState { get; }
 
@@ -112,6 +117,11 @@ namespace JsonApiDotNetCore.Configuration
         /// Whether or not to produce an error on unknown query string parameters. False by default.
         /// </summary>
         bool AllowUnknownQueryStringParameters { get; }
+
+        /// <summary>
+        /// Whether or not to produce an error on unknown attribute and relationship keys in request bodies. False by default.
+        /// </summary>
+        bool AllowUnknownFieldsInRequestBody { get; }
 
         /// <summary>
         /// Determines whether legacy filter notation in query strings, such as =eq:, =like:, and =in: is enabled. False by default.

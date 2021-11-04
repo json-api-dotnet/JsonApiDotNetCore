@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -11,7 +12,6 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Moq.Language;
 using Xunit;
 
 namespace UnitTests.Middleware
@@ -30,7 +30,7 @@ namespace UnitTests.Middleware
             await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Equal(id, request.PrimaryId);
+            request.PrimaryId.Should().Be(id);
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace UnitTests.Middleware
             await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Equal(id, request.PrimaryId);
+            request.PrimaryId.Should().Be(id);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace UnitTests.Middleware
             await RunMiddlewareTask(configuration);
 
             // Assert
-            Assert.Null(request.PrimaryId);
+            request.PrimaryId.Should().BeNull();
         }
 
         [Fact]
@@ -77,15 +77,15 @@ namespace UnitTests.Middleware
 
         private Task RunMiddlewareTask(InvokeConfiguration holder)
         {
-            IControllerResourceMapping controllerResourceMapping = holder.ControllerResourceMapping.Object;
-            HttpContext context = holder.HttpContext;
+            IControllerResourceMapping controllerResourceMapping = holder.ControllerResourceMappingMock.Object;
+            HttpContext httpContext = holder.HttpContext;
             IJsonApiOptions options = holder.Options;
             JsonApiRequest request = holder.Request;
-            IResourceGraph resourceGraph = holder.ResourceGraph.Object;
-            return holder.MiddleWare.InvokeAsync(context, controllerResourceMapping, options, request, resourceGraph, NullLogger<JsonApiMiddleware>.Instance);
+
+            return holder.MiddleWare.InvokeAsync(httpContext, controllerResourceMapping, options, request, NullLogger<JsonApiMiddleware>.Instance);
         }
 
-        private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", string action = "", string id = null, Type relType = null)
+        private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", string action = "", string? id = null, Type? relType = null)
         {
             if (path.First() != '/')
             {
@@ -98,32 +98,21 @@ namespace UnitTests.Middleware
             }, new HttpContextAccessor());
 
             const string forcedNamespace = "api/v1";
-            var mockMapping = new Mock<IControllerResourceMapping>();
-            mockMapping.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(typeof(string));
+            var controllerResourceMappingMock = new Mock<IControllerResourceMapping>();
+            var resourceType = new ResourceType(resourceName, typeof(object), typeof(string));
+            controllerResourceMappingMock.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(resourceType);
 
             IJsonApiOptions options = CreateOptions(forcedNamespace);
-            Mock<IResourceGraph> mockGraph = CreateMockResourceGraph(resourceName, relType != null);
             var request = new JsonApiRequest();
 
             if (relType != null)
             {
-                request.Relationship = new HasManyAttribute
-                {
-                    RightType = relType
-                };
+                request.Relationship = new HasManyAttribute();
             }
 
-            DefaultHttpContext context = CreateHttpContext(path, relType != null, action, id);
+            DefaultHttpContext httpContext = CreateHttpContext(path, relType != null, action, id);
 
-            return new InvokeConfiguration
-            {
-                MiddleWare = middleware,
-                ControllerResourceMapping = mockMapping,
-                Options = options,
-                Request = request,
-                HttpContext = context,
-                ResourceGraph = mockGraph
-            };
+            return new InvokeConfiguration(middleware, httpContext, controllerResourceMappingMock, options, request);
         }
 
         private static IJsonApiOptions CreateOptions(string forcedNamespace)
@@ -136,11 +125,19 @@ namespace UnitTests.Middleware
             return options;
         }
 
-        private static DefaultHttpContext CreateHttpContext(string path, bool isRelationship = false, string action = "", string id = null)
+        private static DefaultHttpContext CreateHttpContext(string path, bool isRelationship = false, string action = "", string? id = null)
         {
-            var context = new DefaultHttpContext();
-            context.Request.Path = new PathString(path);
-            context.Response.Body = new MemoryStream();
+            var httpContext = new DefaultHttpContext
+            {
+                Request =
+                {
+                    Path = new PathString(path)
+                },
+                Response =
+                {
+                    Body = new MemoryStream()
+                }
+            };
 
             var feature = new RouteValuesFeature
             {
@@ -156,46 +153,34 @@ namespace UnitTests.Middleware
                 feature.RouteValues["id"] = id;
             }
 
-            context.Features.Set<IRouteValuesFeature>(feature);
+            httpContext.Features.Set<IRouteValuesFeature>(feature);
 
             var controllerActionDescriptor = new ControllerActionDescriptor
             {
                 ControllerTypeInfo = (TypeInfo)typeof(object)
             };
 
-            context.SetEndpoint(new Endpoint(_ => Task.CompletedTask, new EndpointMetadataCollection(controllerActionDescriptor), null));
-            return context;
-        }
-
-        private Mock<IResourceGraph> CreateMockResourceGraph(string resourceName, bool includeRelationship = false)
-        {
-            var mockGraph = new Mock<IResourceGraph>();
-
-            var resourceContext = new ResourceContext(resourceName, typeof(object), typeof(string), Array.Empty<AttrAttribute>(),
-                Array.Empty<RelationshipAttribute>(), Array.Empty<EagerLoadAttribute>());
-
-            ISetupSequentialResult<ResourceContext> seq = mockGraph.SetupSequence(resourceGraph => resourceGraph.GetResourceContext(It.IsAny<Type>()))
-                .Returns(resourceContext);
-
-            if (includeRelationship)
-            {
-                var relatedContext = new ResourceContext("todoItems", typeof(object), typeof(string), Array.Empty<AttrAttribute>(),
-                    Array.Empty<RelationshipAttribute>(), Array.Empty<EagerLoadAttribute>());
-
-                seq.Returns(relatedContext);
-            }
-
-            return mockGraph;
+            httpContext.SetEndpoint(new Endpoint(_ => Task.CompletedTask, new EndpointMetadataCollection(controllerActionDescriptor), null));
+            return httpContext;
         }
 
         private sealed class InvokeConfiguration
         {
-            public JsonApiMiddleware MiddleWare { get; init; }
-            public HttpContext HttpContext { get; init; }
-            public Mock<IControllerResourceMapping> ControllerResourceMapping { get; init; }
-            public IJsonApiOptions Options { get; init; }
-            public JsonApiRequest Request { get; init; }
-            public Mock<IResourceGraph> ResourceGraph { get; init; }
+            public JsonApiMiddleware MiddleWare { get; }
+            public HttpContext HttpContext { get; }
+            public Mock<IControllerResourceMapping> ControllerResourceMappingMock { get; }
+            public IJsonApiOptions Options { get; }
+            public JsonApiRequest Request { get; }
+
+            public InvokeConfiguration(JsonApiMiddleware middleWare, HttpContext httpContext, Mock<IControllerResourceMapping> controllerResourceMappingMock,
+                IJsonApiOptions options, JsonApiRequest request)
+            {
+                MiddleWare = middleWare;
+                HttpContext = httpContext;
+                ControllerResourceMappingMock = controllerResourceMappingMock;
+                Options = options;
+                Request = request;
+            }
         }
     }
 }

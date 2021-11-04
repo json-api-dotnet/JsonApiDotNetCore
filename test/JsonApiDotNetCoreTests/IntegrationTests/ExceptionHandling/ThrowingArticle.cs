@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class ThrowingArticle : Identifiable
+    public sealed class ThrowingArticle : Identifiable<int>
     {
         [Attr]
         [NotMapped]

@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Response;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
 {
     public sealed class AtomicResponseMeta : IResponseMeta
     {
-        public IReadOnlyDictionary<string, object> GetMeta()
+        public IReadOnlyDictionary<string, object?> GetMeta()
         {
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 ["license"] = "MIT",
                 ["projectUrl"] = "https://github.com/json-api-dotnet/JsonApiDotNetCore/",

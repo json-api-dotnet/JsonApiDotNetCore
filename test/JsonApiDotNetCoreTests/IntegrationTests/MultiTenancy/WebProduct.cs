@@ -5,15 +5,15 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class WebProduct : Identifiable
+    public sealed class WebProduct : Identifiable<int>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Attr]
         public decimal Price { get; set; }
 
         [HasOne]
-        public WebShop Shop { get; set; }
+        public WebShop Shop { get; set; } = null!;
     }
 }

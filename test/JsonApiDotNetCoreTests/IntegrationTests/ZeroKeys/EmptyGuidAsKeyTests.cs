@@ -54,9 +54,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be("00000000-0000-0000-0000-000000000000");
-            responseDocument.Data.ManyValue[0].Links.Self.Should().Be("/maps/00000000-0000-0000-0000-000000000000");
+
+            responseDocument.Data.ManyValue[0].With(resource =>
+            {
+                resource.Links.ShouldNotBeNull();
+                resource.Links.Self.Should().Be("/maps/00000000-0000-0000-0000-000000000000");
+            });
         }
 
         [Fact]
@@ -83,11 +88,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be("00000000-0000-0000-0000-000000000000");
+            responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Links.Self.Should().Be("/maps/00000000-0000-0000-0000-000000000000");
 
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Id.Should().Be("0");
         }
 
@@ -131,7 +137,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             {
                 Map mapInDatabase = await dbContext.Maps.FirstWithIdAsync((Guid?)Guid.Empty);
 
-                mapInDatabase.Should().NotBeNull();
+                mapInDatabase.ShouldNotBeNull();
                 mapInDatabase.Name.Should().Be(newName);
             });
         }
@@ -179,7 +185,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             {
                 Map mapInDatabase = await dbContext.Maps.FirstWithIdAsync((Guid?)Guid.Empty);
 
-                mapInDatabase.Should().NotBeNull();
+                mapInDatabase.ShouldNotBeNull();
                 mapInDatabase.Name.Should().Be(newName);
             });
         }
@@ -201,7 +207,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
 
             var requestBody = new
             {
-                data = (object)null
+                data = (object?)null
             };
 
             string route = $"/games/{existingGame.StringId}/relationships/activeMap";
@@ -218,7 +224,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             {
                 Game gameInDatabase = await dbContext.Games.Include(game => game.ActiveMap).FirstWithIdAsync(existingGame.Id);
 
-                gameInDatabase.Should().NotBeNull();
+                gameInDatabase.ShouldNotBeNull();
                 gameInDatabase.ActiveMap.Should().BeNull();
             });
         }
@@ -262,7 +268,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             {
                 Game gameInDatabase = await dbContext.Games.Include(game => game.ActiveMap).FirstWithIdAsync(existingGame.Id);
 
-                gameInDatabase.Should().NotBeNull();
+                gameInDatabase.ShouldNotBeNull();
+                gameInDatabase.ActiveMap.ShouldNotBeNull();
                 gameInDatabase.ActiveMap.Id.Should().Be(Guid.Empty);
             });
         }
@@ -307,7 +314,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             {
                 Game gameInDatabase = await dbContext.Games.Include(game => game.ActiveMap).FirstWithIdAsync(existingGame.Id);
 
-                gameInDatabase.Should().NotBeNull();
+                gameInDatabase.ShouldNotBeNull();
+                gameInDatabase.ActiveMap.ShouldNotBeNull();
                 gameInDatabase.ActiveMap.Id.Should().Be(Guid.Empty);
             });
         }
@@ -346,7 +354,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             {
                 Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
-                gameInDatabase.Should().NotBeNull();
+                gameInDatabase.ShouldNotBeNull();
                 gameInDatabase.Maps.Should().BeEmpty();
             });
         }
@@ -393,8 +401,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             {
                 Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
-                gameInDatabase.Should().NotBeNull();
-                gameInDatabase.Maps.Should().HaveCount(1);
+                gameInDatabase.ShouldNotBeNull();
+                gameInDatabase.Maps.ShouldHaveCount(1);
                 gameInDatabase.Maps.ElementAt(0).Id.Should().Be(Guid.Empty);
             });
         }
@@ -442,8 +450,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             {
                 Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
-                gameInDatabase.Should().NotBeNull();
-                gameInDatabase.Maps.Should().HaveCount(1);
+                gameInDatabase.ShouldNotBeNull();
+                gameInDatabase.Maps.ShouldHaveCount(1);
                 gameInDatabase.Maps.ElementAt(0).Id.Should().Be(Guid.Empty);
             });
         }
@@ -491,8 +499,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             {
                 Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
-                gameInDatabase.Should().NotBeNull();
-                gameInDatabase.Maps.Should().HaveCount(2);
+                gameInDatabase.ShouldNotBeNull();
+                gameInDatabase.Maps.ShouldHaveCount(2);
                 gameInDatabase.Maps.Should().ContainSingle(map => map.Id == Guid.Empty);
             });
         }
@@ -538,8 +546,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             {
                 Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
-                gameInDatabase.Should().NotBeNull();
-                gameInDatabase.Maps.Should().HaveCount(1);
+                gameInDatabase.ShouldNotBeNull();
+                gameInDatabase.Maps.ShouldHaveCount(1);
                 gameInDatabase.Maps.Should().ContainSingle(map => map.Id != Guid.Empty);
             });
         }
@@ -570,7 +578,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Map gameInDatabase = await dbContext.Maps.FirstWithIdOrDefaultAsync(existingMap.Id);
+                Map? gameInDatabase = await dbContext.Maps.FirstWithIdOrDefaultAsync(existingMap.Id);
 
                 gameInDatabase.Should().BeNull();
             });

@@ -12,16 +12,16 @@ namespace JsonApiDotNetCore.Middleware
         public EndpointKind Kind { get; set; }
 
         /// <inheritdoc />
-        public string PrimaryId { get; set; }
+        public string? PrimaryId { get; set; }
 
         /// <inheritdoc />
-        public ResourceContext PrimaryResource { get; set; }
+        public ResourceType? PrimaryResourceType { get; set; }
 
         /// <inheritdoc />
-        public ResourceContext SecondaryResource { get; set; }
+        public ResourceType? SecondaryResourceType { get; set; }
 
         /// <inheritdoc />
-        public RelationshipAttribute Relationship { get; set; }
+        public RelationshipAttribute? Relationship { get; set; }
 
         /// <inheritdoc />
         public bool IsCollection { get; set; }
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Middleware
         public WriteOperationKind? WriteOperation { get; set; }
 
         /// <inheritdoc />
-        public string TransactionId { get; set; }
+        public string? TransactionId { get; set; }
 
         /// <inheritdoc />
         public void CopyFrom(IJsonApiRequest other)
@@ -42,8 +42,8 @@ namespace JsonApiDotNetCore.Middleware
 
             Kind = other.Kind;
             PrimaryId = other.PrimaryId;
-            PrimaryResource = other.PrimaryResource;
-            SecondaryResource = other.SecondaryResource;
+            PrimaryResourceType = other.PrimaryResourceType;
+            SecondaryResourceType = other.SecondaryResourceType;
             Relationship = other.Relationship;
             IsCollection = other.IsCollection;
             IsReadOnly = other.IsReadOnly;

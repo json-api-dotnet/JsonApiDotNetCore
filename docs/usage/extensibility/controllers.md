@@ -1,30 +1,13 @@
 # Controllers
 
-You need to create controllers that inherit from `JsonApiController<TResource>`
-
-```c#
-public class ArticlesController : JsonApiController<Article>
-{
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<Article> resourceService)
-        : base(options, loggerFactory, resourceService)
-    {
-    }
-}
-```
-
-## Non-Integer Type Keys
-
-If your model is using a type other than `int` for the primary key, you must explicitly declare it in the controller/service/repository definitions.
+You need to create controllers that inherit from `JsonApiController<TResource, TId>`
 
 ```c#
 public class ArticlesController : JsonApiController<Article, Guid>
-//---------------------------------------------------------- ^^^^
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<Article, Guid> resourceService)
-        //----------------------- ^^^^
-        : base(options, loggerFactory, resourceService)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService<Article, Guid> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }
@@ -39,11 +22,11 @@ In this example, if a client attempts to do anything other than GET a resource, 
 This approach is ok, but introduces some boilerplate that can easily be avoided.
 
 ```c#
-public class ArticlesController : BaseJsonApiController<Article>
+public class ArticlesController : BaseJsonApiController<Article, int>
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<Article> resourceService)
-        : base(options, loggerFactory, resourceService)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService<Article, int> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 
@@ -76,11 +59,11 @@ An attempt to use one of the blacklisted methods will result in a HTTP 405 Metho
 
 ```c#
 [HttpReadOnly]
-public class ArticlesController : BaseJsonApiController<Article>
+public class ArticlesController : BaseJsonApiController<Article, int>
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<Article> resourceService)
-        : base(options, loggerFactory, resourceService)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService<Article, int> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }
@@ -95,11 +78,11 @@ As with the ActionFilter attributes, if a service implementation is not availabl
 For more information about resource service injection, see [Replacing injected services](~/usage/extensibility/layer-overview.md#replacing-injected-services) and [Resource Services](~/usage/extensibility/services.md).
 
 ```c#
-public class ReportsController : BaseJsonApiController<Report>
+public class ReportsController : BaseJsonApiController<Report, int>
 {
-    public ReportsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IGetAllService<Report> getAllService)
-        : base(options, loggerFactory, getAllService)
+    public ReportsController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IGetAllService<Report, int> getAllService)
+        : base(options, resourceGraph, loggerFactory, getAllService)
     {
     }
 

@@ -19,9 +19,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers
     [Route("/operations/musicTracks/create")]
     public sealed class CreateMusicTrackOperationsController : JsonApiOperationsController
     {
-        public CreateMusicTrackOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IOperationsProcessor processor,
-            IJsonApiRequest request, ITargetedFields targetedFields)
-            : base(options, loggerFactory, processor, request, targetedFields)
+        public CreateMusicTrackOperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
+            : base(options, resourceGraph, loggerFactory, processor, request, targetedFields)
         {
         }
 
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers
 
             foreach (OperationContainer operation in operations)
             {
-                if (operation.Kind != WriteOperationKind.CreateResource || operation.Resource.GetType() != typeof(MusicTrack))
+                if (operation.Request.WriteOperation != WriteOperationKind.CreateResource || operation.Resource.GetType() != typeof(MusicTrack))
                 {
                     throw new JsonApiException(new ErrorObject(HttpStatusCode.UnprocessableEntity)
                     {

@@ -15,10 +15,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
 
         public override string TransactionId => _extraDbContext.Database.CurrentTransaction.TransactionId.ToString();
 
-        public LyricRepository(ExtraDbContext extraDbContext, ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
-            IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
-            IResourceDefinitionAccessor resourceDefinitionAccessor)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
+        public LyricRepository(ExtraDbContext extraDbContext, ITargetedFields targetedFields, IDbContextResolver dbContextResolver,
+            IResourceGraph resourceGraph, IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders,
+            ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
+            : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
         {
             _extraDbContext = extraDbContext;
 

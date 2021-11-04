@@ -14,15 +14,15 @@ namespace JsonApiDotNetCore.Diagnostics
     {
         private const string HttpContextItemKey = "CascadingCodeTimer:Session";
 
-        private readonly HttpContext _httpContext;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly HttpContext? _httpContext;
+        private readonly IHttpContextAccessor? _httpContextAccessor;
 
         public ICodeTimer CodeTimer
         {
             get
             {
                 HttpContext httpContext = GetHttpContext();
-                var codeTimer = (ICodeTimer)httpContext.Items[HttpContextItemKey];
+                var codeTimer = (ICodeTimer?)httpContext.Items[HttpContextItemKey];
 
                 if (codeTimer == null)
                 {
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Diagnostics
             }
         }
 
-        public event EventHandler Disposed;
+        public event EventHandler? Disposed;
 
         public AspNetCodeTimerSession(IHttpContextAccessor httpContextAccessor)
         {
@@ -52,13 +52,13 @@ namespace JsonApiDotNetCore.Diagnostics
 
         public void Dispose()
         {
-            HttpContext httpContext = TryGetHttpContext();
-            var codeTimer = (ICodeTimer)httpContext?.Items[HttpContextItemKey];
+            HttpContext? httpContext = TryGetHttpContext();
+            var codeTimer = (ICodeTimer?)httpContext?.Items[HttpContextItemKey];
 
             if (codeTimer != null)
             {
                 codeTimer.Dispose();
-                httpContext.Items[HttpContextItemKey] = null;
+                httpContext!.Items[HttpContextItemKey] = null;
             }
 
             OnDisposed();
@@ -71,11 +71,11 @@ namespace JsonApiDotNetCore.Diagnostics
 
         private HttpContext GetHttpContext()
         {
-            HttpContext httpContext = TryGetHttpContext();
+            HttpContext? httpContext = TryGetHttpContext();
             return httpContext ?? throw new InvalidOperationException("An active HTTP request is required.");
         }
 
-        private HttpContext TryGetHttpContext()
+        private HttpContext? TryGetHttpContext()
         {
             return _httpContext ?? _httpContextAccessor?.HttpContext;
         }

@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
         public async Task Can_rollback_on_error()
         {
             // Arrange
-            string newArtistName = _fakers.Performer.Generate().ArtistName;
+            string newArtistName = _fakers.Performer.Generate().ArtistName!;
             DateTimeOffset newBornAt = _fakers.Performer.Generate().BornAt;
             string newTitle = _fakers.MusicTrack.Generate().Title;
 
@@ -92,12 +92,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'performers' with ID '{performerId}' in relationship 'performers' does not exist.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

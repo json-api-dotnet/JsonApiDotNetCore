@@ -39,13 +39,12 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         public async Task InvokeAsync(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping, IJsonApiOptions options,
-            IJsonApiRequest request, IResourceGraph resourceGraph, ILogger<JsonApiMiddleware> logger)
+            IJsonApiRequest request, ILogger<JsonApiMiddleware> logger)
         {
             ArgumentGuard.NotNull(httpContext, nameof(httpContext));
             ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(request, nameof(request));
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(logger, nameof(logger));
 
             using (CodeTimingSessionManager.Current.Measure("JSON:API middleware"))
@@ -56,9 +55,9 @@ namespace JsonApiDotNetCore.Middleware
                 }
 
                 RouteValueDictionary routeValues = httpContext.GetRouteData().Values;
-                ResourceContext primaryResourceContext = TryCreatePrimaryResourceContext(httpContext, controllerResourceMapping, resourceGraph);
+                ResourceType? primaryResourceType = CreatePrimaryResourceType(httpContext, controllerResourceMapping);
 
-                if (primaryResourceContext != null)
+                if (primaryResourceType != null)
                 {
                     if (!await ValidateContentTypeHeaderAsync(HeaderConstants.MediaType, httpContext, options.SerializerWriteOptions) ||
                         !await ValidateAcceptHeaderAsync(MediaType, httpContext, options.SerializerWriteOptions))
@@ -66,7 +65,7 @@ namespace JsonApiDotNetCore.Middleware
                         return;
                     }
 
-                    SetupResourceRequest((JsonApiRequest)request, primaryResourceContext, routeValues, resourceGraph, httpContext.Request);
+                    SetupResourceRequest((JsonApiRequest)request, primaryResourceType, routeValues, httpContext.Request);
 
                     httpContext.RegisterJsonApiRequest();
                 }
@@ -83,7 +82,10 @@ namespace JsonApiDotNetCore.Middleware
                     httpContext.RegisterJsonApiRequest();
                 }
 
-                // Workaround for bug https://github.com/dotnet/aspnetcore/issues/33394
+                // Workaround for bug https://github.com/dotnet/aspnetcore/issues/33394 (fixed in .NET 6)
+                // Note that integration tests do not cover this, because the query string is short-circuited through WebApplicationFactory.
+                // To manually test, execute a GET request such as http://localhost:14140/api/v1/todoItems?include=owner&fields[people]=
+                // and observe it does not fail with 400 "Unknown query string parameter".
                 httpContext.Features.Set<IQueryFeature>(new FixedQueryFeature(httpContext.Features));
 
                 using (CodeTimingSessionManager.Current.Measure("Subsequent middleware"))
@@ -119,24 +121,14 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private static ResourceContext TryCreatePrimaryResourceContext(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping,
-            IResourceGraph resourceGraph)
+        private static ResourceType? CreatePrimaryResourceType(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping)
         {
-            Endpoint endpoint = httpContext.GetEndpoint();
+            Endpoint? endpoint = httpContext.GetEndpoint();
             var controllerActionDescriptor = endpoint?.Metadata.GetMetadata<ControllerActionDescriptor>();
 
-            if (controllerActionDescriptor != null)
-            {
-                Type controllerType = controllerActionDescriptor.ControllerTypeInfo;
-                Type resourceType = controllerResourceMapping.GetResourceTypeForController(controllerType);
-
-                if (resourceType != null)
-                {
-                    return resourceGraph.GetResourceContext(resourceType);
-                }
-            }
-
-            return null;
+            return controllerActionDescriptor != null
+                ? controllerResourceMapping.GetResourceTypeForController(controllerActionDescriptor.ControllerTypeInfo)
+                : null;
         }
 
         private static async Task<bool> ValidateContentTypeHeaderAsync(string allowedContentType, HttpContext httpContext,
@@ -178,7 +170,7 @@ namespace JsonApiDotNetCore.Middleware
 
             foreach (string acceptHeader in acceptHeaders)
             {
-                if (MediaTypeHeaderValue.TryParse(acceptHeader, out MediaTypeHeaderValue headerValue))
+                if (MediaTypeHeaderValue.TryParse(acceptHeader, out MediaTypeHeaderValue? headerValue))
                 {
                     headerValue.Quality = null;
 
@@ -228,14 +220,14 @@ namespace JsonApiDotNetCore.Middleware
             await httpResponse.Body.FlushAsync();
         }
 
-        private static void SetupResourceRequest(JsonApiRequest request, ResourceContext primaryResourceContext, RouteValueDictionary routeValues,
-            IResourceGraph resourceGraph, HttpRequest httpRequest)
+        private static void SetupResourceRequest(JsonApiRequest request, ResourceType primaryResourceType, RouteValueDictionary routeValues,
+            HttpRequest httpRequest)
         {
             request.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method || httpRequest.Method == HttpMethod.Head.Method;
-            request.PrimaryResource = primaryResourceContext;
+            request.PrimaryResourceType = primaryResourceType;
             request.PrimaryId = GetPrimaryRequestId(routeValues);
 
-            string relationshipName = GetRelationshipNameForSecondaryRequest(routeValues);
+            string? relationshipName = GetRelationshipNameForSecondaryRequest(routeValues);
 
             if (relationshipName != null)
             {
@@ -252,12 +244,12 @@ namespace JsonApiDotNetCore.Middleware
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                RelationshipAttribute requestRelationship = primaryResourceContext.TryGetRelationshipByPublicName(relationshipName);
+                RelationshipAttribute? requestRelationship = primaryResourceType.FindRelationshipByPublicName(relationshipName);
 
                 if (requestRelationship != null)
                 {
                     request.Relationship = requestRelationship;
-                    request.SecondaryResource = resourceGraph.GetResourceContext(requestRelationship.RightType);
+                    request.SecondaryResourceType = requestRelationship.RightType;
                 }
             }
             else
@@ -280,25 +272,25 @@ namespace JsonApiDotNetCore.Middleware
             request.IsCollection = isGetAll || request.Relationship is HasManyAttribute;
         }
 
-        private static string GetPrimaryRequestId(RouteValueDictionary routeValues)
+        private static string? GetPrimaryRequestId(RouteValueDictionary routeValues)
         {
-            return routeValues.TryGetValue("id", out object id) ? (string)id : null;
+            return routeValues.TryGetValue("id", out object? id) ? (string?)id : null;
         }
 
-        private static string GetRelationshipNameForSecondaryRequest(RouteValueDictionary routeValues)
+        private static string? GetRelationshipNameForSecondaryRequest(RouteValueDictionary routeValues)
         {
-            return routeValues.TryGetValue("relationshipName", out object routeValue) ? (string)routeValue : null;
+            return routeValues.TryGetValue("relationshipName", out object? routeValue) ? (string?)routeValue : null;
         }
 
         private static bool IsRouteForRelationship(RouteValueDictionary routeValues)
         {
-            string actionName = (string)routeValues["action"];
+            string actionName = (string)routeValues["action"]!;
             return actionName.EndsWith("Relationship", StringComparison.Ordinal);
         }
 
         private static bool IsRouteForOperations(RouteValueDictionary routeValues)
         {
-            string actionName = (string)routeValues["action"];
+            string actionName = (string)routeValues["action"]!;
             return actionName == "PostOperations";
         }
 

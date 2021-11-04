@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return $"{Keywords.Not}({Child})";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

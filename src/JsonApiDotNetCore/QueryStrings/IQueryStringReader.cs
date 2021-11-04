@@ -13,6 +13,6 @@ namespace JsonApiDotNetCore.QueryStrings
         /// <param name="disableQueryStringAttribute">
         /// The <see cref="DisableQueryStringAttribute" /> if set on the controller that is targeted by the current request.
         /// </param>
-        void ReadAll(DisableQueryStringAttribute disableQueryStringAttribute);
+        void ReadAll(DisableQueryStringAttribute? disableQueryStringAttribute);
     }
 }

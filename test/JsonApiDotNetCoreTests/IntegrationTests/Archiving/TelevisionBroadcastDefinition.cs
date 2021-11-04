@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class TelevisionBroadcastDefinition : JsonApiResourceDefinition<TelevisionBroadcast>
+    public sealed class TelevisionBroadcastDefinition : JsonApiResourceDefinition<TelevisionBroadcast, int>
     {
         private readonly TelevisionDbContext _dbContext;
         private readonly IJsonApiRequest _request;
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             _constraintProviders = constraintProviders;
         }
 
-        public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
+        public override FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
         {
             if (_request.IsReadOnly)
             {
@@ -43,16 +43,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
                 if (IsReturningCollectionOfTelevisionBroadcasts() && !HasFilterOnArchivedAt(existingFilter))
                 {
-                    AttrAttribute archivedAtAttribute = ResourceContext.GetAttributeByPropertyName(nameof(TelevisionBroadcast.ArchivedAt));
+                    AttrAttribute archivedAtAttribute = ResourceType.GetAttributeByPropertyName(nameof(TelevisionBroadcast.ArchivedAt));
                     var archivedAtChain = new ResourceFieldChainExpression(archivedAtAttribute);
 
-                    FilterExpression isUnarchived = new ComparisonExpression(ComparisonOperator.Equals, archivedAtChain, new NullConstantExpression());
+                    FilterExpression isUnarchived = new ComparisonExpression(ComparisonOperator.Equals, archivedAtChain, NullConstantExpression.Instance);
 
-                    return existingFilter == null ? isUnarchived : new LogicalExpression(LogicalOperator.And, existingFilter, isUnarchived);
+                    return LogicalExpression.Compose(LogicalOperator.And, existingFilter, isUnarchived);
                 }
             }
 
-            return base.OnApplyFilter(existingFilter);
+            return existingFilter;
         }
 
         private bool IsReturningCollectionOfTelevisionBroadcasts()
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
         {
             if (_request.IsCollection)
             {
-                if (ResourceContext.Equals(_request.PrimaryResource) || ResourceContext.Equals(_request.SecondaryResource))
+                if (ResourceType.Equals(_request.PrimaryResourceType) || ResourceType.Equals(_request.SecondaryResourceType))
                 {
                     return true;
                 }
@@ -90,7 +90,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             foreach (IncludeElementExpression includeElement in includeElements)
             {
-                if (includeElement.Relationship is HasManyAttribute && includeElement.Relationship.RightType == ResourceContext.ResourceType)
+                if (includeElement.Relationship is HasManyAttribute && includeElement.Relationship.RightType.Equals(ResourceType))
                 {
                     return true;
                 }
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             return false;
         }
 
-        private bool HasFilterOnArchivedAt(FilterExpression existingFilter)
+        private bool HasFilterOnArchivedAt(FilterExpression? existingFilter)
         {
             if (existingFilter == null)
             {
@@ -119,7 +119,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
                 _storedArchivedAt = broadcast.ArchivedAt;
             }
 
-            return base.OnPrepareWriteAsync(broadcast, writeOperation, cancellationToken);
+            return Task.CompletedTask;
         }
 
         public override async Task OnWritingAsync(TelevisionBroadcast broadcast, WriteOperationKind writeOperation, CancellationToken cancellationToken)
@@ -182,11 +182,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             }
         }
 
-        private sealed class FilterWalker : QueryExpressionRewriter<object>
+        private sealed class FilterWalker : QueryExpressionRewriter<object?>
         {
             public bool HasFilterOnArchivedAt { get; private set; }
 
-            public override QueryExpression VisitResourceFieldChain(ResourceFieldChainExpression expression, object argument)
+            public override QueryExpression? VisitResourceFieldChain(ResourceFieldChainExpression expression, object? argument)
             {
                 if (expression.Fields[0].Property.Name == nameof(TelevisionBroadcast.ArchivedAt))
                 {

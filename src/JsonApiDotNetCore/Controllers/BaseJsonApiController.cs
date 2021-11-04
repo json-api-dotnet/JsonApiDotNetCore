@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Controllers
 {
     /// <summary>
-    /// Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture that delegates to a Resource Service.
+    /// Implements the foundational ASP.NET controller layer in the JsonApiDotNetCore architecture that delegates to a Resource Service.
     /// </summary>
     /// <typeparam name="TResource">
     /// The resource type.
@@ -25,50 +25,54 @@ namespace JsonApiDotNetCore.Controllers
         where TResource : class, IIdentifiable<TId>
     {
         private readonly IJsonApiOptions _options;
-        private readonly IGetAllService<TResource, TId> _getAll;
-        private readonly IGetByIdService<TResource, TId> _getById;
-        private readonly IGetSecondaryService<TResource, TId> _getSecondary;
-        private readonly IGetRelationshipService<TResource, TId> _getRelationship;
-        private readonly ICreateService<TResource, TId> _create;
-        private readonly IAddToRelationshipService<TResource, TId> _addToRelationship;
-        private readonly IUpdateService<TResource, TId> _update;
-        private readonly ISetRelationshipService<TResource, TId> _setRelationship;
-        private readonly IDeleteService<TResource, TId> _delete;
-        private readonly IRemoveFromRelationshipService<TResource, TId> _removeFromRelationship;
+        private readonly IResourceGraph _resourceGraph;
+        private readonly IGetAllService<TResource, TId>? _getAll;
+        private readonly IGetByIdService<TResource, TId>? _getById;
+        private readonly IGetSecondaryService<TResource, TId>? _getSecondary;
+        private readonly IGetRelationshipService<TResource, TId>? _getRelationship;
+        private readonly ICreateService<TResource, TId>? _create;
+        private readonly IAddToRelationshipService<TResource, TId>? _addToRelationship;
+        private readonly IUpdateService<TResource, TId>? _update;
+        private readonly ISetRelationshipService<TResource, TId>? _setRelationship;
+        private readonly IDeleteService<TResource, TId>? _delete;
+        private readonly IRemoveFromRelationshipService<TResource, TId>? _removeFromRelationship;
         private readonly TraceLogWriter<BaseJsonApiController<TResource, TId>> _traceWriter;
 
         /// <summary>
         /// Creates an instance from a read/write service.
         /// </summary>
-        protected BaseJsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<TResource, TId> resourceService)
-            : this(options, loggerFactory, resourceService, resourceService)
+        protected BaseJsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<TResource, TId> resourceService)
+            : this(options, resourceGraph, loggerFactory, resourceService, resourceService)
         {
         }
 
         /// <summary>
         /// Creates an instance from separate services for reading and writing.
         /// </summary>
-        protected BaseJsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceQueryService<TResource, TId> queryService = null,
-            IResourceCommandService<TResource, TId> commandService = null)
-            : this(options, loggerFactory, queryService, queryService, queryService, queryService, commandService, commandService, commandService,
-                commandService, commandService, commandService)
+        protected BaseJsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceQueryService<TResource, TId>? queryService = null, IResourceCommandService<TResource, TId>? commandService = null)
+            : this(options, resourceGraph, loggerFactory, queryService, queryService, queryService, queryService, commandService, commandService,
+                commandService, commandService, commandService, commandService)
         {
         }
 
         /// <summary>
         /// Creates an instance from separate services for the various individual read and write methods.
         /// </summary>
-        protected BaseJsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<TResource, TId> getAll = null,
-            IGetByIdService<TResource, TId> getById = null, IGetSecondaryService<TResource, TId> getSecondary = null,
-            IGetRelationshipService<TResource, TId> getRelationship = null, ICreateService<TResource, TId> create = null,
-            IAddToRelationshipService<TResource, TId> addToRelationship = null, IUpdateService<TResource, TId> update = null,
-            ISetRelationshipService<TResource, TId> setRelationship = null, IDeleteService<TResource, TId> delete = null,
-            IRemoveFromRelationshipService<TResource, TId> removeFromRelationship = null)
+        protected BaseJsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IGetAllService<TResource, TId>? getAll = null, IGetByIdService<TResource, TId>? getById = null,
+            IGetSecondaryService<TResource, TId>? getSecondary = null, IGetRelationshipService<TResource, TId>? getRelationship = null,
+            ICreateService<TResource, TId>? create = null, IAddToRelationshipService<TResource, TId>? addToRelationship = null,
+            IUpdateService<TResource, TId>? update = null, ISetRelationshipService<TResource, TId>? setRelationship = null,
+            IDeleteService<TResource, TId>? delete = null, IRemoveFromRelationshipService<TResource, TId>? removeFromRelationship = null)
         {
             ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
 
             _options = options;
+            _resourceGraph = resourceGraph;
             _traceWriter = new TraceLogWriter<BaseJsonApiController<TResource, TId>>(loggerFactory);
             _getAll = getAll;
             _getById = getById;
@@ -137,9 +141,9 @@ namespace JsonApiDotNetCore.Controllers
                 throw new RequestMethodNotAllowedException(HttpMethod.Get);
             }
 
-            object relationship = await _getSecondary.GetSecondaryAsync(id, relationshipName, cancellationToken);
+            object? rightValue = await _getSecondary.GetSecondaryAsync(id, relationshipName, cancellationToken);
 
-            return Ok(relationship);
+            return Ok(rightValue);
         }
 
         /// <summary>
@@ -160,9 +164,9 @@ namespace JsonApiDotNetCore.Controllers
                 throw new RequestMethodNotAllowedException(HttpMethod.Get);
             }
 
-            object rightResources = await _getRelationship.GetRelationshipAsync(id, relationshipName, cancellationToken);
+            object? rightValue = await _getRelationship.GetRelationshipAsync(id, relationshipName, cancellationToken);
 
-            return Ok(rightResources);
+            return Ok(rightValue);
         }
 
         /// <summary>
@@ -182,20 +186,14 @@ namespace JsonApiDotNetCore.Controllers
                 throw new RequestMethodNotAllowedException(HttpMethod.Post);
             }
 
-            if (!_options.AllowClientGeneratedIds && resource.StringId != null)
-            {
-                throw new ResourceIdInCreateResourceNotAllowedException();
-            }
-
             if (_options.ValidateModelState && !ModelState.IsValid)
             {
-                throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors,
-                    _options.SerializerOptions.PropertyNamingPolicy);
+                throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors, _resourceGraph);
             }
 
-            TResource newResource = await _create.CreateAsync(resource, cancellationToken);
+            TResource? newResource = await _create.CreateAsync(resource, cancellationToken);
 
-            string resourceId = (newResource ?? resource).StringId;
+            string resourceId = (newResource ?? resource).StringId!;
             string locationUrl = $"{HttpContext.Request.Path}/{resourceId}";
 
             if (newResource == null)
@@ -266,11 +264,10 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_options.ValidateModelState && !ModelState.IsValid)
             {
-                throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors,
-                    _options.SerializerOptions.PropertyNamingPolicy);
+                throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors, _resourceGraph);
             }
 
-            TResource updated = await _update.UpdateAsync(id, resource, cancellationToken);
+            TResource? updated = await _update.UpdateAsync(id, resource, cancellationToken);
             return updated == null ? NoContent() : Ok(updated);
         }
 
@@ -290,7 +287,7 @@ namespace JsonApiDotNetCore.Controllers
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object rightValue,
+        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object? rightValue,
             CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new
@@ -368,36 +365,6 @@ namespace JsonApiDotNetCore.Controllers
             await _removeFromRelationship.RemoveFromToManyRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
 
             return NoContent();
-        }
-    }
-
-    /// <inheritdoc />
-    public abstract class BaseJsonApiController<TResource> : BaseJsonApiController<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-        /// <inheritdoc />
-        protected BaseJsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<TResource, int> resourceService)
-            : base(options, loggerFactory, resourceService, resourceService)
-        {
-        }
-
-        /// <inheritdoc />
-        protected BaseJsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceQueryService<TResource, int> queryService = null,
-            IResourceCommandService<TResource, int> commandService = null)
-            : base(options, loggerFactory, queryService, commandService)
-        {
-        }
-
-        /// <inheritdoc />
-        protected BaseJsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<TResource, int> getAll = null,
-            IGetByIdService<TResource, int> getById = null, IGetSecondaryService<TResource, int> getSecondary = null,
-            IGetRelationshipService<TResource, int> getRelationship = null, ICreateService<TResource, int> create = null,
-            IAddToRelationshipService<TResource, int> addToRelationship = null, IUpdateService<TResource, int> update = null,
-            ISetRelationshipService<TResource, int> setRelationship = null, IDeleteService<TResource, int> delete = null,
-            IRemoveFromRelationshipService<TResource, int> removeFromRelationship = null)
-            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship, update, setRelationship, delete,
-                removeFromRelationship)
-        {
         }
     }
 }

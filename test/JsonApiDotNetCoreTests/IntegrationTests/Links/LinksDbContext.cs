@@ -8,9 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class LinksDbContext : DbContext
     {
-        public DbSet<PhotoAlbum> PhotoAlbums { get; set; }
-        public DbSet<Photo> Photos { get; set; }
-        public DbSet<PhotoLocation> PhotoLocations { get; set; }
+        public DbSet<PhotoAlbum> PhotoAlbums => Set<PhotoAlbum>();
+        public DbSet<Photo> Photos => Set<Photo>();
+        public DbSet<PhotoLocation> PhotoLocations => Set<PhotoLocation>();
 
         public LinksDbContext(DbContextOptions<LinksDbContext> options)
             : base(options)
@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
         {
             builder.Entity<Photo>()
                 .HasOne(photo => photo.Location)
-                .WithOne(location => location.Photo)
+                .WithOne(location => location!.Photo)
                 .HasForeignKey<Photo>("LocationId");
         }
     }

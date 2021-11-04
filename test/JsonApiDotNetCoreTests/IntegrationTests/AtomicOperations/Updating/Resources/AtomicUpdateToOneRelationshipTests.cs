@@ -52,7 +52,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                             {
                                 track = new
                                 {
-                                    data = (object)null
+                                    data = (object?)null
                                 }
                             }
                         }
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                 lyricInDatabase.Track.Should().BeNull();
 
                 List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
-                tracksInDatabase.Should().HaveCount(1);
+                tracksInDatabase.ShouldHaveCount(1);
             });
         }
 
@@ -110,7 +110,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                             {
                                 lyric = new
                                 {
-                                    data = (object)null
+                                    data = (object?)null
                                 }
                             }
                         }
@@ -135,7 +135,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                 trackInDatabase.Lyric.Should().BeNull();
 
                 List<Lyric> lyricsInDatabase = await dbContext.Lyrics.ToListAsync();
-                lyricsInDatabase.Should().HaveCount(1);
+                lyricsInDatabase.ShouldHaveCount(1);
             });
         }
 
@@ -168,7 +168,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                             {
                                 ownedBy = new
                                 {
-                                    data = (object)null
+                                    data = (object?)null
                                 }
                             }
                         }
@@ -193,7 +193,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                 trackInDatabase.OwnedBy.Should().BeNull();
 
                 List<RecordCompany> companiesInDatabase = await dbContext.RecordCompanies.ToListAsync();
-                companiesInDatabase.Should().HaveCount(1);
+                companiesInDatabase.ShouldHaveCount(1);
             });
         }
 
@@ -251,6 +251,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             {
                 Lyric lyricInDatabase = await dbContext.Lyrics.Include(lyric => lyric.Track).FirstWithIdAsync(existingLyric.Id);
 
+                lyricInDatabase.Track.ShouldNotBeNull();
                 lyricInDatabase.Track.Id.Should().Be(existingTrack.Id);
             });
         }
@@ -309,6 +310,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             {
                 MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Lyric).FirstWithIdAsync(existingTrack.Id);
 
+                trackInDatabase.Lyric.ShouldNotBeNull();
                 trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
             });
         }
@@ -367,6 +369,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             {
                 MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.OwnedBy).FirstWithIdAsync(existingTrack.Id);
 
+                trackInDatabase.OwnedBy.ShouldNotBeNull();
                 trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
             });
         }
@@ -428,10 +431,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             {
                 Lyric lyricInDatabase = await dbContext.Lyrics.Include(lyric => lyric.Track).FirstWithIdAsync(existingLyric.Id);
 
+                lyricInDatabase.Track.ShouldNotBeNull();
                 lyricInDatabase.Track.Id.Should().Be(existingTrack.Id);
 
                 List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
-                tracksInDatabase.Should().HaveCount(2);
+                tracksInDatabase.ShouldHaveCount(2);
             });
         }
 
@@ -492,10 +496,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             {
                 MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Lyric).FirstWithIdAsync(existingTrack.Id);
 
+                trackInDatabase.Lyric.ShouldNotBeNull();
                 trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
 
                 List<Lyric> lyricsInDatabase = await dbContext.Lyrics.ToListAsync();
-                lyricsInDatabase.Should().HaveCount(2);
+                lyricsInDatabase.ShouldHaveCount(2);
             });
         }
 
@@ -556,15 +561,120 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             {
                 MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.OwnedBy).FirstWithIdAsync(existingTrack.Id);
 
+                trackInDatabase.OwnedBy.ShouldNotBeNull();
                 trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
 
                 List<RecordCompany> companiesInDatabase = await dbContext.RecordCompanies.ToListAsync();
-                companiesInDatabase.Should().HaveCount(2);
+                companiesInDatabase.ShouldHaveCount(2);
             });
         }
 
         [Fact]
-        public async Task Cannot_create_for_array_in_relationship_data()
+        public async Task Cannot_create_for_null_relationship()
+        {
+            // Arrange
+            MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.MusicTracks.Add(existingTrack);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        data = new
+                        {
+                            type = "musicTracks",
+                            id = existingTrack.StringId,
+                            relationships = new
+                            {
+                                lyric = (object?)null
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.ShouldHaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object, instead of 'null'.");
+            error.Detail.Should().BeNull();
+            error.Source.ShouldNotBeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric");
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        }
+
+        [Fact]
+        public async Task Cannot_create_for_missing_data_in_relationship()
+        {
+            // Arrange
+            MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.MusicTracks.Add(existingTrack);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        data = new
+                        {
+                            type = "musicTracks",
+                            id = existingTrack.StringId,
+                            relationships = new
+                            {
+                                lyric = new
+                                {
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.ShouldHaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.ShouldNotBeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric");
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+        }
+
+        [Fact]
+        public async Task Cannot_create_for_array_data_in_relationship()
         {
             // Arrange
             MusicTrack existingTrack = _fakers.MusicTrack.Generate();
@@ -613,13 +723,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected single data element for to-one relationship.");
-            error.Detail.Should().Be("Expected single data element for 'lyric' relationship.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object or 'null', instead of an array.");
+            error.Detail.Should().BeNull();
+            error.Source.ShouldNotBeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
         }
 
         [Fact]
@@ -660,13 +772,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
-            error.Detail.Should().Be("Expected 'type' element in 'track' relationship.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.ShouldNotBeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/track/data");
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
         }
 
         [Fact]
@@ -708,13 +822,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
+            error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
             error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.ShouldNotBeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data/type");
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
         }
 
         [Fact]
@@ -755,13 +871,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'id' or 'lid' element.");
-            error.Detail.Should().Be("Expected 'id' or 'lid' element in 'lyric' relationship.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Title.Should().Be("Failed to deserialize request body: The 'id' or 'lid' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.ShouldNotBeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
         }
 
         [Fact]
@@ -804,13 +922,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'id' or 'lid' element.");
-            error.Detail.Should().Be("Expected 'id' or 'lid' element in 'lyric' relationship.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Title.Should().Be("Failed to deserialize request body: The 'id' and 'lid' element are mutually exclusive.");
+            error.Detail.Should().BeNull();
+            error.Source.ShouldNotBeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
         }
 
         [Fact]
@@ -862,13 +982,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'lyrics' with ID '{lyricId}' in relationship 'lyric' does not exist.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Meta.Should().NotContainKey("requestBody");
         }
 
         [Fact]
@@ -916,15 +1038,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
-            error.Detail.Should().Be("Relationship 'lyric' contains incompatible resource type 'playlists'.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.StatusCode.Should().Be(HttpStatusCode.Conflict);
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
+            error.Detail.Should().Be("Type 'playlists' is incompatible with type 'lyrics' of relationship 'lyric'.");
+            error.Source.ShouldNotBeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data/type");
+            error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
         }
     }
 }

@@ -13,24 +13,21 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// Transforms <see cref="IncludeExpression" /> into <see cref="EntityFrameworkQueryableExtensions.Include{TEntity, TProperty}" /> calls.
     /// </summary>
     [PublicAPI]
-    public class IncludeClauseBuilder : QueryClauseBuilder<object>
+    public class IncludeClauseBuilder : QueryClauseBuilder<object?>
     {
         private static readonly IncludeChainConverter IncludeChainConverter = new();
 
         private readonly Expression _source;
-        private readonly ResourceContext _resourceContext;
-        private readonly IResourceGraph _resourceGraph;
+        private readonly ResourceType _resourceType;
 
-        public IncludeClauseBuilder(Expression source, LambdaScope lambdaScope, ResourceContext resourceContext, IResourceGraph resourceGraph)
+        public IncludeClauseBuilder(Expression source, LambdaScope lambdaScope, ResourceType resourceType)
             : base(lambdaScope)
         {
             ArgumentGuard.NotNull(source, nameof(source));
-            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             _source = source;
-            _resourceContext = resourceContext;
-            _resourceGraph = resourceGraph;
+            _resourceType = resourceType;
         }
 
         public Expression ApplyInclude(IncludeExpression include)
@@ -40,9 +37,9 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return Visit(include, null);
         }
 
-        public override Expression VisitInclude(IncludeExpression expression, object argument)
+        public override Expression VisitInclude(IncludeExpression expression, object? argument)
         {
-            Expression source = ApplyEagerLoads(_source, _resourceContext.EagerLoads, null);
+            Expression source = ApplyEagerLoads(_source, _resourceType.EagerLoads, null);
 
             foreach (ResourceFieldChainExpression chain in IncludeChainConverter.GetRelationshipChains(expression))
             {
@@ -54,21 +51,20 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private Expression ProcessRelationshipChain(ResourceFieldChainExpression chain, Expression source)
         {
-            string path = null;
+            string? path = null;
             Expression result = source;
 
             foreach (RelationshipAttribute relationship in chain.Fields.Cast<RelationshipAttribute>())
             {
                 path = path == null ? relationship.Property.Name : $"{path}.{relationship.Property.Name}";
 
-                ResourceContext resourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
-                result = ApplyEagerLoads(result, resourceContext.EagerLoads, path);
+                result = ApplyEagerLoads(result, relationship.RightType.EagerLoads, path);
             }
 
-            return IncludeExtensionMethodCall(result, path);
+            return IncludeExtensionMethodCall(result, path!);
         }
 
-        private Expression ApplyEagerLoads(Expression source, IEnumerable<EagerLoadAttribute> eagerLoads, string pathPrefix)
+        private Expression ApplyEagerLoads(Expression source, IEnumerable<EagerLoadAttribute> eagerLoads, string? pathPrefix)
         {
             Expression result = source;
 

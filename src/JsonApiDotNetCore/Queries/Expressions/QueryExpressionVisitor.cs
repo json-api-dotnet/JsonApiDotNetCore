@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public virtual TResult DefaultVisit(QueryExpression expression, TArgument argument)
         {
-            return default;
+            return default!;
         }
 
         public virtual TResult VisitComparison(ComparisonExpression expression, TArgument argument)

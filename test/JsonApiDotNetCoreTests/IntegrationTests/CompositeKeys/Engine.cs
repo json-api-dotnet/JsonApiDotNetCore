@@ -5,12 +5,12 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Engine : Identifiable
+    public sealed class Engine : Identifiable<int>
     {
         [Attr]
-        public string SerialCode { get; set; }
+        public string SerialCode { get; set; } = null!;
 
         [HasOne]
-        public Car Car { get; set; }
+        public Car? Car { get; set; }
     }
 }

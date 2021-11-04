@@ -16,28 +16,31 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Controllers
 {
     /// <summary>
-    /// Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture for handling atomic:operations requests. See
+    /// Implements the foundational ASP.NET controller layer in the JsonApiDotNetCore architecture for handling atomic:operations requests. See
     /// https://jsonapi.org/ext/atomic/ for details. Delegates work to <see cref="IOperationsProcessor" />.
     /// </summary>
     [PublicAPI]
     public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     {
         private readonly IJsonApiOptions _options;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IOperationsProcessor _processor;
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
         private readonly TraceLogWriter<BaseJsonApiOperationsController> _traceWriter;
 
-        protected BaseJsonApiOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IOperationsProcessor processor,
-            IJsonApiRequest request, ITargetedFields targetedFields)
+        protected BaseJsonApiOperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
         {
             ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
             ArgumentGuard.NotNull(processor, nameof(processor));
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
 
             _options = options;
+            _resourceGraph = resourceGraph;
             _processor = processor;
             _request = request;
             _targetedFields = targetedFields;
@@ -113,89 +116,96 @@ namespace JsonApiDotNetCore.Controllers
 
             ArgumentGuard.NotNull(operations, nameof(operations));
 
-            ValidateClientGeneratedIds(operations);
-
             if (_options.ValidateModelState)
             {
                 ValidateModelState(operations);
             }
 
-            IList<OperationContainer> results = await _processor.ProcessAsync(operations, cancellationToken);
+            IList<OperationContainer?> results = await _processor.ProcessAsync(operations, cancellationToken);
             return results.Any(result => result != null) ? Ok(results) : NoContent();
         }
 
-        protected virtual void ValidateClientGeneratedIds(IEnumerable<OperationContainer> operations)
-        {
-            if (!_options.AllowClientGeneratedIds)
-            {
-                int index = 0;
-
-                foreach (OperationContainer operation in operations)
-                {
-                    if (operation.Kind == WriteOperationKind.CreateResource && operation.Resource.StringId != null)
-                    {
-                        throw new ResourceIdInCreateResourceNotAllowedException(index);
-                    }
-
-                    index++;
-                }
-            }
-        }
-
-        protected virtual void ValidateModelState(IEnumerable<OperationContainer> operations)
+        protected virtual void ValidateModelState(IList<OperationContainer> operations)
         {
             // We must validate the resource inside each operation manually, because they are typed as IIdentifiable.
             // Instead of validating IIdentifiable we need to validate the resource runtime-type.
 
-            var violations = new List<ModelStateViolation>();
+            using IDisposable _ = new RevertRequestStateOnDispose(_request, _targetedFields);
 
-            int index = 0;
+            int operationIndex = 0;
+            var requestModelState = new List<(string key, ModelStateEntry entry)>();
+            int maxErrorsRemaining = ModelState.MaxAllowedErrors;
 
             foreach (OperationContainer operation in operations)
             {
-                if (operation.Kind == WriteOperationKind.CreateResource || operation.Kind == WriteOperationKind.UpdateResource)
+                if (maxErrorsRemaining < 1)
                 {
-                    _targetedFields.Attributes = operation.TargetedFields.Attributes;
-                    _targetedFields.Relationships = operation.TargetedFields.Relationships;
-
-                    _request.CopyFrom(operation.Request);
-
-                    var validationContext = new ActionContext();
-                    ObjectValidator.Validate(validationContext, null, string.Empty, operation.Resource);
-
-                    if (!validationContext.ModelState.IsValid)
-                    {
-                        AddValidationErrors(validationContext.ModelState, operation.Resource.GetType(), index, violations);
-                    }
+                    break;
                 }
 
-                index++;
+                maxErrorsRemaining = ValidateOperation(operation, operationIndex, requestModelState, maxErrorsRemaining);
+
+                operationIndex++;
             }
 
-            if (violations.Any())
+            if (requestModelState.Any())
             {
-                throw new InvalidModelStateException(violations, _options.IncludeExceptionStackTraceInErrors, _options.SerializerOptions.PropertyNamingPolicy);
+                Dictionary<string, ModelStateEntry> modelStateDictionary = requestModelState.ToDictionary(tuple => tuple.key, tuple => tuple.entry);
+
+                throw new InvalidModelStateException(modelStateDictionary, typeof(IList<OperationContainer>), _options.IncludeExceptionStackTraceInErrors,
+                    _resourceGraph,
+                    (collectionType, index) => collectionType == typeof(IList<OperationContainer>) ? operations[index].Resource.GetType() : null);
             }
         }
 
-        private static void AddValidationErrors(ModelStateDictionary modelState, Type resourceType, int operationIndex, List<ModelStateViolation> violations)
+        private int ValidateOperation(OperationContainer operation, int operationIndex, List<(string key, ModelStateEntry entry)> requestModelState,
+            int maxErrorsRemaining)
         {
-            foreach ((string propertyName, ModelStateEntry entry) in modelState)
+            if (operation.Request.WriteOperation is WriteOperationKind.CreateResource or WriteOperationKind.UpdateResource)
             {
-                AddValidationErrors(entry, propertyName, resourceType, operationIndex, violations);
-            }
-        }
+                _targetedFields.CopyFrom(operation.TargetedFields);
+                _request.CopyFrom(operation.Request);
 
-        private static void AddValidationErrors(ModelStateEntry entry, string propertyName, Type resourceType, int operationIndex,
-            List<ModelStateViolation> violations)
-        {
-            foreach (ModelError error in entry.Errors)
-            {
-                string prefix = $"/atomic:operations[{operationIndex}]/data/attributes/";
-                var violation = new ModelStateViolation(prefix, propertyName, resourceType, error);
+                var validationContext = new ActionContext
+                {
+                    ModelState =
+                    {
+                        MaxAllowedErrors = maxErrorsRemaining
+                    }
+                };
 
-                violations.Add(violation);
+                ObjectValidator.Validate(validationContext, null, string.Empty, operation.Resource);
+
+                if (!validationContext.ModelState.IsValid)
+                {
+                    int errorsRemaining = maxErrorsRemaining;
+
+                    foreach (string key in validationContext.ModelState.Keys)
+                    {
+                        ModelStateEntry entry = validationContext.ModelState[key];
+
+                        if (entry.ValidationState == ModelValidationState.Invalid)
+                        {
+                            string operationKey = $"[{operationIndex}].{nameof(OperationContainer.Resource)}.{key}";
+
+                            if (entry.Errors.Count > 0 && entry.Errors[0].Exception is TooManyModelErrorsException)
+                            {
+                                requestModelState.Insert(0, (operationKey, entry));
+                            }
+                            else
+                            {
+                                requestModelState.Add((operationKey, entry));
+                            }
+
+                            errorsRemaining -= entry.Errors.Count;
+                        }
+                    }
+
+                    return errorsRemaining;
+                }
             }
+
+            return maxErrorsRemaining;
         }
     }
 }

@@ -8,9 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
     public sealed class RgbColor : Identifiable<string>
     {
         [Attr]
-        public string DisplayName { get; set; }
+        public string DisplayName { get; set; } = null!;
 
         [HasOne]
-        public WorkItemGroup Group { get; set; }
+        public WorkItemGroup? Group { get; set; }
     }
 }

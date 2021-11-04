@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Diagnostics
     /// </summary>
     public sealed class DefaultCodeTimerSession : ICodeTimerSession
     {
-        private readonly AsyncLocal<ICodeTimer> _codeTimerInContext = new();
+        private readonly AsyncLocal<ICodeTimer?> _codeTimerInContext = new();
 
         public ICodeTimer CodeTimer
         {
@@ -17,11 +17,11 @@ namespace JsonApiDotNetCore.Diagnostics
             {
                 AssertNotDisposed();
 
-                return _codeTimerInContext.Value;
+                return _codeTimerInContext.Value!;
             }
         }
 
-        public event EventHandler Disposed;
+        public event EventHandler? Disposed;
 
         public DefaultCodeTimerSession()
         {

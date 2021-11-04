@@ -14,12 +14,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
 {
     [DisableRoutingConvention]
     [Route("world-api/civilization/popular/towns")]
-    public sealed class TownsController : JsonApiController<Town>
+    public sealed class TownsController : JsonApiController<Town, int>
     {
         private readonly CustomRouteDbContext _dbContext;
 
-        public TownsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Town> resourceService, CustomRouteDbContext dbContext)
-            : base(options, loggerFactory, resourceService)
+        public TownsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<Town, int> resourceService,
+            CustomRouteDbContext dbContext)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
             _dbContext = dbContext;
         }

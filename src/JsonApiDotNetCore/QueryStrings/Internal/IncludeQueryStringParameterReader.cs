@@ -18,8 +18,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly IJsonApiOptions _options;
         private readonly IncludeParser _includeParser;
 
-        private IncludeExpression _includeExpression;
-        private string _lastParameterName;
+        private IncludeExpression? _includeExpression;
+        private string? _lastParameterName;
 
         public IncludeQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
             : base(request, resourceGraph)
@@ -27,17 +27,17 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             ArgumentGuard.NotNull(options, nameof(options));
 
             _options = options;
-            _includeParser = new IncludeParser(resourceGraph, ValidateSingleRelationship);
+            _includeParser = new IncludeParser(ValidateSingleRelationship);
         }
 
-        protected void ValidateSingleRelationship(RelationshipAttribute relationship, ResourceContext resourceContext, string path)
+        protected void ValidateSingleRelationship(RelationshipAttribute relationship, ResourceType resourceType, string path)
         {
             if (!relationship.CanInclude)
             {
-                throw new InvalidQueryStringParameterException(_lastParameterName, "Including the requested relationship is not allowed.",
+                throw new InvalidQueryStringParameterException(_lastParameterName!, "Including the requested relationship is not allowed.",
                     path == relationship.PublicName
-                        ? $"Including the relationship '{relationship.PublicName}' on '{resourceContext.PublicName}' is not allowed."
-                        : $"Including the relationship '{relationship.PublicName}' in '{path}' on '{resourceContext.PublicName}' is not allowed.");
+                        ? $"Including the relationship '{relationship.PublicName}' on '{resourceType.PublicName}' is not allowed."
+                        : $"Including the relationship '{relationship.PublicName}' in '{path}' on '{resourceType.PublicName}' is not allowed.");
             }
         }
 
@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private IncludeExpression GetInclude(string parameterValue)
         {
-            return _includeParser.Parse(parameterValue, RequestResource, _options.MaximumIncludeDepth);
+            return _includeParser.Parse(parameterValue, RequestResourceType, _options.MaximumIncludeDepth);
         }
 
         /// <inheritdoc />

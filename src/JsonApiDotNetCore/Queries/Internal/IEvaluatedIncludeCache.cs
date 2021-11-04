@@ -18,6 +18,6 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <summary>
         /// Gets the evaluated inclusion tree that was stored earlier.
         /// </summary>
-        IncludeExpression Get();
+        IncludeExpression? Get();
     }
 }

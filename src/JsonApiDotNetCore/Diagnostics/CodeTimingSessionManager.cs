@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 
 #pragma warning disable AV1008 // Class should not be static
 
@@ -12,7 +13,7 @@ namespace JsonApiDotNetCore.Diagnostics
     public static class CodeTimingSessionManager
     {
         public static readonly bool IsEnabled;
-        private static ICodeTimerSession _session;
+        private static ICodeTimerSession? _session;
 
         public static ICodeTimer Current
         {
@@ -25,14 +26,14 @@ namespace JsonApiDotNetCore.Diagnostics
 
                 AssertHasActiveSession();
 
-                return _session.CodeTimer;
+                return _session!.CodeTimer;
             }
         }
 
         static CodeTimingSessionManager()
         {
 #if DEBUG
-            IsEnabled = !IsRunningInTest();
+            IsEnabled = !IsRunningInTest() && !IsRunningInBenchmark();
 #else
             IsEnabled = false;
 #endif
@@ -45,6 +46,12 @@ namespace JsonApiDotNetCore.Diagnostics
 
             return AppDomain.CurrentDomain.GetAssemblies().Any(assembly =>
                 assembly.FullName != null && assembly.FullName.StartsWith(testAssemblyName, StringComparison.Ordinal));
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private static bool IsRunningInBenchmark()
+        {
+            return Assembly.GetEntryAssembly()?.GetName().Name == "Benchmarks";
         }
 
         private static void AssertHasActiveSession()
@@ -76,7 +83,7 @@ namespace JsonApiDotNetCore.Diagnostics
             }
         }
 
-        private static void SessionOnDisposed(object sender, EventArgs args)
+        private static void SessionOnDisposed(object? sender, EventArgs args)
         {
             if (_session != null)
             {

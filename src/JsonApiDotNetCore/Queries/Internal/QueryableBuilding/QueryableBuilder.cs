@@ -21,19 +21,17 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         private readonly Type _extensionType;
         private readonly LambdaParameterNameFactory _nameFactory;
         private readonly IResourceFactory _resourceFactory;
-        private readonly IResourceGraph _resourceGraph;
         private readonly IModel _entityModel;
         private readonly LambdaScopeFactory _lambdaScopeFactory;
 
         public QueryableBuilder(Expression source, Type elementType, Type extensionType, LambdaParameterNameFactory nameFactory,
-            IResourceFactory resourceFactory, IResourceGraph resourceGraph, IModel entityModel, LambdaScopeFactory lambdaScopeFactory = null)
+            IResourceFactory resourceFactory, IModel entityModel, LambdaScopeFactory? lambdaScopeFactory = null)
         {
             ArgumentGuard.NotNull(source, nameof(source));
             ArgumentGuard.NotNull(elementType, nameof(elementType));
             ArgumentGuard.NotNull(extensionType, nameof(extensionType));
             ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
             ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(entityModel, nameof(entityModel));
 
             _source = source;
@@ -41,7 +39,6 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             _extensionType = extensionType;
             _nameFactory = nameFactory;
             _resourceFactory = resourceFactory;
-            _resourceGraph = resourceGraph;
             _entityModel = entityModel;
             _lambdaScopeFactory = lambdaScopeFactory ?? new LambdaScopeFactory(_nameFactory);
         }
@@ -54,7 +51,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             if (layer.Include != null)
             {
-                expression = ApplyInclude(expression, layer.Include, layer.ResourceContext);
+                expression = ApplyInclude(expression, layer.Include, layer.ResourceType);
             }
 
             if (layer.Filter != null)
@@ -74,17 +71,17 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             if (!layer.Projection.IsNullOrEmpty())
             {
-                expression = ApplyProjection(expression, layer.Projection, layer.ResourceContext);
+                expression = ApplyProjection(expression, layer.Projection, layer.ResourceType);
             }
 
             return expression;
         }
 
-        protected virtual Expression ApplyInclude(Expression source, IncludeExpression include, ResourceContext resourceContext)
+        protected virtual Expression ApplyInclude(Expression source, IncludeExpression include, ResourceType resourceType)
         {
             using LambdaScope lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
-            var builder = new IncludeClauseBuilder(source, lambdaScope, resourceContext, _resourceGraph);
+            var builder = new IncludeClauseBuilder(source, lambdaScope, resourceType);
             return builder.ApplyInclude(include);
         }
 
@@ -112,13 +109,12 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return builder.ApplySkipTake(pagination);
         }
 
-        protected virtual Expression ApplyProjection(Expression source, IDictionary<ResourceFieldAttribute, QueryLayer> projection,
-            ResourceContext resourceContext)
+        protected virtual Expression ApplyProjection(Expression source, IDictionary<ResourceFieldAttribute, QueryLayer?> projection, ResourceType resourceType)
         {
             using LambdaScope lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
-            var builder = new SelectClauseBuilder(source, lambdaScope, _entityModel, _extensionType, _nameFactory, _resourceFactory, _resourceGraph);
-            return builder.ApplySelect(projection, resourceContext);
+            var builder = new SelectClauseBuilder(source, lambdaScope, _entityModel, _extensionType, _nameFactory, _resourceFactory);
+            return builder.ApplySelect(projection, resourceType);
         }
     }
 }

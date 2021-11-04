@@ -22,8 +22,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly IJsonApiOptions _options;
         private readonly PaginationParser _paginationParser;
 
-        private PaginationQueryStringValueExpression _pageSizeConstraint;
-        private PaginationQueryStringValueExpression _pageNumberConstraint;
+        private PaginationQueryStringValueExpression? _pageSizeConstraint;
+        private PaginationQueryStringValueExpression? _pageNumberConstraint;
 
         public PaginationQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
             : base(request, resourceGraph)
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             ArgumentGuard.NotNull(options, nameof(options));
 
             _options = options;
-            _paginationParser = new PaginationParser(resourceGraph);
+            _paginationParser = new PaginationParser();
         }
 
         /// <inheritdoc />
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool CanRead(string parameterName)
         {
-            return parameterName == PageSizeParameterName || parameterName == PageNumberParameterName;
+            return parameterName is PageSizeParameterName or PageNumberParameterName;
         }
 
         /// <inheritdoc />
@@ -79,7 +79,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private PaginationQueryStringValueExpression GetPageConstraint(string parameterValue)
         {
-            return _paginationParser.Parse(parameterValue, RequestResource);
+            return _paginationParser.Parse(parameterValue, RequestResourceType);
         }
 
         protected virtual void ValidatePageSize(PaginationQueryStringValueExpression constraint)
@@ -120,12 +120,12 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
-            var context = new PaginationContext();
+            var paginationState = new PaginationState();
 
             foreach (PaginationElementQueryStringValueExpression element in _pageSizeConstraint?.Elements ??
                 ImmutableArray<PaginationElementQueryStringValueExpression>.Empty)
             {
-                MutablePaginationEntry entry = context.ResolveEntryInScope(element.Scope);
+                MutablePaginationEntry entry = paginationState.ResolveEntryInScope(element.Scope);
                 entry.PageSize = element.Value == 0 ? null : new PageSize(element.Value);
                 entry.HasSetPageSize = true;
             }
@@ -133,21 +133,21 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             foreach (PaginationElementQueryStringValueExpression element in _pageNumberConstraint?.Elements ??
                 ImmutableArray<PaginationElementQueryStringValueExpression>.Empty)
             {
-                MutablePaginationEntry entry = context.ResolveEntryInScope(element.Scope);
+                MutablePaginationEntry entry = paginationState.ResolveEntryInScope(element.Scope);
                 entry.PageNumber = new PageNumber(element.Value);
             }
 
-            context.ApplyOptions(_options);
+            paginationState.ApplyOptions(_options);
 
-            return context.GetExpressionsInScope();
+            return paginationState.GetExpressionsInScope();
         }
 
-        private sealed class PaginationContext
+        private sealed class PaginationState
         {
             private readonly MutablePaginationEntry _globalScope = new();
             private readonly Dictionary<ResourceFieldChainExpression, MutablePaginationEntry> _nestedScopes = new();
 
-            public MutablePaginationEntry ResolveEntryInScope(ResourceFieldChainExpression scope)
+            public MutablePaginationEntry ResolveEntryInScope(ResourceFieldChainExpression? scope)
             {
                 if (scope == null)
                 {
@@ -189,21 +189,21 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             private IEnumerable<ExpressionInScope> EnumerateExpressionsInScope()
             {
-                yield return new ExpressionInScope(null, new PaginationExpression(_globalScope.PageNumber, _globalScope.PageSize));
+                yield return new ExpressionInScope(null, new PaginationExpression(_globalScope.PageNumber!, _globalScope.PageSize));
 
                 foreach ((ResourceFieldChainExpression scope, MutablePaginationEntry entry) in _nestedScopes)
                 {
-                    yield return new ExpressionInScope(scope, new PaginationExpression(entry.PageNumber, entry.PageSize));
+                    yield return new ExpressionInScope(scope, new PaginationExpression(entry.PageNumber!, entry.PageSize));
                 }
             }
         }
 
         private sealed class MutablePaginationEntry
         {
-            public PageSize PageSize { get; set; }
+            public PageSize? PageSize { get; set; }
             public bool HasSetPageSize { get; set; }
 
-            public PageNumber PageNumber { get; set; }
+            public PageNumber? PageNumber { get; set; }
         }
     }
 }

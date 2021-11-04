@@ -85,18 +85,34 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(2);
+            responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.Meta.Should().HaveCount(1);
-            ((JsonElement)responseDocument.Results[0].Data.SingleValue.Meta["copyright"]).GetString().Should().Be("(C) 2018. All rights reserved.");
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Meta.ShouldHaveCount(1);
 
-            responseDocument.Results[1].Data.SingleValue.Meta.Should().HaveCount(1);
-            ((JsonElement)responseDocument.Results[1].Data.SingleValue.Meta["copyright"]).GetString().Should().Be("(C) 1994. All rights reserved.");
+                resource.Meta.ShouldContainKey("copyright").With(value =>
+                {
+                    JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                    element.GetString().Should().Be("(C) 2018. All rights reserved.");
+                });
+            });
+
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Meta.ShouldHaveCount(1);
+
+                resource.Meta.ShouldContainKey("copyright").With(value =>
+                {
+                    JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                    element.GetString().Should().Be("(C) 1994. All rights reserved.");
+                });
+            });
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(MusicTrack), ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta),
-                (typeof(MusicTrack), ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta)
+                (typeof(MusicTrack), ResourceDefinitionExtensibilityPoints.GetMeta),
+                (typeof(MusicTrack), ResourceDefinitionExtensibilityPoints.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -141,13 +157,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].Data.SingleValue.Meta.Should().HaveCount(1);
-            ((JsonElement)responseDocument.Results[0].Data.SingleValue.Meta["notice"]).GetString().Should().Be(TextLanguageMetaDefinition.NoticeText);
+            responseDocument.Results.ShouldHaveCount(1);
+
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Meta.ShouldHaveCount(1);
+
+                resource.Meta.ShouldContainKey("notice").With(value =>
+                {
+                    JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                    element.GetString().Should().Be(TextLanguageMetaDefinition.NoticeText);
+                });
+            });
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(TextLanguage), ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta)
+                (typeof(TextLanguage), ResourceDefinitionExtensibilityPoints.GetMeta)
             }, options => options.WithStrictOrdering());
         }
     }

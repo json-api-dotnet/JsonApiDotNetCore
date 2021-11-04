@@ -87,13 +87,13 @@ public class Startup
 The following chart should help you pick the best version, based on your environment.
 See also our [versioning policy](./VERSIONING_POLICY.md).
 
-| .NET version | EF Core version | JsonApiDotNetCore version |
-| ------------ | --------------- | ------------------------- |
-| Core 2.x     | 2.x             | 3.x                       |
-| Core 3.1     | 3.1             | 4.x                       |
-| Core 3.1     | 5               | 4.x                       |
-| 5            | 5               | 4.x or 5.x                |
-| 6            | 6               | 5.x                       |
+| .NET version | Entity Framework Core version | JsonApiDotNetCore version |
+| ------------ | ----------------------------- | ------------------------- |
+| Core 2.x     | 2.x                           | 3.x                       |
+| Core 3.1     | 3.1                           | 4.x                       |
+| Core 3.1     | 5                             | 4.x                       |
+| 5            | 5                             | 4.x or 5.x                |
+| 6            | 6                             | 5.x                       |
 
 ## Contributing
 

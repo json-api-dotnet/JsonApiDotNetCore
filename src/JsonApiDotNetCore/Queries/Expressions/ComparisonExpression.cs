@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return $"{Operator.ToString().Camelize()}({Left},{Right})";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

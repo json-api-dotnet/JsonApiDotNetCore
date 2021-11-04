@@ -11,20 +11,19 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     [PublicAPI]
     public class PaginationParser : QueryExpressionParser
     {
-        private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
-        private ResourceContext _resourceContextInScope;
+        private readonly Action<ResourceFieldAttribute, ResourceType, string>? _validateSingleFieldCallback;
+        private ResourceType? _resourceTypeInScope;
 
-        public PaginationParser(IResourceGraph resourceGraph, Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
-            : base(resourceGraph)
+        public PaginationParser(Action<ResourceFieldAttribute, ResourceType, string>? validateSingleFieldCallback = null)
         {
             _validateSingleFieldCallback = validateSingleFieldCallback;
         }
 
-        public PaginationQueryStringValueExpression Parse(string source, ResourceContext resourceContextInScope)
+        public PaginationQueryStringValueExpression Parse(string source, ResourceType resourceTypeInScope)
         {
-            ArgumentGuard.NotNull(resourceContextInScope, nameof(resourceContextInScope));
+            ArgumentGuard.NotNull(resourceTypeInScope, nameof(resourceTypeInScope));
 
-            _resourceContextInScope = resourceContextInScope;
+            _resourceTypeInScope = resourceTypeInScope;
 
             Tokenize(source);
 
@@ -79,7 +78,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected int? TryParseNumber()
         {
-            if (TokenStack.TryPeek(out Token nextToken))
+            if (TokenStack.TryPeek(out Token? nextToken))
             {
                 int number;
 
@@ -87,7 +86,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
                 {
                     TokenStack.Pop();
 
-                    if (TokenStack.TryPop(out Token token) && token.Kind == TokenKind.Text && int.TryParse(token.Value, out number))
+                    if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text && int.TryParse(token.Value, out number))
                     {
                         return -number;
                     }
@@ -107,7 +106,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
-            return ChainResolver.ResolveToManyChain(_resourceContextInScope, path, _validateSingleFieldCallback);
+            return ChainResolver.ResolveToManyChain(_resourceTypeInScope!, path, _validateSingleFieldCallback);
         }
     }
 }

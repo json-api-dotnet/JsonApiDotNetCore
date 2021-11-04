@@ -8,10 +8,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
 {
     [HttpReadOnly]
     [DisableQueryString("skipCache")]
-    public sealed class BlockingWritesController : JsonApiController<Bed>
+    public sealed class BlockingWritesController : JsonApiController<Bed, int>
     {
-        public BlockingWritesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Bed> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public BlockingWritesController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<Bed, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

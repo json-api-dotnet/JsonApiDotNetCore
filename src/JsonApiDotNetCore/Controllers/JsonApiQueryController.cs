@@ -25,13 +25,15 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Creates an instance from a read-only service.
         /// </summary>
-        protected JsonApiQueryController(IJsonApiOptions context, ILoggerFactory loggerFactory, IResourceQueryService<TResource, TId> queryService)
-            : base(context, loggerFactory, queryService)
+        protected JsonApiQueryController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceQueryService<TResource, TId> queryService)
+            : base(options, resourceGraph, loggerFactory, queryService)
         {
         }
 
         /// <inheritdoc />
         [HttpGet]
+        [HttpHead]
         public override async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
         {
             return await base.GetAsync(cancellationToken);
@@ -39,6 +41,7 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpGet("{id}")]
+        [HttpHead("{id}")]
         public override async Task<IActionResult> GetAsync(TId id, CancellationToken cancellationToken)
         {
             return await base.GetAsync(id, cancellationToken);
@@ -46,6 +49,7 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpGet("{id}/{relationshipName}")]
+        [HttpHead("{id}/{relationshipName}")]
         public override async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
             return await base.GetSecondaryAsync(id, relationshipName, cancellationToken);
@@ -53,20 +57,10 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpGet("{id}/relationships/{relationshipName}")]
+        [HttpHead("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
             return await base.GetRelationshipAsync(id, relationshipName, cancellationToken);
-        }
-    }
-
-    /// <inheritdoc />
-    public abstract class JsonApiQueryController<TResource> : JsonApiQueryController<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-        /// <inheritdoc />
-        protected JsonApiQueryController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceQueryService<TResource, int> queryService)
-            : base(options, loggerFactory, queryService)
-        {
         }
     }
 }

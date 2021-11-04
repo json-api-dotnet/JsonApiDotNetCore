@@ -36,14 +36,14 @@ namespace JsonApiDotNetCore.Configuration
 
         private void Resolve(DbContext dbContext)
         {
-            foreach (ResourceContext resourceContext in _resourceGraph.GetResourceContexts().Where(context => context.Relationships.Any()))
+            foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes().Where(resourceType => resourceType.Relationships.Any()))
             {
-                IEntityType entityType = dbContext.Model.FindEntityType(resourceContext.ResourceType);
+                IEntityType entityType = dbContext.Model.FindEntityType(resourceType.ClrType);
 
                 if (entityType != null)
                 {
                     IDictionary<string, INavigationBase> navigationMap = GetNavigations(entityType);
-                    ResolveRelationships(resourceContext.Relationships, navigationMap);
+                    ResolveRelationships(resourceType.Relationships, navigationMap);
                 }
             }
         }
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             foreach (RelationshipAttribute relationship in relationships)
             {
-                if (navigationMap.TryGetValue(relationship.Property.Name, out INavigationBase navigation))
+                if (navigationMap.TryGetValue(relationship.Property.Name, out INavigationBase? navigation))
                 {
                     relationship.InverseNavigationProperty = navigation.Inverse?.PropertyInfo;
                 }

@@ -25,15 +25,15 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             Type objectType = typeToConvert.GetGenericArguments()[0];
             Type converterType = typeof(SingleOrManyDataConverter<>).MakeGenericType(objectType);
 
-            return (JsonConverter)Activator.CreateInstance(converterType, BindingFlags.Instance | BindingFlags.Public, null, null, null);
+            return (JsonConverter)Activator.CreateInstance(converterType, BindingFlags.Instance | BindingFlags.Public, null, null, null)!;
         }
 
         private sealed class SingleOrManyDataConverter<T> : JsonObjectConverter<SingleOrManyData<T>>
-            where T : class, IResourceIdentity
+            where T : class, IResourceIdentity, new()
         {
             public override SingleOrManyData<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions serializerOptions)
             {
-                var objects = new List<T>();
+                var objects = new List<T?>();
                 bool isManyData = false;
                 bool hasCompletedToMany = false;
 
@@ -44,6 +44,15 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                         case JsonTokenType.EndArray:
                         {
                             hasCompletedToMany = true;
+                            break;
+                        }
+                        case JsonTokenType.Null:
+                        {
+                            if (isManyData)
+                            {
+                                objects.Add(new T());
+                            }
+
                             break;
                         }
                         case JsonTokenType.StartObject:
@@ -61,7 +70,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                 }
                 while (isManyData && !hasCompletedToMany && reader.Read());
 
-                object data = isManyData ? objects : objects.FirstOrDefault();
+                object? data = isManyData ? objects : objects.FirstOrDefault();
                 return new SingleOrManyData<T>(data);
             }
 

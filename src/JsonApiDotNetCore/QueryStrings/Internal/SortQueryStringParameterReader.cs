@@ -19,20 +19,20 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly QueryStringParameterScopeParser _scopeParser;
         private readonly SortParser _sortParser;
         private readonly List<ExpressionInScope> _constraints = new();
-        private string _lastParameterName;
+        private string? _lastParameterName;
 
         public SortQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
             : base(request, resourceGraph)
         {
-            _scopeParser = new QueryStringParameterScopeParser(resourceGraph, FieldChainRequirements.EndsInToMany);
-            _sortParser = new SortParser(resourceGraph, ValidateSingleField);
+            _scopeParser = new QueryStringParameterScopeParser(FieldChainRequirements.EndsInToMany);
+            _sortParser = new SortParser(ValidateSingleField);
         }
 
-        protected void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)
+        protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
         {
             if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
             {
-                throw new InvalidQueryStringParameterException(_lastParameterName, "Sorting on the requested attribute is not allowed.",
+                throw new InvalidQueryStringParameterException(_lastParameterName!, "Sorting on the requested attribute is not allowed.",
                     $"Sorting on attribute '{attribute.PublicName}' is not allowed.");
             }
         }
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             try
             {
-                ResourceFieldChainExpression scope = GetScope(parameterName);
+                ResourceFieldChainExpression? scope = GetScope(parameterName);
                 SortExpression sort = GetSort(parameterValue, scope);
 
                 var expressionInScope = new ExpressionInScope(scope, sort);
@@ -73,9 +73,9 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             }
         }
 
-        private ResourceFieldChainExpression GetScope(string parameterName)
+        private ResourceFieldChainExpression? GetScope(string parameterName)
         {
-            QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResource);
+            QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResourceType);
 
             if (parameterScope.Scope == null)
             {
@@ -85,10 +85,10 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             return parameterScope.Scope;
         }
 
-        private SortExpression GetSort(string parameterValue, ResourceFieldChainExpression scope)
+        private SortExpression GetSort(string parameterValue, ResourceFieldChainExpression? scope)
         {
-            ResourceContext resourceContextInScope = GetResourceContextForScope(scope);
-            return _sortParser.Parse(parameterValue, resourceContextInScope);
+            ResourceType resourceTypeInScope = GetResourceTypeForScope(scope);
+            return _sortParser.Parse(parameterValue, resourceTypeInScope);
         }
 
         /// <inheritdoc />
