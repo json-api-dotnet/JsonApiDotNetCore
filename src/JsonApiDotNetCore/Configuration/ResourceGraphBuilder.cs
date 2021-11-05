@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Configuration
     {
         private readonly IJsonApiOptions _options;
         private readonly ILogger<ResourceGraphBuilder> _logger;
-        private readonly HashSet<ResourceType> _resourceTypes = new();
+        private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = new();
         private readonly TypeLocator _typeLocator = new();
 
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
@@ -38,12 +38,27 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public IResourceGraph Build()
         {
-            var resourceGraph = new ResourceGraph(_resourceTypes);
+            HashSet<ResourceType> resourceTypes = _resourceTypesByClrType.Values.ToHashSet();
 
-            foreach (RelationshipAttribute relationship in _resourceTypes.SelectMany(resourceType => resourceType.Relationships))
+            if (!resourceTypes.Any())
+            {
+                _logger.LogWarning("The resource graph is empty.");
+            }
+
+            var resourceGraph = new ResourceGraph(resourceTypes);
+
+            foreach (RelationshipAttribute relationship in resourceTypes.SelectMany(resourceType => resourceType.Relationships))
             {
                 relationship.LeftType = resourceGraph.GetResourceType(relationship.LeftClrType!);
-                relationship.RightType = resourceGraph.GetResourceType(relationship.RightClrType!);
+                ResourceType? rightType = resourceGraph.FindResourceType(relationship.RightClrType!);
+
+                if (rightType == null)
+                {
+                    throw new InvalidConfigurationException($"Resource type '{relationship.LeftClrType}' depends on " +
+                        $"'{relationship.RightClrType}', which was not added to the resource graph.");
+                }
+
+                relationship.RightType = rightType;
             }
 
             return resourceGraph;
@@ -123,7 +138,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
 
-            if (_resourceTypes.Any(resourceType => resourceType.ClrType == resourceClrType))
+            if (_resourceTypesByClrType.ContainsKey(resourceClrType))
             {
                 return this;
             }
@@ -139,7 +154,10 @@ namespace JsonApiDotNetCore.Configuration
                 }
 
                 ResourceType resourceType = CreateResourceType(effectivePublicName, resourceClrType, effectiveIdType);
-                _resourceTypes.Add(resourceType);
+
+                AssertNoDuplicatePublicName(resourceType, effectivePublicName);
+
+                _resourceTypesByClrType.Add(resourceClrType, resourceType);
             }
             else
             {
@@ -155,6 +173,8 @@ namespace JsonApiDotNetCore.Configuration
             IReadOnlyCollection<RelationshipAttribute> relationships = GetRelationships(resourceClrType);
             IReadOnlyCollection<EagerLoadAttribute> eagerLoads = GetEagerLoads(resourceClrType);
 
+            AssertNoDuplicatePublicName(attributes, relationships);
+
             var linksAttribute = (ResourceLinksAttribute?)resourceClrType.GetCustomAttribute(typeof(ResourceLinksAttribute));
 
             return linksAttribute == null
@@ -165,7 +185,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceClrType)
         {
-            var attributes = new List<AttrAttribute>();
+            var attributesByName = new Dictionary<string, AttrAttribute>();
 
             foreach (PropertyInfo property in resourceClrType.GetProperties())
             {
@@ -181,7 +201,7 @@ namespace JsonApiDotNetCore.Configuration
                         Capabilities = _options.DefaultAttrCapabilities
                     };
 
-                    attributes.Add(idAttr);
+                    IncludeField(attributesByName, idAttr);
                     continue;
                 }
 
@@ -200,15 +220,20 @@ namespace JsonApiDotNetCore.Configuration
                     attribute.Capabilities = _options.DefaultAttrCapabilities;
                 }
 
-                attributes.Add(attribute);
+                IncludeField(attributesByName, attribute);
             }
 
-            return attributes;
+            if (attributesByName.Count < 2)
+            {
+                _logger.LogWarning($"Type '{resourceClrType}' does not contain any attributes.");
+            }
+
+            return attributesByName.Values;
         }
 
         private IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceClrType)
         {
-            var relationships = new List<RelationshipAttribute>();
+            var relationshipsByName = new Dictionary<string, RelationshipAttribute>();
             PropertyInfo[] properties = resourceClrType.GetProperties();
 
             foreach (PropertyInfo property in properties)
@@ -222,11 +247,11 @@ namespace JsonApiDotNetCore.Configuration
                     relationship.LeftClrType = resourceClrType;
                     relationship.RightClrType = GetRelationshipType(relationship, property);
 
-                    relationships.Add(relationship);
+                    IncludeField(relationshipsByName, relationship);
                 }
             }
 
-            return relationships;
+            return relationshipsByName.Values;
         }
 
         private void SetPublicName(ResourceFieldAttribute field, PropertyInfo property)
@@ -267,6 +292,51 @@ namespace JsonApiDotNetCore.Configuration
             }
 
             return attributes;
+        }
+
+        private static void IncludeField<TField>(Dictionary<string, TField> fieldsByName, TField field)
+            where TField : ResourceFieldAttribute
+        {
+            if (fieldsByName.TryGetValue(field.PublicName, out var existingField))
+            {
+                throw CreateExceptionForDuplicatePublicName(field.Property.DeclaringType!, existingField, field);
+            }
+
+            fieldsByName.Add(field.PublicName, field);
+        }
+
+        private void AssertNoDuplicatePublicName(ResourceType resourceType, string effectivePublicName)
+        {
+            var (existingClrType, _) = _resourceTypesByClrType.FirstOrDefault(type => type.Value.PublicName == resourceType.PublicName);
+
+            if (existingClrType != null)
+            {
+                throw new InvalidConfigurationException(
+                    $"Resource '{existingClrType}' and '{resourceType.ClrType}' both use public name '{effectivePublicName}'.");
+            }
+        }
+
+        private void AssertNoDuplicatePublicName(IReadOnlyCollection<AttrAttribute> attributes, IReadOnlyCollection<RelationshipAttribute> relationships)
+        {
+            IEnumerable<(AttrAttribute attribute, RelationshipAttribute relationship)> query =
+                from attribute in attributes
+                from relationship in relationships
+                where attribute.PublicName == relationship.PublicName
+                select (attribute, relationship);
+
+            (AttrAttribute? duplicateAttribute, RelationshipAttribute? duplicateRelationship) = query.FirstOrDefault();
+
+            if (duplicateAttribute != null && duplicateRelationship != null)
+            {
+                throw CreateExceptionForDuplicatePublicName(duplicateAttribute.Property.DeclaringType!, duplicateAttribute, duplicateRelationship);
+            }
+        }
+
+        private static InvalidConfigurationException CreateExceptionForDuplicatePublicName(Type containingClrType, ResourceFieldAttribute existingField,
+            ResourceFieldAttribute field)
+        {
+            return new InvalidConfigurationException(
+                $"Properties '{containingClrType}.{existingField.Property.Name}' and '{containingClrType}.{field.Property.Name}' both use public name '{field.PublicName}'.");
         }
 
         [AssertionMethod]
