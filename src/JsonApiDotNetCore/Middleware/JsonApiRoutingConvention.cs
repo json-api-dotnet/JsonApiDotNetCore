@@ -84,6 +84,11 @@ namespace JsonApiDotNetCore.Middleware
                             _resourceTypePerControllerTypeMap.Add(controller.ControllerType, resourceType);
                             _controllerPerResourceTypeMap.Add(resourceType, controller);
                         }
+                        else
+                        {
+                            throw new InvalidConfigurationException($"Controller '{controller.ControllerType}' depends on " +
+                                $"resource type '{resourceClrType}', which does not exist in the resource graph.");
+                        }
                     }
                 }
 
