@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
+#pragma warning disable AV1551 // Method overload should call another overload
 #pragma warning disable AV2310 // Code block should not contain inline comment
 
 namespace JsonApiDotNetCore.Queries
@@ -36,6 +37,8 @@ namespace JsonApiDotNetCore.Queries
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly ITargetedFields _targetedFields;
 
+        // ReSharper disable PossibleMultipleEnumeration
+
         public NoSqlQueryLayerComposer(
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             IResourceDefinitionAccessor resourceDefinitionAccessor,
@@ -49,6 +52,8 @@ namespace JsonApiDotNetCore.Queries
             _constraintProviders = constraintProviders;
             _targetedFields = targetedFields;
         }
+
+        // ReSharper restore PossibleMultipleEnumeration
 
         /// <inheritdoc />
         public FilterExpression? GetPrimaryFilterFromConstraintsForNoSql(ResourceType primaryResourceType)

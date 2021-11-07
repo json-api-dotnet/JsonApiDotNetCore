@@ -20,6 +20,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Logging;
 using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
+#pragma warning disable AV1551 // Method overload should call another overload
 #pragma warning disable AV2310 // Code block should not contain inline comment
 #pragma warning disable AV2318 // Work-tracking TO DO comment should be removed
 #pragma warning disable AV2407 // Region should be removed
@@ -642,16 +643,13 @@ namespace JsonApiDotNetCore.Services
             Type type = resource.GetType();
             PropertyInfo? property = type.GetProperty(propertyName);
 
-            if (property is null)
-            {
-                throw new JsonApiException(new ErrorObject(HttpStatusCode.InternalServerError)
+            return property is not null
+                ? property.GetValue(resource)?.ToString()
+                : throw new JsonApiException(new ErrorObject(HttpStatusCode.InternalServerError)
                 {
                     Title = "Invalid property.",
                     Detail = $"The '{type.Name}' type does not have a '{propertyName}' property."
                 });
-            }
-
-            return property.GetValue(resource)?.ToString();
         }
 
         #endregion Implementation
