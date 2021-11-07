@@ -43,7 +43,8 @@ namespace JsonApiDotNetCore.Queries
             IPaginationContext paginationContext,
             ITargetedFields targetedFields,
             IEvaluatedIncludeCache evaluatedIncludeCache,
-            ISparseFieldSetCache sparseFieldSetCache) : base(constraintProviders, resourceDefinitionAccessor, options, paginationContext, targetedFields, evaluatedIncludeCache, sparseFieldSetCache)
+            ISparseFieldSetCache sparseFieldSetCache)
+            : base(constraintProviders, resourceDefinitionAccessor, options, paginationContext, targetedFields, evaluatedIncludeCache, sparseFieldSetCache)
         {
             _constraintProviders = constraintProviders;
             _targetedFields = targetedFields;
@@ -89,12 +90,10 @@ namespace JsonApiDotNetCore.Queries
         {
             return new QueryLayer(primaryResourceType)
             {
-                Filter = new ComparisonExpression(
-                    ComparisonOperator.Equals,
-                    new ResourceFieldChainExpression(
-                        primaryResourceType.Fields.Single(field => field.Property.Name == nameof(IIdentifiable<TId>.Id))),
+                Filter = new ComparisonExpression(ComparisonOperator.Equals,
+                    new ResourceFieldChainExpression(primaryResourceType.Fields.Single(field => field.Property.Name == nameof(IIdentifiable<TId>.Id))),
                     new LiteralConstantExpression(id.ToString()!)),
-                Include = IncludeExpression.Empty,
+                Include = IncludeExpression.Empty
             };
         }
 
@@ -108,37 +107,30 @@ namespace JsonApiDotNetCore.Queries
             // Compose a secondary resource filter in the form "equals({propertyName},'{propertyValue}')".
             FilterExpression[] secondaryResourceFilterExpressions =
             {
-                ComposeSecondaryResourceFilter(requestResourceType, propertyName, propertyValue),
+                ComposeSecondaryResourceFilter(requestResourceType, propertyName, propertyValue)
             };
 
             // Get the query expressions from the request.
-            ExpressionInScope[] constraints = _constraintProviders
-                .SelectMany(provider => provider.GetConstraints())
-                .ToArray();
+            ExpressionInScope[] constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
 
             bool IsQueryLayerConstraint(ExpressionInScope constraint)
             {
-                return constraint.Expression is not IncludeExpression &&
-                    (!isIncluded || (constraint.Scope is not null &&
-                                     constraint.Scope.Fields.Any(field => field.PublicName == requestResourceType.PublicName)));
+                return constraint.Expression is not IncludeExpression && (!isIncluded || (constraint.Scope is not null &&
+                    constraint.Scope.Fields.Any(field => field.PublicName == requestResourceType.PublicName)));
             }
 
-            IEnumerable<QueryExpression> requestQueryExpressions = constraints
-                .Where(IsQueryLayerConstraint)
-                .Select(constraint => constraint.Expression);
+            IEnumerable<QueryExpression> requestQueryExpressions = constraints.Where(IsQueryLayerConstraint).Select(constraint => constraint.Expression);
 
             // Combine the secondary resource filter and request query expressions and
             // create the query layer from the combined query expressions.
-            QueryExpression[] queryExpressions = secondaryResourceFilterExpressions
-                .Concat(requestQueryExpressions)
-                .ToArray();
+            QueryExpression[] queryExpressions = secondaryResourceFilterExpressions.Concat(requestQueryExpressions).ToArray();
 
             var queryLayer = new QueryLayer(requestResourceType)
             {
                 Include = IncludeExpression.Empty,
                 Filter = GetFilter(queryExpressions, requestResourceType),
                 Sort = GetSort(queryExpressions, requestResourceType),
-                Pagination = GetPagination(queryExpressions, requestResourceType),
+                Pagination = GetPagination(queryExpressions, requestResourceType)
             };
 
             // Retrieve the IncludeExpression from the constraints collection.
@@ -147,46 +139,34 @@ namespace JsonApiDotNetCore.Queries
             // into a single expression.
             IncludeExpression include = isIncluded
                 ? IncludeExpression.Empty
-                : constraints
-                    .Select(constraint => constraint.Expression)
-                    .OfType<IncludeExpression>()
-                    .DefaultIfEmpty(IncludeExpression.Empty)
-                    .Single();
+                : constraints.Select(constraint => constraint.Expression).OfType<IncludeExpression>().DefaultIfEmpty(IncludeExpression.Empty).Single();
 
             return (queryLayer, include);
         }
 
-        private static FilterExpression ComposeSecondaryResourceFilter(
-            ResourceType resourceType,
-            string propertyName,
-            string properyValue)
+        private static FilterExpression ComposeSecondaryResourceFilter(ResourceType resourceType, string propertyName, string properyValue)
         {
-            return new ComparisonExpression(
-                ComparisonOperator.Equals,
+            return new ComparisonExpression(ComparisonOperator.Equals,
                 new ResourceFieldChainExpression(resourceType.Fields.Single(field => field.Property.Name == propertyName)),
                 new LiteralConstantExpression(properyValue));
         }
 
-        public (QueryLayer QueryLayer, IncludeExpression Include) ComposeForUpdateForNoSql<TId>(
-            TId id,
-            ResourceType primaryResourceType)
+        public (QueryLayer QueryLayer, IncludeExpression Include) ComposeForUpdateForNoSql<TId>(TId id, ResourceType primaryResourceType)
             where TId : notnull
         {
             // Create primary layer without an include expression.
             AttrAttribute primaryIdAttribute = GetIdAttribute(primaryResourceType);
+
             QueryLayer primaryLayer = new(primaryResourceType)
             {
                 Include = IncludeExpression.Empty,
-                Filter = new ComparisonExpression(
-                    ComparisonOperator.Equals,
-                    new ResourceFieldChainExpression(primaryIdAttribute),
-                    new LiteralConstantExpression(id.ToString()!)),
+                Filter = new ComparisonExpression(ComparisonOperator.Equals, new ResourceFieldChainExpression(primaryIdAttribute),
+                    new LiteralConstantExpression(id.ToString()!))
             };
 
             // Create a separate include expression.
             ImmutableHashSet<IncludeElementExpression> includeElements = _targetedFields.Relationships
-                .Select(relationship => new IncludeElementExpression(relationship))
-                .ToImmutableHashSet();
+                .Select(relationship => new IncludeElementExpression(relationship)).ToImmutableHashSet();
 
             IncludeExpression include = includeElements.Any() ? new IncludeExpression(includeElements) : IncludeExpression.Empty;
 

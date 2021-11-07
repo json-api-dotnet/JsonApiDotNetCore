@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Services
         protected enum ResourceKind
         {
             Secondary,
-            Relationship,
+            Relationship
         }
 
         private readonly IResourceRepositoryAccessor _repositoryAccessor;
@@ -160,10 +160,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public async Task<object?> GetSecondaryAsync(
-            TId id,
-            string relationshipName,
-            CancellationToken cancellationToken)
+        public async Task<object?> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new
             {
@@ -180,10 +177,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public async Task<object?> GetRelationshipAsync(
-            TId id,
-            string relationshipName,
-            CancellationToken cancellationToken)
+        public async Task<object?> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new
             {
@@ -246,11 +240,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public async Task SetRelationshipAsync(
-            TId leftId,
-            string relationshipName,
-            object? rightValue,
-            CancellationToken cancellationToken)
+        public async Task SetRelationshipAsync(TId leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new
             {
@@ -267,8 +257,7 @@ namespace JsonApiDotNetCore.Services
 
             TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(leftId, cancellationToken);
 
-            await _resourceDefinitionAccessor.OnPrepareWriteAsync(
-                resourceFromDatabase, WriteOperationKind.SetRelationship, cancellationToken);
+            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, WriteOperationKind.SetRelationship, cancellationToken);
 
             // TODO: Revisit. Should we wrap in try-catch clause as JsonApiResourceService?
             await _repositoryAccessor.SetRelationshipAsync(resourceFromDatabase, rightValue, cancellationToken);
@@ -298,8 +287,7 @@ namespace JsonApiDotNetCore.Services
 
             TResource primaryResource = await GetPrimaryResourceForUpdateAsync(leftId, cancellationToken);
 
-            await _resourceDefinitionAccessor.OnPrepareWriteAsync(
-                primaryResource, WriteOperationKind.RemoveFromRelationship, cancellationToken);
+            await _resourceDefinitionAccessor.OnPrepareWriteAsync(primaryResource, WriteOperationKind.RemoveFromRelationship, cancellationToken);
 
             await _repositoryAccessor.RemoveFromToManyRelationshipAsync(primaryResource, rightResourceIds, cancellationToken);
         }
@@ -322,8 +310,7 @@ namespace JsonApiDotNetCore.Services
 
             QueryLayer queryLayer = _queryLayerComposer.ComposeForGetByIdForNoSql(id, _request.PrimaryResourceType);
 
-            IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(
-                queryLayer, cancellationToken);
+            IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
 
             return AssertPrimaryResourceExists(primaryResources.SingleOrDefault());
         }
@@ -345,11 +332,9 @@ namespace JsonApiDotNetCore.Services
         {
             AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
 
-            var (primaryLayer, include) = _queryLayerComposer.ComposeForGetByIdWithConstraintsForNoSql(
-                id, _request.PrimaryResourceType, fieldSelection);
+            var (primaryLayer, include) = _queryLayerComposer.ComposeForGetByIdWithConstraintsForNoSql(id, _request.PrimaryResourceType, fieldSelection);
 
-            IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(
-                primaryLayer, cancellationToken);
+            IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
 
             TResource primaryResource = AssertPrimaryResourceExists(primaryResources.SingleOrDefault());
 
@@ -370,13 +355,14 @@ namespace JsonApiDotNetCore.Services
         {
             AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
 
-            (QueryLayer queryLayer, IncludeExpression include) = _queryLayerComposer.ComposeForUpdateForNoSql(
-                id, _request.PrimaryResourceType);
+            (QueryLayer queryLayer, IncludeExpression include) = _queryLayerComposer.ComposeForUpdateForNoSql(id, _request.PrimaryResourceType);
 
-            TResource primaryResource = AssertPrimaryResourceExists(
-                await _repositoryAccessor.GetForUpdateAsync<TResource>(queryLayer, cancellationToken));
+            TResource primaryResource = AssertPrimaryResourceExists(await _repositoryAccessor.GetForUpdateAsync<TResource>(queryLayer, cancellationToken));
 
-            await GetIncludedElementsAsync(new[] { primaryResource }, include, cancellationToken);
+            await GetIncludedElementsAsync(new[]
+            {
+                primaryResource
+            }, include, cancellationToken);
 
             return primaryResource;
         }
@@ -430,12 +416,13 @@ namespace JsonApiDotNetCore.Services
                 throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
                 {
                     Title = "Unsupported expression.",
-                    Detail = "Nested include expressions are currently not supported.",
+                    Detail = "Nested include expressions are currently not supported."
                 });
             }
 
             PropertyInfo property = includeElementExpression.Relationship.Property;
             var ownsMany = Attribute.GetCustomAttribute(property, typeof(NoSqlOwnsManyAttribute));
+
             if (ownsMany is not null)
             {
                 return;
@@ -475,8 +462,9 @@ namespace JsonApiDotNetCore.Services
         {
             // Get the HasMany or HasOne attribute corresponding to the given relationship name.
             ResourceType resourceContext = _resourceGraph.GetResourceType(primaryResource.GetType());
-            RelationshipAttribute? relationshipAttribute = resourceContext.Relationships
-                .SingleOrDefault(relationship => relationship.PublicName == relationshipName);
+
+            RelationshipAttribute? relationshipAttribute =
+                resourceContext.Relationships.SingleOrDefault(relationship => relationship.PublicName == relationshipName);
 
             if (relationshipAttribute is null)
             {
@@ -486,22 +474,22 @@ namespace JsonApiDotNetCore.Services
                 throw new JsonApiException(new ErrorObject(HttpStatusCode.NotFound)
                 {
                     Title = "Relationship not found.",
-                    Detail = message,
+                    Detail = message
                 });
             }
 
             // Check whether the secondary resource is owned by the primary resource.
             PropertyInfo property = relationshipAttribute.Property;
             var ownsMany = Attribute.GetCustomAttribute(property, typeof(NoSqlOwnsManyAttribute));
+
             if (ownsMany is not null)
             {
                 return relationshipAttribute.GetValue(primaryResource);
             }
 
             // Get the HasForeignKey attribute corresponding to the relationship, if any.
-            var foreignKeyAttribute = (NoSqlHasForeignKeyAttribute?) Attribute.GetCustomAttribute(
-                relationshipAttribute.Property,
-                typeof(NoSqlHasForeignKeyAttribute));
+            var foreignKeyAttribute = (NoSqlHasForeignKeyAttribute?)Attribute.GetCustomAttribute(
+                relationshipAttribute.Property, typeof(NoSqlHasForeignKeyAttribute));
 
             if (foreignKeyAttribute is null)
             {
@@ -511,7 +499,7 @@ namespace JsonApiDotNetCore.Services
                 throw new JsonApiException(new ErrorObject(HttpStatusCode.InternalServerError)
                 {
                     Title = "Invalid resource definition.",
-                    Detail = message,
+                    Detail = message
                 });
             }
 
@@ -525,23 +513,21 @@ namespace JsonApiDotNetCore.Services
 
             return relationshipAttribute switch
             {
-                HasManyAttribute => await GetManySecondaryResourcesAsync(
-                    type, foreignKey, stringId, resourceKind, isIncluded, cancellationToken),
+                HasManyAttribute => await GetManySecondaryResourcesAsync(type, foreignKey, stringId, resourceKind, isIncluded, cancellationToken),
 
-                HasOneAttribute when isDependent => await GetOneSecondaryResourceAsync(
-                    type, nameof(IIdentifiable<TId>.Id), GetStringValue(primaryResource, foreignKey),
-                    resourceKind, isIncluded, cancellationToken),
+                HasOneAttribute when isDependent => await GetOneSecondaryResourceAsync(type, nameof(IIdentifiable<TId>.Id),
+                    GetStringValue(primaryResource, foreignKey), resourceKind, isIncluded, cancellationToken),
 
                 HasOneAttribute when !isDependent => throw new JsonApiException(new ErrorObject(HttpStatusCode.NotImplemented)
                 {
                     Title = "Unsupported relationship.",
-                    Detail = "One-to-one relationships are not yet supported.",
+                    Detail = "One-to-one relationships are not yet supported."
                 }),
 
                 _ => throw new JsonApiException(new ErrorObject(HttpStatusCode.InternalServerError)
                 {
                     Title = "Invalid relationship.",
-                    Detail = $"The relationship '{relationshipName}' is invalid.",
+                    Detail = $"The relationship '{relationshipName}' is invalid."
                 })
             };
         }
@@ -597,11 +583,9 @@ namespace JsonApiDotNetCore.Services
             bool isIncluded,
             CancellationToken cancellationToken)
         {
-            var (queryLayer, include) = _queryLayerComposer.ComposeFromConstraintsForNoSql(
-                resourceType, propertyName, propertyValue, isIncluded);
+            var (queryLayer, include) = _queryLayerComposer.ComposeFromConstraintsForNoSql(resourceType, propertyName, propertyValue, isIncluded);
 
-            IReadOnlyCollection<IIdentifiable> items = await _repositoryAccessor.GetAsync(
-                resourceType, queryLayer, cancellationToken);
+            IReadOnlyCollection<IIdentifiable> items = await _repositoryAccessor.GetAsync(resourceType, queryLayer, cancellationToken);
 
             if (resourceKind != ResourceKind.Relationship && !isIncluded)
             {
@@ -663,7 +647,7 @@ namespace JsonApiDotNetCore.Services
                 throw new JsonApiException(new ErrorObject(HttpStatusCode.InternalServerError)
                 {
                     Title = "Invalid property.",
-                    Detail = $"The '{type.Name}' type does not have a '{propertyName}' property.",
+                    Detail = $"The '{type.Name}' type does not have a '{propertyName}' property."
                 });
             }
 

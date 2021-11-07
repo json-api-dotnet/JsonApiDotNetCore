@@ -33,7 +33,6 @@ namespace JsonApiDotNetCore.Queries
             TopFieldSelection fieldSelection)
             where TId : notnull;
 
-
         /// <summary>
         /// Composes a <see cref="QueryLayer" /> with a filter expression in the form "equals(id,'{stringId}')".
         /// </summary>

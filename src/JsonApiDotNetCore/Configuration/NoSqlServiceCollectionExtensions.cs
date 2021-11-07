@@ -46,8 +46,7 @@ namespace JsonApiDotNetCore.Configuration
             {
                 if (TryGetIdType(resourceType, out Type? idType))
                 {
-                    services.AddScoped(
-                        typeof(IResourceService<,>).MakeGenericType(resourceType, idType),
+                    services.AddScoped(typeof(IResourceService<,>).MakeGenericType(resourceType, idType),
                         typeof(NoSqlResourceService<,>).MakeGenericType(resourceType, idType));
                 }
             }
@@ -57,8 +56,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private static bool IsNoSqlResource(Type type)
         {
-            return Attribute.GetCustomAttribute(type, typeof(NoSqlResourceAttribute)) is not null &&
-                   type.GetInterfaces().Any(IsGenericIIdentifiable);
+            return Attribute.GetCustomAttribute(type, typeof(NoSqlResourceAttribute)) is not null && type.GetInterfaces().Any(IsGenericIIdentifiable);
         }
 
         private static bool IsGenericIIdentifiable(Type type)
