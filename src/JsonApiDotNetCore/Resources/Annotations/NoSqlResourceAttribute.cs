@@ -1,16 +1,16 @@
 using System;
+using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     /// <summary>
     /// When put on a resource class, marks that resource as being hosted in a NoSQL database.
-    /// The <see cref="NoSqlServiceCollectionExtensions.AddNoSqlResourceServices" /> will
-    /// register a <see cref="NoSqlResourceService{TResource,TId}" /> for each resource
-    /// having this attribute.
     /// </summary>
+    /// <seealso cref="NoSqlServiceCollectionExtensions.AddNoSqlResourceServices(IServiceCollection)"/>
+    /// <seealso cref="NoSqlServiceCollectionExtensions.AddNoSqlResourceServices(IServiceCollection, Assembly)"/>
     [PublicAPI]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public class NoSqlResourceAttribute : Attribute
