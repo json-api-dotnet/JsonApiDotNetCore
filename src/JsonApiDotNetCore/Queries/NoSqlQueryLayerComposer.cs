@@ -8,6 +8,8 @@ using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
+#pragma warning disable AV2310 // Code block should not contain inline comment
+
 namespace JsonApiDotNetCore.Queries
 {
     /// <summary>
@@ -90,14 +92,14 @@ namespace JsonApiDotNetCore.Queries
                 Filter = new ComparisonExpression(
                     ComparisonOperator.Equals,
                     new ResourceFieldChainExpression(
-                        primaryResourceType.Fields.Single(f => f.Property.Name == nameof(IIdentifiable<TId>.Id))),
+                        primaryResourceType.Fields.Single(field => field.Property.Name == nameof(IIdentifiable<TId>.Id))),
                     new LiteralConstantExpression(id.ToString()!)),
                 Include = IncludeExpression.Empty,
             };
         }
 
         /// <inheritdoc />
-        public (QueryLayer QueryLayer, IncludeExpression Include) ComposeFromConstraintsAndFilterForNoSql(
+        public (QueryLayer QueryLayer, IncludeExpression Include) ComposeFromConstraintsForNoSql(
             ResourceType requestResourceType,
             string propertyName,
             string propertyValue,
@@ -161,7 +163,7 @@ namespace JsonApiDotNetCore.Queries
         {
             return new ComparisonExpression(
                 ComparisonOperator.Equals,
-                new ResourceFieldChainExpression(resourceType.Fields.Single(f => f.Property.Name == propertyName)),
+                new ResourceFieldChainExpression(resourceType.Fields.Single(field => field.Property.Name == propertyName)),
                 new LiteralConstantExpression(properyValue));
         }
 

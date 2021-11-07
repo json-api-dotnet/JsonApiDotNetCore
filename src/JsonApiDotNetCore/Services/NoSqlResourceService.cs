@@ -20,6 +20,10 @@ using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Logging;
 using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
+#pragma warning disable AV2310 // Code block should not contain inline comment
+#pragma warning disable AV2318 // Work-tracking TO DO comment should be removed
+#pragma warning disable AV2407 // Region should be removed
+
 namespace JsonApiDotNetCore.Services
 {
     /// <summary>
@@ -472,7 +476,7 @@ namespace JsonApiDotNetCore.Services
             // Get the HasMany or HasOne attribute corresponding to the given relationship name.
             ResourceType resourceContext = _resourceGraph.GetResourceType(primaryResource.GetType());
             RelationshipAttribute? relationshipAttribute = resourceContext.Relationships
-                .SingleOrDefault(r => r.PublicName == relationshipName);
+                .SingleOrDefault(relationship => relationship.PublicName == relationshipName);
 
             if (relationshipAttribute is null)
             {
@@ -593,7 +597,7 @@ namespace JsonApiDotNetCore.Services
             bool isIncluded,
             CancellationToken cancellationToken)
         {
-            var (queryLayer, include) = _queryLayerComposer.ComposeFromConstraintsAndFilterForNoSql(
+            var (queryLayer, include) = _queryLayerComposer.ComposeFromConstraintsForNoSql(
                 resourceType, propertyName, propertyValue, isIncluded);
 
             IReadOnlyCollection<IIdentifiable> items = await _repositoryAccessor.GetAsync(

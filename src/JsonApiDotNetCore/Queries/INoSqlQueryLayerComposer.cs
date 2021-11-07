@@ -53,7 +53,7 @@ namespace JsonApiDotNetCore.Queries
         /// <see langword="false" />, if the resource is a secondary resource (e.g., "/{primary}/{id}/{relationshipName}").
         /// </param>
         /// <returns>A tuple with a <see cref="QueryLayer" /> and an <see cref="IncludeExpression" />.</returns>
-        (QueryLayer QueryLayer, IncludeExpression Include) ComposeFromConstraintsAndFilterForNoSql(
+        (QueryLayer QueryLayer, IncludeExpression Include) ComposeFromConstraintsForNoSql(
             ResourceType requestResourceType,
             string propertyName,
             string propertyValue,
