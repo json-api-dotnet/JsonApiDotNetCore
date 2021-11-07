@@ -23,17 +23,14 @@ using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 #pragma warning disable AV1551 // Method overload should call another overload
 #pragma warning disable AV2310 // Code block should not contain inline comment
 #pragma warning disable AV2318 // Work-tracking TO DO comment should be removed
-#pragma warning disable AV2407 // Region should be removed
 
 namespace JsonApiDotNetCore.Services
 {
     /// <summary>
-    /// Provides the resource services where a NoSQL database such as Cosmos DB or MongoDB
-    /// is used as a back-end database.
+    /// Provides the resource services where a NoSQL database such as Cosmos DB or MongoDB is used as a back-end database.
     /// </summary>
     /// <remarks>
-    /// Register <see cref="NoSqlResourceService{TResource,TId}" /> with the service container
-    /// as shown in the example.
+    /// Register <see cref="NoSqlResourceService{TResource,TId}" /> with the service container as shown in the example.
     /// </remarks>
     /// <example>
     /// <code><![CDATA[
@@ -46,20 +43,17 @@ namespace JsonApiDotNetCore.Services
     /// }
     /// ]]></code>
     /// </example>
-    /// <typeparam name="TResource">The type of the resource.</typeparam>
-    /// <typeparam name="TId">The type of the resource Id.</typeparam>
+    /// <typeparam name="TResource">
+    /// The type of the resource.
+    /// </typeparam>
+    /// <typeparam name="TId">
+    /// The type of the resource Id.
+    /// </typeparam>
     [PublicAPI]
     public class NoSqlResourceService<TResource, TId> : IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
         where TId : notnull
     {
-        protected enum ResourceKind
-        {
-            Secondary,
-            Included,
-            Relationship
-        }
-
         private readonly IResourceRepositoryAccessor _repositoryAccessor;
         private readonly INoSqlQueryLayerComposer _queryLayerComposer;
         private readonly IPaginationContext _paginationContext;
@@ -100,12 +94,9 @@ namespace JsonApiDotNetCore.Services
             _traceWriter = new TraceLogWriter<NoSqlResourceService<TResource, TId>>(loggerFactory);
 
             // Reuse JsonApiResourceService by delegation (rather than inheritance).
-            _resourceService = new JsonApiResourceService<TResource, TId>(
-                repositoryAccessor, sqlQueryLayerComposer, paginationContext, options,
-                loggerFactory, request, resourceChangeTracker, resourceDefinitionAccessor);
+            _resourceService = new JsonApiResourceService<TResource, TId>(repositoryAccessor, sqlQueryLayerComposer, paginationContext, options, loggerFactory,
+                request, resourceChangeTracker, resourceDefinitionAccessor);
         }
-
-        #region Public API
 
         /// <inheritdoc />
         public async Task<IReadOnlyCollection<TResource>> GetAsync(CancellationToken cancellationToken)
@@ -294,18 +285,21 @@ namespace JsonApiDotNetCore.Services
             await _repositoryAccessor.RemoveFromToManyRelationshipAsync(primaryResource, rightResourceIds, cancellationToken);
         }
 
-        #endregion Public API
-
-        #region Implementation
-
         /// <summary>
-        /// Gets the primary resource by ID, specifying only a filter but no other constraints
-        /// such as include, page, or fields.
+        /// Gets the primary resource by ID, specifying only a filter but no other constraints such as include, page, or fields.
         /// </summary>
-        /// <param name="id">The primary resource ID.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken" />.</param>
-        /// <exception cref="ResourceNotFoundException">If the primary resource does not exist.</exception>
-        /// <returns>The primary resource with unpopulated navigation properties.</returns>
+        /// <param name="id">
+        /// The primary resource ID.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The <see cref="CancellationToken" />.
+        /// </param>
+        /// <exception cref="ResourceNotFoundException">
+        /// If the primary resource does not exist.
+        /// </exception>
+        /// <returns>
+        /// The primary resource with unpopulated navigation properties.
+        /// </returns>
         protected async Task<TResource> GetPrimaryResourceByIdAsync(TId id, CancellationToken cancellationToken)
         {
             AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
@@ -320,10 +314,18 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Gets the primary resource by ID, observing all other constraints such as include or fields.
         /// </summary>
-        /// <param name="id">The primary resource ID.</param>
-        /// <param name="fieldSelection">The <see cref="TopFieldSelection" />.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken" />.</param>
-        /// <exception cref="ResourceNotFoundException">If the primary resource does not exist.</exception>
+        /// <param name="id">
+        /// The primary resource ID.
+        /// </param>
+        /// <param name="fieldSelection">
+        /// The <see cref="TopFieldSelection" />.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The <see cref="CancellationToken" />.
+        /// </param>
+        /// <exception cref="ResourceNotFoundException">
+        /// If the primary resource does not exist.
+        /// </exception>
         /// <returns>
         /// The primary resource with navigation properties populated where such properties represent included resources.
         /// </returns>
@@ -348,8 +350,12 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Gets the primary resource by ID, with all its fields and included resources.
         /// </summary>
-        /// <param name="id">The primary resource ID.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken" />.</param>
+        /// <param name="id">
+        /// The primary resource ID.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The <see cref="CancellationToken" />.
+        /// </param>
         /// <returns>
         /// The primary resource with navigation properties populated where such properties represent included resources.
         /// </returns>
@@ -370,20 +376,27 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// For each primary resource in the <paramref name="primaryResources" /> collection, gets
-        /// the secondary resources specified in the given <see cref="IncludeExpression" />.
+        /// For each primary resource in the <paramref name="primaryResources" /> collection, gets the secondary resources specified in the given
+        /// <see cref="IncludeExpression" />.
         /// </summary>
         /// <remarks>
         /// An <see cref="IncludeExpression" /> specifies one or more relationships.
         /// </remarks>
-        /// <param name="primaryResources">The primary resources.</param>
-        /// <param name="includeExpression">The <see cref="IncludeExpression" />.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken" />.</param>
+        /// <param name="primaryResources">
+        /// The primary resources.
+        /// </param>
+        /// <param name="includeExpression">
+        /// The <see cref="IncludeExpression" />.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The <see cref="CancellationToken" />.
+        /// </param>
         /// <exception cref="JsonApiException">
-        /// If any <see cref="IncludeElementExpression" /> contained in the <see cref="IncludeExpression"/>
-        /// is a nested expression like "first.second".
+        /// If any <see cref="IncludeElementExpression" /> contained in the <see cref="IncludeExpression" /> is a nested expression like "first.second".
         /// </exception>
-        /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
+        /// <returns>
+        /// A <see cref="Task" /> representing the asynchronous operation.
+        /// </returns>
         protected virtual async Task GetIncludedElementsAsync(
             IReadOnlyCollection<IIdentifiable> primaryResources,
             IncludeExpression includeExpression,
@@ -398,16 +411,24 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// For each primary resource in the <paramref name="primaryResources" /> collection, gets
-        /// the secondary resources specified in the given <see cref="IncludeElementExpression" />.
+        /// For each primary resource in the <paramref name="primaryResources" /> collection, gets the secondary resources specified in the given
+        /// <see cref="IncludeElementExpression" />.
         /// </summary>
-        /// <param name="primaryResources">The primary resources.</param>
-        /// <param name="includeElementExpression">The <see cref="IncludeElementExpression" />.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken" />.</param>
+        /// <param name="primaryResources">
+        /// The primary resources.
+        /// </param>
+        /// <param name="includeElementExpression">
+        /// The <see cref="IncludeElementExpression" />.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The <see cref="CancellationToken" />.
+        /// </param>
         /// <exception cref="JsonApiException">
         /// If the <see cref="IncludeElementExpression" /> is a nested expression like "first.second".
         /// </exception>
-        /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
+        /// <returns>
+        /// A <see cref="Task" /> representing the asynchronous operation.
+        /// </returns>
         protected virtual async Task GetIncludedElementAsync(
             IReadOnlyCollection<IIdentifiable> primaryResources,
             IncludeElementExpression includeElementExpression,
@@ -439,20 +460,24 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// For to-many relationships, gets the potentially empty collection of related resources.
-        /// For to-one relationships, gets zero or one related resource.
+        /// For to-many relationships, gets the potentially empty collection of related resources. For to-one relationships, gets zero or one related resource.
         /// </summary>
-        /// <param name="primaryResource">The primary resource.</param>
-        /// <param name="relationshipName">The name of the relationship between the primary and secondary resources.</param>
+        /// <param name="primaryResource">
+        /// The primary resource.
+        /// </param>
+        /// <param name="relationshipName">
+        /// The name of the relationship between the primary and secondary resources.
+        /// </param>
         /// <param name="resourceKind"></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken" />.</param>
+        /// <param name="cancellationToken">
+        /// The <see cref="CancellationToken" />.
+        /// </param>
         /// <exception cref="JsonApiException">
-        /// If the relationship specified by <paramref name="relationshipName" /> does not exist
-        /// or does not have a <see cref="NoSqlHasForeignKeyAttribute" />.
+        /// If the relationship specified by <paramref name="relationshipName" /> does not exist or does not have a <see cref="NoSqlHasForeignKeyAttribute" />.
         /// </exception>
         /// <returns>
-        /// For to-many relationships, an <see cref="IReadOnlyCollection{T}" /> of <see cref="IIdentifiable" />;
-        /// for to-one relationships, an <see cref="IIdentifiable" /> or <see langword="null" />.
+        /// For to-many relationships, an <see cref="IReadOnlyCollection{T}" /> of <see cref="IIdentifiable" />; for to-one relationships, an
+        /// <see cref="IIdentifiable" /> or <see langword="null" />.
         /// </returns>
         protected async Task<object?> GetSecondaryAsync(
             IIdentifiable primaryResource,
@@ -533,14 +558,21 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// For to-one relationships (e.g., Parent), gets the secondary resource,
-        /// if any, filtered by "equals({propertyName},'{propertyValue}')".
+        /// For to-one relationships (e.g., Parent), gets the secondary resource, if any, filtered by "equals({propertyName},'{propertyValue}')".
         /// </summary>
-        /// <param name="resourceType">The resource type.</param>
-        /// <param name="propertyName">The name of the property used to filter resources, e.g., "Id".</param>
-        /// <param name="propertyValue">The value of the property used to filter resources, e.g., "e0bd6fe1-889e-4a06-84f8-5cf2e8d58466".</param>
+        /// <param name="resourceType">
+        /// The resource type.
+        /// </param>
+        /// <param name="propertyName">
+        /// The name of the property used to filter resources, e.g., "Id".
+        /// </param>
+        /// <param name="propertyValue">
+        /// The value of the property used to filter resources, e.g., "e0bd6fe1-889e-4a06-84f8-5cf2e8d58466".
+        /// </param>
         /// <param name="resourceKind"></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken" />.</param>
+        /// <param name="cancellationToken">
+        /// The <see cref="CancellationToken" />.
+        /// </param>
         /// <returns>
         /// The <see cref="IIdentifiable" />, if it exists, or <see langword="null" />.
         /// </returns>
@@ -563,15 +595,25 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <summary>
-        /// For to-many relationships (e.g., Children), gets the collection of secondary resources, filtered
-        /// by the filter expressions provided in the request and by equals({propertyName},'{propertyValue}').
+        /// For to-many relationships (e.g., Children), gets the collection of secondary resources, filtered by the filter expressions provided in the request
+        /// and by equals({propertyName},'{propertyValue}').
         /// </summary>
-        /// <param name="resourceType">The resource type.</param>
-        /// <param name="propertyName">The name of the property used to filter resources, e.g., "ParentId".</param>
-        /// <param name="propertyValue">The value of the property used to filter resources, e.g., "e0bd6fe1-889e-4a06-84f8-5cf2e8d58466".</param>
+        /// <param name="resourceType">
+        /// The resource type.
+        /// </param>
+        /// <param name="propertyName">
+        /// The name of the property used to filter resources, e.g., "ParentId".
+        /// </param>
+        /// <param name="propertyValue">
+        /// The value of the property used to filter resources, e.g., "e0bd6fe1-889e-4a06-84f8-5cf2e8d58466".
+        /// </param>
         /// <param name="resourceKind"></param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken" />.</param>
-        /// <returns>The potentially empty collection of secondary resources.</returns>
+        /// <param name="cancellationToken">
+        /// The <see cref="CancellationToken" />.
+        /// </param>
+        /// <returns>
+        /// The potentially empty collection of secondary resources.
+        /// </returns>
         protected async Task<IReadOnlyCollection<IIdentifiable>> GetManySecondaryResourcesAsync(
             ResourceType resourceType,
             string propertyName,
@@ -631,9 +673,15 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Gets the <see cref="string" /> value of the named property.
         /// </summary>
-        /// <param name="resource">The resource.</param>
-        /// <param name="propertyName">The name of the property.</param>
-        /// <returns>The <see cref="string" /> value of the named property.</returns>
+        /// <param name="resource">
+        /// The resource.
+        /// </param>
+        /// <param name="propertyName">
+        /// The name of the property.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string" /> value of the named property.
+        /// </returns>
         protected string? GetStringValue(object resource, string propertyName)
         {
             Type type = resource.GetType();
@@ -648,6 +696,11 @@ namespace JsonApiDotNetCore.Services
                 });
         }
 
-        #endregion Implementation
+        protected enum ResourceKind
+        {
+            Secondary,
+            Included,
+            Relationship
+        }
     }
 }

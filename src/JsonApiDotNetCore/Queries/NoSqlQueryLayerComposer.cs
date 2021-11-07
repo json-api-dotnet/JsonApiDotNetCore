@@ -17,8 +17,7 @@ namespace JsonApiDotNetCore.Queries
     /// Default implementation of the <see cref="INoSqlQueryLayerComposer" />.
     /// </summary>
     /// <remarks>
-    /// Register <see cref="NoSqlQueryLayerComposer"/> with the service container as
-    /// shown in the following example.
+    /// Register <see cref="NoSqlQueryLayerComposer" /> with the service container as shown in the following example.
     /// </remarks>
     /// <example>
     /// <code><![CDATA[
