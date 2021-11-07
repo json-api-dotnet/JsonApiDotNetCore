@@ -56,6 +56,7 @@ namespace JsonApiDotNetCore.Services
         protected enum ResourceKind
         {
             Secondary,
+            Included,
             Relationship
         }
 
@@ -174,7 +175,7 @@ namespace JsonApiDotNetCore.Services
             // Get the primary resource to (1) ensure it exists and (2) retrieve foreign key values as necessary.
             IIdentifiable primary = await GetPrimaryResourceByIdAsync(id, cancellationToken);
 
-            return await GetSecondaryAsync(primary, relationshipName, ResourceKind.Secondary, false, cancellationToken);
+            return await GetSecondaryAsync(primary, relationshipName, ResourceKind.Secondary, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -191,7 +192,7 @@ namespace JsonApiDotNetCore.Services
             // Get the primary resource to (1) ensure it exists and (2) retrieve foreign key values as necessary.
             IIdentifiable primary = await GetPrimaryResourceByIdAsync(id, cancellationToken);
 
-            return await GetSecondaryAsync(primary, relationshipName, ResourceKind.Relationship, false, cancellationToken);
+            return await GetSecondaryAsync(primary, relationshipName, ResourceKind.Relationship, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -433,7 +434,7 @@ namespace JsonApiDotNetCore.Services
 
             foreach (var primaryResource in primaryResources)
             {
-                await GetSecondaryAsync(primaryResource, relationshipName, ResourceKind.Secondary, true, cancellationToken);
+                await GetSecondaryAsync(primaryResource, relationshipName, ResourceKind.Included, cancellationToken);
             }
         }
 
@@ -444,7 +445,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="primaryResource">The primary resource.</param>
         /// <param name="relationshipName">The name of the relationship between the primary and secondary resources.</param>
         /// <param name="resourceKind"></param>
-        /// <param name="isIncluded">Indicates whether the relationship was specified by using "include={relationshipName}".</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken" />.</param>
         /// <exception cref="JsonApiException">
         /// If the relationship specified by <paramref name="relationshipName" /> does not exist
@@ -458,7 +458,6 @@ namespace JsonApiDotNetCore.Services
             IIdentifiable primaryResource,
             string relationshipName,
             ResourceKind resourceKind,
-            bool isIncluded,
             CancellationToken cancellationToken)
         {
             // Get the HasMany or HasOne attribute corresponding to the given relationship name.
@@ -514,10 +513,10 @@ namespace JsonApiDotNetCore.Services
 
             return relationshipAttribute switch
             {
-                HasManyAttribute => await GetManySecondaryResourcesAsync(type, foreignKey, stringId, resourceKind, isIncluded, cancellationToken),
+                HasManyAttribute => await GetManySecondaryResourcesAsync(type, foreignKey, stringId, resourceKind, cancellationToken),
 
                 HasOneAttribute when isDependent => await GetOneSecondaryResourceAsync(type, nameof(IIdentifiable<TId>.Id),
-                    GetStringValue(primaryResource, foreignKey), resourceKind, isIncluded, cancellationToken),
+                    GetStringValue(primaryResource, foreignKey), resourceKind, cancellationToken),
 
                 HasOneAttribute when !isDependent => throw new JsonApiException(new ErrorObject(HttpStatusCode.NotImplemented)
                 {
@@ -541,7 +540,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="propertyName">The name of the property used to filter resources, e.g., "Id".</param>
         /// <param name="propertyValue">The value of the property used to filter resources, e.g., "e0bd6fe1-889e-4a06-84f8-5cf2e8d58466".</param>
         /// <param name="resourceKind"></param>
-        /// <param name="isIncluded"></param>
         /// <param name="cancellationToken">The <see cref="CancellationToken" />.</param>
         /// <returns>
         /// The <see cref="IIdentifiable" />, if it exists, or <see langword="null" />.
@@ -551,7 +549,6 @@ namespace JsonApiDotNetCore.Services
             string propertyName,
             string? propertyValue,
             ResourceKind resourceKind,
-            bool isIncluded,
             CancellationToken cancellationToken)
         {
             if (propertyValue is null)
@@ -560,7 +557,7 @@ namespace JsonApiDotNetCore.Services
             }
 
             IReadOnlyCollection<IIdentifiable> items = await GetManySecondaryResourcesAsync(
-                resourceType, propertyName, propertyValue, resourceKind, isIncluded, cancellationToken);
+                resourceType, propertyName, propertyValue, resourceKind, cancellationToken);
 
             return items.SingleOrDefault();
         }
@@ -573,7 +570,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="propertyName">The name of the property used to filter resources, e.g., "ParentId".</param>
         /// <param name="propertyValue">The value of the property used to filter resources, e.g., "e0bd6fe1-889e-4a06-84f8-5cf2e8d58466".</param>
         /// <param name="resourceKind"></param>
-        /// <param name="isIncluded">Indicates whether or not the secondary resource is included by way of an include expression.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken" />.</param>
         /// <returns>The potentially empty collection of secondary resources.</returns>
         protected async Task<IReadOnlyCollection<IIdentifiable>> GetManySecondaryResourcesAsync(
@@ -581,14 +577,14 @@ namespace JsonApiDotNetCore.Services
             string propertyName,
             string propertyValue,
             ResourceKind resourceKind,
-            bool isIncluded,
             CancellationToken cancellationToken)
         {
+            bool isIncluded = resourceKind == ResourceKind.Included;
             var (queryLayer, include) = _queryLayerComposer.ComposeFromConstraintsForNoSql(resourceType, propertyName, propertyValue, isIncluded);
 
             IReadOnlyCollection<IIdentifiable> items = await _repositoryAccessor.GetAsync(resourceType, queryLayer, cancellationToken);
 
-            if (resourceKind != ResourceKind.Relationship && !isIncluded)
+            if (resourceKind == ResourceKind.Secondary)
             {
                 await GetIncludedElementsAsync(items, include, cancellationToken);
             }
