@@ -18,8 +18,8 @@ namespace OpenApiClientTests.LegacyClient
         private readonly FakeHttpMessageHandler _handler;
 
         public HttpClient HttpClient { get; }
-        public HttpRequestMessage Request => _handler.Request;
-        public string RequestBody => _handler.RequestBody;
+        public HttpRequestMessage? Request => _handler.Request;
+        public string? RequestBody => _handler.RequestBody;
 
         private FakeHttpClientWrapper(HttpClient httpClient, FakeHttpMessageHandler handler)
         {
@@ -27,11 +27,10 @@ namespace OpenApiClientTests.LegacyClient
             _handler = handler;
         }
 
-        public static FakeHttpClientWrapper Create(HttpStatusCode statusCode, string responseBody)
+        public static FakeHttpClientWrapper Create(HttpStatusCode statusCode, string? responseBody)
         {
             HttpResponseMessage response = CreateResponse(statusCode, responseBody);
-            var handler = new FakeHttpMessageHandler();
-            handler.SetResponse(response);
+            var handler = new FakeHttpMessageHandler(response);
 
             var httpClient = new HttpClient(handler)
             {
@@ -41,14 +40,14 @@ namespace OpenApiClientTests.LegacyClient
             return new FakeHttpClientWrapper(httpClient, handler);
         }
 
-        public void ChangeResponse(HttpStatusCode statusCode, string responseBody)
+        public void ChangeResponse(HttpStatusCode statusCode, string? responseBody)
         {
             HttpResponseMessage response = CreateResponse(statusCode, responseBody);
 
             _handler.SetResponse(response);
         }
 
-        private static HttpResponseMessage CreateResponse(HttpStatusCode statusCode, string responseBody)
+        private static HttpResponseMessage CreateResponse(HttpStatusCode statusCode, string? responseBody)
         {
             var response = new HttpResponseMessage(statusCode);
 
@@ -71,8 +70,13 @@ namespace OpenApiClientTests.LegacyClient
         {
             private HttpResponseMessage _response;
 
-            public HttpRequestMessage Request { get; private set; }
-            public string RequestBody { get; private set; }
+            public HttpRequestMessage? Request { get; private set; }
+            public string? RequestBody { get; private set; }
+
+            public FakeHttpMessageHandler(HttpResponseMessage response)
+            {
+                _response = response;
+            }
 
             public void SetResponse(HttpResponseMessage response)
             {

@@ -5,8 +5,11 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
 {
     internal sealed class RelationshipRequestMetadata : ExpansibleEndpointMetadata, IJsonApiRequestMetadata
     {
-        public IDictionary<string, Type> RequestBodyTypeByRelationshipName { get; init; }
+        public override IDictionary<string, Type> ExpansionElements { get; }
 
-        public override IDictionary<string, Type> ExpansionElements => RequestBodyTypeByRelationshipName;
+        public RelationshipRequestMetadata(IDictionary<string, Type> requestBodyTypeByRelationshipName)
+        {
+            ExpansionElements = requestBodyTypeByRelationshipName;
+        }
     }
 }

@@ -46,17 +46,17 @@ namespace JsonApiDotNetCore.OpenApi
         {
             ArgumentGuard.NotNull(type, nameof(type));
 
-            ResourceContext resourceContext = _resourceGraph.TryGetResourceContext(type);
+            ResourceType? resourceType = _resourceGraph.FindResourceType(type);
 
-            if (resourceContext != null)
+            if (resourceType != null)
             {
-                return resourceContext.PublicName.Singularize();
+                return resourceType.PublicName.Singularize();
             }
 
             if (type.IsConstructedGenericType && OpenTypeToSchemaTemplateMap.ContainsKey(type.GetGenericTypeDefinition()))
             {
-                Type resourceType = type.GetGenericArguments().First();
-                string resourceName = _formatter.FormatResourceName(resourceType).Singularize();
+                Type resourceClrType = type.GetGenericArguments().First();
+                string resourceName = _formatter.FormatResourceName(resourceClrType).Singularize();
 
                 string template = OpenTypeToSchemaTemplateMap[type.GetGenericTypeDefinition()];
                 return template.Replace("###", resourceName);

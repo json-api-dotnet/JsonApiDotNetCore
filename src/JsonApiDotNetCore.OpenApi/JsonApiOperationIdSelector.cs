@@ -35,13 +35,12 @@ namespace JsonApiDotNetCore.OpenApi
         };
 
         private readonly IControllerResourceMapping _controllerResourceMapping;
-        private readonly JsonNamingPolicy _namingPolicy;
+        private readonly JsonNamingPolicy? _namingPolicy;
         private readonly ResourceNameFormatter _formatter;
 
-        public JsonApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, JsonNamingPolicy namingPolicy)
+        public JsonApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, JsonNamingPolicy? namingPolicy)
         {
             ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
-            ArgumentGuard.NotNull(namingPolicy, nameof(namingPolicy));
 
             _controllerResourceMapping = controllerResourceMapping;
             _namingPolicy = namingPolicy;
@@ -52,11 +51,12 @@ namespace JsonApiDotNetCore.OpenApi
         {
             ArgumentGuard.NotNull(endpoint, nameof(endpoint));
 
-            Type primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(endpoint.ActionDescriptor.GetActionMethod().ReflectedType);
+            ResourceType primaryResourceType =
+                _controllerResourceMapping.GetResourceTypeForController(endpoint.ActionDescriptor.GetActionMethod().ReflectedType)!;
 
-            string template = GetTemplate(primaryResourceType, endpoint);
+            string template = GetTemplate(primaryResourceType.ClrType, endpoint);
 
-            return ApplyTemplate(template, primaryResourceType, endpoint);
+            return ApplyTemplate(template, primaryResourceType.ClrType, endpoint);
         }
 
         private static string GetTemplate(Type primaryResourceType, ApiDescription endpoint)
@@ -68,11 +68,11 @@ namespace JsonApiDotNetCore.OpenApi
 
         private static Type GetDocumentType(Type primaryResourceType, ApiDescription endpoint)
         {
-            ControllerParameterDescriptor requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
-            var producesResponseTypeAttribute = endpoint.ActionDescriptor.GetFilterMetadata<ProducesResponseTypeAttribute>();
+            var producesResponseTypeAttribute = endpoint.ActionDescriptor.GetFilterMetadata<ProducesResponseTypeAttribute>()!;
+            ControllerParameterDescriptor? requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
 
             Type documentType = requestBodyDescriptor?.ParameterType.GetGenericTypeDefinition() ??
-                TryGetGenericTypeDefinition(producesResponseTypeAttribute.Type) ?? producesResponseTypeAttribute.Type;
+                GetGenericTypeDefinitionOrDefault(producesResponseTypeAttribute.Type) ?? producesResponseTypeAttribute.Type;
 
             if (documentType == typeof(ResourceCollectionResponseDocument<>))
             {
@@ -87,7 +87,7 @@ namespace JsonApiDotNetCore.OpenApi
             return documentType;
         }
 
-        private static Type TryGetGenericTypeDefinition(Type type)
+        private static Type? GetGenericTypeDefinitionOrDefault(Type type)
         {
             return type.IsConstructedGenericType ? type.GetGenericTypeDefinition() : null;
         }
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCore.OpenApi
             // @formatter:keep_existing_linebreaks restore
             // @formatter:wrap_chained_method_calls restore
 
-            return _namingPolicy.ConvertName(pascalCaseId);
+            return _namingPolicy != null ? _namingPolicy.ConvertName(pascalCaseId) : pascalCaseId;
         }
     }
 }

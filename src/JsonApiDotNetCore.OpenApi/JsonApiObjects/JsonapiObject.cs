@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
+#pragma warning disable 8618 // Non-nullable member is uninitialized.
+
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

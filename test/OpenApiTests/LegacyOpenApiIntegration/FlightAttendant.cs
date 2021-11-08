@@ -10,7 +10,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
     public sealed class FlightAttendant : Identifiable<string>
     {
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowFilter)]
-        public override string Id { get; set; }
+        public override string Id { get; set; } = null!;
 
         [Attr(Capabilities = AttrCapabilities.None)]
         public FlightAttendantExpertiseLevel ExpertiseLevel { get; set; }
@@ -18,7 +18,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         [Attr(Capabilities = AttrCapabilities.All)]
         [Required]
         [EmailAddress]
-        public string EmailAddress { get; set; }
+        public string EmailAddress { get; set; } = null!;
 
         [Attr(Capabilities = AttrCapabilities.All)]
         [Required]
@@ -28,15 +28,15 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate)]
         [Required]
         [Url]
-        public string ProfileImageUrl { get; set; }
+        public string ProfileImageUrl { get; set; } = null!;
 
         [Attr]
         public long DistanceTraveledInKilometers { get; set; }
 
         [HasMany]
-        public ISet<Flight> ScheduledForFlights { get; set; }
+        public ISet<Flight> ScheduledForFlights { get; set; } = null!;
 
         [HasMany]
-        public ISet<Flight> PurserOnFlights { get; set; }
+        public ISet<Flight> PurserOnFlights { get; set; } = null!;
     }
 }

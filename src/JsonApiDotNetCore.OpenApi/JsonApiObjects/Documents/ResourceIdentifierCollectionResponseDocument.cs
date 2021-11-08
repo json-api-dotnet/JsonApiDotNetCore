@@ -5,6 +5,8 @@ using JsonApiDotNetCore.OpenApi.JsonApiObjects.Links;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.Resources;
 
+#pragma warning disable 8618 // Non-nullable member is uninitialized.
+
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

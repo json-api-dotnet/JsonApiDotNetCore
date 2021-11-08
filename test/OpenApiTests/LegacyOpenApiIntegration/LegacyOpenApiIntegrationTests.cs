@@ -47,7 +47,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         private static async Task<string> LoadEmbeddedResourceAsync(string name)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            await using Stream stream = assembly.GetManifestResourceStream(name);
+            await using Stream? stream = assembly.GetManifestResourceStream(name);
 
             if (stream == null)
             {

@@ -13,11 +13,11 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
         [Required]
         [MaxLength(255)]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
         [MaxLength(16)]
-        public string SerialNumber { get; set; }
+        public string SerialNumber { get; set; } = null!;
 
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
         public int? AirtimeInHours { get; set; }
@@ -33,12 +33,12 @@ namespace OpenApiTests.LegacyOpenApiIntegration
 
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
         [MaxLength(85)]
-        public string ManufacturedInCity { get; set; }
+        public string ManufacturedInCity { get; set; } = null!;
 
         [Attr(Capabilities = AttrCapabilities.AllowView)]
         public AircraftKind Kind { get; set; }
 
         [HasMany]
-        public ISet<Flight> Flights { get; set; }
+        public ISet<Flight> Flights { get; set; } = null!;
     }
 }

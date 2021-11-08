@@ -348,7 +348,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightPrimaryResponseDocument document = await ApiResponse.TranslateAsync(async () => await apiClient.PatchFlightAsync(flightId,
+            FlightPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PatchFlightAsync(flightId,
                 new FlightPatchRequestDocument
                 {
                     Data = new FlightDataInPatchRequest

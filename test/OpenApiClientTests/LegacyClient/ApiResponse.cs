@@ -9,7 +9,8 @@ namespace OpenApiClientTests.LegacyClient
 {
     internal static class ApiResponse
     {
-        public static async Task<TResponse> TranslateAsync<TResponse>(Func<Task<TResponse>> operation)
+        public static async Task<TResponse?> TranslateAsync<TResponse>(Func<Task<TResponse>> operation)
+            where TResponse : class
         {
             // Workaround for https://github.com/RicoSuter/NSwag/issues/2499
 
@@ -26,7 +27,7 @@ namespace OpenApiClientTests.LegacyClient
                     throw;
                 }
 
-                return default;
+                return null;
             }
         }
     }

@@ -1,5 +1,7 @@
 using Microsoft.OpenApi.Models;
 
+#nullable disable
+
 namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 {
     /// <summary>

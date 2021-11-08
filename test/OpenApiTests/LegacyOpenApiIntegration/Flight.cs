@@ -14,11 +14,11 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
         [Required]
         [MaxLength(40)]
-        public string FinalDestination { get; set; }
+        public string FinalDestination { get; set; } = null!;
 
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
         [MaxLength(2000)]
-        public string StopOverDestination { get; set; }
+        public string StopOverDestination { get; set; } = null!;
 
         [Attr(PublicName = "operated-by", Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
         public Airline Airline { get; set; }
@@ -30,16 +30,16 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         public DateTime? ArrivesAt { get; set; }
 
         [HasMany]
-        public ISet<FlightAttendant> CabinCrewMembers { get; set; }
+        public ISet<FlightAttendant> CabinCrewMembers { get; set; } = null!;
 
         [HasOne]
-        public FlightAttendant Purser { get; set; }
+        public FlightAttendant Purser { get; set; } = null!;
 
         [Attr]
         [NotMapped]
-        public ICollection<string> ServicesOnBoard { get; set; }
+        public ICollection<string> ServicesOnBoard { get; set; } = null!;
 
         [HasMany]
-        public ICollection<Passenger> Passengers { get; set; }
+        public ICollection<Passenger> Passengers { get; set; } = null!;
     }
 }

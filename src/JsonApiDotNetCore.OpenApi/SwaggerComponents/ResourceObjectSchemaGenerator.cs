@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             IResourceGraph resourceGraph, IJsonApiOptions options, ISchemaRepositoryAccessor schemaRepositoryAccessor,
             ResourceTypeSchemaGenerator resourceTypeSchemaGenerator)
         {
-            JsonNamingPolicy namingPolicy = options.SerializerOptions.PropertyNamingPolicy;
+            JsonNamingPolicy? namingPolicy = options.SerializerOptions.PropertyNamingPolicy;
             ResourceNameFormatter resourceNameFormatter = new(namingPolicy);
             var jsonApiSchemaIdSelector = new JsonApiSchemaIdSelector(resourceNameFormatter, resourceGraph);
 
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
             RemoveResourceIdIfPostResourceObject(resourceTypeInfo.ResourceObjectOpenType, fullSchemaForResourceObject);
 
-            SetResourceType(fullSchemaForResourceObject, resourceTypeInfo.ResourceType);
+            SetResourceType(fullSchemaForResourceObject, resourceTypeInfo.ResourceClrType);
 
             SetResourceAttributes(fullSchemaForResourceObject, fieldObjectBuilder);
 
@@ -106,7 +106,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
         private static void SetResourceAttributes(OpenApiSchema fullSchemaForResourceObject, ResourceFieldObjectSchemaBuilder builder)
         {
-            OpenApiSchema fullSchemaForAttributesObject = builder.BuildAttributesObject(fullSchemaForResourceObject);
+            OpenApiSchema? fullSchemaForAttributesObject = builder.BuildAttributesObject(fullSchemaForResourceObject);
 
             if (fullSchemaForAttributesObject != null)
             {
@@ -120,7 +120,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
         private static void SetResourceRelationships(OpenApiSchema fullSchemaForResourceObject, ResourceFieldObjectSchemaBuilder builder)
         {
-            OpenApiSchema fullSchemaForRelationshipsObject = builder.BuildRelationshipsObject(fullSchemaForResourceObject);
+            OpenApiSchema? fullSchemaForRelationshipsObject = builder.BuildRelationshipsObject(fullSchemaForResourceObject);
 
             if (fullSchemaForRelationshipsObject != null)
             {

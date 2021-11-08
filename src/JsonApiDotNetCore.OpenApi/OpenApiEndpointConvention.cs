@@ -69,11 +69,11 @@ namespace JsonApiDotNetCore.OpenApi
 
         private IReadOnlyCollection<RelationshipAttribute> GetRelationshipsOfPrimaryResource(Type controllerType)
         {
-            Type primaryResourceOfEndpointType = _controllerResourceMapping.GetResourceTypeForController(controllerType);
+            ResourceType primaryResourceTypeOfEndpoint = _controllerResourceMapping.GetResourceTypeForController(controllerType)!;
 
-            ResourceContext primaryResourceContext = _resourceGraph.GetResourceContext(primaryResourceOfEndpointType);
+            ResourceType primaryResourceType = _resourceGraph.GetResourceType(primaryResourceTypeOfEndpoint.ClrType);
 
-            return primaryResourceContext.Relationships;
+            return primaryResourceType.Relationships;
         }
 
         private static bool IsSecondaryOrRelationshipEndpoint(JsonApiEndpoint endpoint)

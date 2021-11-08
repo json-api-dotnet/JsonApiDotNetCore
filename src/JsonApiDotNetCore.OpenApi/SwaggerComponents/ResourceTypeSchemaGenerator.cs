@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
     {
         private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
         private readonly IResourceGraph _resourceGraph;
-        private readonly Dictionary<Type, OpenApiSchema> _resourceTypeSchemaCache = new();
+        private readonly Dictionary<Type, OpenApiSchema> _resourceClrTypeSchemaCache = new();
 
         public ResourceTypeSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor, IResourceGraph resourceGraph)
         {
@@ -21,23 +21,23 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             _resourceGraph = resourceGraph;
         }
 
-        public OpenApiSchema Get(Type resourceType)
+        public OpenApiSchema Get(Type resourceClrType)
         {
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
 
-            if (_resourceTypeSchemaCache.TryGetValue(resourceType, out OpenApiSchema referenceSchema))
+            if (_resourceClrTypeSchemaCache.TryGetValue(resourceClrType, out OpenApiSchema? referenceSchema))
             {
                 return referenceSchema;
             }
 
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
+            ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
 
             var fullSchema = new OpenApiSchema
             {
                 Type = "string",
                 Enum = new List<IOpenApiAny>
                 {
-                    new OpenApiString(resourceContext.PublicName)
+                    new OpenApiString(resourceType.PublicName)
                 }
             };
 
@@ -45,13 +45,13 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             {
                 Reference = new OpenApiReference
                 {
-                    Id = $"{resourceContext.PublicName}-resource-type",
+                    Id = $"{resourceType.PublicName}-resource-type",
                     Type = ReferenceType.Schema
                 }
             };
 
             _schemaRepositoryAccessor.Current.AddDefinition(referenceSchema.Reference.Id, fullSchema);
-            _resourceTypeSchemaCache.Add(resourceContext.ResourceType, referenceSchema);
+            _resourceClrTypeSchemaCache.Add(resourceType.ClrType, referenceSchema);
 
             return referenceSchema;
         }

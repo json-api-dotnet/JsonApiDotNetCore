@@ -5,8 +5,8 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
     /// </summary>
     internal sealed class JsonApiEndpointMetadataContainer
     {
-        public IJsonApiRequestMetadata RequestMetadata { get; init; }
+        public IJsonApiRequestMetadata? RequestMetadata { get; init; }
 
-        public IJsonApiResponseMetadata ResponseMetadata { get; init; }
+        public IJsonApiResponseMetadata? ResponseMetadata { get; init; }
     }
 }

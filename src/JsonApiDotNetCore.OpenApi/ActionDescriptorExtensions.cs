@@ -16,22 +16,22 @@ namespace JsonApiDotNetCore.OpenApi
             return ((ControllerActionDescriptor)descriptor).MethodInfo;
         }
 
-        public static TFilterMetaData GetFilterMetadata<TFilterMetaData>(this ActionDescriptor descriptor)
+        public static TFilterMetaData? GetFilterMetadata<TFilterMetaData>(this ActionDescriptor descriptor)
             where TFilterMetaData : IFilterMetadata
         {
             ArgumentGuard.NotNull(descriptor, nameof(descriptor));
 
-            IFilterMetadata filterMetadata = descriptor.FilterDescriptors.Select(filterDescriptor => filterDescriptor.Filter)
+            IFilterMetadata? filterMetadata = descriptor.FilterDescriptors.Select(filterDescriptor => filterDescriptor.Filter)
                 .FirstOrDefault(filter => filter is TFilterMetaData);
 
-            return (TFilterMetaData)filterMetadata;
+            return (TFilterMetaData?)filterMetadata;
         }
 
-        public static ControllerParameterDescriptor GetBodyParameterDescriptor(this ActionDescriptor descriptor)
+        public static ControllerParameterDescriptor? GetBodyParameterDescriptor(this ActionDescriptor descriptor)
         {
             ArgumentGuard.NotNull(descriptor, nameof(descriptor));
 
-            return (ControllerParameterDescriptor)descriptor.Parameters.FirstOrDefault(parameterDescriptor =>
+            return (ControllerParameterDescriptor?)descriptor.Parameters.FirstOrDefault(parameterDescriptor =>
                 // ReSharper disable once ConstantConditionalAccessQualifier        Motivation: see https://github.com/dotnet/aspnetcore/issues/32538
                 parameterDescriptor.BindingInfo?.BindingSource == BindingSource.Body);
         }

@@ -27,14 +27,14 @@ namespace JsonApiDotNetCore.OpenApi.Client
 
         /// <inheritdoc />
         public IDisposable RegisterAttributesForRequestDocument<TRequestDocument, TAttributesObject>(TRequestDocument requestDocument,
-            params Expression<Func<TAttributesObject, object>>[] alwaysIncludedAttributeSelectors)
+            params Expression<Func<TAttributesObject, object?>>[] alwaysIncludedAttributeSelectors)
             where TRequestDocument : class
         {
             ArgumentGuard.NotNull(requestDocument, nameof(requestDocument));
 
             var attributeNames = new HashSet<string>();
 
-            foreach (Expression<Func<TAttributesObject, object>> selector in alwaysIncludedAttributeSelectors)
+            foreach (Expression<Func<TAttributesObject, object?>> selector in alwaysIncludedAttributeSelectors)
             {
                 if (RemoveConvert(selector.Body) is MemberExpression selectorBody)
                 {

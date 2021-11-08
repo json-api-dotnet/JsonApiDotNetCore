@@ -28,6 +28,7 @@ namespace OpenApiClientTests.LegacyClient
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightCollectionAsync());
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
             wrapper.Request.Method.Should().Be(HttpMethod.Get);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + "flights");
@@ -47,6 +48,7 @@ namespace OpenApiClientTests.LegacyClient
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightAsync(flightId));
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
             wrapper.Request.Method.Should().Be(HttpMethod.Get);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}");
@@ -76,6 +78,7 @@ namespace OpenApiClientTests.LegacyClient
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostFlightAsync(requestDocument));
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
             wrapper.Request.Method.Should().Be(HttpMethod.Post);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + "flights");
@@ -136,6 +139,7 @@ namespace OpenApiClientTests.LegacyClient
             }
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
             wrapper.Request.Method.Should().Be(HttpMethod.Post);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + "airplanes");
@@ -187,6 +191,7 @@ namespace OpenApiClientTests.LegacyClient
             }
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
             wrapper.Request.Method.Should().Be(HttpMethod.Patch);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + $"airplanes/{airplaneId}");
@@ -221,6 +226,7 @@ namespace OpenApiClientTests.LegacyClient
             await apiClient.DeleteFlightAsync(flightId);
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Method.Should().Be(HttpMethod.Delete);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}");
             wrapper.RequestBody.Should().BeNull();
@@ -239,6 +245,7 @@ namespace OpenApiClientTests.LegacyClient
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightPurserAsync(flightId));
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
             wrapper.Request.Method.Should().Be(HttpMethod.Get);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/purser");
@@ -258,6 +265,7 @@ namespace OpenApiClientTests.LegacyClient
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightCabinCrewMembersAsync(flightId));
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
             wrapper.Request.Method.Should().Be(HttpMethod.Get);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/cabin-crew-members");
@@ -277,6 +285,7 @@ namespace OpenApiClientTests.LegacyClient
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightPurserRelationshipAsync(flightId));
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
             wrapper.Request.Method.Should().Be(HttpMethod.Get);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/purser");
@@ -305,6 +314,7 @@ namespace OpenApiClientTests.LegacyClient
             await apiClient.PatchFlightPurserRelationshipAsync(flightId, requestDocument);
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Method.Should().Be(HttpMethod.Patch);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/purser");
             wrapper.Request.Content.Should().NotBeNull();
@@ -332,6 +342,7 @@ namespace OpenApiClientTests.LegacyClient
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId));
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
             wrapper.Request.Method.Should().Be(HttpMethod.Get);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/cabin-crew-members");
@@ -368,6 +379,7 @@ namespace OpenApiClientTests.LegacyClient
             await apiClient.PostFlightCabinCrewMembersRelationshipAsync(flightId, requestDocument);
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Method.Should().Be(HttpMethod.Post);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/cabin-crew-members");
             wrapper.Request.Content.Should().NotBeNull();
@@ -418,6 +430,7 @@ namespace OpenApiClientTests.LegacyClient
             await apiClient.PatchFlightCabinCrewMembersRelationshipAsync(flightId, requestDocument);
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Method.Should().Be(HttpMethod.Patch);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/cabin-crew-members");
             wrapper.Request.Content.Should().NotBeNull();
@@ -468,6 +481,7 @@ namespace OpenApiClientTests.LegacyClient
             await apiClient.DeleteFlightCabinCrewMembersRelationshipAsync(flightId, requestDocument);
 
             // Assert
+            wrapper.Request.ShouldNotBeNull();
             wrapper.Request.Method.Should().Be(HttpMethod.Delete);
             wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/cabin-crew-members");
             wrapper.Request.Content.Should().NotBeNull();

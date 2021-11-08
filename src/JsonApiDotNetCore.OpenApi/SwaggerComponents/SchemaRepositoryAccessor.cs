@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 {
     internal sealed class SchemaRepositoryAccessor : ISchemaRepositoryAccessor
     {
-        private SchemaRepository _schemaRepository;
+        private SchemaRepository? _schemaRepository;
 
         public SchemaRepository Current
         {

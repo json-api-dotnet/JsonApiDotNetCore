@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
                 return null;
             }
 
-            HttpMethodAttribute method = controllerAction.GetCustomAttributes(true).OfType<HttpMethodAttribute>().FirstOrDefault();
+            HttpMethodAttribute? method = controllerAction.GetCustomAttributes(true).OfType<HttpMethodAttribute>().FirstOrDefault();
 
             return ResolveJsonApiEndpoint(method);
         }
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
             return typeof(BaseJsonApiOperationsController).IsAssignableFrom(controllerAction.ReflectedType);
         }
 
-        private static JsonApiEndpoint? ResolveJsonApiEndpoint(HttpMethodAttribute httpMethod)
+        private static JsonApiEndpoint? ResolveJsonApiEndpoint(HttpMethodAttribute? httpMethod)
         {
             return httpMethod switch
             {

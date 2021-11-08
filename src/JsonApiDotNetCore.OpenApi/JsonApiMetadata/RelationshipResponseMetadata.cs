@@ -5,8 +5,11 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
 {
     internal sealed class RelationshipResponseMetadata : ExpansibleEndpointMetadata, IJsonApiResponseMetadata
     {
-        public IDictionary<string, Type> ResponseTypesByRelationshipName { get; init; }
+        public override IDictionary<string, Type> ExpansionElements { get; }
 
-        public override IDictionary<string, Type> ExpansionElements => ResponseTypesByRelationshipName;
+        public RelationshipResponseMetadata(IDictionary<string, Type> responseTypesByRelationshipName)
+        {
+            ExpansionElements = responseTypesByRelationshipName;
+        }
     }
 }

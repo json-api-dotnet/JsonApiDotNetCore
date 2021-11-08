@@ -11,10 +11,10 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         [Attr(PublicName = "document-number", Capabilities = AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
         [Required]
         [MaxLength(9)]
-        public string PassportNumber { get; set; }
+        public string PassportNumber { get; set; } = null!;
 
         [Attr]
-        public string FullName { get; set; }
+        public string FullName { get; set; } = null!;
 
         [Attr]
         public CabinArea CabinArea { get; set; }

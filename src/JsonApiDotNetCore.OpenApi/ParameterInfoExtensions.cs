@@ -6,11 +6,13 @@ namespace JsonApiDotNetCore.OpenApi
 {
     internal static class ParameterInfoExtensions
     {
-        private static readonly Lazy<FieldInfo> NameField = new(() =>
-            typeof(ParameterInfo).GetField("NameImpl", BindingFlags.Instance | BindingFlags.NonPublic), LazyThreadSafetyMode.ExecutionAndPublication);
+        private static readonly Lazy<FieldInfo> NameField =
+            new(() => typeof(ParameterInfo).GetField("NameImpl", BindingFlags.Instance | BindingFlags.NonPublic)!,
+                LazyThreadSafetyMode.ExecutionAndPublication);
 
-        private static readonly Lazy<FieldInfo> ParameterTypeField = new(() =>
-            typeof(ParameterInfo).GetField("ClassImpl", BindingFlags.Instance | BindingFlags.NonPublic), LazyThreadSafetyMode.ExecutionAndPublication);
+        private static readonly Lazy<FieldInfo> ParameterTypeField =
+            new(() => typeof(ParameterInfo).GetField("ClassImpl", BindingFlags.Instance | BindingFlags.NonPublic)!,
+                LazyThreadSafetyMode.ExecutionAndPublication);
 
         public static ParameterInfo WithName(this ParameterInfo source, string name)
         {

@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             _resourceObjectSchemaGenerator = new ResourceObjectSchemaGenerator(defaultSchemaGenerator, resourceGraph, options, _schemaRepositoryAccessor);
         }
 
-        public OpenApiSchema GenerateSchema(Type type, SchemaRepository schemaRepository, MemberInfo memberInfo = null, ParameterInfo parameterInfo = null)
+        public OpenApiSchema GenerateSchema(Type type, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null)
         {
             ArgumentGuard.NotNull(type, nameof(type));
             ArgumentGuard.NotNull(schemaRepository, nameof(schemaRepository));
@@ -135,7 +135,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
         private static OpenApiSchema CreateArrayTypeDataSchema(OpenApiSchema referenceSchemaForResourceObject)
         {
-            return new()
+            return new OpenApiSchema
             {
                 Items = referenceSchemaForResourceObject,
                 Type = "array"
