@@ -67,18 +67,10 @@ namespace JsonApiDotNetCore.Services
         private readonly TraceLogWriter<NoSqlResourceService<TResource, TId>> _traceWriter;
         private readonly JsonApiResourceService<TResource, TId> _resourceService;
 
-        public NoSqlResourceService(
-            IResourceRepositoryAccessor repositoryAccessor,
-            IQueryLayerComposer sqlQueryLayerComposer,
-            IPaginationContext paginationContext,
-            IJsonApiOptions options,
-            ILoggerFactory loggerFactory,
-            IJsonApiRequest request,
-            IResourceChangeTracker<TResource> resourceChangeTracker,
-            IResourceDefinitionAccessor resourceDefinitionAccessor,
-            INoSqlQueryLayerComposer queryLayerComposer,
-            IResourceGraph resourceGraph,
-            IEvaluatedIncludeCache evaluatedIncludeCache)
+        public NoSqlResourceService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer sqlQueryLayerComposer,
+            IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
+            IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor,
+            INoSqlQueryLayerComposer queryLayerComposer, IResourceGraph resourceGraph, IEvaluatedIncludeCache evaluatedIncludeCache)
         {
             _repositoryAccessor = repositoryAccessor;
             _paginationContext = paginationContext;
@@ -193,10 +185,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public Task AddToToManyRelationshipAsync(
-            TId primaryId,
-            string relationshipName,
-            ISet<IIdentifiable> secondaryResourceIds,
+        public Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds,
             CancellationToken cancellationToken)
         {
             return _resourceService.AddToToManyRelationshipAsync(primaryId, relationshipName, secondaryResourceIds, cancellationToken);
@@ -263,10 +252,7 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public async Task RemoveFromToManyRelationshipAsync(
-            TId leftId,
-            string relationshipName,
-            ISet<IIdentifiable> rightResourceIds,
+        public async Task RemoveFromToManyRelationshipAsync(TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new
@@ -329,9 +315,7 @@ namespace JsonApiDotNetCore.Services
         /// <returns>
         /// The primary resource with navigation properties populated where such properties represent included resources.
         /// </returns>
-        protected async Task<TResource> GetPrimaryResourceByIdWithConstraintsAsync(
-            TId id,
-            TopFieldSelection fieldSelection,
+        protected async Task<TResource> GetPrimaryResourceByIdWithConstraintsAsync(TId id, TopFieldSelection fieldSelection,
             CancellationToken cancellationToken)
         {
             AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
@@ -397,9 +381,7 @@ namespace JsonApiDotNetCore.Services
         /// <returns>
         /// A <see cref="Task" /> representing the asynchronous operation.
         /// </returns>
-        protected virtual async Task GetIncludedElementsAsync(
-            IReadOnlyCollection<IIdentifiable> primaryResources,
-            IncludeExpression includeExpression,
+        protected virtual async Task GetIncludedElementsAsync(IReadOnlyCollection<IIdentifiable> primaryResources, IncludeExpression includeExpression,
             CancellationToken cancellationToken)
         {
             _evaluatedIncludeCache.Set(includeExpression);
@@ -429,10 +411,8 @@ namespace JsonApiDotNetCore.Services
         /// <returns>
         /// A <see cref="Task" /> representing the asynchronous operation.
         /// </returns>
-        protected virtual async Task GetIncludedElementAsync(
-            IReadOnlyCollection<IIdentifiable> primaryResources,
-            IncludeElementExpression includeElementExpression,
-            CancellationToken cancellationToken)
+        protected virtual async Task GetIncludedElementAsync(IReadOnlyCollection<IIdentifiable> primaryResources,
+            IncludeElementExpression includeElementExpression, CancellationToken cancellationToken)
         {
             if (includeElementExpression.Children.Any())
             {
@@ -479,10 +459,7 @@ namespace JsonApiDotNetCore.Services
         /// For to-many relationships, an <see cref="IReadOnlyCollection{T}" /> of <see cref="IIdentifiable" />; for to-one relationships, an
         /// <see cref="IIdentifiable" /> or <see langword="null" />.
         /// </returns>
-        protected async Task<object?> GetSecondaryAsync(
-            IIdentifiable primaryResource,
-            string relationshipName,
-            ResourceKind resourceKind,
+        protected async Task<object?> GetSecondaryAsync(IIdentifiable primaryResource, string relationshipName, ResourceKind resourceKind,
             CancellationToken cancellationToken)
         {
             // Get the HasMany or HasOne attribute corresponding to the given relationship name.
@@ -576,12 +553,8 @@ namespace JsonApiDotNetCore.Services
         /// <returns>
         /// The <see cref="IIdentifiable" />, if it exists, or <see langword="null" />.
         /// </returns>
-        protected async Task<IIdentifiable?> GetOneSecondaryResourceAsync(
-            ResourceType resourceType,
-            string propertyName,
-            string? propertyValue,
-            ResourceKind resourceKind,
-            CancellationToken cancellationToken)
+        protected async Task<IIdentifiable?> GetOneSecondaryResourceAsync(ResourceType resourceType, string propertyName, string? propertyValue,
+            ResourceKind resourceKind, CancellationToken cancellationToken)
         {
             if (propertyValue is null)
             {
@@ -614,12 +587,8 @@ namespace JsonApiDotNetCore.Services
         /// <returns>
         /// The potentially empty collection of secondary resources.
         /// </returns>
-        protected async Task<IReadOnlyCollection<IIdentifiable>> GetManySecondaryResourcesAsync(
-            ResourceType resourceType,
-            string propertyName,
-            string propertyValue,
-            ResourceKind resourceKind,
-            CancellationToken cancellationToken)
+        protected async Task<IReadOnlyCollection<IIdentifiable>> GetManySecondaryResourcesAsync(ResourceType resourceType, string propertyName,
+            string propertyValue, ResourceKind resourceKind, CancellationToken cancellationToken)
         {
             bool isIncluded = resourceKind == ResourceKind.Included;
             var (queryLayer, include) = _queryLayerComposer.ComposeFromConstraintsForNoSql(resourceType, propertyName, propertyValue, isIncluded);

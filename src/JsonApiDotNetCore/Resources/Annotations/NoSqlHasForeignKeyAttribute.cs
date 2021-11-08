@@ -7,25 +7,6 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// Used to provide additional information for a JSON:API relationship with a foreign key
     /// (https://jsonapi.org/format/#document-resource-object-relationships).
     /// </summary>
-    /// <example>
-    /// <code><![CDATA[
-    /// public class Author : Identifiable<Guid>
-    /// {
-    ///     [HasMany]
-    ///     [NoSqlHasForeignKey(nameof(Article.AuthorId))]
-    ///     public ICollection<Article> Articles { get; set; }
-    /// }
-    ///
-    /// public class Article : Identifiable<Guid>
-    /// {
-    ///     public Guid AuthorId { get; set; }
-    ///
-    ///     [HasOne]
-    ///     [NoSqlHasForeignKey(nameof(AuthorId))]
-    ///     public Author Author { get; set; }
-    /// }
-    /// ]]></code>
-    /// </example>
     [PublicAPI]
     [AttributeUsage(AttributeTargets.Property)]
     public class NoSqlHasForeignKeyAttribute : Attribute

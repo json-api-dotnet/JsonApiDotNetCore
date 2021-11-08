@@ -38,13 +38,8 @@ namespace JsonApiDotNetCore.Queries
 
         // ReSharper disable PossibleMultipleEnumeration
 
-        public NoSqlQueryLayerComposer(
-            IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IResourceDefinitionAccessor resourceDefinitionAccessor,
-            IJsonApiOptions options,
-            IPaginationContext paginationContext,
-            ITargetedFields targetedFields,
-            IEvaluatedIncludeCache evaluatedIncludeCache,
+        public NoSqlQueryLayerComposer(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor,
+            IJsonApiOptions options, IPaginationContext paginationContext, ITargetedFields targetedFields, IEvaluatedIncludeCache evaluatedIncludeCache,
             ISparseFieldSetCache sparseFieldSetCache)
             : base(constraintProviders, resourceDefinitionAccessor, options, paginationContext, targetedFields, evaluatedIncludeCache, sparseFieldSetCache)
         {
@@ -73,9 +68,7 @@ namespace JsonApiDotNetCore.Queries
         }
 
         /// <inheritdoc />
-        public (QueryLayer QueryLayer, IncludeExpression Include) ComposeForGetByIdWithConstraintsForNoSql<TId>(
-            TId id,
-            ResourceType primaryResourceType,
+        public (QueryLayer QueryLayer, IncludeExpression Include) ComposeForGetByIdWithConstraintsForNoSql<TId>(TId id, ResourceType primaryResourceType,
             TopFieldSelection fieldSelection)
             where TId : notnull
         {
@@ -102,11 +95,8 @@ namespace JsonApiDotNetCore.Queries
         }
 
         /// <inheritdoc />
-        public (QueryLayer QueryLayer, IncludeExpression Include) ComposeFromConstraintsForNoSql(
-            ResourceType requestResourceType,
-            string propertyName,
-            string propertyValue,
-            bool isIncluded)
+        public (QueryLayer QueryLayer, IncludeExpression Include) ComposeFromConstraintsForNoSql(ResourceType requestResourceType, string propertyName,
+            string propertyValue, bool isIncluded)
         {
             // Compose a secondary resource filter in the form "equals({propertyName},'{propertyValue}')".
             FilterExpression[] secondaryResourceFilterExpressions =

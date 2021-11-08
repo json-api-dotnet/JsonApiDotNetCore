@@ -26,9 +26,7 @@ namespace JsonApiDotNetCore.Queries
         /// Composes a <see cref="QueryLayer" /> and an <see cref="IncludeExpression" /> from the constraints specified by the request. Used for primary
         /// resources.
         /// </summary>
-        (QueryLayer QueryLayer, IncludeExpression Include) ComposeForGetByIdWithConstraintsForNoSql<TId>(
-            TId id,
-            ResourceType primaryResourceType,
+        (QueryLayer QueryLayer, IncludeExpression Include) ComposeForGetByIdWithConstraintsForNoSql<TId>(TId id, ResourceType primaryResourceType,
             TopFieldSelection fieldSelection)
             where TId : notnull;
 
@@ -58,11 +56,8 @@ namespace JsonApiDotNetCore.Queries
         /// <returns>
         /// A tuple with a <see cref="QueryLayer" /> and an <see cref="IncludeExpression" />.
         /// </returns>
-        (QueryLayer QueryLayer, IncludeExpression Include) ComposeFromConstraintsForNoSql(
-            ResourceType requestResourceType,
-            string propertyName,
-            string propertyValue,
-            bool isIncluded);
+        (QueryLayer QueryLayer, IncludeExpression Include) ComposeFromConstraintsForNoSql(ResourceType requestResourceType, string propertyName,
+            string propertyValue, bool isIncluded);
 
         /// <summary>
         /// Builds a query that retrieves the primary resource, including all of its attributes and all targeted relationships, during a create/update/delete
