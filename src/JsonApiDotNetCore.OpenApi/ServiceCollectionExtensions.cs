@@ -66,6 +66,7 @@ namespace JsonApiDotNetCore.OpenApi
 
             services.AddSwaggerGen(swaggerGenOptions =>
             {
+                swaggerGenOptions.SupportNonNullableReferenceTypes();
                 SetOperationInfo(swaggerGenOptions, controllerResourceMapping, namingPolicy);
                 SetSchemaIdSelector(swaggerGenOptions, resourceGraph, resourceNameFormatter);
                 swaggerGenOptions.DocumentFilter<EndpointOrderingFilter>();

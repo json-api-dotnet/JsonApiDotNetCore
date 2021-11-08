@@ -18,7 +18,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
 
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
         [MaxLength(2000)]
-        public string StopOverDestination { get; set; } = null!;
+        public string? StopOverDestination { get; set; }
 
         [Attr(PublicName = "operated-by", Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
         public Airline Airline { get; set; }
@@ -37,7 +37,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
 
         [Attr]
         [NotMapped]
-        public ICollection<string> ServicesOnBoard { get; set; } = null!;
+        public ICollection<string>? ServicesOnBoard { get; set; }
 
         [HasMany]
         public ICollection<Passenger> Passengers { get; set; } = null!;

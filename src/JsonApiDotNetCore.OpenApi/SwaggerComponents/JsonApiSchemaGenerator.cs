@@ -28,16 +28,9 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             typeof(SecondaryResourceResponseDocument<>)
         };
 
-        private static readonly Type[] JsonApiResourceIdentifierDocumentOpenTypes =
-        {
-            typeof(ResourceIdentifierCollectionResponseDocument<>),
-            typeof(ResourceIdentifierResponseDocument<>)
-        };
-
         private readonly ISchemaGenerator _defaultSchemaGenerator;
         private readonly ResourceObjectSchemaGenerator _resourceObjectSchemaGenerator;
         private readonly NullableReferenceSchemaGenerator _nullableReferenceSchemaGenerator;
-        private readonly JsonApiObjectNullabilityProcessor _jsonApiObjectNullabilityProcessor;
         private readonly SchemaRepositoryAccessor _schemaRepositoryAccessor = new();
 
         public JsonApiSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options)
@@ -48,7 +41,6 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
             _defaultSchemaGenerator = defaultSchemaGenerator;
             _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(_schemaRepositoryAccessor);
-            _jsonApiObjectNullabilityProcessor = new JsonApiObjectNullabilityProcessor(_schemaRepositoryAccessor);
             _resourceObjectSchemaGenerator = new ResourceObjectSchemaGenerator(defaultSchemaGenerator, resourceGraph, options, _schemaRepositoryAccessor);
         }
 
@@ -73,27 +65,12 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
                 SetDataObjectSchemaToNullable(schema);
             }
 
-            if (IsJsonApiDocument(type))
-            {
-                RemoveNotApplicableNullability(schema);
-            }
-
             return schema;
         }
 
         private static bool IsJsonApiResourceDocument(Type type)
         {
             return type.IsConstructedGenericType && JsonApiResourceDocumentOpenTypes.Contains(type.GetGenericTypeDefinition());
-        }
-
-        private static bool IsJsonApiDocument(Type type)
-        {
-            return IsJsonApiResourceDocument(type) || IsJsonApiResourceIdentifierDocument(type);
-        }
-
-        private static bool IsJsonApiResourceIdentifierDocument(Type type)
-        {
-            return type.IsConstructedGenericType && JsonApiResourceIdentifierDocumentOpenTypes.Contains(type.GetGenericTypeDefinition());
         }
 
         private OpenApiSchema GenerateResourceJsonApiDocumentSchema(Type type)
@@ -140,11 +117,6 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
                 Items = referenceSchemaForResourceObject,
                 Type = "array"
             };
-        }
-
-        private void RemoveNotApplicableNullability(OpenApiSchema schema)
-        {
-            _jsonApiObjectNullabilityProcessor.ClearDocumentProperties(schema);
         }
     }
 }

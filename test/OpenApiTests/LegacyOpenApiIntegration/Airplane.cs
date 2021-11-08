@@ -17,7 +17,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
 
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
         [MaxLength(16)]
-        public string SerialNumber { get; set; } = null!;
+        public string? SerialNumber { get; set; }
 
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
         public int? AirtimeInHours { get; set; }
@@ -33,7 +33,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
 
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
         [MaxLength(85)]
-        public string ManufacturedInCity { get; set; } = null!;
+        public string? ManufacturedInCity { get; set; }
 
         [Attr(Capabilities = AttrCapabilities.AllowView)]
         public AircraftKind Kind { get; set; }

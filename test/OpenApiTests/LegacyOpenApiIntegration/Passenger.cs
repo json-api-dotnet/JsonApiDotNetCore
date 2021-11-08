@@ -14,7 +14,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         public string PassportNumber { get; set; } = null!;
 
         [Attr]
-        public string FullName { get; set; } = null!;
+        public string? FullName { get; set; }
 
         [Attr]
         public CabinArea CabinArea { get; set; }
