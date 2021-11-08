@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -207,7 +208,7 @@ namespace JsonApiDotNetCore.Repositories
             DbSet<TResource> dbSet = _dbContext.Set<TResource>();
             await dbSet.AddAsync(resourceForDatabase, cancellationToken);
 
-            await SaveChangesAsync(cancellationToken);
+            await SaveChangesAsync(cancellationToken, false);
 
             await _resourceDefinitionAccessor.OnWriteSucceededAsync(resourceForDatabase, WriteOperationKind.CreateResource, cancellationToken);
 
@@ -283,13 +284,41 @@ namespace JsonApiDotNetCore.Repositories
                 attribute.SetValue(resourceFromDatabase, attribute.GetValue(resourceFromRequest));
             }
 
+            bool hasConcurrencyToken = RestoreConcurrencyToken(resourceFromRequest, resourceFromDatabase);
+
             await _resourceDefinitionAccessor.OnWritingAsync(resourceFromDatabase, WriteOperationKind.UpdateResource, cancellationToken);
 
-            await SaveChangesAsync(cancellationToken);
+            await SaveChangesAsync(cancellationToken, hasConcurrencyToken);
 
             await _resourceDefinitionAccessor.OnWriteSucceededAsync(resourceFromDatabase, WriteOperationKind.UpdateResource, cancellationToken);
 
             _dbContext.ResetChangeTracker();
+        }
+
+        private bool RestoreConcurrencyToken(TResource resourceFromRequest, TResource resourceFromDatabase)
+        {
+            bool hasConcurrencyToken = false;
+
+            foreach (var propertyEntry in _dbContext.Entry(resourceFromDatabase).Properties)
+            {
+                if (propertyEntry.Metadata.IsConcurrencyToken)
+                {
+                    // Overwrite the ConcurrencyToken coming from database with the one from the request body.
+                    // If they are different, EF Core throws a DbUpdateConcurrencyException on save.
+
+                    PropertyInfo? concurrencyTokenProperty = typeof(TResource).GetProperty(propertyEntry.Metadata.PropertyInfo.Name);
+
+                    if (concurrencyTokenProperty != null)
+                    {
+                        object? concurrencyTokenFromRequest = concurrencyTokenProperty.GetValue(resourceFromRequest);
+                        propertyEntry.OriginalValue = concurrencyTokenFromRequest;
+
+                        hasConcurrencyToken = true;
+                    }
+                }
+            }
+
+            return hasConcurrencyToken;
         }
 
         protected void AssertIsNotClearingRequiredToOneRelationship(RelationshipAttribute relationship, TResource leftResource, object? rightValue)
@@ -341,7 +370,7 @@ namespace JsonApiDotNetCore.Repositories
 
             _dbContext.Remove(resourceTracked);
 
-            await SaveChangesAsync(cancellationToken);
+            await SaveChangesAsync(cancellationToken, false);
 
             await _resourceDefinitionAccessor.OnWriteSucceededAsync(resourceTracked, WriteOperationKind.DeleteResource, cancellationToken);
         }
@@ -412,7 +441,7 @@ namespace JsonApiDotNetCore.Repositories
 
             await _resourceDefinitionAccessor.OnWritingAsync(leftResource, WriteOperationKind.SetRelationship, cancellationToken);
 
-            await SaveChangesAsync(cancellationToken);
+            await SaveChangesAsync(cancellationToken, false);
 
             await _resourceDefinitionAccessor.OnWriteSucceededAsync(leftResource, WriteOperationKind.SetRelationship, cancellationToken);
         }
@@ -445,7 +474,7 @@ namespace JsonApiDotNetCore.Repositories
 
                 await _resourceDefinitionAccessor.OnWritingAsync(leftResourceTracked, WriteOperationKind.AddToRelationship, cancellationToken);
 
-                await SaveChangesAsync(cancellationToken);
+                await SaveChangesAsync(cancellationToken, false);
 
                 await _resourceDefinitionAccessor.OnWriteSucceededAsync(leftResourceTracked, WriteOperationKind.AddToRelationship, cancellationToken);
             }
@@ -508,7 +537,7 @@ namespace JsonApiDotNetCore.Repositories
 
                     await _resourceDefinitionAccessor.OnWritingAsync(leftResourceTracked, WriteOperationKind.RemoveFromRelationship, cancellationToken);
 
-                    await SaveChangesAsync(cancellationToken);
+                    await SaveChangesAsync(cancellationToken, false);
 
                     await _resourceDefinitionAccessor.OnWriteSucceededAsync(leftResourceTracked, WriteOperationKind.RemoveFromRelationship, cancellationToken);
                 }
@@ -559,7 +588,7 @@ namespace JsonApiDotNetCore.Repositories
             return trackedValueToAssign != null && relationship is HasOneAttribute { IsOneToOne: true };
         }
 
-        protected virtual async Task SaveChangesAsync(CancellationToken cancellationToken)
+        protected virtual async Task SaveChangesAsync(CancellationToken cancellationToken, bool hasConcurrencyToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -571,6 +600,11 @@ namespace JsonApiDotNetCore.Repositories
             }
             catch (Exception exception) when (exception is DbUpdateException or InvalidOperationException)
             {
+                if (hasConcurrencyToken && exception is DbUpdateConcurrencyException)
+                {
+                    throw new DataConcurrencyException(exception);
+                }
+
                 _dbContext.ResetChangeTracker();
 
                 throw new DataStoreUpdateException(exception);
