@@ -111,7 +111,7 @@ namespace TestBuildingBlocks
             return factoryWithConfiguredContentRoot;
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             RunOnDatabaseAsync(async dbContext => await dbContext.Database.EnsureDeletedAsync()).Wait();
 
