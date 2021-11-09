@@ -23,20 +23,6 @@ namespace JsonApiDotNetCore.Queries
         (QueryLayer QueryLayer, IncludeExpression Include) ComposeFromConstraintsForNoSql(ResourceType requestResourceType);
 
         /// <summary>
-        /// Composes a <see cref="QueryLayer" /> and an <see cref="IncludeExpression" /> from the constraints specified by the request. Used for primary
-        /// resources.
-        /// </summary>
-        (QueryLayer QueryLayer, IncludeExpression Include) ComposeForGetByIdWithConstraintsForNoSql<TId>(TId id, ResourceType primaryResourceType,
-            TopFieldSelection fieldSelection)
-            where TId : notnull;
-
-        /// <summary>
-        /// Composes a <see cref="QueryLayer" /> with a filter expression in the form "equals(id,'{stringId}')".
-        /// </summary>
-        QueryLayer ComposeForGetByIdForNoSql<TId>(TId id, ResourceType primaryResourceType)
-            where TId : notnull;
-
-        /// <summary>
         /// Composes a <see cref="QueryLayer" /> from the constraints specified by the request and a filter expression in the form
         /// "equals({propertyName},'{propertyValue}')". Used for secondary or included resources.
         /// </summary>
@@ -58,6 +44,20 @@ namespace JsonApiDotNetCore.Queries
         /// </returns>
         (QueryLayer QueryLayer, IncludeExpression Include) ComposeFromConstraintsForNoSql(ResourceType requestResourceType, string propertyName,
             string propertyValue, bool isIncluded);
+
+        /// <summary>
+        /// Composes a <see cref="QueryLayer" /> and an <see cref="IncludeExpression" /> from the constraints specified by the request. Used for primary
+        /// resources.
+        /// </summary>
+        (QueryLayer QueryLayer, IncludeExpression Include) ComposeForGetByIdWithConstraintsForNoSql<TId>(TId id, ResourceType primaryResourceType,
+            TopFieldSelection fieldSelection)
+            where TId : notnull;
+
+        /// <summary>
+        /// Composes a <see cref="QueryLayer" /> with a filter expression in the form "equals(id,'{stringId}')".
+        /// </summary>
+        QueryLayer ComposeForGetByIdForNoSql<TId>(TId id, ResourceType primaryResourceType)
+            where TId : notnull;
 
         /// <summary>
         /// Builds a query that retrieves the primary resource, including all of its attributes and all targeted relationships, during a create/update/delete
