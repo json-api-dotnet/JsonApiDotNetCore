@@ -68,7 +68,7 @@ namespace JsonApiDotNetCoreExample.Cosmos.Models
         public ISet<Tag> Tags { get; set; } = new HashSet<Tag>();
 
         /// <summary>
-        /// Gets or sets the <see cref="Person.Id" /> of the <see cref="Owner" />.
+        /// Gets or sets the person ID of the <see cref="Owner" />.
         /// </summary>
         /// <remarks>
         /// With Cosmos DB, the foreign key must at least be accessible for filtering. Making it viewable is discouraged by the JSON:API specification.
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCoreExample.Cosmos.Models
         public Guid OwnerId { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="Person.Id" /> of the <see cref="Assignee" />.
+        /// Gets or sets the person ID of the <see cref="Assignee" />.
         /// </summary>
         /// <remarks>
         /// With Cosmos DB, the foreign key must at least be accessible for filtering. Making it viewable is discouraged by the JSON:API specification.
