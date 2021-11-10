@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.21.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="$(EFCoreVersion)" />
+  </ItemGroup>
+</Project>
