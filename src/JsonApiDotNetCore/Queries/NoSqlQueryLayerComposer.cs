@@ -176,6 +176,7 @@ namespace JsonApiDotNetCore.Queries
             };
         }
 
+        /// <inheritdoc />
         public (QueryLayer QueryLayer, IncludeExpression Include) ComposeForUpdateForNoSql<TId>(TId id, ResourceType primaryResourceType)
             where TId : notnull
         {
@@ -250,7 +251,9 @@ namespace JsonApiDotNetCore.Queries
             /// <inheritdoc />
             public override bool VisitComparison(ComparisonExpression expression, object? argument)
             {
-                return expression.Left.Accept(this, argument) && expression.Right.Accept(this, argument);
+                _isSimpleFilterExpression &= expression.Left.Accept(this, argument) && expression.Right.Accept(this, argument);
+
+                return _isSimpleFilterExpression;
             }
 
             /// <inheritdoc />
@@ -279,49 +282,66 @@ namespace JsonApiDotNetCore.Queries
             /// <inheritdoc />
             public override bool VisitLogical(LogicalExpression expression, object? argument)
             {
-                return expression.Terms.All(term => term.Accept(this, argument));
+                _isSimpleFilterExpression &= expression.Terms.All(term => term.Accept(this, argument));
+
+                return _isSimpleFilterExpression;
             }
 
             /// <inheritdoc />
             public override bool VisitNot(NotExpression expression, object? argument)
             {
-                return expression.Child.Accept(this, argument);
+                _isSimpleFilterExpression &= expression.Child.Accept(this, argument);
+
+                return _isSimpleFilterExpression;
             }
 
             /// <inheritdoc />
             public override bool VisitHas(HasExpression expression, object? argument)
             {
-                return expression.TargetCollection.Accept(this, argument) && (expression.Filter is null || expression.Filter.Accept(this, argument));
+                _isSimpleFilterExpression &= expression.TargetCollection.Accept(this, argument) &&
+                    (expression.Filter is null || expression.Filter.Accept(this, argument));
+
+                return _isSimpleFilterExpression;
             }
 
             /// <inheritdoc />
             public override bool VisitSortElement(SortElementExpression expression, object? argument)
             {
-                return expression.TargetAttribute is null || expression.TargetAttribute.Accept(this, argument);
+                _isSimpleFilterExpression &= expression.TargetAttribute is null || expression.TargetAttribute.Accept(this, argument);
+
+                return _isSimpleFilterExpression;
             }
 
             /// <inheritdoc />
             public override bool VisitSort(SortExpression expression, object? argument)
             {
-                return expression.Elements.All(element => element.Accept(this, argument));
+                _isSimpleFilterExpression &= expression.Elements.All(element => element.Accept(this, argument));
+
+                return _isSimpleFilterExpression;
             }
 
             /// <inheritdoc />
             public override bool VisitCount(CountExpression expression, object? argument)
             {
-                return expression.TargetCollection.Accept(this, argument);
+                _isSimpleFilterExpression &= expression.TargetCollection.Accept(this, argument);
+
+                return _isSimpleFilterExpression;
             }
 
             /// <inheritdoc />
             public override bool VisitMatchText(MatchTextExpression expression, object? argument)
             {
-                return expression.TargetAttribute.Accept(this, argument);
+                _isSimpleFilterExpression &= expression.TargetAttribute.Accept(this, argument);
+
+                return _isSimpleFilterExpression;
             }
 
             /// <inheritdoc />
             public override bool VisitAny(AnyExpression expression, object? argument)
             {
-                return expression.TargetAttribute.Accept(this, argument);
+                _isSimpleFilterExpression &= expression.TargetAttribute.Accept(this, argument);
+
+                return _isSimpleFilterExpression;
             }
         }
     }
