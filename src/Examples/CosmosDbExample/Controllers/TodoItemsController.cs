@@ -1,11 +1,11 @@
 using System;
+using CosmosDbExample.Models;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample.Cosmos.Models;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExample.Cosmos.Controllers
+namespace CosmosDbExample.Controllers
 {
     public sealed class TodoItemsController : JsonApiController<TodoItem, Guid>
     {

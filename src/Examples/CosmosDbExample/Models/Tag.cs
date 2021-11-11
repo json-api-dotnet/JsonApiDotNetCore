@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCoreExample.Cosmos.Models
+namespace CosmosDbExample.Models
 {
     /// <summary>
     /// Represents a tag that can be assigned to a <see cref="TodoItem" />. In this example project, tags are owned by the <see cref="TodoItem" /> instances

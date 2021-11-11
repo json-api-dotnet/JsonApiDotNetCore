@@ -2,7 +2,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JsonApiDotNetCoreExample.Cosmos.Controllers
+namespace CosmosDbExample.Controllers
 {
     [Route("[controller]")]
     public sealed class NonJsonApiController : ControllerBase

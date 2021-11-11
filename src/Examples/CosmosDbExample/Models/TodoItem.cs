@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using CosmosDbExample.Definitions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCoreExample.Cosmos.Definitions;
 
-namespace JsonApiDotNetCoreExample.Cosmos.Models
+namespace CosmosDbExample.Models
 {
     /// <summary>
     /// Represents a to-do item that is owned by a person and that can be assigned to another person.

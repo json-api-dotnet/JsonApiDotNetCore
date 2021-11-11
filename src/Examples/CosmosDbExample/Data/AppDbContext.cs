@@ -1,6 +1,6 @@
 using System;
+using CosmosDbExample.Models;
 using JetBrains.Annotations;
-using JsonApiDotNetCoreExample.Cosmos.Models;
 using Microsoft.EntityFrameworkCore;
 
 #pragma warning disable IDE0058 // Expression value is never used
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace JsonApiDotNetCoreExample.Cosmos.Data
+namespace CosmosDbExample.Data
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class AppDbContext : DbContext

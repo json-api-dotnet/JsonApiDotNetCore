@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCoreExample.Cosmos.Models
+namespace CosmosDbExample.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public enum TodoItemPriority

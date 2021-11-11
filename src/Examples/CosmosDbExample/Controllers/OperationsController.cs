@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExample.Cosmos.Controllers
+namespace CosmosDbExample.Controllers
 {
     public sealed class OperationsController : JsonApiOperationsController
     {

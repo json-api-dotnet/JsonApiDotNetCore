@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace JsonApiDotNetCoreExample.Cosmos
+namespace CosmosDbExample
 {
     internal static class Program
     {

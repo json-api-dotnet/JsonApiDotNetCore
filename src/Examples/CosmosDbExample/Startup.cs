@@ -1,8 +1,8 @@
 using System;
 using System.Text.Json.Serialization;
+using CosmosDbExample.Data;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
-using JsonApiDotNetCoreExample.Cosmos.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExample.Cosmos
+namespace CosmosDbExample
 {
     public sealed class Startup
     {

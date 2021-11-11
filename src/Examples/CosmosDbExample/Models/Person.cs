@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExample.Cosmos.Models
+namespace CosmosDbExample.Models
 {
     [NoSqlResource]
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
