@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -259,24 +258,9 @@ namespace JsonApiDotNetCore.Queries
             /// <inheritdoc />
             public override bool VisitResourceFieldChain(ResourceFieldChainExpression expression, object? argument)
             {
-                _isSimpleFilterExpression &= expression.Fields.All(IsFieldSupported);
+                _isSimpleFilterExpression &= expression.Fields.All(field => field is AttrAttribute);
 
                 return _isSimpleFilterExpression;
-            }
-
-            private static bool IsFieldSupported(ResourceFieldAttribute field)
-            {
-                return field switch
-                {
-                    AttrAttribute => true,
-                    HasManyAttribute hasMany when HasOwnsManyAttribute(hasMany) => true,
-                    _ => false
-                };
-            }
-
-            private static bool HasOwnsManyAttribute(ResourceFieldAttribute field)
-            {
-                return Attribute.GetCustomAttribute(field.Property, typeof(NoSqlOwnsManyAttribute)) is not null;
             }
 
             /// <inheritdoc />

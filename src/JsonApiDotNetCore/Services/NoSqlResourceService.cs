@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -185,10 +186,48 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds,
+        public async Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds,
             CancellationToken cancellationToken)
         {
-            return _resourceService.AddToToManyRelationshipAsync(primaryId, relationshipName, secondaryResourceIds, cancellationToken);
+            RelationshipAttribute? relationship = _request.Relationship;
+
+            if (relationship == null)
+            {
+                throw new RelationshipNotFoundException(relationshipName, _request.PrimaryResourceType!.PublicName);
+            }
+
+            if (!secondaryResourceIds.Any())
+            {
+                return;
+            }
+
+            ResourceType resourceType = relationship.RightType;
+
+            var targetAttribute = new ResourceFieldChainExpression(resourceType.FindAttributeByPropertyName(nameof(IIdentifiable<object>.Id))!);
+
+            ImmutableHashSet<LiteralConstantExpression> idConstants =
+                secondaryResourceIds.Select(identifiable => new LiteralConstantExpression(identifiable.StringId!)).ToImmutableHashSet();
+
+            var queryLayer = new QueryLayer(resourceType)
+            {
+                Filter = idConstants.Count > 1
+                    ? new AnyExpression(targetAttribute, idConstants)
+                    : new ComparisonExpression(ComparisonOperator.Equals, targetAttribute, idConstants.Single())
+            };
+
+            IReadOnlyCollection<IIdentifiable> secondaryResources = await _repositoryAccessor.GetAsync(resourceType, queryLayer, cancellationToken);
+
+            ImmutableHashSet<IIdentifiable> missingResources = secondaryResourceIds
+                .Where(requestResource => secondaryResources.All(resource => resource.StringId != requestResource.StringId)).ToImmutableHashSet();
+
+            if (missingResources.Any())
+            {
+                IIdentifiable missingResource = missingResources.First();
+
+                throw new ResourceNotFoundException(missingResource.StringId!, resourceType.PublicName);
+            }
+
+            await _resourceService.AddToToManyRelationshipAsync(primaryId, relationshipName, secondaryResourceIds, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -423,14 +462,6 @@ namespace JsonApiDotNetCore.Services
                 });
             }
 
-            PropertyInfo property = includeElementExpression.Relationship.Property;
-            var ownsMany = Attribute.GetCustomAttribute(property, typeof(NoSqlOwnsManyAttribute));
-
-            if (ownsMany is not null)
-            {
-                return;
-            }
-
             string relationshipName = includeElementExpression.Relationship.PublicName;
 
             foreach (var primaryResource in primaryResources)
@@ -478,15 +509,6 @@ namespace JsonApiDotNetCore.Services
                     Title = "Relationship not found.",
                     Detail = message
                 });
-            }
-
-            // Check whether the secondary resource is owned by the primary resource.
-            PropertyInfo property = relationshipAttribute.Property;
-            var ownsMany = Attribute.GetCustomAttribute(property, typeof(NoSqlOwnsManyAttribute));
-
-            if (ownsMany is not null)
-            {
-                return relationshipAttribute.GetValue(primaryResource);
             }
 
             // Get the HasForeignKey attribute corresponding to the relationship, if any.
@@ -627,15 +649,6 @@ namespace JsonApiDotNetCore.Services
             {
                 throw new InvalidOperationException(
                     $"Expected {nameof(IJsonApiRequest)}.{nameof(IJsonApiRequest.PrimaryResourceType)} not to be null at this point.");
-            }
-        }
-
-        [AssertionMethod]
-        private static void AssertRelationshipInJsonApiRequestIsNotNull([SysNotNull] RelationshipAttribute? relationship)
-        {
-            if (relationship is null)
-            {
-                throw new InvalidOperationException($"Expected {nameof(IJsonApiRequest)}.{nameof(IJsonApiRequest.Relationship)} not to be null at this point.");
             }
         }
 
