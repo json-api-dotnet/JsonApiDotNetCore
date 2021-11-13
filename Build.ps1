@@ -99,6 +99,9 @@ CheckLastExitCode
 dotnet build -c Release
 CheckLastExitCode
 
+.\start-cosmos-db-emulator.ps1
+CheckLastExitCode
+
 RunInspectCode
 RunCleanupCode
 
