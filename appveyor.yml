@@ -111,11 +111,11 @@ for:
       # Start Azure Cosmos Emulator on Linux
       # Pull Azure Cosmos Emulator Docker image
       echo "Pulling Azure Cosmos Emulator Docker image for Linux ..."
-      sudo ./pull-docker-azure-cosmos-emulator-linux.sh
+      bash ./pull-docker-azure-cosmos-emulator-linux.sh
 
       # Start Azure Cosmos Emulator container
       echo "Running Azure Cosmos Emulator Docker container ..."
-      sudo nohup ./run-docker-azure-cosmos-emulator-linux.sh &
+      nohup bash ./run-docker-azure-cosmos-emulator-linux.sh &
 
       # Wait for Docker container being started in the background
       echo "Waiting 60 seconds before trying to download Azure Cosmos Emulator SSL certificate ..."
@@ -130,7 +130,7 @@ for:
 
       # Install SSL certificate to be able to access the emulator
       echo "Installing Azure Cosmos Emulator SSL certificate ..."
-      sudo ./install-azure-cosmos-emulator-linux-certificates.sh
+      sudo bash ./install-azure-cosmos-emulator-linux-certificates.sh
 
 build_script:
 - pwsh: |
