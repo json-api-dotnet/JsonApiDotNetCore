@@ -13,7 +13,7 @@ We've completed active development on v4.x, but we'll still fix important bugs o
 The need for breaking changes has blocked several efforts in the v4.x release, so now that we're starting work on v5, we're going to catch up.
 
 - [x] Remove Resource Hooks [#1025](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1025)
-- [x] Update to .NET/EFCORE 5 [#1026](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1026)
+- [x] Update to .NET 5 with EF Core 5 [#1026](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1026)
 - [x] Native many-to-many [#935](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/935)
 - [x] Refactorings [#1027](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1027) [#944](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/944)
 - [x] Tweak trace logging [#1033](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1033)
@@ -24,6 +24,7 @@ The need for breaking changes has blocked several efforts in the v4.x release, s
 - [x] Nullable reference types [#1029](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1029)
 - [x] Improved paging links [#1010](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1010)
 - [x] Configuration validation [#170](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/170)
+- [ ] Support .NET 6 with EF Core 6 [#1109](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1109)
 
 Aside from the list above, we have interest in the following topics. It's too soon yet to decide whether they'll make it into v5.x or in a later major version.
 
