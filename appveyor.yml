@@ -51,7 +51,7 @@ for:
     - pwsh: |
         # Start Azure Cosmos Emulator on Windows
         if ($isWindows) {
-            .\start-cosmos-db-emulator.ps1
+            & .\start-cosmos-db-emulator.ps1
         }
   after_build:
     - pwsh: |
@@ -111,11 +111,11 @@ for:
       # Start Azure Cosmos Emulator on Linux
       # Pull Azure Cosmos Emulator Docker image
       echo "Pulling Azure Cosmos Emulator Docker image for Linux ..."
-      ./pull-docker-azure-cosmos-emulator-linux.sh
+      sudo ./pull-docker-azure-cosmos-emulator-linux.sh
 
       # Start Azure Cosmos Emulator container
       echo "Running Azure Cosmos Emulator Docker container ..."
-      nohup ./run-docker-azure-cosmos-emulator-linux.sh &
+      sudo nohup ./run-docker-azure-cosmos-emulator-linux.sh &
 
       # Wait for Docker container being started in the background
       echo "Waiting 60 seconds before trying to download Azure Cosmos Emulator SSL certificate ..."
