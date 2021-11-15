@@ -145,6 +145,12 @@ build_script:
         psql --version
     }
 
+    # Start Azure Cosmos Emulator on Windows
+    Write-Output "Start Cosmos DB Emulator ..."
+    if ($isWindows) {
+        & .\start-cosmos-db-emulator.ps1
+    }
+
     .\Build.ps1
 
 test: off
