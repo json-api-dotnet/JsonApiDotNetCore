@@ -4,9 +4,6 @@
 # This step is required when Direct mode setting is configured using Cosmos DB SDKs.
 ipaddr="`ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}' | head -n 1`"
 
-# Pull the azure-cosmos-emulator Docker image for Linux from the registry.
-docker pull mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator
-
 # Run the image, creating a container called "azure-cosmos-emulator-linux".
 docker run \
   -p 8081:8081 \

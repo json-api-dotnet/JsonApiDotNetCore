@@ -2,32 +2,38 @@
 
 function StartCosmosDbEmulator {
     if ($PSVersionTable.Platform -eq "Unix") {
-        StartCosmosDbEmulatorDockerContainer
+        StartCosmosDbEmulatorOnLinux
     }
     else {
-        StartCosmosDbEmulatorForWindows
+        StartCosmosDbEmulatorOnWindows
     }
 }
 
-function StartCosmosDbEmulatorDockerContainer {
-    Write-Host "Starting Cosmos DB Emulator Docker container ..."
-    Start-Process nohup 'bash ./run-docker-azure-cosmos-emulator-linux.sh'
+function StartCosmosDbEmulatorOnLinux {
+    Remove-Item .\nohup.*
 
-    Write-Host "Waiting for Cosmos DB Emulator Docker container to start up ..."
-    Start-Sleep -Seconds 30
-    WaitUntilCosmosSqlApiEndpointIsReady
+    Write-Host "Running Azure Cosmos Emulator Docker container ..."
+    Start-Process nohup './run-docker-azure-cosmos-emulator-linux.sh'
+    Start-Sleep -Seconds 1
 
-    Write-Host "Installing Cosmos DB Emulator certificates ..."
-    Start-Sleep -Seconds 30
-    Start-Process nohup 'bash ./install-azure-cosmos-emulator-linux-certificates.sh'
+    Write-Host "Waiting 60 seconds before trying to download Azure Cosmos Emulator SSL certificate ..."
+    Start-Sleep -Seconds 60
+
+    Write-Host "--- BEGIN CONTENTS OF NOHUP.OUT ---"
+    Get-Content .\nohup.out
+    Write-Host "--- END CONTENTS OF NOHUP.OUT ---"
+
+    Write-Host "Installing Azure Cosmos Emulator SSL certificate ..."
+    Start-Process bash './install-azure-cosmos-emulator-linux-certificates.sh' -Wait
+    Write-Host "Installed Azure Cosmos Emulator SSL certificate."
 }
 
-function StartCosmosDbEmulatorForWindows {
+function StartCosmosDbEmulatorOnWindows {
     Write-Host "Starting Cosmos DB Emulator for Windows ..."
     Start-Process -FilePath "C:\Program Files\Azure Cosmos DB Emulator\Microsoft.Azure.Cosmos.Emulator.exe" -ArgumentList "/DisableRateLimiting /NoUI /NoExplorer"
 
-    Write-Host "Waiting for Cosmos DB Emulator for Windows to start up ..."
-    Start-Sleep -Seconds 10
+    Write-Host "Waiting for Azure Cosmos Emulator for Windows to start up ..."
+    Start-Sleep -Seconds 20
     WaitUntilCosmosSqlApiEndpointIsReady
 }
 
@@ -45,6 +51,7 @@ function WaitUntilCosmosSqlApiEndpointIsReady {
         catch {
             $client.Close()
             if($attempt -eq $max) {
+                Write-Host "Cosmos SQL API endpoint is not listening. Aborting connection."
                 throw "Cosmos SQL API endpoint is not listening. Aborting connection."
             } else {
                 [int]$sleepTime = 5 * (++$attempt)

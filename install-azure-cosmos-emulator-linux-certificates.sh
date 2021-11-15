@@ -27,4 +27,5 @@ then
   sudo update-ca-certificates
 else
   echo "Could not download CA certificate!"
+  false
 fi

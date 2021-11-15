@@ -35,6 +35,7 @@ for:
     - image: Visual Studio 2019
   services:
   - postgresql13
+  - docker
   # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
   before_build:
     - pwsh: |
@@ -47,6 +48,34 @@ for:
         choco install docfx -y --version 2.58.5
         if ($lastexitcode -ne 0) {
             throw "docfx install failed with exit code $lastexitcode."
+        }
+    - sh: |
+        # Pull Azure Cosmos Emulator Docker image
+        echo "Pulling Azure Cosmos Emulator Docker image for Linux ..."
+        ./pull-docker-azure-cosmos-emulator-linux.sh
+
+        # Start Azure Cosmos Emulator container
+        echo "Running Azure Cosmos Emulator Docker container ..."
+        nohup ./run-docker-azure-cosmos-emulator-linux.sh &
+
+        # Wait for Docker container being started in the background
+        echo "Waiting 60 seconds before trying to download Azure Cosmos Emulator SSL certificate ..."
+        sleep 60
+
+        # Print the background process output to see whether there are any errors
+        if [ -f "./nohup.out" ]; then
+            echo "--- BEGIN CONTENTS OF NOHUP.OUT ---"
+            cat ./nohup.out
+            echo "--- END CONTENTS OF NOHUP.OUT ---"
+        fi
+
+        # Install SSL certificate to be able to access the emulator
+        echo "Installing Azure Cosmos Emulator SSL certificate ..."
+        sudo ./install-azure-cosmos-emulator-linux-certificates.sh
+    - pwsh: |
+        # Start Azure Cosmos Emulator on Windows
+        if ($isWindows) {
+            .\start-cosmos-db-emulator.ps1
         }
   after_build:
     - pwsh: |
