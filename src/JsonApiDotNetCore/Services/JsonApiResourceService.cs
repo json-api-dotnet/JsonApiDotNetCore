@@ -347,9 +347,7 @@ namespace JsonApiDotNetCore.Services
             CancellationToken cancellationToken)
         {
             QueryLayer queryLayer = _queryLayerComposer.ComposeForHasMany(hasManyRelationship, leftId, rightResourceIds);
-            IReadOnlyCollection<TResource> leftResources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
-
-            TResource? leftResource = leftResources.FirstOrDefault();
+            var leftResource = await _repositoryAccessor.GetForUpdateAsync<TResource>(queryLayer, cancellationToken);
             AssertPrimaryResourceExists(leftResource);
 
             return leftResource;
@@ -517,8 +515,8 @@ namespace JsonApiDotNetCore.Services
 
             QueryLayer queryLayer = _queryLayerComposer.ComposeForUpdate(id, _request.PrimaryResourceType);
             var resource = await _repositoryAccessor.GetForUpdateAsync<TResource>(queryLayer, cancellationToken);
-
             AssertPrimaryResourceExists(resource);
+
             return resource;
         }
 
