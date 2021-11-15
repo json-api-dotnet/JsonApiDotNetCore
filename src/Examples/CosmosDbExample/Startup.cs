@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Diagnostics;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,7 +36,11 @@ namespace CosmosDbExample
 
                 services.AddDbContext<AppDbContext>(options =>
                 {
-                    options.UseCosmos(_connectionString, "TodoItemDB");
+                    options.UseCosmos(_connectionString, "TodoItemDB", builder =>
+                    {
+                        // Required for connection to Azure Cosmos Emulator Docker container on Linux.
+                        builder.ConnectionMode(ConnectionMode.Gateway);
+                    });
 #if DEBUG
                     options.EnableSensitiveDataLogging();
                     options.EnableDetailedErrors();
