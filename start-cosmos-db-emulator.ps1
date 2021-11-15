@@ -19,7 +19,7 @@ function StartCosmosDbEmulatorDockerContainer {
 
     Write-Host "Installing Cosmos DB Emulator certificates ..."
     Start-Sleep -Seconds 30
-    Start-Process -FilePath ".\install-azure-cosmos-emulator-linux-certificates.sh"
+    Start-Process nohup 'bash ./install-azure-cosmos-emulator-linux-certificates.sh'
 }
 
 function StartCosmosDbEmulatorForWindows {
