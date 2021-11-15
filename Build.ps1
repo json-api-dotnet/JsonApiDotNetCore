@@ -100,14 +100,15 @@ dotnet build -c Release
 CheckLastExitCode
 
 .\start-cosmos-db-emulator.ps1
+getcontent .\nohup.out
 CheckLastExitCode
 
-RunInspectCode
-RunCleanupCode
+# RunInspectCode
+# RunCleanupCode
 
-dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
+dotnet test .\test\CosmosDbTests\CosmosDbTests.csproj -c Release --no-build --collect:"XPlat Code Coverage"
 CheckLastExitCode
 
-ReportCodeCoverage
+# ReportCodeCoverage
 
-CreateNuGetPackage
+# CreateNuGetPackage
