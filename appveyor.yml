@@ -1,5 +1,5 @@
 image:
-  # - Ubuntu
+  - Ubuntu
   - Visual Studio 2019
 
 version: '{build}'
@@ -143,12 +143,6 @@ build_script:
     }
     else {
         psql --version
-    }
-
-    # Start Azure Cosmos Emulator on Windows
-    Write-Output "Start Cosmos DB Emulator ..."
-    if ($isWindows) {
-        & .\start-cosmos-db-emulator.ps1
     }
 
     .\Build.ps1

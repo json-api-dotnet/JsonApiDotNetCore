@@ -36,11 +36,7 @@ namespace CosmosDbExample
 
                 services.AddDbContext<AppDbContext>(options =>
                 {
-                    options.UseCosmos(_connectionString, "TodoItemDB", builder =>
-                    {
-                        // Required for connection to Azure Cosmos Emulator Docker container on Linux.
-                        builder.ConnectionMode(ConnectionMode.Gateway);
-                    });
+                    options.UseCosmos(_connectionString, "TodoItemDB");
 #if DEBUG
                     options.EnableSensitiveDataLogging();
                     options.EnableDetailedErrors();
