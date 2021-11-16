@@ -15,6 +15,9 @@ public sealed class JsonApiRequest : IJsonApiRequest
     public string? PrimaryId { get; set; }
 
     /// <inheritdoc />
+    public string? PrimaryVersion { get; set; }
+
+    /// <inheritdoc />
     public ResourceType? PrimaryResourceType { get; set; }
 
     /// <inheritdoc />
@@ -42,6 +45,7 @@ public sealed class JsonApiRequest : IJsonApiRequest
 
         Kind = other.Kind;
         PrimaryId = other.PrimaryId;
+        PrimaryVersion = other.PrimaryVersion;
         PrimaryResourceType = other.PrimaryResourceType;
         SecondaryResourceType = other.SecondaryResourceType;
         Relationship = other.Relationship;

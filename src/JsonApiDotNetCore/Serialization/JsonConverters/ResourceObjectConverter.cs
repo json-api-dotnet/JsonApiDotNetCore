@@ -18,6 +18,7 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
     private static readonly JsonEncodedText TypeText = JsonEncodedText.Encode("type");
     private static readonly JsonEncodedText IdText = JsonEncodedText.Encode("id");
     private static readonly JsonEncodedText LidText = JsonEncodedText.Encode("lid");
+    private static readonly JsonEncodedText VersionText = JsonEncodedText.Encode("version");
     private static readonly JsonEncodedText MetaText = JsonEncodedText.Encode("meta");
     private static readonly JsonEncodedText AttributesText = JsonEncodedText.Encode("attributes");
     private static readonly JsonEncodedText RelationshipsText = JsonEncodedText.Encode("relationships");
@@ -82,6 +83,11 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
                         case "lid":
                         {
                             resourceObject.Lid = reader.GetString();
+                            break;
+                        }
+                        case "version":
+                        {
+                            resourceObject.Version = reader.GetString();
                             break;
                         }
                         case "attributes":
@@ -236,6 +242,11 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
         if (value.Lid != null)
         {
             writer.WriteString(LidText, value.Lid);
+        }
+
+        if (value.Version != null)
+        {
+            writer.WriteString(VersionText, value.Version);
         }
 
         if (!value.Attributes.IsNullOrEmpty())

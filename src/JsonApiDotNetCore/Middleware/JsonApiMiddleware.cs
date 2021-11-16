@@ -212,6 +212,7 @@ public sealed class JsonApiMiddleware
         request.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method || httpRequest.Method == HttpMethod.Head.Method;
         request.PrimaryResourceType = primaryResourceType;
         request.PrimaryId = GetPrimaryRequestId(routeValues);
+        request.PrimaryVersion = GetPrimaryRequestVersion(routeValues);
 
         string? relationshipName = GetRelationshipNameForSecondaryRequest(routeValues);
 
@@ -261,6 +262,11 @@ public sealed class JsonApiMiddleware
     private static string? GetPrimaryRequestId(RouteValueDictionary routeValues)
     {
         return routeValues.TryGetValue("id", out object? id) ? (string?)id : null;
+    }
+
+    private static string? GetPrimaryRequestVersion(RouteValueDictionary routeValues)
+    {
+        return routeValues.TryGetValue("version", out object? id) ? (string?)id : null;
     }
 
     private static string? GetRelationshipNameForSecondaryRequest(RouteValueDictionary routeValues)

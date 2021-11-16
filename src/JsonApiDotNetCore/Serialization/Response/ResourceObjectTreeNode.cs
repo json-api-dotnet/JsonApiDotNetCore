@@ -265,12 +265,12 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
                 return false;
             }
 
-            return left.Type == right.Type && left.Id == right.Id && left.Lid == right.Lid;
+            return left.Type == right.Type && left.Id == right.Id && left.Lid == right.Lid && left.Version == right.Version;
         }
 
         public int GetHashCode(ResourceObject obj)
         {
-            return HashCode.Combine(obj.Type, obj.Id, obj.Lid);
+            return HashCode.Combine(obj.Type, obj.Id, obj.Lid, obj.Version);
         }
     }
 }

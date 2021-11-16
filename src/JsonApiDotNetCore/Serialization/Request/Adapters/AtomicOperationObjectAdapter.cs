@@ -107,6 +107,7 @@ public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
         if (refResult != null)
         {
             state.WritableRequest!.PrimaryId = refResult.Resource.StringId;
+            state.WritableRequest.PrimaryVersion = refResult.Resource.GetVersion();
             state.WritableRequest.PrimaryResourceType = refResult.ResourceType;
             state.WritableRequest.Relationship = refResult.Relationship;
             state.WritableRequest.IsCollection = refResult.Relationship is HasManyAttribute;

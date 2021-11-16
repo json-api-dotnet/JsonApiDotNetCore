@@ -41,7 +41,8 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
             {
                 Type = resourceObject.Type,
                 Id = resourceObject.Id,
-                Lid = resourceObject.Lid
+                Lid = resourceObject.Lid,
+                Version = resourceObject.Version
             });
         }
         else if (data.SingleValue != null)
@@ -50,7 +51,8 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
             {
                 Type = data.SingleValue.Type,
                 Id = data.SingleValue.Id,
-                Lid = data.SingleValue.Lid
+                Lid = data.SingleValue.Lid,
+                Version = data.SingleValue.Version
             };
         }
 
