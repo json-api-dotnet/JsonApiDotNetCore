@@ -1,6 +1,5 @@
 #!/bin/bash
 
-ipaddr="`ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}' | head -n 1`"
 certfile=~/emulatorcert.crt
 echo "Certificate file: ${certfile}"
 
@@ -9,7 +8,7 @@ count=0
 
 while [[ "$result" != "0" && "$count" < "5" ]]; do
   echo "Trying to download certificate ..."
-  curl -k https://$ipaddr:8081/_explorer/emulator.pem > $certfile
+  curl -k https://localhost:8081/_explorer/emulator.pem > $certfile
   result=$?
   let "count++"
 

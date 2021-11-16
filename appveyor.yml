@@ -108,32 +108,29 @@ for:
   - docker
   before_build:
   - sh: |
-      # Do not run the Azure Cosmos Emulator for Linux for now
-      echo "Azure Cosmos Emulator for Linux is not being run at the moment"
+      # Start Azure Cosmos Emulator on Linux
+      # Pull Azure Cosmos Emulator Docker image
+      echo "Pulling Azure Cosmos Emulator Docker image for Linux ..."
+      bash ./pull-docker-azure-cosmos-emulator-linux.sh
 
-      ## Start Azure Cosmos Emulator on Linux
-      ## Pull Azure Cosmos Emulator Docker image
-      #echo "Pulling Azure Cosmos Emulator Docker image for Linux ..."
-      #bash ./pull-docker-azure-cosmos-emulator-linux.sh
+      # Start Azure Cosmos Emulator container
+      echo "Running Azure Cosmos Emulator Docker container ..."
+      nohup bash ./run-docker-azure-cosmos-emulator-linux.sh &
 
-      ## Start Azure Cosmos Emulator container
-      #echo "Running Azure Cosmos Emulator Docker container ..."
-      #nohup bash ./run-docker-azure-cosmos-emulator-linux.sh &
+      # Wait for Docker container being started in the background
+      echo "Waiting 60 seconds before trying to download Azure Cosmos Emulator SSL certificate ..."
+      sleep 60
 
-      ## Wait for Docker container being started in the background
-      #echo "Waiting 60 seconds before trying to download Azure Cosmos Emulator SSL certificate ..."
-      #sleep 60
+      # Print the background process output to see whether there are any errors
+      if [ -f "./nohup.out" ]; then
+          echo "--- BEGIN CONTENTS OF NOHUP.OUT ---"
+          cat ./nohup.out
+          echo "--- END CONTENTS OF NOHUP.OUT ---"
+      fi
 
-      ## Print the background process output to see whether there are any errors
-      #if [ -f "./nohup.out" ]; then
-      #    echo "--- BEGIN CONTENTS OF NOHUP.OUT ---"
-      #    cat ./nohup.out
-      #    echo "--- END CONTENTS OF NOHUP.OUT ---"
-      #fi
-
-      ## Install SSL certificate to be able to access the emulator
-      #echo "Installing Azure Cosmos Emulator SSL certificate ..."
-      #sudo bash ./install-azure-cosmos-emulator-linux-certificates.sh
+      # Install SSL certificate to be able to access the emulator
+      echo "Installing Azure Cosmos Emulator SSL certificate ..."
+      sudo bash ./install-azure-cosmos-emulator-linux-certificates.sh
 
 build_script:
 - pwsh: |

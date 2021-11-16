@@ -1,10 +1,14 @@
 #!/bin/bash
 
-# Determine the IP address of the local machine.
-# This step is required when Direct mode setting is configured using Cosmos DB SDKs.
-ipaddr="`ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}' | head -n 1`"
+# Run the Docker image that was previously pulled from the Docker repository, creating a container called
+# "azure-cosmos-emulator-linux". Do not (!) set
+#
+#   AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=$ipaddr
+#
+# as suggested in Microsoft's documentation at https://docs.microsoft.com/en-us/azure/cosmos-db/linux-emulator.
+# We would not be able to connect to the emulator at all on appveyor, regardless of the connection mode.
+# To connect to the emulator, we must use Gateway mode. Direct mode will not work.
 
-# Run the image, creating a container called "azure-cosmos-emulator-linux".
 docker run \
   -p 8081:8081 \
   -p 10251:10251 \
@@ -16,5 +20,4 @@ docker run \
   --name=azure-cosmos-emulator-linux \
   -e AZURE_COSMOS_EMULATOR_PARTITION_COUNT=3 \
   -e AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE=true \
-  -e AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=$ipaddr \
   mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator

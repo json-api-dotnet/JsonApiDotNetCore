@@ -102,15 +102,8 @@ CheckLastExitCode
 RunInspectCode
 RunCleanupCode
 
-# Owing to issues with the Azure Cosmos Emulator for Linux on appveyor, do not run the CosmosDbTests on Linux
-if ($isLinux) {
-    dotnet test --filter 'FullyQualifiedName!~CosmosDbTests' -c Release --no-build --collect:"XPlat Code Coverage"
-    CheckLastExitCode
-}
-else {
-    dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
-    CheckLastExitCode
-}
+dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
+CheckLastExitCode
 
 ReportCodeCoverage
 
