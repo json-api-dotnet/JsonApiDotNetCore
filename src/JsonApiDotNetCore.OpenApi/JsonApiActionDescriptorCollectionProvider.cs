@@ -102,16 +102,24 @@ namespace JsonApiDotNetCore.OpenApi
         {
             if (ProducesJsonApiResponseBody(endpoint))
             {
-                var producesResponse = endpoint.GetFilterMetadata<ProducesResponseTypeAttribute>()!;
-                producesResponse.Type = responseTypeToSet;
+                var producesResponse = endpoint.GetFilterMetadata<ProducesResponseTypeAttribute>();
+
+                if (producesResponse != null)
+                {
+                    producesResponse.Type = responseTypeToSet;
+                    
+                    return;
+                }
             }
+
+            throw new UnreachableCodeException();
         }
 
         private static bool ProducesJsonApiResponseBody(ActionDescriptor endpoint)
         {
-            var produces = endpoint.GetFilterMetadata<ProducesAttribute>()!;
+            var produces = endpoint.GetFilterMetadata<ProducesAttribute>();
 
-            return produces.ContentTypes.Any(contentType => contentType == HeaderConstants.MediaType);
+            return produces != null && produces.ContentTypes.Any(contentType => contentType == HeaderConstants.MediaType);
         }
 
         private static IList<ActionDescriptor> Expand(ActionDescriptor genericEndpoint, ExpansibleEndpointMetadata metadata,
@@ -123,7 +131,13 @@ namespace JsonApiDotNetCore.OpenApi
             {
                 ActionDescriptor expandedEndpoint = Clone(genericEndpoint);
                 RemovePathParameter(expandedEndpoint.Parameters, JsonApiPathParameter.RelationshipName);
-                ExpandTemplate(expandedEndpoint.AttributeRouteInfo!, relationshipName);
+
+                if (expandedEndpoint.AttributeRouteInfo == null)
+                {
+                    throw new NotSupportedException("Only attribute based routing is supported for JsonApiDotNetCore endpoints");
+                }
+
+                ExpandTemplate(expandedEndpoint.AttributeRouteInfo, relationshipName);
 
                 expansionCallback(expandedEndpoint, relationshipType, relationshipName);
 
@@ -135,7 +149,14 @@ namespace JsonApiDotNetCore.OpenApi
 
         private static void UpdateBodyParameterDescriptor(ActionDescriptor endpoint, Type bodyType, string? parameterName = null)
         {
-            ControllerParameterDescriptor requestBodyDescriptor = endpoint.GetBodyParameterDescriptor()!;
+            ControllerParameterDescriptor? requestBodyDescriptor = endpoint.GetBodyParameterDescriptor();
+
+            if (requestBodyDescriptor == null)
+            {
+                // ASP.NET model binding picks up on [FromBody] in base classes, so even when it is left out in an override, this should not be reachable.
+                throw new UnreachableCodeException();
+            }
+
             requestBodyDescriptor.ParameterType = bodyType;
             ParameterInfo replacementParameterInfo = requestBodyDescriptor.ParameterInfo.WithParameterType(bodyType);
 

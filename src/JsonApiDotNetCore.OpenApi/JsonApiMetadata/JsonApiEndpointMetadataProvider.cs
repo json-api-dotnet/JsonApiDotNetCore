@@ -40,13 +40,16 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
                 throw new NotSupportedException($"Unable to provide metadata for non-JsonApiDotNetCore endpoint '{controllerAction.ReflectedType!.FullName}'.");
             }
 
-            ResourceType primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(controllerAction.ReflectedType)!;
+            ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(controllerAction.ReflectedType);
 
-            return new JsonApiEndpointMetadataContainer
+            if (primaryResourceType == null)
             {
-                RequestMetadata = GetRequestMetadata(endpoint.Value, primaryResourceType.ClrType),
-                ResponseMetadata = GetResponseMetadata(endpoint.Value, primaryResourceType.ClrType)
-            };
+                throw new UnreachableCodeException();
+            }
+
+            IJsonApiRequestMetadata? requestMetadata = GetRequestMetadata(endpoint.Value, primaryResourceType.ClrType);
+            IJsonApiResponseMetadata? responseMetadata = GetResponseMetadata(endpoint.Value, primaryResourceType.ClrType);
+            return new JsonApiEndpointMetadataContainer(requestMetadata, responseMetadata);
         }
 
         private IJsonApiRequestMetadata? GetRequestMetadata(JsonApiEndpoint endpoint, Type primaryResourceType)

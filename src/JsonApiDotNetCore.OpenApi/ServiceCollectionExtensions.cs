@@ -93,7 +93,12 @@ namespace JsonApiDotNetCore.OpenApi
         private static IList<string> GetOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping)
         {
             MethodInfo actionMethod = description.ActionDescriptor.GetActionMethod();
-            ResourceType resourceType = controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType)!;
+            ResourceType? resourceType = controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
+
+            if (resourceType == null)
+            {
+                throw new NotSupportedException("Only JsonApiDotNetCore endpoints are supported.");
+            }
 
             return new[]
             {

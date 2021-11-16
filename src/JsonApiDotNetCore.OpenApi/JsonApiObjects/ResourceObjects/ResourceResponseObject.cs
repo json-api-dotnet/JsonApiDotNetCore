@@ -4,8 +4,6 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Links;
 using JsonApiDotNetCore.Resources;
 
-#pragma warning disable 8618 // Non-nullable member is uninitialized.
-
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
@@ -13,8 +11,8 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects
         where TResource : IIdentifiable
     {
         [Required]
-        public LinksInResourceObject Links { get; set; }
+        public LinksInResourceObject Links { get; set; } = null!;
 
-        public IDictionary<string, object> Meta { get; set; }
+        public IDictionary<string, object> Meta { get; set; } = null!;
     }
 }

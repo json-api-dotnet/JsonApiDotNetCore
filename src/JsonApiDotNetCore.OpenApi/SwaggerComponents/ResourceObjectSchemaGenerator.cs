@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
             RemoveResourceIdIfPostResourceObject(resourceTypeInfo.ResourceObjectOpenType, fullSchemaForResourceObject);
 
-            SetResourceType(fullSchemaForResourceObject, resourceTypeInfo.ResourceClrType);
+            SetResourceType(fullSchemaForResourceObject, resourceTypeInfo.ResourceType.ClrType);
 
             SetResourceAttributes(fullSchemaForResourceObject, fieldObjectBuilder);
 

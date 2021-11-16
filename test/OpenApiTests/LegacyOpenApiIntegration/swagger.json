@@ -2066,7 +2066,6 @@
       "flight-attendant-attributes-in-post-request": {
         "required": [
           "email-address",
-          "age",
           "profile-image-url"
         ],
         "type": "object",
@@ -2446,8 +2445,7 @@
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "nullable": true
+            }
           }
         },
         "additionalProperties": false

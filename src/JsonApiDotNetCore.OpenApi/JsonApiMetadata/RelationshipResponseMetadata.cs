@@ -9,6 +9,8 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
 
         public RelationshipResponseMetadata(IDictionary<string, Type> responseTypesByRelationshipName)
         {
+            ArgumentGuard.NotNull(responseTypesByRelationshipName, nameof(responseTypesByRelationshipName));
+
             ExpansionElements = responseTypesByRelationshipName;
         }
     }

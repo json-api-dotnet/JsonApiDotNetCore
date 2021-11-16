@@ -51,8 +51,13 @@ namespace JsonApiDotNetCore.OpenApi
         {
             ArgumentGuard.NotNull(endpoint, nameof(endpoint));
 
-            ResourceType primaryResourceType =
-                _controllerResourceMapping.GetResourceTypeForController(endpoint.ActionDescriptor.GetActionMethod().ReflectedType)!;
+            ResourceType? primaryResourceType =
+                _controllerResourceMapping.GetResourceTypeForController(endpoint.ActionDescriptor.GetActionMethod().ReflectedType);
+
+            if (primaryResourceType == null)
+            {
+                throw new UnreachableCodeException();
+            }
 
             string template = GetTemplate(primaryResourceType.ClrType, endpoint);
 
@@ -68,11 +73,17 @@ namespace JsonApiDotNetCore.OpenApi
 
         private static Type GetDocumentType(Type primaryResourceType, ApiDescription endpoint)
         {
-            var producesResponseTypeAttribute = endpoint.ActionDescriptor.GetFilterMetadata<ProducesResponseTypeAttribute>()!;
+            var producesResponseTypeAttribute = endpoint.ActionDescriptor.GetFilterMetadata<ProducesResponseTypeAttribute>();
+
+            if (producesResponseTypeAttribute == null)
+            {
+                throw new UnreachableCodeException();
+            }
+
             ControllerParameterDescriptor? requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
 
             Type documentType = requestBodyDescriptor?.ParameterType.GetGenericTypeDefinition() ??
-                GetGenericTypeDefinitionOrDefault(producesResponseTypeAttribute.Type) ?? producesResponseTypeAttribute.Type;
+                GetGenericTypeDefinition(producesResponseTypeAttribute.Type) ?? producesResponseTypeAttribute.Type;
 
             if (documentType == typeof(ResourceCollectionResponseDocument<>))
             {
@@ -87,7 +98,7 @@ namespace JsonApiDotNetCore.OpenApi
             return documentType;
         }
 
-        private static Type? GetGenericTypeDefinitionOrDefault(Type type)
+        private static Type? GetGenericTypeDefinition(Type type)
         {
             return type.IsConstructedGenericType ? type.GetGenericTypeDefinition() : null;
         }

@@ -8,6 +8,8 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
 
         public PrimaryRequestMetadata(Type type)
         {
+            ArgumentGuard.NotNull(type, nameof(type));
+
             Type = type;
         }
     }

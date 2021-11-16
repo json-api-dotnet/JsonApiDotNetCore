@@ -32,7 +32,8 @@ namespace JsonApiDotNetCore.OpenApi
             ArgumentGuard.NotNull(descriptor, nameof(descriptor));
 
             return (ControllerParameterDescriptor?)descriptor.Parameters.FirstOrDefault(parameterDescriptor =>
-                // ReSharper disable once ConstantConditionalAccessQualifier        Motivation: see https://github.com/dotnet/aspnetcore/issues/32538
+                // ReSharper disable once ConstantConditionalAccessQualifier
+                // Justification: see https://github.com/dotnet/aspnetcore/issues/32538
                 parameterDescriptor.BindingInfo?.BindingSource == BindingSource.Body);
         }
     }

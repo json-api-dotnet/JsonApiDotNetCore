@@ -18,15 +18,13 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         [Attr(Capabilities = AttrCapabilities.All)]
         [Required]
         [EmailAddress]
-        public string EmailAddress { get; set; } = null!;
+        public string? EmailAddress { get; set; }
 
         [Attr(Capabilities = AttrCapabilities.All)]
-        [Required]
         [Range(18, 75)]
         public int Age { get; set; }
 
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate)]
-        [Required]
         [Url]
         public string ProfileImageUrl { get; set; } = null!;
 
@@ -34,9 +32,9 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         public long DistanceTraveledInKilometers { get; set; }
 
         [HasMany]
-        public ISet<Flight> ScheduledForFlights { get; set; } = null!;
+        public ISet<Flight> ScheduledForFlights { get; set; } = new HashSet<Flight>();
 
         [HasMany]
-        public ISet<Flight> PurserOnFlights { get; set; } = null!;
+        public ISet<Flight> PurserOnFlights { get; set; } = new HashSet<Flight>();
     }
 }

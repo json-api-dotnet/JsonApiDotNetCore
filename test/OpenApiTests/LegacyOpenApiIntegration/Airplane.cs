@@ -11,7 +11,6 @@ namespace OpenApiTests.LegacyOpenApiIntegration
     public sealed class Airplane : Identifiable<string>
     {
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
-        [Required]
         [MaxLength(255)]
         public string Name { get; set; } = null!;
 
@@ -39,6 +38,6 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         public AircraftKind Kind { get; set; }
 
         [HasMany]
-        public ISet<Flight> Flights { get; set; } = null!;
+        public ISet<Flight> Flights { get; set; } = new HashSet<Flight>();
     }
 }

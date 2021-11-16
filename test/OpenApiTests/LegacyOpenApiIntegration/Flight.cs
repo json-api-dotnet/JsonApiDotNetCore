@@ -12,7 +12,6 @@ namespace OpenApiTests.LegacyOpenApiIntegration
     public sealed class Flight : Identifiable<string>
     {
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
-        [Required]
         [MaxLength(40)]
         public string FinalDestination { get; set; } = null!;
 
@@ -30,16 +29,16 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         public DateTime? ArrivesAt { get; set; }
 
         [HasMany]
-        public ISet<FlightAttendant> CabinCrewMembers { get; set; } = null!;
+        public ISet<FlightAttendant> CabinCrewMembers { get; set; } = new HashSet<FlightAttendant>();
 
         [HasOne]
         public FlightAttendant Purser { get; set; } = null!;
 
         [Attr]
         [NotMapped]
-        public ICollection<string>? ServicesOnBoard { get; set; }
+        public ICollection<string> ServicesOnBoard { get; set; } = null!;
 
         [HasMany]
-        public ICollection<Passenger> Passengers { get; set; } = null!;
+        public ICollection<Passenger> Passengers { get; set; } = new HashSet<Passenger>();
     }
 }

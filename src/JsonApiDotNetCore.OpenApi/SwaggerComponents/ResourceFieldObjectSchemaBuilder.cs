@@ -44,9 +44,9 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
         private IDictionary<string, OpenApiSchema> GetFieldSchemas()
         {
-            if (!ResourceSchemaRepository.TryLookupByType(_resourceTypeInfo.ResourceClrType, out OpenApiSchema referenceSchemaForResource))
+            if (!ResourceSchemaRepository.TryLookupByType(_resourceTypeInfo.ResourceType.ClrType, out OpenApiSchema referenceSchemaForResource))
             {
-                referenceSchemaForResource = _defaultSchemaGenerator.GenerateSchema(_resourceTypeInfo.ResourceClrType, ResourceSchemaRepository);
+                referenceSchemaForResource = _defaultSchemaGenerator.GenerateSchema(_resourceTypeInfo.ResourceType.ClrType, ResourceSchemaRepository);
             }
 
             OpenApiSchema fullSchemaForResource = ResourceSchemaRepository.Schemas[referenceSchemaForResource.Reference.Id];
@@ -77,15 +77,23 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
             foreach ((string fieldName, OpenApiSchema resourceFieldSchema) in _schemasForResourceFields)
             {
-                var matchingAttribute = _resourceTypeInfo.FindResourceFieldByName<AttrAttribute>(fieldName);
+                AttrAttribute? matchingAttribute = _resourceTypeInfo.ResourceType.FindAttributeByPublicName(fieldName);
 
                 if (matchingAttribute != null && matchingAttribute.Capabilities.HasFlag(requiredCapability))
                 {
                     AddAttributeSchemaToResourceObject(matchingAttribute, fullSchemaForAttributesObject, resourceFieldSchema);
 
-                    if (IsAttributeRequired(_resourceTypeInfo.ResourceObjectOpenType, matchingAttribute))
+                    DataTypeClass propertyDataTypeClass = matchingAttribute.Property.ResolveDataType();
+                    bool hasRequiredAttribute = matchingAttribute.Property.GetCustomAttribute<RequiredAttribute>() != null;
+
+                    resourceFieldSchema.Nullable = IsAttributeNullable(propertyDataTypeClass, hasRequiredAttribute);
+
+                    if (_resourceTypeInfo.ResourceObjectOpenType == typeof(ResourcePostRequestObject<>))
                     {
-                        fullSchemaForAttributesObject.Required.Add(matchingAttribute.PublicName);
+                        if (IsAttributeRequired(propertyDataTypeClass, hasRequiredAttribute))
+                        {
+                            fullSchemaForAttributesObject.Required.Add(matchingAttribute.PublicName);
+                        }
                     }
                 }
             }
@@ -108,16 +116,32 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             attributesObjectSchema.Properties.Add(attribute.PublicName, resourceAttributeSchema);
         }
 
+        private static bool IsAttributeNullable(DataTypeClass dataTypeClass, bool hasRequiredAttribute)
+        {
+            return dataTypeClass switch
+            {
+                DataTypeClass.NonNullableReferenceType or DataTypeClass.ValueType => false,
+                DataTypeClass.NullableReferenceType or DataTypeClass.NullableValueType => !hasRequiredAttribute,
+                _ => throw new UnreachableCodeException()
+            };
+        }
+
+        private static bool IsAttributeRequired(DataTypeClass dataTypeClass, bool hasRequiredAttribute)
+        {
+            return dataTypeClass switch
+            {
+                DataTypeClass.NonNullableReferenceType => true,
+                DataTypeClass.ValueType => hasRequiredAttribute,
+                DataTypeClass.NullableReferenceType or DataTypeClass.NullableValueType => hasRequiredAttribute,
+                _ => throw new UnreachableCodeException()
+            };
+        }
+
         private void ExposeSchema(OpenApiReference openApiReference, Type typeRepresentedBySchema)
         {
             OpenApiSchema fullSchema = ResourceSchemaRepository.Schemas[openApiReference.Id];
             _schemaRepositoryAccessor.Current.AddDefinition(openApiReference.Id, fullSchema);
             _schemaRepositoryAccessor.Current.RegisterType(typeRepresentedBySchema, openApiReference.Id);
-        }
-
-        private static bool IsAttributeRequired(Type resourceObjectOpenType, AttrAttribute matchingAttribute)
-        {
-            return resourceObjectOpenType == typeof(ResourcePostRequestObject<>) && matchingAttribute.Property.GetCustomAttribute<RequiredAttribute>() != null;
         }
 
         private OpenApiSchema GetReferenceSchemaForFieldObject(OpenApiSchema fullSchema, string fieldObjectName)
@@ -151,7 +175,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
         {
             foreach (string fieldName in _schemasForResourceFields.Keys)
             {
-                var matchingRelationship = _resourceTypeInfo.FindResourceFieldByName<RelationshipAttribute>(fieldName);
+                RelationshipAttribute? matchingRelationship = _resourceTypeInfo.ResourceType.FindRelationshipByPublicName(fieldName);
 
                 if (matchingRelationship != null)
                 {

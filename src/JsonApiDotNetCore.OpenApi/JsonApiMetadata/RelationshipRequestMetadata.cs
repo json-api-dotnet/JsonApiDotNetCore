@@ -9,6 +9,8 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
 
         public RelationshipRequestMetadata(IDictionary<string, Type> requestBodyTypeByRelationshipName)
         {
+            ArgumentGuard.NotNull(requestBodyTypeByRelationshipName, nameof(requestBodyTypeByRelationshipName));
+
             ExpansionElements = requestBodyTypeByRelationshipName;
         }
     }
