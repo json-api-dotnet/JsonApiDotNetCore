@@ -42,9 +42,6 @@ namespace CosmosDbExample
                     {
                         builder.ConnectionMode(ConnectionMode.Gateway);
                         builder.LimitToEndpoint();
-
-                        // Fail fast!
-                        builder.RequestTimeout(TimeSpan.FromSeconds(10));
                     });
 #if DEBUG
                     options.EnableSensitiveDataLogging();
