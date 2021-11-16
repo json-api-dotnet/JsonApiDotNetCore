@@ -6,10 +6,13 @@ using JsonApiDotNetCore.Diagnostics;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
+#pragma warning disable AV2310 // Code block should not contain inline comment
 
 namespace CosmosDbExample
 {
@@ -35,7 +38,14 @@ namespace CosmosDbExample
 
                 services.AddDbContext<AppDbContext>(options =>
                 {
-                    options.UseCosmos(_connectionString, "TodoItemDB");
+                    options.UseCosmos(_connectionString, "TodoItemDB", builder =>
+                    {
+                        builder.ConnectionMode(ConnectionMode.Gateway);
+                        builder.LimitToEndpoint();
+
+                        // Fail fast!
+                        builder.RequestTimeout(TimeSpan.FromSeconds(10));
+                    });
 #if DEBUG
                     options.EnableSensitiveDataLogging();
                     options.EnableDetailedErrors();
