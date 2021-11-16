@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Queries
         /// Builds a query that retrieves the primary resource, including all of its attributes and all targeted relationships, during a create/update/delete
         /// request.
         /// </summary>
-        QueryLayer ComposeForUpdate<TId>(TId id, ResourceType primaryResource);
+        QueryLayer ComposeForUpdate<TId>(TId id, ResourceType primaryResourceType);
 
         /// <summary>
         /// Builds a query for each targeted relationship with a filter to match on its right resource IDs.

@@ -211,12 +211,12 @@ namespace JsonApiDotNetCore.Serialization.Response
             return resourceObject;
         }
 
-        protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType resourceType,
+        protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType type,
             IImmutableSet<ResourceFieldAttribute> fieldSet)
         {
-            var attrMap = new Dictionary<string, object?>(resourceType.Attributes.Count);
+            var attrMap = new Dictionary<string, object?>(type.Attributes.Count);
 
-            foreach (AttrAttribute attr in resourceType.Attributes)
+            foreach (AttrAttribute attr in type.Attributes)
             {
                 if (!fieldSet.Contains(attr) || attr.Property.Name == nameof(Identifiable<object>.Id))
                 {

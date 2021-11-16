@@ -30,14 +30,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             var builder = new StringBuilder();
 
-            foreach ((ResourceType resource, SparseFieldSetExpression fields) in Table)
+            foreach ((ResourceType resourceType, SparseFieldSetExpression fields) in Table)
             {
                 if (builder.Length > 0)
                 {
                     builder.Append(',');
                 }
 
-                builder.Append(resource.PublicName);
+                builder.Append(resourceType.PublicName);
                 builder.Append('(');
                 builder.Append(fields);
                 builder.Append(')');

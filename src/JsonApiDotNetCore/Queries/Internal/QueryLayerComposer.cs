@@ -382,16 +382,16 @@ namespace JsonApiDotNetCore.Queries.Internal
         }
 
         /// <inheritdoc />
-        public QueryLayer ComposeForUpdate<TId>(TId id, ResourceType primaryResource)
+        public QueryLayer ComposeForUpdate<TId>(TId id, ResourceType primaryResourceType)
         {
-            ArgumentGuard.NotNull(primaryResource, nameof(primaryResource));
+            ArgumentGuard.NotNull(primaryResourceType, nameof(primaryResourceType));
 
             IImmutableSet<IncludeElementExpression> includeElements = _targetedFields.Relationships
                 .Select(relationship => new IncludeElementExpression(relationship)).ToImmutableHashSet();
 
-            AttrAttribute primaryIdAttribute = GetIdAttribute(primaryResource);
+            AttrAttribute primaryIdAttribute = GetIdAttribute(primaryResourceType);
 
-            QueryLayer primaryLayer = ComposeTopLayer(Array.Empty<ExpressionInScope>(), primaryResource);
+            QueryLayer primaryLayer = ComposeTopLayer(Array.Empty<ExpressionInScope>(), primaryResourceType);
             primaryLayer.Include = includeElements.Any() ? new IncludeExpression(includeElements) : IncludeExpression.Empty;
             primaryLayer.Sort = null;
             primaryLayer.Pagination = null;
