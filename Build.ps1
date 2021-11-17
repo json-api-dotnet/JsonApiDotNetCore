@@ -47,7 +47,7 @@ function RunCleanupCode {
         $mergeCommitHash = git rev-parse "HEAD"
         $targetCommitHash = git rev-parse "$env:APPVEYOR_REPO_BRANCH"
 
-        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --jb --profile --jb --profile='\"JADNC Full Cleanup\"' --jb --properties:Configuration=Release --jb --verbosity=WARN --jb -dsl=GlobalAll --jb -dsl=GlobalPerProduct --jb -dsl=SolutionPersonal --jb -dsl=ProjectPersonal -f commits -a $mergeCommitHash -b $targetCommitHash --fail-on-diff --print-diff
+        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --disable-jb-path-hack --jb --profile='\"JADNC Full Cleanup\"' --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $mergeCommitHash -b $targetCommitHash --fail-on-diff --print-diff
         CheckLastExitCode
     }
 }
