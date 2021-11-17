@@ -14,8 +14,7 @@ namespace JsonApiDotNetCore
         public static void NotNull<T>([NoEnumeration] [SysNotNull] T? value, [InvokerParameterName] string name)
             where T : class
         {
-            if (value is null)
-            {
+if (value is null)
                 throw new ArgumentNullException(name);
             }
         }
