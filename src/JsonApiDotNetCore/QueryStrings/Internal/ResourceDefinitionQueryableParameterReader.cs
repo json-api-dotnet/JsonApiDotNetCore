@@ -19,6 +19,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly List<ExpressionInScope> _constraints = new();
 
+        public bool AllowEmptyValue => false;
+
         public ResourceDefinitionQueryableParameterReader(IJsonApiRequest request, IResourceDefinitionAccessor resourceDefinitionAccessor)
         {
             ArgumentGuard.NotNull(request, nameof(request));

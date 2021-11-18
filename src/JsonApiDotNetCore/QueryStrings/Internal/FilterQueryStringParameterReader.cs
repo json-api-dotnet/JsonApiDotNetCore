@@ -29,6 +29,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private string? _lastParameterName;
 
+        public bool AllowEmptyValue => false;
+
         public FilterQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
             IJsonApiOptions options)
             : base(request, resourceGraph)
