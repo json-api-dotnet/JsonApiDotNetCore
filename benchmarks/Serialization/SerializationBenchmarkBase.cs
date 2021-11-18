@@ -40,7 +40,7 @@ namespace Benchmarks.Serialization
                 }
             };
 
-            ResourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<OutgoingResource>().Build();
+            ResourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<OutgoingResource, int>().Build();
             SerializerWriteOptions = ((IJsonApiOptions)options).SerializerWriteOptions;
 
             // ReSharper disable VirtualMemberCallInConstructor

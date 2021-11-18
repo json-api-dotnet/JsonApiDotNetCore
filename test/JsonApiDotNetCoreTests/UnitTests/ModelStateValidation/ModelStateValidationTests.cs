@@ -39,7 +39,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ModelStateValidation
         {
             // Arrange
             var options = new JsonApiOptions();
-            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Parent>().Add<Child>().Build();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Parent, int>().Add<Child, int>().Build();
 
             var modelState = new ModelStateDictionary();
             modelState.AddModelError(modelStateKey, "(ignored error message)");
@@ -87,7 +87,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ModelStateValidation
         {
             // Arrange
             var options = new JsonApiOptions();
-            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Parent>().Add<Child>().Build();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Parent, int>().Add<Child, int>().Build();
 
             var modelState = new ModelStateDictionary();
             modelState.AddModelError(modelStateKey, "(ignored error message)");

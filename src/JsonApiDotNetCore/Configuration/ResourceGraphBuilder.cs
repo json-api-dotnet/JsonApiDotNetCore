@@ -87,22 +87,6 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Adds a JSON:API resource with <code>int</code> as the identifier CLR type.
-        /// </summary>
-        /// <typeparam name="TResource">
-        /// The resource CLR type.
-        /// </typeparam>
-        /// <param name="publicName">
-        /// The name under which the resource is publicly exposed by the API. If nothing is specified, the naming convention is applied on the pluralized CLR
-        /// type name.
-        /// </param>
-        public ResourceGraphBuilder Add<TResource>(string? publicName = null)
-            where TResource : class, IIdentifiable<int>
-        {
-            return Add<TResource, int>(publicName);
-        }
-
-        /// <summary>
         /// Adds a JSON:API resource.
         /// </summary>
         /// <typeparam name="TResource">

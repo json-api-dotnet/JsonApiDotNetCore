@@ -556,11 +556,11 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response
             // @formatter:keep_existing_linebreaks true
 
             IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
-                .Add<Article>()
-                .Add<Person>()
-                .Add<Blog>()
-                .Add<Food>()
-                .Add<Song>()
+                .Add<Article, int>()
+                .Add<Person, int>()
+                .Add<Blog, int>()
+                .Add<Food, int>()
+                .Add<Song, int>()
                 .Build();
 
             // @formatter:wrap_chained_method_calls restore
