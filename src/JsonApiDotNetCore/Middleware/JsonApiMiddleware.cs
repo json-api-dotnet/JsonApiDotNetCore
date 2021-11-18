@@ -134,7 +134,7 @@ namespace JsonApiDotNetCore.Middleware
         private static async Task<bool> ValidateContentTypeHeaderAsync(string allowedContentType, HttpContext httpContext,
             JsonSerializerOptions serializerOptions)
         {
-            string contentType = httpContext.Request.ContentType;
+            string? contentType = httpContext.Request.ContentType;
 
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             // Justification: Workaround for https://github.com/dotnet/aspnetcore/issues/32097 (fixed in .NET 6)

@@ -412,7 +412,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
                 return "https://domain.com/some/path";
             }
 
-            public override string GetUriByAddress<TAddress>(TAddress address, RouteValueDictionary values, string scheme, HostString host,
+            public override string GetUriByAddress<TAddress>(TAddress address, RouteValueDictionary values, string? scheme, HostString host,
                 PathString pathBase = new(), FragmentString fragment = new(), LinkOptions? options = null)
             {
                 throw new NotImplementedException();

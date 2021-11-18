@@ -257,7 +257,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             return _options.ResourceLinks.HasFlag(linkType);
         }
 
-        private string GetLinkForResourceSelf(ResourceType resourceType, string resourceId)
+        private string? GetLinkForResourceSelf(ResourceType resourceType, string resourceId)
         {
             string? controllerName = _controllerResourceMapping.GetControllerNameForResourceType(resourceType);
             IDictionary<string, object?> routeValues = GetRouteValues(resourceId, null);
@@ -286,7 +286,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             return links.HasValue() ? links : null;
         }
 
-        private string GetLinkForRelationshipSelf(string leftId, RelationshipAttribute relationship)
+        private string? GetLinkForRelationshipSelf(string leftId, RelationshipAttribute relationship)
         {
             string? controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
             IDictionary<string, object?> routeValues = GetRouteValues(leftId, relationship.PublicName);
@@ -294,7 +294,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             return RenderLinkForAction(controllerName, GetRelationshipControllerActionName, routeValues);
         }
 
-        private string GetLinkForRelationshipRelated(string leftId, RelationshipAttribute relationship)
+        private string? GetLinkForRelationshipRelated(string leftId, RelationshipAttribute relationship)
         {
             string? controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
             IDictionary<string, object?> routeValues = GetRouteValues(leftId, relationship.PublicName);
@@ -315,11 +315,11 @@ namespace JsonApiDotNetCore.Serialization.Response
             return routeValues;
         }
 
-        protected virtual string RenderLinkForAction(string? controllerName, string actionName, IDictionary<string, object?> routeValues)
+        protected virtual string? RenderLinkForAction(string? controllerName, string actionName, IDictionary<string, object?> routeValues)
         {
             return _options.UseRelativeLinks
-                ? _linkGenerator.GetPathByAction(_httpContextAccessor.HttpContext, actionName, controllerName, routeValues)
-                : _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext, actionName, controllerName, routeValues);
+                ? _linkGenerator.GetPathByAction(HttpContext, actionName, controllerName, routeValues)
+                : _linkGenerator.GetUriByAction(HttpContext, actionName, controllerName, routeValues);
         }
 
         /// <summary>

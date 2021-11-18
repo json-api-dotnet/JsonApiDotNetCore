@@ -379,7 +379,7 @@ namespace JsonApiDotNetCore.Repositories
 
         private INavigation? GetNavigation(RelationshipAttribute relationship)
         {
-            IEntityType entityType = _dbContext.Model.FindEntityType(typeof(TResource));
+            IEntityType? entityType = _dbContext.Model.FindEntityType(typeof(TResource));
             return entityType?.FindNavigation(relationship.Property.Name);
         }
 
