@@ -89,13 +89,16 @@ public class Startup
 The following chart should help you pick the best version, based on your environment.
 See also our [versioning policy](./VERSIONING_POLICY.md).
 
-| .NET version | Entity Framework Core version | JsonApiDotNetCore version |
-| ------------ | ----------------------------- | ------------------------- |
-| Core 2.x     | 2.x                           | 3.x                       |
-| Core 3.1     | 3.1                           | 4.x                       |
-| Core 3.1     | 5                             | 4.x                       |
-| 5            | 5                             | 4.x or 5.x                |
-| 6            | 6                             | 5.x                       |
+| JsonApiDotNetCore | .NET     | Entity Framework Core | Status                     |
+| ----------------- | -------- | --------------------- | -------------------------- |
+| 3.x               | Core 2.x | 2.x                   | Released                   |
+| 4.x               | Core 3.1 | 3.1                   | Released                   |
+|                   | Core 3.1 | 5                     |                            |
+|                   | 5        | 5                     |                            |
+|                   | 6        | 5                     |                            |
+| v5.x (pending)    | 5        | 5                     | On AppVeyor, to-be-dropped |
+|                   | 6        | 5                     | On AppVeyor, to-be-dropped |
+|                   | 6        | 6                     | Requires build from master |
 
 ## Contributing
 
