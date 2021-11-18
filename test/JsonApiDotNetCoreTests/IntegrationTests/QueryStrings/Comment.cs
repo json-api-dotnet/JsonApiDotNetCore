@@ -15,7 +15,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
         public DateTime CreatedAt { get; set; }
 
         [HasOne]
-        public WebAccount Author { get; set; } = null!;
+        public WebAccount? Author { get; set; }
 
         [HasOne]
         public BlogPost Parent { get; set; } = null!;

@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
         public IList<BlogPost> Posts { get; set; } = new List<BlogPost>();
 
         [HasOne]
-        public AccountPreferences Preferences { get; set; } = null!;
+        public AccountPreferences? Preferences { get; set; }
 
         [HasMany]
         public IList<LoginAttempt> LoginAttempts { get; set; } = new List<LoginAttempt>();

@@ -18,6 +18,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
         public IList<Student> Participants { get; set; } = new List<Student>();
 
         [HasOne]
-        public Student PrimaryContact { get; set; } = null!;
+        public Student? PrimaryContact { get; set; }
     }
 }
