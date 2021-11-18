@@ -1,6 +1,6 @@
 image:
   - Ubuntu
-  - Visual Studio 2019
+  - Visual Studio 2022
 
 version: '{build}'
 
@@ -32,7 +32,7 @@ for:
 -
   matrix:
     only:
-    - image: Visual Studio 2019
+    - image: Visual Studio 2022
   services:
   - postgresql13
   # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
