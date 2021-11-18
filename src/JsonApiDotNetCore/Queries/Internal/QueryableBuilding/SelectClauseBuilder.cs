@@ -128,8 +128,6 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
                 {
                     propertySelectors[propertySelector.Property] = propertySelector;
                 }
-
-                propertySelectors[propertySelector.Property] = propertySelector;
             }
 
             return propertySelectors.Values;
