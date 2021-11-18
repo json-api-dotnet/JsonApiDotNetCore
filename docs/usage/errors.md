@@ -10,7 +10,7 @@ From a controller method:
 return Conflict(new Error(HttpStatusCode.Conflict)
 {
     Title = "Target resource was modified by another user.",
-    Detail = $"User {userName} changed the {resourceField} field on the {resourceName} resource."
+    Detail = $"User {userName} changed the {resourceField} field on {resourceName} resource."
 });
 ```
 
@@ -20,7 +20,7 @@ From other code:
 throw new JsonApiException(new Error(HttpStatusCode.Conflict)
 {
     Title = "Target resource was modified by another user.",
-    Detail = $"User {userName} changed the {resourceField} field on the {resourceName} resource."
+    Detail = $"User {userName} changed the {resourceField} field on {resourceName} resource."
 });
 ```
 
@@ -69,18 +69,22 @@ public class CustomExceptionHandler : ExceptionHandler
         return base.GetLogMessage(exception);
     }
 
-    protected override ErrorDocument CreateErrorDocument(Exception exception)
+    protected override IReadOnlyList<ErrorObject> CreateErrorResponse(Exception exception)
     {
         if (exception is ProductOutOfStockException productOutOfStock)
         {
-            return new ErrorDocument(new Error(HttpStatusCode.Conflict)
+            return new[]
             {
-                Title = "Product is temporarily available.",
-                Detail = $"Product {productOutOfStock.ProductId} cannot be ordered at the moment."
-            });
+                new Error(HttpStatusCode.Conflict)
+                {
+                    Title = "Product is temporarily available.",
+                    Detail = $"Product {productOutOfStock.ProductId} " +
+                        "cannot be ordered at the moment."
+                }
+            };
         }
 
-        return base.CreateErrorDocument(exception);
+        return base.CreateErrorResponse(exception);
     }
 }
 

@@ -19,7 +19,8 @@ public class TodoItemService : JsonApiResourceService<TodoItem, int>
         IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
         IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
         IResourceChangeTracker<TodoItem> resourceChangeTracker,
-        IResourceDefinitionAccessor resourceDefinitionAccessor)
+        IResourceDefinitionAccessor resourceDefinitionAccessor,
+        INotificationService notificationService)
         : base(repositoryAccessor, queryLayerComposer, paginationContext, options,
             loggerFactory, request, resourceChangeTracker, resourceDefinitionAccessor)
     {
@@ -121,7 +122,7 @@ IResourceService
 In order to take advantage of these interfaces you first need to register the service for each implemented interface.
 
 ```c#
-public class ArticleService : ICreateService<Article>, IDeleteService<Article>
+public class ArticleService : ICreateService<Article, int>, IDeleteService<Article, int>
 {
     // ...
 }
@@ -130,8 +131,8 @@ public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddScoped<ICreateService<Article>, ArticleService>();
-        services.AddScoped<IDeleteService<Article>, ArticleService>();
+        services.AddScoped<ICreateService<Article, int>, ArticleService>();
+        services.AddScoped<IDeleteService<Article, int>, ArticleService>();
     }
 }
 ```

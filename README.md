@@ -43,21 +43,23 @@ See [our documentation](https://www.jsonapi.net/) for detailed usage.
 ### Models
 
 ```c#
-public class Article : Identifiable
+#nullable enable
+
+public class Article : Identifiable<int>
 {
     [Attr]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 }
 ```
 
 ### Controllers
 
 ```c#
-public class ArticlesController : JsonApiController<Article>
+public class ArticlesController : JsonApiController<Article, int>
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<Article> resourceService,)
-        : base(options, loggerFactory, resourceService)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService<Article, int> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }

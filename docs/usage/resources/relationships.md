@@ -11,10 +11,12 @@ The left side of a relationship is where the relationship is declared, the right
 This exposes a to-one relationship.
 
 ```c#
+#nullable enable
+
 public class TodoItem : Identifiable<int>
 {
     [HasOne]
-    public Person Owner { get; set; }
+    public Person? Owner { get; set; }
 }
 ```
 
@@ -28,16 +30,18 @@ This means no foreign key column is generated, instead the primary keys point to
 The next example defines that each car requires an engine, while an engine is optionally linked to a car.
 
 ```c#
+#nullable enable
+
 public sealed class Car : Identifiable<int>
 {
     [HasOne]
-    public Engine Engine { get; set; }
+    public Engine Engine { get; set; } = null!;
 }
 
 public sealed class Engine : Identifiable<int>
 {
     [HasOne]
-    public Car Car { get; set; }
+    public Car? Car { get; set; }
 }
 
 public sealed class AppDbContext : DbContext
@@ -106,7 +110,7 @@ This exposes a to-many relationship.
 public class Person : Identifiable<int>
 {
     [HasMany]
-    public ICollection<TodoItem> TodoItems { get; set; }
+    public ICollection<TodoItem> TodoItems { get; set; } = new HashSet<TodoItem>();
 }
 ```
 
@@ -122,6 +126,8 @@ which would expose the relationship to the client the same way as any other `Has
 However, under the covers it would use the join type and Entity Framework Core's APIs to get and set the relationship.
 
 ```c#
+#nullable disable
+
 public class Article : Identifiable<int>
 {
     // tells Entity Framework Core to ignore this property
@@ -146,10 +152,11 @@ There are two ways the exposed relationship name is determined:
 
 2. Individually using the attribute's constructor.
 ```c#
+#nullable enable
 public class TodoItem : Identifiable<int>
 {
     [HasOne(PublicName = "item-owner")]
-    public Person Owner { get; set; }
+    public Person Owner { get; set; } = null!;
 }
 ```
 
@@ -158,10 +165,12 @@ public class TodoItem : Identifiable<int>
 Relationships can be marked to disallow including them using the `?include=` query string parameter. When not allowed, it results in an HTTP 400 response.
 
 ```c#
+#nullable enable
+
 public class TodoItem : Identifiable<int>
 {
     [HasOne(CanInclude: false)]
-    public Person Owner { get; set; }
+    public Person? Owner { get; set; }
 }
 ```
 
@@ -173,25 +182,24 @@ Your resource may expose a calculated property, whose value depends on a related
 So for the calculated property to be evaluated correctly, the related entity must always be retrieved. You can achieve that using `EagerLoad`, for example:
 
 ```c#
+#nullable enable
+
 public class ShippingAddress : Identifiable<int>
 {
     [Attr]
-    public string Street { get; set; }
+    public string Street { get; set; } = null!;
 
     [Attr]
-    public string CountryName
-    {
-        get { return Country.DisplayName; }
-    }
+    public string? CountryName => Country?.DisplayName;
 
     // not exposed as resource, but adds .Include("Country") to the query
     [EagerLoad]
-    public Country Country { get; set; }
+    public Country? Country { get; set; }
 }
 
 public class Country
 {
-    public string IsoCode { get; set; }
-    public string DisplayName { get; set; }
+    public string IsoCode { get; set; } = null!;
+    public string DisplayName { get; set; } = null!;
 }
 ```
