@@ -18,8 +18,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
         {
             _testContext = testContext;
 
-            testContext.UseController<BlockingHttpDeleteController>();
-            testContext.UseController<BlockingWritesController>();
+            testContext.UseController<SofasBlockingSortPageController>();
+            testContext.UseController<PillowsNoSkipCacheController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
         public async Task Cannot_use_custom_query_string_parameter_if_blocked_by_controller()
         {
             // Arrange
-            const string route = "/beds?skipCache";
+            const string route = "/pillows?skipCache";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

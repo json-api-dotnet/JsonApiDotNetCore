@@ -152,30 +152,16 @@ public class Startup
 }
 ```
 
-Then in the controller, you should inherit from the base controller and pass the services into the named, optional base parameters:
+Then in the controller, you should inherit from the JSON:API controller and pass the services into the named, optional base parameters:
 
 ```c#
-public class ArticlesController : BaseJsonApiController<Article, int>
+public class ArticlesController : JsonApiController<Article, int>
 {
     public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
         ILoggerFactory loggerFactory, ICreateService<Article, int> create,
         IDeleteService<Article, int> delete)
         : base(options, resourceGraph, loggerFactory, create: create, delete: delete)
     {
-    }
-
-    [HttpPost]
-    public override async Task<IActionResult> PostAsync([FromBody] Article resource,
-        CancellationToken cancellationToken)
-    {
-        return await base.PostAsync(resource, cancellationToken);
-    }
-
-    [HttpDelete("{id}")]
-    public override async Task<IActionResult>DeleteAsync(int id,
-        CancellationToken cancellationToken)
-    {
-        return await base.DeleteAsync(id, cancellationToken);
     }
 }
 ```

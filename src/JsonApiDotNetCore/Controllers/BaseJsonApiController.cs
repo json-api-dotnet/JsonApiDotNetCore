@@ -95,7 +95,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getAll == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Get);
+                throw new RouteNotAvailableException(HttpMethod.Get, Request.Path);
             }
 
             IReadOnlyCollection<TResource> resources = await _getAll.GetAsync(cancellationToken);
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getById == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Get);
+                throw new RouteNotAvailableException(HttpMethod.Get, Request.Path);
             }
 
             TResource resource = await _getById.GetAsync(id, cancellationToken);
@@ -138,7 +138,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getSecondary == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Get);
+                throw new RouteNotAvailableException(HttpMethod.Get, Request.Path);
             }
 
             object? rightValue = await _getSecondary.GetSecondaryAsync(id, relationshipName, cancellationToken);
@@ -161,7 +161,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getRelationship == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Get);
+                throw new RouteNotAvailableException(HttpMethod.Get, Request.Path);
             }
 
             object? rightValue = await _getRelationship.GetRelationshipAsync(id, relationshipName, cancellationToken);
@@ -183,7 +183,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_create == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Post);
+                throw new RouteNotAvailableException(HttpMethod.Post, Request.Path);
             }
 
             if (_options.ValidateModelState && !ModelState.IsValid)
@@ -235,7 +235,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_addToRelationship == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Post);
+                throw new RouteNotAvailableException(HttpMethod.Post, Request.Path);
             }
 
             await _addToRelationship.AddToToManyRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
@@ -259,7 +259,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_update == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Patch);
+                throw new RouteNotAvailableException(HttpMethod.Patch, Request.Path);
             }
 
             if (_options.ValidateModelState && !ModelState.IsValid)
@@ -301,7 +301,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_setRelationship == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Patch);
+                throw new RouteNotAvailableException(HttpMethod.Patch, Request.Path);
             }
 
             await _setRelationship.SetRelationshipAsync(id, relationshipName, rightValue, cancellationToken);
@@ -321,7 +321,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_delete == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Delete);
+                throw new RouteNotAvailableException(HttpMethod.Delete, Request.Path);
             }
 
             await _delete.DeleteAsync(id, cancellationToken);
@@ -359,7 +359,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_removeFromRelationship == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Delete);
+                throw new RouteNotAvailableException(HttpMethod.Delete, Request.Path);
             }
 
             await _removeFromRelationship.RemoveFromToManyRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
