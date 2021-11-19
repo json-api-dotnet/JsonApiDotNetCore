@@ -595,12 +595,12 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response
                 return null;
             }
 
-            public ResourceLinks? GetResourceLinks(ResourceType resourceType, string id)
+            public ResourceLinks? GetResourceLinks(ResourceType resourceType, IIdentifiable resource)
             {
                 return null;
             }
 
-            public RelationshipLinks? GetRelationshipLinks(RelationshipAttribute relationship, string leftId)
+            public RelationshipLinks? GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable leftResource)
             {
                 return null;
             }

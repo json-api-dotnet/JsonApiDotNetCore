@@ -204,7 +204,7 @@ namespace JsonApiDotNetCore.Serialization.Response
                 IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(type);
 
                 resourceObject.Attributes = ConvertAttributes(resource, type, fieldSet);
-                resourceObject.Links = _linkBuilder.GetResourceLinks(type, resource.StringId!);
+                resourceObject.Links = _linkBuilder.GetResourceLinks(type, resource);
                 resourceObject.Meta = _resourceDefinitionAccessor.GetMeta(type, resource);
             }
 
@@ -292,7 +292,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         private void PopulateRelationshipInResourceObject(ResourceObjectTreeNode treeNode, RelationshipAttribute relationship)
         {
             SingleOrManyData<ResourceIdentifierObject> data = GetRelationshipData(treeNode, relationship);
-            RelationshipLinks? links = _linkBuilder.GetRelationshipLinks(relationship, treeNode.Resource.StringId!);
+            RelationshipLinks? links = _linkBuilder.GetRelationshipLinks(relationship, treeNode.Resource);
 
             if (links != null || data.IsAssigned)
             {

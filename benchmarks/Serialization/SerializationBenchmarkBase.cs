@@ -229,7 +229,7 @@ namespace Benchmarks.Serialization
                 };
             }
 
-            public ResourceLinks GetResourceLinks(ResourceType resourceType, string id)
+            public ResourceLinks GetResourceLinks(ResourceType resourceType, IIdentifiable resource)
             {
                 return new ResourceLinks
                 {
@@ -237,7 +237,7 @@ namespace Benchmarks.Serialization
                 };
             }
 
-            public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, string leftId)
+            public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable leftResource)
             {
                 return new RelationshipLinks
                 {
