@@ -571,13 +571,6 @@ namespace JsonApiDotNetCore.Repositories
             }
             catch (Exception exception) when (exception is DbUpdateException or InvalidOperationException)
             {
-                if (_dbContext.Database.CurrentTransaction != null)
-                {
-                    // The ResourceService calling us needs to run additional SQL queries after an aborted transaction,
-                    // to determine error cause. This fails when a failed transaction is still in progress.
-                    await _dbContext.Database.CurrentTransaction.RollbackAsync(cancellationToken);
-                }
-
                 _dbContext.ResetChangeTracker();
 
                 throw new DataStoreUpdateException(exception);
