@@ -86,38 +86,57 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             var propertySelectors = new Dictionary<PropertyInfo, PropertySelector>();
 
-            // If a read-only attribute is selected, its value likely depends on another property, so select all resource properties.
+            // If a read-only attribute is selected, its calculated value likely depends on another property, so select all properties.
             bool includesReadOnlyAttribute = resourceFieldSelectors.Any(selector =>
                 selector.Key is AttrAttribute attribute && attribute.Property.SetMethod == null);
 
+            // Only selecting relationships implicitly means to select all attributes too.
             bool containsOnlyRelationships = resourceFieldSelectors.All(selector => selector.Key is RelationshipAttribute);
-
-            foreach ((ResourceFieldAttribute resourceField, QueryLayer? queryLayer) in resourceFieldSelectors)
-            {
-                var propertySelector = new PropertySelector(resourceField.Property, queryLayer);
-
-                if (propertySelector.Property.SetMethod != null)
-                {
-                    propertySelectors[propertySelector.Property] = propertySelector;
-                }
-            }
 
             if (includesReadOnlyAttribute || containsOnlyRelationships)
             {
-                IEntityType entityModel = _entityModel.GetEntityTypes().Single(type => type.ClrType == elementType);
-                IEnumerable<IProperty> entityProperties = entityModel.GetProperties().Where(property => !property.IsShadowProperty()).ToArray();
-
-                foreach (IProperty entityProperty in entityProperties)
-                {
-                    var propertySelector = new PropertySelector(entityProperty.PropertyInfo!);
-
-                    if (propertySelector.Property.SetMethod != null)
-                    {
-                        propertySelectors[propertySelector.Property] = propertySelector;
-                    }
-                }
+                IncludeAllProperties(elementType, propertySelectors);
             }
 
+            IncludeFieldSelection(resourceFieldSelectors, propertySelectors);
+
+            IncludeEagerLoads(resourceType, propertySelectors);
+
+            return propertySelectors.Values;
+        }
+
+        private void IncludeAllProperties(Type elementType, Dictionary<PropertyInfo, PropertySelector> propertySelectors)
+        {
+            IEntityType entityModel = _entityModel.GetEntityTypes().Single(type => type.ClrType == elementType);
+            IEnumerable<IProperty> entityProperties = entityModel.GetProperties().Where(property => !property.IsShadowProperty()).ToArray();
+
+            foreach (IProperty entityProperty in entityProperties)
+            {
+                var propertySelector = new PropertySelector(entityProperty.PropertyInfo);
+                IncludeWritableProperty(propertySelector, propertySelectors);
+            }
+        }
+
+        private static void IncludeFieldSelection(IDictionary<ResourceFieldAttribute, QueryLayer?> resourceFieldSelectors,
+            Dictionary<PropertyInfo, PropertySelector> propertySelectors)
+        {
+            foreach ((ResourceFieldAttribute resourceField, QueryLayer? queryLayer) in resourceFieldSelectors)
+            {
+                var propertySelector = new PropertySelector(resourceField.Property, queryLayer);
+                IncludeWritableProperty(propertySelector, propertySelectors);
+            }
+        }
+
+        private static void IncludeWritableProperty(PropertySelector propertySelector, Dictionary<PropertyInfo, PropertySelector> propertySelectors)
+        {
+            if (propertySelector.Property.SetMethod != null)
+            {
+                propertySelectors[propertySelector.Property] = propertySelector;
+            }
+        }
+
+        private static void IncludeEagerLoads(ResourceType resourceType, Dictionary<PropertyInfo, PropertySelector> propertySelectors)
+        {
             foreach (EagerLoadAttribute eagerLoad in resourceType.EagerLoads)
             {
                 var propertySelector = new PropertySelector(eagerLoad.Property);
@@ -129,8 +148,6 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
                     propertySelectors[propertySelector.Property] = propertySelector;
                 }
             }
-
-            return propertySelectors.Values;
         }
 
         private MemberAssignment CreatePropertyAssignment(PropertySelector selector, LambdaScope lambdaScope)
