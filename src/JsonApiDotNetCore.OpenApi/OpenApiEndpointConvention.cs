@@ -16,16 +16,13 @@ namespace JsonApiDotNetCore.OpenApi
     /// </summary>
     internal sealed class OpenApiEndpointConvention : IActionModelConvention
     {
-        private readonly IResourceGraph _resourceGraph;
         private readonly IControllerResourceMapping _controllerResourceMapping;
         private readonly EndpointResolver _endpointResolver = new();
 
-        public OpenApiEndpointConvention(IResourceGraph resourceGraph, IControllerResourceMapping controllerResourceMapping)
+        public OpenApiEndpointConvention(IControllerResourceMapping controllerResourceMapping)
         {
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
 
-            _resourceGraph = resourceGraph;
             _controllerResourceMapping = controllerResourceMapping;
         }
 
@@ -69,9 +66,12 @@ namespace JsonApiDotNetCore.OpenApi
 
         private IReadOnlyCollection<RelationshipAttribute> GetRelationshipsOfPrimaryResource(Type controllerType)
         {
-            ResourceType primaryResourceTypeOfEndpoint = _controllerResourceMapping.GetResourceTypeForController(controllerType)!;
+            ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(controllerType);
 
-            ResourceType primaryResourceType = _resourceGraph.GetResourceType(primaryResourceTypeOfEndpoint.ClrType);
+            if (primaryResourceType == null)
+            {
+                throw new UnreachableCodeException();
+            }
 
             return primaryResourceType.Relationships;
         }

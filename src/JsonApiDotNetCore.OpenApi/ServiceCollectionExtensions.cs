@@ -38,13 +38,12 @@ namespace JsonApiDotNetCore.OpenApi
         {
             services.AddSingleton<IApiDescriptionGroupCollectionProvider>(provider =>
             {
-                var resourceGraph = provider.GetRequiredService<IResourceGraph>();
                 var controllerResourceMapping = provider.GetRequiredService<IControllerResourceMapping>();
                 var actionDescriptorCollectionProvider = provider.GetRequiredService<IActionDescriptorCollectionProvider>();
                 var apiDescriptionProviders = provider.GetRequiredService<IEnumerable<IApiDescriptionProvider>>();
 
                 JsonApiActionDescriptorCollectionProvider descriptorCollectionProviderWrapper =
-                    new(resourceGraph, controllerResourceMapping, actionDescriptorCollectionProvider);
+                    new(controllerResourceMapping, actionDescriptorCollectionProvider);
 
                 return new ApiDescriptionGroupCollectionProvider(descriptorCollectionProviderWrapper, apiDescriptionProviders);
             });
@@ -130,10 +129,9 @@ namespace JsonApiDotNetCore.OpenApi
 
         private static void AddOpenApiEndpointConvention(IServiceScope scope, IMvcCoreBuilder mvcBuilder)
         {
-            var resourceGraph = scope.ServiceProvider.GetRequiredService<IResourceGraph>();
             var controllerResourceMapping = scope.ServiceProvider.GetRequiredService<IControllerResourceMapping>();
 
-            mvcBuilder.AddMvcOptions(options => options.Conventions.Add(new OpenApiEndpointConvention(resourceGraph, controllerResourceMapping)));
+            mvcBuilder.AddMvcOptions(options => options.Conventions.Add(new OpenApiEndpointConvention(controllerResourceMapping)));
         }
     }
 }

@@ -69,7 +69,22 @@ namespace OpenApiClientTests.LegacyClient
                     Type = FlightsResourceType.Flights,
                     Relationships = new FlightRelationshipsInPostRequest
                     {
-                        Purser = new ToOneFlightAttendantRequestData()
+                        Purser = new ToOneFlightAttendantRequestData
+                        {
+                            Data = new FlightAttendantIdentifier
+                            {
+                                Id = "bBJHu",
+                                Type = FlightAttendantsResourceType.FlightAttendants
+                            }
+                        },
+                        BackupPurser = new NullableToOneFlightAttendantRequestData
+                        {
+                            Data = new FlightAttendantIdentifier
+                            {
+                                Id = "NInmX",
+                                Type = FlightAttendantsResourceType.FlightAttendants
+                            }
+                        }
                     }
                 }
             };
@@ -91,7 +106,16 @@ namespace OpenApiClientTests.LegacyClient
     ""type"": ""flights"",
     ""relationships"": {
       ""purser"": {
-        ""data"": null
+        ""data"": {
+          ""type"": ""flight-attendants"",
+          ""id"": ""bBJHu""
+        }
+      },
+      ""backup-purser"": {
+        ""data"": {
+          ""type"": ""flight-attendants"",
+          ""id"": ""NInmX""
+        }
       }
     }
   }

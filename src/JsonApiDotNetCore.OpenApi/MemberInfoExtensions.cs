@@ -1,97 +1,29 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi
 {
     internal static class MemberInfoExtensions
     {
-        private const string NullableAttributeFullTypeName = "System.Runtime.CompilerServices.NullableAttribute";
-        private const string NullableFlagsFieldName = "NullableFlags";
-        private const string NullableContextAttributeFullTypeName = "System.Runtime.CompilerServices.NullableContextAttribute";
-        private const string FlagFieldName = "Flag";
-
-        /// <summary>
-        /// Resolves the class of data type of the
-        /// <param name="memberInfo"></param>
-        /// .
-        /// </summary>
-        public static DataTypeClass ResolveDataType(this MemberInfo memberInfo)
+        public static TypeCategory GetTypeCategory(this MemberInfo source)
         {
-            ArgumentGuard.NotNull(memberInfo, nameof(memberInfo));
+            ArgumentGuard.NotNull(source, nameof(source));
 
-            // Based on https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/67344fe0b7c7e78128159d8bf02ebfe91408c3da/src/Swashbuckle.AspNetCore.SwaggerGen/SchemaGenerator/MemberInfoExtensions.cs#L36
-
-            Type memberType = memberInfo.MemberType == MemberTypes.Field ? ((FieldInfo)memberInfo).FieldType : ((PropertyInfo)memberInfo).PropertyType;
-
-            Type? underlyingType = Nullable.GetUnderlyingType(memberType);
-
-            if (underlyingType != null)
+            Type memberType = source.MemberType switch
             {
-                return underlyingType.IsValueType ? DataTypeClass.NullableValueType : DataTypeClass.NullableReferenceType;
-            }
+                MemberTypes.Field => ((FieldInfo)source).FieldType,
+                MemberTypes.Property => ((PropertyInfo)source).PropertyType,
+                _ => throw new ArgumentException("Cannot get the type category for members of type other than 'MemberTypes.Field' or 'MemberTypes.Property'.")
+            };
 
             if (memberType.IsValueType)
             {
-                return DataTypeClass.ValueType;
+                return Nullable.GetUnderlyingType(memberType) != null ? TypeCategory.NullableValueType : TypeCategory.ValueType;
             }
 
-            Attribute? nullableAttribute = GetNullableAttribute(memberInfo);
-
-            if (nullableAttribute == null)
-            {
-                return HasNullableContextAttribute(memberInfo) ? DataTypeClass.NullableReferenceType : DataTypeClass.NonNullableReferenceType;
-            }
-
-            return HasNullableFlag(nullableAttribute) ? DataTypeClass.NonNullableReferenceType : DataTypeClass.NullableReferenceType;
-        }
-
-        private static Attribute? GetNullableAttribute(MemberInfo memberInfo)
-        {
-            Attribute? nullableAttribute = memberInfo.GetCustomAttributes()
-                .FirstOrDefault(attr => string.Equals(attr.GetType().FullName, NullableAttributeFullTypeName));
-
-            return nullableAttribute;
-        }
-
-        private static bool HasNullableContextAttribute(MemberInfo memberInfo)
-        {
-            if (memberInfo.DeclaringType?.DeclaringType == null)
-            {
-                return false;
-            }
-
-            Type[] declaringTypes = memberInfo.DeclaringType is { IsNested: true }
-                ? new[]
-                {
-                    memberInfo.DeclaringType,
-                    memberInfo.DeclaringType.DeclaringType
-                }
-                : new[]
-                {
-                    memberInfo.DeclaringType
-                };
-
-            foreach (Type type in declaringTypes)
-            {
-                var attributes = (IEnumerable<object>)type.GetCustomAttributes(false);
-
-                object? nullableContext = attributes.FirstOrDefault(attr => string.Equals(attr.GetType().FullName, NullableContextAttributeFullTypeName));
-
-                if (nullableContext != null)
-                {
-                    return nullableContext.GetType().GetField(FlagFieldName) is { } field && field.GetValue(nullableContext) is byte and 1;
-                }
-            }
-
-            return false;
-        }
-
-        private static bool HasNullableFlag(Attribute nullableAttribute)
-        {
-            FieldInfo? fieldInfo = nullableAttribute.GetType().GetField(NullableFlagsFieldName);
-            return fieldInfo is { } nullableFlagsField && nullableFlagsField.GetValue(nullableAttribute) is byte[] { Length: >= 1 } flags && flags[0] == 1;
+            // Once we switch to .NET 6, we should rely instead on the built-in reflection APIs for nullability information. See https://devblogs.microsoft.com/dotnet/announcing-net-6-preview-7/#libraries-reflection-apis-for-nullability-information.
+            return source.IsNonNullableReferenceType() ? TypeCategory.NonNullableReferenceType : TypeCategory.NullableReferenceType;
         }
     }
 }

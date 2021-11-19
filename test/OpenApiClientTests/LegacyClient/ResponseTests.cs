@@ -241,7 +241,10 @@ namespace OpenApiClientTests.LegacyClient
             ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/purser"",
             ""related"": """ + HostPrefix + @"flights/" + flightId + @"/purser""
           },
-          ""data"": null
+          ""data"": {
+              ""type"": ""flight-attendants"",
+              ""id"": """ + flightAttendantId + @"""
+            }
         },
         ""cabin-crew-members"": {
           ""links"": {
@@ -284,7 +287,7 @@ namespace OpenApiClientTests.LegacyClient
                         {
                             Data = new FlightAttendantIdentifier
                             {
-                                Id = "XxuIu",
+                                Id = flightAttendantId,
                                 Type = FlightAttendantsResourceType.FlightAttendants
                             }
                         }
@@ -294,7 +297,8 @@ namespace OpenApiClientTests.LegacyClient
 
             // Assert
             document.Data.Attributes.Should().BeNull();
-            document.Data.Relationships.Purser.Data.Should().BeNull();
+            document.Data.Relationships.Purser.Data.Should().NotBeNull();
+            document.Data.Relationships.Purser.Data.Id.Should().Be(flightAttendantId);
             document.Data.Relationships.CabinCrewMembers.Data.Should().HaveCount(1);
             document.Data.Relationships.CabinCrewMembers.Data.First().Id.Should().Be(flightAttendantId);
             document.Data.Relationships.CabinCrewMembers.Data.First().Type.Should().Be(FlightAttendantsResourceType.FlightAttendants);
@@ -381,12 +385,73 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             const string flightId = "ZvuH1";
+            const string purserId = "bBJHu";
+            const string emailAddress = "email@example.com";
+            const string age = "20";
+            const string profileImageUrl = "www.image.com";
+            const string distanceTraveledInKilometer = "5000";
 
             const string responseBody = @"{
   ""links"": {
     ""self"": """ + HostPrefix + @"flights/" + flightId + @"/purser"",
     ""first"": """ + HostPrefix + @"flights/" + flightId + @"/purser"",
     ""last"": """ + HostPrefix + @"flights/" + flightId + @"/purser""
+  },
+  ""data"": {
+    ""type"": ""flight-attendants"",
+    ""id"": """ + purserId + @""",
+    ""attributes"": {
+      ""email-address"": """ + emailAddress + @""",
+      ""age"": """ + age + @""",
+      ""profile-image-url"": """ + profileImageUrl + @""",
+      ""distance-traveled-in-kilometers"": """ + distanceTraveledInKilometer + @""",
+    },
+    ""relationships"": {
+      ""scheduled-for-flights"": {
+        ""links"": {
+          ""self"": """ + HostPrefix + @"flight-attendants/" + purserId + @"/relationships/scheduled-for-flights"",
+          ""related"": """ + HostPrefix + @"flight-attendants/" + purserId + @"/scheduled-for-flights""
+        }
+      },
+      ""purser-on-flights"": {
+        ""links"": {
+          ""self"": """ + HostPrefix + @"flight-attendants/" + purserId + @"/relationships/purser-on-flights"",
+          ""related"": """ + HostPrefix + @"flight-attendants/" + purserId + @"/purser-on-flights""
+        }
+      },
+    },
+    ""links"": {
+      ""self"": """ + HostPrefix + @"flight-attendants/" + purserId + @""",
+    }
+  }
+}";
+
+            using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+
+            // Act
+            FlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightPurserAsync(flightId);
+
+            // Assert
+            document.Data.Should().NotBeNull();
+            document.Data.Id.Should().Be(purserId);
+            document.Data.Attributes.EmailAddress.Should().Be(emailAddress);
+            document.Data.Attributes.Age.Should().Be(int.Parse(age));
+            document.Data.Attributes.ProfileImageUrl.Should().Be(profileImageUrl);
+            document.Data.Attributes.DistanceTraveledInKilometers.Should().Be(int.Parse(distanceTraveledInKilometer));
+        }
+
+        [Fact]
+        public async Task Getting_nullable_secondary_resource_translates_response()
+        {
+            // Arrange
+            const string flightId = "ZvuH1";
+
+            const string responseBody = @"{
+  ""links"": {
+    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/backup-purser"",
+    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/backup-purser"",
+    ""last"": """ + HostPrefix + @"flights/" + flightId + @"/backup-purser""
   },
   ""data"": null
 }";
@@ -395,7 +460,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightPurserAsync(flightId);
+            NullableFlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightBackupPurserAsync(flightId);
 
             // Assert
             document.Data.Should().BeNull();
@@ -423,6 +488,30 @@ namespace OpenApiClientTests.LegacyClient
 
             // Assert
             document.Data.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task Getting_nullable_ToOne_relationship_translates_response()
+        {
+            // Arrange
+            const string flightId = "ZvuH1";
+
+            const string responseBody = @"{
+  ""links"": {
+    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/backup-purser"",
+    ""related"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/backup-purser""
+  },
+  ""data"": null
+}";
+
+            using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+
+            // Act
+            NullableFlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightBackupPurserRelationshipAsync(flightId);
+
+            // Assert
+            document.Data.Should().BeNull();
         }
 
         [Fact]

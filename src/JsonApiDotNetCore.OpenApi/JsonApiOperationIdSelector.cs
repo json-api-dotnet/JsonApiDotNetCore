@@ -28,9 +28,12 @@ namespace JsonApiDotNetCore.OpenApi
             [typeof(ResourcePatchRequestDocument<>)] = ResourceOperationIdTemplate,
             [typeof(void)] = ResourceOperationIdTemplate,
             [typeof(SecondaryResourceResponseDocument<>)] = SecondaryOperationIdTemplate,
+            [typeof(NullableSecondaryResourceResponseDocument<>)] = SecondaryOperationIdTemplate,
             [typeof(ResourceIdentifierCollectionResponseDocument<>)] = RelationshipOperationIdTemplate,
             [typeof(ResourceIdentifierResponseDocument<>)] = RelationshipOperationIdTemplate,
+            [typeof(NullableResourceIdentifierResponseDocument<>)] = RelationshipOperationIdTemplate,
             [typeof(ToOneRelationshipRequestData<>)] = RelationshipOperationIdTemplate,
+            [typeof(NullableToOneRelationshipRequestData<>)] = RelationshipOperationIdTemplate,
             [typeof(ToManyRelationshipRequestData<>)] = RelationshipOperationIdTemplate
         };
 
@@ -64,14 +67,19 @@ namespace JsonApiDotNetCore.OpenApi
             return ApplyTemplate(template, primaryResourceType.ClrType, endpoint);
         }
 
-        private static string GetTemplate(Type primaryResourceType, ApiDescription endpoint)
+        private static string GetTemplate(Type resourceClrType, ApiDescription endpoint)
         {
-            Type requestDocumentType = GetDocumentType(primaryResourceType, endpoint);
+            Type requestDocumentType = GetDocumentType(resourceClrType, endpoint);
 
-            return DocumentOpenTypeToOperationIdTemplateMap[requestDocumentType];
+            if (!DocumentOpenTypeToOperationIdTemplateMap.TryGetValue(requestDocumentType, out string? template))
+            {
+                throw new UnreachableCodeException();
+            }
+
+            return template;
         }
 
-        private static Type GetDocumentType(Type primaryResourceType, ApiDescription endpoint)
+        private static Type GetDocumentType(Type primaryResourceClrType, ApiDescription endpoint)
         {
             var producesResponseTypeAttribute = endpoint.ActionDescriptor.GetFilterMetadata<ProducesResponseTypeAttribute>();
 
@@ -89,7 +97,7 @@ namespace JsonApiDotNetCore.OpenApi
             {
                 Type documentResourceType = producesResponseTypeAttribute.Type.GetGenericArguments()[0];
 
-                if (documentResourceType != primaryResourceType)
+                if (documentResourceType != primaryResourceClrType)
                 {
                     documentType = typeof(SecondaryResourceResponseDocument<>);
                 }
@@ -103,10 +111,10 @@ namespace JsonApiDotNetCore.OpenApi
             return type.IsConstructedGenericType ? type.GetGenericTypeDefinition() : null;
         }
 
-        private string ApplyTemplate(string operationIdTemplate, Type primaryResourceType, ApiDescription endpoint)
+        private string ApplyTemplate(string operationIdTemplate, Type resourceClrType, ApiDescription endpoint)
         {
             string method = endpoint.HttpMethod!.ToLowerInvariant();
-            string primaryResourceName = _formatter.FormatResourceName(primaryResourceType).Singularize();
+            string primaryResourceName = _formatter.FormatResourceName(resourceClrType).Singularize();
             string relationshipName = operationIdTemplate.Contains("[RelationshipName]") ? endpoint.RelativePath.Split("/").Last() : string.Empty;
 
             // @formatter:wrap_chained_method_calls chop_always

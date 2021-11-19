@@ -12,20 +12,20 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 {
     internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
     {
-        private static readonly Type[] JsonApiResourceDocumentOpenTypes =
+        private static readonly Type[] JsonApiDocumentOpenTypes =
         {
             typeof(ResourceCollectionResponseDocument<>),
             typeof(PrimaryResourceResponseDocument<>),
             typeof(SecondaryResourceResponseDocument<>),
+            typeof(NullableSecondaryResourceResponseDocument<>),
             typeof(ResourcePostRequestDocument<>),
-            typeof(ResourcePatchRequestDocument<>)
-        };
-
-        private static readonly Type[] SingleNonPrimaryDataDocumentOpenTypes =
-        {
-            typeof(ToOneRelationshipRequestData<>),
+            typeof(ResourcePatchRequestDocument<>),
+            typeof(ResourceIdentifierCollectionResponseDocument<>),
             typeof(ResourceIdentifierResponseDocument<>),
-            typeof(SecondaryResourceResponseDocument<>)
+            typeof(NullableResourceIdentifierResponseDocument<>),
+            typeof(ToManyRelationshipRequestData<>),
+            typeof(ToOneRelationshipRequestData<>),
+            typeof(NullableToOneRelationshipRequestData<>)
         };
 
         private readonly ISchemaGenerator _defaultSchemaGenerator;
@@ -56,51 +56,60 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
                 return jsonApiDocumentSchema;
             }
 
-            OpenApiSchema schema = IsJsonApiResourceDocument(type)
-                ? GenerateResourceJsonApiDocumentSchema(type)
-                : _defaultSchemaGenerator.GenerateSchema(type, schemaRepository, memberInfo, parameterInfo);
-
-            if (IsSingleNonPrimaryDataDocument(type))
+            if (IsJsonApiDocument(type))
             {
-                SetDataObjectSchemaToNullable(schema);
+                OpenApiSchema schema = GenerateJsonApiDocumentSchema(type);
+
+                if (IsDataPropertyNullable(type))
+                {
+                    SetDataObjectSchemaToNullable(schema);
+                }
             }
 
-            return schema;
+            return _defaultSchemaGenerator.GenerateSchema(type, schemaRepository, memberInfo, parameterInfo);
         }
 
-        private static bool IsJsonApiResourceDocument(Type type)
+        private static bool IsJsonApiDocument(Type type)
         {
-            return type.IsConstructedGenericType && JsonApiResourceDocumentOpenTypes.Contains(type.GetGenericTypeDefinition());
+            return type.IsConstructedGenericType && JsonApiDocumentOpenTypes.Contains(type.GetGenericTypeDefinition());
         }
 
-        private OpenApiSchema GenerateResourceJsonApiDocumentSchema(Type type)
+        private OpenApiSchema GenerateJsonApiDocumentSchema(Type documentType)
         {
-            Type resourceObjectType = type.BaseType!.GenericTypeArguments[0];
+            Type resourceObjectType = documentType.BaseType!.GenericTypeArguments[0];
 
             if (!_schemaRepositoryAccessor.Current.TryLookupByType(resourceObjectType, out OpenApiSchema referenceSchemaForResourceObject))
             {
                 referenceSchemaForResourceObject = _resourceObjectSchemaGenerator.GenerateSchema(resourceObjectType);
             }
 
-            OpenApiSchema referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(type, _schemaRepositoryAccessor.Current);
+            OpenApiSchema referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(documentType, _schemaRepositoryAccessor.Current);
             OpenApiSchema fullSchemaForDocument = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForDocument.Reference.Id];
 
-            OpenApiSchema referenceSchemaForDataObject =
-                IsSingleDataDocument(type) ? referenceSchemaForResourceObject : CreateArrayTypeDataSchema(referenceSchemaForResourceObject);
+            OpenApiSchema referenceSchemaForDataObject = IsManyDataDocument(documentType)
+                ? CreateArrayTypeDataSchema(referenceSchemaForResourceObject)
+                : referenceSchemaForResourceObject;
 
             fullSchemaForDocument.Properties[JsonApiObjectPropertyName.Data] = referenceSchemaForDataObject;
 
             return referenceSchemaForDocument;
         }
 
-        private static bool IsSingleDataDocument(Type type)
+        private static bool IsManyDataDocument(Type documentType)
         {
-            return type.BaseType?.IsConstructedGenericType == true && type.BaseType.GetGenericTypeDefinition() == typeof(SingleData<>);
+            return documentType.BaseType!.GetGenericTypeDefinition() == typeof(ManyData<>);
         }
 
-        private static bool IsSingleNonPrimaryDataDocument(Type type)
+        private static bool IsDataPropertyNullable(Type type)
         {
-            return type.IsConstructedGenericType && SingleNonPrimaryDataDocumentOpenTypes.Contains(type.GetGenericTypeDefinition());
+            PropertyInfo? dataProperty = type.GetProperty(nameof(JsonApiObjectPropertyName.Data));
+
+            if (dataProperty == null)
+            {
+                throw new UnreachableCodeException();
+            }
+
+            return dataProperty.GetTypeCategory() == TypeCategory.NullableReferenceType;
         }
 
         private void SetDataObjectSchemaToNullable(OpenApiSchema referenceSchemaForDocument)

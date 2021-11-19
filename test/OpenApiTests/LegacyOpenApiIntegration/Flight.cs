@@ -34,9 +34,12 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         [HasOne]
         public FlightAttendant Purser { get; set; } = null!;
 
+        [HasOne]
+        public FlightAttendant? BackupPurser { get; set; }
+
         [Attr]
         [NotMapped]
-        public ICollection<string> ServicesOnBoard { get; set; } = null!;
+        public ICollection<string> ServicesOnBoard { get; set; } = new HashSet<string>();
 
         [HasMany]
         public ICollection<Passenger> Passengers { get; set; } = new HashSet<Passenger>();

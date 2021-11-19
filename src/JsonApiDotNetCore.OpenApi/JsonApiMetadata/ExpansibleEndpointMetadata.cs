@@ -5,6 +5,13 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
 {
     internal abstract class ExpansibleEndpointMetadata
     {
-        public abstract IDictionary<string, Type> ExpansionElements { get; }
+        public IDictionary<string, Type> DocumentTypesByRelationshipName { get; }
+
+        protected ExpansibleEndpointMetadata(IDictionary<string, Type> documentTypesByRelationshipName)
+        {
+            ArgumentGuard.NotNull(documentTypesByRelationshipName, nameof(documentTypesByRelationshipName));
+
+            DocumentTypesByRelationshipName = documentTypesByRelationshipName;
+        }
     }
 }

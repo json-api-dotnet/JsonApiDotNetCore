@@ -1184,6 +1184,152 @@
         }
       }
     },
+    "/api/v1/flights/{id}/backup-purser": {
+      "get": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "get-flight-backup-purser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullable-flight-attendant-secondary-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "head-flight-backup-purser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullable-flight-attendant-secondary-response-document"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/flights/{id}/relationships/backup-purser": {
+      "get": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "get-flight-backup-purser-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullable-flight-attendant-identifier-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "head-flight-backup-purser-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullable-flight-attendant-identifier-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "patch-flight-backup-purser-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/nullable-to-one-flight-attendant-request-data"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/v1/flights/{id}/cabin-crew-members": {
       "get": {
         "tags": [
@@ -2257,14 +2403,7 @@
         "type": "object",
         "properties": {
           "data": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-identifier"
-              },
-              {
-                "$ref": "#/components/schemas/null-value"
-              }
-            ]
+            "$ref": "#/components/schemas/flight-attendant-identifier"
           },
           "meta": {
             "type": "object",
@@ -2370,14 +2509,7 @@
         "type": "object",
         "properties": {
           "data": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-data-in-response"
-              },
-              {
-                "$ref": "#/components/schemas/null-value"
-              }
-            ]
+            "$ref": "#/components/schemas/flight-attendant-data-in-response"
           },
           "meta": {
             "type": "object",
@@ -2641,6 +2773,9 @@
           "purser": {
             "$ref": "#/components/schemas/to-one-flight-attendant-request-data"
           },
+          "backup-purser": {
+            "$ref": "#/components/schemas/nullable-to-one-flight-attendant-request-data"
+          },
           "passengers": {
             "$ref": "#/components/schemas/to-many-passenger-request-data"
           }
@@ -2648,6 +2783,9 @@
         "additionalProperties": false
       },
       "flight-relationships-in-post-request": {
+        "required": [
+          "purser"
+        ],
         "type": "object",
         "properties": {
           "cabin-crew-members": {
@@ -2655,6 +2793,9 @@
           },
           "purser": {
             "$ref": "#/components/schemas/to-one-flight-attendant-request-data"
+          },
+          "backup-purser": {
+            "$ref": "#/components/schemas/nullable-to-one-flight-attendant-request-data"
           },
           "passengers": {
             "$ref": "#/components/schemas/to-many-passenger-request-data"
@@ -2670,6 +2811,9 @@
           },
           "purser": {
             "$ref": "#/components/schemas/to-one-flight-attendant-response-data"
+          },
+          "backup-purser": {
+            "$ref": "#/components/schemas/nullable-to-one-flight-attendant-response-data"
           },
           "passengers": {
             "$ref": "#/components/schemas/to-many-passenger-response-data"
@@ -2852,6 +2996,111 @@
           "items": {}
         },
         "nullable": true
+      },
+      "nullable-flight-attendant-identifier-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-identifier"
+              },
+              {
+                "$ref": "#/components/schemas/null-value"
+              }
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-identifier-document"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullable-flight-attendant-secondary-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-data-in-response"
+              },
+              {
+                "$ref": "#/components/schemas/null-value"
+              }
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-document"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullable-to-one-flight-attendant-request-data": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-identifier"
+              },
+              {
+                "$ref": "#/components/schemas/null-value"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullable-to-one-flight-attendant-response-data": {
+        "required": [
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-identifier"
+              },
+              {
+                "$ref": "#/components/schemas/null-value"
+              }
+            ]
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-relationship-object"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "additionalProperties": false
       },
       "passenger-attributes-in-response": {
         "type": "object",
@@ -3085,14 +3334,7 @@
         "type": "object",
         "properties": {
           "data": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-identifier"
-              },
-              {
-                "$ref": "#/components/schemas/null-value"
-              }
-            ]
+            "$ref": "#/components/schemas/flight-attendant-identifier"
           }
         },
         "additionalProperties": false
@@ -3104,14 +3346,7 @@
         "type": "object",
         "properties": {
           "data": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-identifier"
-              },
-              {
-                "$ref": "#/components/schemas/null-value"
-              }
-            ]
+            "$ref": "#/components/schemas/flight-attendant-identifier"
           },
           "links": {
             "$ref": "#/components/schemas/links-in-relationship-object"

@@ -4,13 +4,13 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
 {
     internal sealed class PrimaryResponseMetadata : IJsonApiResponseMetadata
     {
-        public Type Type { get; }
+        public Type DocumentType { get; }
 
-        public PrimaryResponseMetadata(Type type)
+        public PrimaryResponseMetadata(Type documentType)
         {
-            ArgumentGuard.NotNull(type, nameof(type));
+            ArgumentGuard.NotNull(documentType, nameof(documentType));
 
-            Type = type;
+            DocumentType = documentType;
         }
     }
 }
