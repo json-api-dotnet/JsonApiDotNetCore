@@ -207,6 +207,12 @@ public class ResourceGraphBuilder
             return this;
         }
 
+        if (resourceClrType.IsOrImplementsInterface<IVersionedIdentifiable>() && !resourceClrType.IsOrImplementsInterface(typeof(IVersionedIdentifiable<,>)))
+        {
+            throw new InvalidConfigurationException(
+                $"Resource type '{resourceClrType}' implements 'IVersionedIdentifiable', but not 'IVersionedIdentifiable<TId, TVersion>'.");
+        }
+
         if (resourceClrType.IsOrImplementsInterface<IIdentifiable>())
         {
             string effectivePublicName = publicName ?? FormatResourceName(resourceClrType);

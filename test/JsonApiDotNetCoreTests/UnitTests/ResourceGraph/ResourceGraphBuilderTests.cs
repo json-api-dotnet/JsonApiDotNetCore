@@ -164,6 +164,21 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [Fact]
+    public void Cannot_add_versioned_resource_that_implements_only_non_generic_IVersionedIdentifiable()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        Action action = () => builder.Add(typeof(VersionedResourceWithoutToken));
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
+            $"Resource type '{typeof(VersionedResourceWithoutToken)}' implements 'IVersionedIdentifiable', but not 'IVersionedIdentifiable<TId, TVersion>'.");
+    }
+
+    [Fact]
     public void Cannot_build_graph_with_missing_related_HasOne_resource()
     {
         // Arrange
@@ -426,6 +441,13 @@ public sealed class ResourceGraphBuilderTests
     {
         public string? StringId { get; set; }
         public string? LocalId { get; set; }
+    }
+
+    private sealed class VersionedResourceWithoutToken : IVersionedIdentifiable
+    {
+        public string? StringId { get; set; }
+        public string? LocalId { get; set; }
+        public string? Version { get; set; }
     }
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
