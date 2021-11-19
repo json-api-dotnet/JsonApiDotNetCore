@@ -13,9 +13,9 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     private readonly IJsonApiRequest _request;
     private readonly ITargetedFields _targetedFields;
 
-    private IDictionary<string, string>? _initiallyStoredAttributeValues;
-    private IDictionary<string, string>? _requestAttributeValues;
-    private IDictionary<string, string>? _finallyStoredAttributeValues;
+    private IDictionary<string, string?>? _initiallyStoredAttributeValues;
+    private IDictionary<string, string?>? _requestAttributeValues;
+    private IDictionary<string, string?>? _finallyStoredAttributeValues;
 
     public ResourceChangeTracker(IJsonApiRequest request, ITargetedFields targetedFields)
     {
@@ -50,15 +50,20 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
         _finallyStoredAttributeValues = CreateAttributeDictionary(resource, _request.PrimaryResourceType!.Attributes);
     }
 
-    private IDictionary<string, string> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
+    private IDictionary<string, string?> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
     {
-        var result = new Dictionary<string, string>();
+        var result = new Dictionary<string, string?>();
 
         foreach (AttrAttribute attribute in attributes)
         {
             object? value = attribute.GetValue(resource);
             string json = JsonSerializer.Serialize(value);
             result.Add(attribute.PublicName, json);
+        }
+
+        if (resource is IVersionedIdentifiable versionedIdentifiable)
+        {
+            result.Add(nameof(versionedIdentifiable.Version), versionedIdentifiable.Version);
         }
 
         return result;
@@ -73,7 +78,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
             {
                 if (_requestAttributeValues.TryGetValue(key, out string? requestValue))
                 {
-                    string actualValue = _finallyStoredAttributeValues[key];
+                    string? actualValue = _finallyStoredAttributeValues[key];
 
                     if (requestValue != actualValue)
                     {
@@ -82,8 +87,8 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
                 }
                 else
                 {
-                    string initiallyStoredValue = _initiallyStoredAttributeValues[key];
-                    string finallyStoredValue = _finallyStoredAttributeValues[key];
+                    string? initiallyStoredValue = _initiallyStoredAttributeValues[key];
+                    string? finallyStoredValue = _finallyStoredAttributeValues[key];
 
                     if (initiallyStoredValue != finallyStoredValue)
                     {

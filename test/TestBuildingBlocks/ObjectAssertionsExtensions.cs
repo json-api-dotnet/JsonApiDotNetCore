@@ -65,4 +65,33 @@ public static class ObjectAssertionsExtensions
         writer.Flush();
         return Encoding.UTF8.GetString(stream.ToArray());
     }
+
+    /// <summary>
+    /// Asserts that a string contains a resource version separator.
+    /// </summary>
+    [CustomAssertion]
+    public static void BeVersioned(this StringAssertions source, string because = "", params object[] becauseArgs)
+    {
+        source.Contain(";v~", because, becauseArgs);
+    }
+
+    /// <summary>
+    /// Asserts that a string does not contain a resource version separator.
+    /// </summary>
+    [CustomAssertion]
+    public static void NotBeVersioned(this StringAssertions source, string because = "", params object[] becauseArgs)
+    {
+        source.NotBeNull();
+        source.NotContain(";v~", because, becauseArgs);
+    }
+
+    /// <summary>
+    /// Asserts that a version string contains a numeric value that is greater than the specified expected value.
+    /// </summary>
+    [CustomAssertion]
+    public static void BeGreaterThan(this StringAssertions source, uint expected)
+    {
+        uint.TryParse(source.Subject, out uint number).Should().BeTrue();
+        number.Should().BeGreaterThan(expected);
+    }
 }

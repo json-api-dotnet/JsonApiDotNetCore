@@ -11,6 +11,7 @@ public static class Unknown
     public const string ResourceType = "doesNotExist1";
     public const string Relationship = "doesNotExist2";
     public const string LocalId = "doesNotExist3";
+    public const string Version = "99999999";
 
     public static class TypedId
     {
