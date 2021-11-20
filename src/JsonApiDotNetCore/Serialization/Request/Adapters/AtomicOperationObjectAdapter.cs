@@ -141,6 +141,8 @@ public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
             IdConstraint = refRequirements.IdConstraint,
             IdValue = refResult.Resource.StringId,
             LidValue = refResult.Resource.LocalId,
+            VersionConstraint = !refResult.ResourceType.IsVersioned ? JsonElementConstraint.Forbidden : null,
+            VersionValue = refResult.Resource.GetVersion(),
             RelationshipName = refResult.Relationship?.PublicName
         };
     }

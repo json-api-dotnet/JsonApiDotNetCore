@@ -67,7 +67,11 @@ public sealed class DocumentInResourceOrRelationshipRequestAdapter : IDocumentIn
         {
             ResourceType = state.Request.PrimaryResourceType,
             IdConstraint = idConstraint,
-            IdValue = state.Request.PrimaryId
+            IdValue = state.Request.PrimaryId,
+            VersionConstraint = state.Request.PrimaryResourceType!.IsVersioned && state.Request.WriteOperation != WriteOperationKind.CreateResource
+                ? JsonElementConstraint.Required
+                : JsonElementConstraint.Forbidden,
+            VersionValue = state.Request.PrimaryVersion
         };
 
         return requirements;

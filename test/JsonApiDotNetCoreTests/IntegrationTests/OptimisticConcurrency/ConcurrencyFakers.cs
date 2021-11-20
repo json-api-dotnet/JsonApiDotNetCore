@@ -47,6 +47,11 @@ internal sealed class ConcurrencyFakers : FakerContainer
             .RuleFor(webLink => webLink.Url, faker => faker.Internet.Url())
             .RuleFor(webLink => webLink.OpensInNewTab, faker => faker.Random.Bool()));
 
+    private readonly Lazy<Faker<DeploymentJob>> _lazyDeploymentJobFaker = new(() =>
+        new Faker<DeploymentJob>()
+            .UseSeed(GetFakerSeed())
+            .RuleFor(deploymentJob => deploymentJob.StartedAt, faker => faker.Date.PastOffset()));
+
     public Faker<WebPage> WebPage => _lazyWebPageFaker.Value;
     public Faker<FriendlyUrl> FriendlyUrl => _lazyFriendlyUrlFaker.Value;
     public Faker<TextBlock> TextBlock => _lazyTextBlockFaker.Value;
@@ -54,4 +59,5 @@ internal sealed class ConcurrencyFakers : FakerContainer
     public Faker<WebImage> WebImage => _lazyWebImageFaker.Value;
     public Faker<PageFooter> PageFooter => _lazyPageFooterFaker.Value;
     public Faker<WebLink> WebLink => _lazyWebLinkFaker.Value;
+    public Faker<DeploymentJob> DeploymentJob => _lazyDeploymentJobFaker.Value;
 }
