@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.OpenApi
             }
             else
             {
-                throw new NotSupportedException($"Cannot get the type category for members of type '{source.MemberType}' is not supported.");
+                throw new NotSupportedException($"Member type '{source.MemberType}' must be a property or field.");
             }
 
             if (memberType.IsValueType)
