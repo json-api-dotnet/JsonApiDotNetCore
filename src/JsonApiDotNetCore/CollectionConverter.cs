@@ -98,7 +98,7 @@ namespace JsonApiDotNetCore
             {
                 if (type.IsGenericType && type.GenericTypeArguments.Length == 1)
                 {
-                    if (type.IsOrImplementsInterface(typeof(IEnumerable)))
+                    if (type.IsOrImplementsInterface<IEnumerable>())
                     {
                         return type.GenericTypeArguments[0];
                     }

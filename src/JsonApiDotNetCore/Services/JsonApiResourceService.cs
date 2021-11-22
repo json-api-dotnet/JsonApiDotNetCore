@@ -226,17 +226,7 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                if (!Equals(resourceFromRequest.Id, default(TId)))
-                {
-                    TResource? existingResource =
-                        await GetPrimaryResourceByIdOrDefaultAsync(resourceFromRequest.Id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
-
-                    if (existingResource != null)
-                    {
-                        throw new ResourceAlreadyExistsException(resourceFromRequest.StringId!, _request.PrimaryResourceType.PublicName);
-                    }
-                }
-
+                await AssertPrimaryResourceDoesNotExistAsync(resourceFromRequest, cancellationToken);
                 await AssertResourcesToAssignInRelationshipsExistAsync(resourceFromRequest, cancellationToken);
                 throw;
             }
@@ -247,6 +237,19 @@ namespace JsonApiDotNetCore.Services
 
             bool hasImplicitChanges = _resourceChangeTracker.HasImplicitChanges();
             return hasImplicitChanges ? resourceFromDatabase : null;
+        }
+
+        protected async Task AssertPrimaryResourceDoesNotExistAsync(TResource resource, CancellationToken cancellationToken)
+        {
+            if (!Equals(resource.Id, default(TId)))
+            {
+                TResource? existingResource = await GetPrimaryResourceByIdOrDefaultAsync(resource.Id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
+
+                if (existingResource != null)
+                {
+                    throw new ResourceAlreadyExistsException(resource.StringId!, _request.PrimaryResourceType!.PublicName);
+                }
+            }
         }
 
         protected virtual async Task InitializeResourceAsync(TResource resourceForDatabase, CancellationToken cancellationToken)
@@ -347,9 +350,7 @@ namespace JsonApiDotNetCore.Services
             CancellationToken cancellationToken)
         {
             QueryLayer queryLayer = _queryLayerComposer.ComposeForHasMany(hasManyRelationship, leftId, rightResourceIds);
-            IReadOnlyCollection<TResource> leftResources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
-
-            TResource? leftResource = leftResources.FirstOrDefault();
+            var leftResource = await _repositoryAccessor.GetForUpdateAsync<TResource>(queryLayer, cancellationToken);
             AssertPrimaryResourceExists(leftResource);
 
             return leftResource;
@@ -517,8 +518,8 @@ namespace JsonApiDotNetCore.Services
 
             QueryLayer queryLayer = _queryLayerComposer.ComposeForUpdate(id, _request.PrimaryResourceType);
             var resource = await _repositoryAccessor.GetForUpdateAsync<TResource>(queryLayer, cancellationToken);
-
             AssertPrimaryResourceExists(resource);
+
             return resource;
         }
 

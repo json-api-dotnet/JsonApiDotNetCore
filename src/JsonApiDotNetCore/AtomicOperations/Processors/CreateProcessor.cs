@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 
@@ -34,9 +33,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             if (operation.Resource.LocalId != null)
             {
                 string serverId = newResource != null ? newResource.StringId! : operation.Resource.StringId!;
-                ResourceType resourceType = operation.Request.PrimaryResourceType!;
-
-                _localIdTracker.Assign(operation.Resource.LocalId, resourceType.PublicName, serverId);
+                _localIdTracker.Assign(operation.Resource.LocalId, operation.Request.PrimaryResourceType!, serverId);
             }
 
             return newResource == null ? null : operation.WithResource(newResource);

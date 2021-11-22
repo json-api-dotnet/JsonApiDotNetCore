@@ -73,10 +73,10 @@ function CreateNuGetPackage {
         $versionSuffix = $suffixSegments -join "-"
     }
     else {
-        # Get the version suffix from the auto-incrementing build number. Example: "123" => "pre-0123".
+        # Get the version suffix from the auto-incrementing build number. Example: "123" => "master-0123".
         if ($env:APPVEYOR_BUILD_NUMBER) {
             $revision = "{0:D4}" -f [convert]::ToInt32($env:APPVEYOR_BUILD_NUMBER, 10)
-            $versionSuffix = "pre-$revision"
+            $versionSuffix = "$($env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH ?? $env:APPVEYOR_REPO_BRANCH)-$revision"
         }
         else {
             $versionSuffix = "pre-0001"

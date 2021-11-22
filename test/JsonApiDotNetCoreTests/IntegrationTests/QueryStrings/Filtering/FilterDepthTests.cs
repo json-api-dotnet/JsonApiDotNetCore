@@ -502,13 +502,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             List<Blog> blogs = _fakers.Blog.Generate(2);
             blogs[1].Title = "Technology";
             blogs[1].Owner = _fakers.WebAccount.Generate();
-            blogs[1].Owner.UserName = "Smith";
-            blogs[1].Owner.Posts = _fakers.BlogPost.Generate(2);
-            blogs[1].Owner.Posts[0].Caption = "One";
-            blogs[1].Owner.Posts[1].Caption = "Two";
-            blogs[1].Owner.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
-            blogs[1].Owner.Posts[1].Comments.ElementAt(0).CreatedAt = 1.January(2000);
-            blogs[1].Owner.Posts[1].Comments.ElementAt(1).CreatedAt = 10.January(2010);
+            blogs[1].Owner!.UserName = "Smith";
+            blogs[1].Owner!.Posts = _fakers.BlogPost.Generate(2);
+            blogs[1].Owner!.Posts[0].Caption = "One";
+            blogs[1].Owner!.Posts[1].Caption = "Two";
+            blogs[1].Owner!.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
+            blogs[1].Owner!.Posts[1].Comments.ElementAt(0).CreatedAt = 1.January(2000);
+            blogs[1].Owner!.Posts[1].Comments.ElementAt(1).CreatedAt = 10.January(2010);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -538,13 +538,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.Included.ShouldHaveCount(3);
 
             responseDocument.Included[0].Type.Should().Be("webAccounts");
-            responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
+            responseDocument.Included[0].Id.Should().Be(blogs[1].Owner!.StringId);
 
             responseDocument.Included[1].Type.Should().Be("blogPosts");
-            responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
+            responseDocument.Included[1].Id.Should().Be(blogs[1].Owner!.Posts[1].StringId);
 
             responseDocument.Included[2].Type.Should().Be("comments");
-            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.ElementAt(1).StringId);
+            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner!.Posts[1].Comments.ElementAt(1).StringId);
         }
     }
 }

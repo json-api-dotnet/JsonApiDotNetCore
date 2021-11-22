@@ -15,7 +15,7 @@ namespace UnitTests.Internal
             Type type = typeof(Model);
 
             // Act
-            bool result = type.IsOrImplementsInterface(typeof(IIdentifiable));
+            bool result = type.IsOrImplementsInterface<IIdentifiable>();
 
             // Assert
             result.Should().BeTrue();
@@ -28,7 +28,7 @@ namespace UnitTests.Internal
             Type type = typeof(string);
 
             // Act
-            bool result = type.IsOrImplementsInterface(typeof(IIdentifiable));
+            bool result = type.IsOrImplementsInterface<IIdentifiable>();
 
             // Assert
             result.Should().BeFalse();

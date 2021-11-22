@@ -65,7 +65,7 @@ public void ConfigureServices(IServiceCollection services)
 {
     services.AddJsonApi(resources: builder =>
     {
-        builder.Add<Person>();
+        builder.Add<Person, int>();
     });
 }
 ```
@@ -78,7 +78,7 @@ The public resource name is exposed through the `type` member in the JSON:API pa
 ```c#
 services.AddJsonApi(resources: builder =>
 {
-    builder.Add<Person>(publicName: "people");
+    builder.Add<Person, int>(publicName: "people");
 });
 ```
 

@@ -27,25 +27,25 @@ namespace JsonApiDotNetCore.Serialization.Response
         // Related resource objects per relationship. These are emitted in 'included'.
         private Dictionary<RelationshipAttribute, HashSet<ResourceObjectTreeNode>>? _childrenByRelationship;
 
-        private bool IsTreeRoot => RootType.Equals(Type);
+        private bool IsTreeRoot => RootType.Equals(ResourceType);
 
         // The resource this node was built for. We only store it for the LinkBuilder.
         public IIdentifiable Resource { get; }
 
         // The resource type. We use its relationships to maintain order.
-        public ResourceType Type { get; }
+        public ResourceType ResourceType { get; }
 
         // The produced resource object from Resource. For each resource, at most one ResourceObject and one tree node must exist.
         public ResourceObject ResourceObject { get; }
 
-        public ResourceObjectTreeNode(IIdentifiable resource, ResourceType type, ResourceObject resourceObject)
+        public ResourceObjectTreeNode(IIdentifiable resource, ResourceType resourceType, ResourceObject resourceObject)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
-            ArgumentGuard.NotNull(type, nameof(type));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
             ArgumentGuard.NotNull(resourceObject, nameof(resourceObject));
 
             Resource = resource;
-            Type = type;
+            ResourceType = resourceType;
             ResourceObject = resourceObject;
         }
 
@@ -133,7 +133,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         {
             if (treeNode._childrenByRelationship != null)
             {
-                foreach (RelationshipAttribute relationship in treeNode.Type.Relationships)
+                foreach (RelationshipAttribute relationship in treeNode.ResourceType.Relationships)
                 {
                     if (treeNode._childrenByRelationship.TryGetValue(relationship, out HashSet<ResourceObjectTreeNode>? rightNodes))
                     {
@@ -228,7 +228,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.Append(IsTreeRoot ? Type.PublicName : $"{ResourceObject.Type}:{ResourceObject.Id}");
+            builder.Append(IsTreeRoot ? ResourceType.PublicName : $"{ResourceObject.Type}:{ResourceObject.Id}");
 
             if (_directChildren != null)
             {

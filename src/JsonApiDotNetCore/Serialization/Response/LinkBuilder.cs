@@ -228,16 +228,16 @@ namespace JsonApiDotNetCore.Serialization.Response
         }
 
         /// <inheritdoc />
-        public ResourceLinks? GetResourceLinks(ResourceType resourceType, string id)
+        public ResourceLinks? GetResourceLinks(ResourceType resourceType, IIdentifiable resource)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
-            ArgumentGuard.NotNullNorEmpty(id, nameof(id));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             var links = new ResourceLinks();
 
             if (ShouldIncludeResourceLink(LinkTypes.Self, resourceType))
             {
-                links.Self = GetLinkForResourceSelf(resourceType, id);
+                links.Self = GetLinkForResourceSelf(resourceType, resource);
             }
 
             return links.HasValue() ? links : null;
@@ -257,36 +257,36 @@ namespace JsonApiDotNetCore.Serialization.Response
             return _options.ResourceLinks.HasFlag(linkType);
         }
 
-        private string GetLinkForResourceSelf(ResourceType resourceType, string resourceId)
+        private string? GetLinkForResourceSelf(ResourceType resourceType, IIdentifiable resource)
         {
             string? controllerName = _controllerResourceMapping.GetControllerNameForResourceType(resourceType);
-            IDictionary<string, object?> routeValues = GetRouteValues(resourceId, null);
+            IDictionary<string, object?> routeValues = GetRouteValues(resource.StringId!, null);
 
             return RenderLinkForAction(controllerName, GetPrimaryControllerActionName, routeValues);
         }
 
         /// <inheritdoc />
-        public RelationshipLinks? GetRelationshipLinks(RelationshipAttribute relationship, string leftId)
+        public RelationshipLinks? GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable leftResource)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
-            ArgumentGuard.NotNullNorEmpty(leftId, nameof(leftId));
+            ArgumentGuard.NotNull(leftResource, nameof(leftResource));
 
             var links = new RelationshipLinks();
 
             if (ShouldIncludeRelationshipLink(LinkTypes.Self, relationship))
             {
-                links.Self = GetLinkForRelationshipSelf(leftId, relationship);
+                links.Self = GetLinkForRelationshipSelf(leftResource.StringId!, relationship);
             }
 
             if (ShouldIncludeRelationshipLink(LinkTypes.Related, relationship))
             {
-                links.Related = GetLinkForRelationshipRelated(leftId, relationship);
+                links.Related = GetLinkForRelationshipRelated(leftResource.StringId!, relationship);
             }
 
             return links.HasValue() ? links : null;
         }
 
-        private string GetLinkForRelationshipSelf(string leftId, RelationshipAttribute relationship)
+        private string? GetLinkForRelationshipSelf(string leftId, RelationshipAttribute relationship)
         {
             string? controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
             IDictionary<string, object?> routeValues = GetRouteValues(leftId, relationship.PublicName);
@@ -294,7 +294,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             return RenderLinkForAction(controllerName, GetRelationshipControllerActionName, routeValues);
         }
 
-        private string GetLinkForRelationshipRelated(string leftId, RelationshipAttribute relationship)
+        private string? GetLinkForRelationshipRelated(string leftId, RelationshipAttribute relationship)
         {
             string? controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
             IDictionary<string, object?> routeValues = GetRouteValues(leftId, relationship.PublicName);
@@ -315,11 +315,11 @@ namespace JsonApiDotNetCore.Serialization.Response
             return routeValues;
         }
 
-        protected virtual string RenderLinkForAction(string? controllerName, string actionName, IDictionary<string, object?> routeValues)
+        protected virtual string? RenderLinkForAction(string? controllerName, string actionName, IDictionary<string, object?> routeValues)
         {
             return _options.UseRelativeLinks
-                ? _linkGenerator.GetPathByAction(_httpContextAccessor.HttpContext, actionName, controllerName, routeValues)
-                : _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext, actionName, controllerName, routeValues);
+                ? _linkGenerator.GetPathByAction(HttpContext, actionName, controllerName, routeValues)
+                : _linkGenerator.GetUriByAction(HttpContext, actionName, controllerName, routeValues);
         }
 
         /// <summary>

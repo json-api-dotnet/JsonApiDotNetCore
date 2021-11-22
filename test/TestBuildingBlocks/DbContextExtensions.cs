@@ -38,14 +38,14 @@ namespace TestBuildingBlocks
         {
             foreach (Type model in models)
             {
-                IEntityType entityType = dbContext.Model.FindEntityType(model);
+                IEntityType? entityType = dbContext.Model.FindEntityType(model);
 
                 if (entityType == null)
                 {
                     throw new InvalidOperationException($"Table for '{model.Name}' not found.");
                 }
 
-                string tableName = entityType.GetTableName();
+                string tableName = entityType.GetTableName()!;
 
                 // PERF: We first try to clear the table, which is fast and usually succeeds, unless foreign key constraints are violated.
                 // In that case, we recursively delete all related data, which is slow.

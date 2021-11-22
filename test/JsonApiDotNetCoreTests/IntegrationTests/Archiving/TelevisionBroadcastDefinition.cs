@@ -13,7 +13,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
@@ -134,8 +134,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             }
             else if (writeOperation == WriteOperationKind.DeleteResource)
             {
-                TelevisionBroadcast broadcastToDelete =
-                    await _dbContext.Broadcasts.FirstOrDefaultAsync(resource => resource.Id == broadcast.Id, cancellationToken);
+                TelevisionBroadcast? broadcastToDelete = await _dbContext.Broadcasts.FirstWithIdAsync(broadcast.Id, cancellationToken);
 
                 if (broadcastToDelete != null)
                 {

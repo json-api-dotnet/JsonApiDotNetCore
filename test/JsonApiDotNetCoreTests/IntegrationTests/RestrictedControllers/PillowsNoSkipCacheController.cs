@@ -6,11 +6,11 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
 {
-    [NoHttpPost]
-    public sealed class BlockingHttpPostController : JsonApiController<Table, int>
+    [DisableQueryString("skipCache")]
+    public sealed class PillowsNoSkipCacheController : JsonApiController<Pillow, int>
     {
-        public BlockingHttpPostController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-            IResourceService<Table, int> resourceService)
+        public PillowsNoSkipCacheController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<Pillow, int> resourceService)
             : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }

@@ -247,7 +247,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             where TResource : Identifiable<int>
         {
             var options = new JsonApiOptions();
-            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<TResource>().Build();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<TResource, int>().Build();
             options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
 
             var serviceContainer = new ServiceContainer();

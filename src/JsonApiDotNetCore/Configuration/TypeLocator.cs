@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public ResourceDescriptor? ResolveResourceDescriptor(Type? type)
         {
-            if (type != null && type.IsOrImplementsInterface(typeof(IIdentifiable)))
+            if (type != null && type.IsOrImplementsInterface<IIdentifiable>())
             {
                 Type? idType = LookupIdType(type);
 

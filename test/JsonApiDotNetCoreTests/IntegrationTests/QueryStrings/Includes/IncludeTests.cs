@@ -416,10 +416,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             responseDocument.Included[2].Id.Should().Be(comment.Parent.Comments.ElementAt(0).StringId);
             responseDocument.Included[2].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Parent.Comments.ElementAt(0).Text));
 
-            string userName = comment.Parent.Comments.ElementAt(0).Author.UserName;
+            string userName = comment.Parent.Comments.ElementAt(0).Author!.UserName;
 
             responseDocument.Included[3].Type.Should().Be("webAccounts");
-            responseDocument.Included[3].Id.Should().Be(comment.Parent.Comments.ElementAt(0).Author.StringId);
+            responseDocument.Included[3].Id.Should().Be(comment.Parent.Comments.ElementAt(0).Author!.StringId);
             responseDocument.Included[3].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(userName));
 
             responseDocument.Included[4].Type.Should().Be("comments");
@@ -437,7 +437,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             blog.Posts[0].Author!.Preferences = _fakers.AccountPreferences.Generate();
             blog.Posts[0].Comments = _fakers.Comment.Generate(2).ToHashSet();
             blog.Posts[0].Comments.ElementAt(0).Author = _fakers.WebAccount.Generate();
-            blog.Posts[0].Comments.ElementAt(0).Author.Posts = _fakers.BlogPost.Generate(1);
+            blog.Posts[0].Comments.ElementAt(0).Author!.Posts = _fakers.BlogPost.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -493,7 +493,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
                 value.ShouldNotBeNull();
                 value.Data.SingleValue.ShouldNotBeNull();
                 value.Data.SingleValue.Type.Should().Be("accountPreferences");
-                value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Author!.Preferences.StringId);
+                value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Author!.Preferences!.StringId);
             });
 
             responseDocument.Included[1].Relationships.ShouldContainKey("posts").With(value =>
@@ -503,7 +503,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             });
 
             responseDocument.Included[2].Type.Should().Be("accountPreferences");
-            responseDocument.Included[2].Id.Should().Be(blog.Posts[0].Author!.Preferences.StringId);
+            responseDocument.Included[2].Id.Should().Be(blog.Posts[0].Author!.Preferences!.StringId);
 
             responseDocument.Included[3].Type.Should().Be("comments");
             responseDocument.Included[3].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).StringId);
@@ -513,18 +513,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
                 value.ShouldNotBeNull();
                 value.Data.SingleValue.ShouldNotBeNull();
                 value.Data.SingleValue.Type.Should().Be("webAccounts");
-                value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.StringId);
+                value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author!.StringId);
             });
 
             responseDocument.Included[4].Type.Should().Be("webAccounts");
-            responseDocument.Included[4].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.StringId);
+            responseDocument.Included[4].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author!.StringId);
 
             responseDocument.Included[4].Relationships.ShouldContainKey("posts").With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Data.ManyValue.ShouldNotBeEmpty();
                 value.Data.ManyValue[0].Type.Should().Be("blogPosts");
-                value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.Posts[0].StringId);
+                value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author!.Posts[0].StringId);
             });
 
             responseDocument.Included[4].Relationships.ShouldContainKey("preferences").With(value =>
@@ -534,7 +534,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             });
 
             responseDocument.Included[5].Type.Should().Be("blogPosts");
-            responseDocument.Included[5].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.Posts[0].StringId);
+            responseDocument.Included[5].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author!.Posts[0].StringId);
 
             responseDocument.Included[5].Relationships.ShouldContainKey("author").With(value =>
             {

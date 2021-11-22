@@ -556,11 +556,11 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response
             // @formatter:keep_existing_linebreaks true
 
             IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
-                .Add<Article>()
-                .Add<Person>()
-                .Add<Blog>()
-                .Add<Food>()
-                .Add<Song>()
+                .Add<Article, int>()
+                .Add<Person, int>()
+                .Add<Blog, int>()
+                .Add<Food, int>()
+                .Add<Song, int>()
                 .Build();
 
             // @formatter:wrap_chained_method_calls restore
@@ -595,12 +595,12 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response
                 return null;
             }
 
-            public ResourceLinks? GetResourceLinks(ResourceType resourceType, string id)
+            public ResourceLinks? GetResourceLinks(ResourceType resourceType, IIdentifiable resource)
             {
                 return null;
             }
 
-            public RelationshipLinks? GetRelationshipLinks(RelationshipAttribute relationship, string leftId)
+            public RelationshipLinks? GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable leftResource)
             {
                 return null;
             }

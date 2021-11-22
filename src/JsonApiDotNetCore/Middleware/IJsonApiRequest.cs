@@ -14,26 +14,26 @@ namespace JsonApiDotNetCore.Middleware
         public EndpointKind Kind { get; }
 
         /// <summary>
-        /// The ID of the primary (top-level) resource for this request. This would be null in "/blogs", "123" in "/blogs/123" or "/blogs/123/author". This is
+        /// The ID of the primary resource for this request. This would be <c>null</c> in "/blogs", "123" in "/blogs/123" or "/blogs/123/author". This is
         /// <c>null</c> before and after processing operations in an atomic:operations request.
         /// </summary>
         string? PrimaryId { get; }
 
         /// <summary>
-        /// The primary (top-level) resource type for this request. This would be "blogs" in "/blogs", "/blogs/123" or "/blogs/123/author". This is <c>null</c>
-        /// before and after processing operations in an atomic:operations request.
+        /// The primary resource type for this request. This would be "blogs" in "/blogs", "/blogs/123" or "/blogs/123/author". This is <c>null</c> before and
+        /// after processing operations in an atomic:operations request.
         /// </summary>
         ResourceType? PrimaryResourceType { get; }
 
         /// <summary>
-        /// The secondary (nested) resource type for this request. This would be null in "/blogs", "/blogs/123" and "/blogs/123/unknownResource" or "people" in
+        /// The secondary resource type for this request. This would be <c>null</c> in "/blogs", "/blogs/123" and "/blogs/123/unknownResource" or "people" in
         /// "/blogs/123/author" and "/blogs/123/relationships/author". This is <c>null</c> before and after processing operations in an atomic:operations
         /// request.
         /// </summary>
         ResourceType? SecondaryResourceType { get; }
 
         /// <summary>
-        /// The relationship for this nested request. This would be null in "/blogs", "/blogs/123" and "/blogs/123/unknownResource" or "author" in
+        /// The relationship for this request. This would be <c>null</c> in "/blogs", "/blogs/123" and "/blogs/123/unknownResource" or "author" in
         /// "/blogs/123/author" and "/blogs/123/relationships/author". This is <c>null</c> before and after processing operations in an atomic:operations
         /// request.
         /// </summary>
@@ -45,13 +45,13 @@ namespace JsonApiDotNetCore.Middleware
         bool IsCollection { get; }
 
         /// <summary>
-        /// Indicates whether this request targets only fetching of data (such as resources and relationships).
+        /// Indicates whether this request targets only fetching of data (resources and relationships), as opposed to applying changes.
         /// </summary>
         bool IsReadOnly { get; }
 
         /// <summary>
         /// In case of a non-readonly request, this indicates the kind of write operation currently being processed. This is <c>null</c> when processing a
-        /// read-only operations, or before and after processing operations in an atomic:operations request.
+        /// read-only operation, and before and after processing operations in an atomic:operations request.
         /// </summary>
         WriteOperationKind? WriteOperation { get; }
 
