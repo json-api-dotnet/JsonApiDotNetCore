@@ -30,7 +30,6 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
         private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
         private readonly NullableReferenceSchemaGenerator _nullableReferenceSchemaGenerator;
         private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
-        private readonly RelationshipDataTypeFactory _relationshipDataTypeFactory = new();
 
         public ResourceFieldObjectSchemaBuilder(ResourceTypeInfo resourceTypeInfo, ISchemaRepositoryAccessor schemaRepositoryAccessor,
             SchemaGenerator defaultSchemaGenerator, JsonApiSchemaIdSelector jsonApiSchemaIdSelector, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator)
@@ -228,11 +227,11 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             }
         }
 
-        private Type GetRelationshipDataType(RelationshipAttribute relationship, Type resourceObjectType)
+        private static Type GetRelationshipDataType(RelationshipAttribute relationship, Type resourceObjectType)
         {
             return resourceObjectType.GetGenericTypeDefinition().IsAssignableTo(typeof(ResourceResponseObject<>))
-                ? _relationshipDataTypeFactory.GetForResponse(relationship)
-                : _relationshipDataTypeFactory.GetForRequest(relationship);
+                ? RelationshipDataTypeFactory.Instance.GetForResponse(relationship)
+                : RelationshipDataTypeFactory.Instance.GetForRequest(relationship);
         }
 
         private OpenApiSchema? GetReferenceSchemaForRelationshipData(Type relationshipDataType)

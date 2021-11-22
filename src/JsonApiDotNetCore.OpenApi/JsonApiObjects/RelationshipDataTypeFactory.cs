@@ -6,13 +6,17 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects
 {
     internal sealed class RelationshipDataTypeFactory
     {
-        private readonly NonPrimaryDocumentTypeFactory _nonPrimaryDocumentTypeFactory = new();
+        public static RelationshipDataTypeFactory Instance { get; } = new();
+
+        private RelationshipDataTypeFactory()
+        {
+        }
 
         public Type GetForRequest(RelationshipAttribute relationship)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
 
-            return _nonPrimaryDocumentTypeFactory.GetForRelationshipRequest(relationship);
+            return NonPrimaryDocumentTypeFactory.Instance.GetForRelationshipRequest(relationship);
         }
 
         public Type GetForResponse(RelationshipAttribute relationship)

@@ -79,12 +79,12 @@ namespace JsonApiDotNetCore.OpenApi
                     UpdateBodyParameterDescriptor(endpoint, primaryMetadata.DocumentType);
                     return Array.Empty<ActionDescriptor>();
                 }
-                case ExpansibleEndpointMetadata expansibleMetadata and (RelationshipResponseMetadata or SecondaryResponseMetadata):
+                case NonPrimaryEndpointMetadata expansibleMetadata and (RelationshipResponseMetadata or SecondaryResponseMetadata):
                 {
                     return Expand(endpoint, expansibleMetadata,
                         (expandedEndpoint, documentType, _) => UpdateProducesResponseTypeAttribute(expandedEndpoint, documentType));
                 }
-                case ExpansibleEndpointMetadata expansibleMetadata and RelationshipRequestMetadata:
+                case NonPrimaryEndpointMetadata expansibleMetadata and RelationshipRequestMetadata:
                 {
                     return Expand(endpoint, expansibleMetadata, UpdateBodyParameterDescriptor);
                 }
@@ -118,7 +118,7 @@ namespace JsonApiDotNetCore.OpenApi
             return produces != null && produces.ContentTypes.Any(contentType => contentType == HeaderConstants.MediaType);
         }
 
-        private static IEnumerable<ActionDescriptor> Expand(ActionDescriptor genericEndpoint, ExpansibleEndpointMetadata metadata,
+        private static IEnumerable<ActionDescriptor> Expand(ActionDescriptor genericEndpoint, NonPrimaryEndpointMetadata metadata,
             Action<ActionDescriptor, Type, string> expansionCallback)
         {
             var expansion = new List<ActionDescriptor>();

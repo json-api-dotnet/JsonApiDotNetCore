@@ -7,34 +7,40 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects
 {
     internal sealed class NonPrimaryDocumentTypeFactory
     {
-        private readonly DocumentOpenTypeOptions _secondaryResponseDocumentTypeOptions = new(typeof(ResourceCollectionResponseDocument<>),
+        private static readonly DocumentOpenTypeOptions SecondaryResponseDocumentTypeOptions = new(typeof(ResourceCollectionResponseDocument<>),
             typeof(NullableSecondaryResourceResponseDocument<>), typeof(SecondaryResourceResponseDocument<>));
 
-        private readonly DocumentOpenTypeOptions _relationshipRequestDocumentTypeOptions = new(typeof(ToManyRelationshipRequestData<>),
+        private static readonly DocumentOpenTypeOptions RelationshipRequestDocumentTypeOptions = new(typeof(ToManyRelationshipRequestData<>),
             typeof(NullableToOneRelationshipRequestData<>), typeof(ToOneRelationshipRequestData<>));
 
-        private readonly DocumentOpenTypeOptions _relationshipResponseDocumentTypeOptions = new(typeof(ResourceIdentifierCollectionResponseDocument<>),
+        private static readonly DocumentOpenTypeOptions RelationshipResponseDocumentTypeOptions = new(typeof(ResourceIdentifierCollectionResponseDocument<>),
             typeof(NullableResourceIdentifierResponseDocument<>), typeof(ResourceIdentifierResponseDocument<>));
+
+        public static NonPrimaryDocumentTypeFactory Instance { get; } = new();
+
+        private NonPrimaryDocumentTypeFactory()
+        {
+        }
 
         public Type GetForSecondaryResponse(RelationshipAttribute relationship)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
 
-            return Get(relationship, _secondaryResponseDocumentTypeOptions);
+            return Get(relationship, SecondaryResponseDocumentTypeOptions);
         }
 
         public Type GetForRelationshipRequest(RelationshipAttribute relationship)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
 
-            return Get(relationship, _relationshipRequestDocumentTypeOptions);
+            return Get(relationship, RelationshipRequestDocumentTypeOptions);
         }
 
         public Type GetForRelationshipResponse(RelationshipAttribute relationship)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
 
-            return Get(relationship, _relationshipResponseDocumentTypeOptions);
+            return Get(relationship, RelationshipResponseDocumentTypeOptions);
         }
 
         private static Type Get(RelationshipAttribute relationship, DocumentOpenTypeOptions typeOptions)

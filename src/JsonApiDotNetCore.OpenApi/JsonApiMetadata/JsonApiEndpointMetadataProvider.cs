@@ -18,7 +18,6 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
     {
         private readonly IControllerResourceMapping _controllerResourceMapping;
         private readonly EndpointResolver _endpointResolver = new();
-        private readonly NonPrimaryDocumentTypeFactory _nonPrimaryDocumentTypeFactory = new();
 
         public JsonApiEndpointMetadataProvider(IControllerResourceMapping controllerResourceMapping)
         {
@@ -89,12 +88,13 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
             return new PrimaryRequestMetadata(documentType);
         }
 
-        private RelationshipRequestMetadata GetRelationshipRequestMetadata(IEnumerable<RelationshipAttribute> relationships, bool ignoreHasOneRelationships)
+        private static RelationshipRequestMetadata GetRelationshipRequestMetadata(IEnumerable<RelationshipAttribute> relationships,
+            bool ignoreHasOneRelationships)
         {
             IEnumerable<RelationshipAttribute> relationshipsOfEndpoint = ignoreHasOneRelationships ? relationships.OfType<HasManyAttribute>() : relationships;
 
             IDictionary<string, Type> requestDocumentTypesByRelationshipName = relationshipsOfEndpoint.ToDictionary(relationship => relationship.PublicName,
-                _nonPrimaryDocumentTypeFactory.GetForRelationshipRequest);
+                NonPrimaryDocumentTypeFactory.Instance.GetForRelationshipRequest);
 
             return new RelationshipRequestMetadata(requestDocumentTypesByRelationshipName);
         }
@@ -133,18 +133,18 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
             return new PrimaryResponseMetadata(documentType);
         }
 
-        private SecondaryResponseMetadata GetSecondaryResponseMetadata(IEnumerable<RelationshipAttribute> relationships)
+        private static SecondaryResponseMetadata GetSecondaryResponseMetadata(IEnumerable<RelationshipAttribute> relationships)
         {
             IDictionary<string, Type> responseDocumentTypesByRelationshipName = relationships.ToDictionary(relationship => relationship.PublicName,
-                _nonPrimaryDocumentTypeFactory.GetForSecondaryResponse);
+                NonPrimaryDocumentTypeFactory.Instance.GetForSecondaryResponse);
 
             return new SecondaryResponseMetadata(responseDocumentTypesByRelationshipName);
         }
 
-        private RelationshipResponseMetadata GetRelationshipResponseMetadata(IEnumerable<RelationshipAttribute> relationships)
+        private static RelationshipResponseMetadata GetRelationshipResponseMetadata(IEnumerable<RelationshipAttribute> relationships)
         {
             IDictionary<string, Type> responseDocumentTypesByRelationshipName = relationships.ToDictionary(relationship => relationship.PublicName,
-                _nonPrimaryDocumentTypeFactory.GetForRelationshipResponse);
+                NonPrimaryDocumentTypeFactory.Instance.GetForRelationshipResponse);
 
             return new RelationshipResponseMetadata(responseDocumentTypesByRelationshipName);
         }

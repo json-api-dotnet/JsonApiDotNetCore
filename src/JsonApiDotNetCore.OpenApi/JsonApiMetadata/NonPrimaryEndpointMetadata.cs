@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
 {
-    internal abstract class ExpansibleEndpointMetadata
+    internal abstract class NonPrimaryEndpointMetadata
     {
         public IDictionary<string, Type> DocumentTypesByRelationshipName { get; }
 
-        protected ExpansibleEndpointMetadata(IDictionary<string, Type> documentTypesByRelationshipName)
+        protected NonPrimaryEndpointMetadata(IDictionary<string, Type> documentTypesByRelationshipName)
         {
             ArgumentGuard.NotNull(documentTypesByRelationshipName, nameof(documentTypesByRelationshipName));
 
