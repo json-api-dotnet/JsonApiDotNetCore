@@ -8,7 +8,7 @@
     <title>Attributes </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Attributes ">
-    <meta name="generator" content="docfx 2.58.5.0">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -70,10 +70,15 @@
 <h1 id="attributes">Attributes</h1>
 
 <p>If you want an attribute on your model to be publicly available, add the <code>AttrAttribute</code>.</p>
-<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
+<pre><code class="lang-c#">#nullable enable
+
+public class Person : Identifiable&lt;int&gt;
 {
     [Attr]
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
+
+    [Attr]
+    public string LastName { get; set; } = null!;
 }
 </code></pre><h2 id="name">Name</h2>
 <p>There are two ways the exposed attribute name is determined:</p>
@@ -81,10 +86,11 @@
 <li><p>Using the configured <a href="../options.html#customize-serializer-options">naming convention</a>.</p>
 </li>
 <li><p>Individually using the attribute&#39;s constructor.</p>
-<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
+<pre><code class="lang-c#">#nullable enable
+public class Person : Identifiable&lt;int&gt;
 {
  [Attr(PublicName = &quot;first-name&quot;)]
- public string FirstName { get; set; }
+ public string? FirstName { get; set; }
 }
 </code></pre></li>
 </ol>
@@ -95,59 +101,72 @@
 </code></pre><p>This can be overridden per attribute.</p>
 <h3 id="viewability">Viewability</h3>
 <p>Attributes can be marked to allow returning their value in responses. When not allowed and requested using <code>?fields[]=</code>, it results in an HTTP 400 response.</p>
-<pre><code class="lang-c#">public class User : Identifiable&lt;int&gt;
+<pre><code class="lang-c#">#nullable enable
+
+public class User : Identifiable&lt;int&gt;
 {
     [Attr(Capabilities = ~AttrCapabilities.AllowView)]
-    public string Password { get; set; }
+    public string Password { get; set; } = null!;
 }
 </code></pre><h3 id="creatability">Creatability</h3>
 <p>Attributes can be marked as creatable, which will allow <code>POST</code> requests to assign a value to them. When sent but not allowed, an HTTP 422 response is returned.</p>
-<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
+<pre><code class="lang-c#">#nullable enable
+
+public class Person : Identifiable&lt;int&gt;
 {
     [Attr(Capabilities = AttrCapabilities.AllowCreate)]
-    public string CreatorName { get; set; }
+    public string? CreatorName { get; set; }
 }
 </code></pre><h3 id="changeability">Changeability</h3>
 <p>Attributes can be marked as changeable, which will allow <code>PATCH</code> requests to update them. When sent but not allowed, an HTTP 422 response is returned.</p>
-<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
+<pre><code class="lang-c#">#nullable enable
+
+public class Person : Identifiable&lt;int&gt;
 {
     [Attr(Capabilities = AttrCapabilities.AllowChange)]
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; };
 }
 </code></pre><h3 id="filtersort-ability">Filter/Sort-ability</h3>
 <p>Attributes can be marked to allow filtering and/or sorting. When not allowed, it results in an HTTP 400 response.</p>
-<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
+<pre><code class="lang-c#">#nullable enable
+
+public class Person : Identifiable&lt;int&gt;
 {
     [Attr(Capabilities = AttrCapabilities.AllowSort | AttrCapabilities.AllowFilter)]
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
 }
 </code></pre><h2 id="complex-attributes">Complex Attributes</h2>
 <p>Models may contain complex attributes.
 Serialization of these types is done by <a href="https://www.nuget.org/packages/System.Text.Json">System.Text.Json</a>,
 so you should use their APIs to specify serialization format.
 You can also use <a href="../options.html#customize-serializer-options">global options</a> to control the <code>JsonSerializer</code> behavior.</p>
-<pre><code class="lang-c#">public class Foo : Identifiable&lt;int&gt;
+<pre><code class="lang-c#">#nullable enable
+
+public class Foo : Identifiable&lt;int&gt;
 {
     [Attr]
-    public Bar Bar { get; set; }
+    public Bar? Bar { get; set; }
 }
 
 public class Bar
 {
     [JsonPropertyName(&quot;compound-member&quot;)]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string CompoundMember { get; set; }
+    public string? CompoundMember { get; set; }
 }
 </code></pre><p>If you need your complex attributes persisted as a
 JSON string in your database, but you need access to it as a concrete type, you can define two members on your resource.
 The first member is the concrete type that you will directly interact with in your application. You can use the <code>NotMapped</code> attribute to prevent Entity Framework Core from mapping it to the database. The second is the raw JSON property that will be persisted to the database. How you use these members should determine which one is responsible for serialization. In this example, we only serialize and deserialize at the time of persistence
 and retrieval.</p>
-<pre><code class="lang-c#">public class Foo : Identifiable&lt;int&gt;
-{
-    [Attr, NotMapped]
-    public Bar Bar { get; set; }
+<pre><code class="lang-c#">#nullable enable
 
-    public string BarJson
+public class Foo : Identifiable&lt;int&gt;
+{
+    [Attr]
+    [NotMapped]
+    public Bar? Bar { get; set; }
+
+    public string? BarJson
     {
         get
         {

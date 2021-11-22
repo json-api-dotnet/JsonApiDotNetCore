@@ -8,7 +8,7 @@
     <title>Errors </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Errors ">
-    <meta name="generator" content="docfx 2.58.5.0">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -76,13 +76,13 @@ Please keep in mind that JSON:API requires Title to be a generic message, while 
 <pre><code class="lang-c#">return Conflict(new Error(HttpStatusCode.Conflict)
 {
     Title = &quot;Target resource was modified by another user.&quot;,
-    Detail = $&quot;User {userName} changed the {resourceField} field on the {resourceName} resource.&quot;
+    Detail = $&quot;User {userName} changed the {resourceField} field on {resourceName} resource.&quot;
 });
 </code></pre><p>From other code:</p>
 <pre><code class="lang-c#">throw new JsonApiException(new Error(HttpStatusCode.Conflict)
 {
     Title = &quot;Target resource was modified by another user.&quot;,
-    Detail = $&quot;User {userName} changed the {resourceField} field on the {resourceName} resource.&quot;
+    Detail = $&quot;User {userName} changed the {resourceField} field on {resourceName} resource.&quot;
 });
 </code></pre><p>In both cases, the middleware will properly serialize it and return it as a JSON:API error.</p>
 <h1 id="exception-handling">Exception handling</h1>
@@ -125,18 +125,22 @@ public class CustomExceptionHandler : ExceptionHandler
         return base.GetLogMessage(exception);
     }
 
-    protected override ErrorDocument CreateErrorDocument(Exception exception)
+    protected override IReadOnlyList&lt;ErrorObject&gt; CreateErrorResponse(Exception exception)
     {
         if (exception is ProductOutOfStockException productOutOfStock)
         {
-            return new ErrorDocument(new Error(HttpStatusCode.Conflict)
+            return new[]
             {
-                Title = &quot;Product is temporarily available.&quot;,
-                Detail = $&quot;Product {productOutOfStock.ProductId} cannot be ordered at the moment.&quot;
-            });
+                new Error(HttpStatusCode.Conflict)
+                {
+                    Title = &quot;Product is temporarily available.&quot;,
+                    Detail = $&quot;Product {productOutOfStock.ProductId} &quot; +
+                        &quot;cannot be ordered at the moment.&quot;
+                }
+            };
         }
 
-        return base.CreateErrorDocument(exception);
+        return base.CreateErrorResponse(exception);
     }
 }
 

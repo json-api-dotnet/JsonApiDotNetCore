@@ -8,7 +8,7 @@
     <title>Step-By-Step Guide to a Running API </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Step-By-Step Guide to a Running API ">
-    <meta name="generator" content="docfx 2.58.5.0">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -95,21 +95,23 @@ Install-Package JsonApiDotNetCore
 </code></pre><h3 id="define-models">Define Models</h3>
 <p>Define your domain models such that they implement <code>IIdentifiable&lt;TId&gt;</code>.
 The easiest way to do this is to inherit from <code>Identifiable&lt;TId&gt;</code>.</p>
-<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
+<pre><code class="lang-c#">#nullable enable
+
+public class Person : Identifiable&lt;int&gt;
 {
     [Attr]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 }
 </code></pre><h3 id="define-dbcontext">Define DbContext</h3>
 <p>Nothing special here, just an ordinary <code>DbContext</code>.</p>
 <pre><code>public class AppDbContext : DbContext
 {
+    public DbSet&lt;Person&gt; People =&gt; Set&lt;Person&gt;();
+
     public AppDbContext(DbContextOptions&lt;AppDbContext&gt; options)
         : base(options)
     {
     }
-
-    public DbSet&lt;Person&gt; People { get; set; }
 }
 </code></pre><h3 id="define-controllers">Define Controllers</h3>
 <p>You need to create controllers that inherit from <code>JsonApiController&lt;TResource, TId&gt;</code>

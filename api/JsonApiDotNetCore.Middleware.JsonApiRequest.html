@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class JsonApiRequest
    ">
-    <meta name="generator" content="docfx 2.58.5.0">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -158,7 +158,7 @@ public sealed class JsonApiRequest : IJsonApiRequest</code></pre>
   </span>
   <a id="JsonApiDotNetCore_Middleware_JsonApiRequest_IsReadOnly_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.IsReadOnly*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_JsonApiRequest_IsReadOnly" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.IsReadOnly">IsReadOnly</h4>
-  <div class="markdown level1 summary"><p>Indicates whether this request targets only fetching of data (such as resources and relationships).</p>
+  <div class="markdown level1 summary"><p>Indicates whether this request targets only fetching of data (resources and relationships), as opposed to applying changes.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -220,7 +220,7 @@ public sealed class JsonApiRequest : IJsonApiRequest</code></pre>
   </span>
   <a id="JsonApiDotNetCore_Middleware_JsonApiRequest_PrimaryId_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.PrimaryId*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_JsonApiRequest_PrimaryId" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.PrimaryId">PrimaryId</h4>
-  <div class="markdown level1 summary"><p>The ID of the primary (top-level) resource for this request. This would be null in &quot;/blogs&quot;, &quot;123&quot; in &quot;/blogs/123&quot; or &quot;/blogs/123/author&quot;. This is
+  <div class="markdown level1 summary"><p>The ID of the primary resource for this request. This would be <code>null</code> in &quot;/blogs&quot;, &quot;123&quot; in &quot;/blogs/123&quot; or &quot;/blogs/123/author&quot;. This is
 <code>null</code> before and after processing operations in an atomic:operations request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -252,8 +252,8 @@ public sealed class JsonApiRequest : IJsonApiRequest</code></pre>
   </span>
   <a id="JsonApiDotNetCore_Middleware_JsonApiRequest_PrimaryResourceType_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.PrimaryResourceType*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_JsonApiRequest_PrimaryResourceType" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.PrimaryResourceType">PrimaryResourceType</h4>
-  <div class="markdown level1 summary"><p>The primary (top-level) resource type for this request. This would be &quot;blogs&quot; in &quot;/blogs&quot;, &quot;/blogs/123&quot; or &quot;/blogs/123/author&quot;. This is <code>null</code>
-before and after processing operations in an atomic:operations request.</p>
+  <div class="markdown level1 summary"><p>The primary resource type for this request. This would be &quot;blogs&quot; in &quot;/blogs&quot;, &quot;/blogs/123&quot; or &quot;/blogs/123/author&quot;. This is <code>null</code> before and
+after processing operations in an atomic:operations request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -284,7 +284,7 @@ before and after processing operations in an atomic:operations request.</p>
   </span>
   <a id="JsonApiDotNetCore_Middleware_JsonApiRequest_Relationship_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.Relationship*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_JsonApiRequest_Relationship" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.Relationship">Relationship</h4>
-  <div class="markdown level1 summary"><p>The relationship for this nested request. This would be null in &quot;/blogs&quot;, &quot;/blogs/123&quot; and &quot;/blogs/123/unknownResource&quot; or &quot;author&quot; in
+  <div class="markdown level1 summary"><p>The relationship for this request. This would be <code>null</code> in &quot;/blogs&quot;, &quot;/blogs/123&quot; and &quot;/blogs/123/unknownResource&quot; or &quot;author&quot; in
 &quot;/blogs/123/author&quot; and &quot;/blogs/123/relationships/author&quot;. This is <code>null</code> before and after processing operations in an atomic:operations
 request.</p>
 </div>
@@ -317,7 +317,7 @@ request.</p>
   </span>
   <a id="JsonApiDotNetCore_Middleware_JsonApiRequest_SecondaryResourceType_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.SecondaryResourceType*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_JsonApiRequest_SecondaryResourceType" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.SecondaryResourceType">SecondaryResourceType</h4>
-  <div class="markdown level1 summary"><p>The secondary (nested) resource type for this request. This would be null in &quot;/blogs&quot;, &quot;/blogs/123&quot; and &quot;/blogs/123/unknownResource&quot; or &quot;people&quot; in
+  <div class="markdown level1 summary"><p>The secondary resource type for this request. This would be <code>null</code> in &quot;/blogs&quot;, &quot;/blogs/123&quot; and &quot;/blogs/123/unknownResource&quot; or &quot;people&quot; in
 &quot;/blogs/123/author&quot; and &quot;/blogs/123/relationships/author&quot;. This is <code>null</code> before and after processing operations in an atomic:operations
 request.</p>
 </div>
@@ -382,7 +382,7 @@ request.</p>
   <a id="JsonApiDotNetCore_Middleware_JsonApiRequest_WriteOperation_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.WriteOperation*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_JsonApiRequest_WriteOperation" data-uid="JsonApiDotNetCore.Middleware.JsonApiRequest.WriteOperation">WriteOperation</h4>
   <div class="markdown level1 summary"><p>In case of a non-readonly request, this indicates the kind of write operation currently being processed. This is <code>null</code> when processing a
-read-only operations, or before and after processing operations in an atomic:operations request.</p>
+read-only operation, and before and after processing operations in an atomic:operations request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

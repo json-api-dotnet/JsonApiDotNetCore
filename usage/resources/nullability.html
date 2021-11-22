@@ -8,7 +8,7 @@
     <title>Nullability in resources </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Nullability in resources ">
-    <meta name="generator" content="docfx 2.58.5.0">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -87,7 +87,9 @@ To make JsonApiDotNetCore return an error when such a property is missing on res
 <h2 id="nrt-turned-off">NRT turned off</h2>
 <p>When NRT is turned off, use <code>[Required]</code> on required attributes and relationships. This makes Entity Framework Core generate non-nullable columns. And model errors are returned when required fields are omitted.</p>
 <p>Example:</p>
-<pre><code class="lang-c#">public sealed class Label : Identifiable&lt;int&gt;
+<pre><code class="lang-c#">#nullable disable
+
+public sealed class Label : Identifiable&lt;int&gt;
 {
     [Attr]
     [Required]
@@ -111,7 +113,9 @@ To make JsonApiDotNetCore return an error when such a property is missing on res
 <p>The <a href="https://docs.microsoft.com/en-us/ef/core/miscellaneous/nullable-reference-types">Entity Framework Core guide on NRT</a> recommends to use constructor binding to initialize non-nullable properties, but JsonApiDotNetCore does not support that. For required navigation properties, it suggests to use a non-nullable property with a nullable backing field. JsonApiDotNetCore does not support that either. In both cases, just use the null-forgiving operator (!).</p>
 <p>When ModelState validation is turned on, to-many relationships must be assigned an empty collection. Otherwise an error is returned when they don&#39;t occur in the request body.</p>
 <p>Example:</p>
-<pre><code class="lang-c#">public sealed class Label : Identifiable&lt;int&gt;
+<pre><code class="lang-c#">#nullable enable
+
+public sealed class Label : Identifiable&lt;int&gt;
 {
     [Attr]
     public string Name { get; set; } = null!;

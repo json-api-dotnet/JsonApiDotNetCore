@@ -5,12 +5,12 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class RequestMethodNotAllowedException
+    <title>Class RouteNotAvailableException
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class RequestMethodNotAllowedException
+    <meta name="title" content="Class RouteNotAvailableException
    ">
-    <meta name="generator" content="docfx 2.58.5.0">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -68,12 +68,12 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Errors.RequestMethodNotAllowedException">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Errors.RouteNotAvailableException">
   
   
-  <h1 id="JsonApiDotNetCore_Errors_RequestMethodNotAllowedException" data-uid="JsonApiDotNetCore.Errors.RequestMethodNotAllowedException" class="text-break">Class RequestMethodNotAllowedException
+  <h1 id="JsonApiDotNetCore_Errors_RouteNotAvailableException" data-uid="JsonApiDotNetCore.Errors.RouteNotAvailableException" class="text-break">Class RouteNotAvailableException
   </h1>
-  <div class="markdown level0 summary"><p>The error that is thrown when a request is received that contains an unsupported HTTP verb.</p>
+  <div class="markdown level0 summary"><p>The error that is thrown when a request is received for an HTTP route that is not exposed.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -81,7 +81,7 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">System.Exception</span></div>
     <div class="level2"><a class="xref" href="JsonApiDotNetCore.Errors.JsonApiException.html">JsonApiException</a></div>
-    <div class="level3"><span class="xref">RequestMethodNotAllowedException</span></div>
+    <div class="level3"><span class="xref">RouteNotAvailableException</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -152,27 +152,27 @@
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Errors.html">JsonApiDotNetCore.Errors</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Errors_RequestMethodNotAllowedException_syntax">Syntax</h5>
+  <h5 id="JsonApiDotNetCore_Errors_RouteNotAvailableException_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[PublicAPI]
-public sealed class RequestMethodNotAllowedException : JsonApiException, ISerializable</code></pre>
+public sealed class RouteNotAvailableException : JsonApiException, ISerializable</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_RequestMethodNotAllowedException__ctor_System_Net_Http_HttpMethod_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.%23ctor(System.Net.Http.HttpMethod)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_RouteNotAvailableException__ctor_System_Net_Http_HttpMethod_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.RouteNotAvailableException.%23ctor(System.Net.Http.HttpMethod%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/RequestMethodNotAllowedException.cs/#L16">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/RouteNotAvailableException.cs/#L16">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Errors_RequestMethodNotAllowedException__ctor_" data-uid="JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Errors_RequestMethodNotAllowedException__ctor_System_Net_Http_HttpMethod_" data-uid="JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.#ctor(System.Net.Http.HttpMethod)">RequestMethodNotAllowedException(HttpMethod)</h4>
+  <a id="JsonApiDotNetCore_Errors_RouteNotAvailableException__ctor_" data-uid="JsonApiDotNetCore.Errors.RouteNotAvailableException.#ctor*"></a>
+  <h4 id="JsonApiDotNetCore_Errors_RouteNotAvailableException__ctor_System_Net_Http_HttpMethod_System_String_" data-uid="JsonApiDotNetCore.Errors.RouteNotAvailableException.#ctor(System.Net.Http.HttpMethod,System.String)">RouteNotAvailableException(HttpMethod, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public RequestMethodNotAllowedException(HttpMethod method)</code></pre>
+    <pre><code class="lang-csharp hljs">public RouteNotAvailableException(HttpMethod method, string route)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -189,19 +189,24 @@ public sealed class RequestMethodNotAllowedException : JsonApiException, ISerial
         <td><span class="parametername">method</span></td>
         <td></td>
       </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">route</span></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_RequestMethodNotAllowedException_Method.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.Method%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_RouteNotAvailableException_Method.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.RouteNotAvailableException.Method%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/RequestMethodNotAllowedException.cs/#L14">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/RouteNotAvailableException.cs/#L14">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Errors_RequestMethodNotAllowedException_Method_" data-uid="JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.Method*"></a>
-  <h4 id="JsonApiDotNetCore_Errors_RequestMethodNotAllowedException_Method" data-uid="JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.Method">Method</h4>
+  <a id="JsonApiDotNetCore_Errors_RouteNotAvailableException_Method_" data-uid="JsonApiDotNetCore.Errors.RouteNotAvailableException.Method*"></a>
+  <h4 id="JsonApiDotNetCore_Errors_RouteNotAvailableException_Method" data-uid="JsonApiDotNetCore.Errors.RouteNotAvailableException.Method">Method</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -235,10 +240,10 @@ public sealed class RequestMethodNotAllowedException : JsonApiException, ISerial
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_RequestMethodNotAllowedException.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.RequestMethodNotAllowedException%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_RouteNotAvailableException.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.RouteNotAvailableException%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/RequestMethodNotAllowedException.cs/#L11" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/RouteNotAvailableException.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

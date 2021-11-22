@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace JsonApiDotNetCore.Controllers
    ">
-    <meta name="generator" content="docfx 2.58.5.0">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -88,9 +88,8 @@
       <section><p>Provides helper methods to raise JSON:API compliant errors from controller actions.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html">JsonApiCommandController&lt;TResource, TId&gt;</a></h4>
-      <section><p>The base class to derive resource-specific write-only controllers from. This class delegates all work to
-<a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController&lt;TResource, TId&gt;</a> but adds attributes for routing templates. If you want to provide routing templates yourself,
-you should derive from BaseJsonApiController directly.</p>
+      <section><p>The base class to derive resource-specific write-only controllers from. Returns HTTP 405 on read-only endpoints. If you want to provide routing
+templates yourself, you should derive from BaseJsonApiController directly.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiController-2.html">JsonApiController&lt;TResource, TId&gt;</a></h4>
       <section><p>The base class to derive resource-specific controllers from. This class delegates all work to <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController&lt;TResource, TId&gt;</a>
@@ -101,9 +100,8 @@ but adds attributes for routing templates. If you want to provide routing templa
 attributes for routing templates. If you want to provide routing templates yourself, you should derive from BaseJsonApiOperationsController directly.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html">JsonApiQueryController&lt;TResource, TId&gt;</a></h4>
-      <section><p>The base class to derive resource-specific read-only controllers from. This class delegates all work to
-<a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController&lt;TResource, TId&gt;</a> but adds attributes for routing templates. If you want to provide routing templates yourself,
-you should derive from BaseJsonApiController directly.</p>
+      <section><p>The base class to derive resource-specific read-only controllers from. Returns HTTP 405 on write-only endpoints. If you want to provide routing
+templates yourself, you should derive from BaseJsonApiController directly.</p>
 </section>
 </article>
           </div>

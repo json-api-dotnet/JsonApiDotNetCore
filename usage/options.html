@@ -8,7 +8,7 @@
     <title>Global Options </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Global Options ">
-    <meta name="generator" content="docfx 2.58.5.0">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -132,15 +132,20 @@ options.SerializerOptions.DictionaryKeyPolicy = null;
 When <code>ValidateModelState</code> is set to <code>false</code>, no model validation is performed.</p>
 <p>How nullability affects ModelState validation is described <a href="resources/nullability.html">here</a>.</p>
 <pre><code class="lang-c#">options.ValidateModelState = true;
-</code></pre><pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
+</code></pre><pre><code class="lang-c#">#nullable enable
+
+public class Person : Identifiable&lt;int&gt;
 {
     [Attr]
-    [Required]
     [MinLength(3)]
-    public string FirstName { get; set; }
+    public string FirstName { get; set; } = null!;
 
+    [Attr]
     [Required]
-    public LoginAccount Account : get; set; }
+    public int? Age { get; set; }
+
+    [HasOne]
+    public LoginAccount Account { get; set; } = null!;
 }
 </code></pre></article>
           </div>

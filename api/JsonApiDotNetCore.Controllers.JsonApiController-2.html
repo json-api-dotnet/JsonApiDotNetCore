@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class JsonApiController&lt;TResource, TId&gt;
    ">
-    <meta name="generator" content="docfx 2.58.5.0">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -84,6 +84,8 @@ but adds attributes for routing templates. If you want to provide routing templa
     <div class="level2"><a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html">CoreJsonApiController</a></div>
     <div class="level3"><a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController</a>&lt;TResource, TId&gt;</div>
     <div class="level4"><span class="xref">JsonApiController&lt;TResource, TId&gt;</span></div>
+      <div class="level5"><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html">JsonApiCommandController&lt;TResource, TId&gt;</a></div>
+      <div class="level5"><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html">JsonApiQueryController&lt;TResource, TId&gt;</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -837,7 +839,7 @@ but adds attributes for routing templates. If you want to provide routing templa
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteAsync(`1,System.Threading.CancellationToken)">DeleteAsync(TId, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Deletes an existing resource. Example: DELETE /articles/1 HTTP/1.1</p>
+  <div class="markdown level1 summary"><p>Deletes an existing resource. Example: <pre><code>DELETE /articles/1 HTTP/1.1</code></pre></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -893,7 +895,7 @@ public override async Task&lt;IActionResult&gt; DeleteAsync(TId id, Cancellation
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">DeleteRelationshipAsync(TId, String, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Removes resources from a to-many relationship. Example: DELETE /articles/1/relationships/revisions HTTP/1.1</p>
+  <div class="markdown level1 summary"><p>Removes resources from a to-many relationship. Example: <pre><code>DELETE /articles/1/relationships/revisions HTTP/1.1</code></pre></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -963,7 +965,7 @@ public override async Task&lt;IActionResult&gt; DeleteRelationshipAsync(TId id, 
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync(`1,System.Threading.CancellationToken)">GetAsync(TId, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Gets a single top-level (non-nested) resource by ID. Example: /articles/1</p>
+  <div class="markdown level1 summary"><p>Gets a single primary resource by ID. Example: <pre><code>GET /articles/1 HTTP/1.1</code></pre></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1020,7 +1022,7 @@ public override async Task&lt;IActionResult&gt; GetAsync(TId id, CancellationTok
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync(System.Threading.CancellationToken)">GetAsync(CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Gets a collection of top-level (non-nested) resources. Example: GET /articles HTTP/1.1</p>
+  <div class="markdown level1 summary"><p>Gets a collection of primary resources. Example: <pre><code>GET /articles HTTP/1.1</code></pre></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1072,7 +1074,9 @@ public override async Task&lt;IActionResult&gt; GetAsync(CancellationToken cance
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetRelationshipAsync__1_System_String_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetRelationshipAsync(`1,System.String,System.Threading.CancellationToken)">GetRelationshipAsync(TId, String, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Gets a single resource relationship. Example: GET /articles/1/relationships/author HTTP/1.1 Example: GET /articles/1/relationships/revisions HTTP/1.1</p>
+  <div class="markdown level1 summary"><p>Gets a relationship value, which can be a <code>null</code>, a single object or a collection. Example:</p>
+<pre><code>GET /articles/1/relationships/author HTTP/1.1</code></pre> Example:
+<pre><code>GET /articles/1/relationships/revisions HTTP/1.1</code></pre>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1134,7 +1138,8 @@ public override async Task&lt;IActionResult&gt; GetRelationshipAsync(TId id, str
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetSecondaryAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetSecondaryAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetSecondaryAsync__1_System_String_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetSecondaryAsync(`1,System.String,System.Threading.CancellationToken)">GetSecondaryAsync(TId, String, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Gets a single resource or multiple resources at a nested endpoint. Examples: GET /articles/1/author HTTP/1.1 GET /articles/1/revisions HTTP/1.1</p>
+  <div class="markdown level1 summary"><p>Gets a secondary resource or collection of secondary resources. Example: <pre><code>GET /articles/1/author HTTP/1.1</code></pre> Example:</p>
+<pre><code>GET /articles/1/revisions HTTP/1.1</code></pre>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1197,7 +1202,7 @@ public override async Task&lt;IActionResult&gt; GetSecondaryAsync(TId id, string
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchAsync__1__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchAsync(`1,`0,System.Threading.CancellationToken)">PatchAsync(TId, TResource, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Updates the attributes and/or relationships of an existing resource. Only the values of sent attributes are replaced. And only the values of sent
-relationships are replaced. Example: PATCH /articles/1 HTTP/1.1</p>
+relationships are replaced. Example: <pre><code>PATCH /articles/1 HTTP/1.1</code></pre></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1258,8 +1263,9 @@ public override async Task&lt;IActionResult&gt; PatchAsync(TId id, [FromBody] TR
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchRelationshipAsync__1_System_String_System_Object_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchRelationshipAsync(`1,System.String,System.Object,System.Threading.CancellationToken)">PatchRelationshipAsync(TId, String, Object, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Performs a complete replacement of a relationship on an existing resource. Example: PATCH /articles/1/relationships/author HTTP/1.1 Example: PATCH
-/articles/1/relationships/revisions HTTP/1.1</p>
+  <div class="markdown level1 summary"><p>Performs a complete replacement of a relationship on an existing resource. Example:</p>
+<pre><code>PATCH /articles/1/relationships/author HTTP/1.1</code></pre> Example:
+<pre><code>PATCH /articles/1/relationships/revisions HTTP/1.1</code></pre>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1329,7 +1335,7 @@ public override async Task&lt;IActionResult&gt; PatchRelationshipAsync(TId id, s
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostAsync__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostAsync(`0,System.Threading.CancellationToken)">PostAsync(TResource, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Creates a new resource with attributes, relationships or both. Example: POST /articles HTTP/1.1</p>
+  <div class="markdown level1 summary"><p>Creates a new resource with attributes, relationships or both. Example: <pre><code>POST /articles HTTP/1.1</code></pre></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1385,7 +1391,7 @@ public override async Task&lt;IActionResult&gt; PostAsync([FromBody] TResource r
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">PostRelationshipAsync(TId, String, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Adds resources to a to-many relationship. Example: POST /articles/1/revisions HTTP/1.1</p>
+  <div class="markdown level1 summary"><p>Adds resources to a to-many relationship. Example: <pre><code>POST /articles/1/revisions HTTP/1.1</code></pre></p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

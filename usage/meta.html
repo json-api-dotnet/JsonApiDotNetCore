@@ -8,7 +8,7 @@
     <title>Metadata </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Metadata ">
-    <meta name="generator" content="docfx 2.58.5.0">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -73,14 +73,16 @@
 <h2 id="global-meta">Global Meta</h2>
 <p>Global metadata can be added to the root of the response document by registering a service that implements <code>IResponseMeta</code>.
 This is useful if you need access to other registered services to build the meta object.</p>
-<pre><code class="lang-c#">// In Startup.ConfigureServices
+<pre><code class="lang-c#">#nullable enable
+
+// In Startup.ConfigureServices
 services.AddSingleton&lt;IResponseMeta, CopyrightResponseMeta&gt;();
 
 public sealed class CopyrightResponseMeta : IResponseMeta
 {
-    public IReadOnlyDictionary&lt;string, object&gt; GetMeta()
+    public IReadOnlyDictionary&lt;string, object?&gt; GetMeta()
     {
-        return new Dictionary&lt;string, object&gt;
+        return new Dictionary&lt;string, object?&gt;
         {
             [&quot;copyright&quot;] = &quot;Copyright (C) 2002 Umbrella Corporation.&quot;,
             [&quot;authors&quot;] = new[] { &quot;Alice&quot;, &quot;Red Queen&quot; }
@@ -99,21 +101,23 @@ public sealed class CopyrightResponseMeta : IResponseMeta
 }
 </code></pre><h2 id="resource-meta">Resource Meta</h2>
 <p>Resource-specific metadata can be added by implementing <code>IResourceDefinition&lt;TResource, TId&gt;.GetMeta</code> (or overriding it on <code>JsonApiResourceDefinition&lt;TResource, TId&gt;</code>):</p>
-<pre><code class="lang-c#">public class PersonDefinition : JsonApiResourceDefinition&lt;Person, int&gt;
+<pre><code class="lang-c#">#nullable enable
+
+public class PersonDefinition : JsonApiResourceDefinition&lt;Person, int&gt;
 {
     public PersonDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
     {
     }
 
-    public override IReadOnlyDictionary&lt;string, object&gt; GetMeta(Person person)
+    public override IReadOnlyDictionary&lt;string, object?&gt;? GetMeta(Person person)
     {
         if (person.IsEmployee)
         {
-            return new Dictionary&lt;string, object&gt;
+            return new Dictionary&lt;string, object?&gt;
             {
                 [&quot;notice&quot;] = &quot;Check our intranet at http://www.example.com/employees/&quot; +
-                    person.StringId + &quot; for personal details.&quot;
+                    $&quot;{person.StringId} for personal details.&quot;
             };
         }
 

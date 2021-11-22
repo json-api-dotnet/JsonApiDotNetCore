@@ -8,7 +8,7 @@
     <title>The Resource Graph </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="The Resource Graph ">
-    <meta name="generator" content="docfx 2.58.5.0">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -112,7 +112,7 @@ public void ConfigureServices(IServiceCollection services)
 {
     services.AddJsonApi(resources: builder =&gt;
     {
-        builder.Add&lt;Person&gt;();
+        builder.Add&lt;Person, int&gt;();
     });
 }
 </code></pre><h2 id="resource-name">Resource Name</h2>
@@ -121,7 +121,7 @@ public void ConfigureServices(IServiceCollection services)
 <li><p>The <code>publicName</code> parameter when manually adding a resource to the graph</p>
 <pre><code class="lang-c#">services.AddJsonApi(resources: builder =&gt;
 {
- builder.Add&lt;Person&gt;(publicName: &quot;people&quot;);
+ builder.Add&lt;Person, int&gt;(publicName: &quot;people&quot;);
 });
 </code></pre></li>
 <li><p>The model is decorated with a <code>ResourceAttribute</code></p>

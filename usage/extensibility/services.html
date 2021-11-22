@@ -8,7 +8,7 @@
     <title>Resource Services </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Resource Services ">
-    <meta name="generator" content="docfx 2.58.5.0">
+    <meta name="generator" content="docfx 2.58.9.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -83,7 +83,8 @@ In simple cases, you can also just wrap the base implementation with your custom
         IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
         IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
         IResourceChangeTracker&lt;TodoItem&gt; resourceChangeTracker,
-        IResourceDefinitionAccessor resourceDefinitionAccessor)
+        IResourceDefinitionAccessor resourceDefinitionAccessor,
+        INotificationService notificationService)
         : base(repositoryAccessor, queryLayerComposer, paginationContext, options,
             loggerFactory, request, resourceChangeTracker, resourceDefinitionAccessor)
     {
@@ -170,7 +171,7 @@ public class ProductService : IResourceService&lt;Product, int&gt;
     +-- IRemoveFromRelationshipService
         DELETE /{id}/relationships/{relationship}
 </code></pre><p>In order to take advantage of these interfaces you first need to register the service for each implemented interface.</p>
-<pre><code class="lang-c#">public class ArticleService : ICreateService&lt;Article&gt;, IDeleteService&lt;Article&gt;
+<pre><code class="lang-c#">public class ArticleService : ICreateService&lt;Article, int&gt;, IDeleteService&lt;Article, int&gt;
 {
     // ...
 }
@@ -179,8 +180,8 @@ public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddScoped&lt;ICreateService&lt;Article&gt;, ArticleService&gt;();
-        services.AddScoped&lt;IDeleteService&lt;Article&gt;, ArticleService&gt;();
+        services.AddScoped&lt;ICreateService&lt;Article, int&gt;, ArticleService&gt;();
+        services.AddScoped&lt;IDeleteService&lt;Article, int&gt;, ArticleService&gt;();
     }
 }
 </code></pre><p>In v3.0 we introduced an extension method that you can use to register a resource service on all of its JsonApiDotNetCore interfaces.
@@ -193,28 +194,14 @@ This is helpful when you implement (a subset of) the resource interfaces and wan
         services.AddResourceService&lt;ArticleService&gt;();
     }
 }
-</code></pre><p>Then in the controller, you should inherit from the base controller and pass the services into the named, optional base parameters:</p>
-<pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article, int&gt;
+</code></pre><p>Then in the controller, you should inherit from the JSON:API controller and pass the services into the named, optional base parameters:</p>
+<pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article, int&gt;
 {
     public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
         ILoggerFactory loggerFactory, ICreateService&lt;Article, int&gt; create,
         IDeleteService&lt;Article, int&gt; delete)
         : base(options, resourceGraph, loggerFactory, create: create, delete: delete)
     {
-    }
-
-    [HttpPost]
-    public override async Task&lt;IActionResult&gt; PostAsync([FromBody] Article resource,
-        CancellationToken cancellationToken)
-    {
-        return await base.PostAsync(resource, cancellationToken);
-    }
-
-    [HttpDelete(&quot;{id}&quot;)]
-    public override async Task&lt;IActionResult&gt;DeleteAsync(int id,
-        CancellationToken cancellationToken)
-    {
-        return await base.DeleteAsync(id, cancellationToken);
     }
 }
 </code></pre></article>

@@ -129,12 +129,12 @@ references:
   commentId: T:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker
   fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker
   nameWithType: ILocalIdTracker
-- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign(System.String,System.String,System.String)
-  name: Assign(String, String, String)
-  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_Assign_System_String_System_String_System_String_
-  commentId: M:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign(System.String,System.String,System.String)
-  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign(System.String, System.String, System.String)
-  nameWithType: ILocalIdTracker.Assign(String, String, String)
+- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign(System.String,JsonApiDotNetCore.Configuration.ResourceType,System.String)
+  name: Assign(String, ResourceType, String)
+  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_Assign_System_String_JsonApiDotNetCore_Configuration_ResourceType_System_String_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign(System.String,JsonApiDotNetCore.Configuration.ResourceType,System.String)
+  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign(System.String, JsonApiDotNetCore.Configuration.ResourceType, System.String)
+  nameWithType: ILocalIdTracker.Assign(String, ResourceType, String)
 - uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign*
   name: Assign
   href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_Assign_
@@ -142,12 +142,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign
   nameWithType: ILocalIdTracker.Assign
-- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare(System.String,System.String)
-  name: Declare(String, String)
-  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_Declare_System_String_System_String_
-  commentId: M:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare(System.String,System.String)
-  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare(System.String, System.String)
-  nameWithType: ILocalIdTracker.Declare(String, String)
+- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare(System.String,JsonApiDotNetCore.Configuration.ResourceType)
+  name: Declare(String, ResourceType)
+  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_Declare_System_String_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare(System.String,JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare(System.String, JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: ILocalIdTracker.Declare(String, ResourceType)
 - uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare*
   name: Declare
   href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_Declare_
@@ -155,12 +155,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare
   nameWithType: ILocalIdTracker.Declare
-- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.GetValue(System.String,System.String)
-  name: GetValue(String, String)
-  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_GetValue_System_String_System_String_
-  commentId: M:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.GetValue(System.String,System.String)
-  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.GetValue(System.String, System.String)
-  nameWithType: ILocalIdTracker.GetValue(String, String)
+- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.GetValue(System.String,JsonApiDotNetCore.Configuration.ResourceType)
+  name: GetValue(String, ResourceType)
+  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_GetValue_System_String_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.GetValue(System.String,JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.GetValue(System.String, JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: ILocalIdTracker.GetValue(String, ResourceType)
 - uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.GetValue*
   name: GetValue
   href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_GetValue_
@@ -305,12 +305,12 @@ references:
   commentId: T:JsonApiDotNetCore.AtomicOperations.LocalIdTracker
   fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker
   nameWithType: LocalIdTracker
-- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign(System.String,System.String,System.String)
-  name: Assign(String, String, String)
-  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_Assign_System_String_System_String_System_String_
-  commentId: M:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign(System.String,System.String,System.String)
-  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign(System.String, System.String, System.String)
-  nameWithType: LocalIdTracker.Assign(String, String, String)
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign(System.String,JsonApiDotNetCore.Configuration.ResourceType,System.String)
+  name: Assign(String, ResourceType, String)
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_Assign_System_String_JsonApiDotNetCore_Configuration_ResourceType_System_String_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign(System.String,JsonApiDotNetCore.Configuration.ResourceType,System.String)
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign(System.String, JsonApiDotNetCore.Configuration.ResourceType, System.String)
+  nameWithType: LocalIdTracker.Assign(String, ResourceType, String)
 - uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign*
   name: Assign
   href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_Assign_
@@ -318,12 +318,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign
   nameWithType: LocalIdTracker.Assign
-- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare(System.String,System.String)
-  name: Declare(String, String)
-  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_Declare_System_String_System_String_
-  commentId: M:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare(System.String,System.String)
-  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare(System.String, System.String)
-  nameWithType: LocalIdTracker.Declare(String, String)
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare(System.String,JsonApiDotNetCore.Configuration.ResourceType)
+  name: Declare(String, ResourceType)
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_Declare_System_String_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare(System.String,JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare(System.String, JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: LocalIdTracker.Declare(String, ResourceType)
 - uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare*
   name: Declare
   href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_Declare_
@@ -331,12 +331,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare
   nameWithType: LocalIdTracker.Declare
-- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.GetValue(System.String,System.String)
-  name: GetValue(String, String)
-  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_GetValue_System_String_System_String_
-  commentId: M:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.GetValue(System.String,System.String)
-  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.GetValue(System.String, System.String)
-  nameWithType: LocalIdTracker.GetValue(String, String)
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.GetValue(System.String,JsonApiDotNetCore.Configuration.ResourceType)
+  name: GetValue(String, ResourceType)
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_GetValue_System_String_JsonApiDotNetCore_Configuration_ResourceType_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.GetValue(System.String,JsonApiDotNetCore.Configuration.ResourceType)
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.GetValue(System.String, JsonApiDotNetCore.Configuration.ResourceType)
+  nameWithType: LocalIdTracker.GetValue(String, ResourceType)
 - uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.GetValue*
   name: GetValue
   href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_GetValue_
@@ -2038,15 +2038,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Add
   nameWithType: ResourceGraphBuilder.Add
-- uid: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Add``1(System.String)
-  name: Add<TResource>(String)
-  href: api/JsonApiDotNetCore.Configuration.ResourceGraphBuilder.html#JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Add__1_System_String_
-  commentId: M:JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Add``1(System.String)
-  name.vb: Add(Of TResource)(String)
-  fullName: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Add<TResource>(System.String)
-  fullName.vb: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Add(Of TResource)(System.String)
-  nameWithType: ResourceGraphBuilder.Add<TResource>(String)
-  nameWithType.vb: ResourceGraphBuilder.Add(Of TResource)(String)
 - uid: JsonApiDotNetCore.Configuration.ResourceGraphBuilder.Add``2(System.String)
   name: Add<TResource, TId>(String)
   href: api/JsonApiDotNetCore.Configuration.ResourceGraphBuilder.html#JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Add__2_System_String_
@@ -2563,114 +2554,6 @@ references:
   commentId: T:JsonApiDotNetCore.Controllers.Annotations.DisableRoutingConventionAttribute
   fullName: JsonApiDotNetCore.Controllers.Annotations.DisableRoutingConventionAttribute
   nameWithType: DisableRoutingConventionAttribute
-- uid: JsonApiDotNetCore.Controllers.Annotations.HttpReadOnlyAttribute
-  name: HttpReadOnlyAttribute
-  href: api/JsonApiDotNetCore.Controllers.Annotations.HttpReadOnlyAttribute.html
-  commentId: T:JsonApiDotNetCore.Controllers.Annotations.HttpReadOnlyAttribute
-  fullName: JsonApiDotNetCore.Controllers.Annotations.HttpReadOnlyAttribute
-  nameWithType: HttpReadOnlyAttribute
-- uid: JsonApiDotNetCore.Controllers.Annotations.HttpReadOnlyAttribute.Methods
-  name: Methods
-  href: api/JsonApiDotNetCore.Controllers.Annotations.HttpReadOnlyAttribute.html#JsonApiDotNetCore_Controllers_Annotations_HttpReadOnlyAttribute_Methods
-  commentId: P:JsonApiDotNetCore.Controllers.Annotations.HttpReadOnlyAttribute.Methods
-  fullName: JsonApiDotNetCore.Controllers.Annotations.HttpReadOnlyAttribute.Methods
-  nameWithType: HttpReadOnlyAttribute.Methods
-- uid: JsonApiDotNetCore.Controllers.Annotations.HttpReadOnlyAttribute.Methods*
-  name: Methods
-  href: api/JsonApiDotNetCore.Controllers.Annotations.HttpReadOnlyAttribute.html#JsonApiDotNetCore_Controllers_Annotations_HttpReadOnlyAttribute_Methods_
-  commentId: Overload:JsonApiDotNetCore.Controllers.Annotations.HttpReadOnlyAttribute.Methods
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.Annotations.HttpReadOnlyAttribute.Methods
-  nameWithType: HttpReadOnlyAttribute.Methods
-- uid: JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute
-  name: HttpRestrictAttribute
-  href: api/JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.html
-  commentId: T:JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute
-  fullName: JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute
-  nameWithType: HttpRestrictAttribute
-- uid: JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.Methods
-  name: Methods
-  href: api/JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.html#JsonApiDotNetCore_Controllers_Annotations_HttpRestrictAttribute_Methods
-  commentId: P:JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.Methods
-  fullName: JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.Methods
-  nameWithType: HttpRestrictAttribute.Methods
-- uid: JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.Methods*
-  name: Methods
-  href: api/JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.html#JsonApiDotNetCore_Controllers_Annotations_HttpRestrictAttribute_Methods_
-  commentId: Overload:JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.Methods
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.Methods
-  nameWithType: HttpRestrictAttribute.Methods
-- uid: JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.OnActionExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext,Microsoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate)
-  name: OnActionExecutionAsync(ActionExecutingContext, ActionExecutionDelegate)
-  href: api/JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.html#JsonApiDotNetCore_Controllers_Annotations_HttpRestrictAttribute_OnActionExecutionAsync_Microsoft_AspNetCore_Mvc_Filters_ActionExecutingContext_Microsoft_AspNetCore_Mvc_Filters_ActionExecutionDelegate_
-  commentId: M:JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.OnActionExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext,Microsoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate)
-  fullName: JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.OnActionExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext, Microsoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate)
-  nameWithType: HttpRestrictAttribute.OnActionExecutionAsync(ActionExecutingContext, ActionExecutionDelegate)
-- uid: JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.OnActionExecutionAsync*
-  name: OnActionExecutionAsync
-  href: api/JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.html#JsonApiDotNetCore_Controllers_Annotations_HttpRestrictAttribute_OnActionExecutionAsync_
-  commentId: Overload:JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.OnActionExecutionAsync
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.OnActionExecutionAsync
-  nameWithType: HttpRestrictAttribute.OnActionExecutionAsync
-- uid: JsonApiDotNetCore.Controllers.Annotations.NoHttpDeleteAttribute
-  name: NoHttpDeleteAttribute
-  href: api/JsonApiDotNetCore.Controllers.Annotations.NoHttpDeleteAttribute.html
-  commentId: T:JsonApiDotNetCore.Controllers.Annotations.NoHttpDeleteAttribute
-  fullName: JsonApiDotNetCore.Controllers.Annotations.NoHttpDeleteAttribute
-  nameWithType: NoHttpDeleteAttribute
-- uid: JsonApiDotNetCore.Controllers.Annotations.NoHttpDeleteAttribute.Methods
-  name: Methods
-  href: api/JsonApiDotNetCore.Controllers.Annotations.NoHttpDeleteAttribute.html#JsonApiDotNetCore_Controllers_Annotations_NoHttpDeleteAttribute_Methods
-  commentId: P:JsonApiDotNetCore.Controllers.Annotations.NoHttpDeleteAttribute.Methods
-  fullName: JsonApiDotNetCore.Controllers.Annotations.NoHttpDeleteAttribute.Methods
-  nameWithType: NoHttpDeleteAttribute.Methods
-- uid: JsonApiDotNetCore.Controllers.Annotations.NoHttpDeleteAttribute.Methods*
-  name: Methods
-  href: api/JsonApiDotNetCore.Controllers.Annotations.NoHttpDeleteAttribute.html#JsonApiDotNetCore_Controllers_Annotations_NoHttpDeleteAttribute_Methods_
-  commentId: Overload:JsonApiDotNetCore.Controllers.Annotations.NoHttpDeleteAttribute.Methods
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.Annotations.NoHttpDeleteAttribute.Methods
-  nameWithType: NoHttpDeleteAttribute.Methods
-- uid: JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute
-  name: NoHttpPatchAttribute
-  href: api/JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute.html
-  commentId: T:JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute
-  fullName: JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute
-  nameWithType: NoHttpPatchAttribute
-- uid: JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute.Methods
-  name: Methods
-  href: api/JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute.html#JsonApiDotNetCore_Controllers_Annotations_NoHttpPatchAttribute_Methods
-  commentId: P:JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute.Methods
-  fullName: JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute.Methods
-  nameWithType: NoHttpPatchAttribute.Methods
-- uid: JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute.Methods*
-  name: Methods
-  href: api/JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute.html#JsonApiDotNetCore_Controllers_Annotations_NoHttpPatchAttribute_Methods_
-  commentId: Overload:JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute.Methods
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute.Methods
-  nameWithType: NoHttpPatchAttribute.Methods
-- uid: JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute
-  name: NoHttpPostAttribute
-  href: api/JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute.html
-  commentId: T:JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute
-  fullName: JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute
-  nameWithType: NoHttpPostAttribute
-- uid: JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute.Methods
-  name: Methods
-  href: api/JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute.html#JsonApiDotNetCore_Controllers_Annotations_NoHttpPostAttribute_Methods
-  commentId: P:JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute.Methods
-  fullName: JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute.Methods
-  nameWithType: NoHttpPostAttribute.Methods
-- uid: JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute.Methods*
-  name: Methods
-  href: api/JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute.html#JsonApiDotNetCore_Controllers_Annotations_NoHttpPostAttribute_Methods_
-  commentId: Overload:JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute.Methods
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute.Methods
-  nameWithType: NoHttpPostAttribute.Methods
 - uid: JsonApiDotNetCore.Controllers.BaseJsonApiController`2
   name: BaseJsonApiController<TResource, TId>
   href: api/JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html
@@ -2985,110 +2868,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).JsonApiCommandController
   nameWithType: JsonApiCommandController<TResource, TId>.JsonApiCommandController
   nameWithType.vb: JsonApiCommandController(Of TResource, TId).JsonApiCommandController
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`2.DeleteAsync(`1,System.Threading.CancellationToken)
-  name: DeleteAsync(TId, CancellationToken)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_2_DeleteAsync__1_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiCommandController`2.DeleteAsync(`1,System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource, TId>.DeleteAsync(TId, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).DeleteAsync(TId, System.Threading.CancellationToken)
-  nameWithType: JsonApiCommandController<TResource, TId>.DeleteAsync(TId, CancellationToken)
-  nameWithType.vb: JsonApiCommandController(Of TResource, TId).DeleteAsync(TId, CancellationToken)
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`2.DeleteAsync*
-  name: DeleteAsync
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_2_DeleteAsync_
-  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiCommandController`2.DeleteAsync
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource, TId>.DeleteAsync
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).DeleteAsync
-  nameWithType: JsonApiCommandController<TResource, TId>.DeleteAsync
-  nameWithType.vb: JsonApiCommandController(Of TResource, TId).DeleteAsync
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`2.DeleteRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)
-  name: DeleteRelationshipAsync(TId, String, ISet<IIdentifiable>, CancellationToken)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_2_DeleteRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiCommandController`2.DeleteRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)
-  name.vb: DeleteRelationshipAsync(TId, String, ISet(Of IIdentifiable), CancellationToken)
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource, TId>.DeleteRelationshipAsync(TId, System.String, System.Collections.Generic.ISet<JsonApiDotNetCore.Resources.IIdentifiable>, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).DeleteRelationshipAsync(TId, System.String, System.Collections.Generic.ISet(Of JsonApiDotNetCore.Resources.IIdentifiable), System.Threading.CancellationToken)
-  nameWithType: JsonApiCommandController<TResource, TId>.DeleteRelationshipAsync(TId, String, ISet<IIdentifiable>, CancellationToken)
-  nameWithType.vb: JsonApiCommandController(Of TResource, TId).DeleteRelationshipAsync(TId, String, ISet(Of IIdentifiable), CancellationToken)
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`2.DeleteRelationshipAsync*
-  name: DeleteRelationshipAsync
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_2_DeleteRelationshipAsync_
-  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiCommandController`2.DeleteRelationshipAsync
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource, TId>.DeleteRelationshipAsync
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).DeleteRelationshipAsync
-  nameWithType: JsonApiCommandController<TResource, TId>.DeleteRelationshipAsync
-  nameWithType.vb: JsonApiCommandController(Of TResource, TId).DeleteRelationshipAsync
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PatchAsync(`1,`0,System.Threading.CancellationToken)
-  name: PatchAsync(TId, TResource, CancellationToken)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PatchAsync__1__0_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PatchAsync(`1,`0,System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource, TId>.PatchAsync(TId, TResource, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).PatchAsync(TId, TResource, System.Threading.CancellationToken)
-  nameWithType: JsonApiCommandController<TResource, TId>.PatchAsync(TId, TResource, CancellationToken)
-  nameWithType.vb: JsonApiCommandController(Of TResource, TId).PatchAsync(TId, TResource, CancellationToken)
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PatchAsync*
-  name: PatchAsync
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PatchAsync_
-  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PatchAsync
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource, TId>.PatchAsync
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).PatchAsync
-  nameWithType: JsonApiCommandController<TResource, TId>.PatchAsync
-  nameWithType.vb: JsonApiCommandController(Of TResource, TId).PatchAsync
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PatchRelationshipAsync(`1,System.String,System.Object,System.Threading.CancellationToken)
-  name: PatchRelationshipAsync(TId, String, Object, CancellationToken)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PatchRelationshipAsync__1_System_String_System_Object_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PatchRelationshipAsync(`1,System.String,System.Object,System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource, TId>.PatchRelationshipAsync(TId, System.String, System.Object, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).PatchRelationshipAsync(TId, System.String, System.Object, System.Threading.CancellationToken)
-  nameWithType: JsonApiCommandController<TResource, TId>.PatchRelationshipAsync(TId, String, Object, CancellationToken)
-  nameWithType.vb: JsonApiCommandController(Of TResource, TId).PatchRelationshipAsync(TId, String, Object, CancellationToken)
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PatchRelationshipAsync*
-  name: PatchRelationshipAsync
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PatchRelationshipAsync_
-  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PatchRelationshipAsync
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource, TId>.PatchRelationshipAsync
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).PatchRelationshipAsync
-  nameWithType: JsonApiCommandController<TResource, TId>.PatchRelationshipAsync
-  nameWithType.vb: JsonApiCommandController(Of TResource, TId).PatchRelationshipAsync
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PostAsync(`0,System.Threading.CancellationToken)
-  name: PostAsync(TResource, CancellationToken)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PostAsync__0_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PostAsync(`0,System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource, TId>.PostAsync(TResource, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).PostAsync(TResource, System.Threading.CancellationToken)
-  nameWithType: JsonApiCommandController<TResource, TId>.PostAsync(TResource, CancellationToken)
-  nameWithType.vb: JsonApiCommandController(Of TResource, TId).PostAsync(TResource, CancellationToken)
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PostAsync*
-  name: PostAsync
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PostAsync_
-  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PostAsync
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource, TId>.PostAsync
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).PostAsync
-  nameWithType: JsonApiCommandController<TResource, TId>.PostAsync
-  nameWithType.vb: JsonApiCommandController(Of TResource, TId).PostAsync
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PostRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)
-  name: PostRelationshipAsync(TId, String, ISet<IIdentifiable>, CancellationToken)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PostRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PostRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)
-  name.vb: PostRelationshipAsync(TId, String, ISet(Of IIdentifiable), CancellationToken)
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource, TId>.PostRelationshipAsync(TId, System.String, System.Collections.Generic.ISet<JsonApiDotNetCore.Resources.IIdentifiable>, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).PostRelationshipAsync(TId, System.String, System.Collections.Generic.ISet(Of JsonApiDotNetCore.Resources.IIdentifiable), System.Threading.CancellationToken)
-  nameWithType: JsonApiCommandController<TResource, TId>.PostRelationshipAsync(TId, String, ISet<IIdentifiable>, CancellationToken)
-  nameWithType.vb: JsonApiCommandController(Of TResource, TId).PostRelationshipAsync(TId, String, ISet(Of IIdentifiable), CancellationToken)
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PostRelationshipAsync*
-  name: PostRelationshipAsync
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_2_PostRelationshipAsync_
-  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiCommandController`2.PostRelationshipAsync
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource, TId>.PostRelationshipAsync
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).PostRelationshipAsync
-  nameWithType: JsonApiCommandController<TResource, TId>.PostRelationshipAsync
-  nameWithType.vb: JsonApiCommandController(Of TResource, TId).PostRelationshipAsync
 - uid: JsonApiDotNetCore.Controllers.JsonApiController`2
   name: JsonApiController<TResource, TId>
   href: api/JsonApiDotNetCore.Controllers.JsonApiController-2.html
@@ -3350,65 +3129,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Controllers.JsonApiQueryController(Of TResource, TId).JsonApiQueryController
   nameWithType: JsonApiQueryController<TResource, TId>.JsonApiQueryController
   nameWithType.vb: JsonApiQueryController(Of TResource, TId).JsonApiQueryController
-- uid: JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetAsync(`1,System.Threading.CancellationToken)
-  name: GetAsync(TId, CancellationToken)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html#JsonApiDotNetCore_Controllers_JsonApiQueryController_2_GetAsync__1_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetAsync(`1,System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.Controllers.JsonApiQueryController<TResource, TId>.GetAsync(TId, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiQueryController(Of TResource, TId).GetAsync(TId, System.Threading.CancellationToken)
-  nameWithType: JsonApiQueryController<TResource, TId>.GetAsync(TId, CancellationToken)
-  nameWithType.vb: JsonApiQueryController(Of TResource, TId).GetAsync(TId, CancellationToken)
-- uid: JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetAsync(System.Threading.CancellationToken)
-  name: GetAsync(CancellationToken)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html#JsonApiDotNetCore_Controllers_JsonApiQueryController_2_GetAsync_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetAsync(System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.Controllers.JsonApiQueryController<TResource, TId>.GetAsync(System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiQueryController(Of TResource, TId).GetAsync(System.Threading.CancellationToken)
-  nameWithType: JsonApiQueryController<TResource, TId>.GetAsync(CancellationToken)
-  nameWithType.vb: JsonApiQueryController(Of TResource, TId).GetAsync(CancellationToken)
-- uid: JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetAsync*
-  name: GetAsync
-  href: api/JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html#JsonApiDotNetCore_Controllers_JsonApiQueryController_2_GetAsync_
-  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetAsync
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.JsonApiQueryController<TResource, TId>.GetAsync
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiQueryController(Of TResource, TId).GetAsync
-  nameWithType: JsonApiQueryController<TResource, TId>.GetAsync
-  nameWithType.vb: JsonApiQueryController(Of TResource, TId).GetAsync
-- uid: JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetRelationshipAsync(`1,System.String,System.Threading.CancellationToken)
-  name: GetRelationshipAsync(TId, String, CancellationToken)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html#JsonApiDotNetCore_Controllers_JsonApiQueryController_2_GetRelationshipAsync__1_System_String_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetRelationshipAsync(`1,System.String,System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.Controllers.JsonApiQueryController<TResource, TId>.GetRelationshipAsync(TId, System.String, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiQueryController(Of TResource, TId).GetRelationshipAsync(TId, System.String, System.Threading.CancellationToken)
-  nameWithType: JsonApiQueryController<TResource, TId>.GetRelationshipAsync(TId, String, CancellationToken)
-  nameWithType.vb: JsonApiQueryController(Of TResource, TId).GetRelationshipAsync(TId, String, CancellationToken)
-- uid: JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetRelationshipAsync*
-  name: GetRelationshipAsync
-  href: api/JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html#JsonApiDotNetCore_Controllers_JsonApiQueryController_2_GetRelationshipAsync_
-  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetRelationshipAsync
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.JsonApiQueryController<TResource, TId>.GetRelationshipAsync
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiQueryController(Of TResource, TId).GetRelationshipAsync
-  nameWithType: JsonApiQueryController<TResource, TId>.GetRelationshipAsync
-  nameWithType.vb: JsonApiQueryController(Of TResource, TId).GetRelationshipAsync
-- uid: JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetSecondaryAsync(`1,System.String,System.Threading.CancellationToken)
-  name: GetSecondaryAsync(TId, String, CancellationToken)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html#JsonApiDotNetCore_Controllers_JsonApiQueryController_2_GetSecondaryAsync__1_System_String_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetSecondaryAsync(`1,System.String,System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.Controllers.JsonApiQueryController<TResource, TId>.GetSecondaryAsync(TId, System.String, System.Threading.CancellationToken)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiQueryController(Of TResource, TId).GetSecondaryAsync(TId, System.String, System.Threading.CancellationToken)
-  nameWithType: JsonApiQueryController<TResource, TId>.GetSecondaryAsync(TId, String, CancellationToken)
-  nameWithType.vb: JsonApiQueryController(Of TResource, TId).GetSecondaryAsync(TId, String, CancellationToken)
-- uid: JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetSecondaryAsync*
-  name: GetSecondaryAsync
-  href: api/JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html#JsonApiDotNetCore_Controllers_JsonApiQueryController_2_GetSecondaryAsync_
-  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiQueryController`2.GetSecondaryAsync
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.JsonApiQueryController<TResource, TId>.GetSecondaryAsync
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiQueryController(Of TResource, TId).GetSecondaryAsync
-  nameWithType: JsonApiQueryController<TResource, TId>.GetSecondaryAsync
-  nameWithType.vb: JsonApiQueryController(Of TResource, TId).GetSecondaryAsync
 - uid: JsonApiDotNetCore.Diagnostics
   name: JsonApiDotNetCore.Diagnostics
   href: api/JsonApiDotNetCore.Diagnostics.html
@@ -4002,38 +3722,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Errors.RelationshipNotFoundException.RelationshipNotFoundException
   nameWithType: RelationshipNotFoundException.RelationshipNotFoundException
-- uid: JsonApiDotNetCore.Errors.RequestMethodNotAllowedException
-  name: RequestMethodNotAllowedException
-  href: api/JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.html
-  commentId: T:JsonApiDotNetCore.Errors.RequestMethodNotAllowedException
-  fullName: JsonApiDotNetCore.Errors.RequestMethodNotAllowedException
-  nameWithType: RequestMethodNotAllowedException
-- uid: JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.#ctor(System.Net.Http.HttpMethod)
-  name: RequestMethodNotAllowedException(HttpMethod)
-  href: api/JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.html#JsonApiDotNetCore_Errors_RequestMethodNotAllowedException__ctor_System_Net_Http_HttpMethod_
-  commentId: M:JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.#ctor(System.Net.Http.HttpMethod)
-  fullName: JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.RequestMethodNotAllowedException(System.Net.Http.HttpMethod)
-  nameWithType: RequestMethodNotAllowedException.RequestMethodNotAllowedException(HttpMethod)
-- uid: JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.#ctor*
-  name: RequestMethodNotAllowedException
-  href: api/JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.html#JsonApiDotNetCore_Errors_RequestMethodNotAllowedException__ctor_
-  commentId: Overload:JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.RequestMethodNotAllowedException
-  nameWithType: RequestMethodNotAllowedException.RequestMethodNotAllowedException
-- uid: JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.Method
-  name: Method
-  href: api/JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.html#JsonApiDotNetCore_Errors_RequestMethodNotAllowedException_Method
-  commentId: P:JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.Method
-  fullName: JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.Method
-  nameWithType: RequestMethodNotAllowedException.Method
-- uid: JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.Method*
-  name: Method
-  href: api/JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.html#JsonApiDotNetCore_Errors_RequestMethodNotAllowedException_Method_
-  commentId: Overload:JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.Method
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.Method
-  nameWithType: RequestMethodNotAllowedException.Method
 - uid: JsonApiDotNetCore.Errors.ResourceAlreadyExistsException
   name: ResourceAlreadyExistsException
   href: api/JsonApiDotNetCore.Errors.ResourceAlreadyExistsException.html
@@ -4094,6 +3782,38 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.ResourcesInRelationshipsNotFoundException
   nameWithType: ResourcesInRelationshipsNotFoundException.ResourcesInRelationshipsNotFoundException
+- uid: JsonApiDotNetCore.Errors.RouteNotAvailableException
+  name: RouteNotAvailableException
+  href: api/JsonApiDotNetCore.Errors.RouteNotAvailableException.html
+  commentId: T:JsonApiDotNetCore.Errors.RouteNotAvailableException
+  fullName: JsonApiDotNetCore.Errors.RouteNotAvailableException
+  nameWithType: RouteNotAvailableException
+- uid: JsonApiDotNetCore.Errors.RouteNotAvailableException.#ctor(System.Net.Http.HttpMethod,System.String)
+  name: RouteNotAvailableException(HttpMethod, String)
+  href: api/JsonApiDotNetCore.Errors.RouteNotAvailableException.html#JsonApiDotNetCore_Errors_RouteNotAvailableException__ctor_System_Net_Http_HttpMethod_System_String_
+  commentId: M:JsonApiDotNetCore.Errors.RouteNotAvailableException.#ctor(System.Net.Http.HttpMethod,System.String)
+  fullName: JsonApiDotNetCore.Errors.RouteNotAvailableException.RouteNotAvailableException(System.Net.Http.HttpMethod, System.String)
+  nameWithType: RouteNotAvailableException.RouteNotAvailableException(HttpMethod, String)
+- uid: JsonApiDotNetCore.Errors.RouteNotAvailableException.#ctor*
+  name: RouteNotAvailableException
+  href: api/JsonApiDotNetCore.Errors.RouteNotAvailableException.html#JsonApiDotNetCore_Errors_RouteNotAvailableException__ctor_
+  commentId: Overload:JsonApiDotNetCore.Errors.RouteNotAvailableException.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Errors.RouteNotAvailableException.RouteNotAvailableException
+  nameWithType: RouteNotAvailableException.RouteNotAvailableException
+- uid: JsonApiDotNetCore.Errors.RouteNotAvailableException.Method
+  name: Method
+  href: api/JsonApiDotNetCore.Errors.RouteNotAvailableException.html#JsonApiDotNetCore_Errors_RouteNotAvailableException_Method
+  commentId: P:JsonApiDotNetCore.Errors.RouteNotAvailableException.Method
+  fullName: JsonApiDotNetCore.Errors.RouteNotAvailableException.Method
+  nameWithType: RouteNotAvailableException.Method
+- uid: JsonApiDotNetCore.Errors.RouteNotAvailableException.Method*
+  name: Method
+  href: api/JsonApiDotNetCore.Errors.RouteNotAvailableException.html#JsonApiDotNetCore_Errors_RouteNotAvailableException_Method_
+  commentId: Overload:JsonApiDotNetCore.Errors.RouteNotAvailableException.Method
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Errors.RouteNotAvailableException.Method
+  nameWithType: RouteNotAvailableException.Method
 - uid: JsonApiDotNetCore.Errors.UnknownLocalIdValueException
   name: UnknownLocalIdValueException
   href: api/JsonApiDotNetCore.Errors.UnknownLocalIdValueException.html
@@ -10567,6 +10287,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.FilterQueryStringParameterReader
   nameWithType: FilterQueryStringParameterReader.FilterQueryStringParameterReader
+- uid: JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.AllowEmptyValue
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_FilterQueryStringParameterReader_AllowEmptyValue
+  commentId: P:JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.AllowEmptyValue
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.AllowEmptyValue
+  nameWithType: FilterQueryStringParameterReader.AllowEmptyValue
+- uid: JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.AllowEmptyValue*
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_FilterQueryStringParameterReader_AllowEmptyValue_
+  commentId: Overload:JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.AllowEmptyValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.AllowEmptyValue
+  nameWithType: FilterQueryStringParameterReader.AllowEmptyValue
 - uid: JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.CanRead(System.String)
   name: CanRead(String)
   href: api/JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_FilterQueryStringParameterReader_CanRead_System_String_
@@ -10651,6 +10384,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.IncludeQueryStringParameterReader
   nameWithType: IncludeQueryStringParameterReader.IncludeQueryStringParameterReader
+- uid: JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.AllowEmptyValue
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_IncludeQueryStringParameterReader_AllowEmptyValue
+  commentId: P:JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.AllowEmptyValue
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.AllowEmptyValue
+  nameWithType: IncludeQueryStringParameterReader.AllowEmptyValue
+- uid: JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.AllowEmptyValue*
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_IncludeQueryStringParameterReader_AllowEmptyValue_
+  commentId: Overload:JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.AllowEmptyValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.AllowEmptyValue
+  nameWithType: IncludeQueryStringParameterReader.AllowEmptyValue
 - uid: JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.CanRead(System.String)
   name: CanRead(String)
   href: api/JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_IncludeQueryStringParameterReader_CanRead_System_String_
@@ -10767,6 +10513,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.PaginationQueryStringParameterReader
   nameWithType: PaginationQueryStringParameterReader.PaginationQueryStringParameterReader
+- uid: JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.AllowEmptyValue
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_PaginationQueryStringParameterReader_AllowEmptyValue
+  commentId: P:JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.AllowEmptyValue
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.AllowEmptyValue
+  nameWithType: PaginationQueryStringParameterReader.AllowEmptyValue
+- uid: JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.AllowEmptyValue*
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_PaginationQueryStringParameterReader_AllowEmptyValue_
+  commentId: Overload:JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.AllowEmptyValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.AllowEmptyValue
+  nameWithType: PaginationQueryStringParameterReader.AllowEmptyValue
 - uid: JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.CanRead(System.String)
   name: CanRead(String)
   href: api/JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_PaginationQueryStringParameterReader_CanRead_System_String_
@@ -10970,6 +10729,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.ResourceDefinitionQueryableParameterReader
   nameWithType: ResourceDefinitionQueryableParameterReader.ResourceDefinitionQueryableParameterReader
+- uid: JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.AllowEmptyValue
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_ResourceDefinitionQueryableParameterReader_AllowEmptyValue
+  commentId: P:JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.AllowEmptyValue
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.AllowEmptyValue
+  nameWithType: ResourceDefinitionQueryableParameterReader.AllowEmptyValue
+- uid: JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.AllowEmptyValue*
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_ResourceDefinitionQueryableParameterReader_AllowEmptyValue_
+  commentId: Overload:JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.AllowEmptyValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.AllowEmptyValue
+  nameWithType: ResourceDefinitionQueryableParameterReader.AllowEmptyValue
 - uid: JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.CanRead(System.String)
   name: CanRead(String)
   href: api/JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_ResourceDefinitionQueryableParameterReader_CanRead_System_String_
@@ -11041,6 +10813,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.QueryStrings.Internal.SortQueryStringParameterReader.SortQueryStringParameterReader
   nameWithType: SortQueryStringParameterReader.SortQueryStringParameterReader
+- uid: JsonApiDotNetCore.QueryStrings.Internal.SortQueryStringParameterReader.AllowEmptyValue
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.SortQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_SortQueryStringParameterReader_AllowEmptyValue
+  commentId: P:JsonApiDotNetCore.QueryStrings.Internal.SortQueryStringParameterReader.AllowEmptyValue
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.SortQueryStringParameterReader.AllowEmptyValue
+  nameWithType: SortQueryStringParameterReader.AllowEmptyValue
+- uid: JsonApiDotNetCore.QueryStrings.Internal.SortQueryStringParameterReader.AllowEmptyValue*
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.SortQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_SortQueryStringParameterReader_AllowEmptyValue_
+  commentId: Overload:JsonApiDotNetCore.QueryStrings.Internal.SortQueryStringParameterReader.AllowEmptyValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.SortQueryStringParameterReader.AllowEmptyValue
+  nameWithType: SortQueryStringParameterReader.AllowEmptyValue
 - uid: JsonApiDotNetCore.QueryStrings.Internal.SortQueryStringParameterReader.CanRead(System.String)
   name: CanRead(String)
   href: api/JsonApiDotNetCore.QueryStrings.Internal.SortQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_SortQueryStringParameterReader_CanRead_System_String_
@@ -17318,12 +17103,12 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Response.ILinkBuilder
   fullName: JsonApiDotNetCore.Serialization.Response.ILinkBuilder
   nameWithType: ILinkBuilder
-- uid: JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.String)
-  name: GetRelationshipLinks(RelationshipAttribute, String)
-  href: api/JsonApiDotNetCore.Serialization.Response.ILinkBuilder.html#JsonApiDotNetCore_Serialization_Response_ILinkBuilder_GetRelationshipLinks_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_String_
-  commentId: M:JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.String)
-  fullName: JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.String)
-  nameWithType: ILinkBuilder.GetRelationshipLinks(RelationshipAttribute, String)
+- uid: JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,JsonApiDotNetCore.Resources.IIdentifiable)
+  name: GetRelationshipLinks(RelationshipAttribute, IIdentifiable)
+  href: api/JsonApiDotNetCore.Serialization.Response.ILinkBuilder.html#JsonApiDotNetCore_Serialization_Response_ILinkBuilder_GetRelationshipLinks_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_JsonApiDotNetCore_Resources_IIdentifiable_
+  commentId: M:JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,JsonApiDotNetCore.Resources.IIdentifiable)
+  fullName: JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, JsonApiDotNetCore.Resources.IIdentifiable)
+  nameWithType: ILinkBuilder.GetRelationshipLinks(RelationshipAttribute, IIdentifiable)
 - uid: JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetRelationshipLinks*
   name: GetRelationshipLinks
   href: api/JsonApiDotNetCore.Serialization.Response.ILinkBuilder.html#JsonApiDotNetCore_Serialization_Response_ILinkBuilder_GetRelationshipLinks_
@@ -17331,12 +17116,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetRelationshipLinks
   nameWithType: ILinkBuilder.GetRelationshipLinks
-- uid: JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetResourceLinks(JsonApiDotNetCore.Configuration.ResourceType,System.String)
-  name: GetResourceLinks(ResourceType, String)
-  href: api/JsonApiDotNetCore.Serialization.Response.ILinkBuilder.html#JsonApiDotNetCore_Serialization_Response_ILinkBuilder_GetResourceLinks_JsonApiDotNetCore_Configuration_ResourceType_System_String_
-  commentId: M:JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetResourceLinks(JsonApiDotNetCore.Configuration.ResourceType,System.String)
-  fullName: JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetResourceLinks(JsonApiDotNetCore.Configuration.ResourceType, System.String)
-  nameWithType: ILinkBuilder.GetResourceLinks(ResourceType, String)
+- uid: JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetResourceLinks(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Resources.IIdentifiable)
+  name: GetResourceLinks(ResourceType, IIdentifiable)
+  href: api/JsonApiDotNetCore.Serialization.Response.ILinkBuilder.html#JsonApiDotNetCore_Serialization_Response_ILinkBuilder_GetResourceLinks_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Resources_IIdentifiable_
+  commentId: M:JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetResourceLinks(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Resources.IIdentifiable)
+  fullName: JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetResourceLinks(JsonApiDotNetCore.Configuration.ResourceType, JsonApiDotNetCore.Resources.IIdentifiable)
+  nameWithType: ILinkBuilder.GetResourceLinks(ResourceType, IIdentifiable)
 - uid: JsonApiDotNetCore.Serialization.Response.ILinkBuilder.GetResourceLinks*
   name: GetResourceLinks
   href: api/JsonApiDotNetCore.Serialization.Response.ILinkBuilder.html#JsonApiDotNetCore_Serialization_Response_ILinkBuilder_GetResourceLinks_
@@ -17481,12 +17266,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Response.LinkBuilder.LinkBuilder
   nameWithType: LinkBuilder.LinkBuilder
-- uid: JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.String)
-  name: GetRelationshipLinks(RelationshipAttribute, String)
-  href: api/JsonApiDotNetCore.Serialization.Response.LinkBuilder.html#JsonApiDotNetCore_Serialization_Response_LinkBuilder_GetRelationshipLinks_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_String_
-  commentId: M:JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.String)
-  fullName: JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.String)
-  nameWithType: LinkBuilder.GetRelationshipLinks(RelationshipAttribute, String)
+- uid: JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,JsonApiDotNetCore.Resources.IIdentifiable)
+  name: GetRelationshipLinks(RelationshipAttribute, IIdentifiable)
+  href: api/JsonApiDotNetCore.Serialization.Response.LinkBuilder.html#JsonApiDotNetCore_Serialization_Response_LinkBuilder_GetRelationshipLinks_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_JsonApiDotNetCore_Resources_IIdentifiable_
+  commentId: M:JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,JsonApiDotNetCore.Resources.IIdentifiable)
+  fullName: JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, JsonApiDotNetCore.Resources.IIdentifiable)
+  nameWithType: LinkBuilder.GetRelationshipLinks(RelationshipAttribute, IIdentifiable)
 - uid: JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetRelationshipLinks*
   name: GetRelationshipLinks
   href: api/JsonApiDotNetCore.Serialization.Response.LinkBuilder.html#JsonApiDotNetCore_Serialization_Response_LinkBuilder_GetRelationshipLinks_
@@ -17494,12 +17279,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetRelationshipLinks
   nameWithType: LinkBuilder.GetRelationshipLinks
-- uid: JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetResourceLinks(JsonApiDotNetCore.Configuration.ResourceType,System.String)
-  name: GetResourceLinks(ResourceType, String)
-  href: api/JsonApiDotNetCore.Serialization.Response.LinkBuilder.html#JsonApiDotNetCore_Serialization_Response_LinkBuilder_GetResourceLinks_JsonApiDotNetCore_Configuration_ResourceType_System_String_
-  commentId: M:JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetResourceLinks(JsonApiDotNetCore.Configuration.ResourceType,System.String)
-  fullName: JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetResourceLinks(JsonApiDotNetCore.Configuration.ResourceType, System.String)
-  nameWithType: LinkBuilder.GetResourceLinks(ResourceType, String)
+- uid: JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetResourceLinks(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Resources.IIdentifiable)
+  name: GetResourceLinks(ResourceType, IIdentifiable)
+  href: api/JsonApiDotNetCore.Serialization.Response.LinkBuilder.html#JsonApiDotNetCore_Serialization_Response_LinkBuilder_GetResourceLinks_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Resources_IIdentifiable_
+  commentId: M:JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetResourceLinks(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Resources.IIdentifiable)
+  fullName: JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetResourceLinks(JsonApiDotNetCore.Configuration.ResourceType, JsonApiDotNetCore.Resources.IIdentifiable)
+  nameWithType: LinkBuilder.GetResourceLinks(ResourceType, IIdentifiable)
 - uid: JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetResourceLinks*
   name: GetResourceLinks
   href: api/JsonApiDotNetCore.Serialization.Response.LinkBuilder.html#JsonApiDotNetCore_Serialization_Response_LinkBuilder_GetResourceLinks_
@@ -18052,6 +17837,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource, TId).AddToToManyRelationshipAsync
   nameWithType: JsonApiResourceService<TResource, TId>.AddToToManyRelationshipAsync
   nameWithType.vb: JsonApiResourceService(Of TResource, TId).AddToToManyRelationshipAsync
+- uid: JsonApiDotNetCore.Services.JsonApiResourceService`2.AssertPrimaryResourceDoesNotExistAsync(`0,System.Threading.CancellationToken)
+  name: AssertPrimaryResourceDoesNotExistAsync(TResource, CancellationToken)
+  href: api/JsonApiDotNetCore.Services.JsonApiResourceService-2.html#JsonApiDotNetCore_Services_JsonApiResourceService_2_AssertPrimaryResourceDoesNotExistAsync__0_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.Services.JsonApiResourceService`2.AssertPrimaryResourceDoesNotExistAsync(`0,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.Services.JsonApiResourceService<TResource, TId>.AssertPrimaryResourceDoesNotExistAsync(TResource, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource, TId).AssertPrimaryResourceDoesNotExistAsync(TResource, System.Threading.CancellationToken)
+  nameWithType: JsonApiResourceService<TResource, TId>.AssertPrimaryResourceDoesNotExistAsync(TResource, CancellationToken)
+  nameWithType.vb: JsonApiResourceService(Of TResource, TId).AssertPrimaryResourceDoesNotExistAsync(TResource, CancellationToken)
+- uid: JsonApiDotNetCore.Services.JsonApiResourceService`2.AssertPrimaryResourceDoesNotExistAsync*
+  name: AssertPrimaryResourceDoesNotExistAsync
+  href: api/JsonApiDotNetCore.Services.JsonApiResourceService-2.html#JsonApiDotNetCore_Services_JsonApiResourceService_2_AssertPrimaryResourceDoesNotExistAsync_
+  commentId: Overload:JsonApiDotNetCore.Services.JsonApiResourceService`2.AssertPrimaryResourceDoesNotExistAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Services.JsonApiResourceService<TResource, TId>.AssertPrimaryResourceDoesNotExistAsync
+  fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource, TId).AssertPrimaryResourceDoesNotExistAsync
+  nameWithType: JsonApiResourceService<TResource, TId>.AssertPrimaryResourceDoesNotExistAsync
+  nameWithType.vb: JsonApiResourceService(Of TResource, TId).AssertPrimaryResourceDoesNotExistAsync
 - uid: JsonApiDotNetCore.Services.JsonApiResourceService`2.AssertResourcesToAssignInRelationshipsExistAsync(`0,System.Threading.CancellationToken)
   name: AssertResourcesToAssignInRelationshipsExistAsync(TResource, CancellationToken)
   href: api/JsonApiDotNetCore.Services.JsonApiResourceService-2.html#JsonApiDotNetCore_Services_JsonApiResourceService_2_AssertResourcesToAssignInRelationshipsExistAsync__0_System_Threading_CancellationToken_
