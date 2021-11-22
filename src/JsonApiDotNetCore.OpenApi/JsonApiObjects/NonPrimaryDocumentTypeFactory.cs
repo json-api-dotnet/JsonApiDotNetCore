@@ -7,13 +7,13 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects
 {
     internal sealed class NonPrimaryDocumentTypeFactory
     {
-        private static readonly DocumentOpenTypeOptions SecondaryResponseDocumentTypeOptions = new(typeof(ResourceCollectionResponseDocument<>),
+        private static readonly DocumentOpenTypes SecondaryResponseDocumentOpenTypes = new(typeof(ResourceCollectionResponseDocument<>),
             typeof(NullableSecondaryResourceResponseDocument<>), typeof(SecondaryResourceResponseDocument<>));
 
-        private static readonly DocumentOpenTypeOptions RelationshipRequestDocumentTypeOptions = new(typeof(ToManyRelationshipRequestData<>),
+        private static readonly DocumentOpenTypes RelationshipRequestDocumentOpenTypes = new(typeof(ToManyRelationshipRequestData<>),
             typeof(NullableToOneRelationshipRequestData<>), typeof(ToOneRelationshipRequestData<>));
 
-        private static readonly DocumentOpenTypeOptions RelationshipResponseDocumentTypeOptions = new(typeof(ResourceIdentifierCollectionResponseDocument<>),
+        private static readonly DocumentOpenTypes RelationshipResponseDocumentOpenTypes = new(typeof(ResourceIdentifierCollectionResponseDocument<>),
             typeof(NullableResourceIdentifierResponseDocument<>), typeof(ResourceIdentifierResponseDocument<>));
 
         public static NonPrimaryDocumentTypeFactory Instance { get; } = new();
@@ -26,53 +26,53 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
 
-            return Get(relationship, SecondaryResponseDocumentTypeOptions);
+            return Get(relationship, SecondaryResponseDocumentOpenTypes);
         }
 
         public Type GetForRelationshipRequest(RelationshipAttribute relationship)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
 
-            return Get(relationship, RelationshipRequestDocumentTypeOptions);
+            return Get(relationship, RelationshipRequestDocumentOpenTypes);
         }
 
         public Type GetForRelationshipResponse(RelationshipAttribute relationship)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
 
-            return Get(relationship, RelationshipResponseDocumentTypeOptions);
+            return Get(relationship, RelationshipResponseDocumentOpenTypes);
         }
 
-        private static Type Get(RelationshipAttribute relationship, DocumentOpenTypeOptions typeOptions)
+        private static Type Get(RelationshipAttribute relationship, DocumentOpenTypes types)
         {
             // @formatter:nested_ternary_style expanded
 
             Type documentOpenType = relationship is HasManyAttribute
-                ? typeOptions.ManyData
+                ? types.ManyDataOpenType
                 : relationship.IsNullable()
-                    ? typeOptions.NullableSingleData
-                    : typeOptions.SingleData;
+                    ? types.NullableSingleDataOpenType
+                    : types.SingleDataOpenType;
 
             // @formatter:nested_ternary_style restore
 
             return documentOpenType.MakeGenericType(relationship.RightType.ClrType);
         }
 
-        private sealed class DocumentOpenTypeOptions
+        private sealed class DocumentOpenTypes
         {
-            public Type ManyData { get; }
-            public Type NullableSingleData { get; }
-            public Type SingleData { get; }
+            public Type ManyDataOpenType { get; }
+            public Type NullableSingleDataOpenType { get; }
+            public Type SingleDataOpenType { get; }
 
-            public DocumentOpenTypeOptions(Type manyDataOpenType, Type nullableSingleDataOpenType, Type singleDataOpenType)
+            public DocumentOpenTypes(Type manyDataOpenType, Type nullableSingleDataOpenType, Type singleDataOpenType)
             {
                 ArgumentGuard.NotNull(manyDataOpenType, nameof(manyDataOpenType));
                 ArgumentGuard.NotNull(nullableSingleDataOpenType, nameof(nullableSingleDataOpenType));
                 ArgumentGuard.NotNull(singleDataOpenType, nameof(singleDataOpenType));
 
-                ManyData = manyDataOpenType;
-                NullableSingleData = nullableSingleDataOpenType;
-                SingleData = singleDataOpenType;
+                ManyDataOpenType = manyDataOpenType;
+                NullableSingleDataOpenType = nullableSingleDataOpenType;
+                SingleDataOpenType = singleDataOpenType;
             }
         }
     }

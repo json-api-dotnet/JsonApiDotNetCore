@@ -10,19 +10,28 @@ namespace JsonApiDotNetCore.OpenApi
         {
             ArgumentGuard.NotNull(source, nameof(source));
 
-            Type memberType = source.MemberType switch
+            Type memberType;
+
+            if (source.MemberType.HasFlag(MemberTypes.Field))
             {
-                MemberTypes.Field => ((FieldInfo)source).FieldType,
-                MemberTypes.Property => ((PropertyInfo)source).PropertyType,
-                _ => throw new ArgumentException("Cannot get the type category for members of type other than 'MemberTypes.Field' or 'MemberTypes.Property'.")
-            };
+                memberType = ((FieldInfo)source).FieldType;
+            }
+            else if (source.MemberType.HasFlag(MemberTypes.Property))
+            {
+                memberType = ((PropertyInfo)source).PropertyType;
+            }
+            else
+            {
+                throw new NotSupportedException($"Cannot get the type category for members of type '{source.MemberType}' is not supported.");
+            }
 
             if (memberType.IsValueType)
             {
                 return Nullable.GetUnderlyingType(memberType) != null ? TypeCategory.NullableValueType : TypeCategory.ValueType;
             }
 
-            // Once we switch to .NET 6, we should rely instead on the built-in reflection APIs for nullability information. See https://devblogs.microsoft.com/dotnet/announcing-net-6-preview-7/#libraries-reflection-apis-for-nullability-information.
+            // Once we switch to .NET 6, we should rely instead on the built-in reflection APIs for nullability information.
+            // See https://devblogs.microsoft.com/dotnet/announcing-net-6-preview-7/#libraries-reflection-apis-for-nullability-information.
             return source.IsNonNullableReferenceType() ? TypeCategory.NonNullableReferenceType : TypeCategory.NullableReferenceType;
         }
     }

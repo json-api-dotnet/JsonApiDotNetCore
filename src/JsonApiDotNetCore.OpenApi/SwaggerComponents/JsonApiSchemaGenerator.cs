@@ -109,7 +109,9 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
                 throw new UnreachableCodeException();
             }
 
-            return dataProperty.GetTypeCategory() == TypeCategory.NullableReferenceType;
+            TypeCategory typeCategory = dataProperty.GetTypeCategory();
+
+            return typeCategory == TypeCategory.NullableReferenceType;
         }
 
         private void SetDataObjectSchemaToNullable(OpenApiSchema referenceSchemaForDocument)

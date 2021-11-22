@@ -29,7 +29,8 @@ namespace OpenApiTests.LegacyOpenApiIntegration
                 .WithMany(flightAttendant => flightAttendant.PurserOnFlights);
 
             builder.Entity<Flight>()
-                .HasOne(flight => flight.BackupPurser);
+                .HasOne(flight => flight.BackupPurser)
+                .WithMany();
         }
     }
 }

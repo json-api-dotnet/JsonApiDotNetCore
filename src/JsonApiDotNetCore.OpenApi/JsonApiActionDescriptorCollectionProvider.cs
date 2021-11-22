@@ -79,14 +79,14 @@ namespace JsonApiDotNetCore.OpenApi
                     UpdateBodyParameterDescriptor(endpoint, primaryMetadata.DocumentType);
                     return Array.Empty<ActionDescriptor>();
                 }
-                case NonPrimaryEndpointMetadata expansibleMetadata and (RelationshipResponseMetadata or SecondaryResponseMetadata):
+                case NonPrimaryEndpointMetadata nonPrimaryEndpointMetadata and (RelationshipResponseMetadata or SecondaryResponseMetadata):
                 {
-                    return Expand(endpoint, expansibleMetadata,
+                    return Expand(endpoint, nonPrimaryEndpointMetadata,
                         (expandedEndpoint, documentType, _) => UpdateProducesResponseTypeAttribute(expandedEndpoint, documentType));
                 }
-                case NonPrimaryEndpointMetadata expansibleMetadata and RelationshipRequestMetadata:
+                case NonPrimaryEndpointMetadata nonPrimaryEndpointMetadata and RelationshipRequestMetadata:
                 {
-                    return Expand(endpoint, expansibleMetadata, UpdateBodyParameterDescriptor);
+                    return Expand(endpoint, nonPrimaryEndpointMetadata, UpdateBodyParameterDescriptor);
                 }
                 default:
                 {
