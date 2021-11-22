@@ -101,7 +101,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         private (ResourceIdentityRequirements requirements, IIdentifiable? primaryResource) ConvertRef(AtomicOperationObject atomicOperationObject,
             RequestAdapterState state)
         {
-            ResourceIdentityRequirements requirements = CreateDataRequirements(state);
+            ResourceIdentityRequirements requirements = CreateRefRequirements(state);
             IIdentifiable? primaryResource = null;
 
             AtomicReferenceResult? refResult = atomicOperationObject.Ref != null
@@ -117,14 +117,14 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
                 ConvertRefRelationship(atomicOperationObject.Data, refResult, state);
 
-                requirements = CreateRefRequirements(refResult, requirements);
+                requirements = CreateDataRequirements(refResult, requirements);
                 primaryResource = refResult.Resource;
             }
 
             return (requirements, primaryResource);
         }
 
-        private ResourceIdentityRequirements CreateDataRequirements(RequestAdapterState state)
+        private ResourceIdentityRequirements CreateRefRequirements(RequestAdapterState state)
         {
             JsonElementConstraint? idConstraint = state.Request.WriteOperation == WriteOperationKind.CreateResource
                 ? _options.AllowClientGeneratedIds ? null : JsonElementConstraint.Forbidden
@@ -136,12 +136,12 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             };
         }
 
-        private static ResourceIdentityRequirements CreateRefRequirements(AtomicReferenceResult refResult, ResourceIdentityRequirements dataRequirements)
+        private static ResourceIdentityRequirements CreateDataRequirements(AtomicReferenceResult refResult, ResourceIdentityRequirements refRequirements)
         {
             return new ResourceIdentityRequirements
             {
                 ResourceType = refResult.ResourceType,
-                IdConstraint = dataRequirements.IdConstraint,
+                IdConstraint = refRequirements.IdConstraint,
                 IdValue = refResult.Resource.StringId,
                 LidValue = refResult.Resource.LocalId,
                 RelationshipName = refResult.Relationship?.PublicName
