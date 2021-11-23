@@ -21,6 +21,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly List<ExpressionInScope> _constraints = new();
         private string? _lastParameterName;
 
+        public bool AllowEmptyValue => false;
+
         public SortQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
             : base(request, resourceGraph)
         {

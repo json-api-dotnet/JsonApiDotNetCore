@@ -38,10 +38,12 @@ Define your domain models such that they implement `IIdentifiable<TId>`.
 The easiest way to do this is to inherit from `Identifiable<TId>`.
 
 ```c#
+#nullable enable
+
 public class Person : Identifiable<int>
 {
     [Attr]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 }
 ```
 
@@ -52,12 +54,12 @@ Nothing special here, just an ordinary `DbContext`.
 ```
 public class AppDbContext : DbContext
 {
+    public DbSet<Person> People => Set<Person>();
+
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
     }
-
-    public DbSet<Person> People { get; set; }
 }
 ```
 

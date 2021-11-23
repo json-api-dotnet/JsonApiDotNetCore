@@ -33,6 +33,8 @@ When NRT is turned off, use `[Required]` on required attributes and relationship
 Example:
 
 ```c#
+#nullable disable
+
 public sealed class Label : Identifiable<int>
 {
     [Attr]
@@ -65,6 +67,8 @@ When ModelState validation is turned on, to-many relationships must be assigned 
 Example:
 
 ```c#
+#nullable enable
+
 public sealed class Label : Identifiable<int>
 {
     [Attr]

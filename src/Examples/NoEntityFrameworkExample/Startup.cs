@@ -24,7 +24,7 @@ namespace NoEntityFrameworkExample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddJsonApi(options => options.Namespace = "api/v1", resources: builder => builder.Add<WorkItem>("workItems"));
+            services.AddJsonApi(options => options.Namespace = "api/v1", resources: builder => builder.Add<WorkItem, int>("workItems"));
 
             services.AddResourceService<WorkItemService>();
 

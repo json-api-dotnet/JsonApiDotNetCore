@@ -540,7 +540,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             blogCaptured.Title.Should().Be(blog.Title);
             blogCaptured.PlatformName.Should().BeNull();
 
-            blogCaptured.Owner.UserName.Should().Be(blog.Owner.UserName);
+            blogCaptured.Owner!.UserName.Should().Be(blog.Owner.UserName);
             blogCaptured.Owner.DisplayName.Should().Be(blog.Owner.DisplayName);
             blogCaptured.Owner.DateOfBirth.Should().BeNull();
 

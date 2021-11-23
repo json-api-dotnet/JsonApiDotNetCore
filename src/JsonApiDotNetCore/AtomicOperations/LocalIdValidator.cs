@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (resource.LocalId != null)
             {
-                _localIdTracker.Declare(resource.LocalId, resourceType.PublicName);
+                _localIdTracker.Declare(resource.LocalId, resourceType);
             }
         }
 
@@ -89,7 +89,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (operation.Resource.LocalId != null)
             {
-                _localIdTracker.Assign(operation.Resource.LocalId, resourceType.PublicName, "placeholder");
+                _localIdTracker.Assign(operation.Resource.LocalId, resourceType, "placeholder");
             }
         }
 
@@ -98,7 +98,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             if (resource.LocalId != null)
             {
                 ResourceType resourceType = _resourceGraph.GetResourceType(resource.GetType());
-                _localIdTracker.GetValue(resource.LocalId, resourceType.PublicName);
+                _localIdTracker.GetValue(resource.LocalId, resourceType);
             }
         }
     }

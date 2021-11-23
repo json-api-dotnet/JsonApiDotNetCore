@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 
 namespace JsonApiDotNetCore.AtomicOperations
@@ -16,10 +17,10 @@ namespace JsonApiDotNetCore.AtomicOperations
         }
 
         /// <inheritdoc />
-        public void Declare(string localId, string resourceType)
+        public void Declare(string localId, ResourceType resourceType)
         {
             ArgumentGuard.NotNullNorEmpty(localId, nameof(localId));
-            ArgumentGuard.NotNullNorEmpty(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             AssertIsNotDeclared(localId);
 
@@ -35,10 +36,10 @@ namespace JsonApiDotNetCore.AtomicOperations
         }
 
         /// <inheritdoc />
-        public void Assign(string localId, string resourceType, string stringId)
+        public void Assign(string localId, ResourceType resourceType, string stringId)
         {
             ArgumentGuard.NotNullNorEmpty(localId, nameof(localId));
-            ArgumentGuard.NotNullNorEmpty(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
             ArgumentGuard.NotNullNorEmpty(stringId, nameof(stringId));
 
             AssertIsDeclared(localId);
@@ -56,10 +57,10 @@ namespace JsonApiDotNetCore.AtomicOperations
         }
 
         /// <inheritdoc />
-        public string GetValue(string localId, string resourceType)
+        public string GetValue(string localId, ResourceType resourceType)
         {
             ArgumentGuard.NotNullNorEmpty(localId, nameof(localId));
-            ArgumentGuard.NotNullNorEmpty(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             AssertIsDeclared(localId);
 
@@ -83,20 +84,20 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
         }
 
-        private static void AssertSameResourceType(string currentType, string declaredType, string localId)
+        private static void AssertSameResourceType(ResourceType currentType, ResourceType declaredType, string localId)
         {
-            if (declaredType != currentType)
+            if (!declaredType.Equals(currentType))
             {
-                throw new IncompatibleLocalIdTypeException(localId, declaredType, currentType);
+                throw new IncompatibleLocalIdTypeException(localId, declaredType.PublicName, currentType.PublicName);
             }
         }
 
         private sealed class LocalIdState
         {
-            public string ResourceType { get; }
+            public ResourceType ResourceType { get; }
             public string? ServerId { get; set; }
 
-            public LocalIdState(string resourceType)
+            public LocalIdState(ResourceType resourceType)
             {
                 ResourceType = resourceType;
             }

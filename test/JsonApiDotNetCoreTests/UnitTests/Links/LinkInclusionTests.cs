@@ -166,7 +166,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping);
 
             // Act
-            ResourceLinks? resourceLinks = linkBuilder.GetResourceLinks(exampleResourceType, "id");
+            ResourceLinks? resourceLinks = linkBuilder.GetResourceLinks(exampleResourceType, new ExampleResource());
 
             // Assert
             if (expected == LinkTypes.Self)
@@ -331,7 +331,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             };
 
             // Act
-            RelationshipLinks? relationshipLinks = linkBuilder.GetRelationshipLinks(relationship, "?");
+            RelationshipLinks? relationshipLinks = linkBuilder.GetRelationshipLinks(relationship, new ExampleResource());
 
             // Assert
             if (expected == LinkTypes.None)
@@ -412,7 +412,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
                 return "https://domain.com/some/path";
             }
 
-            public override string GetUriByAddress<TAddress>(TAddress address, RouteValueDictionary values, string scheme, HostString host,
+            public override string GetUriByAddress<TAddress>(TAddress address, RouteValueDictionary values, string? scheme, HostString host,
                 PathString pathBase = new(), FragmentString fragment = new(), LinkOptions? options = null)
             {
                 throw new NotImplementedException();

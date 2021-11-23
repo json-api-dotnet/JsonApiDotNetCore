@@ -151,10 +151,10 @@ namespace JsonApiDotNetCore.Serialization.Response
             };
         }
 
-        private void TraverseResource(IIdentifiable resource, ResourceType type, EndpointKind kind, IImmutableSet<IncludeElementExpression> includeElements,
-            ResourceObjectTreeNode parentTreeNode, RelationshipAttribute? parentRelationship)
+        private void TraverseResource(IIdentifiable resource, ResourceType resourceType, EndpointKind kind,
+            IImmutableSet<IncludeElementExpression> includeElements, ResourceObjectTreeNode parentTreeNode, RelationshipAttribute? parentRelationship)
         {
-            ResourceObjectTreeNode treeNode = GetOrCreateTreeNode(resource, type, kind);
+            ResourceObjectTreeNode treeNode = GetOrCreateTreeNode(resource, resourceType, kind);
 
             if (parentRelationship != null)
             {
@@ -171,12 +171,12 @@ namespace JsonApiDotNetCore.Serialization.Response
             }
         }
 
-        private ResourceObjectTreeNode GetOrCreateTreeNode(IIdentifiable resource, ResourceType type, EndpointKind kind)
+        private ResourceObjectTreeNode GetOrCreateTreeNode(IIdentifiable resource, ResourceType resourceType, EndpointKind kind)
         {
             if (!_resourceToTreeNodeCache.TryGetValue(resource, out ResourceObjectTreeNode? treeNode))
             {
-                ResourceObject resourceObject = ConvertResource(resource, type, kind);
-                treeNode = new ResourceObjectTreeNode(resource, type, resourceObject);
+                ResourceObject resourceObject = ConvertResource(resource, resourceType, kind);
+                treeNode = new ResourceObjectTreeNode(resource, resourceType, resourceObject);
 
                 _resourceToTreeNodeCache.Add(resource, treeNode);
             }
@@ -184,7 +184,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             return treeNode;
         }
 
-        protected virtual ResourceObject ConvertResource(IIdentifiable resource, ResourceType type, EndpointKind kind)
+        protected virtual ResourceObject ConvertResource(IIdentifiable resource, ResourceType resourceType, EndpointKind kind)
         {
             bool isRelationship = kind == EndpointKind.Relationship;
 
@@ -195,17 +195,17 @@ namespace JsonApiDotNetCore.Serialization.Response
 
             var resourceObject = new ResourceObject
             {
-                Type = type.PublicName,
+                Type = resourceType.PublicName,
                 Id = resource.StringId
             };
 
             if (!isRelationship)
             {
-                IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(type);
+                IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceType);
 
-                resourceObject.Attributes = ConvertAttributes(resource, type, fieldSet);
-                resourceObject.Links = _linkBuilder.GetResourceLinks(type, resource.StringId!);
-                resourceObject.Meta = _resourceDefinitionAccessor.GetMeta(type, resource);
+                resourceObject.Attributes = ConvertAttributes(resource, resourceType, fieldSet);
+                resourceObject.Links = _linkBuilder.GetResourceLinks(resourceType, resource);
+                resourceObject.Meta = _resourceDefinitionAccessor.GetMeta(resourceType, resource);
             }
 
             return resourceObject;
@@ -278,9 +278,9 @@ namespace JsonApiDotNetCore.Serialization.Response
 
         private void PopulateRelationshipsInResourceObject(ResourceObjectTreeNode treeNode)
         {
-            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(treeNode.Type);
+            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(treeNode.ResourceType);
 
-            foreach (RelationshipAttribute relationship in treeNode.Type.Relationships)
+            foreach (RelationshipAttribute relationship in treeNode.ResourceType.Relationships)
             {
                 if (fieldSet.Contains(relationship))
                 {
@@ -292,7 +292,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         private void PopulateRelationshipInResourceObject(ResourceObjectTreeNode treeNode, RelationshipAttribute relationship)
         {
             SingleOrManyData<ResourceIdentifierObject> data = GetRelationshipData(treeNode, relationship);
-            RelationshipLinks? links = _linkBuilder.GetRelationshipLinks(relationship, treeNode.Resource.StringId!);
+            RelationshipLinks? links = _linkBuilder.GetRelationshipLinks(relationship, treeNode.Resource);
 
             if (links != null || data.IsAssigned)
             {
@@ -315,7 +315,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             {
                 IEnumerable<ResourceIdentifierObject> resourceIdentifierObjects = rightNodes.Select(rightNode => new ResourceIdentifierObject
                 {
-                    Type = rightNode.Type.PublicName,
+                    Type = rightNode.ResourceType.PublicName,
                     Id = rightNode.ResourceObject.Id
                 });
 

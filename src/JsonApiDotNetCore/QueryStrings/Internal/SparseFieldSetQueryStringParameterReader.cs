@@ -69,10 +69,10 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             try
             {
-                ResourceType targetResource = GetSparseFieldType(parameterName);
-                SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue, targetResource);
+                ResourceType targetResourceType = GetSparseFieldType(parameterName);
+                SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue, targetResourceType);
 
-                _sparseFieldTableBuilder[targetResource] = sparseFieldSet;
+                _sparseFieldTableBuilder[targetResourceType] = sparseFieldSet;
             }
             catch (QueryParseException exception)
             {

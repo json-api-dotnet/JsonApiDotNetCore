@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph
             var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
             // Act
-            builder.Add<ResourceWithAttribute>();
+            builder.Add<ResourceWithAttribute, int>();
 
             // Assert
             IResourceGraph resourceGraph = builder.Build();
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph
             var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
             // Act
-            builder.Add<ResourceWithAttribute>();
+            builder.Add<ResourceWithAttribute, int>();
 
             // Assert
             IResourceGraph resourceGraph = builder.Build();
@@ -60,7 +60,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph
             var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
             // Act
-            builder.Add<ResourceWithAttribute>();
+            builder.Add<ResourceWithAttribute, int>();
 
             // Assert
             IResourceGraph resourceGraph = builder.Build();
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph
             var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
             // Act
-            builder.Add<ResourceWithAttribute>();
+            builder.Add<ResourceWithAttribute, int>();
 
             // Assert
             IResourceGraph resourceGraph = builder.Build();
@@ -94,10 +94,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph
             // Arrange
             var options = new JsonApiOptions();
             var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
-            builder.Add<ResourceWithHasOneRelationship>("duplicate");
+            builder.Add<ResourceWithHasOneRelationship, int>("duplicate");
 
             // Act
-            Action action = () => builder.Add<ResourceWithAttribute>("duplicate");
+            Action action = () => builder.Add<ResourceWithAttribute, int>("duplicate");
 
             // Assert
             action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
@@ -112,7 +112,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph
             var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
             // Act
-            Action action = () => builder.Add<ResourceWithDuplicateAttrPublicName>();
+            Action action = () => builder.Add<ResourceWithDuplicateAttrPublicName, int>();
 
             // Assert
             action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
@@ -128,7 +128,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph
             var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
             // Act
-            Action action = () => builder.Add<ResourceWithDuplicateRelationshipPublicName>();
+            Action action = () => builder.Add<ResourceWithDuplicateRelationshipPublicName, int>();
 
             // Assert
             action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
@@ -144,7 +144,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph
             var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
             // Act
-            Action action = () => builder.Add<ResourceWithDuplicateAttrRelationshipPublicName>();
+            Action action = () => builder.Add<ResourceWithDuplicateAttrRelationshipPublicName, int>();
 
             // Assert
             action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
@@ -174,7 +174,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph
             var options = new JsonApiOptions();
             var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
-            builder.Add<ResourceWithHasOneRelationship>();
+            builder.Add<ResourceWithHasOneRelationship, int>();
 
             // Act
             Action action = () => builder.Build();
@@ -191,7 +191,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph
             var options = new JsonApiOptions();
             var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
 
-            builder.Add<ResourceWithHasManyRelationship>();
+            builder.Add<ResourceWithHasManyRelationship, int>();
 
             // Act
             Action action = () => builder.Build();
@@ -229,7 +229,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph
             var builder = new ResourceGraphBuilder(options, loggerFactory);
 
             // Act
-            builder.Add<ResourceWithHasOneRelationship>();
+            builder.Add<ResourceWithHasOneRelationship, int>();
 
             // Assert
             loggerFactory.Logger.Messages.ShouldHaveCount(1);
@@ -265,7 +265,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph
             var options = new JsonApiOptions();
 
             var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
-            builder.Add<ResourceOfInt32>();
+            builder.Add<ResourceOfInt32, int>();
             IResourceGraph resourceGraph = builder.Build();
 
             var proxyGenerator = new ProxyGenerator();

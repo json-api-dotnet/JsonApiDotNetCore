@@ -22,6 +22,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
         public IList<BlogPost> Posts { get; set; } = new List<BlogPost>();
 
         [HasOne]
-        public WebAccount Owner { get; set; } = null!;
+        public WebAccount? Owner { get; set; }
     }
 }

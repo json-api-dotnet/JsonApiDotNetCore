@@ -162,7 +162,7 @@ namespace JsonApiDotNetCore.Middleware
                 if ((nextBaseType == aspNetControllerType || nextBaseType == coreControllerType) && currentType.IsGenericType)
                 {
                     Type? resourceClrType = currentType.GetGenericArguments()
-                        .FirstOrDefault(typeArgument => typeArgument.IsOrImplementsInterface(typeof(IIdentifiable)));
+                        .FirstOrDefault(typeArgument => typeArgument.IsOrImplementsInterface<IIdentifiable>());
 
                     if (resourceClrType != null)
                     {

@@ -416,8 +416,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Arrange
             List<Blog> blogs = _fakers.Blog.Generate(2);
             blogs[1].Owner = _fakers.WebAccount.Generate();
-            blogs[1].Owner.Posts = _fakers.BlogPost.Generate(2);
-            blogs[1].Owner.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
+            blogs[1].Owner!.Posts = _fakers.BlogPost.Generate(2);
+            blogs[1].Owner!.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -441,13 +441,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Included.ShouldHaveCount(3);
 
             responseDocument.Included[0].Type.Should().Be("webAccounts");
-            responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
+            responseDocument.Included[0].Id.Should().Be(blogs[1].Owner!.StringId);
 
             responseDocument.Included[1].Type.Should().Be("blogPosts");
-            responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
+            responseDocument.Included[1].Id.Should().Be(blogs[1].Owner!.Posts[1].StringId);
 
             responseDocument.Included[2].Type.Should().Be("comments");
-            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.ElementAt(1).StringId);
+            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner!.Posts[1].Comments.ElementAt(1).StringId);
 
             string linkPrefix = $"{HostPrefix}/blogs?include=owner.posts.comments";
 

@@ -21,6 +21,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private IncludeExpression? _includeExpression;
         private string? _lastParameterName;
 
+        public bool AllowEmptyValue => false;
+
         public IncludeQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
             : base(request, resourceGraph)
         {

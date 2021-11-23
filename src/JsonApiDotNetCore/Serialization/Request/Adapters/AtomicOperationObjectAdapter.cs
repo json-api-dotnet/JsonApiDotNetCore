@@ -101,7 +101,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         private (ResourceIdentityRequirements requirements, IIdentifiable? primaryResource) ConvertRef(AtomicOperationObject atomicOperationObject,
             RequestAdapterState state)
         {
-            ResourceIdentityRequirements requirements = CreateIdentityRequirements(state);
+            ResourceIdentityRequirements requirements = CreateRefRequirements(state);
             IIdentifiable? primaryResource = null;
 
             AtomicReferenceResult? refResult = atomicOperationObject.Ref != null
@@ -110,15 +110,6 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
             if (refResult != null)
             {
-                requirements = new ResourceIdentityRequirements
-                {
-                    ResourceType = refResult.ResourceType,
-                    IdConstraint = requirements.IdConstraint,
-                    IdValue = refResult.Resource.StringId,
-                    LidValue = refResult.Resource.LocalId,
-                    RelationshipName = refResult.Relationship?.PublicName
-                };
-
                 state.WritableRequest!.PrimaryId = refResult.Resource.StringId;
                 state.WritableRequest.PrimaryResourceType = refResult.ResourceType;
                 state.WritableRequest.Relationship = refResult.Relationship;
@@ -126,13 +117,14 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
                 ConvertRefRelationship(atomicOperationObject.Data, refResult, state);
 
+                requirements = CreateDataRequirements(refResult, requirements);
                 primaryResource = refResult.Resource;
             }
 
             return (requirements, primaryResource);
         }
 
-        private ResourceIdentityRequirements CreateIdentityRequirements(RequestAdapterState state)
+        private ResourceIdentityRequirements CreateRefRequirements(RequestAdapterState state)
         {
             JsonElementConstraint? idConstraint = state.Request.WriteOperation == WriteOperationKind.CreateResource
                 ? _options.AllowClientGeneratedIds ? null : JsonElementConstraint.Forbidden
@@ -141,6 +133,18 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             return new ResourceIdentityRequirements
             {
                 IdConstraint = idConstraint
+            };
+        }
+
+        private static ResourceIdentityRequirements CreateDataRequirements(AtomicReferenceResult refResult, ResourceIdentityRequirements refRequirements)
+        {
+            return new ResourceIdentityRequirements
+            {
+                ResourceType = refResult.ResourceType,
+                IdConstraint = refRequirements.IdConstraint,
+                IdValue = refResult.Resource.StringId,
+                LidValue = refResult.Resource.LocalId,
+                RelationshipName = refResult.Relationship?.PublicName
             };
         }
 

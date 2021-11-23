@@ -19,13 +19,13 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             // @formatter:keep_existing_linebreaks true
 
             ResourceGraph = new ResourceGraphBuilder(Options, NullLoggerFactory.Instance)
-                .Add<Blog>()
-                .Add<BlogPost>()
-                .Add<Label>()
-                .Add<Comment>()
-                .Add<WebAccount>()
-                .Add<AccountPreferences>()
-                .Add<LoginAttempt>()
+                .Add<Blog, int>()
+                .Add<BlogPost, int>()
+                .Add<Label, int>()
+                .Add<Comment, int>()
+                .Add<WebAccount, int>()
+                .Add<AccountPreferences, int>()
+                .Add<LoginAttempt, int>()
                 .Build();
 
             // @formatter:wrap_chained_method_calls restore

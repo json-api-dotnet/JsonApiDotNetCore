@@ -21,7 +21,7 @@ namespace Benchmarks.Deserialization
         protected DeserializationBenchmarkBase()
         {
             var options = new JsonApiOptions();
-            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<IncomingResource>().Build();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<IncomingResource, int>().Build();
             options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
             SerializerReadOptions = ((IJsonApiOptions)options).SerializerReadOptions;
 

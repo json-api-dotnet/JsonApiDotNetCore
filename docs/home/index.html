@@ -142,31 +142,35 @@
                      <div class="icon"><i class='bx bx-detail'></i></div>
                      <h4 class="title">Resource</h4>
                      <pre>
-<code>public class Article : Identifiable
+<code>#nullable enable
+
+public class Article : Identifiable&lt;long&gt;
 {
     [Attr]
-    [Required, MaxLength(30)]
-    public string Title { get; set; }
+    [MaxLength(30)]
+    public string Title { get; set; } = null!;
 
     [Attr(Capabilities = AttrCapabilities.AllowFilter)]
-    public string Summary { get; set; }
+    public string? Summary { get; set; }
 
     [Attr(PublicName = "websiteUrl")]
-    public string Url { get; set; }
+    public string? Url { get; set; }
+
+    [Attr]
+    [Required]
+    public int? WordCount { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.AllowView)]
     public DateTimeOffset LastModifiedAt { get; set; }
 
     [HasOne]
-    public Person Author { get; set; }
+    public Person Author { get; set; } = null!;
+
+    [HasOne]
+    public Person? Reviewer { get; set; }
 
     [HasMany]
-    public ICollection&lt;Revision&gt; Revisions { get; set; }  
-
-    [HasManyThrough(nameof(ArticleTags))]
-    [NotMapped]
-    public ICollection&lt;Tag&gt; Tags { get; set; }
-    public ICollection&lt;ArticleTag&gt; ArticleTags { get; set; }
+    public ICollection&lt;Tag&gt; Tags { get; set; } = new HashSet&lt;Tag&gt;();
 }</code>
                      </pre>
                   </div>
@@ -179,7 +183,7 @@
                      <h4 class="title">Request</h4>
                      <pre>
 <code>
-GET /articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields=title,summary&include=author HTTP/1.1
+GET /articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields[articles]=title,summary&include=author HTTP/1.1
 </code>
                      </pre>
                   </div>
@@ -197,9 +201,9 @@ GET /articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields=title,s
     "totalResources": 1
   },
   "links": {
-    "self": "/articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields=title,summary&include=author",
-    "first": "/articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields=title,summary&include=author",
-    "last": "/articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields=title,summary&include=author"
+    "self": "/articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields%5Barticles%5D=title,summary&include=author",
+    "first": "/articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields%5Barticles%5D=title,summary&include=author",
+    "last": "/articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields%5Barticles%5D=title,summary&include=author"
   },
   "data": [
     {

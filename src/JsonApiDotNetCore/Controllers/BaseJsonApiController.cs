@@ -87,7 +87,9 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Gets a collection of top-level (non-nested) resources. Example: GET /articles HTTP/1.1
+        /// Gets a collection of primary resources. Example: <code><![CDATA[
+        /// GET /articles HTTP/1.1
+        /// ]]></code>
         /// </summary>
         public virtual async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
         {
@@ -95,7 +97,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getAll == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Get);
+                throw new RouteNotAvailableException(HttpMethod.Get, Request.Path);
             }
 
             IReadOnlyCollection<TResource> resources = await _getAll.GetAsync(cancellationToken);
@@ -104,7 +106,9 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Gets a single top-level (non-nested) resource by ID. Example: /articles/1
+        /// Gets a single primary resource by ID. Example: <code><![CDATA[
+        /// GET /articles/1 HTTP/1.1
+        /// ]]></code>
         /// </summary>
         public virtual async Task<IActionResult> GetAsync(TId id, CancellationToken cancellationToken)
         {
@@ -115,7 +119,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getById == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Get);
+                throw new RouteNotAvailableException(HttpMethod.Get, Request.Path);
             }
 
             TResource resource = await _getById.GetAsync(id, cancellationToken);
@@ -124,7 +128,12 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Gets a single resource or multiple resources at a nested endpoint. Examples: GET /articles/1/author HTTP/1.1 GET /articles/1/revisions HTTP/1.1
+        /// Gets a secondary resource or collection of secondary resources. Example: <code><![CDATA[
+        /// GET /articles/1/author HTTP/1.1
+        /// ]]></code> Example:
+        /// <code><![CDATA[
+        /// GET /articles/1/revisions HTTP/1.1
+        /// ]]></code>
         /// </summary>
         public virtual async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
@@ -138,7 +147,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getSecondary == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Get);
+                throw new RouteNotAvailableException(HttpMethod.Get, Request.Path);
             }
 
             object? rightValue = await _getSecondary.GetSecondaryAsync(id, relationshipName, cancellationToken);
@@ -147,7 +156,13 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Gets a single resource relationship. Example: GET /articles/1/relationships/author HTTP/1.1 Example: GET /articles/1/relationships/revisions HTTP/1.1
+        /// Gets a relationship value, which can be a <c>null</c>, a single object or a collection. Example:
+        /// <code><![CDATA[
+        /// GET /articles/1/relationships/author HTTP/1.1
+        /// ]]></code> Example:
+        /// <code><![CDATA[
+        /// GET /articles/1/relationships/revisions HTTP/1.1
+        /// ]]></code>
         /// </summary>
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
@@ -161,7 +176,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_getRelationship == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Get);
+                throw new RouteNotAvailableException(HttpMethod.Get, Request.Path);
             }
 
             object? rightValue = await _getRelationship.GetRelationshipAsync(id, relationshipName, cancellationToken);
@@ -170,7 +185,9 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Creates a new resource with attributes, relationships or both. Example: POST /articles HTTP/1.1
+        /// Creates a new resource with attributes, relationships or both. Example: <code><![CDATA[
+        /// POST /articles HTTP/1.1
+        /// ]]></code>
         /// </summary>
         public virtual async Task<IActionResult> PostAsync([FromBody] TResource resource, CancellationToken cancellationToken)
         {
@@ -183,7 +200,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_create == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Post);
+                throw new RouteNotAvailableException(HttpMethod.Post, Request.Path);
             }
 
             if (_options.ValidateModelState && !ModelState.IsValid)
@@ -206,7 +223,9 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Adds resources to a to-many relationship. Example: POST /articles/1/revisions HTTP/1.1
+        /// Adds resources to a to-many relationship. Example: <code><![CDATA[
+        /// POST /articles/1/revisions HTTP/1.1
+        /// ]]></code>
         /// </summary>
         /// <param name="id">
         /// Identifies the left side of the relationship.
@@ -235,7 +254,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_addToRelationship == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Post);
+                throw new RouteNotAvailableException(HttpMethod.Post, Request.Path);
             }
 
             await _addToRelationship.AddToToManyRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
@@ -245,7 +264,9 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <summary>
         /// Updates the attributes and/or relationships of an existing resource. Only the values of sent attributes are replaced. And only the values of sent
-        /// relationships are replaced. Example: PATCH /articles/1 HTTP/1.1
+        /// relationships are replaced. Example: <code><![CDATA[
+        /// PATCH /articles/1 HTTP/1.1
+        /// ]]></code>
         /// </summary>
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource, CancellationToken cancellationToken)
         {
@@ -259,7 +280,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_update == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Patch);
+                throw new RouteNotAvailableException(HttpMethod.Patch, Request.Path);
             }
 
             if (_options.ValidateModelState && !ModelState.IsValid)
@@ -268,12 +289,18 @@ namespace JsonApiDotNetCore.Controllers
             }
 
             TResource? updated = await _update.UpdateAsync(id, resource, cancellationToken);
+
             return updated == null ? NoContent() : Ok(updated);
         }
 
         /// <summary>
-        /// Performs a complete replacement of a relationship on an existing resource. Example: PATCH /articles/1/relationships/author HTTP/1.1 Example: PATCH
-        /// /articles/1/relationships/revisions HTTP/1.1
+        /// Performs a complete replacement of a relationship on an existing resource. Example:
+        /// <code><![CDATA[
+        /// PATCH /articles/1/relationships/author HTTP/1.1
+        /// ]]></code> Example:
+        /// <code><![CDATA[
+        /// PATCH /articles/1/relationships/revisions HTTP/1.1
+        /// ]]></code>
         /// </summary>
         /// <param name="id">
         /// Identifies the left side of the relationship.
@@ -301,7 +328,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_setRelationship == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Patch);
+                throw new RouteNotAvailableException(HttpMethod.Patch, Request.Path);
             }
 
             await _setRelationship.SetRelationshipAsync(id, relationshipName, rightValue, cancellationToken);
@@ -310,7 +337,9 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Deletes an existing resource. Example: DELETE /articles/1 HTTP/1.1
+        /// Deletes an existing resource. Example: <code><![CDATA[
+        /// DELETE /articles/1 HTTP/1.1
+        /// ]]></code>
         /// </summary>
         public virtual async Task<IActionResult> DeleteAsync(TId id, CancellationToken cancellationToken)
         {
@@ -321,7 +350,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_delete == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Delete);
+                throw new RouteNotAvailableException(HttpMethod.Delete, Request.Path);
             }
 
             await _delete.DeleteAsync(id, cancellationToken);
@@ -330,7 +359,9 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Removes resources from a to-many relationship. Example: DELETE /articles/1/relationships/revisions HTTP/1.1
+        /// Removes resources from a to-many relationship. Example: <code><![CDATA[
+        /// DELETE /articles/1/relationships/revisions HTTP/1.1
+        /// ]]></code>
         /// </summary>
         /// <param name="id">
         /// Identifies the left side of the relationship.
@@ -359,7 +390,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_removeFromRelationship == null)
             {
-                throw new RequestMethodNotAllowedException(HttpMethod.Delete);
+                throw new RouteNotAvailableException(HttpMethod.Delete, Request.Path);
             }
 
             await _removeFromRelationship.RemoveFromToManyRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);

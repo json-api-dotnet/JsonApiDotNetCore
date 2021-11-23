@@ -18,8 +18,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
         {
             _testContext = testContext;
 
-            testContext.UseController<BlockingHttpDeleteController>();
-            testContext.UseController<BlockingWritesController>();
+            testContext.UseController<SofasBlockingSortPageController>();
+            testContext.UseController<PillowsNoSkipCacheController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
@@ -73,10 +73,25 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
         }
 
         [Fact]
+        public async Task Can_use_custom_query_string_parameter()
+        {
+            // Arrange
+            const string route = "/sofas?skipCache";
+
+            // Act
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ShouldNotBeEmpty();
+        }
+
+        [Fact]
         public async Task Cannot_use_custom_query_string_parameter_if_blocked_by_controller()
         {
             // Arrange
-            const string route = "/beds?skipCache=true";
+            const string route = "/pillows?skipCache";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

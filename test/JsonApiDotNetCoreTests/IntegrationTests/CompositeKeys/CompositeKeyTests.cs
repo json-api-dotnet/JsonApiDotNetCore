@@ -186,7 +186,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Car carInDatabase = await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == newCar.RegionId && car.LicensePlate == newCar.LicensePlate);
+                Car? carInDatabase =
+                    await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == newCar.RegionId && car.LicensePlate == newCar.LicensePlate);
 
                 carInDatabase.ShouldNotBeNull();
                 carInDatabase.Id.Should().Be($"{newCar.RegionId}:{newCar.LicensePlate}");
@@ -508,7 +509,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Car carInDatabase =
+                Car? carInDatabase =
                     await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == existingCar.RegionId && car.LicensePlate == existingCar.LicensePlate);
 
                 carInDatabase.Should().BeNull();

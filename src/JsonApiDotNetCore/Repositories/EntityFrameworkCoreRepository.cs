@@ -379,7 +379,7 @@ namespace JsonApiDotNetCore.Repositories
 
         private INavigation? GetNavigation(RelationshipAttribute relationship)
         {
-            IEntityType entityType = _dbContext.Model.FindEntityType(typeof(TResource));
+            IEntityType? entityType = _dbContext.Model.FindEntityType(typeof(TResource));
             return entityType?.FindNavigation(relationship.Property.Name);
         }
 
@@ -500,15 +500,18 @@ namespace JsonApiDotNetCore.Repositories
                 HashSet<IIdentifiable> rightResourceIdsToStore = rightResourceIdsStored.ToHashSet(IdentifiableComparer.Instance);
                 rightResourceIdsToStore.ExceptWith(rightResourceIdsToRemove);
 
-                AssertIsNotClearingRequiredToOneRelationship(relationship, leftResourceTracked, rightResourceIdsToStore);
+                if (!rightResourceIdsToStore.SetEquals(rightResourceIdsStored))
+                {
+                    AssertIsNotClearingRequiredToOneRelationship(relationship, leftResourceTracked, rightResourceIdsToStore);
 
-                await UpdateRelationshipAsync(relationship, leftResourceTracked, rightResourceIdsToStore, cancellationToken);
+                    await UpdateRelationshipAsync(relationship, leftResourceTracked, rightResourceIdsToStore, cancellationToken);
 
-                await _resourceDefinitionAccessor.OnWritingAsync(leftResourceTracked, WriteOperationKind.RemoveFromRelationship, cancellationToken);
+                    await _resourceDefinitionAccessor.OnWritingAsync(leftResourceTracked, WriteOperationKind.RemoveFromRelationship, cancellationToken);
 
-                await SaveChangesAsync(cancellationToken);
+                    await SaveChangesAsync(cancellationToken);
 
-                await _resourceDefinitionAccessor.OnWriteSucceededAsync(leftResourceTracked, WriteOperationKind.RemoveFromRelationship, cancellationToken);
+                    await _resourceDefinitionAccessor.OnWriteSucceededAsync(leftResourceTracked, WriteOperationKind.RemoveFromRelationship, cancellationToken);
+                }
             }
         }
 
@@ -568,13 +571,6 @@ namespace JsonApiDotNetCore.Repositories
             }
             catch (Exception exception) when (exception is DbUpdateException or InvalidOperationException)
             {
-                if (_dbContext.Database.CurrentTransaction != null)
-                {
-                    // The ResourceService calling us needs to run additional SQL queries after an aborted transaction,
-                    // to determine error cause. This fails when a failed transaction is still in progress.
-                    await _dbContext.Database.CurrentTransaction.RollbackAsync(cancellationToken);
-                }
-
                 _dbContext.ResetChangeTracker();
 
                 throw new DataStoreUpdateException(exception);

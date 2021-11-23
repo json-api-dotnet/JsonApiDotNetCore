@@ -115,14 +115,19 @@ options.ValidateModelState = true;
 ```
 
 ```c#
+#nullable enable
+
 public class Person : Identifiable<int>
 {
     [Attr]
-    [Required]
     [MinLength(3)]
-    public string FirstName { get; set; }
+    public string FirstName { get; set; } = null!;
 
+    [Attr]
     [Required]
-    public LoginAccount Account : get; set; }
+    public int? Age { get; set; }
+
+    [HasOne]
+    public LoginAccount Account { get; set; } = null!;
 }
 ```

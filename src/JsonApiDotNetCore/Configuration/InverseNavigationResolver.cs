@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             foreach (ResourceType resourceType in _resourceGraph.GetResourceTypes().Where(resourceType => resourceType.Relationships.Any()))
             {
-                IEntityType entityType = dbContext.Model.FindEntityType(resourceType.ClrType);
+                IEntityType? entityType = dbContext.Model.FindEntityType(resourceType.ClrType);
 
                 if (entityType != null)
                 {
