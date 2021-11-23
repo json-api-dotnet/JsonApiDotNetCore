@@ -9,18 +9,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
     public sealed class Lyric : Identifiable<long>
     {
         [Attr]
-        public string Format { get; set; }
+        public string? Format { get; set; }
 
         [Attr]
-        public string Text { get; set; }
+        public string Text { get; set; } = null!;
 
         [Attr(Capabilities = AttrCapabilities.None)]
         public DateTimeOffset CreatedAt { get; set; }
 
         [HasOne]
-        public TextLanguage Language { get; set; }
+        public TextLanguage? Language { get; set; }
 
         [HasOne]
-        public MusicTrack Track { get; set; }
+        public MusicTrack? Track { get; set; }
     }
 }

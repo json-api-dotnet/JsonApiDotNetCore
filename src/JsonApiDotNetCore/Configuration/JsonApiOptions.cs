@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Configuration
         internal bool DisableChildrenPagination { get; set; }
 
         /// <inheritdoc />
-        public string Namespace { get; set; }
+        public string? Namespace { get; set; }
 
         /// <inheritdoc />
         public AttrCapabilities DefaultAttrCapabilities { get; set; } = AttrCapabilities.All;
@@ -37,6 +37,9 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <inheritdoc />
         public bool IncludeExceptionStackTraceInErrors { get; set; }
+
+        /// <inheritdoc />
+        public bool IncludeRequestBodyInErrors { get; set; }
 
         /// <inheritdoc />
         public bool UseRelativeLinks { get; set; }
@@ -54,22 +57,25 @@ namespace JsonApiDotNetCore.Configuration
         public bool IncludeTotalResourceCount { get; set; }
 
         /// <inheritdoc />
-        public PageSize DefaultPageSize { get; set; } = new(10);
+        public PageSize? DefaultPageSize { get; set; } = new(10);
 
         /// <inheritdoc />
-        public PageSize MaximumPageSize { get; set; }
+        public PageSize? MaximumPageSize { get; set; }
 
         /// <inheritdoc />
-        public PageNumber MaximumPageNumber { get; set; }
+        public PageNumber? MaximumPageNumber { get; set; }
 
         /// <inheritdoc />
-        public bool ValidateModelState { get; set; }
+        public bool ValidateModelState { get; set; } = true;
 
         /// <inheritdoc />
         public bool AllowClientGeneratedIds { get; set; }
 
         /// <inheritdoc />
         public bool AllowUnknownQueryStringParameters { get; set; }
+
+        /// <inheritdoc />
+        public bool AllowUnknownFieldsInRequestBody { get; set; }
 
         /// <inheritdoc />
         public bool EnableLegacyFilterNotation { get; set; }

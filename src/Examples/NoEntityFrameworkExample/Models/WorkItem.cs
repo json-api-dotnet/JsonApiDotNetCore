@@ -6,13 +6,13 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace NoEntityFrameworkExample.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class WorkItem : Identifiable
+    public sealed class WorkItem : Identifiable<int>
     {
         [Attr]
         public bool IsBlocked { get; set; }
 
         [Attr]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         [Attr]
         public long DurationInHours { get; set; }

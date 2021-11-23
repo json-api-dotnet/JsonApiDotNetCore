@@ -1,4 +1,4 @@
-﻿namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
+namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
 {
     public enum WorkflowStage
     {

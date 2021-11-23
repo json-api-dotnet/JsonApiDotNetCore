@@ -60,13 +60,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?page[size]=1");
-            responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
+            responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?page%5Bsize%5D=1");
+            responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogPosts?page%5Bnumber%5D=2&page%5Bsize%5D=1");
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Next.Should().BeNull();
         }
@@ -91,12 +91,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("page[number]");
         }
 
@@ -105,15 +106,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             Blog blog = _fakers.Blog.Generate();
-            blog.Posts = _fakers.BlogPost.Generate(2);
+            blog.Posts = _fakers.BlogPost.Generate(5);
+
+            Blog otherBlog = _fakers.Blog.Generate();
+            otherBlog.Posts = _fakers.BlogPost.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Blogs.Add(blog);
+                dbContext.Blogs.AddRange(blog, otherBlog);
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/blogs/{blog.StringId}/posts?page[number]=2&page[size]=1";
+            string route = $"/blogs/{blog.StringId}/posts?page[number]=3&page[size]=1";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -121,15 +125,47 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
-            responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[1].StringId);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[2].StringId);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.First.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page[size]=1");
+            responseDocument.Links.First.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page%5Bsize%5D=1");
+            responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page%5Bnumber%5D=5&page%5Bsize%5D=1");
+            responseDocument.Links.Prev.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page%5Bnumber%5D=2&page%5Bsize%5D=1");
+            responseDocument.Links.Next.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page%5Bnumber%5D=4&page%5Bsize%5D=1");
+        }
+
+        [Fact]
+        public async Task Can_paginate_in_secondary_resources_without_inverse_relationship()
+        {
+            // Arrange
+            WebAccount? account = _fakers.WebAccount.Generate();
+            account.LoginAttempts = _fakers.LoginAttempt.Generate(2);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Accounts.Add(account);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/webAccounts/{account.StringId}/loginAttempts?page[number]=2&page[size]=1";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(account.LoginAttempts[1].StringId);
+
+            responseDocument.Links.ShouldNotBeNull();
+            responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
+            responseDocument.Links.First.Should().Be($"{HostPrefix}/webAccounts/{account.StringId}/loginAttempts?page%5Bsize%5D=1");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
-            responseDocument.Links.Next.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page[number]=3&page[size]=1");
+            responseDocument.Links.Next.Should().Be($"{HostPrefix}/webAccounts/{account.StringId}/loginAttempts?page%5Bnumber%5D=3&page%5Bsize%5D=1");
         }
 
         [Fact]
@@ -152,12 +188,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("page[size]");
         }
 
@@ -184,16 +221,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
-            responseDocument.Included.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
+            responseDocument.Included.ShouldHaveCount(2);
 
             responseDocument.Included[0].Id.Should().Be(blogs[0].Posts[1].StringId);
             responseDocument.Included[1].Id.Should().Be(blogs[1].Posts[1].StringId);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.First.Should().Be($"{HostPrefix}/blogs?include=posts&page[size]=2,posts:1");
-            responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogs?include=posts&page[number]=2&page[size]=2,posts:1");
+            responseDocument.Links.First.Should().Be($"{HostPrefix}/blogs?include=posts&page%5Bsize%5D=2,posts%3A1");
+            responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogs?include=posts&page%5Bnumber%5D=2&page%5Bsize%5D=2,posts%3A1");
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().Be(responseDocument.Links.Last);
         }
@@ -220,11 +257,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
@@ -237,7 +274,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             Blog blog = _fakers.Blog.Generate();
-            blog.Posts = _fakers.BlogPost.Generate(2);
+            blog.Posts = _fakers.BlogPost.Generate(4);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -253,15 +290,49 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[1].StringId);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.First.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/relationships/posts?page[size]=1");
+            responseDocument.Links.First.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/relationships/posts?page%5Bsize%5D=1");
+            responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/relationships/posts?page%5Bnumber%5D=4&page%5Bsize%5D=1");
+            responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
+            responseDocument.Links.Next.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/relationships/posts?page%5Bnumber%5D=3&page%5Bsize%5D=1");
+        }
+
+        [Fact]
+        public async Task Can_paginate_OneToMany_relationship_on_relationship_endpoint_without_inverse_relationship()
+        {
+            // Arrange
+            WebAccount? account = _fakers.WebAccount.Generate();
+            account.LoginAttempts = _fakers.LoginAttempt.Generate(2);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Accounts.Add(account);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/webAccounts/{account.StringId}/relationships/loginAttempts?page[number]=2&page[size]=1";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(account.LoginAttempts[1].StringId);
+
+            string basePath = $"{HostPrefix}/webAccounts/{account.StringId}/relationships/loginAttempts";
+
+            responseDocument.Links.ShouldNotBeNull();
+            responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
+            responseDocument.Links.First.Should().Be(basePath + "?page%5Bsize%5D=1");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
-            responseDocument.Links.Next.Should().BeNull();
+            responseDocument.Links.Next.Should().Be(basePath + "?page%5Bnumber%5D=3&page%5Bsize%5D=1");
         }
 
         [Fact]
@@ -292,15 +363,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
-            responseDocument.Included.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
+            responseDocument.Included.ShouldHaveCount(2);
 
             responseDocument.Included[0].Id.Should().Be(posts[0].Labels.ElementAt(1).StringId);
             responseDocument.Included[1].Id.Should().Be(posts[1].Labels.ElementAt(1).StringId);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?include=labels&page[size]=labels:1");
+            responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?include=labels&page%5Bsize%5D=labels%3A1");
             responseDocument.Links.Last.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
@@ -311,7 +382,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             BlogPost post = _fakers.BlogPost.Generate();
-            post.Labels = _fakers.Label.Generate(2).ToHashSet();
+            post.Labels = _fakers.Label.Generate(4).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -328,15 +399,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(post.Labels.ElementAt(1).StringId);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts/{post.StringId}/relationships/labels?page[size]=1");
-            responseDocument.Links.Last.Should().BeNull();
+            responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts/{post.StringId}/relationships/labels?page%5Bsize%5D=1");
+            responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogPosts/{post.StringId}/relationships/labels?page%5Bnumber%5D=4&page%5Bsize%5D=1");
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
-            responseDocument.Links.Next.Should().BeNull();
+            responseDocument.Links.Next.Should().Be($"{HostPrefix}/blogPosts/{post.StringId}/relationships/labels?page%5Bnumber%5D=3&page%5Bsize%5D=1");
         }
 
         [Fact]
@@ -345,8 +416,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Arrange
             List<Blog> blogs = _fakers.Blog.Generate(2);
             blogs[1].Owner = _fakers.WebAccount.Generate();
-            blogs[1].Owner.Posts = _fakers.BlogPost.Generate(2);
-            blogs[1].Owner.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
+            blogs[1].Owner!.Posts = _fakers.BlogPost.Generate(2);
+            blogs[1].Owner!.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -364,20 +435,26 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
 
-            responseDocument.Included.Should().HaveCount(3);
-            responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
-            responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
-            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.ElementAt(1).StringId);
+            responseDocument.Included.ShouldHaveCount(3);
+
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
+            responseDocument.Included[0].Id.Should().Be(blogs[1].Owner!.StringId);
+
+            responseDocument.Included[1].Type.Should().Be("blogPosts");
+            responseDocument.Included[1].Id.Should().Be(blogs[1].Owner!.Posts[1].StringId);
+
+            responseDocument.Included[2].Type.Should().Be("comments");
+            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner!.Posts[1].Comments.ElementAt(1).StringId);
 
             string linkPrefix = $"{HostPrefix}/blogs?include=owner.posts.comments";
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.First.Should().Be($"{linkPrefix}&page[size]=1,owner.posts:1,owner.posts.comments:1");
-            responseDocument.Links.Last.Should().Be($"{linkPrefix}&page[size]=1,owner.posts:1,owner.posts.comments:1&page[number]=2");
+            responseDocument.Links.First.Should().Be($"{linkPrefix}&page%5Bsize%5D=1,owner.posts%3A1,owner.posts.comments%3A1");
+            responseDocument.Links.Last.Should().Be($"{linkPrefix}&page%5Bsize%5D=1,owner.posts%3A1,owner.posts.comments%3A1&page%5Bnumber%5D=2");
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Next.Should().BeNull();
         }
@@ -394,12 +471,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
-            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource 'webAccounts'.");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("page[number]");
         }
 
@@ -415,12 +493,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
-            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource 'blogPosts'.");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource type 'blogPosts'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("page[size]");
         }
 
@@ -448,16 +527,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
             responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(blog.Posts[1].StringId);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
-            responseDocument.Links.Last.Should().BeNull();
+            responseDocument.Links.Last.Should().Be($"{HostPrefix}{route}?page%5Bnumber%5D=2");
             responseDocument.Links.Prev.Should().BeNull();
-            responseDocument.Links.Next.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page[number]=2");
+            responseDocument.Links.Next.Should().Be(responseDocument.Links.Last);
         }
 
         [Fact]
@@ -484,9 +563,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(25);
+            responseDocument.Data.ManyValue.ShouldHaveCount(25);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
@@ -531,6 +610,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            responseDocument.ShouldNotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
 
             if (firstLink != null)
@@ -575,7 +656,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
 
             static string SetPageNumberInUrl(string url, int pageNumber)
             {
-                return pageNumber != 1 ? $"{url}&page[number]={pageNumber}" : url;
+                string link = pageNumber != 1 ? $"{url}&page[number]={pageNumber}" : url;
+                return link.Replace("[", "%5B").Replace("]", "%5D").Replace("'", "%27");
             }
         }
     }

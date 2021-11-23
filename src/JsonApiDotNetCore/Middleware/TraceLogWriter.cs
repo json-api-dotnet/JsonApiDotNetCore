@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Middleware
             _logger = loggerFactory.CreateLogger(typeof(T));
         }
 
-        public void LogMethodStart(object parameters = null, [CallerMemberName] string memberName = "")
+        public void LogMethodStart(object? parameters = null, [CallerMemberName] string memberName = "")
         {
             if (IsEnabled)
             {
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-        private static string FormatMessage(string memberName, object parameters)
+        private static string FormatMessage(string memberName, object? parameters)
         {
             var builder = new StringBuilder();
 
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.Middleware
             return builder.ToString();
         }
 
-        private static void WriteProperties(StringBuilder builder, object propertyContainer)
+        private static void WriteProperties(StringBuilder builder, object? propertyContainer)
         {
             if (propertyContainer != null)
             {
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCore.Middleware
             builder.Append(property.Name);
             builder.Append(": ");
 
-            object value = property.GetValue(instance);
+            object? value = property.GetValue(instance);
 
             if (value == null)
             {
@@ -119,11 +119,11 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-        private static bool HasToStringOverload(Type type)
+        private static bool HasToStringOverload(Type? type)
         {
             if (type != null)
             {
-                MethodInfo toStringMethod = type.GetMethod("ToString", Array.Empty<Type>());
+                MethodInfo? toStringMethod = type.GetMethod("ToString", Array.Empty<Type>());
 
                 if (toStringMethod != null && toStringMethod.DeclaringType != typeof(object))
                 {

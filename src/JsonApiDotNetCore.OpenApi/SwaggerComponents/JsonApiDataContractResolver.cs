@@ -38,11 +38,11 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
             DataContract dataContract = _dataContractResolver.GetDataContractForType(type);
 
-            IList<DataProperty> replacementProperties = null;
+            IList<DataProperty>? replacementProperties = null;
 
             if (type.IsAssignableTo(typeof(IIdentifiable)))
             {
-                replacementProperties = GetDataPropertiesThatExistInResourceContext(type, dataContract);
+                replacementProperties = GetDataPropertiesThatExistInResourceClrType(type, dataContract);
             }
 
             if (replacementProperties != null)
@@ -59,20 +59,20 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
                 dataContract.ObjectTypeNameProperty, dataContract.ObjectTypeNameValue);
         }
 
-        private IList<DataProperty> GetDataPropertiesThatExistInResourceContext(Type resourceType, DataContract dataContract)
+        private IList<DataProperty> GetDataPropertiesThatExistInResourceClrType(Type resourceClrType, DataContract dataContract)
         {
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
+            ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
             var dataProperties = new List<DataProperty>();
 
             foreach (DataProperty property in dataContract.ObjectProperties)
             {
-                if (property.MemberInfo.Name == nameof(Identifiable.Id))
+                if (property.MemberInfo.Name == nameof(Identifiable<object>.Id))
                 {
                     // Schemas of JsonApiDotNetCore resources will obtain an Id property through inheritance of a resource identifier type.
                     continue;
                 }
 
-                ResourceFieldAttribute matchingField = resourceContext.Fields.SingleOrDefault(field =>
+                ResourceFieldAttribute? matchingField = resourceType.Fields.SingleOrDefault(field =>
                     IsPropertyCompatibleWithMember(field.Property, property.MemberInfo));
 
                 if (matchingField != null)
@@ -90,7 +90,8 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
         private static DataProperty ChangeDataPropertyName(DataProperty property, string name)
         {
-            return new(name, property.MemberType, property.IsRequired, property.IsNullable, property.IsReadOnly, property.IsWriteOnly, property.MemberInfo);
+            return new DataProperty(name, property.MemberType, property.IsRequired, property.IsNullable, property.IsReadOnly, property.IsWriteOnly,
+                property.MemberInfo);
         }
 
         private static bool IsPropertyCompatibleWithMember(PropertyInfo property, MemberInfo member)

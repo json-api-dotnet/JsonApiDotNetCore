@@ -4,6 +4,7 @@ using System.Linq;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Graph
@@ -14,34 +15,34 @@ namespace UnitTests.Graph
         public void GetResourceDescriptorsPerAssembly_Locates_Identifiable_Resource()
         {
             // Arrange
-            Type resourceType = typeof(Model);
+            Type resourceClrType = typeof(Model);
 
             var assemblyCache = new ResourceDescriptorAssemblyCache();
-            assemblyCache.RegisterAssembly(resourceType.Assembly);
+            assemblyCache.RegisterAssembly(resourceClrType.Assembly);
 
             // Act
             IReadOnlyCollection<ResourceDescriptor> descriptors = assemblyCache.GetResourceDescriptors();
 
             // Assert
-            descriptors.Should().NotBeEmpty();
-            descriptors.Should().ContainSingle(descriptor => descriptor.ResourceType == resourceType);
+            descriptors.ShouldNotBeEmpty();
+            descriptors.Should().ContainSingle(descriptor => descriptor.ResourceClrType == resourceClrType);
         }
 
         [Fact]
         public void GetResourceDescriptorsPerAssembly_Only_Contains_IIdentifiable_Types()
         {
             // Arrange
-            Type resourceType = typeof(Model);
+            Type resourceClrType = typeof(Model);
 
             var assemblyCache = new ResourceDescriptorAssemblyCache();
-            assemblyCache.RegisterAssembly(resourceType.Assembly);
+            assemblyCache.RegisterAssembly(resourceClrType.Assembly);
 
             // Act
             IReadOnlyCollection<ResourceDescriptor> descriptors = assemblyCache.GetResourceDescriptors();
 
             // Assert
-            descriptors.Should().NotBeEmpty();
-            descriptors.Select(descriptor => descriptor.ResourceType).Should().AllBeAssignableTo<IIdentifiable>();
+            descriptors.ShouldNotBeEmpty();
+            descriptors.Select(descriptor => descriptor.ResourceClrType).Should().AllBeAssignableTo<IIdentifiable>();
         }
     }
 }

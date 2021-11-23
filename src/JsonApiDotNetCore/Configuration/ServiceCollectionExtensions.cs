@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Repositories;
@@ -20,9 +19,9 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Configures JsonApiDotNetCore by registering resources manually.
         /// </summary>
-        public static IServiceCollection AddJsonApi(this IServiceCollection services, Action<JsonApiOptions> options = null,
-            Action<ServiceDiscoveryFacade> discovery = null, Action<ResourceGraphBuilder> resources = null, IMvcCoreBuilder mvcBuilder = null,
-            ICollection<Type> dbContextTypes = null)
+        public static IServiceCollection AddJsonApi(this IServiceCollection services, Action<JsonApiOptions>? options = null,
+            Action<ServiceDiscoveryFacade>? discovery = null, Action<ResourceGraphBuilder>? resources = null, IMvcCoreBuilder? mvcBuilder = null,
+            ICollection<Type>? dbContextTypes = null)
         {
             ArgumentGuard.NotNull(services, nameof(services));
 
@@ -34,30 +33,30 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Configures JsonApiDotNetCore by registering resources from an Entity Framework Core model.
         /// </summary>
-        public static IServiceCollection AddJsonApi<TDbContext>(this IServiceCollection services, Action<JsonApiOptions> options = null,
-            Action<ServiceDiscoveryFacade> discovery = null, Action<ResourceGraphBuilder> resources = null, IMvcCoreBuilder mvcBuilder = null)
+        public static IServiceCollection AddJsonApi<TDbContext>(this IServiceCollection services, Action<JsonApiOptions>? options = null,
+            Action<ServiceDiscoveryFacade>? discovery = null, Action<ResourceGraphBuilder>? resources = null, IMvcCoreBuilder? mvcBuilder = null)
             where TDbContext : DbContext
         {
             return AddJsonApi(services, options, discovery, resources, mvcBuilder, typeof(TDbContext).AsArray());
         }
 
-        private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> configureOptions,
-            Action<ServiceDiscoveryFacade> configureAutoDiscovery, Action<ResourceGraphBuilder> configureResourceGraph, IMvcCoreBuilder mvcBuilder,
+        private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions>? configureOptions,
+            Action<ServiceDiscoveryFacade>? configureAutoDiscovery, Action<ResourceGraphBuilder>? configureResources, IMvcCoreBuilder? mvcBuilder,
             ICollection<Type> dbContextTypes)
         {
             using var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
 
             applicationBuilder.ConfigureJsonApiOptions(configureOptions);
             applicationBuilder.ConfigureAutoDiscovery(configureAutoDiscovery);
-            applicationBuilder.AddResourceGraph(dbContextTypes, configureResourceGraph);
+            applicationBuilder.ConfigureResourceGraph(dbContextTypes, configureResources);
             applicationBuilder.ConfigureMvc();
             applicationBuilder.DiscoverInjectables();
             applicationBuilder.ConfigureServiceContainer(dbContextTypes);
         }
 
         /// <summary>
-        /// Adds IoC container registrations for the various JsonApiDotNetCore resource service interfaces, such as <see cref="IGetAllService{TResource}" />,
-        /// <see cref="ICreateService{TResource}" /> and the various others.
+        /// Adds IoC container registrations for the various JsonApiDotNetCore resource service interfaces, such as <see cref="IGetAllService{TResource,TId}" />,
+        /// <see cref="ICreateService{TResource, TId}" /> and the various others.
         /// </summary>
         public static IServiceCollection AddResourceService<TService>(this IServiceCollection services)
         {
@@ -70,7 +69,7 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <summary>
         /// Adds IoC container registrations for the various JsonApiDotNetCore resource repository interfaces, such as
-        /// <see cref="IResourceReadRepository{TResource}" /> and <see cref="IResourceWriteRepository{TResource}" />.
+        /// <see cref="IResourceReadRepository{TResource,TId}" /> and <see cref="IResourceWriteRepository{TResource, TId}" />.
         /// </summary>
         public static IServiceCollection AddResourceRepository<TRepository>(this IServiceCollection services)
         {
@@ -83,7 +82,7 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <summary>
         /// Adds IoC container registrations for the various JsonApiDotNetCore resource definition interfaces, such as
-        /// <see cref="IResourceDefinition{TResource}" /> and <see cref="IResourceDefinition{TResource,TId}" />.
+        /// <see cref="IResourceDefinition{TResource,TId}" />.
         /// </summary>
         public static IServiceCollection AddResourceDefinition<TResourceDefinition>(this IServiceCollection services)
         {
@@ -97,25 +96,13 @@ namespace JsonApiDotNetCore.Configuration
         private static void RegisterForConstructedType(IServiceCollection services, Type implementationType, IEnumerable<Type> openGenericInterfaces)
         {
             bool seenCompatibleInterface = false;
-            ResourceDescriptor resourceDescriptor = TryGetResourceTypeFromServiceImplementation(implementationType);
+            ResourceDescriptor? resourceDescriptor = ResolveResourceTypeFromServiceImplementation(implementationType);
 
             if (resourceDescriptor != null)
             {
                 foreach (Type openGenericInterface in openGenericInterfaces)
                 {
-                    // A shorthand interface is one where the ID type is omitted.
-                    // e.g. IResourceService<TResource> is the shorthand for IResourceService<TResource, TId>
-                    bool isShorthandInterface = openGenericInterface.GetTypeInfo().GenericTypeParameters.Length == 1;
-
-                    if (isShorthandInterface && resourceDescriptor.IdType != typeof(int))
-                    {
-                        // We can't create a shorthand for ID types other than int.
-                        continue;
-                    }
-
-                    Type constructedType = isShorthandInterface
-                        ? openGenericInterface.MakeGenericType(resourceDescriptor.ResourceType)
-                        : openGenericInterface.MakeGenericType(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
+                    Type constructedType = openGenericInterface.MakeGenericType(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType);
 
                     if (constructedType.IsAssignableFrom(implementationType))
                     {
@@ -131,15 +118,14 @@ namespace JsonApiDotNetCore.Configuration
             }
         }
 
-        private static ResourceDescriptor TryGetResourceTypeFromServiceImplementation(Type serviceType)
+        private static ResourceDescriptor? ResolveResourceTypeFromServiceImplementation(Type? serviceType)
         {
-            foreach (Type @interface in serviceType.GetInterfaces())
+            if (serviceType != null)
             {
-                Type firstGenericArgument = @interface.IsGenericType ? @interface.GenericTypeArguments.First() : null;
-
-                if (firstGenericArgument != null)
+                foreach (Type @interface in serviceType.GetInterfaces())
                 {
-                    ResourceDescriptor resourceDescriptor = TypeLocator.TryGetResourceDescriptor(firstGenericArgument);
+                    Type? firstGenericArgument = @interface.IsGenericType ? @interface.GenericTypeArguments.First() : null;
+                    ResourceDescriptor? resourceDescriptor = TypeLocator.ResolveResourceDescriptor(firstGenericArgument);
 
                     if (resourceDescriptor != null)
                     {

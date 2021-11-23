@@ -35,43 +35,45 @@ Install-Package JsonApiDotNetCore
 ### Define Models
 
 Define your domain models such that they implement `IIdentifiable<TId>`.
-The easiest way to do this is to inherit from `Identifiable`
+The easiest way to do this is to inherit from `Identifiable<TId>`.
 
 ```c#
-public class Person : Identifiable
+#nullable enable
+
+public class Person : Identifiable<int>
 {
     [Attr]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 }
 ```
 
 ### Define DbContext
 
-Nothing special here, just an ordinary `DbContext`
+Nothing special here, just an ordinary `DbContext`.
 
 ```
 public class AppDbContext : DbContext
 {
+    public DbSet<Person> People => Set<Person>();
+
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
     }
-
-    public DbSet<Person> People { get; set; }
 }
 ```
 
 ### Define Controllers
 
-You need to create controllers that inherit from `JsonApiController<TResource>` or `JsonApiController<TResource, TId>`
-where `TResource` is the model that inherits from `Identifiable<TId>`
+You need to create controllers that inherit from `JsonApiController<TResource, TId>`
+where `TResource` is the model that inherits from `Identifiable<TId>`.
 
 ```c#
-public class PeopleController : JsonApiController<Person>
+public class PeopleController : JsonApiController<Person, int>
 {
-    public PeopleController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<Person> resourceService)
-        : base(options, loggerFactory, resourceService)
+    public PeopleController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService<Person, int> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }
@@ -114,18 +116,18 @@ public void Configure(IApplicationBuilder app)
 One way to seed the database is in your Configure method:
 
 ```c#
-public void Configure(IApplicationBuilder app, AppDbContext context)
+public void Configure(IApplicationBuilder app, AppDbContext dbContext)
 {
-    context.Database.EnsureCreated();
+    dbContext.Database.EnsureCreated();
 
-    if (!context.People.Any())
+    if (!dbContext.People.Any())
     {
-        context.People.Add(new Person
+        dbContext.People.Add(new Person
         {
             Name = "John Doe"
         });
 
-        context.SaveChanges();
+        dbContext.SaveChanges();
     }
 
     app.UseRouting();

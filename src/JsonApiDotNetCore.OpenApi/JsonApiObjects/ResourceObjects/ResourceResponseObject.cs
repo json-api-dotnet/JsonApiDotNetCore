@@ -11,8 +11,8 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects
         where TResource : IIdentifiable
     {
         [Required]
-        public LinksInResourceObject Links { get; set; }
+        public LinksInResourceObject Links { get; set; } = null!;
 
-        public IDictionary<string, object> Meta { get; set; }
+        public IDictionary<string, object> Meta { get; set; } = null!;
     }
 }

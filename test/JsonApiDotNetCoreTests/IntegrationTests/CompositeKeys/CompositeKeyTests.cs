@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -16,6 +15,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
     public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> _testContext;
+        private readonly CompositeKeyFakers _fakers = new();
 
         public CompositeKeyTests(IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> testContext)
         {
@@ -27,8 +27,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddResourceRepository<CarCompositeKeyAwareRepository<Car, string>>();
-                services.AddResourceRepository<CarCompositeKeyAwareRepository<Dealership>>();
+                services.AddResourceRepository<CarCompositeKeyAwareRepository<Car, string?>>();
+                services.AddResourceRepository<CarCompositeKeyAwareRepository<Dealership, int>>();
             });
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
@@ -39,11 +39,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         public async Task Can_filter_on_ID_in_primary_resources()
         {
             // Arrange
-            var car = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
+            Car car = _fakers.Car.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -52,7 +48,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            const string route = "/cars?filter=any(id,'123:AA-BB-11','999:XX-YY-22')";
+            string route = $"/cars?filter=any(id,'{car.RegionId}:{car.LicensePlate}','999:XX-YY-22')";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -60,7 +56,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
         }
 
@@ -68,11 +64,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         public async Task Can_get_primary_resource_by_ID()
         {
             // Arrange
-            var car = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
+            Car car = _fakers.Car.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -89,7 +81,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(car.StringId);
         }
 
@@ -97,11 +89,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         public async Task Can_sort_on_ID()
         {
             // Arrange
-            var car = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
+            Car car = _fakers.Car.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -118,7 +106,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
         }
 
@@ -126,11 +114,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         public async Task Can_select_ID()
         {
             // Arrange
-            var car = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
+            Car car = _fakers.Car.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -147,7 +131,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
         }
 
@@ -155,9 +139,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         public async Task Can_create_resource()
         {
             // Arrange
+            Engine existingEngine = _fakers.Engine.Generate();
+
+            Car newCar = _fakers.Car.Generate();
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<Car>();
+                dbContext.Engines.Add(existingEngine);
+                await dbContext.SaveChangesAsync();
             });
 
             var requestBody = new
@@ -167,8 +157,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                     type = "cars",
                     attributes = new
                     {
-                        regionId = 123,
-                        licensePlate = "AA-BB-11"
+                        regionId = newCar.RegionId,
+                        licensePlate = newCar.LicensePlate
+                    },
+                    relationships = new
+                    {
+                        engine = new
+                        {
+                            data = new
+                            {
+                                type = "engines",
+                                id = existingEngine.StringId
+                            }
+                        }
                     }
                 }
             };
@@ -185,10 +186,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Car carInDatabase = await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == 123 && car.LicensePlate == "AA-BB-11");
+                Car? carInDatabase =
+                    await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == newCar.RegionId && car.LicensePlate == newCar.LicensePlate);
 
-                carInDatabase.Should().NotBeNull();
-                carInDatabase.Id.Should().Be("123:AA-BB-11");
+                carInDatabase.ShouldNotBeNull();
+                carInDatabase.Id.Should().Be($"{newCar.RegionId}:{newCar.LicensePlate}");
             });
         }
 
@@ -196,16 +198,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         public async Task Can_create_OneToOne_relationship()
         {
             // Arrange
-            var existingCar = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
-
-            var existingEngine = new Engine
-            {
-                SerialCode = "1234567890"
-            };
+            Car existingCar = _fakers.Car.Generate();
+            Engine existingEngine = _fakers.Engine.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -248,7 +242,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             {
                 Engine engineInDatabase = await dbContext.Engines.Include(engine => engine.Car).FirstWithIdAsync(existingEngine.Id);
 
-                engineInDatabase.Car.Should().NotBeNull();
+                engineInDatabase.Car.ShouldNotBeNull();
                 engineInDatabase.Car.Id.Should().Be(existingCar.StringId);
             });
         }
@@ -257,15 +251,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         public async Task Can_clear_OneToOne_relationship()
         {
             // Arrange
-            var existingEngine = new Engine
-            {
-                SerialCode = "1234567890",
-                Car = new Car
-                {
-                    RegionId = 123,
-                    LicensePlate = "AA-BB-11"
-                }
-            };
+            Engine existingEngine = _fakers.Engine.Generate();
+            existingEngine.Car = _fakers.Car.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -284,7 +271,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                     {
                         car = new
                         {
-                            data = (object)null
+                            data = (object?)null
                         }
                     }
                 }
@@ -312,23 +299,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         public async Task Can_remove_from_OneToMany_relationship()
         {
             // Arrange
-            var existingDealership = new Dealership
-            {
-                Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
-                Inventory = new HashSet<Car>
-                {
-                    new()
-                    {
-                        RegionId = 123,
-                        LicensePlate = "AA-BB-11"
-                    },
-                    new()
-                    {
-                        RegionId = 456,
-                        LicensePlate = "CC-DD-22"
-                    }
-                }
-            };
+            Dealership existingDealership = _fakers.Dealership.Generate();
+            existingDealership.Inventory = _fakers.Car.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -344,7 +316,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                     new
                     {
                         type = "cars",
-                        id = "123:AA-BB-11"
+                        id = existingDealership.Inventory.ElementAt(0).StringId
                     }
                 }
             };
@@ -361,10 +333,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Dealership dealershipInDatabase = await dbContext.Dealerships
-                    .Include(dealership => dealership.Inventory).FirstWithIdOrDefaultAsync(existingDealership.Id);
+                Dealership dealershipInDatabase =
+                    await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
 
-                dealershipInDatabase.Inventory.Should().HaveCount(1);
+                dealershipInDatabase.Inventory.ShouldHaveCount(1);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingDealership.Inventory.ElementAt(1).Id);
             });
         }
@@ -373,16 +345,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         public async Task Can_add_to_OneToMany_relationship()
         {
             // Arrange
-            var existingDealership = new Dealership
-            {
-                Address = "Dam 1, 1012JS Amsterdam, the Netherlands"
-            };
-
-            var existingCar = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
+            Dealership existingDealership = _fakers.Dealership.Generate();
+            Car existingCar = _fakers.Car.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -398,7 +362,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                     new
                     {
                         type = "cars",
-                        id = "123:AA-BB-11"
+                        id = existingCar.StringId
                     }
                 }
             };
@@ -415,10 +379,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Dealership dealershipInDatabase = await dbContext.Dealerships
-                    .Include(dealership => dealership.Inventory).FirstWithIdOrDefaultAsync(existingDealership.Id);
+                Dealership dealershipInDatabase =
+                    await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
 
-                dealershipInDatabase.Inventory.Should().HaveCount(1);
+                dealershipInDatabase.Inventory.ShouldHaveCount(1);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);
             });
         }
@@ -427,29 +391,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         public async Task Can_replace_OneToMany_relationship()
         {
             // Arrange
-            var existingDealership = new Dealership
-            {
-                Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
-                Inventory = new HashSet<Car>
-                {
-                    new()
-                    {
-                        RegionId = 123,
-                        LicensePlate = "AA-BB-11"
-                    },
-                    new()
-                    {
-                        RegionId = 456,
-                        LicensePlate = "CC-DD-22"
-                    }
-                }
-            };
+            Dealership existingDealership = _fakers.Dealership.Generate();
+            existingDealership.Inventory = _fakers.Car.Generate(2).ToHashSet();
 
-            var existingCar = new Car
-            {
-                RegionId = 789,
-                LicensePlate = "EE-FF-33"
-            };
+            Car existingCar = _fakers.Car.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -465,12 +410,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                     new
                     {
                         type = "cars",
-                        id = "123:AA-BB-11"
+                        id = existingDealership.Inventory.ElementAt(0).StringId
                     },
                     new
                     {
                         type = "cars",
-                        id = "789:EE-FF-33"
+                        id = existingCar.StringId
                     }
                 }
             };
@@ -487,10 +432,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Dealership dealershipInDatabase = await dbContext.Dealerships
-                    .Include(dealership => dealership.Inventory).FirstWithIdOrDefaultAsync(existingDealership.Id);
+                Dealership dealershipInDatabase =
+                    await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
 
-                dealershipInDatabase.Inventory.Should().HaveCount(2);
+                dealershipInDatabase.Inventory.ShouldHaveCount(2);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingDealership.Inventory.ElementAt(0).Id);
             });
@@ -500,10 +445,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         public async Task Cannot_remove_from_ManyToOne_relationship_for_unknown_relationship_ID()
         {
             // Arrange
-            var existingDealership = new Dealership
-            {
-                Address = "Dam 1, 1012JS Amsterdam, the Netherlands"
-            };
+            Dealership existingDealership = _fakers.Dealership.Generate();
+
+            string unknownCarId = _fakers.Car.Generate().StringId!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -519,7 +463,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                     new
                     {
                         type = "cars",
-                        id = "999:XX-YY-22"
+                        id = unknownCarId
                     }
                 }
             };
@@ -532,23 +476,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be("Related resource of type 'cars' with ID '999:XX-YY-22' in relationship 'inventory' does not exist.");
+            error.Detail.Should().Be($"Related resource of type 'cars' with ID '{unknownCarId}' in relationship 'inventory' does not exist.");
         }
 
         [Fact]
         public async Task Can_delete_resource()
         {
             // Arrange
-            var existingCar = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
+            Car existingCar = _fakers.Car.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -569,7 +509,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Car carInDatabase =
+                Car? carInDatabase =
                     await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == existingCar.RegionId && car.LicensePlate == existingCar.LicensePlate);
 
                 carInDatabase.Should().BeNull();

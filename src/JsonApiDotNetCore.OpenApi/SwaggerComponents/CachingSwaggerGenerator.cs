@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             _defaultSwaggerGenerator = defaultSwaggerGenerator;
         }
 
-        public OpenApiDocument GetSwagger(string documentName, string host = null, string basePath = null)
+        public OpenApiDocument GetSwagger(string documentName, string? host = null, string? basePath = null)
         {
             ArgumentGuard.NotNullNorEmpty(documentName, nameof(documentName));
 

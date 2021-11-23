@@ -65,7 +65,7 @@ public void ConfigureServices(IServiceCollection services)
 {
     services.AddJsonApi(resources: builder =>
     {
-        builder.Add<Person>();
+        builder.Add<Person, int>();
     });
 }
 ```
@@ -78,14 +78,14 @@ The public resource name is exposed through the `type` member in the JSON:API pa
 ```c#
 services.AddJsonApi(resources: builder =>
 {
-    builder.Add<Person>(publicName: "people");
+    builder.Add<Person, int>(publicName: "people");
 });
 ```
 
 2. The model is decorated with a `ResourceAttribute`
 ```c#
 [Resource("myResources")]
-public class MyModel : Identifiable
+public class MyModel : Identifiable<int>
 {
 }
 ```
@@ -93,7 +93,7 @@ public class MyModel : Identifiable
 3. The configured naming convention (by default this is camel-case).
 ```c#
 // this will be registered as "myModels"
-public class MyModel : Identifiable
+public class MyModel : Identifiable<int>
 {
 }
 ```

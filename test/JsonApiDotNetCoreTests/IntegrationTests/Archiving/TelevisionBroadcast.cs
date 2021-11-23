@@ -7,10 +7,10 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class TelevisionBroadcast : Identifiable
+    public sealed class TelevisionBroadcast : Identifiable<int>
     {
         [Attr]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         [Attr]
         public DateTimeOffset AiredAt { get; set; }
@@ -19,9 +19,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
         public DateTimeOffset? ArchivedAt { get; set; }
 
         [HasOne]
-        public TelevisionStation AiredOn { get; set; }
+        public TelevisionStation? AiredOn { get; set; }
 
         [HasMany]
-        public ISet<BroadcastComment> Comments { get; set; }
+        public ISet<BroadcastComment> Comments { get; set; } = new HashSet<BroadcastComment>();
     }
 }

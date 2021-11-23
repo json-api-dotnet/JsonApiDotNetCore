@@ -8,14 +8,16 @@ Global metadata can be added to the root of the response document by registering
 This is useful if you need access to other registered services to build the meta object.
 
 ```c#
+#nullable enable
+
 // In Startup.ConfigureServices
 services.AddSingleton<IResponseMeta, CopyrightResponseMeta>();
 
 public sealed class CopyrightResponseMeta : IResponseMeta
 {
-    public IReadOnlyDictionary<string, object> GetMeta()
+    public IReadOnlyDictionary<string, object?> GetMeta()
     {
-        return new Dictionary<string, object>
+        return new Dictionary<string, object?>
         {
             ["copyright"] = "Copyright (C) 2002 Umbrella Corporation.",
             ["authors"] = new[] { "Alice", "Red Queen" }
@@ -39,24 +41,26 @@ public sealed class CopyrightResponseMeta : IResponseMeta
 
 ## Resource Meta
 
-Resource-specific metadata can be added by implementing `IResourceDefinition<TResource, TId>.GetMeta` (or overriding it on `JsonApiResourceDefinition`):
+Resource-specific metadata can be added by implementing `IResourceDefinition<TResource, TId>.GetMeta` (or overriding it on `JsonApiResourceDefinition<TResource, TId>`):
 
 ```c#
-public class PersonDefinition : JsonApiResourceDefinition<Person>
+#nullable enable
+
+public class PersonDefinition : JsonApiResourceDefinition<Person, int>
 {
     public PersonDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
     {
     }
 
-    public override IReadOnlyDictionary<string, object> GetMeta(Person person)
+    public override IReadOnlyDictionary<string, object?>? GetMeta(Person person)
     {
         if (person.IsEmployee)
         {
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 ["notice"] = "Check our intranet at http://www.example.com/employees/" +
-                    person.StringId + " for personal details."
+                    $"{person.StringId} for personal details."
             };
         }
 

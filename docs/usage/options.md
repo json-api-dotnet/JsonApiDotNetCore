@@ -39,6 +39,9 @@ options.MaximumPageNumber = new PageNumber(50);
 options.IncludeTotalResourceCount = true;
 ```
 
+To retrieve the total number of resources on secondary and relationship endpoints, the reverse of the relationship must to be available. For example, in `GET /customers/1/orders`, both the relationships `[HasMany] Customer.Orders` and `[HasOne] Order.Customer` must be defined.
+If `IncludeTotalResourceCount` is set to `false` (or the inverse relationship is unavailable on a non-primary endpoint), best-effort paging links are returned instead. This means no `last` link and the `next` link only occurs when the current page is full.
+
 ## Relative Links
 
 All links are absolute by default. However, you can configure relative links.
@@ -100,20 +103,31 @@ options.SerializerOptions.DictionaryKeyPolicy = null;
 Because we copy resource properties into an intermediate object before serialization, JSON annotations such as `[JsonPropertyName]` and `[JsonIgnore]` on `[Attr]` properties are ignored.
 
 
-## Enable ModelState Validation
+## ModelState Validation
 
-If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set `ValidateModelState` to `true`. By default, no model validation is performed.
+[ASP.NET ModelState validation](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/validation) can be used to validate incoming request bodies when creating and updating resources. Since v5.0, this is enabled by default.
+When `ValidateModelState` is set to `false`, no model validation is performed.
+
+How nullability affects ModelState validation is described [here](~/usage/resources/nullability.md).
 
 ```c#
 options.ValidateModelState = true;
 ```
 
 ```c#
-public class Person : Identifiable
+#nullable enable
+
+public class Person : Identifiable<int>
 {
     [Attr]
-    [Required]
     [MinLength(3)]
-    public string FirstName { get; set; }
+    public string FirstName { get; set; } = null!;
+
+    [Attr]
+    [Required]
+    public int? Age { get; set; }
+
+    [HasOne]
+    public LoginAccount Account { get; set; } = null!;
 }
 ```

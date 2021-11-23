@@ -67,7 +67,7 @@ namespace TestBuildingBlocks
         }
 
         /// <summary>
-        /// Used to assert on a JSON-formatted string, ignoring differences in insignificant whitespace and line endings.
+        /// Asserts that a JSON-formatted string matches the specified expected one, ignoring differences in insignificant whitespace and line endings.
         /// </summary>
         [CustomAssertion]
         public static void BeJson(this StringAssertions source, string expected, string because = "", params object[] becauseArgs)

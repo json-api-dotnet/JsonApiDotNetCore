@@ -5,13 +5,13 @@ This allows you to customize it however you want. This is also a good place to i
 
 ## Supplementing Default Behavior
 
-If you don't need to alter the underlying mechanisms, you can inherit from `JsonApiResourceService<TResource>` and override the existing methods.
+If you don't need to alter the underlying mechanisms, you can inherit from `JsonApiResourceService<TResource, TId>` and override the existing methods.
 In simple cases, you can also just wrap the base implementation with your custom logic.
 
 A simple example would be to send notifications when a resource gets created.
 
 ```c#
-public class TodoItemService : JsonApiResourceService<TodoItem>
+public class TodoItemService : JsonApiResourceService<TodoItem, int>
 {
     private readonly INotificationService _notificationService;
 
@@ -19,7 +19,8 @@ public class TodoItemService : JsonApiResourceService<TodoItem>
         IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
         IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
         IResourceChangeTracker<TodoItem> resourceChangeTracker,
-        IResourceDefinitionAccessor resourceDefinitionAccessor)
+        IResourceDefinitionAccessor resourceDefinitionAccessor,
+        INotificationService notificationService)
         : base(repositoryAccessor, queryLayerComposer, paginationContext, options,
             loggerFactory, request, resourceChangeTracker, resourceDefinitionAccessor)
     {
@@ -43,21 +44,21 @@ public class TodoItemService : JsonApiResourceService<TodoItem>
 ## Not Using Entity Framework Core?
 
 As previously discussed, this library uses Entity Framework Core by default.
-If you'd like to use another ORM that does not provide what JsonApiResourceService depends upon, you can use a custom `IResourceService<TResource>` implementation.
+If you'd like to use another ORM that does not provide what JsonApiResourceService depends upon, you can use a custom `IResourceService<TResource, TId>` implementation.
 
 ```c#
 // Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
     // add the service override for Product
-    services.AddScoped<IResourceService<Product>, ProductService>();
+    services.AddScoped<IResourceService<Product, int>, ProductService>();
 
     // add your own Data Access Object
     services.AddScoped<IProductDao, ProductDao>();
 }
 
 // ProductService.cs
-public class ProductService : IResourceService<Product>
+public class ProductService : IResourceService<Product, int>
 {
     private readonly IProductDao _dao;
 
@@ -121,7 +122,7 @@ IResourceService
 In order to take advantage of these interfaces you first need to register the service for each implemented interface.
 
 ```c#
-public class ArticleService : ICreateService<Article>, IDeleteService<Article>
+public class ArticleService : ICreateService<Article, int>, IDeleteService<Article, int>
 {
     // ...
 }
@@ -130,8 +131,8 @@ public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddScoped<ICreateService<Article>, ArticleService>();
-        services.AddScoped<IDeleteService<Article>, ArticleService>();
+        services.AddScoped<ICreateService<Article, int>, ArticleService>();
+        services.AddScoped<IDeleteService<Article, int>, ArticleService>();
     }
 }
 ```
@@ -151,29 +152,16 @@ public class Startup
 }
 ```
 
-Then in the controller, you should inherit from the base controller and pass the services into the named, optional base parameters:
+Then in the controller, you should inherit from the JSON:API controller and pass the services into the named, optional base parameters:
 
 ```c#
-public class ArticlesController : BaseJsonApiController<Article>
+public class ArticlesController : JsonApiController<Article, int>
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        ICreateService<Article, int> create, IDeleteService<Article, int> delete)
-        : base(options, loggerFactory, create: create, delete: delete)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, ICreateService<Article, int> create,
+        IDeleteService<Article, int> delete)
+        : base(options, resourceGraph, loggerFactory, create: create, delete: delete)
     {
-    }
-
-    [HttpPost]
-    public override async Task<IActionResult> PostAsync([FromBody] Article resource,
-        CancellationToken cancellationToken)
-    {
-        return await base.PostAsync(resource, cancellationToken);
-    }
-
-    [HttpDelete("{id}")]
-    public override async Task<IActionResult>DeleteAsync(int id,
-        CancellationToken cancellationToken)
-    {
-        return await base.DeleteAsync(id, cancellationToken);
     }
 }
 ```

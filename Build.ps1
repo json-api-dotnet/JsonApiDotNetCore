@@ -8,7 +8,7 @@ function CheckLastExitCode {
 
 function RunInspectCode {
     $outputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
-    dotnet jb inspectcode JsonApiDotNetCore.sln --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=SolutionPersonal -dsl=ProjectPersonal
+    dotnet jb inspectcode JsonApiDotNetCore.sln --no-build --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
     CheckLastExitCode
 
     [xml]$xml = Get-Content "$outputPath"
@@ -47,7 +47,7 @@ function RunCleanupCode {
         $mergeCommitHash = git rev-parse "HEAD"
         $targetCommitHash = git rev-parse "$env:APPVEYOR_REPO_BRANCH"
 
-        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --jb --profile --jb --profile='\"JADNC Full Cleanup\"' --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $mergeCommitHash -b $targetCommitHash --fail-on-diff --print-diff
+        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --disable-jb-path-hack --jb --profile='\"JADNC Full Cleanup\"' --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $mergeCommitHash -b $targetCommitHash --fail-on-diff --print-diff
         CheckLastExitCode
     }
 }
@@ -73,10 +73,10 @@ function CreateNuGetPackage {
         $versionSuffix = $suffixSegments -join "-"
     }
     else {
-        # Get the version suffix from the auto-incrementing build number. Example: "123" => "pre-0123".
+        # Get the version suffix from the auto-incrementing build number. Example: "123" => "master-0123".
         if ($env:APPVEYOR_BUILD_NUMBER) {
             $revision = "{0:D4}" -f [convert]::ToInt32($env:APPVEYOR_BUILD_NUMBER, 10)
-            $versionSuffix = "pre-$revision"
+            $versionSuffix = "$($env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH ?? $env:APPVEYOR_REPO_BRANCH)-$revision"
         }
         else {
             $versionSuffix = "pre-0001"

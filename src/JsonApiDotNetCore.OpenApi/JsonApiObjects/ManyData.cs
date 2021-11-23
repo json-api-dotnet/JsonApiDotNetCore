@@ -10,6 +10,6 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects
         where TData : ResourceIdentifierObject
     {
         [Required]
-        public ICollection<TData> Data { get; set; }
+        public ICollection<TData> Data { get; set; } = null!;
     }
 }

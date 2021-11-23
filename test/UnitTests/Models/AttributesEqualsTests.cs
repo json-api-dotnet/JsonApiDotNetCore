@@ -1,3 +1,4 @@
+using FluentAssertions;
 using JsonApiDotNetCore.Resources.Annotations;
 using Xunit;
 
@@ -8,6 +9,7 @@ namespace UnitTests.Models
         [Fact]
         public void HasManyAttribute_Equals_Returns_True_When_Same_Name()
         {
+            // Arrange
             var attribute1 = new HasManyAttribute
             {
                 PublicName = "test"
@@ -18,15 +20,20 @@ namespace UnitTests.Models
                 PublicName = "test"
             };
 
-            Assert.Equal(attribute1, attribute2);
+            // Act
+            bool result = attribute1.Equals(attribute2);
+
+            // Assert
+            result.Should().BeTrue();
         }
 
         [Fact]
         public void HasManyAttribute_Equals_Returns_False_When_Different_Name()
         {
+            // Arrange
             var attribute1 = new HasManyAttribute
             {
-                PublicName = "test"
+                PublicName = "test1"
             };
 
             var attribute2 = new HasManyAttribute
@@ -34,12 +41,17 @@ namespace UnitTests.Models
                 PublicName = "test2"
             };
 
-            Assert.NotEqual(attribute1, attribute2);
+            // Act
+            bool result = attribute1.Equals(attribute2);
+
+            // Assert
+            result.Should().BeFalse();
         }
 
         [Fact]
         public void HasOneAttribute_Equals_Returns_True_When_Same_Name()
         {
+            // Arrange
             var attribute1 = new HasOneAttribute
             {
                 PublicName = "test"
@@ -50,15 +62,20 @@ namespace UnitTests.Models
                 PublicName = "test"
             };
 
-            Assert.Equal(attribute1, attribute2);
+            // Act
+            bool result = attribute1.Equals(attribute2);
+
+            // Assert
+            result.Should().BeTrue();
         }
 
         [Fact]
         public void HasOneAttribute_Equals_Returns_False_When_Different_Name()
         {
+            // Arrange
             var attribute1 = new HasOneAttribute
             {
-                PublicName = "test"
+                PublicName = "test1"
             };
 
             var attribute2 = new HasOneAttribute
@@ -66,12 +83,17 @@ namespace UnitTests.Models
                 PublicName = "test2"
             };
 
-            Assert.NotEqual(attribute1, attribute2);
+            // Act
+            bool result = attribute1.Equals(attribute2);
+
+            // Assert
+            result.Should().BeFalse();
         }
 
         [Fact]
         public void AttrAttribute_Equals_Returns_True_When_Same_Name()
         {
+            // Arrange
             var attribute1 = new AttrAttribute
             {
                 PublicName = "test"
@@ -82,15 +104,20 @@ namespace UnitTests.Models
                 PublicName = "test"
             };
 
-            Assert.Equal(attribute1, attribute2);
+            // Act
+            bool result = attribute1.Equals(attribute2);
+
+            // Assert
+            result.Should().BeTrue();
         }
 
         [Fact]
         public void AttrAttribute_Equals_Returns_False_When_Different_Name()
         {
+            // Arrange
             var attribute1 = new AttrAttribute
             {
-                PublicName = "test"
+                PublicName = "test1"
             };
 
             var attribute2 = new AttrAttribute
@@ -98,12 +125,17 @@ namespace UnitTests.Models
                 PublicName = "test2"
             };
 
-            Assert.NotEqual(attribute1, attribute2);
+            // Act
+            bool result = attribute1.Equals(attribute2);
+
+            // Assert
+            result.Should().BeFalse();
         }
 
         [Fact]
         public void HasManyAttribute_Does_Not_Equal_HasOneAttribute_With_Same_Name()
         {
+            // Arrange
             RelationshipAttribute attribute1 = new HasManyAttribute
             {
                 PublicName = "test"
@@ -114,8 +146,11 @@ namespace UnitTests.Models
                 PublicName = "test"
             };
 
-            Assert.NotEqual(attribute1, attribute2);
-            Assert.NotEqual(attribute2, attribute1);
+            // Act
+            bool result = attribute1.Equals(attribute2);
+
+            // Assert
+            result.Should().BeFalse();
         }
     }
 }

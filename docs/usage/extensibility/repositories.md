@@ -8,9 +8,9 @@ The repository should then be registered in Startup.cs.
 ```c#
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddScoped<IResourceRepository<Article>, ArticleRepository>();
-    services.AddScoped<IResourceReadRepository<Article>, ArticleRepository>();
-    services.AddScoped<IResourceWriteRepository<Article>, ArticleRepository>();
+    services.AddScoped<IResourceRepository<Article, int>, ArticleRepository>();
+    services.AddScoped<IResourceReadRepository<Article, int>, ArticleRepository>();
+    services.AddScoped<IResourceWriteRepository<Article, int>, ArticleRepository>();
 }
 ```
 
@@ -34,18 +34,18 @@ A sample implementation that performs authorization might look like this.
 All of the methods in EntityFrameworkCoreRepository will use the `GetAll()` method to get the `DbSet<TResource>`, so this is a good method to apply filters such as user or tenant authorization.
 
 ```c#
-public class ArticleRepository : EntityFrameworkCoreRepository<Article>
+public class ArticleRepository : EntityFrameworkCoreRepository<Article, int>
 {
     private readonly IAuthenticationService _authenticationService;
 
     public ArticleRepository(IAuthenticationService authenticationService,
-        ITargetedFields targetedFields, IDbContextResolver contextResolver,
-        IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
-        IResourceFactory resourceFactory,
+        ITargetedFields targetedFields, IDbContextResolver dbContextResolver,
+        IResourceGraph resourceGraph, IResourceFactory resourceFactory,
         IEnumerable<IQueryConstraintProvider> constraintProviders,
-        ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory,
-            resourceFactory, constraintProviders, loggerFactory) 
+        ILoggerFactory loggerFactory,
+        IResourceDefinitionAccessor resourceDefinitionAccessor)
+        : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory,
+            constraintProviders, loggerFactory, resourceDefinitionAccessor)
     {
         _authenticationService = authenticationService;
     }
@@ -64,18 +64,17 @@ If you need to use multiple Entity Framework Core DbContexts, first create a rep
 This example shows a single `DbContextARepository` for all entities that are members of `DbContextA`.
 
 ```c#
-public class DbContextARepository<TResource> : EntityFrameworkCoreRepository<TResource>
-    where TResource : class, IIdentifiable<int>
+public class DbContextARepository<TResource, TId> : EntityFrameworkCoreRepository<TResource, TId>
+    where TResource : class, IIdentifiable<TId>
 {
     public DbContextARepository(ITargetedFields targetedFields,
-        DbContextResolver<DbContextA> contextResolver,
+        DbContextResolver<DbContextA> dbContextResolver,
     //  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
-        IResourceFactory resourceFactory,
+        IResourceGraph resourceGraph, IResourceFactory resourceFactory,
         IEnumerable<IQueryConstraintProvider> constraintProviders,
-        ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory,
-            resourceFactory, constraintProviders, loggerFactory)
+        ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
+        : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory,
+            constraintProviders, loggerFactory, resourceDefinitionAccessor)
     {
     }
 }

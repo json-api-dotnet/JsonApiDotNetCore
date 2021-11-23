@@ -9,7 +9,9 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
@@ -22,7 +24,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
         {
             Options.EnableLegacyFilterNotation = true;
 
-            Request.PrimaryResource = ResourceGraph.GetResourceContext<BlogPost>();
+            Request.PrimaryResourceType = ResourceGraph.GetResourceType<BlogPost>();
 
             var resourceFactory = new ResourceFactory(new ServiceContainer());
             _reader = new FilterQueryStringParameterReader(Request, ResourceGraph, resourceFactory, Options);
@@ -32,15 +34,16 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
         [InlineData("filter", "some", "Expected field name between brackets in filter parameter name.")]
         [InlineData("filter[", "some", "Expected field name between brackets in filter parameter name.")]
         [InlineData("filter[]", "some", "Expected field name between brackets in filter parameter name.")]
-        [InlineData("filter[.]", "some", "Relationship '' in '.' does not exist on resource 'blogPosts'.")]
-        [InlineData("filter[some]", "other", "Field 'some' does not exist on resource 'blogPosts'.")]
-        [InlineData("filter[author]", "some", "Attribute 'author' does not exist on resource 'blogPosts'.")]
-        [InlineData("filter[author.posts]", "some", "Field 'posts' in 'author.posts' must be an attribute or a to-one relationship on resource 'webAccounts'.")]
-        [InlineData("filter[unknown.id]", "some", "Relationship 'unknown' in 'unknown.id' does not exist on resource 'blogPosts'.")]
-        [InlineData("filter", "expr:equals(some,'other')", "Field 'some' does not exist on resource 'blogPosts'.")]
-        [InlineData("filter", "expr:equals(author,'Joe')", "Attribute 'author' does not exist on resource 'blogPosts'.")]
-        [InlineData("filter", "expr:has(author)", "Relationship 'author' must be a to-many relationship on resource 'blogPosts'.")]
-        [InlineData("filter", "expr:equals(count(author),'1')", "Relationship 'author' must be a to-many relationship on resource 'blogPosts'.")]
+        [InlineData("filter[.]", "some", "Relationship '' in '.' does not exist on resource type 'blogPosts'.")]
+        [InlineData("filter[some]", "other", "Field 'some' does not exist on resource type 'blogPosts'.")]
+        [InlineData("filter[author]", "some", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
+        [InlineData("filter[author.posts]", "some",
+            "Field 'posts' in 'author.posts' must be an attribute or a to-one relationship on resource type 'webAccounts'.")]
+        [InlineData("filter[unknown.id]", "some", "Relationship 'unknown' in 'unknown.id' does not exist on resource type 'blogPosts'.")]
+        [InlineData("filter", "expr:equals(some,'other')", "Field 'some' does not exist on resource type 'blogPosts'.")]
+        [InlineData("filter", "expr:equals(author,'Joe')", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
+        [InlineData("filter", "expr:has(author)", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
+        [InlineData("filter", "expr:equals(count(author),'1')", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
         public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
         {
             // Act
@@ -49,12 +52,15 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             // Assert
             InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
-            exception.QueryParameterName.Should().Be(parameterName);
-            exception.Errors.Should().HaveCount(1);
-            exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Errors[0].Title.Should().Be("The specified filter is invalid.");
-            exception.Errors[0].Detail.Should().Be(errorMessage);
-            exception.Errors[0].Source.Parameter.Should().Be(parameterName);
+            exception.ParameterName.Should().Be(parameterName);
+            exception.Errors.ShouldHaveCount(1);
+
+            ErrorObject error = exception.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified filter is invalid.");
+            error.Detail.Should().Be(errorMessage);
+            error.Source.ShouldNotBeNull();
+            error.Source.Parameter.Should().Be(parameterName);
         }
 
         [Theory]
@@ -91,7 +97,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
 
             // Assert
-            ResourceFieldChainExpression scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
+            ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
             scope.Should().BeNull();
 
             QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();

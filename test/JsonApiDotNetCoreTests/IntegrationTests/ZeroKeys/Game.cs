@@ -11,19 +11,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
     public sealed class Game : Identifiable<int?>
     {
         [Attr]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         [NotMapped]
         [Attr]
         public Guid SessionToken => Guid.NewGuid();
 
         [HasMany]
-        public ICollection<Player> ActivePlayers { get; set; }
+        public ICollection<Player> ActivePlayers { get; set; } = new List<Player>();
 
         [HasOne]
-        public Map ActiveMap { get; set; }
+        public Map? ActiveMap { get; set; }
 
         [HasMany]
-        public ICollection<Map> Maps { get; set; }
+        public ICollection<Map> Maps { get; set; } = new List<Map>();
     }
 }

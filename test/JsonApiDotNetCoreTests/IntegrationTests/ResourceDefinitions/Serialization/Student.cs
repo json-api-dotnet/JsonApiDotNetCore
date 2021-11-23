@@ -5,15 +5,15 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Student : Identifiable
+    public sealed class Student : Identifiable<int>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Attr]
-        public string SocialSecurityNumber { get; set; }
+        public string SocialSecurityNumber { get; set; } = null!;
 
         [HasOne]
-        public Scholarship Scholarship { get; set; }
+        public Scholarship? Scholarship { get; set; }
     }
 }

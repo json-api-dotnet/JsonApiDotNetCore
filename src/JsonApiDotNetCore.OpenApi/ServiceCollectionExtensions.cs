@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.OpenApi
         /// <summary>
         /// Adds the OpenAPI integration to JsonApiDotNetCore by configuring Swashbuckle.
         /// </summary>
-        public static void AddOpenApi(this IServiceCollection services, IMvcCoreBuilder mvcBuilder, Action<SwaggerGenOptions> setupSwaggerGenAction = null)
+        public static void AddOpenApi(this IServiceCollection services, IMvcCoreBuilder mvcBuilder, Action<SwaggerGenOptions>? setupSwaggerGenAction = null)
         {
             ArgumentGuard.NotNull(services, nameof(services));
             ArgumentGuard.NotNull(mvcBuilder, nameof(mvcBuilder));
@@ -38,13 +38,12 @@ namespace JsonApiDotNetCore.OpenApi
         {
             services.AddSingleton<IApiDescriptionGroupCollectionProvider>(provider =>
             {
-                var resourceGraph = provider.GetRequiredService<IResourceGraph>();
                 var controllerResourceMapping = provider.GetRequiredService<IControllerResourceMapping>();
                 var actionDescriptorCollectionProvider = provider.GetRequiredService<IActionDescriptorCollectionProvider>();
                 var apiDescriptionProviders = provider.GetRequiredService<IEnumerable<IApiDescriptionProvider>>();
 
                 JsonApiActionDescriptorCollectionProvider descriptorCollectionProviderWrapper =
-                    new(resourceGraph, controllerResourceMapping, actionDescriptorCollectionProvider);
+                    new(controllerResourceMapping, actionDescriptorCollectionProvider);
 
                 return new ApiDescriptionGroupCollectionProvider(descriptorCollectionProviderWrapper, apiDescriptionProviders);
             });
@@ -54,19 +53,21 @@ namespace JsonApiDotNetCore.OpenApi
             mvcBuilder.AddMvcOptions(options => options.InputFormatters.Add(new JsonApiRequestFormatMetadataProvider()));
         }
 
-        private static void AddSwaggerGenerator(IServiceScope scope, IServiceCollection services, Action<SwaggerGenOptions> setupSwaggerGenAction)
+        private static void AddSwaggerGenerator(IServiceScope scope, IServiceCollection services, Action<SwaggerGenOptions>? setupSwaggerGenAction)
         {
             var controllerResourceMapping = scope.ServiceProvider.GetRequiredService<IControllerResourceMapping>();
             var resourceGraph = scope.ServiceProvider.GetRequiredService<IResourceGraph>();
             var jsonApiOptions = scope.ServiceProvider.GetRequiredService<IJsonApiOptions>();
-            JsonNamingPolicy namingPolicy = jsonApiOptions.SerializerOptions.PropertyNamingPolicy;
+            JsonNamingPolicy? namingPolicy = jsonApiOptions.SerializerOptions.PropertyNamingPolicy;
+            ResourceNameFormatter resourceNameFormatter = new(namingPolicy);
 
             AddSchemaGenerator(services);
 
             services.AddSwaggerGen(swaggerGenOptions =>
             {
-                SetOperationInfo(swaggerGenOptions, controllerResourceMapping, resourceGraph, namingPolicy);
-                SetSchemaIdSelector(swaggerGenOptions, resourceGraph, namingPolicy);
+                swaggerGenOptions.SupportNonNullableReferenceTypes();
+                SetOperationInfo(swaggerGenOptions, controllerResourceMapping, namingPolicy);
+                SetSchemaIdSelector(swaggerGenOptions, resourceGraph, resourceNameFormatter);
                 swaggerGenOptions.DocumentFilter<EndpointOrderingFilter>();
 
                 setupSwaggerGenAction?.Invoke(swaggerGenOptions);
@@ -80,30 +81,32 @@ namespace JsonApiDotNetCore.OpenApi
         }
 
         private static void SetOperationInfo(SwaggerGenOptions swaggerGenOptions, IControllerResourceMapping controllerResourceMapping,
-            IResourceGraph resourceGraph, JsonNamingPolicy namingPolicy)
+            JsonNamingPolicy? namingPolicy)
         {
-            swaggerGenOptions.TagActionsBy(description => GetOperationTags(description, controllerResourceMapping, resourceGraph));
+            swaggerGenOptions.TagActionsBy(description => GetOperationTags(description, controllerResourceMapping));
 
             JsonApiOperationIdSelector jsonApiOperationIdSelector = new(controllerResourceMapping, namingPolicy);
             swaggerGenOptions.CustomOperationIds(jsonApiOperationIdSelector.GetOperationId);
         }
 
-        private static IList<string> GetOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping,
-            IResourceGraph resourceGraph)
+        private static IList<string> GetOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping)
         {
             MethodInfo actionMethod = description.ActionDescriptor.GetActionMethod();
-            Type resourceType = controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
-            ResourceContext resourceContext = resourceGraph.GetResourceContext(resourceType);
+            ResourceType? resourceType = controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
+
+            if (resourceType == null)
+            {
+                throw new NotSupportedException("Only JsonApiDotNetCore endpoints are supported.");
+            }
 
             return new[]
             {
-                resourceContext.PublicName
+                resourceType.PublicName
             };
         }
 
-        private static void SetSchemaIdSelector(SwaggerGenOptions swaggerGenOptions, IResourceGraph resourceGraph, JsonNamingPolicy namingPolicy)
+        private static void SetSchemaIdSelector(SwaggerGenOptions swaggerGenOptions, IResourceGraph resourceGraph, ResourceNameFormatter resourceNameFormatter)
         {
-            ResourceNameFormatter resourceNameFormatter = new(namingPolicy);
             JsonApiSchemaIdSelector jsonApiObjectSchemaSelector = new(resourceNameFormatter, resourceGraph);
 
             swaggerGenOptions.CustomSchemaIds(type => jsonApiObjectSchemaSelector.GetSchemaId(type));
@@ -126,10 +129,9 @@ namespace JsonApiDotNetCore.OpenApi
 
         private static void AddOpenApiEndpointConvention(IServiceScope scope, IMvcCoreBuilder mvcBuilder)
         {
-            var resourceGraph = scope.ServiceProvider.GetRequiredService<IResourceGraph>();
             var controllerResourceMapping = scope.ServiceProvider.GetRequiredService<IControllerResourceMapping>();
 
-            mvcBuilder.AddMvcOptions(options => options.Conventions.Add(new OpenApiEndpointConvention(resourceGraph, controllerResourceMapping)));
+            mvcBuilder.AddMvcOptions(options => options.Conventions.Add(new OpenApiEndpointConvention(controllerResourceMapping)));
         }
     }
 }

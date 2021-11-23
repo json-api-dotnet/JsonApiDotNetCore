@@ -14,23 +14,6 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources
 {
-    /// <summary>
-    /// Provides a resource-centric extensibility point for executing custom code when something happens with a resource. The goal here is to reduce the need
-    /// for overriding the service and repository layers.
-    /// </summary>
-    /// <typeparam name="TResource">
-    /// The resource type.
-    /// </typeparam>
-    [PublicAPI]
-    public class JsonApiResourceDefinition<TResource> : JsonApiResourceDefinition<TResource, int>, IResourceDefinition<TResource>
-        where TResource : class, IIdentifiable<int>
-    {
-        public JsonApiResourceDefinition(IResourceGraph resourceGraph)
-            : base(resourceGraph)
-        {
-        }
-    }
-
     /// <inheritdoc />
     [PublicAPI]
     public class JsonApiResourceDefinition<TResource, TId> : IResourceDefinition<TResource, TId>
@@ -41,30 +24,30 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Provides metadata for the resource type <typeparamref name="TResource" />.
         /// </summary>
-        protected ResourceContext ResourceContext { get; }
+        protected ResourceType ResourceType { get; }
 
         public JsonApiResourceDefinition(IResourceGraph resourceGraph)
         {
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
             ResourceGraph = resourceGraph;
-            ResourceContext = resourceGraph.GetResourceContext<TResource>();
+            ResourceType = resourceGraph.GetResourceType<TResource>();
         }
 
         /// <inheritdoc />
-        public virtual IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
+        public virtual IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes)
         {
             return existingIncludes;
         }
 
         /// <inheritdoc />
-        public virtual FilterExpression OnApplyFilter(FilterExpression existingFilter)
+        public virtual FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
         {
             return existingFilter;
         }
 
         /// <inheritdoc />
-        public virtual SortExpression OnApplySort(SortExpression existingSort)
+        public virtual SortExpression? OnApplySort(SortExpression? existingSort)
         {
             return existingSort;
         }
@@ -83,11 +66,11 @@ namespace JsonApiDotNetCore.Resources
         /// </example>
         protected SortExpression CreateSortExpressionFromLambda(PropertySortOrder keySelectors)
         {
-            ArgumentGuard.NotNull(keySelectors, nameof(keySelectors));
+            ArgumentGuard.NotNullNorEmpty(keySelectors, nameof(keySelectors));
 
             ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>(keySelectors.Count);
 
-            foreach ((Expression<Func<TResource, dynamic>> keySelector, ListSortDirection sortDirection) in keySelectors)
+            foreach ((Expression<Func<TResource, dynamic?>> keySelector, ListSortDirection sortDirection) in keySelectors)
             {
                 bool isAscending = sortDirection == ListSortDirection.Ascending;
                 AttrAttribute attribute = ResourceGraph.GetAttributes(keySelector).Single();
@@ -100,25 +83,25 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public virtual PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
+        public virtual PaginationExpression? OnApplyPagination(PaginationExpression? existingPagination)
         {
             return existingPagination;
         }
 
         /// <inheritdoc />
-        public virtual SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+        public virtual SparseFieldSetExpression? OnApplySparseFieldSet(SparseFieldSetExpression? existingSparseFieldSet)
         {
             return existingSparseFieldSet;
         }
 
         /// <inheritdoc />
-        public virtual QueryStringParameterHandlers<TResource> OnRegisterQueryableHandlersForQueryStringParameters()
+        public virtual QueryStringParameterHandlers<TResource>? OnRegisterQueryableHandlersForQueryStringParameters()
         {
             return null;
         }
 
         /// <inheritdoc />
-        public virtual IDictionary<string, object> GetMeta(TResource resource)
+        public virtual IDictionary<string, object?>? GetMeta(TResource resource)
         {
             return null;
         }
@@ -130,8 +113,8 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public virtual Task<IIdentifiable> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship,
-            IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        public virtual Task<IIdentifiable?> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship,
+            IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             return Task.FromResult(rightResourceId);
         }
@@ -183,7 +166,7 @@ namespace JsonApiDotNetCore.Resources
         /// This is an alias type intended to simplify the implementation's method signature. See <see cref="CreateSortExpressionFromLambda" /> for usage
         /// details.
         /// </summary>
-        public sealed class PropertySortOrder : List<(Expression<Func<TResource, dynamic>> KeySelector, ListSortDirection SortDirection)>
+        public sealed class PropertySortOrder : List<(Expression<Func<TResource, dynamic?>> KeySelector, ListSortDirection SortDirection)>
         {
         }
     }

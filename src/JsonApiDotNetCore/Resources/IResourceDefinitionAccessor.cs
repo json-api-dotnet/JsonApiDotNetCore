@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -18,38 +19,38 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnApplyIncludes" /> for the specified resource type.
         /// </summary>
-        IImmutableList<IncludeElementExpression> OnApplyIncludes(Type resourceType, IImmutableList<IncludeElementExpression> existingIncludes);
+        IImmutableSet<IncludeElementExpression> OnApplyIncludes(ResourceType resourceType, IImmutableSet<IncludeElementExpression> existingIncludes);
 
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnApplyFilter" /> for the specified resource type.
         /// </summary>
-        FilterExpression OnApplyFilter(Type resourceType, FilterExpression existingFilter);
+        FilterExpression? OnApplyFilter(ResourceType resourceType, FilterExpression? existingFilter);
 
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnApplySort" /> for the specified resource type.
         /// </summary>
-        SortExpression OnApplySort(Type resourceType, SortExpression existingSort);
+        SortExpression? OnApplySort(ResourceType resourceType, SortExpression? existingSort);
 
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnApplyPagination" /> for the specified resource type.
         /// </summary>
-        PaginationExpression OnApplyPagination(Type resourceType, PaginationExpression existingPagination);
+        PaginationExpression? OnApplyPagination(ResourceType resourceType, PaginationExpression? existingPagination);
 
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnApplySparseFieldSet" /> for the specified resource type.
         /// </summary>
-        SparseFieldSetExpression OnApplySparseFieldSet(Type resourceType, SparseFieldSetExpression existingSparseFieldSet);
+        SparseFieldSetExpression? OnApplySparseFieldSet(ResourceType resourceType, SparseFieldSetExpression? existingSparseFieldSet);
 
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnRegisterQueryableHandlersForQueryStringParameters" /> for the specified resource type, then
         /// returns the <see cref="IQueryable{T}" /> expression for the specified parameter name.
         /// </summary>
-        object GetQueryableHandlerForQueryStringParameter(Type resourceType, string parameterName);
+        object? GetQueryableHandlerForQueryStringParameter(Type resourceClrType, string parameterName);
 
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.GetMeta" /> for the specified resource.
         /// </summary>
-        IDictionary<string, object> GetMeta(Type resourceType, IIdentifiable resourceInstance);
+        IDictionary<string, object?>? GetMeta(ResourceType resourceType, IIdentifiable resourceInstance);
 
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnPrepareWriteAsync" /> for the specified resource.
@@ -60,8 +61,8 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnSetToOneRelationshipAsync" /> for the specified resource.
         /// </summary>
-        public Task<IIdentifiable> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
-            IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        public Task<IIdentifiable?> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
+            IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>

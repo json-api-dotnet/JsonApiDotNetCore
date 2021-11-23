@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 {
     internal sealed class HexadecimalCodec
     {
-        public int Decode(string value)
+        public int Decode(string? value)
         {
             if (value == null)
             {
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
                 });
             }
 
-            string stringValue = FromHexString(value.Substring(1));
+            string stringValue = FromHexString(value[1..]);
             return int.Parse(stringValue);
         }
 
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             return new string(chars);
         }
 
-        public string Encode(int value)
+        public string? Encode(int value)
         {
             if (value == 0)
             {

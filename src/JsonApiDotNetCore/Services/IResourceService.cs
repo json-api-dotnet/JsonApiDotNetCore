@@ -8,17 +8,6 @@ namespace JsonApiDotNetCore.Services
     /// <typeparam name="TResource">
     /// The resource type.
     /// </typeparam>
-    public interface IResourceService<TResource> : IResourceCommandService<TResource>, IResourceQueryService<TResource>, IResourceService<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-    }
-
-    /// <summary>
-    /// Represents the foundational Resource Service layer in the JsonApiDotNetCore architecture that uses a Resource Repository for data access.
-    /// </summary>
-    /// <typeparam name="TResource">
-    /// The resource type.
-    /// </typeparam>
     /// <typeparam name="TId">
     /// The resource identifier type.
     /// </typeparam>

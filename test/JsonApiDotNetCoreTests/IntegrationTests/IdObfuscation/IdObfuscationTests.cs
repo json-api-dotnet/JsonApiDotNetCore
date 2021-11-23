@@ -44,7 +44,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
         }
 
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
         }
 
@@ -86,7 +86,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -99,6 +99,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
         {
             // Arrange
             DebitCard card = _fakers.DebitCard.Generate();
+            card.Account = _fakers.BankAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -114,7 +115,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(card.StringId);
         }
 
@@ -139,7 +140,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
             responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(account.Cards[1].StringId);
         }
@@ -165,12 +166,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
 
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Id.Should().Be(account.Cards[0].StringId);
-            responseDocument.Included[0].Attributes.Should().HaveCount(1);
+            responseDocument.Included[0].Attributes.ShouldHaveCount(1);
             responseDocument.Included[0].Relationships.Should().BeNull();
         }
 
@@ -195,7 +196,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
         }
 
@@ -244,8 +245,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Attributes["ownerName"].Should().Be(newCard.OwnerName);
-            responseDocument.Data.SingleValue.Attributes["pinCode"].Should().Be(newCard.PinCode);
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("ownerName").With(value => value.Should().Be(newCard.OwnerName));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("pinCode").With(value => value.Should().Be(newCard.PinCode));
 
             var codec = new HexadecimalCodec();
             int newCardId = codec.Decode(responseDocument.Data.SingleValue.Id);
@@ -257,7 +259,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
                 cardInDatabase.OwnerName.Should().Be(newCard.OwnerName);
                 cardInDatabase.PinCode.Should().Be(newCard.PinCode);
 
-                cardInDatabase.Account.Should().NotBeNull();
+                cardInDatabase.Account.ShouldNotBeNull();
                 cardInDatabase.Account.Id.Should().Be(existingAccount.Id);
                 cardInDatabase.Account.StringId.Should().Be(existingAccount.StringId);
             });
@@ -271,6 +273,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             existingAccount.Cards = _fakers.DebitCard.Generate(1);
 
             DebitCard existingCard = _fakers.DebitCard.Generate();
+            existingCard.Account = _fakers.BankAccount.Generate();
 
             string newIban = _fakers.BankAccount.Generate().Iban;
 
@@ -323,7 +326,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 
                 accountInDatabase.Iban.Should().Be(newIban);
 
-                accountInDatabase.Cards.Should().HaveCount(1);
+                accountInDatabase.Cards.ShouldHaveCount(1);
                 accountInDatabase.Cards[0].Id.Should().Be(existingCard.Id);
                 accountInDatabase.Cards[0].StringId.Should().Be(existingCard.StringId);
             });
@@ -337,6 +340,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             existingAccount.Cards = _fakers.DebitCard.Generate(1);
 
             DebitCard existingDebitCard = _fakers.DebitCard.Generate();
+            existingDebitCard.Account = _fakers.BankAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -370,7 +374,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             {
                 BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
-                accountInDatabase.Cards.Should().HaveCount(2);
+                accountInDatabase.Cards.ShouldHaveCount(2);
             });
         }
 
@@ -413,7 +417,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             {
                 BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
-                accountInDatabase.Cards.Should().HaveCount(1);
+                accountInDatabase.Cards.ShouldHaveCount(1);
             });
         }
 
@@ -442,7 +446,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdOrDefaultAsync(existingAccount.Id);
+                BankAccount? accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdOrDefaultAsync(existingAccount.Id);
 
                 accountInDatabase.Should().BeNull();
             });
@@ -453,7 +457,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
         {
             // Arrange
             var codec = new HexadecimalCodec();
-            string stringId = codec.Encode(Unknown.TypedId.Int32);
+            string? stringId = codec.Encode(Unknown.TypedId.Int32);
 
             string route = $"/bankAccounts/{stringId}";
 
@@ -463,7 +467,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);

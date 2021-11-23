@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 using Microsoft.AspNetCore.Mvc;
@@ -26,15 +25,14 @@ namespace JsonApiDotNetCore.OpenApi
 
         public ActionDescriptorCollection ActionDescriptors => GetActionDescriptors();
 
-        public JsonApiActionDescriptorCollectionProvider(IResourceGraph resourceGraph, IControllerResourceMapping controllerResourceMapping,
+        public JsonApiActionDescriptorCollectionProvider(IControllerResourceMapping controllerResourceMapping,
             IActionDescriptorCollectionProvider defaultProvider)
         {
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
             ArgumentGuard.NotNull(defaultProvider, nameof(defaultProvider));
 
             _defaultProvider = defaultProvider;
-            _jsonApiEndpointMetadataProvider = new JsonApiEndpointMetadataProvider(resourceGraph, controllerResourceMapping);
+            _jsonApiEndpointMetadataProvider = new JsonApiEndpointMetadataProvider(controllerResourceMapping);
         }
 
         private ActionDescriptorCollection GetActionDescriptors()
@@ -67,29 +65,28 @@ namespace JsonApiDotNetCore.OpenApi
             return descriptor is ControllerActionDescriptor controllerAction && controllerAction.Properties.ContainsKey(typeof(ApiDescriptionActionData));
         }
 
-        private static IList<ActionDescriptor> AddJsonApiMetadataToAction(ActionDescriptor endpoint, IJsonApiEndpointMetadata jsonApiEndpointMetadata)
+        private static IEnumerable<ActionDescriptor> AddJsonApiMetadataToAction(ActionDescriptor endpoint, IJsonApiEndpointMetadata? jsonApiEndpointMetadata)
         {
             switch (jsonApiEndpointMetadata)
             {
                 case PrimaryResponseMetadata primaryMetadata:
                 {
-                    UpdateProducesResponseTypeAttribute(endpoint, primaryMetadata.Type);
+                    UpdateProducesResponseTypeAttribute(endpoint, primaryMetadata.DocumentType);
                     return Array.Empty<ActionDescriptor>();
                 }
                 case PrimaryRequestMetadata primaryMetadata:
                 {
-                    UpdateBodyParameterDescriptor(endpoint, primaryMetadata.Type);
+                    UpdateBodyParameterDescriptor(endpoint, primaryMetadata.DocumentType);
                     return Array.Empty<ActionDescriptor>();
                 }
-                case ExpansibleEndpointMetadata expansibleMetadata
-                    when expansibleMetadata is RelationshipResponseMetadata || expansibleMetadata is SecondaryResponseMetadata:
+                case NonPrimaryEndpointMetadata nonPrimaryEndpointMetadata and (RelationshipResponseMetadata or SecondaryResponseMetadata):
                 {
-                    return Expand(endpoint, expansibleMetadata,
-                        (expandedEndpoint, relationshipType, _) => UpdateProducesResponseTypeAttribute(expandedEndpoint, relationshipType));
+                    return Expand(endpoint, nonPrimaryEndpointMetadata,
+                        (expandedEndpoint, documentType, _) => UpdateProducesResponseTypeAttribute(expandedEndpoint, documentType));
                 }
-                case ExpansibleEndpointMetadata expansibleMetadata when expansibleMetadata is RelationshipRequestMetadata:
+                case NonPrimaryEndpointMetadata nonPrimaryEndpointMetadata and RelationshipRequestMetadata:
                 {
-                    return Expand(endpoint, expansibleMetadata, UpdateBodyParameterDescriptor);
+                    return Expand(endpoint, nonPrimaryEndpointMetadata, UpdateBodyParameterDescriptor);
                 }
                 default:
                 {
@@ -98,34 +95,48 @@ namespace JsonApiDotNetCore.OpenApi
             }
         }
 
-        private static void UpdateProducesResponseTypeAttribute(ActionDescriptor endpoint, Type responseTypeToSet)
+        private static void UpdateProducesResponseTypeAttribute(ActionDescriptor endpoint, Type responseDocumentType)
         {
-            if (ProducesJsonApiResponseBody(endpoint))
+            if (ProducesJsonApiResponseDocument(endpoint))
             {
                 var producesResponse = endpoint.GetFilterMetadata<ProducesResponseTypeAttribute>();
-                producesResponse.Type = responseTypeToSet;
+
+                if (producesResponse != null)
+                {
+                    producesResponse.Type = responseDocumentType;
+                    return;
+                }
             }
+
+            throw new UnreachableCodeException();
         }
 
-        private static bool ProducesJsonApiResponseBody(ActionDescriptor endpoint)
+        private static bool ProducesJsonApiResponseDocument(ActionDescriptor endpoint)
         {
             var produces = endpoint.GetFilterMetadata<ProducesAttribute>();
 
             return produces != null && produces.ContentTypes.Any(contentType => contentType == HeaderConstants.MediaType);
         }
 
-        private static IList<ActionDescriptor> Expand(ActionDescriptor genericEndpoint, ExpansibleEndpointMetadata metadata,
+        private static IEnumerable<ActionDescriptor> Expand(ActionDescriptor genericEndpoint, NonPrimaryEndpointMetadata metadata,
             Action<ActionDescriptor, Type, string> expansionCallback)
         {
             var expansion = new List<ActionDescriptor>();
 
-            foreach ((string relationshipName, Type relationshipType) in metadata.ExpansionElements)
+            foreach ((string relationshipName, Type documentType) in metadata.DocumentTypesByRelationshipName)
             {
-                ActionDescriptor expandedEndpoint = Clone(genericEndpoint);
-                RemovePathParameter(expandedEndpoint.Parameters, JsonApiPathParameter.RelationshipName);
-                ExpandTemplate(expandedEndpoint.AttributeRouteInfo, relationshipName);
+                if (genericEndpoint.AttributeRouteInfo == null)
+                {
+                    throw new NotSupportedException("Only attribute routing is supported for JsonApiDotNetCore endpoints.");
+                }
 
-                expansionCallback(expandedEndpoint, relationshipType, relationshipName);
+                ActionDescriptor expandedEndpoint = Clone(genericEndpoint);
+
+                RemovePathParameter(expandedEndpoint.Parameters, JsonApiPathParameter.RelationshipName);
+
+                ExpandTemplate(expandedEndpoint.AttributeRouteInfo!, relationshipName);
+
+                expansionCallback(expandedEndpoint, documentType, relationshipName);
 
                 expansion.Add(expandedEndpoint);
             }
@@ -133,11 +144,18 @@ namespace JsonApiDotNetCore.OpenApi
             return expansion;
         }
 
-        private static void UpdateBodyParameterDescriptor(ActionDescriptor endpoint, Type bodyType, string parameterName = null)
+        private static void UpdateBodyParameterDescriptor(ActionDescriptor endpoint, Type documentType, string? parameterName = null)
         {
-            ControllerParameterDescriptor requestBodyDescriptor = endpoint.GetBodyParameterDescriptor();
-            requestBodyDescriptor.ParameterType = bodyType;
-            ParameterInfo replacementParameterInfo = requestBodyDescriptor.ParameterInfo.WithParameterType(bodyType);
+            ControllerParameterDescriptor? requestBodyDescriptor = endpoint.GetBodyParameterDescriptor();
+
+            if (requestBodyDescriptor == null)
+            {
+                // ASP.NET model binding picks up on [FromBody] in base classes, so even when it is left out in an override, this should not be reachable.
+                throw new UnreachableCodeException();
+            }
+
+            requestBodyDescriptor.ParameterType = documentType;
+            ParameterInfo replacementParameterInfo = requestBodyDescriptor.ParameterInfo.WithParameterType(documentType);
 
             if (parameterName != null)
             {
@@ -151,7 +169,7 @@ namespace JsonApiDotNetCore.OpenApi
         {
             var clonedDescriptor = (ActionDescriptor)descriptor.MemberwiseClone();
 
-            clonedDescriptor.AttributeRouteInfo = (AttributeRouteInfo)descriptor.AttributeRouteInfo.MemberwiseClone();
+            clonedDescriptor.AttributeRouteInfo = (AttributeRouteInfo)descriptor.AttributeRouteInfo!.MemberwiseClone();
 
             clonedDescriptor.FilterDescriptors = new List<FilterDescriptor>();
 

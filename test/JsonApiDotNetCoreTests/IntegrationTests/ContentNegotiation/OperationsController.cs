@@ -9,9 +9,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 {
     public sealed class OperationsController : JsonApiOperationsController
     {
-        public OperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IOperationsProcessor processor, IJsonApiRequest request,
-            ITargetedFields targetedFields)
-            : base(options, loggerFactory, processor, request, targetedFields)
+        public OperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor,
+            IJsonApiRequest request, ITargetedFields targetedFields)
+            : base(options, resourceGraph, loggerFactory, processor, request, targetedFields)
         {
         }
     }

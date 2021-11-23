@@ -8,9 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
     public sealed class BankAccount : ObfuscatedIdentifiable
     {
         [Attr]
-        public string Iban { get; set; }
+        public string Iban { get; set; } = null!;
 
         [HasMany]
-        public IList<DebitCard> Cards { get; set; }
+        public IList<DebitCard> Cards { get; set; } = new List<DebitCard>();
     }
 }

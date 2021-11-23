@@ -14,22 +14,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
     /// Enables sparse fieldset tests to verify which fields were (not) retrieved from the database.
     /// </summary>
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class ResultCapturingRepository<TResource> : EntityFrameworkCoreRepository<TResource>
-        where TResource : class, IIdentifiable<int>
+    public sealed class ResultCapturingRepository<TResource, TId> : EntityFrameworkCoreRepository<TResource, TId>
+        where TResource : class, IIdentifiable<TId>
     {
         private readonly ResourceCaptureStore _captureStore;
 
-        public ResultCapturingRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
+        public ResultCapturingRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
             IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
             IResourceDefinitionAccessor resourceDefinitionAccessor, ResourceCaptureStore captureStore)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
+            : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
         {
             _captureStore = captureStore;
         }
 
-        public override async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken)
+        public override async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
         {
-            IReadOnlyCollection<TResource> resources = await base.GetAsync(layer, cancellationToken);
+            IReadOnlyCollection<TResource> resources = await base.GetAsync(queryLayer, cancellationToken);
 
             _captureStore.Add(resources);
 

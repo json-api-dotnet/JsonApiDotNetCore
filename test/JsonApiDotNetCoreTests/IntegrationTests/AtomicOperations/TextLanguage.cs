@@ -10,12 +10,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
     public sealed class TextLanguage : Identifiable<Guid>
     {
         [Attr]
-        public string IsoCode { get; set; }
+        public string? IsoCode { get; set; }
 
         [Attr(Capabilities = AttrCapabilities.None)]
         public bool IsRightToLeft { get; set; }
 
         [HasMany]
-        public ICollection<Lyric> Lyrics { get; set; }
+        public ICollection<Lyric> Lyrics { get; set; } = new List<Lyric>();
     }
 }

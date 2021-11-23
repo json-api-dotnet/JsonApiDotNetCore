@@ -43,21 +43,23 @@ See [our documentation](https://www.jsonapi.net/) for detailed usage.
 ### Models
 
 ```c#
-public class Article : Identifiable
+#nullable enable
+
+public class Article : Identifiable<int>
 {
     [Attr]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 }
 ```
 
 ### Controllers
 
 ```c#
-public class ArticlesController : JsonApiController<Article>
+public class ArticlesController : JsonApiController<Article, int>
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<Article> resourceService,)
-        : base(options, loggerFactory, resourceService)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService<Article, int> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }
@@ -87,13 +89,16 @@ public class Startup
 The following chart should help you pick the best version, based on your environment.
 See also our [versioning policy](./VERSIONING_POLICY.md).
 
-| .NET version | EF Core version | JsonApiDotNetCore version |
-| ------------ | --------------- | ------------------------- |
-| Core 2.x     | 2.x             | 3.x                       |
-| Core 3.1     | 3.1             | 4.x                       |
-| Core 3.1     | 5               | 4.x                       |
-| 5            | 5               | 4.x or 5.x                |
-| 6            | 6               | 5.x                       |
+| JsonApiDotNetCore | .NET     | Entity Framework Core | Status                     |
+| ----------------- | -------- | --------------------- | -------------------------- |
+| 3.x               | Core 2.x | 2.x                   | Released                   |
+| 4.x               | Core 3.1 | 3.1                   | Released                   |
+|                   | Core 3.1 | 5                     |                            |
+|                   | 5        | 5                     |                            |
+|                   | 6        | 5                     |                            |
+| v5.x (pending)    | 5        | 5                     | On AppVeyor, to-be-dropped |
+|                   | 6        | 5                     | On AppVeyor, to-be-dropped |
+|                   | 6        | 6                     | Requires build from master |
 
 ## Contributing
 

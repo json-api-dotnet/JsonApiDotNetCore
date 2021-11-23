@@ -5,31 +5,30 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class PlanetDefinition : JsonApiResourceDefinition<Planet>
+    public sealed class PlanetDefinition : HitCountingResourceDefinition<Planet, int>
     {
         private readonly IClientSettingsProvider _clientSettingsProvider;
-        private readonly ResourceDefinitionHitCounter _hitCounter;
+
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Reading;
 
         public PlanetDefinition(IResourceGraph resourceGraph, IClientSettingsProvider clientSettingsProvider, ResourceDefinitionHitCounter hitCounter)
-            : base(resourceGraph)
+            : base(resourceGraph, hitCounter)
         {
             // This constructor will be resolved from the container, which means
             // you can take on any dependency that is also defined in the container.
 
             _clientSettingsProvider = clientSettingsProvider;
-            _hitCounter = hitCounter;
         }
 
-        public override IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
+        public override IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes)
         {
-            _hitCounter.TrackInvocation<Planet>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes);
+            base.OnApplyIncludes(existingIncludes);
 
             if (_clientSettingsProvider.IsIncludePlanetMoonsBlocked &&
                 existingIncludes.Any(include => include.Relationship.Property.Name == nameof(Planet.Moons)))
@@ -43,18 +42,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             return existingIncludes;
         }
 
-        public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
+        public override FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
         {
-            _hitCounter.TrackInvocation<Planet>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter);
+            base.OnApplyFilter(existingFilter);
 
             if (_clientSettingsProvider.ArePlanetsWithPrivateNameHidden)
             {
-                AttrAttribute privateNameAttribute = ResourceContext.GetAttributeByPropertyName(nameof(Planet.PrivateName));
+                AttrAttribute privateNameAttribute = ResourceType.GetAttributeByPropertyName(nameof(Planet.PrivateName));
 
                 FilterExpression hasNoPrivateName = new ComparisonExpression(ComparisonOperator.Equals, new ResourceFieldChainExpression(privateNameAttribute),
-                    new NullConstantExpression());
+                    NullConstantExpression.Instance);
 
-                return existingFilter == null ? hasNoPrivateName : new LogicalExpression(LogicalOperator.And, hasNoPrivateName, existingFilter);
+                return LogicalExpression.Compose(LogicalOperator.And, hasNoPrivateName, existingFilter);
             }
 
             return existingFilter;

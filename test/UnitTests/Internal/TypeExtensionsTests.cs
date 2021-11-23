@@ -1,4 +1,5 @@
 using System;
+using FluentAssertions;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Resources;
 using Xunit;
@@ -14,10 +15,10 @@ namespace UnitTests.Internal
             Type type = typeof(Model);
 
             // Act
-            bool result = type.IsOrImplementsInterface(typeof(IIdentifiable));
+            bool result = type.IsOrImplementsInterface<IIdentifiable>();
 
             // Assert
-            Assert.True(result);
+            result.Should().BeTrue();
         }
 
         [Fact]
@@ -27,16 +28,16 @@ namespace UnitTests.Internal
             Type type = typeof(string);
 
             // Act
-            bool result = type.IsOrImplementsInterface(typeof(IIdentifiable));
+            bool result = type.IsOrImplementsInterface<IIdentifiable>();
 
             // Assert
-            Assert.False(result);
+            result.Should().BeFalse();
         }
 
         private sealed class Model : IIdentifiable
         {
-            public string StringId { get; set; }
-            public string LocalId { get; set; }
+            public string? StringId { get; set; }
+            public string? LocalId { get; set; }
         }
     }
 }

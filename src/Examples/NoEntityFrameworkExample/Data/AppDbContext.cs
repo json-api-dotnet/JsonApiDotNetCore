@@ -7,7 +7,7 @@ namespace NoEntityFrameworkExample.Data
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class AppDbContext : DbContext
     {
-        public DbSet<WorkItem> WorkItems { get; set; }
+        public DbSet<WorkItem> WorkItems => Set<WorkItem>();
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)

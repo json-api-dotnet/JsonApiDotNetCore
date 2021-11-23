@@ -11,19 +11,19 @@ namespace JsonApiDotNetCore.Resources
     public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TResource>
         where TResource : class, IIdentifiable
     {
-        private readonly IResourceGraph _resourceGraph;
+        private readonly ResourceType _resourceType;
         private readonly ITargetedFields _targetedFields;
 
-        private IDictionary<string, string> _initiallyStoredAttributeValues;
-        private IDictionary<string, string> _requestAttributeValues;
-        private IDictionary<string, string> _finallyStoredAttributeValues;
+        private IDictionary<string, string>? _initiallyStoredAttributeValues;
+        private IDictionary<string, string>? _requestAttributeValues;
+        private IDictionary<string, string>? _finallyStoredAttributeValues;
 
         public ResourceChangeTracker(IResourceGraph resourceGraph, ITargetedFields targetedFields)
         {
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
 
-            _resourceGraph = resourceGraph;
+            _resourceType = resourceGraph.GetResourceType<TResource>();
             _targetedFields = targetedFields;
         }
 
@@ -32,8 +32,7 @@ namespace JsonApiDotNetCore.Resources
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext<TResource>();
-            _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
+            _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, _resourceType.Attributes);
         }
 
         /// <inheritdoc />
@@ -49,8 +48,7 @@ namespace JsonApiDotNetCore.Resources
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext<TResource>();
-            _finallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
+            _finallyStoredAttributeValues = CreateAttributeDictionary(resource, _resourceType.Attributes);
         }
 
         private IDictionary<string, string> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
@@ -59,7 +57,7 @@ namespace JsonApiDotNetCore.Resources
 
             foreach (AttrAttribute attribute in attributes)
             {
-                object value = attribute.GetValue(resource);
+                object? value = attribute.GetValue(resource);
                 string json = JsonSerializer.Serialize(value);
                 result.Add(attribute.PublicName, json);
             }
@@ -70,26 +68,28 @@ namespace JsonApiDotNetCore.Resources
         /// <inheritdoc />
         public bool HasImplicitChanges()
         {
-            foreach (string key in _initiallyStoredAttributeValues.Keys)
+            if (_initiallyStoredAttributeValues != null && _requestAttributeValues != null && _finallyStoredAttributeValues != null)
             {
-                if (_requestAttributeValues.ContainsKey(key))
+                foreach (string key in _initiallyStoredAttributeValues.Keys)
                 {
-                    string requestValue = _requestAttributeValues[key];
-                    string actualValue = _finallyStoredAttributeValues[key];
-
-                    if (requestValue != actualValue)
+                    if (_requestAttributeValues.TryGetValue(key, out string? requestValue))
                     {
-                        return true;
+                        string actualValue = _finallyStoredAttributeValues[key];
+
+                        if (requestValue != actualValue)
+                        {
+                            return true;
+                        }
                     }
-                }
-                else
-                {
-                    string initiallyStoredValue = _initiallyStoredAttributeValues[key];
-                    string finallyStoredValue = _finallyStoredAttributeValues[key];
-
-                    if (initiallyStoredValue != finallyStoredValue)
+                    else
                     {
-                        return true;
+                        string initiallyStoredValue = _initiallyStoredAttributeValues[key];
+                        string finallyStoredValue = _finallyStoredAttributeValues[key];
+
+                        if (initiallyStoredValue != finallyStoredValue)
+                        {
+                            return true;
+                        }
                     }
                 }
             }

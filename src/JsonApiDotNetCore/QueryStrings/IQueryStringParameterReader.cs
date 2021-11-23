@@ -9,9 +9,9 @@ namespace JsonApiDotNetCore.QueryStrings
     public interface IQueryStringParameterReader
     {
         /// <summary>
-        /// Indicates whether this reader supports empty query string parameter values. Defaults to <c>false</c>.
+        /// Indicates whether this reader supports empty query string parameter values.
         /// </summary>
-        bool AllowEmptyValue => false;
+        bool AllowEmptyValue { get; }
 
         /// <summary>
         /// Indicates whether usage of this query string parameter is blocked using <see cref="DisableQueryStringAttribute" /> on a controller.

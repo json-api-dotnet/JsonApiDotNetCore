@@ -12,27 +12,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
 {
-    public abstract class MessagingGroupDefinition : JsonApiResourceDefinition<DomainGroup, Guid>
+    public abstract class MessagingGroupDefinition : HitCountingResourceDefinition<DomainGroup, Guid>
     {
         private readonly DbSet<DomainUser> _userSet;
         private readonly DbSet<DomainGroup> _groupSet;
-        private readonly ResourceDefinitionHitCounter _hitCounter;
         private readonly List<OutgoingMessage> _pendingMessages = new();
 
-        private string _beforeGroupName;
+        private string? _beforeGroupName;
+
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Writing;
 
         protected MessagingGroupDefinition(IResourceGraph resourceGraph, DbSet<DomainUser> userSet, DbSet<DomainGroup> groupSet,
             ResourceDefinitionHitCounter hitCounter)
-            : base(resourceGraph)
+            : base(resourceGraph, hitCounter)
         {
             _userSet = userSet;
             _groupSet = groupSet;
-            _hitCounter = hitCounter;
         }
 
-        public override Task OnPrepareWriteAsync(DomainGroup group, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        public override async Task OnPrepareWriteAsync(DomainGroup group, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync);
+            await base.OnPrepareWriteAsync(group, writeOperation, cancellationToken);
 
             if (writeOperation == WriteOperationKind.CreateResource)
             {
@@ -42,14 +42,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
             {
                 _beforeGroupName = group.Name;
             }
-
-            return Task.CompletedTask;
         }
 
         public override async Task OnSetToManyRelationshipAsync(DomainGroup group, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync);
+            await base.OnSetToManyRelationshipAsync(group, hasManyRelationship, rightResourceIds, writeOperation, cancellationToken);
 
             if (hasManyRelationship.Property.Name == nameof(DomainGroup.Users))
             {
@@ -60,44 +58,29 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
 
                 foreach (DomainUser beforeUser in beforeUsers)
                 {
-                    IMessageContent content = null;
+                    IMessageContent? content = null;
 
                     if (beforeUser.Group == null)
                     {
-                        content = new UserAddedToGroupContent
-                        {
-                            UserId = beforeUser.Id,
-                            GroupId = group.Id
-                        };
+                        content = new UserAddedToGroupContent(beforeUser.Id, group.Id);
                     }
                     else if (beforeUser.Group != null && beforeUser.Group.Id != group.Id)
                     {
-                        content = new UserMovedToGroupContent
-                        {
-                            UserId = beforeUser.Id,
-                            BeforeGroupId = beforeUser.Group.Id,
-                            AfterGroupId = group.Id
-                        };
+                        content = new UserMovedToGroupContent(beforeUser.Id, beforeUser.Group.Id, group.Id);
                     }
 
                     if (content != null)
                     {
-                        _pendingMessages.Add(OutgoingMessage.CreateFromContent(content));
+                        var message = OutgoingMessage.CreateFromContent(content);
+                        _pendingMessages.Add(message);
                     }
                 }
 
-                if (group.Users != null)
+                foreach (DomainUser userToRemoveFromGroup in group.Users.Where(user => !rightUserIds.Contains(user.Id)))
                 {
-                    foreach (DomainUser userToRemoveFromGroup in group.Users.Where(user => !rightUserIds.Contains(user.Id)))
-                    {
-                        var message = OutgoingMessage.CreateFromContent(new UserRemovedFromGroupContent
-                        {
-                            UserId = userToRemoveFromGroup.Id,
-                            GroupId = group.Id
-                        });
-
-                        _pendingMessages.Add(message);
-                    }
+                    var content = new UserRemovedFromGroupContent(userToRemoveFromGroup.Id, group.Id);
+                    var message = OutgoingMessage.CreateFromContent(content);
+                    _pendingMessages.Add(message);
                 }
             }
         }
@@ -105,7 +88,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
         public override async Task OnAddToRelationshipAsync(Guid groupId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
-            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnAddToRelationshipAsync);
+            await base.OnAddToRelationshipAsync(groupId, hasManyRelationship, rightResourceIds, cancellationToken);
 
             if (hasManyRelationship.Property.Name == nameof(DomainGroup.Users))
             {
@@ -116,38 +99,30 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
 
                 foreach (DomainUser beforeUser in beforeUsers)
                 {
-                    IMessageContent content = null;
+                    IMessageContent? content = null;
 
                     if (beforeUser.Group == null)
                     {
-                        content = new UserAddedToGroupContent
-                        {
-                            UserId = beforeUser.Id,
-                            GroupId = groupId
-                        };
+                        content = new UserAddedToGroupContent(beforeUser.Id, groupId);
                     }
                     else if (beforeUser.Group != null && beforeUser.Group.Id != groupId)
                     {
-                        content = new UserMovedToGroupContent
-                        {
-                            UserId = beforeUser.Id,
-                            BeforeGroupId = beforeUser.Group.Id,
-                            AfterGroupId = groupId
-                        };
+                        content = new UserMovedToGroupContent(beforeUser.Id, beforeUser.Group.Id, groupId);
                     }
 
                     if (content != null)
                     {
-                        _pendingMessages.Add(OutgoingMessage.CreateFromContent(content));
+                        var message = OutgoingMessage.CreateFromContent(content);
+                        _pendingMessages.Add(message);
                     }
                 }
             }
         }
 
-        public override Task OnRemoveFromRelationshipAsync(DomainGroup group, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+        public override async Task OnRemoveFromRelationshipAsync(DomainGroup group, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
-            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnRemoveFromRelationshipAsync);
+            await base.OnRemoveFromRelationshipAsync(group, hasManyRelationship, rightResourceIds, cancellationToken);
 
             if (hasManyRelationship.Property.Name == nameof(DomainGroup.Users))
             {
@@ -155,68 +130,42 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
 
                 foreach (DomainUser userToRemoveFromGroup in group.Users.Where(user => rightUserIds.Contains(user.Id)))
                 {
-                    var message = OutgoingMessage.CreateFromContent(new UserRemovedFromGroupContent
-                    {
-                        UserId = userToRemoveFromGroup.Id,
-                        GroupId = group.Id
-                    });
-
+                    var content = new UserRemovedFromGroupContent(userToRemoveFromGroup.Id, group.Id);
+                    var message = OutgoingMessage.CreateFromContent(content);
                     _pendingMessages.Add(message);
                 }
             }
-
-            return Task.CompletedTask;
         }
 
         protected async Task FinishWriteAsync(DomainGroup group, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             if (writeOperation == WriteOperationKind.CreateResource)
             {
-                var message = OutgoingMessage.CreateFromContent(new GroupCreatedContent
-                {
-                    GroupId = group.Id,
-                    GroupName = group.Name
-                });
-
+                var message = OutgoingMessage.CreateFromContent(new GroupCreatedContent(group.Id, group.Name));
                 await FlushMessageAsync(message, cancellationToken);
             }
             else if (writeOperation == WriteOperationKind.UpdateResource)
             {
                 if (_beforeGroupName != group.Name)
                 {
-                    var message = OutgoingMessage.CreateFromContent(new GroupRenamedContent
-                    {
-                        GroupId = group.Id,
-                        BeforeGroupName = _beforeGroupName,
-                        AfterGroupName = group.Name
-                    });
-
+                    var message = OutgoingMessage.CreateFromContent(new GroupRenamedContent(group.Id, _beforeGroupName!, group.Name));
                     await FlushMessageAsync(message, cancellationToken);
                 }
             }
             else if (writeOperation == WriteOperationKind.DeleteResource)
             {
-                DomainGroup groupToDelete = await GetGroupToDeleteAsync(group.Id, cancellationToken);
+                DomainGroup? groupToDelete = await GetGroupToDeleteAsync(group.Id, cancellationToken);
 
                 if (groupToDelete != null)
                 {
                     foreach (DomainUser user in groupToDelete.Users)
                     {
-                        var removeMessage = OutgoingMessage.CreateFromContent(new UserRemovedFromGroupContent
-                        {
-                            UserId = user.Id,
-                            GroupId = group.Id
-                        });
-
+                        var removeMessage = OutgoingMessage.CreateFromContent(new UserRemovedFromGroupContent(user.Id, group.Id));
                         await FlushMessageAsync(removeMessage, cancellationToken);
                     }
                 }
 
-                var deleteMessage = OutgoingMessage.CreateFromContent(new GroupDeletedContent
-                {
-                    GroupId = group.Id
-                });
-
+                var deleteMessage = OutgoingMessage.CreateFromContent(new GroupDeletedContent(group.Id));
                 await FlushMessageAsync(deleteMessage, cancellationToken);
             }
 
@@ -228,7 +177,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
 
         protected abstract Task FlushMessageAsync(OutgoingMessage message, CancellationToken cancellationToken);
 
-        protected virtual async Task<DomainGroup> GetGroupToDeleteAsync(Guid groupId, CancellationToken cancellationToken)
+        protected virtual async Task<DomainGroup?> GetGroupToDeleteAsync(Guid groupId, CancellationToken cancellationToken)
         {
             return await _groupSet.Include(group => group.Users).FirstOrDefaultAsync(group => group.Id == groupId, cancellationToken);
         }

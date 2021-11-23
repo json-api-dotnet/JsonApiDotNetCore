@@ -3,10 +3,11 @@ using System.Collections.Generic;
 
 namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
 {
-    internal sealed class RelationshipResponseMetadata : ExpansibleEndpointMetadata, IJsonApiResponseMetadata
+    internal sealed class RelationshipResponseMetadata : NonPrimaryEndpointMetadata, IJsonApiResponseMetadata
     {
-        public IDictionary<string, Type> ResponseTypesByRelationshipName { get; init; }
-
-        public override IDictionary<string, Type> ExpansionElements => ResponseTypesByRelationshipName;
+        public RelationshipResponseMetadata(IDictionary<string, Type> documentTypesByRelationshipName)
+            : base(documentTypesByRelationshipName)
+        {
+        }
     }
 }

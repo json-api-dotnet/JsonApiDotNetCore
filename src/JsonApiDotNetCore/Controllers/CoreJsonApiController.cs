@@ -14,22 +14,26 @@ namespace JsonApiDotNetCore.Controllers
         {
             ArgumentGuard.NotNull(error, nameof(error));
 
-            return Error(error.AsEnumerable());
+            return new ObjectResult(error)
+            {
+                StatusCode = (int)error.StatusCode
+            };
         }
 
         protected IActionResult Error(IEnumerable<ErrorObject> errors)
         {
-            ArgumentGuard.NotNull(errors, nameof(errors));
+            IReadOnlyList<ErrorObject>? errorList = ToErrorList(errors);
+            ArgumentGuard.NotNullNorEmpty(errorList, nameof(errors));
 
-            var document = new Document
+            return new ObjectResult(errorList)
             {
-                Errors = errors.ToList()
+                StatusCode = (int)ErrorObject.GetResponseStatusCode(errorList)
             };
+        }
 
-            return new ObjectResult(document)
-            {
-                StatusCode = (int)document.GetErrorStatusCode()
-            };
+        private static IReadOnlyList<ErrorObject>? ToErrorList(IEnumerable<ErrorObject>? errors)
+        {
+            return errors?.ToArray();
         }
     }
 }

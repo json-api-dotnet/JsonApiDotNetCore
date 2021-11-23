@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal))
             {
-                string expression = parameterValue.Substring(ExpressionPrefix.Length);
+                string expression = parameterValue[ExpressionPrefix.Length..];
                 return (parameterName, expression);
             }
 
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             {
                 if (parameterValue.StartsWith(prefix, StringComparison.Ordinal))
                 {
-                    string value = parameterValue.Substring(prefix.Length);
+                    string value = parameterValue[prefix.Length..];
                     string escapedValue = EscapeQuotes(value);
                     string expression = $"{keyword}({attributeName},'{escapedValue}')";
 
@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             if (parameterValue.StartsWith(NotEqualsPrefix, StringComparison.Ordinal))
             {
-                string value = parameterValue.Substring(NotEqualsPrefix.Length);
+                string value = parameterValue[NotEqualsPrefix.Length..];
                 string escapedValue = EscapeQuotes(value);
                 string expression = $"{Keywords.Not}({Keywords.Equals}({attributeName},'{escapedValue}'))";
 
@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             if (parameterValue.StartsWith(InPrefix, StringComparison.Ordinal))
             {
-                string[] valueParts = parameterValue.Substring(InPrefix.Length).Split(",");
+                string[] valueParts = parameterValue[InPrefix.Length..].Split(",");
                 string valueList = $"'{string.Join("','", valueParts)}'";
                 string expression = $"{Keywords.Any}({attributeName},{valueList})";
 
@@ -90,7 +90,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             if (parameterValue.StartsWith(NotInPrefix, StringComparison.Ordinal))
             {
-                string[] valueParts = parameterValue.Substring(NotInPrefix.Length).Split(",");
+                string[] valueParts = parameterValue[NotInPrefix.Length..].Split(",");
                 string valueList = $"'{string.Join("','", valueParts)}'";
                 string expression = $"{Keywords.Not}({Keywords.Any}({attributeName},{valueList}))";
 

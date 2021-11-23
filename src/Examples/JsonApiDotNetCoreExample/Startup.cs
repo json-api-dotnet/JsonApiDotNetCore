@@ -52,12 +52,12 @@ namespace JsonApiDotNetCoreExample
                     {
                         options.Namespace = "api/v1";
                         options.UseRelativeLinks = true;
-                        options.ValidateModelState = true;
                         options.IncludeTotalResourceCount = true;
                         options.SerializerOptions.WriteIndented = true;
                         options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 #if DEBUG
                         options.IncludeExceptionStackTraceInErrors = true;
+                        options.IncludeRequestBodyInErrors = true;
 #endif
                     }, discovery => discovery.AddCurrentAssembly(), mvcBuilder: mvcBuilder);
                 }
@@ -67,17 +67,13 @@ namespace JsonApiDotNetCoreExample
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment environment, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment environment, ILoggerFactory loggerFactory, AppDbContext dbContext)
         {
             ILogger<Startup> logger = loggerFactory.CreateLogger<Startup>();
 
             using (CodeTimingSessionManager.Current.Measure("Initialize other (startup)"))
             {
-                using (IServiceScope scope = app.ApplicationServices.CreateScope())
-                {
-                    var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    appDbContext.Database.EnsureCreated();
-                }
+                dbContext.Database.EnsureCreated();
 
                 app.UseRouting();
 

@@ -23,7 +23,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             string newLoginName = _fakers.DomainUser.Generate().LoginName;
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -51,22 +51,23 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Data.SingleValue.Attributes["loginName"].Should().Be(newLoginName);
-            responseDocument.Data.SingleValue.Attributes["displayName"].Should().Be(newDisplayName);
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("loginName").With(value => value.Should().Be(newLoginName));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(newDisplayName));
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id);
+            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<UserCreatedContent>();
                 content.UserId.Should().Be(newUserId);
@@ -123,23 +124,24 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Data.SingleValue.Attributes["loginName"].Should().Be(newLoginName);
-            responseDocument.Data.SingleValue.Attributes["displayName"].Should().BeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("loginName").With(value => value.Should().Be(newLoginName));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().BeNull());
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id);
+            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserCreatedContent>();
                 content1.UserId.Should().Be(newUserId);
@@ -161,7 +163,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             DomainUser existingUser = _fakers.DomainUser.Generate();
 
             string newLoginName = _fakers.DomainUser.Generate().LoginName;
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -196,14 +198,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserLoginNameChangedContent>();
                 content1.UserId.Should().Be(existingUser.Id);
@@ -226,7 +229,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             DomainUser existingUser = _fakers.DomainUser.Generate();
             existingUser.Group = _fakers.DomainGroup.Generate();
 
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -249,7 +252,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
                     {
                         group = new
                         {
-                            data = (object)null
+                            data = (object?)null
                         }
                     }
                 }
@@ -267,15 +270,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserDisplayNameChangedContent>();
                 content1.UserId.Should().Be(existingUser.Id);
@@ -297,7 +301,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             DomainUser existingUser = _fakers.DomainUser.Generate();
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -342,15 +346,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserDisplayNameChangedContent>();
                 content1.UserId.Should().Be(existingUser.Id);
@@ -374,7 +379,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -419,15 +424,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserDisplayNameChangedContent>();
                 content1.UserId.Should().Be(existingUser.Id);
@@ -468,13 +474,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<UserDeletedContent>();
                 content.UserId.Should().Be(existingUser.Id);
@@ -509,13 +516,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserRemovedFromGroupContent>();
                 content1.UserId.Should().Be(existingUser.Id);
@@ -544,7 +552,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             var requestBody = new
             {
-                data = (object)null
+                data = (object?)null
             };
 
             string route = $"/domainUsers/{existingUser.StringId}/relationships/group";
@@ -559,15 +567,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<UserRemovedFromGroupContent>();
                 content.UserId.Should().Be(existingUser.Id);
@@ -612,15 +621,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<UserAddedToGroupContent>();
                 content.UserId.Should().Be(existingUser.Id);
@@ -667,15 +677,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<UserMovedToGroupContent>();
                 content.UserId.Should().Be(existingUser.Id);

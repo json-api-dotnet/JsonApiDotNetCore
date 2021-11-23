@@ -1,22 +1,16 @@
 using System;
-using System.Linq;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 {
     internal sealed class ResourceTypeInfo
     {
-        private readonly ResourceContext _resourceContext;
-
         public Type ResourceObjectType { get; }
         public Type ResourceObjectOpenType { get; }
-        public Type ResourceType { get; }
+        public ResourceType ResourceType { get; }
 
-        private ResourceTypeInfo(Type resourceObjectType, Type resourceObjectOpenType, Type resourceType, ResourceContext resourceContext)
+        private ResourceTypeInfo(Type resourceObjectType, Type resourceObjectOpenType, ResourceType resourceType)
         {
-            _resourceContext = resourceContext;
-
             ResourceObjectType = resourceObjectType;
             ResourceObjectOpenType = resourceObjectOpenType;
             ResourceType = resourceType;
@@ -28,18 +22,10 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
             Type resourceObjectOpenType = resourceObjectType.GetGenericTypeDefinition();
-            Type resourceType = resourceObjectType.GenericTypeArguments[0];
-            ResourceContext resourceContext = resourceGraph.GetResourceContext(resourceType);
+            Type resourceClrType = resourceObjectType.GenericTypeArguments[0];
+            ResourceType resourceType = resourceGraph.GetResourceType(resourceClrType);
 
-            return new ResourceTypeInfo(resourceObjectType, resourceObjectOpenType, resourceType, resourceContext);
-        }
-
-        public TResourceFieldAttribute TryGetResourceFieldByName<TResourceFieldAttribute>(string publicName)
-            where TResourceFieldAttribute : ResourceFieldAttribute
-        {
-            ArgumentGuard.NotNullNorEmpty(publicName, nameof(publicName));
-
-            return (TResourceFieldAttribute)_resourceContext.Fields.FirstOrDefault(field => field is TResourceFieldAttribute && field.PublicName == publicName);
+            return new ResourceTypeInfo(resourceObjectType, resourceObjectOpenType, resourceType);
         }
     }
 }

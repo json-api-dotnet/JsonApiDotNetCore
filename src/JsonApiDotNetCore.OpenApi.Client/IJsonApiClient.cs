@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.OpenApi.Client
         /// <c>using</c> statement, so the registrations are cleaned up after executing the request.
         /// </returns>
         IDisposable RegisterAttributesForRequestDocument<TRequestDocument, TAttributesObject>(TRequestDocument requestDocument,
-            params Expression<Func<TAttributesObject, object>>[] alwaysIncludedAttributeSelectors)
+            params Expression<Func<TAttributesObject, object?>>[] alwaysIncludedAttributeSelectors)
             where TRequestDocument : class;
     }
 }

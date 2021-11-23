@@ -28,20 +28,22 @@ namespace JsonApiDotNetCore.OpenApi
             [typeof(ResourcePatchRequestDocument<>)] = ResourceOperationIdTemplate,
             [typeof(void)] = ResourceOperationIdTemplate,
             [typeof(SecondaryResourceResponseDocument<>)] = SecondaryOperationIdTemplate,
+            [typeof(NullableSecondaryResourceResponseDocument<>)] = SecondaryOperationIdTemplate,
             [typeof(ResourceIdentifierCollectionResponseDocument<>)] = RelationshipOperationIdTemplate,
             [typeof(ResourceIdentifierResponseDocument<>)] = RelationshipOperationIdTemplate,
+            [typeof(NullableResourceIdentifierResponseDocument<>)] = RelationshipOperationIdTemplate,
             [typeof(ToOneRelationshipRequestData<>)] = RelationshipOperationIdTemplate,
+            [typeof(NullableToOneRelationshipRequestData<>)] = RelationshipOperationIdTemplate,
             [typeof(ToManyRelationshipRequestData<>)] = RelationshipOperationIdTemplate
         };
 
         private readonly IControllerResourceMapping _controllerResourceMapping;
-        private readonly JsonNamingPolicy _namingPolicy;
+        private readonly JsonNamingPolicy? _namingPolicy;
         private readonly ResourceNameFormatter _formatter;
 
-        public JsonApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, JsonNamingPolicy namingPolicy)
+        public JsonApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, JsonNamingPolicy? namingPolicy)
         {
             ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
-            ArgumentGuard.NotNull(namingPolicy, nameof(namingPolicy));
 
             _controllerResourceMapping = controllerResourceMapping;
             _namingPolicy = namingPolicy;
@@ -52,33 +54,50 @@ namespace JsonApiDotNetCore.OpenApi
         {
             ArgumentGuard.NotNull(endpoint, nameof(endpoint));
 
-            Type primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(endpoint.ActionDescriptor.GetActionMethod().ReflectedType);
+            ResourceType? primaryResourceType =
+                _controllerResourceMapping.GetResourceTypeForController(endpoint.ActionDescriptor.GetActionMethod().ReflectedType);
 
-            string template = GetTemplate(primaryResourceType, endpoint);
+            if (primaryResourceType == null)
+            {
+                throw new UnreachableCodeException();
+            }
 
-            return ApplyTemplate(template, primaryResourceType, endpoint);
+            string template = GetTemplate(primaryResourceType.ClrType, endpoint);
+
+            return ApplyTemplate(template, primaryResourceType.ClrType, endpoint);
         }
 
-        private static string GetTemplate(Type primaryResourceType, ApiDescription endpoint)
+        private static string GetTemplate(Type resourceClrType, ApiDescription endpoint)
         {
-            Type requestDocumentType = GetDocumentType(primaryResourceType, endpoint);
+            Type requestDocumentType = GetDocumentType(resourceClrType, endpoint);
 
-            return DocumentOpenTypeToOperationIdTemplateMap[requestDocumentType];
+            if (!DocumentOpenTypeToOperationIdTemplateMap.TryGetValue(requestDocumentType, out string? template))
+            {
+                throw new UnreachableCodeException();
+            }
+
+            return template;
         }
 
-        private static Type GetDocumentType(Type primaryResourceType, ApiDescription endpoint)
+        private static Type GetDocumentType(Type primaryResourceClrType, ApiDescription endpoint)
         {
-            ControllerParameterDescriptor requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
             var producesResponseTypeAttribute = endpoint.ActionDescriptor.GetFilterMetadata<ProducesResponseTypeAttribute>();
 
+            if (producesResponseTypeAttribute == null)
+            {
+                throw new UnreachableCodeException();
+            }
+
+            ControllerParameterDescriptor? requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
+
             Type documentType = requestBodyDescriptor?.ParameterType.GetGenericTypeDefinition() ??
-                TryGetGenericTypeDefinition(producesResponseTypeAttribute.Type) ?? producesResponseTypeAttribute.Type;
+                GetGenericTypeDefinition(producesResponseTypeAttribute.Type) ?? producesResponseTypeAttribute.Type;
 
             if (documentType == typeof(ResourceCollectionResponseDocument<>))
             {
                 Type documentResourceType = producesResponseTypeAttribute.Type.GetGenericArguments()[0];
 
-                if (documentResourceType != primaryResourceType)
+                if (documentResourceType != primaryResourceClrType)
                 {
                     documentType = typeof(SecondaryResourceResponseDocument<>);
                 }
@@ -87,15 +106,15 @@ namespace JsonApiDotNetCore.OpenApi
             return documentType;
         }
 
-        private static Type TryGetGenericTypeDefinition(Type type)
+        private static Type? GetGenericTypeDefinition(Type type)
         {
             return type.IsConstructedGenericType ? type.GetGenericTypeDefinition() : null;
         }
 
-        private string ApplyTemplate(string operationIdTemplate, Type primaryResourceType, ApiDescription endpoint)
+        private string ApplyTemplate(string operationIdTemplate, Type resourceClrType, ApiDescription endpoint)
         {
             string method = endpoint.HttpMethod!.ToLowerInvariant();
-            string primaryResourceName = _formatter.FormatResourceName(primaryResourceType).Singularize();
+            string primaryResourceName = _formatter.FormatResourceName(resourceClrType).Singularize();
             string relationshipName = operationIdTemplate.Contains("[RelationshipName]") ? endpoint.RelativePath.Split("/").Last() : string.Empty;
 
             // @formatter:wrap_chained_method_calls chop_always
@@ -109,7 +128,7 @@ namespace JsonApiDotNetCore.OpenApi
             // @formatter:keep_existing_linebreaks restore
             // @formatter:wrap_chained_method_calls restore
 
-            return _namingPolicy.ConvertName(pascalCaseId);
+            return _namingPolicy != null ? _namingPolicy.ConvertName(pascalCaseId) : pascalCaseId;
         }
     }
 }

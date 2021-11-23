@@ -5,15 +5,15 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Moon : Identifiable
+    public sealed class Moon : Identifiable<int>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Attr]
         public decimal SolarRadius { get; set; }
 
         [HasOne]
-        public Planet OrbitsAround { get; set; }
+        public Planet OrbitsAround { get; set; } = null!;
     }
 }

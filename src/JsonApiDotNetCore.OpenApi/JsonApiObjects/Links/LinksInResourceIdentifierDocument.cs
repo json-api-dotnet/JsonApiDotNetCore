@@ -7,11 +7,11 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Links
     internal sealed class LinksInResourceIdentifierDocument
     {
         [Required]
-        public string Self { get; set; }
+        public string Self { get; set; } = null!;
 
-        public string Describedby { get; set; }
+        public string Describedby { get; set; } = null!;
 
         [Required]
-        public string Related { get; set; }
+        public string Related { get; set; } = null!;
     }
 }

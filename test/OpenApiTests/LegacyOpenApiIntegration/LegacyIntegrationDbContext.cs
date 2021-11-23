@@ -9,9 +9,9 @@ namespace OpenApiTests.LegacyOpenApiIntegration
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class LegacyIntegrationDbContext : DbContext
     {
-        public DbSet<Airplane> Airplanes { get; set; }
-        public DbSet<Flight> Flights { get; set; }
-        public DbSet<FlightAttendant> FlightAttendants { get; set; }
+        public DbSet<Airplane> Airplanes => Set<Airplane>();
+        public DbSet<Flight> Flights => Set<Flight>();
+        public DbSet<FlightAttendant> FlightAttendants => Set<FlightAttendant>();
 
         public LegacyIntegrationDbContext(DbContextOptions<LegacyIntegrationDbContext> options)
             : base(options)
@@ -27,6 +27,10 @@ namespace OpenApiTests.LegacyOpenApiIntegration
             builder.Entity<Flight>()
                 .HasOne(flight => flight.Purser)
                 .WithMany(flightAttendant => flightAttendant.PurserOnFlights);
+
+            builder.Entity<Flight>()
+                .HasOne(flight => flight.BackupPurser)
+                .WithMany();
         }
     }
 }

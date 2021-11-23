@@ -5,10 +5,11 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
 {
-    public sealed class SystemDirectoriesController : JsonApiController<SystemDirectory>
+    public sealed class SystemDirectoriesController : JsonApiController<SystemDirectory, int>
     {
-        public SystemDirectoriesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<SystemDirectory> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public SystemDirectoriesController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<SystemDirectory, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

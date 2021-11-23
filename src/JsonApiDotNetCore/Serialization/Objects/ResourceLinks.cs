@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
     {
         [JsonPropertyName("self")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Self { get; set; }
+        public string? Self { get; set; }
 
         internal bool HasValue()
         {

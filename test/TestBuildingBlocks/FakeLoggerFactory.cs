@@ -51,7 +51,7 @@ namespace TestBuildingBlocks
                 _messages.Clear();
             }
 
-            public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+            public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
             {
                 if (IsEnabled(logLevel))
                 {
@@ -62,7 +62,20 @@ namespace TestBuildingBlocks
 
             public IDisposable BeginScope<TState>(TState state)
             {
-                return null;
+                return NullScope.Instance;
+            }
+
+            private sealed class NullScope : IDisposable
+            {
+                public static readonly NullScope Instance = new();
+
+                private NullScope()
+                {
+                }
+
+                public void Dispose()
+                {
+                }
             }
         }
 

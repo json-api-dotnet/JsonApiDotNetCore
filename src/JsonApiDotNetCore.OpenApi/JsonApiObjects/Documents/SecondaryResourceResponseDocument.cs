@@ -11,11 +11,11 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents
     internal sealed class SecondaryResourceResponseDocument<TResource> : SingleData<ResourceResponseObject<TResource>>
         where TResource : IIdentifiable
     {
-        public IDictionary<string, object> Meta { get; set; }
+        public IDictionary<string, object> Meta { get; set; } = null!;
 
-        public JsonapiObject Jsonapi { get; set; }
+        public JsonapiObject Jsonapi { get; set; } = null!;
 
         [Required]
-        public LinksInResourceDocument Links { get; set; }
+        public LinksInResourceDocument Links { get; set; } = null!;
     }
 }

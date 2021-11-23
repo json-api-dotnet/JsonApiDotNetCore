@@ -4,17 +4,16 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
 {
-    public sealed class WorkflowTests : IClassFixture<IntegrationTestContext<ModelStateValidationStartup<WorkflowDbContext>, WorkflowDbContext>>
+    public sealed class WorkflowTests : IClassFixture<IntegrationTestContext<TestableStartup<WorkflowDbContext>, WorkflowDbContext>>
     {
-        private readonly IntegrationTestContext<ModelStateValidationStartup<WorkflowDbContext>, WorkflowDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<WorkflowDbContext>, WorkflowDbContext> _testContext;
 
-        public WorkflowTests(IntegrationTestContext<ModelStateValidationStartup<WorkflowDbContext>, WorkflowDbContext> testContext)
+        public WorkflowTests(IntegrationTestContext<TestableStartup<WorkflowDbContext>, WorkflowDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -50,7 +49,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
         }
 
         [Fact]
@@ -77,12 +76,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Invalid workflow stage.");
             error.Detail.Should().Be("Initial stage of workflow must be 'Created'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/attributes/stage");
         }
 
@@ -122,12 +122,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Invalid workflow stage.");
             error.Detail.Should().Be("Cannot transition from 'OnHold' to 'Succeeded'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/attributes/stage");
         }
 

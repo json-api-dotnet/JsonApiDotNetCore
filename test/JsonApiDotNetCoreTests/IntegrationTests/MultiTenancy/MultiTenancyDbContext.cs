@@ -10,8 +10,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
     {
         private readonly ITenantProvider _tenantProvider;
 
-        public DbSet<WebShop> WebShops { get; set; }
-        public DbSet<WebProduct> WebProducts { get; set; }
+        public DbSet<WebShop> WebShops => Set<WebShop>();
+        public DbSet<WebProduct> WebProducts => Set<WebProduct>();
 
         public MultiTenancyDbContext(DbContextOptions<MultiTenancyDbContext> options, ITenantProvider tenantProvider)
             : base(options)
@@ -23,8 +23,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
         {
             builder.Entity<WebShop>()
                 .HasMany(webShop => webShop.Products)
-                .WithOne(webProduct => webProduct.Shop)
-                .IsRequired();
+                .WithOne(webProduct => webProduct.Shop);
 
             builder.Entity<WebShop>()
                 .HasQueryFilter(webShop => webShop.TenantId == _tenantProvider.TenantId);

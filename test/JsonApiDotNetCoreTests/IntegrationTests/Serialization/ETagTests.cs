@@ -45,9 +45,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            httpResponse.Headers.ETag.Should().NotBeNull();
-            httpResponse.Headers.ETag!.IsWeak.Should().BeFalse();
-            httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
+            httpResponse.Headers.ETag.ShouldNotBeNull();
+            httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
+            httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
 
             responseDocument.Should().BeEmpty();
         }
@@ -73,11 +73,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            httpResponse.Headers.ETag.Should().NotBeNull();
-            httpResponse.Headers.ETag!.IsWeak.Should().BeFalse();
-            httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
+            httpResponse.Headers.ETag.ShouldNotBeNull();
+            httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
+            httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
 
-            responseDocument.Should().NotBeEmpty();
+            responseDocument.ShouldNotBeEmpty();
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
 
             httpResponse.Headers.ETag.Should().BeNull();
 
-            responseDocument.Should().NotBeEmpty();
+            responseDocument.ShouldNotBeEmpty();
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
 
             httpResponse.Headers.ETag.Should().BeNull();
 
-            responseDocument.Should().NotBeEmpty();
+            responseDocument.ShouldNotBeEmpty();
         }
 
         [Fact]
@@ -169,12 +169,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.PreconditionFailed);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.PreconditionFailed);
             error.Title.Should().Be("Detection of mid-air edit collisions using ETags is not supported.");
             error.Detail.Should().BeNull();
+            error.Source.ShouldNotBeNull();
             error.Source.Header.Should().Be("If-Match");
         }
 
@@ -208,9 +209,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             // Assert
             httpResponse2.Should().HaveStatusCode(HttpStatusCode.NotModified);
 
-            httpResponse2.Headers.ETag.Should().NotBeNull();
-            httpResponse2.Headers.ETag!.IsWeak.Should().BeFalse();
-            httpResponse2.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
+            httpResponse2.Headers.ETag.ShouldNotBeNull();
+            httpResponse2.Headers.ETag.IsWeak.Should().BeFalse();
+            httpResponse2.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
 
             responseDocument2.Should().BeEmpty();
         }
@@ -241,11 +242,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            httpResponse.Headers.ETag.Should().NotBeNull();
-            httpResponse.Headers.ETag!.IsWeak.Should().BeFalse();
-            httpResponse.Headers.ETag.Tag.Should().NotBeNullOrEmpty();
+            httpResponse.Headers.ETag.ShouldNotBeNull();
+            httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
+            httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
 
-            responseDocument.Should().NotBeEmpty();
+            responseDocument.ShouldNotBeEmpty();
         }
     }
 }

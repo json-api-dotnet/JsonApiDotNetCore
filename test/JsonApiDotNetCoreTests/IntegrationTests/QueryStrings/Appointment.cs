@@ -6,10 +6,13 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Appointment : Identifiable
+    public sealed class Appointment : Identifiable<int>
     {
         [Attr]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
+
+        [Attr]
+        public string? Description { get; set; }
 
         [Attr]
         public DateTimeOffset StartTime { get; set; }

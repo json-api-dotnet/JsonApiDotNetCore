@@ -1,3 +1,5 @@
+using JsonApiDotNetCore.Configuration;
+
 namespace JsonApiDotNetCore.AtomicOperations
 {
     /// <summary>
@@ -13,16 +15,16 @@ namespace JsonApiDotNetCore.AtomicOperations
         /// <summary>
         /// Declares a local ID without assigning a server-generated value.
         /// </summary>
-        void Declare(string localId, string resourceType);
+        void Declare(string localId, ResourceType resourceType);
 
         /// <summary>
         /// Assigns a server-generated ID value to a previously declared local ID.
         /// </summary>
-        void Assign(string localId, string resourceType, string stringId);
+        void Assign(string localId, ResourceType resourceType, string stringId);
 
         /// <summary>
         /// Gets the server-assigned ID for the specified local ID.
         /// </summary>
-        string GetValue(string localId, string resourceType);
+        string GetValue(string localId, ResourceType resourceType);
     }
 }

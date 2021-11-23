@@ -7,8 +7,9 @@ namespace OpenApiTests.LegacyOpenApiIntegration
 {
     public sealed class FlightAttendantsController : JsonApiController<FlightAttendant, string>
     {
-        public FlightAttendantsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<FlightAttendant, string> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public FlightAttendantsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<FlightAttendant, string> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

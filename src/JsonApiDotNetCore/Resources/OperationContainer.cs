@@ -13,18 +13,16 @@ namespace JsonApiDotNetCore.Resources
     {
         private static readonly CollectionConverter CollectionConverter = new();
 
-        public WriteOperationKind Kind { get; }
         public IIdentifiable Resource { get; }
         public ITargetedFields TargetedFields { get; }
         public IJsonApiRequest Request { get; }
 
-        public OperationContainer(WriteOperationKind kind, IIdentifiable resource, ITargetedFields targetedFields, IJsonApiRequest request)
+        public OperationContainer(IIdentifiable resource, ITargetedFields targetedFields, IJsonApiRequest request)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
             ArgumentGuard.NotNull(request, nameof(request));
 
-            Kind = kind;
             Resource = resource;
             TargetedFields = targetedFields;
             Request = request;
@@ -39,7 +37,7 @@ namespace JsonApiDotNetCore.Resources
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            return new OperationContainer(Kind, resource, TargetedFields, Request);
+            return new OperationContainer(resource, TargetedFields, Request);
         }
 
         public ISet<IIdentifiable> GetSecondaryResources()
@@ -56,7 +54,7 @@ namespace JsonApiDotNetCore.Resources
 
         private void AddSecondaryResources(RelationshipAttribute relationship, HashSet<IIdentifiable> secondaryResources)
         {
-            object rightValue = relationship.GetValue(Resource);
+            object? rightValue = relationship.GetValue(Resource);
             ICollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
 
             secondaryResources.AddRange(rightResources);

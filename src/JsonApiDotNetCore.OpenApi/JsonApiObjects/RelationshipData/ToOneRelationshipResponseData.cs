@@ -12,8 +12,8 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData
         where TResource : IIdentifiable
     {
         [Required]
-        public LinksInRelationshipObject Links { get; set; }
+        public LinksInRelationshipObject Links { get; set; } = null!;
 
-        public IDictionary<string, object> Meta { get; set; }
+        public IDictionary<string, object> Meta { get; set; } = null!;
     }
 }

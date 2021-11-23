@@ -16,40 +16,52 @@ namespace JsonApiDotNetCore.Resources.Annotations
         private protected static readonly CollectionConverter CollectionConverter = new();
 
         /// <summary>
-        /// The property name of the EF Core inverse navigation, which may or may not exist. Even if it exists, it may not be exposed as a JSON:API relationship.
+        /// The CLR type in which this relationship is declared.
+        /// </summary>
+        internal Type? LeftClrType { get; set; }
+
+        /// <summary>
+        /// The CLR type this relationship points to. In the case of a <see cref="HasManyAttribute" /> relationship, this value will be the collection element
+        /// type.
+        /// </summary>
+        /// <example>
+        /// <code><![CDATA[
+        /// public ISet<Tag> Tags { get; set; } // RightClrType: typeof(Tag)
+        /// ]]></code>
+        /// </example>
+        internal Type? RightClrType { get; set; }
+
+        /// <summary>
+        /// The <see cref="PropertyInfo" /> of the Entity Framework Core inverse navigation, which may or may not exist. Even if it exists, it may not be exposed
+        /// as a JSON:API relationship.
         /// </summary>
         /// <example>
         /// <code><![CDATA[
         /// public class Article : Identifiable
         /// {
-        ///     [HasOne] // InverseNavigationProperty = Person.Articles
+        ///     [HasOne] // InverseNavigationProperty: Person.Articles
         ///     public Person Owner { get; set; }
         /// }
         /// 
         /// public class Person : Identifiable
         /// {
-        ///     [HasMany] // InverseNavigationProperty = Article.Owner
+        ///     [HasMany] // InverseNavigationProperty: Article.Owner
         ///     public ICollection<Article> Articles { get; set; }
         /// }
         /// ]]></code>
         /// </example>
-        public PropertyInfo InverseNavigationProperty { get; set; }
+        public PropertyInfo? InverseNavigationProperty { get; set; }
 
         /// <summary>
-        /// The containing type in which this relationship is declared.
+        /// The containing resource type in which this relationship is declared.
         /// </summary>
-        public Type LeftType { get; internal set; }
+        public ResourceType LeftType { get; internal set; } = null!;
 
         /// <summary>
-        /// The type this relationship points to. This does not necessarily match the relationship property type. In the case of a
-        /// <see cref="HasManyAttribute" /> relationship, this value will be the collection element type.
+        /// The resource type this relationship points to. In the case of a <see cref="HasManyAttribute" /> relationship, this value will be the collection
+        /// element type.
         /// </summary>
-        /// <example>
-        /// <code><![CDATA[
-        /// public List<Tag> Tags { get; set; } // RightType == typeof(Tag)
-        /// ]]></code>
-        /// </example>
-        public Type RightType { get; internal set; }
+        public ResourceType RightType { get; internal set; } = null!;
 
         /// <summary>
         /// Configures which links to show in the <see cref="Serialization.Objects.RelationshipLinks" /> object for this relationship. Defaults to
@@ -67,27 +79,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public bool CanInclude { get; set; } = true;
 
-        /// <summary>
-        /// Gets the value of the resource property this attribute was declared on.
-        /// </summary>
-        public object GetValue(object resource)
-        {
-            ArgumentGuard.NotNull(resource, nameof(resource));
-
-            return Property.GetValue(resource);
-        }
-
-        /// <summary>
-        /// Sets the value of the resource property this attribute was declared on.
-        /// </summary>
-        public void SetValue(object resource, object newValue)
-        {
-            ArgumentGuard.NotNull(resource, nameof(resource));
-
-            Property.SetValue(resource, newValue);
-        }
-
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {
@@ -101,12 +93,13 @@ namespace JsonApiDotNetCore.Resources.Annotations
 
             var other = (RelationshipAttribute)obj;
 
-            return LeftType == other.LeftType && RightType == other.RightType && Links == other.Links && CanInclude == other.CanInclude && base.Equals(other);
+            return LeftClrType == other.LeftClrType && RightClrType == other.RightClrType && Links == other.Links && CanInclude == other.CanInclude &&
+                base.Equals(other);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(LeftType, RightType, Links, CanInclude, base.GetHashCode());
+            return HashCode.Combine(LeftClrType, RightClrType, Links, CanInclude, base.GetHashCode());
         }
     }
 }

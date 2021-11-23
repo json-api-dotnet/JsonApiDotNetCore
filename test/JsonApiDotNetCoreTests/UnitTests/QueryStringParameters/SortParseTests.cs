@@ -9,6 +9,8 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
+using JsonApiDotNetCore.Serialization.Objects;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
@@ -54,22 +56,23 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
 
         [Theory]
         [InlineData("sort[", "id", "Field name expected.")]
-        [InlineData("sort[abc.def]", "id", "Relationship 'abc' in 'abc.def' does not exist on resource 'blogs'.")]
-        [InlineData("sort[posts.author]", "id", "Relationship 'author' in 'posts.author' must be a to-many relationship on resource 'blogPosts'.")]
+        [InlineData("sort[abc.def]", "id", "Relationship 'abc' in 'abc.def' does not exist on resource type 'blogs'.")]
+        [InlineData("sort[posts.author]", "id", "Relationship 'author' in 'posts.author' must be a to-many relationship on resource type 'blogPosts'.")]
         [InlineData("sort", "", "-, count function or field name expected.")]
         [InlineData("sort", " ", "Unexpected whitespace.")]
         [InlineData("sort", "-", "Count function or field name expected.")]
-        [InlineData("sort", "abc", "Attribute 'abc' does not exist on resource 'blogs'.")]
-        [InlineData("sort[posts]", "author", "Attribute 'author' does not exist on resource 'blogPosts'.")]
-        [InlineData("sort[posts]", "author.livingAddress", "Attribute 'livingAddress' in 'author.livingAddress' does not exist on resource 'webAccounts'.")]
+        [InlineData("sort", "abc", "Attribute 'abc' does not exist on resource type 'blogs'.")]
+        [InlineData("sort[posts]", "author", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
+        [InlineData("sort[posts]", "author.livingAddress",
+            "Attribute 'livingAddress' in 'author.livingAddress' does not exist on resource type 'webAccounts'.")]
         [InlineData("sort", "-count", "( expected.")]
         [InlineData("sort", "count", "( expected.")]
         [InlineData("sort", "count(posts", ") expected.")]
         [InlineData("sort", "count(", "Field name expected.")]
         [InlineData("sort", "count(-abc)", "Field name expected.")]
-        [InlineData("sort", "count(abc)", "Relationship 'abc' does not exist on resource 'blogs'.")]
-        [InlineData("sort", "count(id)", "Relationship 'id' does not exist on resource 'blogs'.")]
-        [InlineData("sort[posts]", "count(author)", "Relationship 'author' must be a to-many relationship on resource 'blogPosts'.")]
+        [InlineData("sort", "count(abc)", "Relationship 'abc' does not exist on resource type 'blogs'.")]
+        [InlineData("sort", "count(id)", "Relationship 'id' does not exist on resource type 'blogs'.")]
+        [InlineData("sort[posts]", "count(author)", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
         [InlineData("sort[posts]", "caption,", "-, count function or field name expected.")]
         [InlineData("sort[posts]", "caption:", ", expected.")]
         [InlineData("sort[posts]", "caption,-", "Count function or field name expected.")]
@@ -81,12 +84,15 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             // Assert
             InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
-            exception.QueryParameterName.Should().Be(parameterName);
-            exception.Errors.Should().HaveCount(1);
-            exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            exception.Errors[0].Title.Should().Be("The specified sort is invalid.");
-            exception.Errors[0].Detail.Should().Be(errorMessage);
-            exception.Errors[0].Source.Parameter.Should().Be(parameterName);
+            exception.ParameterName.Should().Be(parameterName);
+            exception.Errors.ShouldHaveCount(1);
+
+            ErrorObject error = exception.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified sort is invalid.");
+            error.Detail.Should().Be(errorMessage);
+            error.Source.ShouldNotBeNull();
+            error.Source.Parameter.Should().Be(parameterName);
         }
 
         [Theory]
@@ -109,7 +115,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
 
             // Assert
-            ResourceFieldChainExpression scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
+            ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
             scope?.ToString().Should().Be(scopeExpected);
 
             QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class GiftCertificate : Identifiable
+    public sealed class GiftCertificate : Identifiable<int>
     {
         private readonly ISystemClock _systemClock;
 
@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
         public bool HasExpired => IssueDate.AddYears(1) < _systemClock.UtcNow;
 
         [HasOne]
-        public PostOffice Issuer { get; set; }
+        public PostOffice? Issuer { get; set; }
 
         public GiftCertificate(InjectionDbContext injectionDbContext)
         {

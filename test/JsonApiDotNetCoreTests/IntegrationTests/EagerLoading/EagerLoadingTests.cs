@@ -25,6 +25,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
+                services.AddResourceDefinition<BuildingDefinition>();
                 services.AddResourceRepository<BuildingRepository>();
             });
         }
@@ -52,12 +53,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(building.StringId);
-            responseDocument.Data.SingleValue.Attributes["number"].Should().Be(building.Number);
-            responseDocument.Data.SingleValue.Attributes["windowCount"].Should().Be(4);
-            responseDocument.Data.SingleValue.Attributes["primaryDoorColor"].Should().Be(building.PrimaryDoor.Color);
-            responseDocument.Data.SingleValue.Attributes["secondaryDoorColor"].Should().Be(building.SecondaryDoor.Color);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("number").With(value => value.Should().Be(building.Number));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("windowCount").With(value => value.Should().Be(4));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("primaryDoorColor").With(value => value.Should().Be(building.PrimaryDoor.Color));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("secondaryDoorColor").With(value => value.Should().Be(building.SecondaryDoor.Color));
         }
 
         [Fact]
@@ -88,12 +89,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(street.StringId);
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(street.Name);
-            responseDocument.Data.SingleValue.Attributes["buildingCount"].Should().Be(2);
-            responseDocument.Data.SingleValue.Attributes["doorTotalCount"].Should().Be(3);
-            responseDocument.Data.SingleValue.Attributes["windowTotalCount"].Should().Be(5);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(street.Name));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("buildingCount").With(value => value.Should().Be(2));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("doorTotalCount").With(value => value.Should().Be(3));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("windowTotalCount").With(value => value.Should().Be(5));
         }
 
         [Fact]
@@ -119,10 +120,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(street.StringId);
-            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
-            responseDocument.Data.SingleValue.Attributes["windowTotalCount"].Should().Be(3);
+            responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("windowTotalCount").With(value => value.Should().Be(3));
             responseDocument.Data.SingleValue.Relationships.Should().BeNull();
         }
 
@@ -151,21 +152,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(state.StringId);
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(state.Name);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(state.Name));
 
-            responseDocument.Included.Should().HaveCount(2);
+            responseDocument.Included.ShouldHaveCount(2);
 
             responseDocument.Included[0].Type.Should().Be("cities");
             responseDocument.Included[0].Id.Should().Be(state.Cities[0].StringId);
-            responseDocument.Included[0].Attributes["name"].Should().Be(state.Cities[0].Name);
+            responseDocument.Included[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(state.Cities[0].Name));
 
             responseDocument.Included[1].Type.Should().Be("streets");
             responseDocument.Included[1].Id.Should().Be(state.Cities[0].Streets[0].StringId);
-            responseDocument.Included[1].Attributes["buildingCount"].Should().Be(1);
-            responseDocument.Included[1].Attributes["doorTotalCount"].Should().Be(1);
-            responseDocument.Included[1].Attributes["windowTotalCount"].Should().Be(3);
+            responseDocument.Included[1].Attributes.ShouldContainKey("buildingCount").With(value => value.Should().Be(1));
+            responseDocument.Included[1].Attributes.ShouldContainKey("doorTotalCount").With(value => value.Should().Be(1));
+            responseDocument.Included[1].Attributes.ShouldContainKey("windowTotalCount").With(value => value.Should().Be(3));
         }
 
         [Fact]
@@ -194,18 +195,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(state.Cities[0].StringId);
-            responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
-            responseDocument.Data.ManyValue[0].Attributes["name"].Should().Be(state.Cities[0].Name);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldHaveCount(1);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(state.Cities[0].Name));
             responseDocument.Data.ManyValue[0].Relationships.Should().BeNull();
 
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("streets");
             responseDocument.Included[0].Id.Should().Be(state.Cities[0].Streets[0].StringId);
-            responseDocument.Included[0].Attributes.Should().HaveCount(2);
-            responseDocument.Included[0].Attributes["doorTotalCount"].Should().Be(2);
-            responseDocument.Included[0].Attributes["windowTotalCount"].Should().Be(1);
+            responseDocument.Included[0].Attributes.ShouldHaveCount(2);
+            responseDocument.Included[0].Attributes.ShouldContainKey("doorTotalCount").With(value => value.Should().Be(2));
+            responseDocument.Included[0].Attributes.ShouldContainKey("windowTotalCount").With(value => value.Should().Be(1));
             responseDocument.Included[0].Relationships.Should().BeNull();
         }
 
@@ -235,20 +236,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Data.SingleValue.Attributes["number"].Should().Be(newBuilding.Number);
-            responseDocument.Data.SingleValue.Attributes["windowCount"].Should().Be(0);
-            responseDocument.Data.SingleValue.Attributes["primaryDoorColor"].Should().BeNull();
-            responseDocument.Data.SingleValue.Attributes["secondaryDoorColor"].Should().BeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("number").With(value => value.Should().Be(newBuilding.Number));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("windowCount").With(value => value.Should().Be(0));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("primaryDoorColor").With(value => value.Should().Be("(unspecified)"));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("secondaryDoorColor").With(value => value.Should().BeNull());
 
-            int newBuildingId = int.Parse(responseDocument.Data.SingleValue.Id);
+            int newBuildingId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                Building buildingInDatabase = await dbContext.Buildings
+                Building? buildingInDatabase = await dbContext.Buildings
                     .Include(building => building.PrimaryDoor)
                     .Include(building => building.SecondaryDoor)
                     .Include(building => building.Windows)
@@ -257,9 +258,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                buildingInDatabase.Should().NotBeNull();
+                buildingInDatabase.ShouldNotBeNull();
                 buildingInDatabase.Number.Should().Be(newBuilding.Number);
-                buildingInDatabase.PrimaryDoor.Should().NotBeNull();
+                buildingInDatabase.PrimaryDoor.ShouldNotBeNull();
+                buildingInDatabase.PrimaryDoor.Color.Should().Be("(unspecified)");
                 buildingInDatabase.SecondaryDoor.Should().BeNull();
                 buildingInDatabase.Windows.Should().BeEmpty();
             });
@@ -312,7 +314,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                Building buildingInDatabase = await dbContext.Buildings
+                Building? buildingInDatabase = await dbContext.Buildings
                     .Include(building => building.PrimaryDoor)
                     .Include(building => building.SecondaryDoor)
                     .Include(building => building.Windows)
@@ -321,13 +323,57 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                buildingInDatabase.Should().NotBeNull();
+                buildingInDatabase.ShouldNotBeNull();
                 buildingInDatabase.Number.Should().Be(newBuildingNumber);
-                buildingInDatabase.PrimaryDoor.Should().NotBeNull();
+                buildingInDatabase.PrimaryDoor.ShouldNotBeNull();
                 buildingInDatabase.PrimaryDoor.Color.Should().Be(newPrimaryDoorColor);
-                buildingInDatabase.SecondaryDoor.Should().NotBeNull();
-                buildingInDatabase.Windows.Should().HaveCount(2);
+                buildingInDatabase.SecondaryDoor.ShouldNotBeNull();
+                buildingInDatabase.Windows.ShouldHaveCount(2);
             });
+        }
+
+        [Fact]
+        public async Task Cannot_update_resource_when_primaryDoorColor_is_set_to_null()
+        {
+            // Arrange
+            Building existingBuilding = _fakers.Building.Generate();
+            existingBuilding.PrimaryDoor = _fakers.Door.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Buildings.Add(existingBuilding);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "buildings",
+                    id = existingBuilding.StringId,
+                    attributes = new
+                    {
+                        primaryDoorColor = (string?)null
+                    }
+                }
+            };
+
+            string route = $"/buildings/{existingBuilding.StringId}";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.ShouldHaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Input validation failed.");
+            error.Detail.Should().Be("The PrimaryDoorColor field is required.");
+            error.Source.ShouldNotBeNull();
+            error.Source.Pointer.Should().Be("/data/attributes/primaryDoorColor");
         }
 
         [Fact]
@@ -355,7 +401,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Building buildingInDatabase = await dbContext.Buildings.FirstWithIdOrDefaultAsync(existingBuilding.Id);
+                Building? buildingInDatabase = await dbContext.Buildings.FirstWithIdOrDefaultAsync(existingBuilding.Id);
 
                 buildingInDatabase.Should().BeNull();
             });

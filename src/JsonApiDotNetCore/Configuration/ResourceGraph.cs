@@ -13,88 +13,88 @@ namespace JsonApiDotNetCore.Configuration
     [PublicAPI]
     public sealed class ResourceGraph : IResourceGraph
     {
-        private static readonly Type ProxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
+        private static readonly Type? ProxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
 
-        private readonly IReadOnlySet<ResourceContext> _resourceContextSet;
-        private readonly Dictionary<Type, ResourceContext> _resourceContextsByType = new();
-        private readonly Dictionary<string, ResourceContext> _resourceContextsByPublicName = new();
+        private readonly IReadOnlySet<ResourceType> _resourceTypeSet;
+        private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = new();
+        private readonly Dictionary<string, ResourceType> _resourceTypesByPublicName = new();
 
-        public ResourceGraph(IReadOnlySet<ResourceContext> resourceContexts)
+        public ResourceGraph(IReadOnlySet<ResourceType> resourceTypeSet)
         {
-            ArgumentGuard.NotNull(resourceContexts, nameof(resourceContexts));
+            ArgumentGuard.NotNull(resourceTypeSet, nameof(resourceTypeSet));
 
-            _resourceContextSet = resourceContexts;
+            _resourceTypeSet = resourceTypeSet;
 
-            foreach (ResourceContext resourceContext in resourceContexts)
+            foreach (ResourceType resourceType in resourceTypeSet)
             {
-                _resourceContextsByType.Add(resourceContext.ResourceType, resourceContext);
-                _resourceContextsByPublicName.Add(resourceContext.PublicName, resourceContext);
+                _resourceTypesByClrType.Add(resourceType.ClrType, resourceType);
+                _resourceTypesByPublicName.Add(resourceType.PublicName, resourceType);
             }
         }
 
         /// <inheritdoc />
-        public IReadOnlySet<ResourceContext> GetResourceContexts()
+        public IReadOnlySet<ResourceType> GetResourceTypes()
         {
-            return _resourceContextSet;
+            return _resourceTypeSet;
         }
 
         /// <inheritdoc />
-        public ResourceContext GetResourceContext(string publicName)
+        public ResourceType GetResourceType(string publicName)
         {
-            ResourceContext resourceContext = TryGetResourceContext(publicName);
+            ResourceType? resourceType = FindResourceType(publicName);
 
-            if (resourceContext == null)
+            if (resourceType == null)
             {
                 throw new InvalidOperationException($"Resource type '{publicName}' does not exist.");
             }
 
-            return resourceContext;
+            return resourceType;
         }
 
         /// <inheritdoc />
-        public ResourceContext TryGetResourceContext(string publicName)
+        public ResourceType? FindResourceType(string publicName)
         {
-            ArgumentGuard.NotNullNorEmpty(publicName, nameof(publicName));
+            ArgumentGuard.NotNull(publicName, nameof(publicName));
 
-            return _resourceContextsByPublicName.TryGetValue(publicName, out ResourceContext resourceContext) ? resourceContext : null;
+            return _resourceTypesByPublicName.TryGetValue(publicName, out ResourceType? resourceType) ? resourceType : null;
         }
 
         /// <inheritdoc />
-        public ResourceContext GetResourceContext(Type resourceType)
+        public ResourceType GetResourceType(Type resourceClrType)
         {
-            ResourceContext resourceContext = TryGetResourceContext(resourceType);
+            ResourceType? resourceType = FindResourceType(resourceClrType);
 
-            if (resourceContext == null)
+            if (resourceType == null)
             {
-                throw new InvalidOperationException($"Resource of type '{resourceType.Name}' does not exist.");
+                throw new InvalidOperationException($"Resource of type '{resourceClrType.Name}' does not exist.");
             }
 
-            return resourceContext;
+            return resourceType;
         }
 
         /// <inheritdoc />
-        public ResourceContext TryGetResourceContext(Type resourceType)
+        public ResourceType? FindResourceType(Type resourceClrType)
         {
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
 
-            Type typeToFind = IsLazyLoadingProxyForResourceType(resourceType) ? resourceType.BaseType : resourceType;
-            return _resourceContextsByType.TryGetValue(typeToFind!, out ResourceContext resourceContext) ? resourceContext : null;
+            Type typeToFind = IsLazyLoadingProxyForResourceType(resourceClrType) ? resourceClrType.BaseType! : resourceClrType;
+            return _resourceTypesByClrType.TryGetValue(typeToFind, out ResourceType? resourceType) ? resourceType : null;
         }
 
-        private bool IsLazyLoadingProxyForResourceType(Type resourceType)
+        private bool IsLazyLoadingProxyForResourceType(Type resourceClrType)
         {
-            return ProxyTargetAccessorType?.IsAssignableFrom(resourceType) ?? false;
+            return ProxyTargetAccessorType?.IsAssignableFrom(resourceClrType) ?? false;
         }
 
         /// <inheritdoc />
-        public ResourceContext GetResourceContext<TResource>()
+        public ResourceType GetResourceType<TResource>()
             where TResource : class, IIdentifiable
         {
-            return GetResourceContext(typeof(TResource));
+            return GetResourceType(typeof(TResource));
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector)
+        public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(selector, nameof(selector));
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector)
+        public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(selector, nameof(selector));
@@ -112,7 +112,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector)
+        public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(selector, nameof(selector));
@@ -120,7 +120,7 @@ namespace JsonApiDotNetCore.Configuration
             return FilterFields<TResource, RelationshipAttribute>(selector);
         }
 
-        private IReadOnlyCollection<TField> FilterFields<TResource, TField>(Expression<Func<TResource, dynamic>> selector)
+        private IReadOnlyCollection<TField> FilterFields<TResource, TField>(Expression<Func<TResource, dynamic?>> selector)
             where TResource : class, IIdentifiable
             where TField : ResourceFieldAttribute
         {
@@ -129,7 +129,7 @@ namespace JsonApiDotNetCore.Configuration
 
             foreach (string memberName in ToMemberNames(selector))
             {
-                TField matchingField = source.FirstOrDefault(field => field.Property.Name == memberName);
+                TField? matchingField = source.FirstOrDefault(field => field.Property.Name == memberName);
 
                 if (matchingField == null)
                 {
@@ -145,22 +145,22 @@ namespace JsonApiDotNetCore.Configuration
         private IReadOnlyCollection<TKind> GetFieldsOfType<TResource, TKind>()
             where TKind : ResourceFieldAttribute
         {
-            ResourceContext resourceContext = GetResourceContext(typeof(TResource));
+            ResourceType resourceType = GetResourceType(typeof(TResource));
 
             if (typeof(TKind) == typeof(AttrAttribute))
             {
-                return (IReadOnlyCollection<TKind>)resourceContext.Attributes;
+                return (IReadOnlyCollection<TKind>)resourceType.Attributes;
             }
 
             if (typeof(TKind) == typeof(RelationshipAttribute))
             {
-                return (IReadOnlyCollection<TKind>)resourceContext.Relationships;
+                return (IReadOnlyCollection<TKind>)resourceType.Relationships;
             }
 
-            return (IReadOnlyCollection<TKind>)resourceContext.Fields;
+            return (IReadOnlyCollection<TKind>)resourceType.Fields;
         }
 
-        private IEnumerable<string> ToMemberNames<TResource>(Expression<Func<TResource, dynamic>> selector)
+        private IEnumerable<string> ToMemberNames<TResource>(Expression<Func<TResource, dynamic?>> selector)
         {
             Expression selectorBody = RemoveConvert(selector.Body);
 

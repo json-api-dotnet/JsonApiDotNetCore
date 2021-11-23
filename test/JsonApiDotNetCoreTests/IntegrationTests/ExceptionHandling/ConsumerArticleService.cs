@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class ConsumerArticleService : JsonApiResourceService<ConsumerArticle>
+    public sealed class ConsumerArticleService : JsonApiResourceService<ConsumerArticle, int>
     {
         private const string SupportEmailAddress = "company@email.com";
         internal const string UnavailableArticlePrefix = "X";

@@ -6,9 +6,9 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     public sealed class Token
     {
         public TokenKind Kind { get; }
-        public string Value { get; }
+        public string? Value { get; }
 
-        public Token(TokenKind kind, string value = null)
+        public Token(TokenKind kind, string? value = null)
         {
             Kind = kind;
             Value = value;

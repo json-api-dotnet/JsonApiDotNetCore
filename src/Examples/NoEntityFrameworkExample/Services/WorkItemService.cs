@@ -15,7 +15,7 @@ using Npgsql;
 namespace NoEntityFrameworkExample.Services
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class WorkItemService : IResourceService<WorkItem>
+    public sealed class WorkItemService : IResourceService<WorkItem, int>
     {
         private readonly string _connectionString;
 
@@ -46,17 +46,17 @@ namespace NoEntityFrameworkExample.Services
             return workItems.Single();
         }
 
-        public Task<object> GetSecondaryAsync(int id, string relationshipName, CancellationToken cancellationToken)
+        public Task<object?> GetSecondaryAsync(int id, string relationshipName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<object> GetRelationshipAsync(int id, string relationshipName, CancellationToken cancellationToken)
+        public Task<object?> GetRelationshipAsync(int id, string relationshipName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<WorkItem> CreateAsync(WorkItem resource, CancellationToken cancellationToken)
+        public async Task<WorkItem?> CreateAsync(WorkItem resource, CancellationToken cancellationToken)
         {
             const string commandText = @"insert into ""WorkItems"" (""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId"") values " +
                 @"(@title, @isBlocked, @durationInHours, @projectId) returning ""Id"", ""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId""";
@@ -78,12 +78,12 @@ namespace NoEntityFrameworkExample.Services
             throw new NotImplementedException();
         }
 
-        public Task<WorkItem> UpdateAsync(int id, WorkItem resource, CancellationToken cancellationToken)
+        public Task<WorkItem?> UpdateAsync(int id, WorkItem resource, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task SetRelationshipAsync(int leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)
+        public Task SetRelationshipAsync(int leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

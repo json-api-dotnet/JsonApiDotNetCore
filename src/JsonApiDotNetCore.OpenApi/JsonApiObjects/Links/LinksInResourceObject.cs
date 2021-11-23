@@ -7,6 +7,6 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Links
     internal sealed class LinksInResourceObject
     {
         [Required]
-        public string Self { get; set; }
+        public string Self { get; set; } = null!;
     }
 }

@@ -5,6 +5,6 @@ namespace JsonApiDotNetCore.Configuration
 {
     internal interface IJsonApiApplicationBuilder
     {
-        public Action<MvcOptions> ConfigureMvcOptions { set; }
+        public Action<MvcOptions>? ConfigureMvcOptions { set; }
     }
 }

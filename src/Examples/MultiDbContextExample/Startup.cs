@@ -25,6 +25,7 @@ namespace MultiDbContextExample
             services.AddJsonApi(options =>
             {
                 options.IncludeExceptionStackTraceInErrors = true;
+                options.IncludeRequestBodyInErrors = true;
             }, dbContextTypes: new[]
             {
                 typeof(DbContextA),

@@ -11,9 +11,5 @@ namespace JsonApiDotNetCore.OpenApi
         public const string RelationshipsObject = "relationships";
         public const string MetaObject = "meta";
         public const string LinksObject = "links";
-        public const string JsonapiObject = "jsonapi";
-        public const string JsonapiObjectVersion = "version";
-        public const string JsonapiObjectExt = "ext";
-        public const string JsonapiObjectProfile = "profile";
     }
 }

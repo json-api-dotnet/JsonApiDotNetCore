@@ -7,10 +7,13 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class FilterableResource : Identifiable
+    public sealed class FilterableResource : Identifiable<int>
     {
         [Attr]
-        public string SomeString { get; set; }
+        public string SomeString { get; set; } = string.Empty;
+
+        [Attr]
+        public string? SomeNullableString { get; set; }
 
         [Attr]
         public bool SomeBoolean { get; set; }
@@ -79,6 +82,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
         public DayOfWeek? SomeNullableEnum { get; set; }
 
         [HasMany]
-        public ICollection<FilterableResource> Children { get; set; }
+        public ICollection<FilterableResource> Children { get; set; } = new List<FilterableResource>();
     }
 }

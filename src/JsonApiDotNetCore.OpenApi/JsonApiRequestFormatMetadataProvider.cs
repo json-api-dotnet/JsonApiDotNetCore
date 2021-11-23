@@ -17,6 +17,7 @@ namespace JsonApiDotNetCore.OpenApi
         {
             typeof(ToManyRelationshipRequestData<>),
             typeof(ToOneRelationshipRequestData<>),
+            typeof(NullableToOneRelationshipRequestData<>),
             typeof(ResourcePostRequestDocument<>),
             typeof(ResourcePatchRequestDocument<>)
         };

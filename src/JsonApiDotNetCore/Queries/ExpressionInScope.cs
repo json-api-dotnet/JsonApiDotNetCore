@@ -10,10 +10,10 @@ namespace JsonApiDotNetCore.Queries
     [PublicAPI]
     public class ExpressionInScope
     {
-        public ResourceFieldChainExpression Scope { get; }
+        public ResourceFieldChainExpression? Scope { get; }
         public QueryExpression Expression { get; }
 
-        public ExpressionInScope(ResourceFieldChainExpression scope, QueryExpression expression)
+        public ExpressionInScope(ResourceFieldChainExpression? scope, QueryExpression expression)
         {
             ArgumentGuard.NotNull(expression, nameof(expression));
 

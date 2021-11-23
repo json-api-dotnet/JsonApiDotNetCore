@@ -7,9 +7,9 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Links
     internal sealed class LinksInRelationshipObject
     {
         [Required]
-        public string Self { get; set; }
+        public string Self { get; set; } = null!;
 
         [Required]
-        public string Related { get; set; }
+        public string Related { get; set; } = null!;
     }
 }

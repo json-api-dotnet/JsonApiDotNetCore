@@ -11,40 +11,31 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     /// </summary>
     internal sealed class ResourceFieldChainResolver
     {
-        private readonly IResourceGraph _resourceGraph;
-
-        public ResourceFieldChainResolver(IResourceGraph resourceGraph)
-        {
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-
-            _resourceGraph = resourceGraph;
-        }
-
         /// <summary>
         /// Resolves a chain of relationships that ends in a to-many relationship, for example: blogs.owner.articles.comments
         /// </summary>
-        public IImmutableList<ResourceFieldAttribute> ResolveToManyChain(ResourceContext resourceContext, string path,
-            Action<ResourceFieldAttribute, ResourceContext, string> validateCallback = null)
+        public IImmutableList<ResourceFieldAttribute> ResolveToManyChain(ResourceType resourceType, string path,
+            Action<ResourceFieldAttribute, ResourceType, string>? validateCallback = null)
         {
             ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
 
             string[] publicNameParts = path.Split(".");
-            ResourceContext nextResourceContext = resourceContext;
+            ResourceType nextResourceType = resourceType;
 
             foreach (string publicName in publicNameParts[..^1])
             {
-                RelationshipAttribute relationship = GetRelationship(publicName, nextResourceContext, path);
+                RelationshipAttribute relationship = GetRelationship(publicName, nextResourceType, path);
 
-                validateCallback?.Invoke(relationship, nextResourceContext, path);
+                validateCallback?.Invoke(relationship, nextResourceType, path);
 
                 chainBuilder.Add(relationship);
-                nextResourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
+                nextResourceType = relationship.RightType;
             }
 
             string lastName = publicNameParts[^1];
-            RelationshipAttribute lastToManyRelationship = GetToManyRelationship(lastName, nextResourceContext, path);
+            RelationshipAttribute lastToManyRelationship = GetToManyRelationship(lastName, nextResourceType, path);
 
-            validateCallback?.Invoke(lastToManyRelationship, nextResourceContext, path);
+            validateCallback?.Invoke(lastToManyRelationship, nextResourceType, path);
 
             chainBuilder.Add(lastToManyRelationship);
             return chainBuilder.ToImmutable();
@@ -62,20 +53,20 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// articles.revisions.author
         /// </example>
         /// </summary>
-        public IImmutableList<ResourceFieldAttribute> ResolveRelationshipChain(ResourceContext resourceContext, string path,
-            Action<RelationshipAttribute, ResourceContext, string> validateCallback = null)
+        public IImmutableList<ResourceFieldAttribute> ResolveRelationshipChain(ResourceType resourceType, string path,
+            Action<RelationshipAttribute, ResourceType, string>? validateCallback = null)
         {
             ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
-            ResourceContext nextResourceContext = resourceContext;
+            ResourceType nextResourceType = resourceType;
 
             foreach (string publicName in path.Split("."))
             {
-                RelationshipAttribute relationship = GetRelationship(publicName, nextResourceContext, path);
+                RelationshipAttribute relationship = GetRelationship(publicName, nextResourceType, path);
 
-                validateCallback?.Invoke(relationship, nextResourceContext, path);
+                validateCallback?.Invoke(relationship, nextResourceType, path);
 
                 chainBuilder.Add(relationship);
-                nextResourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
+                nextResourceType = relationship.RightType;
             }
 
             return chainBuilder.ToImmutable();
@@ -88,28 +79,28 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// </example>
         /// <example>name</example>
         /// </summary>
-        public IImmutableList<ResourceFieldAttribute> ResolveToOneChainEndingInAttribute(ResourceContext resourceContext, string path,
-            Action<ResourceFieldAttribute, ResourceContext, string> validateCallback = null)
+        public IImmutableList<ResourceFieldAttribute> ResolveToOneChainEndingInAttribute(ResourceType resourceType, string path,
+            Action<ResourceFieldAttribute, ResourceType, string>? validateCallback = null)
         {
             ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
 
             string[] publicNameParts = path.Split(".");
-            ResourceContext nextResourceContext = resourceContext;
+            ResourceType nextResourceType = resourceType;
 
             foreach (string publicName in publicNameParts[..^1])
             {
-                RelationshipAttribute toOneRelationship = GetToOneRelationship(publicName, nextResourceContext, path);
+                RelationshipAttribute toOneRelationship = GetToOneRelationship(publicName, nextResourceType, path);
 
-                validateCallback?.Invoke(toOneRelationship, nextResourceContext, path);
+                validateCallback?.Invoke(toOneRelationship, nextResourceType, path);
 
                 chainBuilder.Add(toOneRelationship);
-                nextResourceContext = _resourceGraph.GetResourceContext(toOneRelationship.RightType);
+                nextResourceType = toOneRelationship.RightType;
             }
 
             string lastName = publicNameParts[^1];
-            AttrAttribute lastAttribute = GetAttribute(lastName, nextResourceContext, path);
+            AttrAttribute lastAttribute = GetAttribute(lastName, nextResourceType, path);
 
-            validateCallback?.Invoke(lastAttribute, nextResourceContext, path);
+            validateCallback?.Invoke(lastAttribute, nextResourceType, path);
 
             chainBuilder.Add(lastAttribute);
             return chainBuilder.ToImmutable();
@@ -124,29 +115,29 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// comments
         /// </example>
         /// </summary>
-        public IImmutableList<ResourceFieldAttribute> ResolveToOneChainEndingInToMany(ResourceContext resourceContext, string path,
-            Action<ResourceFieldAttribute, ResourceContext, string> validateCallback = null)
+        public IImmutableList<ResourceFieldAttribute> ResolveToOneChainEndingInToMany(ResourceType resourceType, string path,
+            Action<ResourceFieldAttribute, ResourceType, string>? validateCallback = null)
         {
             ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
 
             string[] publicNameParts = path.Split(".");
-            ResourceContext nextResourceContext = resourceContext;
+            ResourceType nextResourceType = resourceType;
 
             foreach (string publicName in publicNameParts[..^1])
             {
-                RelationshipAttribute toOneRelationship = GetToOneRelationship(publicName, nextResourceContext, path);
+                RelationshipAttribute toOneRelationship = GetToOneRelationship(publicName, nextResourceType, path);
 
-                validateCallback?.Invoke(toOneRelationship, nextResourceContext, path);
+                validateCallback?.Invoke(toOneRelationship, nextResourceType, path);
 
                 chainBuilder.Add(toOneRelationship);
-                nextResourceContext = _resourceGraph.GetResourceContext(toOneRelationship.RightType);
+                nextResourceType = toOneRelationship.RightType;
             }
 
             string lastName = publicNameParts[^1];
 
-            RelationshipAttribute toManyRelationship = GetToManyRelationship(lastName, nextResourceContext, path);
+            RelationshipAttribute toManyRelationship = GetToManyRelationship(lastName, nextResourceType, path);
 
-            validateCallback?.Invoke(toManyRelationship, nextResourceContext, path);
+            validateCallback?.Invoke(toManyRelationship, nextResourceType, path);
 
             chainBuilder.Add(toManyRelationship);
             return chainBuilder.ToImmutable();
@@ -161,105 +152,105 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// author.address
         /// </example>
         /// </summary>
-        public IImmutableList<ResourceFieldAttribute> ResolveToOneChainEndingInAttributeOrToOne(ResourceContext resourceContext, string path,
-            Action<ResourceFieldAttribute, ResourceContext, string> validateCallback = null)
+        public IImmutableList<ResourceFieldAttribute> ResolveToOneChainEndingInAttributeOrToOne(ResourceType resourceType, string path,
+            Action<ResourceFieldAttribute, ResourceType, string>? validateCallback = null)
         {
             ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
 
             string[] publicNameParts = path.Split(".");
-            ResourceContext nextResourceContext = resourceContext;
+            ResourceType nextResourceType = resourceType;
 
             foreach (string publicName in publicNameParts[..^1])
             {
-                RelationshipAttribute toOneRelationship = GetToOneRelationship(publicName, nextResourceContext, path);
+                RelationshipAttribute toOneRelationship = GetToOneRelationship(publicName, nextResourceType, path);
 
-                validateCallback?.Invoke(toOneRelationship, nextResourceContext, path);
+                validateCallback?.Invoke(toOneRelationship, nextResourceType, path);
 
                 chainBuilder.Add(toOneRelationship);
-                nextResourceContext = _resourceGraph.GetResourceContext(toOneRelationship.RightType);
+                nextResourceType = toOneRelationship.RightType;
             }
 
             string lastName = publicNameParts[^1];
-            ResourceFieldAttribute lastField = GetField(lastName, nextResourceContext, path);
+            ResourceFieldAttribute lastField = GetField(lastName, nextResourceType, path);
 
             if (lastField is HasManyAttribute)
             {
                 throw new QueryParseException(path == lastName
-                    ? $"Field '{lastName}' must be an attribute or a to-one relationship on resource '{nextResourceContext.PublicName}'."
-                    : $"Field '{lastName}' in '{path}' must be an attribute or a to-one relationship on resource '{nextResourceContext.PublicName}'.");
+                    ? $"Field '{lastName}' must be an attribute or a to-one relationship on resource type '{nextResourceType.PublicName}'."
+                    : $"Field '{lastName}' in '{path}' must be an attribute or a to-one relationship on resource type '{nextResourceType.PublicName}'.");
             }
 
-            validateCallback?.Invoke(lastField, nextResourceContext, path);
+            validateCallback?.Invoke(lastField, nextResourceType, path);
 
             chainBuilder.Add(lastField);
             return chainBuilder.ToImmutable();
         }
 
-        private RelationshipAttribute GetRelationship(string publicName, ResourceContext resourceContext, string path)
+        private RelationshipAttribute GetRelationship(string publicName, ResourceType resourceType, string path)
         {
-            RelationshipAttribute relationship = resourceContext.TryGetRelationshipByPublicName(publicName);
+            RelationshipAttribute? relationship = resourceType.FindRelationshipByPublicName(publicName);
 
             if (relationship == null)
             {
                 throw new QueryParseException(path == publicName
-                    ? $"Relationship '{publicName}' does not exist on resource '{resourceContext.PublicName}'."
-                    : $"Relationship '{publicName}' in '{path}' does not exist on resource '{resourceContext.PublicName}'.");
+                    ? $"Relationship '{publicName}' does not exist on resource type '{resourceType.PublicName}'."
+                    : $"Relationship '{publicName}' in '{path}' does not exist on resource type '{resourceType.PublicName}'.");
             }
 
             return relationship;
         }
 
-        private RelationshipAttribute GetToManyRelationship(string publicName, ResourceContext resourceContext, string path)
+        private RelationshipAttribute GetToManyRelationship(string publicName, ResourceType resourceType, string path)
         {
-            RelationshipAttribute relationship = GetRelationship(publicName, resourceContext, path);
+            RelationshipAttribute relationship = GetRelationship(publicName, resourceType, path);
 
             if (relationship is not HasManyAttribute)
             {
                 throw new QueryParseException(path == publicName
-                    ? $"Relationship '{publicName}' must be a to-many relationship on resource '{resourceContext.PublicName}'."
-                    : $"Relationship '{publicName}' in '{path}' must be a to-many relationship on resource '{resourceContext.PublicName}'.");
+                    ? $"Relationship '{publicName}' must be a to-many relationship on resource type '{resourceType.PublicName}'."
+                    : $"Relationship '{publicName}' in '{path}' must be a to-many relationship on resource type '{resourceType.PublicName}'.");
             }
 
             return relationship;
         }
 
-        private RelationshipAttribute GetToOneRelationship(string publicName, ResourceContext resourceContext, string path)
+        private RelationshipAttribute GetToOneRelationship(string publicName, ResourceType resourceType, string path)
         {
-            RelationshipAttribute relationship = GetRelationship(publicName, resourceContext, path);
+            RelationshipAttribute relationship = GetRelationship(publicName, resourceType, path);
 
             if (relationship is not HasOneAttribute)
             {
                 throw new QueryParseException(path == publicName
-                    ? $"Relationship '{publicName}' must be a to-one relationship on resource '{resourceContext.PublicName}'."
-                    : $"Relationship '{publicName}' in '{path}' must be a to-one relationship on resource '{resourceContext.PublicName}'.");
+                    ? $"Relationship '{publicName}' must be a to-one relationship on resource type '{resourceType.PublicName}'."
+                    : $"Relationship '{publicName}' in '{path}' must be a to-one relationship on resource type '{resourceType.PublicName}'.");
             }
 
             return relationship;
         }
 
-        private AttrAttribute GetAttribute(string publicName, ResourceContext resourceContext, string path)
+        private AttrAttribute GetAttribute(string publicName, ResourceType resourceType, string path)
         {
-            AttrAttribute attribute = resourceContext.TryGetAttributeByPublicName(publicName);
+            AttrAttribute? attribute = resourceType.FindAttributeByPublicName(publicName);
 
             if (attribute == null)
             {
                 throw new QueryParseException(path == publicName
-                    ? $"Attribute '{publicName}' does not exist on resource '{resourceContext.PublicName}'."
-                    : $"Attribute '{publicName}' in '{path}' does not exist on resource '{resourceContext.PublicName}'.");
+                    ? $"Attribute '{publicName}' does not exist on resource type '{resourceType.PublicName}'."
+                    : $"Attribute '{publicName}' in '{path}' does not exist on resource type '{resourceType.PublicName}'.");
             }
 
             return attribute;
         }
 
-        public ResourceFieldAttribute GetField(string publicName, ResourceContext resourceContext, string path)
+        public ResourceFieldAttribute GetField(string publicName, ResourceType resourceType, string path)
         {
-            ResourceFieldAttribute field = resourceContext.Fields.FirstOrDefault(nextField => nextField.PublicName == publicName);
+            ResourceFieldAttribute? field = resourceType.Fields.FirstOrDefault(nextField => nextField.PublicName == publicName);
 
             if (field == null)
             {
                 throw new QueryParseException(path == publicName
-                    ? $"Field '{publicName}' does not exist on resource '{resourceContext.PublicName}'."
-                    : $"Field '{publicName}' in '{path}' does not exist on resource '{resourceContext.PublicName}'.");
+                    ? $"Field '{publicName}' does not exist on resource type '{resourceType.PublicName}'."
+                    : $"Field '{publicName}' in '{path}' does not exist on resource type '{resourceType.PublicName}'.");
             }
 
             return field;

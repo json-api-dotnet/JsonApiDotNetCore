@@ -2,27 +2,24 @@ using System.ComponentModel;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class StarDefinition : JsonApiResourceDefinition<Star>
+    public sealed class StarDefinition : HitCountingResourceDefinition<Star, int>
     {
-        private readonly ResourceDefinitionHitCounter _hitCounter;
+        protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Reading;
 
         public StarDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
-            : base(resourceGraph)
+            : base(resourceGraph, hitCounter)
         {
             // This constructor will be resolved from the container, which means
             // you can take on any dependency that is also defined in the container.
-
-            _hitCounter = hitCounter;
         }
 
-        public override SortExpression OnApplySort(SortExpression existingSort)
+        public override SortExpression OnApplySort(SortExpression? existingSort)
         {
-            _hitCounter.TrackInvocation<Star>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort);
+            base.OnApplySort(existingSort);
 
             return existingSort ?? GetDefaultSortOrder();
         }
@@ -36,9 +33,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             });
         }
 
-        public override PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
+        public override PaginationExpression OnApplyPagination(PaginationExpression? existingPagination)
         {
-            _hitCounter.TrackInvocation<Star>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination);
+            base.OnApplyPagination(existingPagination);
 
             var maxPageSize = new PageSize(5);
 
@@ -51,9 +48,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             return new PaginationExpression(PageNumber.ValueOne, maxPageSize);
         }
 
-        public override SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+        public override SparseFieldSetExpression? OnApplySparseFieldSet(SparseFieldSetExpression? existingSparseFieldSet)
         {
-            _hitCounter.TrackInvocation<Star>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet);
+            base.OnApplySparseFieldSet(existingSparseFieldSet);
 
             // @formatter:keep_existing_linebreaks true
 

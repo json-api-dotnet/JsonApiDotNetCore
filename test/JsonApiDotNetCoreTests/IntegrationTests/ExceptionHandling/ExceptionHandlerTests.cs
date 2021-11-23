@@ -72,17 +72,65 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Gone);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Gone);
             error.Title.Should().Be("The requested article is no longer available.");
             error.Detail.Should().Be("Article with code 'X123' is no longer available.");
-            ((JsonElement)error.Meta["support"]).GetString().Should().Be("Please contact us for info about similar articles at company@email.com.");
 
-            loggerFactory.Logger.Messages.Should().HaveCount(1);
+            error.Meta.ShouldContainKey("support").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be("Please contact us for info about similar articles at company@email.com.");
+            });
+
+            responseDocument.Meta.Should().BeNull();
+
+            loggerFactory.Logger.Messages.ShouldHaveCount(1);
             loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Warning);
             loggerFactory.Logger.Messages.Single().Text.Should().Contain("Article with code 'X123' is no longer available.");
+        }
+
+        [Fact]
+        public async Task Logs_and_produces_error_response_on_deserialization_failure()
+        {
+            // Arrange
+            var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
+            loggerFactory.Logger.Clear();
+
+            const string requestBody = @"{ ""data"": { ""type"": """" } }";
+
+            const string route = "/consumerArticles";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.ShouldHaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
+            error.Detail.Should().Be("Resource type '' does not exist.");
+
+            error.Meta.ShouldContainKey("requestBody").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be(requestBody);
+            });
+
+            error.Meta.ShouldContainKey("stackTrace").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
+
+                stackTraceLines.ShouldNotBeEmpty();
+            });
+
+            loggerFactory.Logger.Messages.Should().BeEmpty();
         }
 
         [Fact]
@@ -108,17 +156,24 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
             error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
 
-            IEnumerable<string> stackTraceLines = ((JsonElement)error.Meta["stackTrace"]).EnumerateArray().Select(token => token.GetString());
-            stackTraceLines.Should().ContainMatch("* System.InvalidOperationException: Article status could not be determined.*");
+            error.Meta.ShouldContainKey("stackTrace").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
 
-            loggerFactory.Logger.Messages.Should().HaveCount(1);
+                stackTraceLines.Should().ContainMatch("*ThrowingArticle*");
+            });
+
+            responseDocument.Meta.Should().BeNull();
+
+            loggerFactory.Logger.Messages.ShouldHaveCount(1);
             loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Error);
             loggerFactory.Logger.Messages.Single().Text.Should().Contain("Exception has been thrown by the target of an invocation.");
         }

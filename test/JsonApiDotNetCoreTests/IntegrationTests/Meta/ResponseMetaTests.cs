@@ -3,18 +3,18 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 {
-    public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
+    public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext> _testContext;
 
-        public ResponseMetaTests(IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
+        public ResponseMetaTests(IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext> testContext)
         {
             _testContext = testContext;
 

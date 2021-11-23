@@ -19,47 +19,30 @@ namespace JsonApiDotNetCore.Configuration
     {
         internal static readonly HashSet<Type> ServiceInterfaces = new()
         {
-            typeof(IResourceService<>),
             typeof(IResourceService<,>),
-            typeof(IResourceCommandService<>),
             typeof(IResourceCommandService<,>),
-            typeof(IResourceQueryService<>),
             typeof(IResourceQueryService<,>),
-            typeof(IGetAllService<>),
             typeof(IGetAllService<,>),
-            typeof(IGetByIdService<>),
             typeof(IGetByIdService<,>),
-            typeof(IGetSecondaryService<>),
             typeof(IGetSecondaryService<,>),
-            typeof(IGetRelationshipService<>),
             typeof(IGetRelationshipService<,>),
-            typeof(ICreateService<>),
             typeof(ICreateService<,>),
-            typeof(IAddToRelationshipService<>),
             typeof(IAddToRelationshipService<,>),
-            typeof(IUpdateService<>),
             typeof(IUpdateService<,>),
-            typeof(ISetRelationshipService<>),
             typeof(ISetRelationshipService<,>),
-            typeof(IDeleteService<>),
             typeof(IDeleteService<,>),
-            typeof(IRemoveFromRelationshipService<>),
             typeof(IRemoveFromRelationshipService<,>)
         };
 
         internal static readonly HashSet<Type> RepositoryInterfaces = new()
         {
-            typeof(IResourceRepository<>),
             typeof(IResourceRepository<,>),
-            typeof(IResourceWriteRepository<>),
             typeof(IResourceWriteRepository<,>),
-            typeof(IResourceReadRepository<>),
             typeof(IResourceReadRepository<,>)
         };
 
         internal static readonly HashSet<Type> ResourceDefinitionInterfaces = new()
         {
-            typeof(IResourceDefinition<>),
             typeof(IResourceDefinition<,>)
         };
 
@@ -137,14 +120,14 @@ namespace JsonApiDotNetCore.Configuration
 
             foreach (Type dbContextType in dbContextTypes)
             {
-                Type resolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
-                _services.AddScoped(typeof(IDbContextResolver), resolverType);
+                Type dbContextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
+                _services.AddScoped(typeof(IDbContextResolver), dbContextResolverType);
             }
         }
 
         private void AddResource(ResourceDescriptor resourceDescriptor)
         {
-            _resourceGraphBuilder.Add(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
+            _resourceGraphBuilder.Add(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType);
         }
 
         private void AddServices(Assembly assembly, ResourceDescriptor resourceDescriptor)
@@ -174,8 +157,8 @@ namespace JsonApiDotNetCore.Configuration
         private void RegisterImplementations(Assembly assembly, Type interfaceType, ResourceDescriptor resourceDescriptor)
         {
             Type[] genericArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2
-                ? ArrayFactory.Create(resourceDescriptor.ResourceType, resourceDescriptor.IdType)
-                : ArrayFactory.Create(resourceDescriptor.ResourceType);
+                ? ArrayFactory.Create(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType)
+                : ArrayFactory.Create(resourceDescriptor.ResourceClrType);
 
             (Type implementation, Type registrationInterface)? result =
                 _typeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);

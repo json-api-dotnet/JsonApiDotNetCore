@@ -39,7 +39,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
             new Faker<RgbColor>()
                 .UseSeed(GetFakerSeed())
                 .RuleFor(color => color.Id, faker => faker.Random.Hexadecimal(6))
-                .RuleFor(color => color.DisplayName, faker => faker.Lorem.Word()));
+                .RuleFor(color => color.DisplayName, faker => faker.Commerce.Color()));
 
         public Faker<WorkItem> WorkItem => _lazyWorkItemFaker.Value;
         public Faker<WorkTag> WorkTag => _lazyWorkTagFaker.Value;

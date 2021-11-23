@@ -22,10 +22,10 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly SparseFieldTypeParser _sparseFieldTypeParser;
         private readonly SparseFieldSetParser _sparseFieldSetParser;
 
-        private readonly ImmutableDictionary<ResourceContext, SparseFieldSetExpression>.Builder _sparseFieldTableBuilder =
-            ImmutableDictionary.CreateBuilder<ResourceContext, SparseFieldSetExpression>();
+        private readonly ImmutableDictionary<ResourceType, SparseFieldSetExpression>.Builder _sparseFieldTableBuilder =
+            ImmutableDictionary.CreateBuilder<ResourceType, SparseFieldSetExpression>();
 
-        private string _lastParameterName;
+        private string? _lastParameterName;
 
         /// <inheritdoc />
         bool IQueryStringParameterReader.AllowEmptyValue => true;
@@ -34,14 +34,14 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             : base(request, resourceGraph)
         {
             _sparseFieldTypeParser = new SparseFieldTypeParser(resourceGraph);
-            _sparseFieldSetParser = new SparseFieldSetParser(resourceGraph, ValidateSingleField);
+            _sparseFieldSetParser = new SparseFieldSetParser(ValidateSingleField);
         }
 
-        protected void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)
+        protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
         {
             if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowView))
             {
-                throw new InvalidQueryStringParameterException(_lastParameterName, "Retrieving the requested attribute is not allowed.",
+                throw new InvalidQueryStringParameterException(_lastParameterName!, "Retrieving the requested attribute is not allowed.",
                     $"Retrieving the attribute '{attribute.PublicName}' is not allowed.");
             }
         }
@@ -69,10 +69,10 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             try
             {
-                ResourceContext targetResource = GetSparseFieldType(parameterName);
-                SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue, targetResource);
+                ResourceType targetResourceType = GetSparseFieldType(parameterName);
+                SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue, targetResourceType);
 
-                _sparseFieldTableBuilder[targetResource] = sparseFieldSet;
+                _sparseFieldTableBuilder[targetResourceType] = sparseFieldSet;
             }
             catch (QueryParseException exception)
             {
@@ -80,19 +80,19 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             }
         }
 
-        private ResourceContext GetSparseFieldType(string parameterName)
+        private ResourceType GetSparseFieldType(string parameterName)
         {
             return _sparseFieldTypeParser.Parse(parameterName);
         }
 
-        private SparseFieldSetExpression GetSparseFieldSet(string parameterValue, ResourceContext resourceContext)
+        private SparseFieldSetExpression GetSparseFieldSet(string parameterValue, ResourceType resourceType)
         {
-            SparseFieldSetExpression sparseFieldSet = _sparseFieldSetParser.Parse(parameterValue, resourceContext);
+            SparseFieldSetExpression? sparseFieldSet = _sparseFieldSetParser.Parse(parameterValue, resourceType);
 
             if (sparseFieldSet == null)
             {
                 // We add ID on an incoming empty fieldset, so that callers can distinguish between no fieldset and an empty one.
-                AttrAttribute idAttribute = resourceContext.GetAttributeByPropertyName(nameof(Identifiable.Id));
+                AttrAttribute idAttribute = resourceType.GetAttributeByPropertyName(nameof(Identifiable<object>.Id));
                 return new SparseFieldSetExpression(ImmutableHashSet.Create<ResourceFieldAttribute>(idAttribute));
             }
 

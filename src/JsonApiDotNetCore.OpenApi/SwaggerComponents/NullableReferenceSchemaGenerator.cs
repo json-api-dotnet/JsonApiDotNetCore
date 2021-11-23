@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
         private static readonly NullableReferenceSchemaStrategy NullableReferenceStrategy =
             Enum.Parse<NullableReferenceSchemaStrategy>(NullableReferenceSchemaStrategy.Implicit.ToString());
 
-        private static OpenApiSchema _referenceSchemaForNullValue;
+        private static OpenApiSchema? _referenceSchemaForNullValue;
         private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
 
         public NullableReferenceSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor)
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
         // This approach is supported in OAS starting from v3.1. See https://github.com/OAI/OpenAPI-Specification/issues/1368#issuecomment-580103688
         private static OpenApiSchema GetNullableReferenceSchemaUsingExplicitNullType()
         {
-            return new()
+            return new OpenApiSchema
             {
                 Type = "null"
             };

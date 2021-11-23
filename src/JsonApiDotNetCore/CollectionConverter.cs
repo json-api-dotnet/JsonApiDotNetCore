@@ -33,11 +33,11 @@ namespace JsonApiDotNetCore
             ArgumentGuard.NotNull(collectionType, nameof(collectionType));
 
             Type concreteCollectionType = ToConcreteCollectionType(collectionType);
-            dynamic concreteCollectionInstance = Activator.CreateInstance(concreteCollectionType);
+            dynamic concreteCollectionInstance = Activator.CreateInstance(concreteCollectionType)!;
 
             foreach (object item in source)
             {
-                concreteCollectionInstance!.Add((dynamic)item);
+                concreteCollectionInstance.Add((dynamic)item);
             }
 
             return concreteCollectionInstance;
@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore
         /// <summary>
         /// Returns a collection that contains zero, one or multiple resources, depending on the specified value.
         /// </summary>
-        public ICollection<IIdentifiable> ExtractResources(object value)
+        public ICollection<IIdentifiable> ExtractResources(object? value)
         {
             if (value is ICollection<IIdentifiable> resourceCollection)
             {
@@ -92,13 +92,13 @@ namespace JsonApiDotNetCore
         /// <summary>
         /// Returns the element type if the specified type is a generic collection, for example: IList{string} -> string or IList -> null.
         /// </summary>
-        public Type TryGetCollectionElementType(Type type)
+        public Type? FindCollectionElementType(Type? type)
         {
             if (type != null)
             {
                 if (type.IsGenericType && type.GenericTypeArguments.Length == 1)
                 {
-                    if (type.IsOrImplementsInterface(typeof(IEnumerable)))
+                    if (type.IsOrImplementsInterface<IEnumerable>())
                     {
                         return type.GenericTypeArguments[0];
                     }
@@ -114,6 +114,8 @@ namespace JsonApiDotNetCore
         /// </summary>
         public bool TypeCanContainHashSet(Type collectionType)
         {
+            ArgumentGuard.NotNull(collectionType, nameof(collectionType));
+
             if (collectionType.IsGenericType)
             {
                 Type openCollectionType = collectionType.GetGenericTypeDefinition();

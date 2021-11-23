@@ -26,22 +26,22 @@ namespace GettingStarted
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         [UsedImplicitly]
-        public void Configure(IApplicationBuilder app, SampleDbContext context)
+        public void Configure(IApplicationBuilder app, SampleDbContext dbContext)
         {
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-            CreateSampleData(context);
+            dbContext.Database.EnsureDeleted();
+            dbContext.Database.EnsureCreated();
+            CreateSampleData(dbContext);
 
             app.UseRouting();
             app.UseJsonApi();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
 
-        private static void CreateSampleData(SampleDbContext context)
+        private static void CreateSampleData(SampleDbContext dbContext)
         {
             // Note: The generate-examples.ps1 script (to create example requests in documentation) depends on these.
 
-            context.Books.AddRange(new Book
+            dbContext.Books.AddRange(new Book
             {
                 Title = "Frankenstein",
                 PublishYear = 1818,
@@ -67,7 +67,7 @@ namespace GettingStarted
                 }
             });
 
-            context.SaveChanges();
+            dbContext.SaveChanges();
         }
     }
 }

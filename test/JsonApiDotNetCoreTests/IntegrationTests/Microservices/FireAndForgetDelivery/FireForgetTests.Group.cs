@@ -43,19 +43,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(newGroupName);
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(1);
+            messageBroker.SentMessages.ShouldHaveCount(1);
 
-            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id);
+            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             var content = messageBroker.SentMessages[0].GetContentAs<GroupCreatedContent>();
             content.GroupId.Should().Be(newGroupId);
@@ -121,20 +121,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(newGroupName);
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(3);
+            messageBroker.SentMessages.ShouldHaveCount(3);
 
-            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id);
+            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<GroupCreatedContent>();
             content1.GroupId.Should().Be(newGroupId);
@@ -192,12 +192,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(1);
+            messageBroker.SentMessages.ShouldHaveCount(1);
 
             var content = messageBroker.SentMessages[0].GetContentAs<GroupRenamedContent>();
             content.GroupId.Should().Be(existingGroup.StringId);
@@ -276,13 +276,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(3);
+            messageBroker.SentMessages.ShouldHaveCount(3);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserAddedToGroupContent>();
             content1.UserId.Should().Be(existingUserWithoutGroup.Id);
@@ -325,11 +325,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(1);
+            messageBroker.SentMessages.ShouldHaveCount(1);
 
             var content = messageBroker.SentMessages[0].GetContentAs<GroupDeletedContent>();
             content.GroupId.Should().Be(existingGroup.StringId);
@@ -363,11 +363,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(2);
+            messageBroker.SentMessages.ShouldHaveCount(2);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserRemovedFromGroupContent>();
             content1.UserId.Should().Be(existingGroup.Users.ElementAt(0).Id);
@@ -437,13 +437,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(3);
+            messageBroker.SentMessages.ShouldHaveCount(3);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserAddedToGroupContent>();
             content1.UserId.Should().Be(existingUserWithoutGroup.Id);
@@ -511,12 +511,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnAddToRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnAddToRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(2);
+            messageBroker.SentMessages.ShouldHaveCount(2);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserAddedToGroupContent>();
             content1.UserId.Should().Be(existingUserWithoutGroup.Id);
@@ -573,12 +573,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRemoveFromRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnRemoveFromRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(1);
+            messageBroker.SentMessages.ShouldHaveCount(1);
 
             var content = messageBroker.SentMessages[0].GetContentAs<UserRemovedFromGroupContent>();
             content.UserId.Should().Be(existingUserWithSameGroup2.Id);

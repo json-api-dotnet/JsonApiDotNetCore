@@ -8,12 +8,6 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Repositories
 {
-    /// <inheritdoc />
-    public interface IResourceReadRepository<TResource> : IResourceReadRepository<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-    }
-
     /// <summary>
     /// Groups read operations.
     /// </summary>
@@ -30,11 +24,11 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Executes a read query using the specified constraints and returns the collection of matching resources.
         /// </summary>
-        Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Executes a read query using the specified top-level filter and returns the top-level count of matching resources.
+        /// Executes a read query using the specified filter and returns the count of matching resources.
         /// </summary>
-        Task<int> CountAsync(FilterExpression topFilter, CancellationToken cancellationToken);
+        Task<int> CountAsync(FilterExpression? filter, CancellationToken cancellationToken);
     }
 }

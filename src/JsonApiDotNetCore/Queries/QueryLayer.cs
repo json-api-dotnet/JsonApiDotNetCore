@@ -14,19 +14,19 @@ namespace JsonApiDotNetCore.Queries
     [PublicAPI]
     public sealed class QueryLayer
     {
-        public ResourceContext ResourceContext { get; }
+        public ResourceType ResourceType { get; }
 
-        public IncludeExpression Include { get; set; }
-        public FilterExpression Filter { get; set; }
-        public SortExpression Sort { get; set; }
-        public PaginationExpression Pagination { get; set; }
-        public IDictionary<ResourceFieldAttribute, QueryLayer> Projection { get; set; }
+        public IncludeExpression? Include { get; set; }
+        public FilterExpression? Filter { get; set; }
+        public SortExpression? Sort { get; set; }
+        public PaginationExpression? Pagination { get; set; }
+        public IDictionary<ResourceFieldAttribute, QueryLayer?>? Projection { get; set; }
 
-        public QueryLayer(ResourceContext resourceContext)
+        public QueryLayer(ResourceType resourceType)
         {
-            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-            ResourceContext = resourceContext;
+            ResourceType = resourceType;
         }
 
         public override string ToString()
@@ -39,9 +39,9 @@ namespace JsonApiDotNetCore.Queries
             return builder.ToString();
         }
 
-        private static void WriteLayer(IndentingStringWriter writer, QueryLayer layer, string prefix = null)
+        private static void WriteLayer(IndentingStringWriter writer, QueryLayer layer, string? prefix = null)
         {
-            writer.WriteLine($"{prefix}{nameof(QueryLayer)}<{layer.ResourceContext.ResourceType.Name}>");
+            writer.WriteLine($"{prefix}{nameof(QueryLayer)}<{layer.ResourceType.ClrType.Name}>");
 
             using (writer.Indent())
             {
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Queries
 
                     using (writer.Indent())
                     {
-                        foreach ((ResourceFieldAttribute field, QueryLayer nextLayer) in layer.Projection)
+                        foreach ((ResourceFieldAttribute field, QueryLayer? nextLayer) in layer.Projection)
                         {
                             if (nextLayer == null)
                             {
@@ -97,7 +97,7 @@ namespace JsonApiDotNetCore.Queries
                 _builder = builder;
             }
 
-            public void WriteLine(string line)
+            public void WriteLine(string? line)
             {
                 if (_indentDepth > 0)
                 {

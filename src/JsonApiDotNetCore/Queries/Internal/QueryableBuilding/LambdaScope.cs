@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         public ParameterExpression Parameter { get; }
         public Expression Accessor { get; }
 
-        public LambdaScope(LambdaParameterNameFactory nameFactory, Type elementType, Expression accessorExpression)
+        public LambdaScope(LambdaParameterNameFactory nameFactory, Type elementType, Expression? accessorExpression)
         {
             ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
             ArgumentGuard.NotNull(elementType, nameof(elementType));

@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Text.Json.Serialization;
 
 namespace JsonApiDotNetCore.Serialization.Objects
@@ -13,11 +10,11 @@ namespace JsonApiDotNetCore.Serialization.Objects
     {
         [JsonPropertyName("jsonapi")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public JsonApiObject JsonApi { get; set; }
+        public JsonApiObject? JsonApi { get; set; }
 
         [JsonPropertyName("links")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public TopLevelLinks Links { get; set; }
+        public TopLevelLinks? Links { get; set; }
 
         [JsonPropertyName("data")]
         // JsonIgnoreCondition is determined at runtime by WriteOnlyDocumentConverter.
@@ -25,40 +22,22 @@ namespace JsonApiDotNetCore.Serialization.Objects
 
         [JsonPropertyName("atomic:operations")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IList<AtomicOperationObject> Operations { get; set; }
+        public IList<AtomicOperationObject?>? Operations { get; set; }
 
         [JsonPropertyName("atomic:results")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IList<AtomicResultObject> Results { get; set; }
+        public IList<AtomicResultObject>? Results { get; set; }
 
         [JsonPropertyName("errors")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IList<ErrorObject> Errors { get; set; }
+        public IList<ErrorObject>? Errors { get; set; }
 
         [JsonPropertyName("included")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IList<ResourceObject> Included { get; set; }
+        public IList<ResourceObject>? Included { get; set; }
 
         [JsonPropertyName("meta")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IDictionary<string, object> Meta { get; set; }
-
-        internal HttpStatusCode GetErrorStatusCode()
-        {
-            if (Errors.IsNullOrEmpty())
-            {
-                throw new InvalidOperationException("No errors found.");
-            }
-
-            int[] statusCodes = Errors.Select(error => (int)error.StatusCode).Distinct().ToArray();
-
-            if (statusCodes.Length == 1)
-            {
-                return (HttpStatusCode)statusCodes[0];
-            }
-
-            int statusCode = int.Parse($"{statusCodes.Max().ToString()[0]}00");
-            return (HttpStatusCode)statusCode;
-        }
+        public IDictionary<string, object?>? Meta { get; set; }
     }
 }

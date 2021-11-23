@@ -18,13 +18,17 @@ namespace JsonApiDotNetCore.OpenApi
             [typeof(ResourcePostRequestObject<>)] = "###-data-in-post-request",
             [typeof(ResourcePatchRequestObject<>)] = "###-data-in-patch-request",
             [typeof(ToOneRelationshipRequestData<>)] = "to-one-###-request-data",
+            [typeof(NullableToOneRelationshipRequestData<>)] = "nullable-to-one-###-request-data",
             [typeof(ToManyRelationshipRequestData<>)] = "to-many-###-request-data",
             [typeof(PrimaryResourceResponseDocument<>)] = "###-primary-response-document",
             [typeof(SecondaryResourceResponseDocument<>)] = "###-secondary-response-document",
+            [typeof(NullableSecondaryResourceResponseDocument<>)] = "nullable-###-secondary-response-document",
             [typeof(ResourceCollectionResponseDocument<>)] = "###-collection-response-document",
             [typeof(ResourceIdentifierResponseDocument<>)] = "###-identifier-response-document",
+            [typeof(NullableResourceIdentifierResponseDocument<>)] = "nullable-###-identifier-response-document",
             [typeof(ResourceIdentifierCollectionResponseDocument<>)] = "###-identifier-collection-response-document",
             [typeof(ToOneRelationshipResponseData<>)] = "to-one-###-response-data",
+            [typeof(NullableToOneRelationshipResponseData<>)] = "nullable-to-one-###-response-data",
             [typeof(ToManyRelationshipResponseData<>)] = "to-many-###-response-data",
             [typeof(ResourceResponseObject<>)] = "###-data-in-response",
             [typeof(ResourceIdentifierObject<>)] = "###-identifier"
@@ -46,17 +50,17 @@ namespace JsonApiDotNetCore.OpenApi
         {
             ArgumentGuard.NotNull(type, nameof(type));
 
-            ResourceContext resourceContext = _resourceGraph.TryGetResourceContext(type);
+            ResourceType? resourceType = _resourceGraph.FindResourceType(type);
 
-            if (resourceContext != null)
+            if (resourceType != null)
             {
-                return resourceContext.PublicName.Singularize();
+                return resourceType.PublicName.Singularize();
             }
 
             if (type.IsConstructedGenericType && OpenTypeToSchemaTemplateMap.ContainsKey(type.GetGenericTypeDefinition()))
             {
-                Type resourceType = type.GetGenericArguments().First();
-                string resourceName = _formatter.FormatResourceName(resourceType).Singularize();
+                Type resourceClrType = type.GetGenericArguments().First();
+                string resourceName = _formatter.FormatResourceName(resourceClrType).Singularize();
 
                 string template = OpenTypeToSchemaTemplateMap[type.GetGenericTypeDefinition()];
                 return template.Replace("###", resourceName);

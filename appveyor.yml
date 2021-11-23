@@ -1,6 +1,6 @@
 image:
   - Ubuntu
-  - Visual Studio 2019
+  - Visual Studio 2022
 
 version: '{build}'
 
@@ -33,7 +33,7 @@ for:
 -
   matrix:
     only:
-    - image: Visual Studio 2019
+    - image: Visual Studio 2022
   services:
   - postgresql13
   # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
@@ -44,6 +44,9 @@ for:
             git checkout $env:APPVEYOR_REPO_BRANCH -q
         }
         choco install docfx -y
+        if ($lastexitcode -ne 0) {
+            throw "docfx install failed with exit code $lastexitcode."
+        }
   after_build:
     - pwsh: |
         CD ./docs
