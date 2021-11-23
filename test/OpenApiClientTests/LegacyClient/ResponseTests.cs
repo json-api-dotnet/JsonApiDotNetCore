@@ -283,7 +283,7 @@ namespace OpenApiClientTests.LegacyClient
                     Type = FlightsResourceType.Flights,
                     Relationships = new FlightRelationshipsInPostRequest
                     {
-                        Purser = new ToOneFlightAttendantRequestData
+                        Purser = new ToOneFlightAttendantDataInRequest
                         {
                             Data = new FlightAttendantIdentifier
                             {
@@ -552,7 +552,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            await apiClient.PatchFlightPurserRelationshipAsync("ZvuH1", new ToOneFlightAttendantRequestData
+            await apiClient.PatchFlightPurserRelationshipAsync("ZvuH1", new ToOneFlightAttendantDataInRequest
             {
                 Data = new FlightAttendantIdentifier
                 {
@@ -608,7 +608,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await apiClient.PostFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await apiClient.PostFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantDataInRequest
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -637,7 +637,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await apiClient.PatchFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await apiClient.PatchFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantDataInRequest
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -666,7 +666,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await apiClient.DeleteFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await apiClient.DeleteFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantDataInRequest
             {
                 Data = new List<FlightAttendantIdentifier>
                 {

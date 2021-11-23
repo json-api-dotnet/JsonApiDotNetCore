@@ -1,14 +1,14 @@
 using System;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects
 {
-    internal sealed class RelationshipDataTypeFactory
+    internal sealed class RelationshipTypeFactory
     {
-        public static RelationshipDataTypeFactory Instance { get; } = new();
+        public static RelationshipTypeFactory Instance { get; } = new();
 
-        private RelationshipDataTypeFactory()
+        private RelationshipTypeFactory()
         {
         }
 
@@ -26,10 +26,10 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects
             // @formatter:nested_ternary_style expanded
 
             Type relationshipDataOpenType = relationship is HasManyAttribute
-                ? typeof(ToManyRelationshipResponseData<>)
+                ? typeof(ToManyRelationshipInResponse<>)
                 : relationship.IsNullable()
-                    ? typeof(NullableToOneRelationshipResponseData<>)
-                    : typeof(ToOneRelationshipResponseData<>);
+                    ? typeof(NullableToOneRelationshipInResponse<>)
+                    : typeof(ToOneRelationshipInResponse<>);
 
             // @formatter:nested_ternary_style restore
 

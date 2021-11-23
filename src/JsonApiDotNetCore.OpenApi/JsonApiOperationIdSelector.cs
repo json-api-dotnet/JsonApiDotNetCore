@@ -6,7 +6,7 @@ using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -32,9 +32,9 @@ namespace JsonApiDotNetCore.OpenApi
             [typeof(ResourceIdentifierCollectionResponseDocument<>)] = RelationshipOperationIdTemplate,
             [typeof(ResourceIdentifierResponseDocument<>)] = RelationshipOperationIdTemplate,
             [typeof(NullableResourceIdentifierResponseDocument<>)] = RelationshipOperationIdTemplate,
-            [typeof(ToOneRelationshipRequestData<>)] = RelationshipOperationIdTemplate,
-            [typeof(NullableToOneRelationshipRequestData<>)] = RelationshipOperationIdTemplate,
-            [typeof(ToManyRelationshipRequestData<>)] = RelationshipOperationIdTemplate
+            [typeof(ToOneRelationshipInRequest<>)] = RelationshipOperationIdTemplate,
+            [typeof(NullableToOneRelationshipInRequest<>)] = RelationshipOperationIdTemplate,
+            [typeof(ToManyRelationshipInRequest<>)] = RelationshipOperationIdTemplate
         };
 
         private readonly IControllerResourceMapping _controllerResourceMapping;

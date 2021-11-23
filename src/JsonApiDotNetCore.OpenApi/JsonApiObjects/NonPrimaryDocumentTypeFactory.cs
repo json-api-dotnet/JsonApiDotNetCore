@@ -1,6 +1,6 @@
 using System;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects
@@ -10,8 +10,8 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects
         private static readonly DocumentOpenTypes SecondaryResponseDocumentOpenTypes = new(typeof(ResourceCollectionResponseDocument<>),
             typeof(NullableSecondaryResourceResponseDocument<>), typeof(SecondaryResourceResponseDocument<>));
 
-        private static readonly DocumentOpenTypes RelationshipRequestDocumentOpenTypes = new(typeof(ToManyRelationshipRequestData<>),
-            typeof(NullableToOneRelationshipRequestData<>), typeof(ToOneRelationshipRequestData<>));
+        private static readonly DocumentOpenTypes RelationshipRequestDocumentOpenTypes = new(typeof(ToManyRelationshipInRequest<>),
+            typeof(NullableToOneRelationshipInRequest<>), typeof(ToOneRelationshipInRequest<>));
 
         private static readonly DocumentOpenTypes RelationshipResponseDocumentOpenTypes = new(typeof(ResourceIdentifierCollectionResponseDocument<>),
             typeof(NullableResourceIdentifierResponseDocument<>), typeof(ResourceIdentifierResponseDocument<>));

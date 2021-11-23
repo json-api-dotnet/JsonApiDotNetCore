@@ -4,7 +4,7 @@ using System.Linq;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 
 namespace JsonApiDotNetCore.OpenApi
@@ -17,9 +17,9 @@ namespace JsonApiDotNetCore.OpenApi
             [typeof(ResourcePatchRequestDocument<>)] = "###-patch-request-document",
             [typeof(ResourcePostRequestObject<>)] = "###-data-in-post-request",
             [typeof(ResourcePatchRequestObject<>)] = "###-data-in-patch-request",
-            [typeof(ToOneRelationshipRequestData<>)] = "to-one-###-request-data",
-            [typeof(NullableToOneRelationshipRequestData<>)] = "nullable-to-one-###-request-data",
-            [typeof(ToManyRelationshipRequestData<>)] = "to-many-###-request-data",
+            [typeof(ToOneRelationshipInRequest<>)] = "to-one-###-data-in-request",
+            [typeof(NullableToOneRelationshipInRequest<>)] = "nullable-to-one-###-data-in-request",
+            [typeof(ToManyRelationshipInRequest<>)] = "to-many-###-data-in-request",
             [typeof(PrimaryResourceResponseDocument<>)] = "###-primary-response-document",
             [typeof(SecondaryResourceResponseDocument<>)] = "###-secondary-response-document",
             [typeof(NullableSecondaryResourceResponseDocument<>)] = "nullable-###-secondary-response-document",
@@ -27,9 +27,9 @@ namespace JsonApiDotNetCore.OpenApi
             [typeof(ResourceIdentifierResponseDocument<>)] = "###-identifier-response-document",
             [typeof(NullableResourceIdentifierResponseDocument<>)] = "nullable-###-identifier-response-document",
             [typeof(ResourceIdentifierCollectionResponseDocument<>)] = "###-identifier-collection-response-document",
-            [typeof(ToOneRelationshipResponseData<>)] = "to-one-###-response-data",
-            [typeof(NullableToOneRelationshipResponseData<>)] = "nullable-to-one-###-response-data",
-            [typeof(ToManyRelationshipResponseData<>)] = "to-many-###-response-data",
+            [typeof(ToOneRelationshipInResponse<>)] = "to-one-###-data-in-response",
+            [typeof(NullableToOneRelationshipInResponse<>)] = "nullable-to-one-###-data-in-response",
+            [typeof(ToManyRelationshipInResponse<>)] = "to-many-###-data-in-response",
             [typeof(ResourceResponseObject<>)] = "###-data-in-response",
             [typeof(ResourceIdentifierObject<>)] = "###-identifier"
         };

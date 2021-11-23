@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.OpenApi.Models;
@@ -16,11 +16,11 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
     {
         private static readonly SchemaRepository ResourceSchemaRepository = new();
 
-        private static readonly Type[] RelationshipResponseDataOpenTypes =
+        private static readonly Type[] RelationshipInResponseOpenTypes =
         {
-            typeof(ToOneRelationshipResponseData<>),
-            typeof(ToManyRelationshipResponseData<>),
-            typeof(NullableToOneRelationshipResponseData<>)
+            typeof(ToOneRelationshipInResponse<>),
+            typeof(ToManyRelationshipInResponse<>),
+            typeof(NullableToOneRelationshipInResponse<>)
         };
 
         private readonly ResourceTypeInfo _resourceTypeInfo;
@@ -180,7 +180,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
                 if (matchingRelationship != null)
                 {
                     EnsureResourceIdentifierObjectSchemaExists(matchingRelationship);
-                    AddRelationshipDataSchemaToResourceObject(matchingRelationship, fullSchemaForRelationshipsObject);
+                    AddRelationshipSchemaToResourceObject(matchingRelationship, fullSchemaForRelationshipsObject);
                 }
             }
         }
@@ -212,49 +212,46 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             fullSchemaForResourceIdentifierObject.Properties[JsonApiObjectPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType);
         }
 
-        private void AddRelationshipDataSchemaToResourceObject(RelationshipAttribute relationship, OpenApiSchema fullSchemaForRelationshipObject)
+        private void AddRelationshipSchemaToResourceObject(RelationshipAttribute relationship, OpenApiSchema fullSchemaForRelationshipsObject)
         {
-            Type relationshipDataType = GetRelationshipDataType(relationship, _resourceTypeInfo.ResourceObjectOpenType);
+            Type relationshipSchemaType = GetRelationshipSchemaType(relationship, _resourceTypeInfo.ResourceObjectOpenType);
 
-            OpenApiSchema relationshipDataSchema = GetReferenceSchemaForRelationshipData(relationshipDataType) ??
-                CreateRelationshipDataObjectSchema(relationshipDataType);
+            OpenApiSchema relationshipSchema = GetReferenceSchemaForRelationship(relationshipSchemaType) ?? CreateRelationshipSchema(relationshipSchemaType);
 
-            fullSchemaForRelationshipObject.Properties.Add(relationship.PublicName, relationshipDataSchema);
+            fullSchemaForRelationshipsObject.Properties.Add(relationship.PublicName, relationshipSchema);
 
             if (IsFieldRequired(relationship))
             {
-                fullSchemaForRelationshipObject.Required.Add(relationship.PublicName);
+                fullSchemaForRelationshipsObject.Required.Add(relationship.PublicName);
             }
         }
 
-        private static Type GetRelationshipDataType(RelationshipAttribute relationship, Type resourceObjectType)
+        private static Type GetRelationshipSchemaType(RelationshipAttribute relationship, Type resourceObjectType)
         {
             return resourceObjectType.GetGenericTypeDefinition().IsAssignableTo(typeof(ResourceResponseObject<>))
-                ? RelationshipDataTypeFactory.Instance.GetForResponse(relationship)
-                : RelationshipDataTypeFactory.Instance.GetForRequest(relationship);
+                ? RelationshipTypeFactory.Instance.GetForResponse(relationship)
+                : RelationshipTypeFactory.Instance.GetForRequest(relationship);
         }
 
-        private OpenApiSchema? GetReferenceSchemaForRelationshipData(Type relationshipDataType)
+        private OpenApiSchema? GetReferenceSchemaForRelationship(Type relationshipSchemaType)
         {
-            _schemaRepositoryAccessor.Current.TryLookupByType(relationshipDataType, out OpenApiSchema? referenceSchemaForRelationshipData);
-            return referenceSchemaForRelationshipData;
+            _schemaRepositoryAccessor.Current.TryLookupByType(relationshipSchemaType, out OpenApiSchema? referenceSchema);
+            return referenceSchema;
         }
 
-        private OpenApiSchema CreateRelationshipDataObjectSchema(Type relationshipDataType)
+        private OpenApiSchema CreateRelationshipSchema(Type relationshipSchemaType)
         {
-            OpenApiSchema referenceSchema = _defaultSchemaGenerator.GenerateSchema(relationshipDataType, _schemaRepositoryAccessor.Current);
+            OpenApiSchema referenceSchema = _defaultSchemaGenerator.GenerateSchema(relationshipSchemaType, _schemaRepositoryAccessor.Current);
 
             OpenApiSchema fullSchema = _schemaRepositoryAccessor.Current.Schemas[referenceSchema.Reference.Id];
 
-            if (IsDataPropertyNullable(relationshipDataType))
+            if (IsDataPropertyNullable(relationshipSchemaType))
             {
                 fullSchema.Properties[JsonApiObjectPropertyName.Data] =
                     _nullableReferenceSchemaGenerator.GenerateSchema(fullSchema.Properties[JsonApiObjectPropertyName.Data]);
             }
 
-            Type relationshipDataOpenType = relationshipDataType.GetGenericTypeDefinition();
-
-            if (IsRelationshipDataPropertyInResponse(relationshipDataOpenType))
+            if (IsRelationshipInResponseType(relationshipSchemaType))
             {
                 fullSchema.Required.Remove(JsonApiObjectPropertyName.Data);
             }
@@ -262,9 +259,11 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             return referenceSchema;
         }
 
-        private static bool IsRelationshipDataPropertyInResponse(Type relationshipDataOpenType)
+        private static bool IsRelationshipInResponseType(Type relationshipSchemaType)
         {
-            return RelationshipResponseDataOpenTypes.Contains(relationshipDataOpenType);
+            Type relationshipSchemaOpenType = relationshipSchemaType.GetGenericTypeDefinition();
+
+            return RelationshipInResponseOpenTypes.Contains(relationshipSchemaOpenType);
         }
 
         private static bool IsDataPropertyNullable(Type type)

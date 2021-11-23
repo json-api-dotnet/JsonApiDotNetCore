@@ -5,10 +5,10 @@ using JsonApiDotNetCore.OpenApi.JsonApiObjects.Links;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData
+namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    internal sealed class NullableToOneRelationshipResponseData<TResource> : NullableSingleData<ResourceIdentifierObject<TResource>>
+    internal sealed class NullableToOneRelationshipInResponse<TResource> : NullableSingleData<ResourceIdentifierObject<TResource>>
         where TResource : IIdentifiable
     {
         [Required]
