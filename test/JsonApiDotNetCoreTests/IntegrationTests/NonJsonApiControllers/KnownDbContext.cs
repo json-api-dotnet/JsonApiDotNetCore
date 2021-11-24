@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 namespace JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class NonJsonApiDbContext : DbContext
+    public sealed class KnownDbContext : DbContext
     {
-        public NonJsonApiDbContext(DbContextOptions<NonJsonApiDbContext> options)
+        public DbSet<KnownResource> KnownResources => Set<KnownResource>();
+
+        public KnownDbContext(DbContextOptions<KnownDbContext> options)
             : base(options)
         {
         }

@@ -6,7 +6,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers
 {
-    public sealed class UnknownResourceControllerTests : IntegrationTestContext<TestableStartup<NonJsonApiDbContext>, NonJsonApiDbContext>
+    public sealed class UnknownResourceControllerTests : IntegrationTestContext<TestableStartup<EmptyDbContext>, EmptyDbContext>
     {
         public UnknownResourceControllerTests()
         {
