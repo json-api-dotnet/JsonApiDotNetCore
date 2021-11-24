@@ -4,6 +4,9 @@
     <AspNetCoreVersion>5.0.*</AspNetCoreVersion>
     <EFCoreVersion>5.0.*</EFCoreVersion>
     <NpgsqlPostgreSQLVersion>5.0.*</NpgsqlPostgreSQLVersion>
+    <MicrosoftCodeAnalysisVersion>3.*</MicrosoftCodeAnalysisVersion>
+    <HumanizerVersion>2.11.10</HumanizerVersion>
+    <JsonApiDotNetCoreVersionPrefix>5.0.0</JsonApiDotNetCoreVersionPrefix>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>9999</WarningLevel>
     <Nullable>enable</Nullable>

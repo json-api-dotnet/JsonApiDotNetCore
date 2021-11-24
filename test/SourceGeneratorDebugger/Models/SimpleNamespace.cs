@@ -2,13 +2,15 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace MultiDbContextExample.Models
+// ReSharper disable CheckNamespace
+
+namespace SourceGeneratorDebugger
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     [Resource]
-    public sealed class ResourceB : Identifiable<int>
+    public sealed class SimpleNamespace : Identifiable<int>
     {
         [Attr]
-        public string? NameB { get; set; }
+        public string? Value { get; set; }
     }
 }

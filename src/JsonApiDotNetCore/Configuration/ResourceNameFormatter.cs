@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Configuration
 
             var resourceAttribute = resourceClrType.GetCustomAttribute<ResourceAttribute>(true);
 
-            if (resourceAttribute != null)
+            if (resourceAttribute != null && !string.IsNullOrWhiteSpace(resourceAttribute.PublicName))
             {
                 return resourceAttribute.PublicName;
             }

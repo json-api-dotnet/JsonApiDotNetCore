@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreExample.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [Resource]
     public sealed class TodoItem : Identifiable<int>
     {
         [Attr]
