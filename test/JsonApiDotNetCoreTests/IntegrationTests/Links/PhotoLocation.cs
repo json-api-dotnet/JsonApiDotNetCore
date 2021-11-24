@@ -4,8 +4,9 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Links
 {
-    [ResourceLinks(TopLevelLinks = LinkTypes.None, ResourceLinks = LinkTypes.None, RelationshipLinks = LinkTypes.Related)]
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [ResourceLinks(TopLevelLinks = LinkTypes.None, ResourceLinks = LinkTypes.None, RelationshipLinks = LinkTypes.Related)]
+    [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.Links")]
     public sealed class PhotoLocation : Identifiable<int>
     {
         [Attr]

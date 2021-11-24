@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState")]
     public sealed class SystemDirectory : Identifiable<int>
     {
         [RegularExpression("^[0-9]+$")]

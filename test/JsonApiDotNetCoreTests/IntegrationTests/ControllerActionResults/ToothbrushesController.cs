@@ -1,28 +1,18 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
 {
-    public sealed class ToothbrushesController : BaseJsonApiController<Toothbrush, int>
+    partial class ToothbrushesController
     {
         internal const int EmptyActionResultId = 11111111;
         internal const int ActionResultWithErrorObjectId = 22222222;
         internal const int ActionResultWithStringParameter = 33333333;
         internal const int ObjectResultWithErrorObjectId = 44444444;
         internal const int ObjectResultWithErrorCollectionId = 55555555;
-
-        public ToothbrushesController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-            IResourceService<Toothbrush, int> resourceService)
-            : base(options, resourceGraph, loggerFactory, resourceService)
-        {
-        }
 
         [HttpGet("{id}")]
         public override async Task<IActionResult> GetAsync(int id, CancellationToken cancellationToken)

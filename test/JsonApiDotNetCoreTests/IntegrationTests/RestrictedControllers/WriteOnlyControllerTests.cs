@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
         {
             _testContext = testContext;
 
-            testContext.UseController<TablesWriteOnlyController>();
+            testContext.UseController<TablesController>();
         }
 
         [Fact]

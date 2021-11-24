@@ -11,6 +11,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
+    <ProjectReference Include="..\..\src\JsonApiDotNetCore.SourceGenerators\JsonApiDotNetCore.SourceGenerators.csproj" OutputItemType="Analyzer"
+      ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>

@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
         {
             _testContext = testContext;
 
-            testContext.UseController<ChairsNoRelationshipsController>();
+            testContext.UseController<ChairsController>();
         }
 
         [Fact]

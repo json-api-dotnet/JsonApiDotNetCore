@@ -61,6 +61,11 @@ namespace JsonApiDotNetCore.SourceGenerators
             _sourceBuilder.Clear();
             _depth = 0;
 
+            if (idType.IsReferenceType && idType.NullableAnnotation == NullableAnnotation.Annotated)
+            {
+                WriteNullableEnable();
+            }
+
             WriteNamespaceImports(loggerFactoryInterface, resourceType);
 
             if (controllerNamespace != null)
@@ -84,6 +89,12 @@ namespace JsonApiDotNetCore.SourceGenerators
             }
 
             return _sourceBuilder.ToString();
+        }
+
+        private void WriteNullableEnable()
+        {
+            _sourceBuilder.AppendLine("#nullable enable");
+            _sourceBuilder.AppendLine();
         }
 
         private void WriteNamespaceImports(INamedTypeSymbol loggerFactoryInterface, INamedTypeSymbol resourceType)

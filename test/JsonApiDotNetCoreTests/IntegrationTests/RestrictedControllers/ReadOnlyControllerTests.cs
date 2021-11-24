@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
         {
             _testContext = testContext;
 
-            testContext.UseController<BedsReadOnlyController>();
+            testContext.UseController<BedsController>();
         }
 
         [Fact]
