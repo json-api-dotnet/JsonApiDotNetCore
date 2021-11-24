@@ -117,7 +117,7 @@ namespace JsonApiDotNetCore.Middleware
         private bool IsRoutingConventionEnabled(ControllerModel controller)
         {
             return controller.ControllerType.IsSubclassOf(typeof(CoreJsonApiController)) &&
-                controller.ControllerType.GetCustomAttribute<DisableRoutingConventionAttribute>() == null;
+                controller.ControllerType.GetCustomAttribute<DisableRoutingConventionAttribute>(true) == null;
         }
 
         /// <summary>

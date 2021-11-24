@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// When put on a resource class, overrides global configuration for which links to render.
     /// </summary>
     [PublicAPI]
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
     public sealed class ResourceLinksAttribute : Attribute
     {
         /// <summary>

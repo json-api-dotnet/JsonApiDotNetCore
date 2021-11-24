@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// When put on a resource class, overrides the convention-based resource name.
     /// </summary>
     [PublicAPI]
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
     public sealed class ResourceAttribute : Attribute
     {
         /// <summary>

@@ -22,9 +22,11 @@ namespace JsonApiDotNetCore.Configuration
         {
             ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
 
-            if (resourceClrType.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute attribute)
+            var resourceAttribute = resourceClrType.GetCustomAttribute<ResourceAttribute>(true);
+
+            if (resourceAttribute != null)
             {
-                return attribute.PublicName;
+                return resourceAttribute.PublicName;
             }
 
             string publicName = resourceClrType.Name.Pluralize();

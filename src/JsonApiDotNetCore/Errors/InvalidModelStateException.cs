@@ -374,7 +374,7 @@ namespace JsonApiDotNetCore.Errors
             {
                 ArgumentGuard.NotNull(property, nameof(property));
 
-                var jsonNameAttribute = (JsonPropertyNameAttribute?)property.GetCustomAttribute(typeof(JsonPropertyNameAttribute));
+                var jsonNameAttribute = property.GetCustomAttribute<JsonPropertyNameAttribute>(true);
                 return jsonNameAttribute?.Name ?? property.Name;
             }
         }

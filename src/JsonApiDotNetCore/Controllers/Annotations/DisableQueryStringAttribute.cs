@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
     /// public class CustomersController : JsonApiController<Customer> { }
     /// ]]></example>
     [PublicAPI]
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
     public sealed class DisableQueryStringAttribute : Attribute
     {
         public static readonly DisableQueryStringAttribute Empty = new(JsonApiQueryStringParameters.None);

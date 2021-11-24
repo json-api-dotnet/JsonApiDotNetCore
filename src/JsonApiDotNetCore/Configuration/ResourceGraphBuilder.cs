@@ -159,7 +159,7 @@ namespace JsonApiDotNetCore.Configuration
 
             AssertNoDuplicatePublicName(attributes, relationships);
 
-            var linksAttribute = (ResourceLinksAttribute?)resourceClrType.GetCustomAttribute(typeof(ResourceLinksAttribute));
+            var linksAttribute = resourceClrType.GetCustomAttribute<ResourceLinksAttribute>(true);
 
             return linksAttribute == null
                 ? new ResourceType(publicName, resourceClrType, idClrType, attributes, relationships, eagerLoads)
@@ -189,7 +189,7 @@ namespace JsonApiDotNetCore.Configuration
                     continue;
                 }
 
-                var attribute = (AttrAttribute?)property.GetCustomAttribute(typeof(AttrAttribute));
+                var attribute = property.GetCustomAttribute<AttrAttribute>(true);
 
                 if (attribute == null)
                 {
@@ -222,7 +222,7 @@ namespace JsonApiDotNetCore.Configuration
 
             foreach (PropertyInfo property in properties)
             {
-                var relationship = (RelationshipAttribute?)property.GetCustomAttribute(typeof(RelationshipAttribute));
+                var relationship = property.GetCustomAttribute<RelationshipAttribute>(true);
 
                 if (relationship != null)
                 {
@@ -261,7 +261,7 @@ namespace JsonApiDotNetCore.Configuration
 
             foreach (PropertyInfo property in properties)
             {
-                var eagerLoad = (EagerLoadAttribute?)property.GetCustomAttribute(typeof(EagerLoadAttribute));
+                var eagerLoad = property.GetCustomAttribute<EagerLoadAttribute>(true);
 
                 if (eagerLoad == null)
                 {

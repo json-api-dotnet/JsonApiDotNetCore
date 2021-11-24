@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Middleware
 
             if (context.HttpContext.IsJsonApiRequest())
             {
-                var disableQueryStringAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryStringAttribute>();
+                var disableQueryStringAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryStringAttribute>(true);
                 _queryStringReader.ReadAll(disableQueryStringAttribute);
             }
 

@@ -48,7 +48,7 @@ namespace TestBuildingBlocks
                 return false;
             }
 
-            return method.GetCustomAttribute(typeof(FactAttribute)) != null || method.GetCustomAttribute(typeof(TheoryAttribute)) != null;
+            return method.GetCustomAttribute<FactAttribute>() != null || method.GetCustomAttribute<TheoryAttribute>() != null;
         }
 
         private static int GetDeterministicHashCode(string source)
