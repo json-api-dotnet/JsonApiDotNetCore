@@ -16,6 +16,7 @@ namespace JsonApiDotNetCore.Resources
         string? LocalId { get; set; }
     }
 
+    [PublicAPI]
     public interface IIdentifiable<TId> : IIdentifiable
     {
         TId Id { get; set; }

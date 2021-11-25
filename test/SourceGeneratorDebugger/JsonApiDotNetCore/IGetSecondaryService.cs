@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 
+// ReSharper disable UnusedTypeParameter
 // ReSharper disable CheckNamespace
 #pragma warning disable AV1505 // Namespace should match with assembly name
 

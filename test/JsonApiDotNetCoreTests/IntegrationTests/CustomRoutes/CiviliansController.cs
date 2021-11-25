@@ -4,6 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
 {
+    // Workaround for https://youtrack.jetbrains.com/issue/RSRP-487028
+    public partial class CiviliansController
+    {
+    }
+
     [ApiController]
     [DisableRoutingConvention]
     [Route("world-civilians")]

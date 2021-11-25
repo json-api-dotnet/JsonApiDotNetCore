@@ -12,6 +12,11 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
 {
+    // Workaround for https://youtrack.jetbrains.com/issue/RSRP-487028
+    public partial class TownsController
+    {
+    }
+
     [DisableRoutingConvention]
     [Route("world-api/civilization/popular/towns")]
     partial class TownsController

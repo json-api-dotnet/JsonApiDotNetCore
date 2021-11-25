@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 
 // ReSharper disable CheckNamespace
 #pragma warning disable AV1505 // Namespace should match with assembly name
@@ -6,6 +7,7 @@ using System;
 namespace JsonApiDotNetCore.Controllers
 {
     // IMPORTANT: An internal copy of this type exists in the SourceGenerators project. Keep these in sync when making changes.
+    [PublicAPI]
     [Flags]
     public enum JsonApiEndpoints
     {
