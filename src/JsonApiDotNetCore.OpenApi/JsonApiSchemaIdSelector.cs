@@ -77,18 +77,18 @@ namespace JsonApiDotNetCore.OpenApi
             return _formatter.FormatResourceName(type).Singularize();
         }
 
-        public string GetSchemaId(Type resourceObjectOpenType, ResourceObjectFieldType fieldType)
+        public string GetSchemaId(Type resourceObjectType, ResourceObjectFieldType fieldType)
         {
-            ArgumentGuard.NotNull(resourceObjectOpenType, nameof(resourceObjectOpenType));
+            ArgumentGuard.NotNull(resourceObjectType, nameof(resourceObjectType));
 
-            if (!resourceObjectOpenType.IsConstructedGenericType || !_resourceObjectOpenTypes.Contains(resourceObjectOpenType.GetGenericTypeDefinition()))
+            if (!resourceObjectType.IsConstructedGenericType || !_resourceObjectOpenTypes.Contains(resourceObjectType.GetGenericTypeDefinition()))
             {
-                throw new InvalidOperationException($"Type '{resourceObjectOpenType.Name}' must be an open type representing a resource object.");
+                throw new InvalidOperationException($"Type '{resourceObjectType.Name}' must be a resource object.");
             }
 
-            Type resourceClrType = resourceObjectOpenType.GetGenericArguments().First();
+            Type resourceClrType = resourceObjectType.GetGenericArguments().First();
             string resourceName = _formatter.FormatResourceName(resourceClrType).Singularize();
-            string template = OpenTypeToSchemaTemplateMap[resourceObjectOpenType.GetGenericTypeDefinition()];
+            string template = OpenTypeToSchemaTemplateMap[resourceObjectType.GetGenericTypeDefinition()];
 
             string fieldObjectName = fieldType == ResourceObjectFieldType.Attributes
                 ? JsonApiObjectPropertyName.AttributesObject
