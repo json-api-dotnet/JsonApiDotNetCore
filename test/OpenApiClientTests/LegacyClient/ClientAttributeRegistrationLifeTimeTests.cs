@@ -20,7 +20,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument = new AirplanePatchRequestDocument
             {
-                Data = new AirplaneDataInPatchRequest
+                Data = new AirplaneInPatchRequest
                 {
                     Id = airplaneId,
                     Type = AirplanesResourceType.Airplanes,
@@ -62,7 +62,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument = new AirplanePatchRequestDocument
             {
-                Data = new AirplaneDataInPatchRequest
+                Data = new AirplaneInPatchRequest
                 {
                     Id = airplaneId,
                     Type = AirplanesResourceType.Airplanes,
@@ -109,7 +109,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument1 = new AirplanePatchRequestDocument
             {
-                Data = new AirplaneDataInPatchRequest
+                Data = new AirplaneInPatchRequest
                 {
                     Id = airplaneId1,
                     Type = AirplanesResourceType.Airplanes,
@@ -121,7 +121,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument2 = new AirplanePatchRequestDocument
             {
-                Data = new AirplaneDataInPatchRequest
+                Data = new AirplaneInPatchRequest
                 {
                     Id = airplaneId2,
                     Type = AirplanesResourceType.Airplanes,
@@ -164,7 +164,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument = new AirplanePatchRequestDocument
             {
-                Data = new AirplaneDataInPatchRequest
+                Data = new AirplaneInPatchRequest
                 {
                     Id = airplaneId,
                     Type = AirplanesResourceType.Airplanes,
@@ -207,7 +207,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument1 = new AirplanePatchRequestDocument
             {
-                Data = new AirplaneDataInPatchRequest
+                Data = new AirplaneInPatchRequest
                 {
                     Id = airplaneId1,
                     Type = AirplanesResourceType.Airplanes,
@@ -217,7 +217,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument2 = new AirplanePostRequestDocument
             {
-                Data = new AirplaneDataInPostRequest
+                Data = new AirplaneInPostRequest
                 {
                     Type = AirplanesResourceType.Airplanes,
                     Attributes = new AirplaneAttributesInPostRequest()
@@ -258,7 +258,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument1 = new AirplanePatchRequestDocument
             {
-                Data = new AirplaneDataInPatchRequest
+                Data = new AirplaneInPatchRequest
                 {
                     Id = airplaneId1,
                     Type = AirplanesResourceType.Airplanes,
@@ -276,7 +276,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument2 = new AirplanePatchRequestDocument
             {
-                Data = new AirplaneDataInPatchRequest
+                Data = new AirplaneInPatchRequest
                 {
                     Id = airplaneId2,
                     Type = AirplanesResourceType.Airplanes,
@@ -318,7 +318,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument1 = new AirplanePostRequestDocument
             {
-                Data = new AirplaneDataInPostRequest
+                Data = new AirplaneInPostRequest
                 {
                     Type = AirplanesResourceType.Airplanes,
                     Attributes = new AirplaneAttributesInPostRequest()
@@ -335,7 +335,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument2 = new AirplanePatchRequestDocument
             {
-                Data = new AirplaneDataInPatchRequest
+                Data = new AirplaneInPatchRequest
                 {
                     Id = airplaneId,
                     Type = AirplanesResourceType.Airplanes,
@@ -379,7 +379,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument1 = new AirplanePatchRequestDocument
             {
-                Data = new AirplaneDataInPatchRequest
+                Data = new AirplaneInPatchRequest
                 {
                     Id = airplaneId1,
                     Type = AirplanesResourceType.Airplanes,
@@ -391,7 +391,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument2 = new AirplanePatchRequestDocument
             {
-                Data = new AirplaneDataInPatchRequest
+                Data = new AirplaneInPatchRequest
                 {
                     Id = airplaneId2,
                     Type = AirplanesResourceType.Airplanes,

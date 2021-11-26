@@ -15,11 +15,11 @@ namespace JsonApiDotNetCore.OpenApi
         {
             [typeof(ResourcePostRequestDocument<>)] = "###-post-request-document",
             [typeof(ResourcePatchRequestDocument<>)] = "###-patch-request-document",
-            [typeof(ResourcePostRequestObject<>)] = "###-data-in-post-request",
-            [typeof(ResourcePatchRequestObject<>)] = "###-data-in-patch-request",
-            [typeof(ToOneRelationshipInRequest<>)] = "to-one-###-data-in-request",
-            [typeof(NullableToOneRelationshipInRequest<>)] = "nullable-to-one-###-data-in-request",
-            [typeof(ToManyRelationshipInRequest<>)] = "to-many-###-data-in-request",
+            [typeof(ResourceObjectInPostRequest<>)] = "###-in-post-request",
+            [typeof(ResourceObjectInPatchRequest<>)] = "###-in-patch-request",
+            [typeof(ToOneRelationshipInRequest<>)] = "to-one-###-in-request",
+            [typeof(NullableToOneRelationshipInRequest<>)] = "nullable-to-one-###-in-request",
+            [typeof(ToManyRelationshipInRequest<>)] = "to-many-###-in-request",
             [typeof(PrimaryResourceResponseDocument<>)] = "###-primary-response-document",
             [typeof(SecondaryResourceResponseDocument<>)] = "###-secondary-response-document",
             [typeof(NullableSecondaryResourceResponseDocument<>)] = "nullable-###-secondary-response-document",
@@ -27,11 +27,18 @@ namespace JsonApiDotNetCore.OpenApi
             [typeof(ResourceIdentifierResponseDocument<>)] = "###-identifier-response-document",
             [typeof(NullableResourceIdentifierResponseDocument<>)] = "nullable-###-identifier-response-document",
             [typeof(ResourceIdentifierCollectionResponseDocument<>)] = "###-identifier-collection-response-document",
-            [typeof(ToOneRelationshipInResponse<>)] = "to-one-###-data-in-response",
-            [typeof(NullableToOneRelationshipInResponse<>)] = "nullable-to-one-###-data-in-response",
-            [typeof(ToManyRelationshipInResponse<>)] = "to-many-###-data-in-response",
-            [typeof(ResourceResponseObject<>)] = "###-data-in-response",
+            [typeof(ToOneRelationshipInResponse<>)] = "to-one-###-in-response",
+            [typeof(NullableToOneRelationshipInResponse<>)] = "nullable-to-one-###-in-response",
+            [typeof(ToManyRelationshipInResponse<>)] = "to-many-###-in-response",
+            [typeof(ResourceObjectInResponse<>)] = "###-in-response",
             [typeof(ResourceIdentifierObject<>)] = "###-identifier"
+        };
+
+        private readonly Type[] _resourceObjectOpenTypes =
+        {
+            typeof(ResourceObjectInPostRequest<>),
+            typeof(ResourceObjectInPatchRequest<>),
+            typeof(ResourceObjectInResponse<>)
         };
 
         private readonly ResourceNameFormatter _formatter;
@@ -68,6 +75,26 @@ namespace JsonApiDotNetCore.OpenApi
 
             // Used for a fixed set of types, such as jsonapi-object, links-in-many-resource-document etc.
             return _formatter.FormatResourceName(type).Singularize();
+        }
+
+        public string GetSchemaId(Type resourceObjectOpenType, ResourceObjectFieldType fieldType)
+        {
+            ArgumentGuard.NotNull(resourceObjectOpenType, nameof(resourceObjectOpenType));
+
+            if (!resourceObjectOpenType.IsConstructedGenericType || !_resourceObjectOpenTypes.Contains(resourceObjectOpenType.GetGenericTypeDefinition()))
+            {
+                throw new InvalidOperationException($"Type '{resourceObjectOpenType.Name}' must be an open type representing a resource object.");
+            }
+
+            Type resourceClrType = resourceObjectOpenType.GetGenericArguments().First();
+            string resourceName = _formatter.FormatResourceName(resourceClrType).Singularize();
+            string template = OpenTypeToSchemaTemplateMap[resourceObjectOpenType.GetGenericTypeDefinition()];
+
+            string fieldObjectName = fieldType == ResourceObjectFieldType.Attributes
+                ? JsonApiObjectPropertyName.AttributesObject
+                : JsonApiObjectPropertyName.RelationshipsObject;
+
+            return template.Replace("###", $"{resourceName}-{fieldObjectName}");
         }
     }
 }

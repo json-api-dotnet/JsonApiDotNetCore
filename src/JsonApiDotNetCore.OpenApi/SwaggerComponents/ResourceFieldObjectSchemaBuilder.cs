@@ -76,7 +76,8 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
             fullSchemaForAttributesObject.AdditionalPropertiesAllowed = false;
 
-            return GetReferenceSchemaForFieldObject(fullSchemaForAttributesObject, JsonApiObjectPropertyName.AttributesObject);
+            string fieldObjectSchemaId = _jsonApiSchemaIdSelector.GetSchemaId(_resourceTypeInfo.ResourceObjectType, ResourceObjectFieldType.Attributes);
+            return _schemaRepositoryAccessor.Current.AddDefinition(fieldObjectSchemaId, fullSchemaForAttributesObject);
         }
 
         private void SetMembersOfAttributesObject(OpenApiSchema fullSchemaForAttributesObject)
@@ -103,9 +104,9 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
         private static AttrCapabilities GetRequiredCapabilityForAttributes(Type resourceObjectOpenType)
         {
-            return resourceObjectOpenType == typeof(ResourceResponseObject<>) ? AttrCapabilities.AllowView :
-                resourceObjectOpenType == typeof(ResourcePostRequestObject<>) ? AttrCapabilities.AllowCreate :
-                resourceObjectOpenType == typeof(ResourcePatchRequestObject<>) ? AttrCapabilities.AllowChange : throw new UnreachableCodeException();
+            return resourceObjectOpenType == typeof(ResourceObjectInResponse<>) ? AttrCapabilities.AllowView :
+                resourceObjectOpenType == typeof(ResourceObjectInPostRequest<>) ? AttrCapabilities.AllowCreate :
+                resourceObjectOpenType == typeof(ResourceObjectInPatchRequest<>) ? AttrCapabilities.AllowChange : throw new UnreachableCodeException();
         }
 
         private void AddAttributeSchemaToResourceObject(AttrAttribute attribute, OpenApiSchema attributesObjectSchema, OpenApiSchema resourceAttributeSchema)
@@ -127,7 +128,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
         private bool IsFieldRequired(ResourceFieldAttribute field)
         {
-            if (field is HasManyAttribute || _resourceTypeInfo.ResourceObjectOpenType != typeof(ResourcePostRequestObject<>))
+            if (field is HasManyAttribute || _resourceTypeInfo.ResourceObjectOpenType != typeof(ResourceObjectInPostRequest<>))
             {
                 return false;
             }
@@ -142,15 +143,6 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
                 TypeCategory.NullableReferenceType or TypeCategory.NullableValueType => hasRequiredAttribute,
                 _ => throw new UnreachableCodeException()
             };
-        }
-
-        private OpenApiSchema GetReferenceSchemaForFieldObject(OpenApiSchema fullSchema, string fieldObjectName)
-        {
-            // NSwag does not have proper support for using an inline schema for the attributes and relationships object in a resource object, see https://github.com/RicoSuter/NSwag/issues/3474. Once this issue has been resolved, we can remove this.
-            string resourceObjectSchemaId = _jsonApiSchemaIdSelector.GetSchemaId(_resourceTypeInfo.ResourceObjectType);
-            string fieldObjectSchemaId = resourceObjectSchemaId.Replace(JsonApiObjectPropertyName.Data, fieldObjectName);
-
-            return _schemaRepositoryAccessor.Current.AddDefinition(fieldObjectSchemaId, fullSchema);
         }
 
         public OpenApiSchema? BuildRelationshipsObject(OpenApiSchema fullSchemaForResourceObject)
@@ -168,7 +160,8 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
             fullSchemaForRelationshipsObject.AdditionalPropertiesAllowed = false;
 
-            return GetReferenceSchemaForFieldObject(fullSchemaForRelationshipsObject, JsonApiObjectPropertyName.RelationshipsObject);
+            string fieldObjectSchemaId = _jsonApiSchemaIdSelector.GetSchemaId(_resourceTypeInfo.ResourceObjectType, ResourceObjectFieldType.Relationships);
+            return _schemaRepositoryAccessor.Current.AddDefinition(fieldObjectSchemaId, fullSchemaForRelationshipsObject);
         }
 
         private void SetMembersOfRelationshipsObject(OpenApiSchema fullSchemaForRelationshipsObject)
@@ -228,7 +221,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
         private static Type GetRelationshipSchemaType(RelationshipAttribute relationship, Type resourceObjectType)
         {
-            return resourceObjectType.GetGenericTypeDefinition().IsAssignableTo(typeof(ResourceResponseObject<>))
+            return resourceObjectType.GetGenericTypeDefinition().IsAssignableTo(typeof(ResourceObjectInResponse<>))
                 ? RelationshipTypeFactory.Instance.GetForResponse(relationship)
                 : RelationshipTypeFactory.Instance.GetForRequest(relationship);
         }

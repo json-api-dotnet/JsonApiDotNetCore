@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    internal sealed class SecondaryResourceResponseDocument<TResource> : SingleData<ResourceResponseObject<TResource>>
+    internal sealed class SecondaryResourceResponseDocument<TResource> : SingleData<ResourceObjectInResponse<TResource>>
         where TResource : IIdentifiable
     {
         public IDictionary<string, object> Meta { get; set; } = null!;

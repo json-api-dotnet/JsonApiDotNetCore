@@ -110,7 +110,7 @@ namespace OpenApiClientTests.LegacyClient
             document.Links.Last.Should().Be(topLevelLink);
             document.Data.Should().HaveCount(1);
 
-            FlightDataInResponse flight = document.Data.First();
+            FlightInResponse flight = document.Data.First();
             flight.Id.Should().Be(flightId);
             flight.Type.Should().Be(FlightsResourceType.Flights);
             flight.Links.Self.Should().Be(flightResourceLink);
@@ -278,12 +278,12 @@ namespace OpenApiClientTests.LegacyClient
             // Act
             FlightPrimaryResponseDocument document = await apiClient.PostFlightAsync(new FlightPostRequestDocument
             {
-                Data = new FlightDataInPostRequest
+                Data = new FlightInPostRequest
                 {
                     Type = FlightsResourceType.Flights,
                     Relationships = new FlightRelationshipsInPostRequest
                     {
-                        Purser = new ToOneFlightAttendantDataInRequest
+                        Purser = new ToOneFlightAttendantInRequest
                         {
                             Data = new FlightAttendantIdentifier
                             {
@@ -330,7 +330,7 @@ namespace OpenApiClientTests.LegacyClient
             // Act
             FlightPrimaryResponseDocument document = await apiClient.PatchFlightAsync(flightId, new FlightPatchRequestDocument
             {
-                Data = new FlightDataInPatchRequest
+                Data = new FlightInPatchRequest
                 {
                     Id = flightId,
                     Type = FlightsResourceType.Flights
@@ -355,7 +355,7 @@ namespace OpenApiClientTests.LegacyClient
             FlightPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PatchFlightAsync(flightId,
                 new FlightPatchRequestDocument
                 {
-                    Data = new FlightDataInPatchRequest
+                    Data = new FlightInPatchRequest
                     {
                         Id = flightId,
                         Type = FlightsResourceType.Flights
@@ -552,7 +552,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            await apiClient.PatchFlightPurserRelationshipAsync("ZvuH1", new ToOneFlightAttendantDataInRequest
+            await apiClient.PatchFlightPurserRelationshipAsync("ZvuH1", new ToOneFlightAttendantInRequest
             {
                 Data = new FlightAttendantIdentifier
                 {
@@ -608,7 +608,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await apiClient.PostFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantDataInRequest
+            Func<Task> action = async () => await apiClient.PostFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -637,7 +637,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await apiClient.PatchFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantDataInRequest
+            Func<Task> action = async () => await apiClient.PatchFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -666,7 +666,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await apiClient.DeleteFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantDataInRequest
+            Func<Task> action = async () => await apiClient.DeleteFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
             {
                 Data = new List<FlightAttendantIdentifier>
                 {

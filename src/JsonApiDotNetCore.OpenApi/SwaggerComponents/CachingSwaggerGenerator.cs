@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -26,7 +28,14 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
             string cacheKey = $"{documentName}#{host}#{basePath}";
 
-            return _openApiDocumentCache.GetOrAdd(cacheKey, _ => _defaultSwaggerGenerator.GetSwagger(documentName, host, basePath));
+            return _openApiDocumentCache.GetOrAdd(cacheKey, _ =>
+            {
+                OpenApiDocument document = _defaultSwaggerGenerator.GetSwagger(documentName, host, basePath);
+
+                // Remove once https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2283 is addressed.
+                document.Components.Schemas = new SortedDictionary<string, OpenApiSchema>(document.Components.Schemas, StringComparer.Ordinal);
+                return document;
+            });
         }
     }
 }

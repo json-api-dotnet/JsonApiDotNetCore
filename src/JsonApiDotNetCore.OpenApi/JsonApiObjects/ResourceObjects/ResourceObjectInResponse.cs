@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    internal sealed class ResourceResponseObject<TResource> : ResourceObject<TResource>
+    internal sealed class ResourceObjectInResponse<TResource> : ResourceObject<TResource>
         where TResource : IIdentifiable
     {
         [Required]

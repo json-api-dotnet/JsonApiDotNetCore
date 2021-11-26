@@ -92,7 +92,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
         private void RemoveResourceIdIfPostResourceObject(Type resourceObjectOpenType, OpenApiSchema fullSchemaForResourceObject)
         {
-            if (resourceObjectOpenType == typeof(ResourcePostRequestObject<>) && !_allowClientGeneratedIds)
+            if (resourceObjectOpenType == typeof(ResourceObjectInPostRequest<>) && !_allowClientGeneratedIds)
             {
                 fullSchemaForResourceObject.Required.Remove(JsonApiObjectPropertyName.Id);
                 fullSchemaForResourceObject.Properties.Remove(JsonApiObjectPropertyName.Id);
