@@ -2,6 +2,7 @@
   <PropertyGroup>
     <VersionPrefix>$(JsonApiDotNetCoreVersionPrefix)</VersionPrefix>
     <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
+    <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 

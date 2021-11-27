@@ -10,6 +10,8 @@
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>9999</WarningLevel>
     <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
   </PropertyGroup>
 
   <ItemGroup>
