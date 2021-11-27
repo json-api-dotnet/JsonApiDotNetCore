@@ -7,7 +7,6 @@ The shortest path to a running API looks like:
 - Install
 - Define models
 - Define the DbContext
-- Define controllers
 - Add Middleware and Services
 - Seed the database
 - Start the app
@@ -40,6 +39,7 @@ The easiest way to do this is to inherit from `Identifiable<TId>`.
 ```c#
 #nullable enable
 
+[Resource]
 public class Person : Identifiable<int>
 {
     [Attr]
@@ -58,22 +58,6 @@ public class AppDbContext : DbContext
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
-    {
-    }
-}
-```
-
-### Define Controllers
-
-You need to create controllers that inherit from `JsonApiController<TResource, TId>`
-where `TResource` is the model that inherits from `Identifiable<TId>`.
-
-```c#
-public class PeopleController : JsonApiController<Person, int>
-{
-    public PeopleController(IJsonApiOptions options, IResourceGraph resourceGraph,
-        ILoggerFactory loggerFactory, IResourceService<Person, int> resourceService)
-        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }

@@ -45,23 +45,11 @@ See [our documentation](https://www.jsonapi.net/) for detailed usage.
 ```c#
 #nullable enable
 
+[Resource]
 public class Article : Identifiable<int>
 {
     [Attr]
     public string Name { get; set; } = null!;
-}
-```
-
-### Controllers
-
-```c#
-public class ArticlesController : JsonApiController<Article, int>
-{
-    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
-        ILoggerFactory loggerFactory, IResourceService<Article, int> resourceService)
-        : base(options, resourceGraph, loggerFactory, resourceService)
-    {
-    }
 }
 ```
 

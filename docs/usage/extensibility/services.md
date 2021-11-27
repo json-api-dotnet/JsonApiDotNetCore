@@ -1,7 +1,8 @@
 # Resource Services
 
 The `IResourceService` acts as a service layer between the controller and the data access layer.
-This allows you to customize it however you want. This is also a good place to implement custom business logic.
+This allows you to customize it however you want. While this is still a potential place to implement custom business logic,
+since v4, [Resource Definitions](~/usage/extensibility/resource-definitions.md) are more suitable for that.
 
 ## Supplementing Default Behavior
 
@@ -77,7 +78,7 @@ public class ProductService : IResourceService<Product, int>
 
 ## Limited Requirements
 
-In some cases it may be necessary to only expose a few methods on a resource. For this reason, we have created a hierarchy of service interfaces that can be used to get the exact implementation you require.
+In some cases it may be necessary to only expose a few actions on a resource. For this reason, we have created a hierarchy of service interfaces that can be used to get the exact implementation you require.
 
 This interface hierarchy is defined by this tree structure.
 
@@ -152,7 +153,18 @@ public class Startup
 }
 ```
 
-Then in the controller, you should inherit from the JSON:API controller and pass the services into the named, optional base parameters:
+Then on your model, pass in the set of endpoints to expose (the ones that you've registered services for):
+
+```c#
+[Resource(GenerateControllerEndpoints =
+    JsonApiEndpoints.Create | JsonApiEndpoints.Delete)]
+public class Article : Identifiable<int>
+{
+    // ...
+}
+```
+
+Alternatively, when using a hand-written controller, you should inherit from the JSON:API controller and pass the services into the named, optional base parameters:
 
 ```c#
 public class ArticlesController : JsonApiController<Article, int>

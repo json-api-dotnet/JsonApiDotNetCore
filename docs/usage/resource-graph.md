@@ -72,28 +72,28 @@ public void ConfigureServices(IServiceCollection services)
 
 ## Resource Name
 
-The public resource name is exposed through the `type` member in the JSON:API payload. This can be configured by the following approaches (in order of priority):
+The public resource name is exposed through the `type` member in the JSON:API payload. This can be configured using the following approaches (in order of priority):
 
-1. The `publicName` parameter when manually adding a resource to the graph
+1. The `publicName` parameter when manually adding a resource to the graph.
 ```c#
 services.AddJsonApi(resources: builder =>
 {
-    builder.Add<Person, int>(publicName: "people");
+    builder.Add<Person, int>(publicName: "individuals");
 });
 ```
 
-2. The model is decorated with a `ResourceAttribute`
+2. The `PublicName` property when a model is decorated with a `ResourceAttribute`.
 ```c#
-[Resource("myResources")]
-public class MyModel : Identifiable<int>
+[Resource(PublicName = "individuals")]
+public class Person : Identifiable<int>
 {
 }
 ```
 
-3. The configured naming convention (by default this is camel-case).
+3. The configured naming convention (by default this is camel-case), after pluralization.
 ```c#
-// this will be registered as "myModels"
-public class MyModel : Identifiable<int>
+// this will be registered as "people"
+public class Person : Identifiable<int>
 {
 }
 ```
