@@ -110,7 +110,7 @@ namespace OpenApiClientTests.LegacyClient
             document.Links.Last.Should().Be(topLevelLink);
             document.Data.Should().HaveCount(1);
 
-            FlightInResponse flight = document.Data.First();
+            FlightDataInResponse flight = document.Data.First();
             flight.Id.Should().Be(flightId);
             flight.Type.Should().Be(FlightsResourceType.Flights);
             flight.Links.Self.Should().Be(flightResourceLink);
@@ -278,7 +278,7 @@ namespace OpenApiClientTests.LegacyClient
             // Act
             FlightPrimaryResponseDocument document = await apiClient.PostFlightAsync(new FlightPostRequestDocument
             {
-                Data = new FlightInPostRequest
+                Data = new FlightDataInPostRequest
                 {
                     Type = FlightsResourceType.Flights,
                     Relationships = new FlightRelationshipsInPostRequest
@@ -330,7 +330,7 @@ namespace OpenApiClientTests.LegacyClient
             // Act
             FlightPrimaryResponseDocument document = await apiClient.PatchFlightAsync(flightId, new FlightPatchRequestDocument
             {
-                Data = new FlightInPatchRequest
+                Data = new FlightDataInPatchRequest
                 {
                     Id = flightId,
                     Type = FlightsResourceType.Flights
@@ -355,7 +355,7 @@ namespace OpenApiClientTests.LegacyClient
             FlightPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PatchFlightAsync(flightId,
                 new FlightPatchRequestDocument
                 {
-                    Data = new FlightInPatchRequest
+                    Data = new FlightDataInPatchRequest
                     {
                         Id = flightId,
                         Type = FlightsResourceType.Flights

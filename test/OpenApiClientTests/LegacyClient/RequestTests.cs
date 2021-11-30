@@ -64,7 +64,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument = new FlightPostRequestDocument
             {
-                Data = new FlightInPostRequest
+                Data = new FlightDataInPostRequest
                 {
                     Type = FlightsResourceType.Flights,
                     Relationships = new FlightRelationshipsInPostRequest
@@ -144,7 +144,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument = new AirplanePostRequestDocument
             {
-                Data = new AirplaneInPostRequest
+                Data = new AirplaneDataInPostRequest
                 {
                     Type = AirplanesResourceType.Airplanes,
                     Attributes = new AirplaneAttributesInPostRequest
@@ -195,7 +195,7 @@ namespace OpenApiClientTests.LegacyClient
 
             var requestDocument = new AirplanePatchRequestDocument
             {
-                Data = new AirplaneInPatchRequest
+                Data = new AirplaneDataInPatchRequest
                 {
                     Id = airplaneId,
                     Type = AirplanesResourceType.Airplanes,

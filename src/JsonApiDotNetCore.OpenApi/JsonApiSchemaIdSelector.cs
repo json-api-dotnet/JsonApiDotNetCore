@@ -15,10 +15,10 @@ namespace JsonApiDotNetCore.OpenApi
         {
             [typeof(ResourcePostRequestDocument<>)] = "###-post-request-document",
             [typeof(ResourcePatchRequestDocument<>)] = "###-patch-request-document",
-            [typeof(ResourceObjectInPostRequest<>)] = "###-in-post-request",
+            [typeof(ResourceObjectInPostRequest<>)] = "###-data-in-post-request",
             [typeof(AttributesInPostRequest<>)] = "###-attributes-in-post-request",
             [typeof(RelationshipsInPostRequest<>)] = "###-relationships-in-post-request",
-            [typeof(ResourceObjectInPatchRequest<>)] = "###-in-patch-request",
+            [typeof(ResourceObjectInPatchRequest<>)] = "###-data-in-patch-request",
             [typeof(AttributesInPatchRequest<>)] = "###-attributes-in-patch-request",
             [typeof(RelationshipsInPatchRequest<>)] = "###-relationships-in-patch-request",
             [typeof(ToOneRelationshipInRequest<>)] = "to-one-###-in-request",
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.OpenApi
             [typeof(ToOneRelationshipInResponse<>)] = "to-one-###-in-response",
             [typeof(NullableToOneRelationshipInResponse<>)] = "nullable-to-one-###-in-response",
             [typeof(ToManyRelationshipInResponse<>)] = "to-many-###-in-response",
-            [typeof(ResourceObjectInResponse<>)] = "###-in-response",
+            [typeof(ResourceObjectInResponse<>)] = "###-data-in-response",
             [typeof(AttributesInResponse<>)] = "###-attributes-in-response",
             [typeof(RelationshipsInResponse<>)] = "###-relationships-in-response",
             [typeof(ResourceIdentifierObject<>)] = "###-identifier"
