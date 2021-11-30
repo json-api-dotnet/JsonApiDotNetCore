@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects
 {
     // ReSharper disable once UnusedTypeParameter
-    internal class ResourceIdentifierObject<TResource> : ResourceIdentifierObject
+    internal sealed class ResourceIdentifierObject<TResource> : ResourceIdentifierObject
         where TResource : IIdentifiable
     {
     }

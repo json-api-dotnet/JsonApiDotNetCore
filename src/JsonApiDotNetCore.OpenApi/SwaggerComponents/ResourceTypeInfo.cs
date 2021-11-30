@@ -5,13 +5,11 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 {
     internal sealed class ResourceTypeInfo
     {
-        public Type ResourceObjectType { get; }
         public Type ResourceObjectOpenType { get; }
         public ResourceType ResourceType { get; }
 
-        private ResourceTypeInfo(Type resourceObjectType, Type resourceObjectOpenType, ResourceType resourceType)
+        private ResourceTypeInfo(Type resourceObjectOpenType, ResourceType resourceType)
         {
-            ResourceObjectType = resourceObjectType;
             ResourceObjectOpenType = resourceObjectOpenType;
             ResourceType = resourceType;
         }
@@ -25,7 +23,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             Type resourceClrType = resourceObjectType.GenericTypeArguments[0];
             ResourceType resourceType = resourceGraph.GetResourceType(resourceClrType);
 
-            return new ResourceTypeInfo(resourceObjectType, resourceObjectOpenType, resourceType);
+            return new ResourceTypeInfo(resourceObjectOpenType, resourceType);
         }
     }
 }

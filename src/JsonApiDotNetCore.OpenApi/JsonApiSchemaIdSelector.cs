@@ -16,7 +16,11 @@ namespace JsonApiDotNetCore.OpenApi
             [typeof(ResourcePostRequestDocument<>)] = "###-post-request-document",
             [typeof(ResourcePatchRequestDocument<>)] = "###-patch-request-document",
             [typeof(ResourceObjectInPostRequest<>)] = "###-in-post-request",
+            [typeof(AttributesInPostRequest<>)] = "###-attributes-in-post-request",
+            [typeof(RelationshipsInPostRequest<>)] = "###-relationships-in-post-request",
             [typeof(ResourceObjectInPatchRequest<>)] = "###-in-patch-request",
+            [typeof(AttributesInPatchRequest<>)] = "###-attributes-in-patch-request",
+            [typeof(RelationshipsInPatchRequest<>)] = "###-relationships-in-patch-request",
             [typeof(ToOneRelationshipInRequest<>)] = "to-one-###-in-request",
             [typeof(NullableToOneRelationshipInRequest<>)] = "nullable-to-one-###-in-request",
             [typeof(ToManyRelationshipInRequest<>)] = "to-many-###-in-request",
@@ -31,14 +35,9 @@ namespace JsonApiDotNetCore.OpenApi
             [typeof(NullableToOneRelationshipInResponse<>)] = "nullable-to-one-###-in-response",
             [typeof(ToManyRelationshipInResponse<>)] = "to-many-###-in-response",
             [typeof(ResourceObjectInResponse<>)] = "###-in-response",
+            [typeof(AttributesInResponse<>)] = "###-attributes-in-response",
+            [typeof(RelationshipsInResponse<>)] = "###-relationships-in-response",
             [typeof(ResourceIdentifierObject<>)] = "###-identifier"
-        };
-
-        private readonly Type[] _resourceObjectOpenTypes =
-        {
-            typeof(ResourceObjectInPostRequest<>),
-            typeof(ResourceObjectInPatchRequest<>),
-            typeof(ResourceObjectInResponse<>)
         };
 
         private readonly ResourceNameFormatter _formatter;
@@ -75,26 +74,6 @@ namespace JsonApiDotNetCore.OpenApi
 
             // Used for a fixed set of types, such as jsonapi-object, links-in-many-resource-document etc.
             return _formatter.FormatResourceName(type).Singularize();
-        }
-
-        public string GetSchemaId(Type resourceObjectType, ResourceObjectFieldType fieldType)
-        {
-            ArgumentGuard.NotNull(resourceObjectType, nameof(resourceObjectType));
-
-            if (!resourceObjectType.IsConstructedGenericType || !_resourceObjectOpenTypes.Contains(resourceObjectType.GetGenericTypeDefinition()))
-            {
-                throw new InvalidOperationException($"Type '{resourceObjectType.Name}' must be a resource object.");
-            }
-
-            Type resourceClrType = resourceObjectType.GetGenericArguments().First();
-            string resourceName = _formatter.FormatResourceName(resourceClrType).Singularize();
-            string template = OpenTypeToSchemaTemplateMap[resourceObjectType.GetGenericTypeDefinition()];
-
-            string fieldObjectName = fieldType == ResourceObjectFieldType.Attributes
-                ? JsonApiObjectPropertyName.AttributesObject
-                : JsonApiObjectPropertyName.RelationshipsObject;
-
-            return template.Replace("###", $"{resourceName}-{fieldObjectName}");
         }
     }
 }

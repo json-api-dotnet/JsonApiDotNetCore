@@ -26,24 +26,21 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
         private readonly ResourceTypeInfo _resourceTypeInfo;
         private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
         private readonly SchemaGenerator _defaultSchemaGenerator;
-        private readonly JsonApiSchemaIdSelector _jsonApiSchemaIdSelector;
         private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
         private readonly NullableReferenceSchemaGenerator _nullableReferenceSchemaGenerator;
         private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
 
         public ResourceFieldObjectSchemaBuilder(ResourceTypeInfo resourceTypeInfo, ISchemaRepositoryAccessor schemaRepositoryAccessor,
-            SchemaGenerator defaultSchemaGenerator, JsonApiSchemaIdSelector jsonApiSchemaIdSelector, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator)
+            SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator)
         {
             ArgumentGuard.NotNull(resourceTypeInfo, nameof(resourceTypeInfo));
             ArgumentGuard.NotNull(schemaRepositoryAccessor, nameof(schemaRepositoryAccessor));
             ArgumentGuard.NotNull(defaultSchemaGenerator, nameof(defaultSchemaGenerator));
-            ArgumentGuard.NotNull(jsonApiSchemaIdSelector, nameof(jsonApiSchemaIdSelector));
             ArgumentGuard.NotNull(resourceTypeSchemaGenerator, nameof(resourceTypeSchemaGenerator));
 
             _resourceTypeInfo = resourceTypeInfo;
             _schemaRepositoryAccessor = schemaRepositoryAccessor;
             _defaultSchemaGenerator = defaultSchemaGenerator;
-            _jsonApiSchemaIdSelector = jsonApiSchemaIdSelector;
             _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
 
             _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(schemaRepositoryAccessor);
@@ -61,26 +58,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             return fullSchemaForResource.Properties;
         }
 
-        public OpenApiSchema? BuildAttributesObject(OpenApiSchema fullSchemaForResourceObject)
-        {
-            ArgumentGuard.NotNull(fullSchemaForResourceObject, nameof(fullSchemaForResourceObject));
-
-            OpenApiSchema fullSchemaForAttributesObject = fullSchemaForResourceObject.Properties[JsonApiObjectPropertyName.AttributesObject];
-
-            SetMembersOfAttributesObject(fullSchemaForAttributesObject);
-
-            if (!fullSchemaForAttributesObject.Properties.Any())
-            {
-                return null;
-            }
-
-            fullSchemaForAttributesObject.AdditionalPropertiesAllowed = false;
-
-            string fieldObjectSchemaId = _jsonApiSchemaIdSelector.GetSchemaId(_resourceTypeInfo.ResourceObjectType, ResourceObjectFieldType.Attributes);
-            return _schemaRepositoryAccessor.Current.AddDefinition(fieldObjectSchemaId, fullSchemaForAttributesObject);
-        }
-
-        private void SetMembersOfAttributesObject(OpenApiSchema fullSchemaForAttributesObject)
+        public void SetMembersOfAttributesObject(OpenApiSchema fullSchemaForAttributesObject)
         {
             AttrCapabilities requiredCapability = GetRequiredCapabilityForAttributes(_resourceTypeInfo.ResourceObjectOpenType);
 
@@ -145,26 +123,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             };
         }
 
-        public OpenApiSchema? BuildRelationshipsObject(OpenApiSchema fullSchemaForResourceObject)
-        {
-            ArgumentGuard.NotNull(fullSchemaForResourceObject, nameof(fullSchemaForResourceObject));
-
-            OpenApiSchema fullSchemaForRelationshipsObject = fullSchemaForResourceObject.Properties[JsonApiObjectPropertyName.RelationshipsObject];
-
-            SetMembersOfRelationshipsObject(fullSchemaForRelationshipsObject);
-
-            if (!fullSchemaForRelationshipsObject.Properties.Any())
-            {
-                return null;
-            }
-
-            fullSchemaForRelationshipsObject.AdditionalPropertiesAllowed = false;
-
-            string fieldObjectSchemaId = _jsonApiSchemaIdSelector.GetSchemaId(_resourceTypeInfo.ResourceObjectType, ResourceObjectFieldType.Relationships);
-            return _schemaRepositoryAccessor.Current.AddDefinition(fieldObjectSchemaId, fullSchemaForRelationshipsObject);
-        }
-
-        private void SetMembersOfRelationshipsObject(OpenApiSchema fullSchemaForRelationshipsObject)
+        public void SetMembersOfRelationshipsObject(OpenApiSchema fullSchemaForRelationshipsObject)
         {
             foreach (string fieldName in _schemasForResourceFields.Keys)
             {
