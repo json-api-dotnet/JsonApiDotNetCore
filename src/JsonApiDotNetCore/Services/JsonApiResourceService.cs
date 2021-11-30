@@ -2,6 +2,7 @@ using System.Collections;
 using System.Net;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Errors;
@@ -30,11 +31,12 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     private readonly TraceLogWriter<JsonApiResourceService<TResource, TId>> _traceWriter;
     private readonly IJsonApiRequest _request;
     private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
+    private readonly IVersionTracker _versionTracker;
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
 
     public JsonApiResourceService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
         IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker,
-        IResourceDefinitionAccessor resourceDefinitionAccessor)
+        IVersionTracker versionTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
     {
         ArgumentGuard.NotNull(repositoryAccessor);
         ArgumentGuard.NotNull(queryLayerComposer);
@@ -43,6 +45,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         ArgumentGuard.NotNull(loggerFactory);
         ArgumentGuard.NotNull(request);
         ArgumentGuard.NotNull(resourceChangeTracker);
+        ArgumentGuard.NotNull(versionTracker);
         ArgumentGuard.NotNull(resourceDefinitionAccessor);
 
         _repositoryAccessor = repositoryAccessor;
@@ -51,6 +54,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         _options = options;
         _request = request;
         _resourceChangeTracker = resourceChangeTracker;
+        _versionTracker = versionTracker;
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
         _traceWriter = new TraceLogWriter<JsonApiResourceService<TResource, TId>>(loggerFactory);
     }
@@ -226,7 +230,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             throw;
         }
 
-        TResource resourceFromDatabase = await GetPrimaryResourceByIdAsync(resourceForDatabase.Id, TopFieldSelection.WithAllAttributes, cancellationToken);
+        TResource resourceFromDatabase =
+            await GetPrimaryResourceAfterWriteAsync(resourceForDatabase.Id, TopFieldSelection.WithAllAttributes, cancellationToken);
 
         _resourceChangeTracker.SetFinallyStoredAttributeValues(resourceFromDatabase);
 
@@ -477,7 +482,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             throw;
         }
 
-        TResource afterResourceFromDatabase = await GetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes, cancellationToken);
+        TResource afterResourceFromDatabase = await GetPrimaryResourceAfterWriteAsync(id, TopFieldSelection.WithAllAttributes, cancellationToken);
 
         _resourceChangeTracker.SetFinallyStoredAttributeValues(afterResourceFromDatabase);
 
@@ -521,6 +526,11 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             await AssertRightResourcesExistAsync(effectiveRightValue, cancellationToken);
             AssertIsNotResourceVersionMismatch(exception);
             throw;
+        }
+
+        if (_versionTracker.RequiresVersionTracking())
+        {
+            await GetPrimaryResourceAfterWriteAsync(leftId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
         }
     }
 
@@ -612,6 +622,24 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
 
         IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
         return primaryResources.SingleOrDefault();
+    }
+
+    private async Task<TResource> GetPrimaryResourceAfterWriteAsync(TId id, TopFieldSelection fieldSelection, CancellationToken cancellationToken)
+    {
+        AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
+
+        if (_versionTracker.RequiresVersionTracking())
+        {
+            QueryLayer queryLayer = _queryLayerComposer.ComposeForGetVersionsAfterWrite(id, _request.PrimaryResourceType, fieldSelection);
+            IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
+            TResource? primaryResource = primaryResources.SingleOrDefault();
+            AssertPrimaryResourceExists(primaryResource);
+
+            _versionTracker.CaptureVersions(_request.PrimaryResourceType, primaryResource);
+            return primaryResource;
+        }
+
+        return await GetPrimaryResourceByIdAsync(id, fieldSelection, cancellationToken);
     }
 
     protected async Task<TResource> GetPrimaryResourceForUpdateAsync(TId id, CancellationToken cancellationToken)

@@ -15,6 +15,7 @@ public class OperationsProcessor : IOperationsProcessor
     private readonly IOperationProcessorAccessor _operationProcessorAccessor;
     private readonly IOperationsTransactionFactory _operationsTransactionFactory;
     private readonly ILocalIdTracker _localIdTracker;
+    private readonly IVersionTracker _versionTracker;
     private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiRequest _request;
     private readonly ITargetedFields _targetedFields;
@@ -22,12 +23,13 @@ public class OperationsProcessor : IOperationsProcessor
     private readonly LocalIdValidator _localIdValidator;
 
     public OperationsProcessor(IOperationProcessorAccessor operationProcessorAccessor, IOperationsTransactionFactory operationsTransactionFactory,
-        ILocalIdTracker localIdTracker, IResourceGraph resourceGraph, IJsonApiRequest request, ITargetedFields targetedFields,
+        ILocalIdTracker localIdTracker, IVersionTracker versionTracker, IResourceGraph resourceGraph, IJsonApiRequest request, ITargetedFields targetedFields,
         ISparseFieldSetCache sparseFieldSetCache)
     {
         ArgumentGuard.NotNull(operationProcessorAccessor);
         ArgumentGuard.NotNull(operationsTransactionFactory);
         ArgumentGuard.NotNull(localIdTracker);
+        ArgumentGuard.NotNull(versionTracker);
         ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(request);
         ArgumentGuard.NotNull(targetedFields);
@@ -36,6 +38,7 @@ public class OperationsProcessor : IOperationsProcessor
         _operationProcessorAccessor = operationProcessorAccessor;
         _operationsTransactionFactory = operationsTransactionFactory;
         _localIdTracker = localIdTracker;
+        _versionTracker = versionTracker;
         _resourceGraph = resourceGraph;
         _request = request;
         _targetedFields = targetedFields;
@@ -104,11 +107,15 @@ public class OperationsProcessor : IOperationsProcessor
         cancellationToken.ThrowIfCancellationRequested();
 
         TrackLocalIdsForOperation(operation);
+        RefreshVersionsForOperation(operation);
 
         _targetedFields.CopyFrom(operation.TargetedFields);
         _request.CopyFrom(operation.Request);
 
         return await _operationProcessorAccessor.ProcessAsync(operation, cancellationToken);
+
+        // Ideally we'd take the versions from response here and update the version cache, but currently
+        // not all resource service methods return data. Therefore this is handled elsewhere.
     }
 
     protected void TrackLocalIdsForOperation(OperationContainer operation)
@@ -142,6 +149,38 @@ public class OperationsProcessor : IOperationsProcessor
         {
             ResourceType resourceType = _resourceGraph.GetResourceType(resource.GetClrType());
             resource.StringId = _localIdTracker.GetValue(resource.LocalId, resourceType);
+        }
+    }
+
+    private void RefreshVersionsForOperation(OperationContainer operation)
+    {
+        if (operation.Request.PrimaryResourceType!.IsVersioned)
+        {
+            string? requestVersion = operation.Resource.GetVersion();
+
+            if (requestVersion == null)
+            {
+                string? trackedVersion = _versionTracker.GetVersion(operation.Request.PrimaryResourceType, operation.Resource.StringId!);
+                operation.Resource.SetVersion(trackedVersion);
+
+                ((JsonApiRequest)operation.Request).PrimaryVersion = trackedVersion;
+            }
+        }
+
+        foreach (IIdentifiable rightResource in operation.GetSecondaryResources())
+        {
+            ResourceType rightResourceType = _resourceGraph.GetResourceType(rightResource.GetClrType());
+
+            if (rightResourceType.IsVersioned)
+            {
+                string? requestVersion = rightResource.GetVersion();
+
+                if (requestVersion == null)
+                {
+                    string? trackedVersion = _versionTracker.GetVersion(rightResourceType, rightResource.StringId!);
+                    rightResource.SetVersion(trackedVersion);
+                }
+            }
         }
     }
 }

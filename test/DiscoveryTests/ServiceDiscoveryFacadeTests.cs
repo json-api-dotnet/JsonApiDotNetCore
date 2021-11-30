@@ -1,4 +1,5 @@
 using FluentAssertions;
+using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -36,6 +37,7 @@ public sealed class ServiceDiscoveryFacadeTests
         _services.AddScoped(_ => new Mock<ITargetedFields>().Object);
         _services.AddScoped(_ => new Mock<IResourceGraph>().Object);
         _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
+        _services.AddScoped(_ => new Mock<IVersionTracker>().Object);
         _services.AddScoped(_ => new Mock<IResourceFactory>().Object);
         _services.AddScoped(_ => new Mock<IPaginationContext>().Object);
         _services.AddScoped(_ => new Mock<IQueryLayerComposer>().Object);
