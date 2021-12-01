@@ -4,7 +4,7 @@ using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -23,9 +23,9 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             typeof(ResourceIdentifierCollectionResponseDocument<>),
             typeof(ResourceIdentifierResponseDocument<>),
             typeof(NullableResourceIdentifierResponseDocument<>),
-            typeof(ToManyRelationshipRequestData<>),
-            typeof(ToOneRelationshipRequestData<>),
-            typeof(NullableToOneRelationshipRequestData<>)
+            typeof(ToManyRelationshipInRequest<>),
+            typeof(ToOneRelationshipInRequest<>),
+            typeof(NullableToOneRelationshipInRequest<>)
         };
 
         private readonly ISchemaGenerator _defaultSchemaGenerator;

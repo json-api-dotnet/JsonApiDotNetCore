@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
+using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using Microsoft.OpenApi.Models;
@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
         private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
         private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
         private readonly bool _allowClientGeneratedIds;
-        private readonly Func<ResourceTypeInfo, ResourceFieldObjectSchemaBuilder> _createFieldObjectBuilderFactory;
+        private readonly Func<ResourceTypeInfo, ResourceFieldObjectSchemaBuilder> _resourceFieldObjectSchemaBuilderFactory;
 
         public ResourceObjectSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options,
             ISchemaRepositoryAccessor schemaRepositoryAccessor)
@@ -32,20 +32,8 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             _resourceTypeSchemaGenerator = new ResourceTypeSchemaGenerator(schemaRepositoryAccessor, resourceGraph);
             _allowClientGeneratedIds = options.AllowClientGeneratedIds;
 
-            _createFieldObjectBuilderFactory = CreateFieldObjectBuilderFactory(defaultSchemaGenerator, resourceGraph, options, schemaRepositoryAccessor,
-                _resourceTypeSchemaGenerator);
-        }
-
-        private static Func<ResourceTypeInfo, ResourceFieldObjectSchemaBuilder> CreateFieldObjectBuilderFactory(SchemaGenerator defaultSchemaGenerator,
-            IResourceGraph resourceGraph, IJsonApiOptions options, ISchemaRepositoryAccessor schemaRepositoryAccessor,
-            ResourceTypeSchemaGenerator resourceTypeSchemaGenerator)
-        {
-            JsonNamingPolicy? namingPolicy = options.SerializerOptions.PropertyNamingPolicy;
-            ResourceNameFormatter resourceNameFormatter = new(namingPolicy);
-            var jsonApiSchemaIdSelector = new JsonApiSchemaIdSelector(resourceNameFormatter, resourceGraph);
-
-            return resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor, defaultSchemaGenerator,
-                jsonApiSchemaIdSelector, resourceTypeSchemaGenerator);
+            _resourceFieldObjectSchemaBuilderFactory = resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor,
+                defaultSchemaGenerator, _resourceTypeSchemaGenerator);
         }
 
         public OpenApiSchema GenerateSchema(Type resourceObjectType)
@@ -55,7 +43,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             (OpenApiSchema fullSchemaForResourceObject, OpenApiSchema referenceSchemaForResourceObject) = EnsureSchemasExist(resourceObjectType);
 
             var resourceTypeInfo = ResourceTypeInfo.Create(resourceObjectType, _resourceGraph);
-            ResourceFieldObjectSchemaBuilder fieldObjectBuilder = _createFieldObjectBuilderFactory(resourceTypeInfo);
+            ResourceFieldObjectSchemaBuilder fieldObjectBuilder = _resourceFieldObjectSchemaBuilderFactory(resourceTypeInfo);
 
             RemoveResourceIdIfPostResourceObject(resourceTypeInfo.ResourceObjectOpenType, fullSchemaForResourceObject);
 
@@ -92,7 +80,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
         private void RemoveResourceIdIfPostResourceObject(Type resourceObjectOpenType, OpenApiSchema fullSchemaForResourceObject)
         {
-            if (resourceObjectOpenType == typeof(ResourcePostRequestObject<>) && !_allowClientGeneratedIds)
+            if (resourceObjectOpenType == typeof(ResourceObjectInPostRequest<>) && !_allowClientGeneratedIds)
             {
                 fullSchemaForResourceObject.Required.Remove(JsonApiObjectPropertyName.Id);
                 fullSchemaForResourceObject.Properties.Remove(JsonApiObjectPropertyName.Id);
@@ -104,31 +92,39 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             fullSchemaForResourceObject.Properties[JsonApiObjectPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType);
         }
 
-        private static void SetResourceAttributes(OpenApiSchema fullSchemaForResourceObject, ResourceFieldObjectSchemaBuilder builder)
+        private void SetResourceAttributes(OpenApiSchema fullSchemaForResourceObject, ResourceFieldObjectSchemaBuilder builder)
         {
-            OpenApiSchema? fullSchemaForAttributesObject = builder.BuildAttributesObject(fullSchemaForResourceObject);
+            OpenApiSchema referenceSchemaForAttributesObject = fullSchemaForResourceObject.Properties[JsonApiObjectPropertyName.AttributesObject];
+            OpenApiSchema fullSchemaForAttributesObject = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForAttributesObject.Reference.Id];
 
-            if (fullSchemaForAttributesObject != null)
+            builder.SetMembersOfAttributesObject(fullSchemaForAttributesObject);
+
+            if (!fullSchemaForAttributesObject.Properties.Any())
             {
-                fullSchemaForResourceObject.Properties[JsonApiObjectPropertyName.AttributesObject] = fullSchemaForAttributesObject;
+                fullSchemaForResourceObject.Properties.Remove(JsonApiObjectPropertyName.AttributesObject);
+                _schemaRepositoryAccessor.Current.Schemas.Remove(referenceSchemaForAttributesObject.Reference.Id);
             }
             else
             {
-                fullSchemaForResourceObject.Properties.Remove(JsonApiObjectPropertyName.AttributesObject);
+                fullSchemaForAttributesObject.AdditionalPropertiesAllowed = false;
             }
         }
 
-        private static void SetResourceRelationships(OpenApiSchema fullSchemaForResourceObject, ResourceFieldObjectSchemaBuilder builder)
+        private void SetResourceRelationships(OpenApiSchema fullSchemaForResourceObject, ResourceFieldObjectSchemaBuilder builder)
         {
-            OpenApiSchema? fullSchemaForRelationshipsObject = builder.BuildRelationshipsObject(fullSchemaForResourceObject);
+            OpenApiSchema referenceSchemaForRelationshipsObject = fullSchemaForResourceObject.Properties[JsonApiObjectPropertyName.RelationshipsObject];
+            OpenApiSchema fullSchemaForRelationshipsObject = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForRelationshipsObject.Reference.Id];
 
-            if (fullSchemaForRelationshipsObject != null)
+            builder.SetMembersOfRelationshipsObject(fullSchemaForRelationshipsObject);
+
+            if (!fullSchemaForRelationshipsObject.Properties.Any())
             {
-                fullSchemaForResourceObject.Properties[JsonApiObjectPropertyName.RelationshipsObject] = fullSchemaForRelationshipsObject;
+                fullSchemaForResourceObject.Properties.Remove(JsonApiObjectPropertyName.RelationshipsObject);
+                _schemaRepositoryAccessor.Current.Schemas.Remove(referenceSchemaForRelationshipsObject.Reference.Id);
             }
             else
             {
-                fullSchemaForResourceObject.Properties.Remove(JsonApiObjectPropertyName.RelationshipsObject);
+                fullSchemaForRelationshipsObject.AdditionalPropertiesAllowed = false;
             }
         }
 

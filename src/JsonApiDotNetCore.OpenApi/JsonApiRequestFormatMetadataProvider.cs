@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Net.Http.Headers;
@@ -15,9 +15,9 @@ namespace JsonApiDotNetCore.OpenApi
     {
         private static readonly Type[] JsonApiRequestObjectOpenType =
         {
-            typeof(ToManyRelationshipRequestData<>),
-            typeof(ToOneRelationshipRequestData<>),
-            typeof(NullableToOneRelationshipRequestData<>),
+            typeof(ToManyRelationshipInRequest<>),
+            typeof(ToOneRelationshipInRequest<>),
+            typeof(NullableToOneRelationshipInRequest<>),
             typeof(ResourcePostRequestDocument<>),
             typeof(ResourcePatchRequestDocument<>)
         };

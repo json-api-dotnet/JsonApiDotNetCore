@@ -69,7 +69,7 @@ namespace OpenApiClientTests.LegacyClient
                     Type = FlightsResourceType.Flights,
                     Relationships = new FlightRelationshipsInPostRequest
                     {
-                        Purser = new ToOneFlightAttendantRequestData
+                        Purser = new ToOneFlightAttendantInRequest
                         {
                             Data = new FlightAttendantIdentifier
                             {
@@ -77,7 +77,7 @@ namespace OpenApiClientTests.LegacyClient
                                 Type = FlightAttendantsResourceType.FlightAttendants
                             }
                         },
-                        BackupPurser = new NullableToOneFlightAttendantRequestData
+                        BackupPurser = new NullableToOneFlightAttendantInRequest
                         {
                             Data = new FlightAttendantIdentifier
                             {
@@ -325,7 +325,7 @@ namespace OpenApiClientTests.LegacyClient
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
-            var requestDocument = new ToOneFlightAttendantRequestData
+            var requestDocument = new ToOneFlightAttendantInRequest
             {
                 Data = new FlightAttendantIdentifier
                 {
@@ -382,7 +382,7 @@ namespace OpenApiClientTests.LegacyClient
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
-            var requestDocument = new ToManyFlightAttendantRequestData
+            var requestDocument = new ToManyFlightAttendantInRequest
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -433,7 +433,7 @@ namespace OpenApiClientTests.LegacyClient
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
-            var requestDocument = new ToManyFlightAttendantRequestData
+            var requestDocument = new ToManyFlightAttendantInRequest
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -484,7 +484,7 @@ namespace OpenApiClientTests.LegacyClient
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
-            var requestDocument = new ToManyFlightAttendantRequestData
+            var requestDocument = new ToManyFlightAttendantInRequest
             {
                 Data = new List<FlightAttendantIdentifier>
                 {

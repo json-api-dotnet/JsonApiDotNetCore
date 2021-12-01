@@ -4,7 +4,7 @@ using System.Linq;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 
 namespace JsonApiDotNetCore.OpenApi
@@ -15,11 +15,15 @@ namespace JsonApiDotNetCore.OpenApi
         {
             [typeof(ResourcePostRequestDocument<>)] = "###-post-request-document",
             [typeof(ResourcePatchRequestDocument<>)] = "###-patch-request-document",
-            [typeof(ResourcePostRequestObject<>)] = "###-data-in-post-request",
-            [typeof(ResourcePatchRequestObject<>)] = "###-data-in-patch-request",
-            [typeof(ToOneRelationshipRequestData<>)] = "to-one-###-request-data",
-            [typeof(NullableToOneRelationshipRequestData<>)] = "nullable-to-one-###-request-data",
-            [typeof(ToManyRelationshipRequestData<>)] = "to-many-###-request-data",
+            [typeof(ResourceObjectInPostRequest<>)] = "###-data-in-post-request",
+            [typeof(AttributesInPostRequest<>)] = "###-attributes-in-post-request",
+            [typeof(RelationshipsInPostRequest<>)] = "###-relationships-in-post-request",
+            [typeof(ResourceObjectInPatchRequest<>)] = "###-data-in-patch-request",
+            [typeof(AttributesInPatchRequest<>)] = "###-attributes-in-patch-request",
+            [typeof(RelationshipsInPatchRequest<>)] = "###-relationships-in-patch-request",
+            [typeof(ToOneRelationshipInRequest<>)] = "to-one-###-in-request",
+            [typeof(NullableToOneRelationshipInRequest<>)] = "nullable-to-one-###-in-request",
+            [typeof(ToManyRelationshipInRequest<>)] = "to-many-###-in-request",
             [typeof(PrimaryResourceResponseDocument<>)] = "###-primary-response-document",
             [typeof(SecondaryResourceResponseDocument<>)] = "###-secondary-response-document",
             [typeof(NullableSecondaryResourceResponseDocument<>)] = "nullable-###-secondary-response-document",
@@ -27,10 +31,12 @@ namespace JsonApiDotNetCore.OpenApi
             [typeof(ResourceIdentifierResponseDocument<>)] = "###-identifier-response-document",
             [typeof(NullableResourceIdentifierResponseDocument<>)] = "nullable-###-identifier-response-document",
             [typeof(ResourceIdentifierCollectionResponseDocument<>)] = "###-identifier-collection-response-document",
-            [typeof(ToOneRelationshipResponseData<>)] = "to-one-###-response-data",
-            [typeof(NullableToOneRelationshipResponseData<>)] = "nullable-to-one-###-response-data",
-            [typeof(ToManyRelationshipResponseData<>)] = "to-many-###-response-data",
-            [typeof(ResourceResponseObject<>)] = "###-data-in-response",
+            [typeof(ToOneRelationshipInResponse<>)] = "to-one-###-in-response",
+            [typeof(NullableToOneRelationshipInResponse<>)] = "nullable-to-one-###-in-response",
+            [typeof(ToManyRelationshipInResponse<>)] = "to-many-###-in-response",
+            [typeof(ResourceObjectInResponse<>)] = "###-data-in-response",
+            [typeof(AttributesInResponse<>)] = "###-attributes-in-response",
+            [typeof(RelationshipsInResponse<>)] = "###-relationships-in-response",
             [typeof(ResourceIdentifierObject<>)] = "###-identifier"
         };
 

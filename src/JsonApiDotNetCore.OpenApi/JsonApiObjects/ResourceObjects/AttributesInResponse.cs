@@ -2,7 +2,8 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects
 {
-    internal sealed class ResourcePatchRequestObject<TResource> : ResourceObject<TResource>
+    // ReSharper disable once UnusedTypeParameter
+    internal sealed class AttributesInResponse<TResource>
         where TResource : IIdentifiable
     {
     }

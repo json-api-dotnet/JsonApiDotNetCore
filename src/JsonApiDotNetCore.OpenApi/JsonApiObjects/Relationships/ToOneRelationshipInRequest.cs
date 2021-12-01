@@ -2,10 +2,10 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData
+namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    internal sealed class ToManyRelationshipRequestData<TResource> : ManyData<ResourceIdentifierObject<TResource>>
+    internal sealed class ToOneRelationshipInRequest<TResource> : SingleData<ResourceIdentifierObject<TResource>>
         where TResource : IIdentifiable
     {
     }
