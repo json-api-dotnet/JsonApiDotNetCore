@@ -4,7 +4,7 @@ namespace JsonApiDotNetCore.SourceGenerators
 {
     // IMPORTANT: A copy of this type exists in the JsonApiDotNetCore project. Keep these in sync when making changes.
     [Flags]
-    internal enum JsonApiEndpointsCopy
+    public enum JsonApiEndpointsCopy
     {
         None = 0,
         GetCollection = 1,

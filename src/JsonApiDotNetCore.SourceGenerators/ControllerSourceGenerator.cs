@@ -45,10 +45,10 @@ namespace JsonApiDotNetCore.SourceGenerators
             }
 
             INamedTypeSymbol resourceAttributeType = context.Compilation.GetTypeByMetadataName("JsonApiDotNetCore.Resources.Annotations.ResourceAttribute");
-            INamedTypeSymbol openIdentifiableInterface = context.Compilation.GetTypeByMetadataName("JsonApiDotNetCore.Resources.IIdentifiable`1");
+            INamedTypeSymbol identifiableOpenInterface = context.Compilation.GetTypeByMetadataName("JsonApiDotNetCore.Resources.IIdentifiable`1");
             INamedTypeSymbol loggerFactoryInterface = context.Compilation.GetTypeByMetadataName("Microsoft.Extensions.Logging.ILoggerFactory");
 
-            if (resourceAttributeType == null || openIdentifiableInterface == null || loggerFactoryInterface == null)
+            if (resourceAttributeType == null || identifiableOpenInterface == null || loggerFactoryInterface == null)
             {
                 return;
             }
@@ -90,18 +90,18 @@ namespace JsonApiDotNetCore.SourceGenerators
 
                 string controllerNamespace = GetControllerNamespace(controllerNamespaceArgument, resourceType);
 
-                INamedTypeSymbol closedIdentifiableInterface = FirstOrDefault(resourceType.AllInterfaces, openIdentifiableInterface,
+                INamedTypeSymbol identifiableClosedInterface = FirstOrDefault(resourceType.AllInterfaces, identifiableOpenInterface,
                     (@interface, openInterface) => @interface.IsGenericType &&
                         SymbolEqualityComparer.Default.Equals(@interface.ConstructedFrom, openInterface));
 
-                if (closedIdentifiableInterface == null)
+                if (identifiableClosedInterface == null)
                 {
                     var diagnostic = Diagnostic.Create(MissingInterfaceWarning, typeDeclarationSyntax.GetLocation(), resourceType.Name);
                     context.ReportDiagnostic(diagnostic);
                     continue;
                 }
 
-                ITypeSymbol idType = closedIdentifiableInterface.TypeArguments[0];
+                ITypeSymbol idType = identifiableClosedInterface.TypeArguments[0];
                 string controllerName = $"{resourceType.Name.Pluralize()}Controller";
                 JsonApiEndpointsCopy endpointsToGenerate = (JsonApiEndpointsCopy?)(int?)endpointsArgument.Value ?? JsonApiEndpointsCopy.All;
 
