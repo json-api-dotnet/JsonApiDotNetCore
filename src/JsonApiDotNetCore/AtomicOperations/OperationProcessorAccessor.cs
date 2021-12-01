@@ -23,6 +23,11 @@ namespace JsonApiDotNetCore.AtomicOperations
             _serviceProvider = serviceProvider;
         }
 
+        public void NewMethod()
+        {
+                Console.WriteLine(100 + 200);
+        }
+
         /// <inheritdoc />
         public Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {

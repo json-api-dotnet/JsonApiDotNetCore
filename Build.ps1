@@ -99,12 +99,12 @@ CheckLastExitCode
 dotnet build -c Release
 CheckLastExitCode
 
-RunInspectCode
-RunCleanupCode
+#RunInspectCode
+#RunCleanupCode
 
-dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
-CheckLastExitCode
+#dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
+#CheckLastExitCode
 
 ReportCodeCoverage
 
-CreateNuGetPackage
+#CreateNuGetPackage
