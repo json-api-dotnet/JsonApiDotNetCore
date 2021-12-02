@@ -17,8 +17,6 @@ namespace JsonApiDotNetCore.Serialization.Objects
         // to ensure ManyValue never contains null items.
         where T : class, IResourceIdentity, new()
     {
-        // ReSharper disable once MergeConditionalExpression
-        // Justification: ReSharper reporting this is a bug, which is fixed in v2021.2.1. This condition cannot be merged.
         public object? Value => ManyValue != null ? ManyValue : SingleValue;
 
         [JsonIgnore]

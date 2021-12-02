@@ -281,7 +281,7 @@ namespace JsonApiDotNetCore.Configuration
         private static void IncludeField<TField>(Dictionary<string, TField> fieldsByName, TField field)
             where TField : ResourceFieldAttribute
         {
-            if (fieldsByName.TryGetValue(field.PublicName, out var existingField))
+            if (fieldsByName.TryGetValue(field.PublicName, out TField? existingField))
             {
                 throw CreateExceptionForDuplicatePublicName(field.Property.DeclaringType!, existingField, field);
             }
@@ -291,7 +291,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AssertNoDuplicatePublicName(ResourceType resourceType, string effectivePublicName)
         {
-            var (existingClrType, _) = _resourceTypesByClrType.FirstOrDefault(type => type.Value.PublicName == resourceType.PublicName);
+            (Type? existingClrType, _) = _resourceTypesByClrType.FirstOrDefault(type => type.Value.PublicName == resourceType.PublicName);
 
             if (existingClrType != null)
             {

@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentAssertions.Common;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;

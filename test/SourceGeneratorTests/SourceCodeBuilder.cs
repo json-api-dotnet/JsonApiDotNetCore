@@ -17,7 +17,7 @@ namespace SourceGeneratorTests
 
             if (_namespaceImports.Any())
             {
-                foreach (var namespaceImport in _namespaceImports)
+                foreach (string namespaceImport in _namespaceImports)
                 {
                     builder.AppendLine($"using {namespaceImport};");
                 }

@@ -35,7 +35,7 @@ namespace SourceGeneratorTests
             PortableExecutableReference systemRuntimeReference =
                 MetadataReference.CreateFromFile(Path.Combine(Path.GetDirectoryName(objectLocation)!, "System.Runtime.dll"));
 
-            foreach (var reference in new[]
+            foreach (PortableExecutableReference reference in new[]
             {
                 MetadataReference.CreateFromFile(objectLocation),
                 systemRuntimeReference
@@ -57,7 +57,7 @@ namespace SourceGeneratorTests
 
         public CompilationBuilder WithJsonApiDotNetCoreReferences()
         {
-            foreach (var reference in new[]
+            foreach (PortableExecutableReference reference in new[]
             {
                 MetadataReference.CreateFromFile(typeof(ControllerBase).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(AttrAttribute).Assembly.Location)

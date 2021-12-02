@@ -7,7 +7,8 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
     /// <summary>
-    /// Transforms <see cref="PaginationExpression" /> into <see cref="Queryable.Skip{TSource}" /> and <see cref="Queryable.Take{TSource}" /> calls.
+    /// Transforms <see cref="PaginationExpression" /> into <see cref="Queryable.Skip{TSource}" /> and
+    /// <see cref="Queryable.Take{TSource}(IQueryable{TSource},int)" /> calls.
     /// </summary>
     [PublicAPI]
     public class SkipTakeClauseBuilder : QueryClauseBuilder<object?>

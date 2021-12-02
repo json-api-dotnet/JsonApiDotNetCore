@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
