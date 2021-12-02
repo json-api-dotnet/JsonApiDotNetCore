@@ -582,7 +582,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             WebAccount account = _fakers.WebAccount.Generate();
-            account.UserName = $"&{account.UserName}";
 
             const int totalCount = 3 * DefaultPageSize + 3;
             List<BlogPost> posts = _fakers.BlogPost.Generate(totalCount);
@@ -599,7 +598,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            string routePrefix = $"/blogPosts?filter=equals(author.userName,'{WebUtility.UrlEncode(account.UserName)}')" +
+            string routePrefix = $"/blogPosts?filter=equals(author.userName,'{account.UserName}')" +
                 "&fields[webAccounts]=userName&include=author&sort=id&foo=bar,baz";
 
             string route = $"{routePrefix}&page[number]={pageNumber}";

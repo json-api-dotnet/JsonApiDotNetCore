@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Web;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using Humanizer;
@@ -208,7 +209,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/filterableResources?filter=equals(someDateTimeOffset,'{WebUtility.UrlEncode(resource.SomeDateTimeOffset.ToString("O"))}')";
+            string route = $"/filterableResources?filter=equals(someDateTimeOffset,'{HttpUtility.UrlEncode(resource.SomeDateTimeOffset.ToString("O"))}')";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

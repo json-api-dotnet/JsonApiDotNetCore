@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             // Arrange
             var resource = new FilterableResource
             {
-                SomeString = "This, that & more"
+                SomeString = "This, that & more + some"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
