@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentAssertions.Common;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Authentication;
@@ -40,10 +39,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
         {
             // Arrange
             var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-            clock.UtcNow = 27.January(2021);
+            clock.UtcNow = 27.January(2021).AsUtc();
 
             GiftCertificate certificate = _fakers.GiftCertificate.Generate();
-            certificate.IssueDate = 28.January(2020);
+            certificate.IssueDate = 28.January(2020).AsUtc();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -73,7 +72,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
         {
             // Arrange
             var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-            clock.UtcNow = 27.January(2021).At(13, 53);
+            clock.UtcNow = 27.January(2021).At(13, 53).AsUtc();
 
             List<PostOffice> postOffices = _fakers.PostOffice.Generate(2);
 
@@ -103,7 +102,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
         {
             // Arrange
             var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-            clock.UtcNow = 27.January(2021).At(13, 53);
+            clock.UtcNow = 27.January(2021).At(13, 53).AsUtc();
 
             GiftCertificate certificate = _fakers.GiftCertificate.Generate();
             certificate.Issuer = _fakers.PostOffice.Generate();
@@ -133,11 +132,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
         {
             // Arrange
             var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-            clock.UtcNow = 19.March(1998).At(6, 34);
+            clock.UtcNow = 19.March(1998).At(6, 34).AsUtc();
 
             PostOffice existingOffice = _fakers.PostOffice.Generate();
 
-            var newIssueDate = 18.March(1997).ToDateTimeOffset();
+            DateTimeOffset newIssueDate = 18.March(1997).AsUtc();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -218,7 +217,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
         {
             // Arrange
             var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-            clock.UtcNow = 19.March(1998).At(6, 34);
+            clock.UtcNow = 19.March(1998).At(6, 34).AsUtc();
 
             PostOffice existingOffice = _fakers.PostOffice.Generate();
             existingOffice.GiftCertificates = _fakers.GiftCertificate.Generate(1);

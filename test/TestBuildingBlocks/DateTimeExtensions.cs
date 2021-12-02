@@ -6,21 +6,16 @@ namespace TestBuildingBlocks
     {
         // The milliseconds precision in DateTime/DateTimeOffset values that fakers produce is higher
         // than what PostgreSQL can store. This results in our resource change tracker to detect
-        // that the time stored in database differs from the time in the request body.
-        // While that's technically correct, we don't want such side effects influencing our tests everywhere.
+        // that the time stored in the database differs from the time in the request body. While that's
+        // technically correct, we don't want such side effects influencing our tests everywhere.
 
         public static DateTimeOffset TruncateToWholeMilliseconds(this DateTimeOffset value)
         {
+            // Because PostgreSQL does not store the UTC offset in the database, it cannot round-trip
+            // values with a non-zero UTC offset, and therefore always rejects such values.
+
             DateTime dateTime = TruncateToWholeMilliseconds(value.DateTime);
-
-            // PostgreSQL is unable to store the timezone in the database, so it always uses the local zone.
-            // See https://www.npgsql.org/doc/types/datetime.html.
-            // We're taking the local zone here, to prevent our change tracker to detect that the time
-            // stored in database differs from the time in the request body. While that's technically
-            // correct, we don't want such side effects influencing our tests everywhere.
-            TimeSpan offset = TimeZoneInfo.Local.GetUtcOffset(dateTime);
-
-            return new DateTimeOffset(dateTime, offset);
+            return new DateTimeOffset(dateTime, TimeSpan.Zero);
         }
 
         public static DateTime TruncateToWholeMilliseconds(this DateTime value)

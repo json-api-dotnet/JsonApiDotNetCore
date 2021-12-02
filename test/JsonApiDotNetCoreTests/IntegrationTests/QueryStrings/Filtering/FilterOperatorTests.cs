@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using FluentAssertions;
+using FluentAssertions.Extensions;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -350,18 +352,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
         [InlineData("2001-01-09", "2001-01-01", ComparisonOperator.GreaterThan, "2001-01-01")]
         [InlineData("2001-01-09", "2001-01-01", ComparisonOperator.GreaterOrEqual, "2001-01-05")]
         [InlineData("2001-01-09", "2001-01-01", ComparisonOperator.GreaterOrEqual, "2001-01-09")]
-        public async Task Can_filter_comparison_on_DateTime(string matchingDateTime, string nonMatchingDateTime, ComparisonOperator filterOperator,
-            string filterDateTime)
+        public async Task Can_filter_comparison_on_DateTime_in_local_time_zone(string matchingDateTime, string nonMatchingDateTime,
+            ComparisonOperator filterOperator, string filterDateTime)
         {
             // Arrange
             var resource = new FilterableResource
             {
-                SomeDateTime = DateTime.ParseExact(matchingDateTime, "yyyy-MM-dd", null)
+                SomeDateTimeInLocalZone = DateTime.Parse(matchingDateTime, CultureInfo.InvariantCulture).AsLocal()
             };
 
             var otherResource = new FilterableResource
             {
-                SomeDateTime = DateTime.ParseExact(nonMatchingDateTime, "yyyy-MM-dd", null)
+                SomeDateTimeInLocalZone = DateTime.Parse(nonMatchingDateTime, CultureInfo.InvariantCulture).AsLocal()
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -371,8 +373,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someDateTime," +
-                $"'{DateTime.ParseExact(filterDateTime, "yyyy-MM-dd", null)}')";
+            string route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someDateTimeInLocalZone,'{filterDateTime}')";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -382,8 +383,52 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
 
-            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTime")
-                .With(value => value.As<DateTime>().Should().BeCloseTo(resource.SomeDateTime));
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTimeInLocalZone")
+                .With(value => value.As<DateTime>().Should().BeCloseTo(resource.SomeDateTimeInLocalZone));
+        }
+
+        [Theory]
+        [InlineData("2001-01-01", "2001-01-09", ComparisonOperator.LessThan, "2001-01-05Z")]
+        [InlineData("2001-01-01", "2001-01-09", ComparisonOperator.LessThan, "2001-01-09Z")]
+        [InlineData("2001-01-01", "2001-01-09", ComparisonOperator.LessOrEqual, "2001-01-05Z")]
+        [InlineData("2001-01-01", "2001-01-09", ComparisonOperator.LessOrEqual, "2001-01-01Z")]
+        [InlineData("2001-01-09", "2001-01-01", ComparisonOperator.GreaterThan, "2001-01-05Z")]
+        [InlineData("2001-01-09", "2001-01-01", ComparisonOperator.GreaterThan, "2001-01-01Z")]
+        [InlineData("2001-01-09", "2001-01-01", ComparisonOperator.GreaterOrEqual, "2001-01-05Z")]
+        [InlineData("2001-01-09", "2001-01-01", ComparisonOperator.GreaterOrEqual, "2001-01-09Z")]
+        public async Task Can_filter_comparison_on_DateTime_in_UTC_time_zone(string matchingDateTime, string nonMatchingDateTime,
+            ComparisonOperator filterOperator, string filterDateTime)
+        {
+            // Arrange
+            var resource = new FilterableResource
+            {
+                SomeDateTimeInUtcZone = DateTime.Parse(matchingDateTime, CultureInfo.InvariantCulture).AsUtc()
+            };
+
+            var otherResource = new FilterableResource
+            {
+                SomeDateTimeInUtcZone = DateTime.Parse(nonMatchingDateTime, CultureInfo.InvariantCulture).AsUtc()
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<FilterableResource>();
+                dbContext.FilterableResources.AddRange(resource, otherResource);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someDateTimeInUtcZone,'{filterDateTime}')";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
+
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTimeInUtcZone")
+                .With(value => value.As<DateTime>().Should().BeCloseTo(resource.SomeDateTimeInUtcZone));
         }
 
         [Theory]

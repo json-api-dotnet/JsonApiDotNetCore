@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using JetBrains.Annotations;
 
 #pragma warning disable AV1008 // Class should not be static
@@ -48,9 +49,15 @@ namespace JsonApiDotNetCore.Resources.Internal
                     return isNullableTypeRequested ? (Guid?)convertedValue : convertedValue;
                 }
 
+                if (nonNullableType == typeof(DateTime))
+                {
+                    DateTime convertedValue = DateTime.Parse(stringValue, null, DateTimeStyles.RoundtripKind);
+                    return isNullableTypeRequested ? (DateTime?)convertedValue : convertedValue;
+                }
+
                 if (nonNullableType == typeof(DateTimeOffset))
                 {
-                    DateTimeOffset convertedValue = DateTimeOffset.Parse(stringValue);
+                    DateTimeOffset convertedValue = DateTimeOffset.Parse(stringValue, null, DateTimeStyles.RoundtripKind);
                     return isNullableTypeRequested ? (DateTimeOffset?)convertedValue : convertedValue;
                 }
 

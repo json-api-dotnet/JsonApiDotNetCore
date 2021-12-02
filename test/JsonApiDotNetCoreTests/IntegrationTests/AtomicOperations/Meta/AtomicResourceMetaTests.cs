@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
                             attributes = new
                             {
                                 title = newTitle1,
-                                releasedAt = 1.January(2018)
+                                releasedAt = 1.January(2018).AsUtc()
                             }
                         }
                     },
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
                             attributes = new
                             {
                                 title = newTitle2,
-                                releasedAt = 23.August(1994)
+                                releasedAt = 23.August(1994).AsUtc()
                             }
                         }
                     }

@@ -507,8 +507,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             blogs[1].Owner!.Posts[0].Caption = "One";
             blogs[1].Owner!.Posts[1].Caption = "Two";
             blogs[1].Owner!.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
-            blogs[1].Owner!.Posts[1].Comments.ElementAt(0).CreatedAt = 1.January(2000);
-            blogs[1].Owner!.Posts[1].Comments.ElementAt(1).CreatedAt = 10.January(2010);
+            blogs[1].Owner!.Posts[1].Comments.ElementAt(0).CreatedAt = 1.January(2000).AsUtc();
+            blogs[1].Owner!.Posts[1].Comments.ElementAt(1).CreatedAt = 10.January(2010).AsUtc();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -522,7 +522,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             const string route = "/blogs?include=owner.posts.comments&" +
                 "filter=and(equals(title,'Technology'),has(owner.posts),equals(owner.userName,'Smith'))&" +
                 "filter[owner.posts]=equals(caption,'Two')&" +
-                "filter[owner.posts.comments]=greaterThan(createdAt,'2005-05-05')";
+                "filter[owner.posts.comments]=greaterThan(createdAt,'2005-05-05Z')";
 
             // @formatter:keep_existing_linebreaks restore
 

@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentAssertions.Common;
 using FluentAssertions.Extensions;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
@@ -134,12 +133,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
         }
 
         [Fact]
-        public async Task Can_filter_equality_on_type_DateTime()
+        public async Task Can_filter_equality_on_type_DateTime_in_local_time_zone()
         {
             // Arrange
             var resource = new FilterableResource
             {
-                SomeDateTime = 27.January(2003).At(11, 22, 33, 44)
+                SomeDateTimeInLocalZone = 27.January(2003).At(11, 22, 33, 44)
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -149,7 +148,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/filterableResources?filter=equals(someDateTime,'{resource.SomeDateTime:O}')";
+            string route = $"/filterableResources?filter=equals(someDateTimeInLocalZone,'{resource.SomeDateTimeInLocalZone:O}')";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -159,17 +158,47 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
 
-            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTime")
-                .With(value => value.As<DateTime>().Should().BeCloseTo(resource.SomeDateTime));
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTimeInLocalZone")
+                .With(value => value.As<DateTime>().Should().BeCloseTo(resource.SomeDateTimeInLocalZone));
         }
 
         [Fact]
-        public async Task Can_filter_equality_on_type_DateTimeOffset()
+        public async Task Can_filter_equality_on_type_DateTime_in_UTC_time_zone()
         {
             // Arrange
             var resource = new FilterableResource
             {
-                SomeDateTimeOffset = 27.January(2003).At(11, 22, 33, 44).ToDateTimeOffset(TimeSpan.FromHours(3))
+                SomeDateTimeInUtcZone = 27.January(2003).At(11, 22, 33, 44).AsUtc()
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<FilterableResource>();
+                dbContext.FilterableResources.AddRange(resource, new FilterableResource());
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/filterableResources?filter=equals(someDateTimeInUtcZone,'{resource.SomeDateTimeInUtcZone:O}')";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
+
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTimeInUtcZone")
+                .With(value => value.As<DateTime>().Should().BeCloseTo(resource.SomeDateTimeInUtcZone));
+        }
+
+        [Fact]
+        public async Task Can_filter_equality_on_type_DateTimeOffset_in_UTC_time_zone()
+        {
+            // Arrange
+            var resource = new FilterableResource
+            {
+                SomeDateTimeOffset = 27.January(2003).At(11, 22, 33, 44).AsUtc()
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -282,8 +311,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
                 SomeNullableDecimal = 1,
                 SomeNullableDouble = 1,
                 SomeNullableGuid = Guid.NewGuid(),
-                SomeNullableDateTime = 1.January(2001),
-                SomeNullableDateTimeOffset = 1.January(2001).ToDateTimeOffset(TimeSpan.FromHours(-1)),
+                SomeNullableDateTime = 1.January(2001).AsUtc(),
+                SomeNullableDateTimeOffset = 1.January(2001).AsUtc(),
                 SomeNullableTimeSpan = TimeSpan.FromHours(1),
                 SomeNullableEnum = DayOfWeek.Friday
             };
@@ -332,8 +361,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
                 SomeNullableDecimal = 1,
                 SomeNullableDouble = 1,
                 SomeNullableGuid = Guid.NewGuid(),
-                SomeNullableDateTime = 1.January(2001),
-                SomeNullableDateTimeOffset = 1.January(2001).ToDateTimeOffset(TimeSpan.FromHours(-1)),
+                SomeNullableDateTime = 1.January(2001).AsUtc(),
+                SomeNullableDateTimeOffset = 1.January(2001).AsUtc(),
                 SomeNullableTimeSpan = TimeSpan.FromHours(1),
                 SomeNullableEnum = DayOfWeek.Friday
             };

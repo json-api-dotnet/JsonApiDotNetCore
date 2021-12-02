@@ -19,7 +19,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 {
     public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext>>
     {
-        private static readonly DateTimeOffset SoftDeletionTime = 1.January(2001).ToDateTimeOffset();
+        private static readonly DateTimeOffset SoftDeletionTime = 1.January(2001).AsUtc();
 
         private readonly IntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext> _testContext;
         private readonly SoftDeletionFakers _fakers = new();
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             {
                 services.AddSingleton<ISystemClock>(new FrozenSystemClock
                 {
-                    UtcNow = 1.January(2005).ToDateTimeOffset()
+                    UtcNow = 1.January(2005).AsUtc()
                 });
 
                 services.AddResourceService<SoftDeletionAwareResourceService<Company, int>>();

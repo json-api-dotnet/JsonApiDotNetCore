@@ -320,9 +320,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             blogs[0].Posts[3].Url = "";
 
             blogs[0].Posts[0].Comments = _fakers.Comment.Generate(3).ToHashSet();
-            blogs[0].Posts[0].Comments.ElementAt(0).CreatedAt = 1.January(2015);
-            blogs[0].Posts[0].Comments.ElementAt(1).CreatedAt = 1.January(2014);
-            blogs[0].Posts[0].Comments.ElementAt(2).CreatedAt = 1.January(2016);
+            blogs[0].Posts[0].Comments.ElementAt(0).CreatedAt = 1.January(2015).AsUtc();
+            blogs[0].Posts[0].Comments.ElementAt(1).CreatedAt = 1.January(2014).AsUtc();
+            blogs[0].Posts[0].Comments.ElementAt(2).CreatedAt = 1.January(2016).AsUtc();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -412,8 +412,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             blogs[1].Owner!.Posts[1].Caption = "Two";
 
             blogs[1].Owner!.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
-            blogs[1].Owner!.Posts[1].Comments.ElementAt(0).CreatedAt = 1.January(2000);
-            blogs[1].Owner!.Posts[1].Comments.ElementAt(0).CreatedAt = 10.January(2010);
+            blogs[1].Owner!.Posts[1].Comments.ElementAt(0).CreatedAt = 1.January(2000).AsUtc();
+            blogs[1].Owner!.Posts[1].Comments.ElementAt(0).CreatedAt = 10.January(2010).AsUtc();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

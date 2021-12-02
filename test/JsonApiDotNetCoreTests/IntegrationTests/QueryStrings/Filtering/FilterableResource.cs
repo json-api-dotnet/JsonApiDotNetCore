@@ -59,7 +59,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
         public Guid? SomeNullableGuid { get; set; }
 
         [Attr]
-        public DateTime SomeDateTime { get; set; }
+        public DateTime SomeDateTimeInLocalZone { get; set; }
+
+        [Attr]
+        public DateTime SomeDateTimeInUtcZone { get; set; }
 
         [Attr]
         public DateTime? SomeNullableDateTime { get; set; }

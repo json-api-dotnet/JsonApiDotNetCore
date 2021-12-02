@@ -16,7 +16,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings
 {
     public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
-        private static readonly DateTime FrozenTime = 30.July(2018).At(13, 46, 12);
+        private static readonly DateTime FrozenTime = 30.July(2018).At(13, 46, 12).AsUtc();
 
         private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new();

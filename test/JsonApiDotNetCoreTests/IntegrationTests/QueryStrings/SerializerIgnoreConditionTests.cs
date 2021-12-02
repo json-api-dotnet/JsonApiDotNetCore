@@ -40,7 +40,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
             calendar.Appointments = _fakers.Appointment.Generate(1).ToHashSet();
             calendar.Appointments.Single().Description = null;
             calendar.Appointments.Single().StartTime = default;
-            calendar.Appointments.Single().EndTime = 1.January(2001);
+            calendar.Appointments.Single().EndTime = 1.January(2001).AsUtc();
 
             await RunOnDatabaseAsync(async dbContext =>
             {
