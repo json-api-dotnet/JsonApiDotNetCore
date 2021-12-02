@@ -133,7 +133,7 @@ namespace JsonApiDotNetCore.Controllers
             using IDisposable _ = new RevertRequestStateOnDispose(_request, _targetedFields);
 
             int operationIndex = 0;
-            var requestModelState = new List<(string key, ModelStateEntry entry)>();
+            var requestModelState = new List<(string key, ModelStateEntry? entry)>();
             int maxErrorsRemaining = ModelState.MaxAllowedErrors;
 
             foreach (OperationContainer operation in operations)
@@ -150,7 +150,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (requestModelState.Any())
             {
-                Dictionary<string, ModelStateEntry> modelStateDictionary = requestModelState.ToDictionary(tuple => tuple.key, tuple => tuple.entry);
+                Dictionary<string, ModelStateEntry?> modelStateDictionary = requestModelState.ToDictionary(tuple => tuple.key, tuple => tuple.entry);
 
                 throw new InvalidModelStateException(modelStateDictionary, typeof(IList<OperationContainer>), _options.IncludeExceptionStackTraceInErrors,
                     _resourceGraph,
@@ -158,7 +158,7 @@ namespace JsonApiDotNetCore.Controllers
             }
         }
 
-        private int ValidateOperation(OperationContainer operation, int operationIndex, List<(string key, ModelStateEntry entry)> requestModelState,
+        private int ValidateOperation(OperationContainer operation, int operationIndex, List<(string key, ModelStateEntry? entry)> requestModelState,
             int maxErrorsRemaining)
         {
             if (operation.Request.WriteOperation is WriteOperationKind.CreateResource or WriteOperationKind.UpdateResource)
@@ -182,7 +182,7 @@ namespace JsonApiDotNetCore.Controllers
 
                     foreach (string key in validationContext.ModelState.Keys)
                     {
-                        ModelStateEntry entry = validationContext.ModelState[key];
+                        ModelStateEntry entry = validationContext.ModelState[key]!;
 
                         if (entry.ValidationState == ModelValidationState.Invalid)
                         {

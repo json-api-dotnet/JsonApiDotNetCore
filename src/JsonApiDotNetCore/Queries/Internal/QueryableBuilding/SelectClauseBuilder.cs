@@ -112,7 +112,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             foreach (IProperty entityProperty in entityProperties)
             {
-                var propertySelector = new PropertySelector(entityProperty.PropertyInfo);
+                var propertySelector = new PropertySelector(entityProperty.PropertyInfo!);
                 IncludeWritableProperty(propertySelector, propertySelectors);
             }
         }

@@ -20,13 +20,13 @@ namespace JsonApiDotNetCore.Errors
     [PublicAPI]
     public sealed class InvalidModelStateException : JsonApiException
     {
-        public InvalidModelStateException(IReadOnlyDictionary<string, ModelStateEntry> modelState, Type modelType, bool includeExceptionStackTraceInErrors,
+        public InvalidModelStateException(IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType, bool includeExceptionStackTraceInErrors,
             IResourceGraph resourceGraph, Func<Type, int, Type?>? getCollectionElementTypeCallback = null)
             : base(FromModelStateDictionary(modelState, modelType, resourceGraph, includeExceptionStackTraceInErrors, getCollectionElementTypeCallback))
         {
         }
 
-        private static IEnumerable<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry> modelState, Type modelType,
+        private static IEnumerable<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType,
             IResourceGraph resourceGraph, bool includeExceptionStackTraceInErrors, Func<Type, int, Type?>? getCollectionElementTypeCallback)
         {
             ArgumentGuard.NotNull(modelState, nameof(modelState));
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.Errors
         }
 
         private static IEnumerable<(ModelStateEntry entry, string? sourcePointer)> ResolveSourcePointers(
-            IReadOnlyDictionary<string, ModelStateEntry> modelState, Type modelType, IResourceGraph resourceGraph,
+            IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType, IResourceGraph resourceGraph,
             Func<Type, int, Type?>? getCollectionElementTypeCallback)
         {
             foreach (string key in modelState.Keys)
@@ -53,7 +53,7 @@ namespace JsonApiDotNetCore.Errors
                 var rootSegment = ModelStateKeySegment.Create(modelType, key, getCollectionElementTypeCallback);
                 string? sourcePointer = ResolveSourcePointer(rootSegment, resourceGraph);
 
-                yield return (modelState[key], sourcePointer);
+                yield return (modelState[key]!, sourcePointer);
             }
         }
 
