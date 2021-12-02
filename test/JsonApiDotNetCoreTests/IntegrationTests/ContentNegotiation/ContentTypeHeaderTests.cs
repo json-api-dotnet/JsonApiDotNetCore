@@ -182,7 +182,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             const string route = "/policies";
-            string contentType = $"{HeaderConstants.MediaType}; profile=something";
+            const string contentType = $"{HeaderConstants.MediaType}; profile=something";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
@@ -217,7 +217,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             const string route = "/policies";
-            string contentType = $"{HeaderConstants.MediaType}; ext=something";
+            const string contentType = $"{HeaderConstants.MediaType}; ext=something";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
@@ -287,7 +287,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             const string route = "/policies";
-            string contentType = $"{HeaderConstants.MediaType}; charset=ISO-8859-4";
+            const string contentType = $"{HeaderConstants.MediaType}; charset=ISO-8859-4";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
@@ -322,7 +322,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             const string route = "/policies";
-            string contentType = $"{HeaderConstants.MediaType}; unknown=unexpected";
+            const string contentType = $"{HeaderConstants.MediaType}; unknown=unexpected";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
@@ -375,7 +375,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             responseDocument.Errors.ShouldHaveCount(1);
 
-            string detail = $"Please specify '{HeaderConstants.AtomicOperationsMediaType}' instead of '{contentType}' for the Content-Type header value.";
+            const string detail = $"Please specify '{HeaderConstants.AtomicOperationsMediaType}' instead of '{contentType}' for the Content-Type header value.";
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);

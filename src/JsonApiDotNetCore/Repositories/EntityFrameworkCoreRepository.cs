@@ -297,7 +297,7 @@ namespace JsonApiDotNetCore.Repositories
             if (relationship is HasOneAttribute)
             {
                 INavigation? navigation = GetNavigation(relationship);
-                bool isRelationshipRequired = navigation?.ForeignKey?.IsRequired ?? false;
+                bool isRelationshipRequired = navigation?.ForeignKey.IsRequired ?? false;
 
                 bool isClearingRelationship = rightValue == null;
 

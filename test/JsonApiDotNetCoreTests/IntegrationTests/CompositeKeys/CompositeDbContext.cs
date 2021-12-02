@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 
             builder.Entity<Engine>()
                 .HasOne(engine => engine.Car)
-                .WithOne(car => car!.Engine)
+                .WithOne(car => car.Engine)
                 .HasForeignKey<Engine>();
 
             builder.Entity<Dealership>()

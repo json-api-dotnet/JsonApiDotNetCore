@@ -441,7 +441,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Included[2].Type.Should().Be("comments");
             responseDocument.Included[2].Id.Should().Be(blogs[1].Owner!.Posts[1].Comments.ElementAt(1).StringId);
 
-            string linkPrefix = $"{HostPrefix}/blogs?include=owner.posts.comments";
+            const string linkPrefix = $"{HostPrefix}/blogs?include=owner.posts.comments";
 
             responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
@@ -455,7 +455,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_paginate_in_unknown_scope()
         {
             // Arrange
-            string route = $"/webAccounts?page[number]={Unknown.Relationship}:1";
+            const string route = $"/webAccounts?page[number]={Unknown.Relationship}:1";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -477,7 +477,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_paginate_in_unknown_nested_scope()
         {
             // Arrange
-            string route = $"/webAccounts?page[size]=posts.{Unknown.Relationship}:1";
+            const string route = $"/webAccounts?page[size]=posts.{Unknown.Relationship}:1";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

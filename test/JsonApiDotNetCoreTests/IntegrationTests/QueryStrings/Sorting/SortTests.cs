@@ -456,7 +456,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
         public async Task Cannot_sort_in_unknown_scope()
         {
             // Arrange
-            string route = $"/webAccounts?sort[{Unknown.Relationship}]=id";
+            const string route = $"/webAccounts?sort[{Unknown.Relationship}]=id";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -478,7 +478,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
         public async Task Cannot_sort_in_unknown_nested_scope()
         {
             // Arrange
-            string route = $"/webAccounts?sort[posts.{Unknown.Relationship}]=id";
+            const string route = $"/webAccounts?sort[posts.{Unknown.Relationship}]=id";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

@@ -836,7 +836,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
         public async Task Cannot_include_unknown_relationship()
         {
             // Arrange
-            string route = $"/webAccounts?include={Unknown.Relationship}";
+            const string route = $"/webAccounts?include={Unknown.Relationship}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -858,7 +858,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
         public async Task Cannot_include_unknown_nested_relationship()
         {
             // Arrange
-            string route = $"/blogs?include=posts.{Unknown.Relationship}";
+            const string route = $"/blogs?include=posts.{Unknown.Relationship}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

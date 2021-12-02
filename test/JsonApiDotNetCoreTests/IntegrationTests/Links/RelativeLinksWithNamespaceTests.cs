@@ -93,7 +93,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"{PathPrefix}/photoAlbums?include=photos";
+            const string route = $"{PathPrefix}/photoAlbums?include=photos";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -346,7 +346,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
                 }
             };
 
-            string route = $"{PathPrefix}/photoAlbums?include=photos";
+            const string route = $"{PathPrefix}/photoAlbums?include=photos";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);

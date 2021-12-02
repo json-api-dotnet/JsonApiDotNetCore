@@ -30,7 +30,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
         public async Task Cannot_filter_in_unknown_scope()
         {
             // Arrange
-            string route = $"/webAccounts?filter[{Unknown.Relationship}]=equals(title,null)";
+            const string route = $"/webAccounts?filter[{Unknown.Relationship}]=equals(title,null)";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
         public async Task Cannot_filter_in_unknown_nested_scope()
         {
             // Arrange
-            string route = $"/webAccounts?filter[posts.{Unknown.Relationship}]=equals(title,null)";
+            const string route = $"/webAccounts?filter[posts.{Unknown.Relationship}]=equals(title,null)";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

@@ -705,7 +705,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
         public async Task Cannot_select_on_unknown_resource_type()
         {
             // Arrange
-            string route = $"/webAccounts?fields[{Unknown.ResourceType}]=id";
+            const string route = $"/webAccounts?fields[{Unknown.ResourceType}]=id";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

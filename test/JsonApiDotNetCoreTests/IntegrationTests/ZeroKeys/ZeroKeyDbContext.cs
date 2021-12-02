@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
 
             builder.Entity<Player>()
                 .HasOne(player => player.ActiveGame)
-                .WithMany(game => game!.ActivePlayers);
+                .WithMany(game => game.ActivePlayers);
         }
     }
 }
