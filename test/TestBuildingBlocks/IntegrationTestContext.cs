@@ -83,14 +83,7 @@ namespace TestBuildingBlocks
 
                 services.AddDbContext<TDbContext>(options =>
                 {
-                    options.UseNpgsql(dbConnectionString, builder =>
-                        // The next line suppresses Entity Framework Core Warning:
-                        //    "Compiling a query which loads related collections for more than one collection navigation
-                        //    either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured."
-                        // We'd like to use `QuerySplittingBehavior.SplitQuery` because of improved performance, but unfortunately
-                        // it makes Entity Framework Core 5 crash on queries that load related data in a projection without Include.
-                        // This is fixed in Entity Framework Core 6, tracked at https://github.com/dotnet/efcore/issues/21234.
-                        builder.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery));
+                    options.UseNpgsql(dbConnectionString, builder => builder.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
 
 #if DEBUG
                     options.EnableSensitiveDataLogging();
