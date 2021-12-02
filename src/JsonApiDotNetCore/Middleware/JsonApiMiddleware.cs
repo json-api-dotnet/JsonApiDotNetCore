@@ -11,7 +11,6 @@ using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
@@ -130,8 +129,6 @@ namespace JsonApiDotNetCore.Middleware
         {
             string? contentType = httpContext.Request.ContentType;
 
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            // Justification: Workaround for https://github.com/dotnet/aspnetcore/issues/32097 (fixed in .NET 6)
             if (contentType != null && contentType != allowedContentType)
             {
                 await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.UnsupportedMediaType)
