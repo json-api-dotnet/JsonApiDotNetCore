@@ -82,12 +82,6 @@ namespace JsonApiDotNetCore.Middleware
                     httpContext.RegisterJsonApiRequest();
                 }
 
-                // Workaround for bug https://github.com/dotnet/aspnetcore/issues/33394 (fixed in .NET 6)
-                // Note that integration tests do not cover this, because the query string is short-circuited through WebApplicationFactory.
-                // To manually test, execute a GET request such as http://localhost:14140/api/v1/todoItems?include=owner&fields[people]=
-                // and observe it does not fail with 400 "Unknown query string parameter".
-                httpContext.Features.Set<IQueryFeature>(new FixedQueryFeature(httpContext.Features));
-
                 using (CodeTimingSessionManager.Current.Measure("Subsequent middleware"))
                 {
                     await _next(httpContext);
