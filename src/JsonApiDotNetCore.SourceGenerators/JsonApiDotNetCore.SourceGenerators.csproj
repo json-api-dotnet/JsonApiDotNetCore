@@ -47,7 +47,6 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer.Core" Version="$(HumanizerVersion)" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="$(MicrosoftCodeAnalysisVersion)" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(MicrosoftCodeAnalysisVersion)" PrivateAssets="all" />
   </ItemGroup>
 </Project>
