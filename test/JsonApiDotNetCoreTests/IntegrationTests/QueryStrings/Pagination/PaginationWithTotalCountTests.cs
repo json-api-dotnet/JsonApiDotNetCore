@@ -34,9 +34,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             options.MaximumPageSize = null;
             options.MaximumPageNumber = null;
             options.AllowUnknownQueryStringParameters = true;
-
-            options.DisableTopPagination = false;
-            options.DisableChildrenPagination = false;
         }
 
         [Fact]
@@ -349,11 +346,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
                 dbContext.Posts.AddRange(posts);
                 await dbContext.SaveChangesAsync();
             });
-
-            // Workaround for https://github.com/dotnet/efcore/issues/21026
-            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.DisableTopPagination = true;
-            options.DisableChildrenPagination = false;
 
             const string route = "/blogPosts?include=labels&page[number]=labels:2&page[size]=labels:1";
 

@@ -27,9 +27,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.EnableLegacyFilterNotation = false;
-
-            options.DisableTopPagination = false;
-            options.DisableChildrenPagination = false;
         }
 
         [Fact]
@@ -369,11 +366,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
                 dbContext.Posts.AddRange(posts);
                 await dbContext.SaveChangesAsync();
             });
-
-            // Workaround for https://github.com/dotnet/efcore/issues/21026
-            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.DisableTopPagination = false;
-            options.DisableChildrenPagination = true;
 
             const string route = "/blogPosts?include=labels&filter[labels]=equals(name,'Hot')";
 

@@ -22,10 +22,6 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         JsonSerializerOptions IJsonApiOptions.SerializerWriteOptions => _lazySerializerWriteOptions.Value;
 
-        // Workaround for https://github.com/dotnet/efcore/issues/21026
-        internal bool DisableTopPagination { get; set; }
-        internal bool DisableChildrenPagination { get; set; }
-
         /// <inheritdoc />
         public string? Namespace { get; set; }
 
