@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Threading.Tasks;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.QueryStrings;
 using Microsoft.AspNetCore.Mvc.Filters;

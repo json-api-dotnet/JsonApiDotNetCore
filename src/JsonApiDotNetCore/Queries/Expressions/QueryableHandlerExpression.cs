@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Primitives;

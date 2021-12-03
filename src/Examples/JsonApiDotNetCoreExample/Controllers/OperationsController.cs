@@ -3,7 +3,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
-using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {

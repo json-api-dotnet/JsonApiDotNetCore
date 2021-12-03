@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 

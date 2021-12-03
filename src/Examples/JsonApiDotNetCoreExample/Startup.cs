@@ -1,15 +1,9 @@
-using System;
 using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample
 {

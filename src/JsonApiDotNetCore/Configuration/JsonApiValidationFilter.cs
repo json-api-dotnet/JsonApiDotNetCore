@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Http;

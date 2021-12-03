@@ -1,7 +1,4 @@
-using System.Collections.Generic;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages;

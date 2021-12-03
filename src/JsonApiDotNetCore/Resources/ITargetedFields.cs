@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources

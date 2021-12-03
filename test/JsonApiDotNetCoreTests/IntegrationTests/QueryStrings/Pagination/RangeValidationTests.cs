@@ -1,7 +1,4 @@
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;

@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging.Abstractions;

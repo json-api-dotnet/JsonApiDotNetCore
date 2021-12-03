@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;

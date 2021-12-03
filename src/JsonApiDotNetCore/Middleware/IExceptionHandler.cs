@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Middleware

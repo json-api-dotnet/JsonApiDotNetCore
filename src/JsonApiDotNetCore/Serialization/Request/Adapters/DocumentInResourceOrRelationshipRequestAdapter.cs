@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;

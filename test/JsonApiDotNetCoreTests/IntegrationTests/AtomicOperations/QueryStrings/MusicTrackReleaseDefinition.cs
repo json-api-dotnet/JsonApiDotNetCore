@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;

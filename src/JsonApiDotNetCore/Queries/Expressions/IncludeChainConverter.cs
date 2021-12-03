@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions

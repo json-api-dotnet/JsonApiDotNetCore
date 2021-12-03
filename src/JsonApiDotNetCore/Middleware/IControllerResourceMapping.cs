@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Middleware

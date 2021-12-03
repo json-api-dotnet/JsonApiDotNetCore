@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.Design;
 using BenchmarkDotNet.Attributes;
 using JsonApiDotNetCore;

@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Linq;
 using System.Net;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;

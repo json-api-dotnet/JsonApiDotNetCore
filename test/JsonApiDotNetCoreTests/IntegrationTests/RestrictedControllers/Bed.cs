@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources;

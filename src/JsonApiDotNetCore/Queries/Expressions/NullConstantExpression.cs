@@ -1,4 +1,3 @@
-using System;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 

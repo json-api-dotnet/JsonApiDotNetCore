@@ -1,4 +1,3 @@
-using System;
 using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;

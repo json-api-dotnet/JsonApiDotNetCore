@@ -1,5 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Repositories;
 using Microsoft.EntityFrameworkCore;

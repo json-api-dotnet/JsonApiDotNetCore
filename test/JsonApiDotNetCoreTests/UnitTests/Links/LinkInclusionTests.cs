@@ -1,4 +1,3 @@
-using System;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;

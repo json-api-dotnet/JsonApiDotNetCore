@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing

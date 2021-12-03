@@ -1,5 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
 using JsonApiDotNetCore.AtomicOperations.Processors;
 using JsonApiDotNetCore.Resources;
 

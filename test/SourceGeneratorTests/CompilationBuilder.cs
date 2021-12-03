@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;

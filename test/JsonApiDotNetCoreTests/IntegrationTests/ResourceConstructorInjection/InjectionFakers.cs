@@ -1,4 +1,3 @@
-using System;
 using Bogus;
 using JsonApiDotNetCore;
 using Microsoft.Extensions.DependencyInjection;

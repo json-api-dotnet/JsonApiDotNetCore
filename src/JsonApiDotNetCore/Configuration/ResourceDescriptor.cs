@@ -1,5 +1,3 @@
-using System;
-
 namespace JsonApiDotNetCore.Configuration
 {
     internal sealed class ResourceDescriptor

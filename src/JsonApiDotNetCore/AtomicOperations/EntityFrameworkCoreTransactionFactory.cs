@@ -1,5 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Repositories;
 using Microsoft.EntityFrameworkCore;

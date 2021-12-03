@@ -1,5 +1,3 @@
-using System;
-
 namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 {
     public interface ITenantProvider

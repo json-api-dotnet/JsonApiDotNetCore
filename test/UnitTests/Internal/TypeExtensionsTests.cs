@@ -1,4 +1,3 @@
-using System;
 using FluentAssertions;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Resources;

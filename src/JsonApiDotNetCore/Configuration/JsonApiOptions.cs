@@ -1,8 +1,6 @@
-using System;
 using System.Data;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Threading;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.JsonConverters;

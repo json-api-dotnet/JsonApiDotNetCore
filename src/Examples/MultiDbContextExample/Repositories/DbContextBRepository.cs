@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
-using Microsoft.Extensions.Logging;
 using MultiDbContextExample.Data;
 
 namespace MultiDbContextExample.Repositories

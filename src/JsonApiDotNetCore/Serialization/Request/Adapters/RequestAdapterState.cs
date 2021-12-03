@@ -1,4 +1,3 @@
-using System;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Middleware;

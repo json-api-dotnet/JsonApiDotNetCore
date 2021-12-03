@@ -1,5 +1,3 @@
-using System;
-
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     /// <summary>

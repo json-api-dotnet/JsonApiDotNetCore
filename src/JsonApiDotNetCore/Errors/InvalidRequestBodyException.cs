@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Net;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;

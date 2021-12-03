@@ -1,6 +1,4 @@
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 

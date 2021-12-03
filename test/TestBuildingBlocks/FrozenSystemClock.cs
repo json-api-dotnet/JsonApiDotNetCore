@@ -1,4 +1,3 @@
-using System;
 using FluentAssertions.Extensions;
 using Microsoft.AspNetCore.Authentication;
 

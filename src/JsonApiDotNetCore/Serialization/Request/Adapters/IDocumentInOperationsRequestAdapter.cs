@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using JsonApiDotNetCore.Serialization.Request;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;

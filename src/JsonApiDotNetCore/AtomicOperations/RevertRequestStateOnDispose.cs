@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 

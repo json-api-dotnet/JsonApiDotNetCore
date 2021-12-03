@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;

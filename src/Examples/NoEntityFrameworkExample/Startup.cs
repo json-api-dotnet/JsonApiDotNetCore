@@ -1,10 +1,6 @@
-using System;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using NoEntityFrameworkExample.Data;
 using NoEntityFrameworkExample.Models;
 using NoEntityFrameworkExample.Services;

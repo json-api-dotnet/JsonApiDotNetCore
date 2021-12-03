@@ -2,9 +2,7 @@ using GettingStarted.Data;
 using GettingStarted.Models;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace GettingStarted
 {

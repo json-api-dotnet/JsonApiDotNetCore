@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using JsonApiDotNetCore.Controllers.Annotations;
 using Microsoft.AspNetCore.Mvc;
 

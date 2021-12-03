@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using JetBrains.Annotations;
 using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;

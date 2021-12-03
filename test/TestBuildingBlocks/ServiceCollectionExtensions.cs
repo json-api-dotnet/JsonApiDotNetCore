@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;

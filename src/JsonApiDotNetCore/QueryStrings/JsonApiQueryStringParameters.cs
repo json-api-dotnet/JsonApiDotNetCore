@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Controllers.Annotations;
 
 namespace JsonApiDotNetCore.QueryStrings

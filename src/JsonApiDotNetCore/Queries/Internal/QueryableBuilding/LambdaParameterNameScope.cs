@@ -1,4 +1,3 @@
-using System;
 using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding

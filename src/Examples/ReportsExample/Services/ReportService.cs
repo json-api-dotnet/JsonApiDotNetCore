@@ -1,9 +1,5 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Services;
-using Microsoft.Extensions.Logging;
 using ReportsExample.Models;
 
 namespace ReportsExample.Services
