@@ -130,7 +130,7 @@ namespace TestBuildingBlocks
 
         public async Task RunOnDatabaseAsync(Func<TDbContext, Task> asyncAction)
         {
-            using IServiceScope scope = Factory.Services.CreateScope();
+            await using AsyncServiceScope scope = Factory.Services.CreateAsyncScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
             await asyncAction(dbContext);

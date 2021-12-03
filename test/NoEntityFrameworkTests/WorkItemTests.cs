@@ -163,7 +163,7 @@ namespace NoEntityFrameworkTests
 
         private async Task RunOnDatabaseAsync(Func<AppDbContext, Task> asyncAction)
         {
-            using IServiceScope scope = _factory.Services.CreateScope();
+            await using AsyncServiceScope scope = _factory.Services.CreateAsyncScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             await asyncAction(dbContext);
