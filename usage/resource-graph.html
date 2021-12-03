@@ -116,23 +116,23 @@ public void ConfigureServices(IServiceCollection services)
     });
 }
 </code></pre><h2 id="resource-name">Resource Name</h2>
-<p>The public resource name is exposed through the <code>type</code> member in the JSON:API payload. This can be configured by the following approaches (in order of priority):</p>
+<p>The public resource name is exposed through the <code>type</code> member in the JSON:API payload. This can be configured using the following approaches (in order of priority):</p>
 <ol>
-<li><p>The <code>publicName</code> parameter when manually adding a resource to the graph</p>
+<li><p>The <code>publicName</code> parameter when manually adding a resource to the graph.</p>
 <pre><code class="lang-c#">services.AddJsonApi(resources: builder =&gt;
 {
- builder.Add&lt;Person, int&gt;(publicName: &quot;people&quot;);
+ builder.Add&lt;Person, int&gt;(publicName: &quot;individuals&quot;);
 });
 </code></pre></li>
-<li><p>The model is decorated with a <code>ResourceAttribute</code></p>
-<pre><code class="lang-c#">[Resource(&quot;myResources&quot;)]
-public class MyModel : Identifiable&lt;int&gt;
+<li><p>The <code>PublicName</code> property when a model is decorated with a <code>ResourceAttribute</code>.</p>
+<pre><code class="lang-c#">[Resource(PublicName = &quot;individuals&quot;)]
+public class Person : Identifiable&lt;int&gt;
 {
 }
 </code></pre></li>
-<li><p>The configured naming convention (by default this is camel-case).</p>
-<pre><code class="lang-c#">// this will be registered as &quot;myModels&quot;
-public class MyModel : Identifiable&lt;int&gt;
+<li><p>The configured naming convention (by default this is camel-case), after pluralization.</p>
+<pre><code class="lang-c#">// this will be registered as &quot;people&quot;
+public class Person : Identifiable&lt;int&gt;
 {
 }
 </code></pre></li>

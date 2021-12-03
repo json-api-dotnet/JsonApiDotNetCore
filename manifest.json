@@ -513,7 +513,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.Annotations.DisableQueryStringAttribute.html",
-          "hash": "SrajiI2jEZyJyeb1/6pUnb4SFV6yUJr0+oyuot03H4U="
+          "hash": "Zf1H4yGSJGc8dbsFZ5KBJA970CDEmUNJQ5XOJ8wYPjs="
         }
       },
       "is_incremental": false,
@@ -525,7 +525,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.Annotations.DisableRoutingConventionAttribute.html",
-          "hash": "XaqEVeWFWuvqBN7B5kzHQ/puygtG3jHKY6VDhL33RfA="
+          "hash": "0J1/VxcWZ4kWOUC8javEYiw1dqatVSSiFkwqSPKthGM="
         }
       },
       "is_incremental": false,
@@ -605,6 +605,18 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiEndpoints.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiEndpoints.html",
+          "hash": "kDiEnJnurjWykjyJlY6B7c6LE/jMjRcs2vc3WRq4WEU="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiOperationsController.yml",
       "output": {
         ".html": {
@@ -633,7 +645,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.html",
-          "hash": "vc2WcXWiBmjCdx2/2nzWntwS8Ye8Wud4ilkaXo8VR+c="
+          "hash": "sS4mXRseQmor5Yde6K+YPzmRn3I2+YHLY9vAsKVanzU="
         }
       },
       "is_incremental": false,
@@ -2589,7 +2601,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.html",
-          "hash": "8v+7UszDpcEAPm573Qv9b7WFG67s2s7uyTvFmbqIGt4="
+          "hash": "+g6RN4HwepoaqVfQvB7HA6/LNGxTMXWWfYNiOg8cuME="
         }
       },
       "is_incremental": false,
@@ -2613,7 +2625,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Resources.Annotations.ResourceLinksAttribute.html",
-          "hash": "ZpUy/9bWnB7trRQxv87eexyuqMhP+pjC1B1sFA5zjHA="
+          "hash": "Uvfx8q8P2SRBfLn9SHZ2s4TyNQhJYEC4YCHxaRJrrnI="
         }
       },
       "is_incremental": false,
@@ -2625,7 +2637,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Resources.Annotations.html",
-          "hash": "/HIy0LS8fYZq0+Os1V/2v574e7s+nyYiU9qTXmXxSRs="
+          "hash": "4Lm6ScJkQO1vqmyh/uiAL82b1BaZVR6hFEMXSLBm/MQ="
         }
       },
       "is_incremental": false,
@@ -3897,7 +3909,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "+7kf0P6oGuY0KZcvoVPQ0BZurMd96Dgxdo8hY2SMOmM="
+          "hash": "c/3cbDIThD1iQX4VH8kF/0EoHE5gDArN211i7S+kjTA="
         }
       },
       "is_incremental": false,
@@ -3965,7 +3977,7 @@
       "output": {
         ".html": {
           "relative_path": "getting-started/step-by-step.html",
-          "hash": "WFA+TOJS/CBcxqX9S9Mg9KDKtIE5sKyoPe03BqVoVSY="
+          "hash": "4pIldgZkCn8A3YtewOo8cheIAUZz/MMSnuHpk8AHxC4="
         }
       },
       "is_incremental": false,
@@ -4085,7 +4097,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/controllers.html",
-          "hash": "u7T4bW2OMe6sSy4JamFnSd6spBAXZqCuQNdRenn3si4="
+          "hash": "lFp1XI1ML8RLPxI5LDYd6oqBnuBIewNXpB1ImoXen+0="
         }
       },
       "is_incremental": false,
@@ -4157,7 +4169,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/services.html",
-          "hash": "Omy5WgbrukNqyjTA5htxaPjEu+zxYFzQ8QOR1k2wFNY="
+          "hash": "ClARnGdyudcXFU1UcT0GBxyhrtIe9mMbN1Zp4Pp74dw="
         }
       },
       "is_incremental": false,
@@ -4265,7 +4277,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/resource-graph.html",
-          "hash": "u7v6KKNjORsgUSgFT/n+diBQTRfkKkNA1fS3GitQ4Ug="
+          "hash": "dcxcnsUnnombmxRgxhLwQwf+8xKJMfGJBrwDSyrsDoA="
         }
       },
       "is_incremental": false,
@@ -4325,7 +4337,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/routing.html",
-          "hash": "2pwabNUwDm3QU/GPvXwrcGXRZHy4mIelDuBPUDenNd4="
+          "hash": "+UHfExD2jzYSAJMuridbARQcIr1HuRg3oI4M5k//jxQ="
         }
       },
       "is_incremental": false,
@@ -4412,7 +4424,7 @@
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 322,
+          "total_file_count": 323,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {

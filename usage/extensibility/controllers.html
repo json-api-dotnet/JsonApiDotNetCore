@@ -69,7 +69,70 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="controllers">Controllers</h1>
 
-<p>You need to create controllers that inherit from <code>JsonApiController&lt;TResource, TId&gt;</code></p>
+<p>To expose API endpoints, ASP.NET controllers need to be defined.</p>
+<p><em>since v5</em></p>
+<p>Controllers are auto-generated (using <a href="https://docs.microsoft.com/en-us/dotnet/csharp/roslyn-sdk/source-generators-overview">source generators</a>) when you add <code>[Resource]</code> on your model class:</p>
+<pre><code class="lang-c#">[Resource] // Generates ArticlesController.g.cs
+public class Article : Identifiable&lt;Guid&gt;
+{
+    // ...
+}
+</code></pre><h2 id="resource-access-control">Resource Access Control</h2>
+<p>It is often desirable to limit which endpoints are exposed on your controller.
+A subset can be specified too:</p>
+<pre><code class="lang-c#">[Resource(GenerateControllerEndpoints =
+    JsonApiEndpoints.GetCollection | JsonApiEndpoints.GetSingle)]
+public class Article : Identifiable&lt;Guid&gt;
+{
+    // ...
+}
+</code></pre><p>Instead of passing a set of endpoints, you can use <code>JsonApiEndpoints.Query</code> to generate all read-only endpoints or <code>JsonApiEndpoints.Command</code> for all write-only endpoints.</p>
+<p>When an endpoint is blocked, an HTTP 403 Forbidden response is returned.</p>
+<pre><code class="lang-http">DELETE http://localhost:14140/articles/1 HTTP/1.1
+</code></pre><pre><code class="lang-json">{
+  &quot;links&quot;: {
+    &quot;self&quot;: &quot;/articles&quot;
+  },
+  &quot;errors&quot;: [
+    {
+      &quot;id&quot;: &quot;dde7f219-2274-4473-97ef-baac3e7c1487&quot;,
+      &quot;status&quot;: &quot;403&quot;,
+      &quot;title&quot;: &quot;The requested endpoint is not accessible.&quot;,
+      &quot;detail&quot;: &quot;Endpoint &#39;/articles/1&#39; is not accessible for DELETE requests.&quot;
+    }
+  ]
+}
+</code></pre><h2 id="augmenting-controllers">Augmenting controllers</h2>
+<p>Auto-generated controllers can easily be augmented because they are partial classes. For example:</p>
+<pre><code class="lang-c#">[DisableRoutingConvention]
+[Route(&quot;some/custom/route&quot;)]
+[DisableQueryString(JsonApiQueryStringParameters.Include)]
+partial class ArticlesController
+{
+    [HttpPost]
+    public IActionResult Upload()
+    {
+        // ...
+    }
+}
+</code></pre><p>If you need to inject extra dependencies, tell the IoC container with <code>[ActivatorUtilitiesConstructor]</code> to prefer your constructor:</p>
+<pre><code class="lang-c#">partial class ArticlesController
+{
+    private IAuthenticationService _authService;
+
+    [ActivatorUtilitiesConstructor]
+    public ArticlesController(IAuthenticationService authService, IJsonApiOptions options,
+        IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+        IResourceService&lt;Article, Guid&gt; resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
+    {
+        _authService = authService;
+    }
+}
+</code></pre><p>In case you don&#39;t want to use auto-generated controllers and define them yourself (see below), remove
+<code>[Resource]</code> from your models or use <code>[Resource(GenerateControllerEndpoints = JsonApiEndpoints.None)]</code>.</p>
+<h2 id="earlier-versions">Earlier versions</h2>
+<p>In earlier versions of JsonApiDotNetCore, you needed to create controllers that inherit from <code>JsonApiController&lt;TResource, TId&gt;</code>. For example:</p>
 <pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article, Guid&gt;
 {
     public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
@@ -79,7 +142,7 @@
     }
 }
 </code></pre><p>If you want to setup routes yourself, you can instead inherit from <code>BaseJsonApiController&lt;TResource, TId&gt;</code> and override its methods with your own <code>[HttpGet]</code>, <code>[HttpHead]</code>, <code>[HttpPost]</code>, <code>[HttpPatch]</code> and <code>[HttpDelete]</code> attributes added on them. Don&#39;t forget to add <code>[FromBody]</code> on parameters where needed.</p>
-<h2 id="resource-access-control">Resource Access Control</h2>
+<h3 id="resource-access-control-1">Resource Access Control</h3>
 <p>It is often desirable to limit which routes are exposed on your controller.</p>
 <p>To provide read-only access, inherit from <code>JsonApiQueryController</code> instead, which blocks all POST, PATCH and DELETE requests.
 Likewise, to provide write-only access, inherit from <code>JsonApiCommandController</code>, which blocks all GET and HEAD requests.</p>
@@ -94,22 +157,7 @@ In some cases, resources may be an aggregation of entities or a view on top of t
     }
 }
 </code></pre><p>For more information about resource service injection, see <a href="layer-overview.html#replacing-injected-services">Replacing injected services</a> and <a href="services.html">Resource Services</a>.</p>
-<p>When a route is blocked, an HTTP 403 Forbidden response is returned.</p>
-<pre><code class="lang-http">DELETE http://localhost:14140/people/1 HTTP/1.1
-</code></pre><pre><code class="lang-json">{
-  &quot;links&quot;: {
-    &quot;self&quot;: &quot;/api/v1/people&quot;
-  },
-  &quot;errors&quot;: [
-    {
-      &quot;id&quot;: &quot;dde7f219-2274-4473-97ef-baac3e7c1487&quot;,
-      &quot;status&quot;: &quot;403&quot;,
-      &quot;title&quot;: &quot;The requested endpoint is not accessible.&quot;,
-      &quot;detail&quot;: &quot;Endpoint &#39;/people/1&#39; is not accessible for DELETE requests.&quot;
-    }
-  ]
-}
-</code></pre></article>
+</article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">

@@ -76,7 +76,6 @@ The shortest path to a running API looks like:</p>
 <li>Install</li>
 <li>Define models</li>
 <li>Define the DbContext</li>
-<li>Define controllers</li>
 <li>Add Middleware and Services</li>
 <li>Seed the database</li>
 <li>Start the app</li>
@@ -97,6 +96,7 @@ Install-Package JsonApiDotNetCore
 The easiest way to do this is to inherit from <code>Identifiable&lt;TId&gt;</code>.</p>
 <pre><code class="lang-c#">#nullable enable
 
+[Resource]
 public class Person : Identifiable&lt;int&gt;
 {
     [Attr]
@@ -110,17 +110,6 @@ public class Person : Identifiable&lt;int&gt;
 
     public AppDbContext(DbContextOptions&lt;AppDbContext&gt; options)
         : base(options)
-    {
-    }
-}
-</code></pre><h3 id="define-controllers">Define Controllers</h3>
-<p>You need to create controllers that inherit from <code>JsonApiController&lt;TResource, TId&gt;</code>
-where <code>TResource</code> is the model that inherits from <code>Identifiable&lt;TId&gt;</code>.</p>
-<pre><code class="lang-c#">public class PeopleController : JsonApiController&lt;Person, int&gt;
-{
-    public PeopleController(IJsonApiOptions options, IResourceGraph resourceGraph,
-        ILoggerFactory loggerFactory, IResourceService&lt;Person, int&gt; resourceService)
-        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }
