@@ -29,9 +29,7 @@
   <!-- Test Project Dependencies -->
   <PropertyGroup>
     <CoverletVersion>3.1.0</CoverletVersion>
-    <FluentAssertionsVersion>6.2.0</FluentAssertionsVersion>
     <MoqVersion>4.16.1</MoqVersion>
-    <XUnitVersion>2.4.*</XUnitVersion>
     <TestSdkVersion>17.0.0</TestSdkVersion>
   </PropertyGroup>
 </Project>
