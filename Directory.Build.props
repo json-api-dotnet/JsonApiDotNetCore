@@ -1,9 +1,9 @@
 <Project>
   <PropertyGroup>
-    <NetCoreAppVersion>net6.0</NetCoreAppVersion>
-    <AspNetCoreVersion>6.0.*</AspNetCoreVersion>
+    <TargetFrameworkName>net6.0</TargetFrameworkName>
+    <AspNetVersion>6.0.*</AspNetVersion>
     <EFCoreVersion>6.0.*</EFCoreVersion>
-    <NpgsqlPostgreSQLVersion>6.0.*</NpgsqlPostgreSQLVersion>
+    <EFCorePostgresVersion>6.0.*</EFCorePostgresVersion>
     <MicrosoftCodeAnalysisVersion>4.*</MicrosoftCodeAnalysisVersion>
     <HumanizerVersion>2.*</HumanizerVersion>
     <JsonApiDotNetCoreVersionPrefix>5.0.0</JsonApiDotNetCoreVersionPrefix>
