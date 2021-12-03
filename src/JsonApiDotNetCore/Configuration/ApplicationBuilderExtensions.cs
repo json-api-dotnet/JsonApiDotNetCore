@@ -24,9 +24,11 @@ namespace JsonApiDotNetCore.Configuration
         {
             ArgumentGuard.NotNull(builder, nameof(builder));
 
-            using IServiceScope scope = builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            var inverseNavigationResolver = scope.ServiceProvider.GetRequiredService<IInverseNavigationResolver>();
-            inverseNavigationResolver.Resolve();
+            using (IServiceScope scope = builder.ApplicationServices.CreateScope())
+            {
+                var inverseNavigationResolver = scope.ServiceProvider.GetRequiredService<IInverseNavigationResolver>();
+                inverseNavigationResolver.Resolve();
+            }
 
             var jsonApiApplicationBuilder = builder.ApplicationServices.GetRequiredService<IJsonApiApplicationBuilder>();
 
