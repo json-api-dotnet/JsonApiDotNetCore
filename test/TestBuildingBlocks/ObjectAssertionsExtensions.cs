@@ -14,35 +14,12 @@ namespace TestBuildingBlocks
     public static class ObjectAssertionsExtensions
     {
         private const decimal NumericPrecision = 0.00000000001M;
-        private static readonly TimeSpan TimePrecision = TimeSpan.FromMilliseconds(20);
 
         private static readonly JsonWriterOptions JsonWriterOptions = new()
         {
             Indented = true,
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
-
-        /// <summary>
-        /// Same as <see cref="DateTimeAssertions{TAssertions}.BeCloseTo(DateTime, TimeSpan, string, object[])" />, but with default precision.
-        /// </summary>
-        [CustomAssertion]
-        public static AndConstraint<TAssertions> BeCloseTo<TAssertions>(this DateTimeAssertions<TAssertions> parent, DateTime nearbyTime, string because = "",
-            params object[] becauseArgs)
-            where TAssertions : DateTimeAssertions<TAssertions>
-        {
-            return parent.BeCloseTo(nearbyTime, TimePrecision, because, becauseArgs);
-        }
-
-        /// <summary>
-        /// Same as <see cref="DateTimeOffsetAssertions{TAssertions}.BeCloseTo(DateTimeOffset, TimeSpan, string, object[])" />, but with default precision.
-        /// </summary>
-        [CustomAssertion]
-        public static AndConstraint<TAssertions> BeCloseTo<TAssertions>(this DateTimeOffsetAssertions<TAssertions> parent, DateTimeOffset nearbyTime,
-            string because = "", params object[] becauseArgs)
-            where TAssertions : DateTimeOffsetAssertions<TAssertions>
-        {
-            return parent.BeCloseTo(nearbyTime, TimePrecision, because, becauseArgs);
-        }
 
         /// <summary>
         /// Same as <see cref="NumericAssertionsExtensions.BeApproximately(NumericAssertions{decimal}, decimal, decimal, string, object[])" />, but with default

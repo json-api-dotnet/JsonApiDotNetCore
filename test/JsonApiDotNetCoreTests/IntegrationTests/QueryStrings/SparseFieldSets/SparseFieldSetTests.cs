@@ -593,13 +593,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
 
             responseDocument.Included.ShouldHaveCount(2);
 
-            DateTime dateOfBirth = blog.Owner.DateOfBirth!.Value;
-
             responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(blog.Owner.StringId);
             responseDocument.Included[0].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(blog.Owner.UserName));
             responseDocument.Included[0].Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(blog.Owner.DisplayName));
-            responseDocument.Included[0].Attributes.ShouldContainKey("dateOfBirth").With(value => value.As<DateTime?>().Should().BeCloseTo(dateOfBirth));
+            responseDocument.Included[0].Attributes.ShouldContainKey("dateOfBirth").With(value => value.Should().Be(blog.Owner.DateOfBirth));
 
             responseDocument.Included[0].Relationships.ShouldContainKey("posts").With(value =>
             {

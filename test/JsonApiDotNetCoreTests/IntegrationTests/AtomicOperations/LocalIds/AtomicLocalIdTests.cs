@@ -188,7 +188,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                 resource.Type.Should().Be("performers");
                 resource.Lid.Should().BeNull();
                 resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newPerformer.ArtistName));
-                resource.Attributes.ShouldContainKey("bornAt").With(value => value.As<DateTimeOffset>().Should().BeCloseTo(newPerformer.BornAt));
+                resource.Attributes.ShouldContainKey("bornAt").With(value => value.Should().Be(newPerformer.BornAt));
             });
 
             responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
@@ -210,7 +210,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                 trackInDatabase.Performers.ShouldHaveCount(1);
                 trackInDatabase.Performers[0].Id.Should().Be(newPerformerId);
                 trackInDatabase.Performers[0].ArtistName.Should().Be(newPerformer.ArtistName);
-                trackInDatabase.Performers[0].BornAt.Should().BeCloseTo(newPerformer.BornAt);
+                trackInDatabase.Performers[0].BornAt.Should().Be(newPerformer.BornAt);
             });
         }
 

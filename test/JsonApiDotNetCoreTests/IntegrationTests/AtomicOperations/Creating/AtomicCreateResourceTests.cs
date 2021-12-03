@@ -76,7 +76,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             {
                 resource.Type.Should().Be("performers");
                 resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newArtistName));
-                resource.Attributes.ShouldContainKey("bornAt").With(value => value.As<DateTimeOffset>().Should().BeCloseTo(newBornAt));
+                resource.Attributes.ShouldContainKey("bornAt").With(value => value.Should().Be(newBornAt));
                 resource.Relationships.Should().BeNull();
             });
 
@@ -87,7 +87,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                 Performer performerInDatabase = await dbContext.Performers.FirstWithIdAsync(newPerformerId);
 
                 performerInDatabase.ArtistName.Should().Be(newArtistName);
-                performerInDatabase.BornAt.Should().BeCloseTo(newBornAt);
+                performerInDatabase.BornAt.Should().Be(newBornAt);
             });
         }
 
@@ -147,9 +147,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                         .With(value => value.As<decimal?>().Should().BeApproximately(newTracks[index].LengthInSeconds));
 
                     resource.Attributes.ShouldContainKey("genre").With(value => value.Should().Be(newTracks[index].Genre));
-
-                    resource.Attributes.ShouldContainKey("releasedAt")
-                        .With(value => value.As<DateTimeOffset>().Should().BeCloseTo(newTracks[index].ReleasedAt));
+                    resource.Attributes.ShouldContainKey("releasedAt").With(value => value.Should().Be(newTracks[index].ReleasedAt));
 
                     resource.Relationships.ShouldNotBeEmpty();
                 });
@@ -170,7 +168,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                     trackInDatabase.Title.Should().Be(newTracks[index].Title);
                     trackInDatabase.LengthInSeconds.Should().BeApproximately(newTracks[index].LengthInSeconds);
                     trackInDatabase.Genre.Should().Be(newTracks[index].Genre);
-                    trackInDatabase.ReleasedAt.Should().BeCloseTo(newTracks[index].ReleasedAt);
+                    trackInDatabase.ReleasedAt.Should().Be(newTracks[index].ReleasedAt);
                 }
             });
         }
@@ -214,7 +212,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             {
                 resource.Type.Should().Be("performers");
                 resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().BeNull());
-                resource.Attributes.ShouldContainKey("bornAt").With(value => value.As<DateTimeOffset>().Should().BeCloseTo(default));
+                resource.Attributes.ShouldContainKey("bornAt").With(value => value.Should().Be(default(DateTimeOffset)));
                 resource.Relationships.Should().BeNull();
             });
 

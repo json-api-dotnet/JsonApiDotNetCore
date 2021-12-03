@@ -40,13 +40,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
                 .RuleFor(webAccount => webAccount.UserName, faker => faker.Person.UserName)
                 .RuleFor(webAccount => webAccount.Password, faker => faker.Internet.Password())
                 .RuleFor(webAccount => webAccount.DisplayName, faker => faker.Person.FullName)
-                .RuleFor(webAccount => webAccount.DateOfBirth, faker => faker.Person.DateOfBirth)
+                .RuleFor(webAccount => webAccount.DateOfBirth, faker => faker.Person.DateOfBirth.TruncateToWholeMilliseconds())
                 .RuleFor(webAccount => webAccount.EmailAddress, faker => faker.Internet.Email()));
 
         private readonly Lazy<Faker<LoginAttempt>> _lazyLoginAttemptFaker = new(() =>
             new Faker<LoginAttempt>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(loginAttempt => loginAttempt.TriedAt, faker => faker.Date.PastOffset())
+                .RuleFor(loginAttempt => loginAttempt.TriedAt, faker => faker.Date.PastOffset()
+                    .TruncateToWholeMilliseconds())
                 .RuleFor(loginAttempt => loginAttempt.IsSucceeded, faker => faker.Random.Bool()));
 
         private readonly Lazy<Faker<AccountPreferences>> _lazyAccountPreferencesFaker = new(() =>

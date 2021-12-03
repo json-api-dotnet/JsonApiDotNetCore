@@ -225,7 +225,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("comments");
             responseDocument.Included[0].Id.Should().Be(post.Comments.Single().StringId);
-            responseDocument.Included[0].Attributes.ShouldContainKey("createdAt").With(value => value.As<DateTime>().Should().BeCloseTo(createdAt));
+            responseDocument.Included[0].Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(createdAt));
         }
 
         [Fact]
@@ -371,7 +371,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Included[1].Type.Should().Be("comments");
             responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Comments.Single().StringId);
-            responseDocument.Included[1].Attributes.ShouldContainKey("createdAt").With(value => value.As<DateTime>().Should().BeCloseTo(createdAt));
+            responseDocument.Included[1].Attributes.ShouldContainKey("createdAt").With(value => value.Should().Be(createdAt));
         }
 
         [Fact]

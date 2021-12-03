@@ -384,7 +384,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
 
             responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTimeInLocalZone")
-                .With(value => value.As<DateTime>().Should().BeCloseTo(resource.SomeDateTimeInLocalZone));
+                .With(value => value.Should().Be(resource.SomeDateTimeInLocalZone));
         }
 
         [Theory]
@@ -428,7 +428,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
 
             responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTimeInUtcZone")
-                .With(value => value.As<DateTime>().Should().BeCloseTo(resource.SomeDateTimeInUtcZone));
+                .With(value => value.Should().Be(resource.SomeDateTimeInUtcZone));
         }
 
         [Theory]

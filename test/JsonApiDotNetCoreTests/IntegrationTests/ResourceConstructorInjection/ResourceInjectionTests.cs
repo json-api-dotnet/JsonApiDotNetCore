@@ -60,10 +60,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(certificate.StringId);
-
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("issueDate")
-                .With(value => value.As<DateTimeOffset>().Should().BeCloseTo(certificate.IssueDate));
-
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("issueDate").With(value => value.Should().Be(certificate.IssueDate));
             responseDocument.Data.SingleValue.Attributes.ShouldContainKey("hasExpired").With(value => value.Should().Be(false));
         }
 
@@ -176,10 +173,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("issueDate")
-                .With(value => value.As<DateTimeOffset>().Should().BeCloseTo(newIssueDate));
-
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("issueDate").With(value => value.Should().Be(newIssueDate));
             responseDocument.Data.SingleValue.Attributes.ShouldContainKey("hasExpired").With(value => value.Should().Be(true));
 
             responseDocument.Data.SingleValue.Relationships.ShouldContainKey("issuer").With(value =>

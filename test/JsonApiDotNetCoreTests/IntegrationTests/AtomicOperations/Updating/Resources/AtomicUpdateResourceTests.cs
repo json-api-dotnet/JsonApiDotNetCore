@@ -434,7 +434,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                 trackInDatabase.Title.Should().Be(existingTrack.Title);
                 trackInDatabase.LengthInSeconds.Should().BeApproximately(existingTrack.LengthInSeconds);
                 trackInDatabase.Genre.Should().Be(newGenre);
-                trackInDatabase.ReleasedAt.Should().BeCloseTo(existingTrack.ReleasedAt);
+                trackInDatabase.ReleasedAt.Should().Be(existingTrack.ReleasedAt);
 
                 trackInDatabase.OwnedBy.ShouldNotBeNull();
                 trackInDatabase.OwnedBy.Id.Should().Be(existingTrack.OwnedBy.Id);
@@ -499,7 +499,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                 trackInDatabase.Title.Should().Be(newTitle);
                 trackInDatabase.LengthInSeconds.Should().BeApproximately(newLengthInSeconds);
                 trackInDatabase.Genre.Should().Be(newGenre);
-                trackInDatabase.ReleasedAt.Should().BeCloseTo(newReleasedAt);
+                trackInDatabase.ReleasedAt.Should().Be(newReleasedAt);
 
                 trackInDatabase.OwnedBy.ShouldNotBeNull();
                 trackInDatabase.OwnedBy.Id.Should().Be(existingTrack.OwnedBy.Id);
@@ -700,7 +700,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                 Performer performerInDatabase = await dbContext.Performers.FirstWithIdAsync(existingPerformer.Id);
 
                 performerInDatabase.ArtistName.Should().Be(newArtistName);
-                performerInDatabase.BornAt.Should().BeCloseTo(existingPerformer.BornAt);
+                performerInDatabase.BornAt.Should().Be(existingPerformer.BornAt);
             });
         }
 
