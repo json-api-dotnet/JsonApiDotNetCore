@@ -8,11 +8,11 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers
 {
-    public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestContext<TestableStartup<NonJsonApiDbContext>, NonJsonApiDbContext>>
+    public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestContext<TestableStartup<EmptyDbContext>, EmptyDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<NonJsonApiDbContext>, NonJsonApiDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<EmptyDbContext>, EmptyDbContext> _testContext;
 
-        public NonJsonApiControllerTests(IntegrationTestContext<TestableStartup<NonJsonApiDbContext>, NonJsonApiDbContext> testContext)
+        public NonJsonApiControllerTests(IntegrationTestContext<TestableStartup<EmptyDbContext>, EmptyDbContext> testContext)
         {
             _testContext = testContext;
 

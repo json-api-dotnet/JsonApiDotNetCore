@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization")]
     public sealed class Scholarship : Identifiable<int>
     {
         [Attr]

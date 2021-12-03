@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes")]
     public sealed class Town : Identifiable<int>
     {
         [Attr]

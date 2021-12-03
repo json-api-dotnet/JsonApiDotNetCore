@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace NoEntityFrameworkExample.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [Resource]
     public sealed class WorkItem : Identifiable<int>
     {
         [Attr]

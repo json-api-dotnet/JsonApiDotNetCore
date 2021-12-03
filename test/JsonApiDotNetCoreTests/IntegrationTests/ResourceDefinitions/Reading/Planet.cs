@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading")]
     public sealed class Planet : Identifiable<int>
     {
         [Attr]

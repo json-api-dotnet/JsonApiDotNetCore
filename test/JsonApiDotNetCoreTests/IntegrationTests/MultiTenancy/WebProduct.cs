@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy")]
     public sealed class WebProduct : Identifiable<int>
     {
         [Attr]

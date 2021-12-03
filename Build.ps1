@@ -8,7 +8,8 @@ function CheckLastExitCode {
 
 function RunInspectCode {
     $outputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
-    dotnet jb inspectcode JsonApiDotNetCore.sln --no-build --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+    # passing --build instead of --no-build as workaround for https://youtrack.jetbrains.com/issue/RSRP-487054
+    dotnet jb inspectcode JsonApiDotNetCore.sln --build --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
     CheckLastExitCode
 
     [xml]$xml = Get-Content "$outputPath"
@@ -84,10 +85,10 @@ function CreateNuGetPackage {
     }
 
     if ([string]::IsNullOrWhitespace($versionSuffix)) {
-        dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts
+        dotnet pack --no-restore --no-build --configuration Release --output .\artifacts
     }
     else {
-        dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$versionSuffix
+        dotnet pack --no-restore --no-build --configuration Release --output .\artifacts --version-suffix=$versionSuffix
     }
 
     CheckLastExitCode

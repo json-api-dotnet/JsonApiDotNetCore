@@ -18,8 +18,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
         {
             _testContext = testContext;
 
-            testContext.UseController<SofasBlockingSortPageController>();
-            testContext.UseController<PillowsNoSkipCacheController>();
+            testContext.UseController<SofasController>();
+            testContext.UseController<PillowsController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

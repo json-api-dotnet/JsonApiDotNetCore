@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults")]
     public sealed class Toothbrush : Identifiable<int>
     {
         [Attr]

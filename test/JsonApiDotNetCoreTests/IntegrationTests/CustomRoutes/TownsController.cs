@@ -3,21 +3,27 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
 {
+    // Workaround for https://youtrack.jetbrains.com/issue/RSRP-487028
+    public partial class TownsController
+    {
+    }
+
     [DisableRoutingConvention]
     [Route("world-api/civilization/popular/towns")]
-    public sealed class TownsController : JsonApiController<Town, int>
+    partial class TownsController
     {
         private readonly CustomRouteDbContext _dbContext;
 
+        [ActivatorUtilitiesConstructor]
         public TownsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<Town, int> resourceService,
             CustomRouteDbContext dbContext)
             : base(options, resourceGraph, loggerFactory, resourceService)

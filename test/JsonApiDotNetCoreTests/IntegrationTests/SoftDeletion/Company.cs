@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion")]
     public sealed class Company : Identifiable<int>, ISoftDeletable
     {
         [Attr]

@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace MultiDbContextExample.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [Resource]
     public sealed class ResourceA : Identifiable<int>
     {
         [Attr]

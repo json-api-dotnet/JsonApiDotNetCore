@@ -81,6 +81,11 @@ namespace JsonApiDotNetCore.Middleware
 
                         if (resourceType != null)
                         {
+                            if (_controllerPerResourceTypeMap.ContainsKey(resourceType))
+                            {
+                                throw new InvalidConfigurationException($"Multiple controllers found for resource type '{resourceType}'.");
+                            }
+
                             _resourceTypePerControllerTypeMap.Add(controller.ControllerType, resourceType);
                             _controllerPerResourceTypeMap.Add(resourceType, controller);
                         }
@@ -117,7 +122,7 @@ namespace JsonApiDotNetCore.Middleware
         private bool IsRoutingConventionEnabled(ControllerModel controller)
         {
             return controller.ControllerType.IsSubclassOf(typeof(CoreJsonApiController)) &&
-                controller.ControllerType.GetCustomAttribute<DisableRoutingConventionAttribute>() == null;
+                controller.ControllerType.GetCustomAttribute<DisableRoutingConventionAttribute>(true) == null;
         }
 
         /// <summary>
