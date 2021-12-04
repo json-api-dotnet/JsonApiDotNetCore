@@ -1,20 +1,19 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.Serialization.Objects
-{
-    /// <summary>
-    /// See "links" in https://jsonapi.org/format/1.1/#error-objects.
-    /// </summary>
-    [PublicAPI]
-    public sealed class ErrorLinks
-    {
-        [JsonPropertyName("about")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? About { get; set; }
+namespace JsonApiDotNetCore.Serialization.Objects;
 
-        [JsonPropertyName("type")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? Type { get; set; }
-    }
+/// <summary>
+/// See "links" in https://jsonapi.org/format/1.1/#error-objects.
+/// </summary>
+[PublicAPI]
+public sealed class ErrorLinks
+{
+    [JsonPropertyName("about")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? About { get; set; }
+
+    [JsonPropertyName("type")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Type { get; set; }
 }

@@ -3,33 +3,32 @@ using System.Text.Json;
 using Humanizer;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.Configuration
+namespace JsonApiDotNetCore.Configuration;
+
+internal sealed class ResourceNameFormatter
 {
-    internal sealed class ResourceNameFormatter
+    private readonly JsonNamingPolicy? _namingPolicy;
+
+    public ResourceNameFormatter(JsonNamingPolicy? namingPolicy)
     {
-        private readonly JsonNamingPolicy? _namingPolicy;
+        _namingPolicy = namingPolicy;
+    }
 
-        public ResourceNameFormatter(JsonNamingPolicy? namingPolicy)
+    /// <summary>
+    /// Gets the publicly exposed resource name by applying the configured naming convention on the pluralized CLR type name.
+    /// </summary>
+    public string FormatResourceName(Type resourceClrType)
+    {
+        ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
+
+        var resourceAttribute = resourceClrType.GetCustomAttribute<ResourceAttribute>(true);
+
+        if (resourceAttribute != null && !string.IsNullOrWhiteSpace(resourceAttribute.PublicName))
         {
-            _namingPolicy = namingPolicy;
+            return resourceAttribute.PublicName;
         }
 
-        /// <summary>
-        /// Gets the publicly exposed resource name by applying the configured naming convention on the pluralized CLR type name.
-        /// </summary>
-        public string FormatResourceName(Type resourceClrType)
-        {
-            ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
-
-            var resourceAttribute = resourceClrType.GetCustomAttribute<ResourceAttribute>(true);
-
-            if (resourceAttribute != null && !string.IsNullOrWhiteSpace(resourceAttribute.PublicName))
-            {
-                return resourceAttribute.PublicName;
-            }
-
-            string publicName = resourceClrType.Name.Pluralize();
-            return _namingPolicy != null ? _namingPolicy.ConvertName(publicName) : publicName;
-        }
+        string publicName = resourceClrType.Name.Pluralize();
+        return _namingPolicy != null ? _namingPolicy.ConvertName(publicName) : publicName;
     }
 }

@@ -1,12 +1,11 @@
 using JsonApiDotNetCore.Serialization.Objects;
 
-namespace JsonApiDotNetCore.Middleware
+namespace JsonApiDotNetCore.Middleware;
+
+/// <summary>
+/// Central place to handle all exceptions, such as log them and translate into error response.
+/// </summary>
+public interface IExceptionHandler
 {
-    /// <summary>
-    /// Central place to handle all exceptions, such as log them and translate into error response.
-    /// </summary>
-    public interface IExceptionHandler
-    {
-        IReadOnlyList<ErrorObject> HandleException(Exception exception);
-    }
+    IReadOnlyList<ErrorObject> HandleException(Exception exception);
 }

@@ -4,128 +4,127 @@ using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.Links
+namespace JsonApiDotNetCoreTests.IntegrationTests.Links;
+
+public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext>>
 {
-    public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> _testContext;
+    private readonly LinksFakers _fakers = new();
+
+    public LinkInclusionTests(IntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> _testContext;
-        private readonly LinksFakers _fakers = new();
+        _testContext = testContext;
 
-        public LinkInclusionTests(IntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> testContext)
+        testContext.UseController<PhotosController>();
+        testContext.UseController<PhotoLocationsController>();
+    }
+
+    [Fact]
+    public async Task Get_primary_resource_with_include_applies_links_visibility_from_ResourceLinksAttribute()
+    {
+        // Arrange
+        PhotoLocation location = _fakers.PhotoLocation.Generate();
+        location.Photo = _fakers.Photo.Generate();
+        location.Album = _fakers.PhotoAlbum.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            _testContext = testContext;
+            dbContext.PhotoLocations.Add(location);
+            await dbContext.SaveChangesAsync();
+        });
 
-            testContext.UseController<PhotosController>();
-            testContext.UseController<PhotoLocationsController>();
-        }
+        string route = $"/photoLocations/{location.StringId}?include=photo,album";
 
-        [Fact]
-        public async Task Get_primary_resource_with_include_applies_links_visibility_from_ResourceLinksAttribute()
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Links.Should().BeNull();
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Links.Should().BeNull();
+
+        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photo").With(value =>
         {
-            // Arrange
-            PhotoLocation location = _fakers.PhotoLocation.Generate();
-            location.Photo = _fakers.Photo.Generate();
-            location.Album = _fakers.PhotoAlbum.Generate();
+            value.ShouldNotBeNull();
+            value.Links.ShouldNotBeNull();
+            value.Links.Self.Should().BeNull();
+            value.Links.Related.ShouldNotBeNull();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.PhotoLocations.Add(location);
-                await dbContext.SaveChangesAsync();
-            });
+        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("album").With(value =>
+        {
+            value.ShouldNotBeNull();
+            value.Links.Should().BeNull();
+        });
 
-            string route = $"/photoLocations/{location.StringId}?include=photo,album";
+        responseDocument.Included.ShouldHaveCount(2);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        responseDocument.Included[0].With(resource =>
+        {
+            resource.Links.ShouldNotBeNull();
+            resource.Links.Self.ShouldNotBeNull();
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Links.Should().BeNull();
-
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Links.Should().BeNull();
-
-            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photo").With(value =>
+            resource.Relationships.ShouldContainKey("location").With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
-                value.Links.Self.Should().BeNull();
+                value.Links.Self.ShouldNotBeNull();
                 value.Links.Related.ShouldNotBeNull();
             });
+        });
 
-            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("album").With(value =>
-            {
-                value.ShouldNotBeNull();
-                value.Links.Should().BeNull();
-            });
-
-            responseDocument.Included.ShouldHaveCount(2);
-
-            responseDocument.Included[0].With(resource =>
-            {
-                resource.Links.ShouldNotBeNull();
-                resource.Links.Self.ShouldNotBeNull();
-
-                resource.Relationships.ShouldContainKey("location").With(value =>
-                {
-                    value.ShouldNotBeNull();
-                    value.Links.ShouldNotBeNull();
-                    value.Links.Self.ShouldNotBeNull();
-                    value.Links.Related.ShouldNotBeNull();
-                });
-            });
-
-            responseDocument.Included[1].With(resource =>
-            {
-                resource.Links.ShouldNotBeNull();
-                resource.Links.Self.ShouldNotBeNull();
-
-                resource.Relationships.ShouldContainKey("photos").With(value =>
-                {
-                    value.ShouldNotBeNull();
-                    value.Links.ShouldNotBeNull();
-                    value.Links.Self.ShouldNotBeNull();
-                    value.Links.Related.ShouldNotBeNull();
-                });
-            });
-        }
-
-        [Fact]
-        public async Task Get_secondary_resource_applies_links_visibility_from_ResourceLinksAttribute()
+        responseDocument.Included[1].With(resource =>
         {
-            // Arrange
-            Photo photo = _fakers.Photo.Generate();
-            photo.Location = _fakers.PhotoLocation.Generate();
+            resource.Links.ShouldNotBeNull();
+            resource.Links.Self.ShouldNotBeNull();
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Photos.Add(photo);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/photos/{photo.StringId}/location";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Links.Should().BeNull();
-
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Links.Should().BeNull();
-
-            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photo").With(value =>
+            resource.Relationships.ShouldContainKey("photos").With(value =>
             {
                 value.ShouldNotBeNull();
                 value.Links.ShouldNotBeNull();
-                value.Links.Self.Should().BeNull();
+                value.Links.Self.ShouldNotBeNull();
                 value.Links.Related.ShouldNotBeNull();
             });
+        });
+    }
 
-            responseDocument.Data.SingleValue.Relationships.Should().NotContainKey("album");
-        }
+    [Fact]
+    public async Task Get_secondary_resource_applies_links_visibility_from_ResourceLinksAttribute()
+    {
+        // Arrange
+        Photo photo = _fakers.Photo.Generate();
+        photo.Location = _fakers.PhotoLocation.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Photos.Add(photo);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/photos/{photo.StringId}/location";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Links.Should().BeNull();
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Links.Should().BeNull();
+
+        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photo").With(value =>
+        {
+            value.ShouldNotBeNull();
+            value.Links.ShouldNotBeNull();
+            value.Links.Self.Should().BeNull();
+            value.Links.Related.ShouldNotBeNull();
+        });
+
+        responseDocument.Data.SingleValue.Relationships.Should().NotContainKey("album");
     }
 }

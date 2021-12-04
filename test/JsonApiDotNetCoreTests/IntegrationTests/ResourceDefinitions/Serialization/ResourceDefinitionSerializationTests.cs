@@ -7,828 +7,827 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization;
+
+public sealed class ResourceDefinitionSerializationTests
+    : IClassFixture<IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext>>
 {
-    public sealed class ResourceDefinitionSerializationTests
-        : IClassFixture<IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> _testContext;
+    private readonly SerializationFakers _fakers = new();
+
+    public ResourceDefinitionSerializationTests(IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> _testContext;
-        private readonly SerializationFakers _fakers = new();
+        _testContext = testContext;
 
-        public ResourceDefinitionSerializationTests(IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> testContext)
+        testContext.UseController<StudentsController>();
+        testContext.UseController<ScholarshipsController>();
+
+        testContext.ConfigureServicesAfterStartup(services =>
         {
-            _testContext = testContext;
+            services.AddResourceDefinition<StudentDefinition>();
 
-            testContext.UseController<StudentsController>();
-            testContext.UseController<ScholarshipsController>();
+            services.AddSingleton<IEncryptionService, AesEncryptionService>();
+            services.AddSingleton<ResourceDefinitionHitCounter>();
 
-            testContext.ConfigureServicesAfterStartup(services =>
-            {
-                services.AddResourceDefinition<StudentDefinition>();
+            services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
+        });
 
-                services.AddSingleton<IEncryptionService, AesEncryptionService>();
-                services.AddSingleton<ResourceDefinitionHitCounter>();
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        hitCounter.Reset();
+    }
 
-                services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
-            });
+    [Fact]
+    public async Task Encrypts_on_get_primary_resources()
+    {
+        // Arrange
+        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-            hitCounter.Reset();
-        }
+        List<Student> students = _fakers.Student.Generate(2);
 
-        [Fact]
-        public async Task Encrypts_on_get_primary_resources()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            await dbContext.ClearTableAsync<Student>();
+            dbContext.Students.AddRange(students);
+            await dbContext.SaveChangesAsync();
+        });
 
-            List<Student> students = _fakers.Student.Generate(2);
+        const string route = "/students";
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Student>();
-                dbContext.Students.AddRange(students);
-                await dbContext.SaveChangesAsync();
-            });
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            const string route = "/students";
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        responseDocument.Data.ManyValue.ShouldHaveCount(2);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.ManyValue.ShouldHaveCount(2);
-
-            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(students[0].SocialSecurityNumber);
-            });
-
-            responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(students[1].SocialSecurityNumber);
-            });
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
-            }, options => options.WithStrictOrdering());
-        }
-
-        [Fact]
-        public async Task Encrypts_on_get_primary_resources_with_ToMany_include()
+        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
         {
-            // Arrange
-            var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
-            List<Scholarship> scholarships = _fakers.Scholarship.Generate(2);
-            scholarships[0].Participants = _fakers.Student.Generate(2);
-            scholarships[1].Participants = _fakers.Student.Generate(2);
+            socialSecurityNumber.Should().Be(students[0].SocialSecurityNumber);
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Scholarship>();
-                dbContext.Scholarships.AddRange(scholarships);
-                await dbContext.SaveChangesAsync();
-            });
-
-            const string route = "/scholarships?include=participants";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.ManyValue.ShouldHaveCount(2);
-
-            responseDocument.Included.ShouldHaveCount(4);
-
-            responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(scholarships[0].Participants[0].SocialSecurityNumber);
-            });
-
-            responseDocument.Included[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(scholarships[0].Participants[1].SocialSecurityNumber);
-            });
-
-            responseDocument.Included[2].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(scholarships[1].Participants[0].SocialSecurityNumber);
-            });
-
-            responseDocument.Included[3].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(scholarships[1].Participants[1].SocialSecurityNumber);
-            });
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
-            }, options => options.WithStrictOrdering());
-        }
-
-        [Fact]
-        public async Task Encrypts_on_get_primary_resource_by_ID()
+        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
         {
-            // Arrange
-            var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
-            Student student = _fakers.Student.Generate();
+            socialSecurityNumber.Should().Be(students[1].SocialSecurityNumber);
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Students.Add(student);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/students/{student.StringId}";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(student.SocialSecurityNumber);
-            });
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
-            }, options => options.WithStrictOrdering());
-        }
-
-        [Fact]
-        public async Task Encrypts_on_get_secondary_resources()
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            // Arrange
-            var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
+        }, options => options.WithStrictOrdering());
+    }
 
-            Scholarship scholarship = _fakers.Scholarship.Generate();
-            scholarship.Participants = _fakers.Student.Generate(2);
+    [Fact]
+    public async Task Encrypts_on_get_primary_resources_with_ToMany_include()
+    {
+        // Arrange
+        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Scholarships.Add(scholarship);
-                await dbContext.SaveChangesAsync();
-            });
+        List<Scholarship> scholarships = _fakers.Scholarship.Generate(2);
+        scholarships[0].Participants = _fakers.Student.Generate(2);
+        scholarships[1].Participants = _fakers.Student.Generate(2);
 
-            string route = $"/scholarships/{scholarship.StringId}/participants";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.ManyValue.ShouldHaveCount(2);
-
-            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(scholarship.Participants[0].SocialSecurityNumber);
-            });
-
-            responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(scholarship.Participants[1].SocialSecurityNumber);
-            });
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
-            }, options => options.WithStrictOrdering());
-        }
-
-        [Fact]
-        public async Task Encrypts_on_get_secondary_resource()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            await dbContext.ClearTableAsync<Scholarship>();
+            dbContext.Scholarships.AddRange(scholarships);
+            await dbContext.SaveChangesAsync();
+        });
 
-            Scholarship scholarship = _fakers.Scholarship.Generate();
-            scholarship.PrimaryContact = _fakers.Student.Generate();
+        const string route = "/scholarships?include=participants";
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Scholarships.Add(scholarship);
-                await dbContext.SaveChangesAsync();
-            });
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            string route = $"/scholarships/{scholarship.StringId}/primaryContact";
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        responseDocument.Data.ManyValue.ShouldHaveCount(2);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        responseDocument.Included.ShouldHaveCount(4);
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
-            });
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
-            }, options => options.WithStrictOrdering());
-        }
-
-        [Fact]
-        public async Task Encrypts_on_get_secondary_resource_with_ToOne_include()
+        responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
         {
-            // Arrange
-            var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
-            Scholarship scholarship = _fakers.Scholarship.Generate();
-            scholarship.PrimaryContact = _fakers.Student.Generate();
+            socialSecurityNumber.Should().Be(scholarships[0].Participants[0].SocialSecurityNumber);
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Scholarships.Add(scholarship);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/scholarships/{scholarship.StringId}?include=primaryContact";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-
-            responseDocument.Included.ShouldHaveCount(1);
-
-            responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
-            });
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
-            }, options => options.WithStrictOrdering());
-        }
-
-        [Fact]
-        public async Task Decrypts_on_create_resource()
+        responseDocument.Included[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
         {
-            // Arrange
-            var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
-            string newName = _fakers.Student.Generate().Name;
-            string newSocialSecurityNumber = _fakers.Student.Generate().SocialSecurityNumber;
+            socialSecurityNumber.Should().Be(scholarships[0].Participants[1].SocialSecurityNumber);
+        });
 
-            var requestBody = new
+        responseDocument.Included[2].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        {
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+            socialSecurityNumber.Should().Be(scholarships[1].Participants[0].SocialSecurityNumber);
+        });
+
+        responseDocument.Included[3].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        {
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+            socialSecurityNumber.Should().Be(scholarships[1].Participants[1].SocialSecurityNumber);
+        });
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
+        }, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task Encrypts_on_get_primary_resource_by_ID()
+    {
+        // Arrange
+        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Student student = _fakers.Student.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Students.Add(student);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/students/{student.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        {
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+            socialSecurityNumber.Should().Be(student.SocialSecurityNumber);
+        });
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
+        }, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task Encrypts_on_get_secondary_resources()
+    {
+        // Arrange
+        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Scholarship scholarship = _fakers.Scholarship.Generate();
+        scholarship.Participants = _fakers.Student.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Scholarships.Add(scholarship);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/scholarships/{scholarship.StringId}/participants";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+
+        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        {
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+            socialSecurityNumber.Should().Be(scholarship.Participants[0].SocialSecurityNumber);
+        });
+
+        responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        {
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+            socialSecurityNumber.Should().Be(scholarship.Participants[1].SocialSecurityNumber);
+        });
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
+        }, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task Encrypts_on_get_secondary_resource()
+    {
+        // Arrange
+        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Scholarship scholarship = _fakers.Scholarship.Generate();
+        scholarship.PrimaryContact = _fakers.Student.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Scholarships.Add(scholarship);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/scholarships/{scholarship.StringId}/primaryContact";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        {
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+            socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
+        });
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
+        }, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task Encrypts_on_get_secondary_resource_with_ToOne_include()
+    {
+        // Arrange
+        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Scholarship scholarship = _fakers.Scholarship.Generate();
+        scholarship.PrimaryContact = _fakers.Student.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Scholarships.Add(scholarship);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/scholarships/{scholarship.StringId}?include=primaryContact";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+
+        responseDocument.Included.ShouldHaveCount(1);
+
+        responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        {
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+            socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
+        });
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
+        }, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task Decrypts_on_create_resource()
+    {
+        // Arrange
+        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        string newName = _fakers.Student.Generate().Name;
+        string newSocialSecurityNumber = _fakers.Student.Generate().SocialSecurityNumber;
+
+        var requestBody = new
+        {
+            data = new
             {
-                data = new
+                type = "students",
+                attributes = new
                 {
-                    type = "students",
-                    attributes = new
+                    name = newName,
+                    socialSecurityNumber = encryptionService.Encrypt(newSocialSecurityNumber)
+                }
+            }
+        };
+
+        const string route = "/students";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        {
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+            socialSecurityNumber.Should().Be(newSocialSecurityNumber);
+        });
+
+        int newStudentId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Student studentInDatabase = await dbContext.Students.FirstWithIdAsync(newStudentId);
+
+            studentInDatabase.SocialSecurityNumber.Should().Be(newSocialSecurityNumber);
+        });
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnDeserialize),
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
+        }, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task Encrypts_on_create_resource_with_included_ToOne_relationship()
+    {
+        // Arrange
+        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Student existingStudent = _fakers.Student.Generate();
+
+        string newProgramName = _fakers.Scholarship.Generate().ProgramName;
+        decimal newAmount = _fakers.Scholarship.Generate().Amount;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Students.Add(existingStudent);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "scholarships",
+                attributes = new
+                {
+                    programName = newProgramName,
+                    amount = newAmount
+                },
+                relationships = new
+                {
+                    primaryContact = new
                     {
-                        name = newName,
-                        socialSecurityNumber = encryptionService.Encrypt(newSocialSecurityNumber)
+                        data = new
+                        {
+                            type = "students",
+                            id = existingStudent.StringId
+                        }
                     }
                 }
-            };
+            }
+        };
 
-            const string route = "/students";
+        const string route = "/scholarships?include=primaryContact";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+        responseDocument.Included.ShouldHaveCount(1);
 
-                socialSecurityNumber.Should().Be(newSocialSecurityNumber);
-            });
-
-            int newStudentId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                Student studentInDatabase = await dbContext.Students.FirstWithIdAsync(newStudentId);
-
-                studentInDatabase.SocialSecurityNumber.Should().Be(newSocialSecurityNumber);
-            });
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnDeserialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
-            }, options => options.WithStrictOrdering());
-        }
-
-        [Fact]
-        public async Task Encrypts_on_create_resource_with_included_ToOne_relationship()
+        responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
         {
-            // Arrange
-            var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
-            Student existingStudent = _fakers.Student.Generate();
+            socialSecurityNumber.Should().Be(existingStudent.SocialSecurityNumber);
+        });
 
-            string newProgramName = _fakers.Scholarship.Generate().ProgramName;
-            decimal newAmount = _fakers.Scholarship.Generate().Amount;
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
+        }, options => options.WithStrictOrdering());
+    }
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+    [Fact]
+    public async Task Decrypts_on_update_resource()
+    {
+        // Arrange
+        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Student existingStudent = _fakers.Student.Generate();
+
+        string newSocialSecurityNumber = _fakers.Student.Generate().SocialSecurityNumber;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Students.Add(existingStudent);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
             {
-                dbContext.Students.Add(existingStudent);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "students",
+                id = existingStudent.StringId,
+                attributes = new
                 {
-                    type = "scholarships",
-                    attributes = new
+                    socialSecurityNumber = encryptionService.Encrypt(newSocialSecurityNumber)
+                }
+            }
+        };
+
+        string route = $"/students/{existingStudent.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+        {
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+            socialSecurityNumber.Should().Be(newSocialSecurityNumber);
+        });
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Student studentInDatabase = await dbContext.Students.FirstWithIdAsync(existingStudent.Id);
+
+            studentInDatabase.SocialSecurityNumber.Should().Be(newSocialSecurityNumber);
+        });
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnDeserialize),
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
+        }, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task Encrypts_on_update_resource_with_included_ToMany_relationship()
+    {
+        // Arrange
+        var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Scholarship existingScholarship = _fakers.Scholarship.Generate();
+        existingScholarship.Participants = _fakers.Student.Generate(3);
+
+        decimal newAmount = _fakers.Scholarship.Generate().Amount;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Scholarships.Add(existingScholarship);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "scholarships",
+                id = existingScholarship.StringId,
+                attributes = new
+                {
+                    amount = newAmount
+                },
+                relationships = new
+                {
+                    participants = new
                     {
-                        programName = newProgramName,
-                        amount = newAmount
-                    },
-                    relationships = new
-                    {
-                        primaryContact = new
+                        data = new[]
                         {
-                            data = new
+                            new
                             {
                                 type = "students",
-                                id = existingStudent.StringId
-                            }
-                        }
-                    }
-                }
-            };
-
-            const string route = "/scholarships?include=primaryContact";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
-
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-
-            responseDocument.Included.ShouldHaveCount(1);
-
-            responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(existingStudent.SocialSecurityNumber);
-            });
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
-            }, options => options.WithStrictOrdering());
-        }
-
-        [Fact]
-        public async Task Decrypts_on_update_resource()
-        {
-            // Arrange
-            var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-
-            Student existingStudent = _fakers.Student.Generate();
-
-            string newSocialSecurityNumber = _fakers.Student.Generate().SocialSecurityNumber;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Students.Add(existingStudent);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "students",
-                    id = existingStudent.StringId,
-                    attributes = new
-                    {
-                        socialSecurityNumber = encryptionService.Encrypt(newSocialSecurityNumber)
-                    }
-                }
-            };
-
-            string route = $"/students/{existingStudent.StringId}";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(newSocialSecurityNumber);
-            });
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                Student studentInDatabase = await dbContext.Students.FirstWithIdAsync(existingStudent.Id);
-
-                studentInDatabase.SocialSecurityNumber.Should().Be(newSocialSecurityNumber);
-            });
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnDeserialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
-            }, options => options.WithStrictOrdering());
-        }
-
-        [Fact]
-        public async Task Encrypts_on_update_resource_with_included_ToMany_relationship()
-        {
-            // Arrange
-            var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-
-            Scholarship existingScholarship = _fakers.Scholarship.Generate();
-            existingScholarship.Participants = _fakers.Student.Generate(3);
-
-            decimal newAmount = _fakers.Scholarship.Generate().Amount;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Scholarships.Add(existingScholarship);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "scholarships",
-                    id = existingScholarship.StringId,
-                    attributes = new
-                    {
-                        amount = newAmount
-                    },
-                    relationships = new
-                    {
-                        participants = new
-                        {
-                            data = new[]
+                                id = existingScholarship.Participants[0].StringId
+                            },
+                            new
                             {
-                                new
-                                {
-                                    type = "students",
-                                    id = existingScholarship.Participants[0].StringId
-                                },
-                                new
-                                {
-                                    type = "students",
-                                    id = existingScholarship.Participants[2].StringId
-                                }
+                                type = "students",
+                                id = existingScholarship.Participants[2].StringId
                             }
                         }
                     }
                 }
-            };
+            }
+        };
 
-            string route = $"/scholarships/{existingScholarship.StringId}?include=participants";
+        string route = $"/scholarships/{existingScholarship.StringId}?include=participants";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-            responseDocument.Included.ShouldHaveCount(2);
+        responseDocument.Included.ShouldHaveCount(2);
 
-            responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(existingScholarship.Participants[0].SocialSecurityNumber);
-            });
-
-            responseDocument.Included[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
-            {
-                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
-                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
-
-                socialSecurityNumber.Should().Be(existingScholarship.Participants[2].SocialSecurityNumber);
-            });
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
-                (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
-            }, options => options.WithStrictOrdering());
-        }
-
-        [Fact]
-        public async Task Skips_on_get_ToOne_relationship()
+        responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
-            Scholarship scholarship = _fakers.Scholarship.Generate();
-            scholarship.PrimaryContact = _fakers.Student.Generate();
+            socialSecurityNumber.Should().Be(existingScholarship.Participants[0].SocialSecurityNumber);
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Scholarships.Add(scholarship);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/scholarships/{scholarship.StringId}/relationships/primaryContact";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Id.Should().Be(scholarship.PrimaryContact.StringId);
-
-            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Skips_on_get_ToMany_relationship()
+        responseDocument.Included[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+            string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
-            Scholarship scholarship = _fakers.Scholarship.Generate();
-            scholarship.Participants = _fakers.Student.Generate(2);
+            socialSecurityNumber.Should().Be(existingScholarship.Participants[2].SocialSecurityNumber);
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Scholarships.Add(scholarship);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/scholarships/{scholarship.StringId}/relationships/participants";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.ManyValue.ShouldHaveCount(2);
-            responseDocument.Data.ManyValue[0].Id.Should().Be(scholarship.Participants[0].StringId);
-            responseDocument.Data.ManyValue[1].Id.Should().Be(scholarship.Participants[1].StringId);
-
-            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Skips_on_update_ToOne_relationship()
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize),
+            (typeof(Student), ResourceDefinitionExtensibilityPoints.OnSerialize)
+        }, options => options.WithStrictOrdering());
+    }
 
-            Scholarship existingScholarship = _fakers.Scholarship.Generate();
-            Student existingStudent = _fakers.Student.Generate();
+    [Fact]
+    public async Task Skips_on_get_ToOne_relationship()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        Scholarship scholarship = _fakers.Scholarship.Generate();
+        scholarship.PrimaryContact = _fakers.Student.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Scholarships.Add(scholarship);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/scholarships/{scholarship.StringId}/relationships/primaryContact";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Id.Should().Be(scholarship.PrimaryContact.StringId);
+
+        hitCounter.HitExtensibilityPoints.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Skips_on_get_ToMany_relationship()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Scholarship scholarship = _fakers.Scholarship.Generate();
+        scholarship.Participants = _fakers.Student.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Scholarships.Add(scholarship);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/scholarships/{scholarship.StringId}/relationships/participants";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(scholarship.Participants[0].StringId);
+        responseDocument.Data.ManyValue[1].Id.Should().Be(scholarship.Participants[1].StringId);
+
+        hitCounter.HitExtensibilityPoints.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Skips_on_update_ToOne_relationship()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Scholarship existingScholarship = _fakers.Scholarship.Generate();
+        Student existingStudent = _fakers.Student.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.AddInRange(existingScholarship, existingStudent);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
             {
-                dbContext.AddInRange(existingScholarship, existingStudent);
-                await dbContext.SaveChangesAsync();
-            });
+                type = "students",
+                id = existingStudent.StringId
+            }
+        };
 
-            var requestBody = new
+        string route = $"/scholarships/{existingScholarship.StringId}/relationships/primaryContact";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        hitCounter.HitExtensibilityPoints.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Skips_on_set_ToMany_relationship()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Scholarship existingScholarship = _fakers.Scholarship.Generate();
+        List<Student> existingStudents = _fakers.Student.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Scholarships.Add(existingScholarship);
+            dbContext.Students.AddRange(existingStudents);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
             {
-                data = new
+                new
                 {
                     type = "students",
-                    id = existingStudent.StringId
-                }
-            };
-
-            string route = $"/scholarships/{existingScholarship.StringId}/relationships/primaryContact";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Skips_on_set_ToMany_relationship()
-        {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-
-            Scholarship existingScholarship = _fakers.Scholarship.Generate();
-            List<Student> existingStudents = _fakers.Student.Generate(2);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Scholarships.Add(existingScholarship);
-                dbContext.Students.AddRange(existingStudents);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
+                    id = existingStudents[0].StringId
+                },
+                new
                 {
-                    new
-                    {
-                        type = "students",
-                        id = existingStudents[0].StringId
-                    },
-                    new
-                    {
-                        type = "students",
-                        id = existingStudents[1].StringId
-                    }
+                    type = "students",
+                    id = existingStudents[1].StringId
                 }
-            };
+            }
+        };
 
-            string route = $"/scholarships/{existingScholarship.StringId}/relationships/participants";
+        string route = $"/scholarships/{existingScholarship.StringId}/relationships/participants";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeEmpty();
+        responseDocument.Should().BeEmpty();
 
-            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
-        }
+        hitCounter.HitExtensibilityPoints.Should().BeEmpty();
+    }
 
-        [Fact]
-        public async Task Skips_on_add_to_ToMany_relationship()
+    [Fact]
+    public async Task Skips_on_add_to_ToMany_relationship()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Scholarship existingScholarship = _fakers.Scholarship.Generate();
+        List<Student> existingStudents = _fakers.Student.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            dbContext.Scholarships.Add(existingScholarship);
+            dbContext.Students.AddRange(existingStudents);
+            await dbContext.SaveChangesAsync();
+        });
 
-            Scholarship existingScholarship = _fakers.Scholarship.Generate();
-            List<Student> existingStudents = _fakers.Student.Generate(2);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Scholarships.Add(existingScholarship);
-                dbContext.Students.AddRange(existingStudents);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "students",
-                        id = existingStudents[0].StringId
-                    },
-                    new
-                    {
-                        type = "students",
-                        id = existingStudents[1].StringId
-                    }
-                }
-            };
-
-            string route = $"/scholarships/{existingScholarship.StringId}/relationships/participants";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Skips_on_remove_from_ToMany_relationship()
+        var requestBody = new
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-
-            Scholarship existingScholarship = _fakers.Scholarship.Generate();
-            existingScholarship.Participants = _fakers.Student.Generate(2);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            data = new[]
             {
-                dbContext.Scholarships.Add(existingScholarship);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
+                new
                 {
-                    new
-                    {
-                        type = "students",
-                        id = existingScholarship.Participants[0].StringId
-                    },
-                    new
-                    {
-                        type = "students",
-                        id = existingScholarship.Participants[1].StringId
-                    }
+                    type = "students",
+                    id = existingStudents[0].StringId
+                },
+                new
+                {
+                    type = "students",
+                    id = existingStudents[1].StringId
                 }
-            };
+            }
+        };
 
-            string route = $"/scholarships/{existingScholarship.StringId}/relationships/participants";
+        string route = $"/scholarships/{existingScholarship.StringId}/relationships/participants";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeEmpty();
+        responseDocument.Should().BeEmpty();
 
-            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
-        }
+        hitCounter.HitExtensibilityPoints.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Skips_on_remove_from_ToMany_relationship()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        Scholarship existingScholarship = _fakers.Scholarship.Generate();
+        existingScholarship.Participants = _fakers.Student.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Scholarships.Add(existingScholarship);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
+                {
+                    type = "students",
+                    id = existingScholarship.Participants[0].StringId
+                },
+                new
+                {
+                    type = "students",
+                    id = existingScholarship.Participants[1].StringId
+                }
+            }
+        };
+
+        string route = $"/scholarships/{existingScholarship.StringId}/relationships/participants";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        hitCounter.HitExtensibilityPoints.Should().BeEmpty();
     }
 }

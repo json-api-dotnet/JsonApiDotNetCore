@@ -1,15 +1,14 @@
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCore.AtomicOperations
+namespace JsonApiDotNetCore.AtomicOperations;
+
+/// <summary>
+/// Atomically processes a request that contains a list of operations.
+/// </summary>
+public interface IOperationsProcessor
 {
     /// <summary>
-    /// Atomically processes a request that contains a list of operations.
+    /// Processes the list of specified operations.
     /// </summary>
-    public interface IOperationsProcessor
-    {
-        /// <summary>
-        /// Processes the list of specified operations.
-        /// </summary>
-        Task<IList<OperationContainer?>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken);
-    }
+    Task<IList<OperationContainer?>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken);
 }

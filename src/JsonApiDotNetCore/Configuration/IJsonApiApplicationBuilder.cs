@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace JsonApiDotNetCore.Configuration
+namespace JsonApiDotNetCore.Configuration;
+
+internal interface IJsonApiApplicationBuilder
 {
-    internal interface IJsonApiApplicationBuilder
-    {
-        public Action<MvcOptions>? ConfigureMvcOptions { set; }
-    }
+    public Action<MvcOptions>? ConfigureMvcOptions { set; }
 }

@@ -3,33 +3,32 @@ using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.QueryStrings;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace JsonApiDotNetCore.Middleware
+namespace JsonApiDotNetCore.Middleware;
+
+/// <inheritdoc />
+public sealed class AsyncQueryStringActionFilter : IAsyncQueryStringActionFilter
 {
-    /// <inheritdoc />
-    public sealed class AsyncQueryStringActionFilter : IAsyncQueryStringActionFilter
+    private readonly IQueryStringReader _queryStringReader;
+
+    public AsyncQueryStringActionFilter(IQueryStringReader queryStringReader)
     {
-        private readonly IQueryStringReader _queryStringReader;
+        ArgumentGuard.NotNull(queryStringReader, nameof(queryStringReader));
 
-        public AsyncQueryStringActionFilter(IQueryStringReader queryStringReader)
+        _queryStringReader = queryStringReader;
+    }
+
+    /// <inheritdoc />
+    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+    {
+        ArgumentGuard.NotNull(context, nameof(context));
+        ArgumentGuard.NotNull(next, nameof(next));
+
+        if (context.HttpContext.IsJsonApiRequest())
         {
-            ArgumentGuard.NotNull(queryStringReader, nameof(queryStringReader));
-
-            _queryStringReader = queryStringReader;
+            var disableQueryStringAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryStringAttribute>(true);
+            _queryStringReader.ReadAll(disableQueryStringAttribute);
         }
 
-        /// <inheritdoc />
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-        {
-            ArgumentGuard.NotNull(context, nameof(context));
-            ArgumentGuard.NotNull(next, nameof(next));
-
-            if (context.HttpContext.IsJsonApiRequest())
-            {
-                var disableQueryStringAttribute = context.Controller.GetType().GetCustomAttribute<DisableQueryStringAttribute>(true);
-                _queryStringReader.ReadAll(disableQueryStringAttribute);
-            }
-
-            await next();
-        }
+        await next();
     }
 }

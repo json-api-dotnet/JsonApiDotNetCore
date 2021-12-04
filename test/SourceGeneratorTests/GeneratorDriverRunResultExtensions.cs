@@ -3,75 +3,74 @@ using FluentAssertions.Primitives;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
-namespace SourceGeneratorTests
+namespace SourceGeneratorTests;
+
+internal static class GeneratorDriverRunResultExtensions
 {
-    internal static class GeneratorDriverRunResultExtensions
+    public static GeneratorDriverRunResultAssertions Should(this GeneratorDriverRunResult instance)
     {
-        public static GeneratorDriverRunResultAssertions Should(this GeneratorDriverRunResult instance)
+        return new GeneratorDriverRunResultAssertions(instance);
+    }
+
+    internal sealed class GeneratorDriverRunResultAssertions : ReferenceTypeAssertions<GeneratorDriverRunResult, GeneratorDriverRunResultAssertions>
+    {
+        protected override string Identifier => nameof(GeneratorDriverRunResult);
+
+        public GeneratorDriverRunResultAssertions(GeneratorDriverRunResult subject)
+            : base(subject)
         {
-            return new GeneratorDriverRunResultAssertions(instance);
         }
 
-        internal sealed class GeneratorDriverRunResultAssertions : ReferenceTypeAssertions<GeneratorDriverRunResult, GeneratorDriverRunResultAssertions>
+        public void NotHaveDiagnostics()
         {
-            protected override string Identifier => nameof(GeneratorDriverRunResult);
+            Subject.Diagnostics.Should().BeEmpty();
+        }
 
-            public GeneratorDriverRunResultAssertions(GeneratorDriverRunResult subject)
-                : base(subject)
-            {
-            }
+        public void HaveSingleDiagnostic(string message)
+        {
+            Subject.Diagnostics.Should().HaveCount(1);
+            Subject.Diagnostics[0].ToString().Should().Be(message);
+        }
 
-            public void NotHaveDiagnostics()
-            {
-                Subject.Diagnostics.Should().BeEmpty();
-            }
+        public void NotHaveProducedSourceCode()
+        {
+            Subject.Results.Should().HaveCount(1);
 
-            public void HaveSingleDiagnostic(string message)
-            {
-                Subject.Diagnostics.Should().HaveCount(1);
-                Subject.Diagnostics[0].ToString().Should().Be(message);
-            }
+            GeneratorRunResult generatorResult = Subject.Results[0];
+            generatorResult.GeneratedSources.Should().BeEmpty();
+        }
 
-            public void NotHaveProducedSourceCode()
-            {
-                Subject.Results.Should().HaveCount(1);
+        public void HaveProducedSourceCode(string expectedCode)
+        {
+            string generatedSourceText = GetGeneratedSourceText();
 
-                GeneratorRunResult generatorResult = Subject.Results[0];
-                generatorResult.GeneratedSources.Should().BeEmpty();
-            }
+            string? generatedSourceTextNormalized = NormalizeLineEndings(generatedSourceText);
+            string? expectedTextNormalized = NormalizeLineEndings(expectedCode);
 
-            public void HaveProducedSourceCode(string expectedCode)
-            {
-                string generatedSourceText = GetGeneratedSourceText();
+            generatedSourceTextNormalized.Should().Be(expectedTextNormalized);
+        }
 
-                string? generatedSourceTextNormalized = NormalizeLineEndings(generatedSourceText);
-                string? expectedTextNormalized = NormalizeLineEndings(expectedCode);
+        public void HaveProducedSourceCodeContaining(string expectedText)
+        {
+            string generatedSourceText = GetGeneratedSourceText();
 
-                generatedSourceTextNormalized.Should().Be(expectedTextNormalized);
-            }
+            generatedSourceText.Should().Contain(expectedText);
+        }
 
-            public void HaveProducedSourceCodeContaining(string expectedText)
-            {
-                string generatedSourceText = GetGeneratedSourceText();
+        private string GetGeneratedSourceText()
+        {
+            Subject.Results.Should().HaveCount(1);
 
-                generatedSourceText.Should().Contain(expectedText);
-            }
+            GeneratorRunResult generatorResult = Subject.Results[0];
+            generatorResult.GeneratedSources.Should().HaveCount(1);
 
-            private string GetGeneratedSourceText()
-            {
-                Subject.Results.Should().HaveCount(1);
+            SourceText generatedSource = generatorResult.GeneratedSources[0].SourceText;
+            return generatedSource.ToString();
+        }
 
-                GeneratorRunResult generatorResult = Subject.Results[0];
-                generatorResult.GeneratedSources.Should().HaveCount(1);
-
-                SourceText generatedSource = generatorResult.GeneratedSources[0].SourceText;
-                return generatedSource.ToString();
-            }
-
-            private static string? NormalizeLineEndings(string? text)
-            {
-                return text?.Replace("\r\n", "\n").Replace("\r", "\n");
-            }
+        private static string? NormalizeLineEndings(string? text)
+        {
+            return text?.Replace("\r\n", "\n").Replace("\r", "\n");
         }
     }
 }

@@ -10,185 +10,184 @@ using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
+namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving;
+
+[UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+public sealed class TelevisionBroadcastDefinition : JsonApiResourceDefinition<TelevisionBroadcast, int>
 {
-    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class TelevisionBroadcastDefinition : JsonApiResourceDefinition<TelevisionBroadcast, int>
+    private readonly TelevisionDbContext _dbContext;
+    private readonly IJsonApiRequest _request;
+    private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
+
+    private DateTimeOffset? _storedArchivedAt;
+
+    public TelevisionBroadcastDefinition(IResourceGraph resourceGraph, TelevisionDbContext dbContext, IJsonApiRequest request,
+        IEnumerable<IQueryConstraintProvider> constraintProviders)
+        : base(resourceGraph)
     {
-        private readonly TelevisionDbContext _dbContext;
-        private readonly IJsonApiRequest _request;
-        private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
+        _dbContext = dbContext;
+        _request = request;
+        _constraintProviders = constraintProviders;
+    }
 
-        private DateTimeOffset? _storedArchivedAt;
-
-        public TelevisionBroadcastDefinition(IResourceGraph resourceGraph, TelevisionDbContext dbContext, IJsonApiRequest request,
-            IEnumerable<IQueryConstraintProvider> constraintProviders)
-            : base(resourceGraph)
+    public override FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
+    {
+        if (_request.IsReadOnly)
         {
-            _dbContext = dbContext;
-            _request = request;
-            _constraintProviders = constraintProviders;
-        }
+            // Rule: hide archived broadcasts in collections, unless a filter is specified.
 
-        public override FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
-        {
-            if (_request.IsReadOnly)
+            if (IsReturningCollectionOfTelevisionBroadcasts() && !HasFilterOnArchivedAt(existingFilter))
             {
-                // Rule: hide archived broadcasts in collections, unless a filter is specified.
+                AttrAttribute archivedAtAttribute = ResourceType.GetAttributeByPropertyName(nameof(TelevisionBroadcast.ArchivedAt));
+                var archivedAtChain = new ResourceFieldChainExpression(archivedAtAttribute);
 
-                if (IsReturningCollectionOfTelevisionBroadcasts() && !HasFilterOnArchivedAt(existingFilter))
-                {
-                    AttrAttribute archivedAtAttribute = ResourceType.GetAttributeByPropertyName(nameof(TelevisionBroadcast.ArchivedAt));
-                    var archivedAtChain = new ResourceFieldChainExpression(archivedAtAttribute);
+                FilterExpression isUnarchived = new ComparisonExpression(ComparisonOperator.Equals, archivedAtChain, NullConstantExpression.Instance);
 
-                    FilterExpression isUnarchived = new ComparisonExpression(ComparisonOperator.Equals, archivedAtChain, NullConstantExpression.Instance);
-
-                    return LogicalExpression.Compose(LogicalOperator.And, existingFilter, isUnarchived);
-                }
+                return LogicalExpression.Compose(LogicalOperator.And, existingFilter, isUnarchived);
             }
-
-            return existingFilter;
         }
 
-        private bool IsReturningCollectionOfTelevisionBroadcasts()
-        {
-            return IsRequestingCollectionOfTelevisionBroadcasts() || IsIncludingCollectionOfTelevisionBroadcasts();
-        }
+        return existingFilter;
+    }
 
-        private bool IsRequestingCollectionOfTelevisionBroadcasts()
+    private bool IsReturningCollectionOfTelevisionBroadcasts()
+    {
+        return IsRequestingCollectionOfTelevisionBroadcasts() || IsIncludingCollectionOfTelevisionBroadcasts();
+    }
+
+    private bool IsRequestingCollectionOfTelevisionBroadcasts()
+    {
+        if (_request.IsCollection)
         {
-            if (_request.IsCollection)
+            if (ResourceType.Equals(_request.PrimaryResourceType) || ResourceType.Equals(_request.SecondaryResourceType))
             {
-                if (ResourceType.Equals(_request.PrimaryResourceType) || ResourceType.Equals(_request.SecondaryResourceType))
-                {
-                    return true;
-                }
+                return true;
             }
+        }
 
+        return false;
+    }
+
+    private bool IsIncludingCollectionOfTelevisionBroadcasts()
+    {
+        // @formatter:wrap_chained_method_calls chop_always
+        // @formatter:keep_existing_linebreaks true
+
+        IncludeElementExpression[] includeElements = _constraintProviders
+            .SelectMany(provider => provider.GetConstraints())
+            .Select(expressionInScope => expressionInScope.Expression)
+            .OfType<IncludeExpression>()
+            .SelectMany(include => include.Elements)
+            .ToArray();
+
+        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_chained_method_calls restore
+
+        foreach (IncludeElementExpression includeElement in includeElements)
+        {
+            if (includeElement.Relationship is HasManyAttribute && includeElement.Relationship.RightType.Equals(ResourceType))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool HasFilterOnArchivedAt(FilterExpression? existingFilter)
+    {
+        if (existingFilter == null)
+        {
             return false;
         }
 
-        private bool IsIncludingCollectionOfTelevisionBroadcasts()
+        var walker = new FilterWalker();
+        walker.Visit(existingFilter, null);
+
+        return walker.HasFilterOnArchivedAt;
+    }
+
+    public override Task OnPrepareWriteAsync(TelevisionBroadcast broadcast, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+    {
+        if (writeOperation == WriteOperationKind.UpdateResource)
         {
-            // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
-
-            IncludeElementExpression[] includeElements = _constraintProviders
-                .SelectMany(provider => provider.GetConstraints())
-                .Select(expressionInScope => expressionInScope.Expression)
-                .OfType<IncludeExpression>()
-                .SelectMany(include => include.Elements)
-                .ToArray();
-
-            // @formatter:keep_existing_linebreaks restore
-            // @formatter:wrap_chained_method_calls restore
-
-            foreach (IncludeElementExpression includeElement in includeElements)
-            {
-                if (includeElement.Relationship is HasManyAttribute && includeElement.Relationship.RightType.Equals(ResourceType))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            _storedArchivedAt = broadcast.ArchivedAt;
         }
 
-        private bool HasFilterOnArchivedAt(FilterExpression? existingFilter)
+        return Task.CompletedTask;
+    }
+
+    public override async Task OnWritingAsync(TelevisionBroadcast broadcast, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+    {
+        if (writeOperation == WriteOperationKind.CreateResource)
         {
-            if (existingFilter == null)
-            {
-                return false;
-            }
-
-            var walker = new FilterWalker();
-            walker.Visit(existingFilter, null);
-
-            return walker.HasFilterOnArchivedAt;
+            AssertIsNotArchived(broadcast);
         }
-
-        public override Task OnPrepareWriteAsync(TelevisionBroadcast broadcast, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        else if (writeOperation == WriteOperationKind.UpdateResource)
         {
-            if (writeOperation == WriteOperationKind.UpdateResource)
-            {
-                _storedArchivedAt = broadcast.ArchivedAt;
-            }
-
-            return Task.CompletedTask;
+            AssertIsNotShiftingArchiveDate(broadcast);
         }
-
-        public override async Task OnWritingAsync(TelevisionBroadcast broadcast, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        else if (writeOperation == WriteOperationKind.DeleteResource)
         {
-            if (writeOperation == WriteOperationKind.CreateResource)
-            {
-                AssertIsNotArchived(broadcast);
-            }
-            else if (writeOperation == WriteOperationKind.UpdateResource)
-            {
-                AssertIsNotShiftingArchiveDate(broadcast);
-            }
-            else if (writeOperation == WriteOperationKind.DeleteResource)
-            {
-                TelevisionBroadcast? broadcastToDelete = await _dbContext.Broadcasts.FirstWithIdAsync(broadcast.Id, cancellationToken);
+            TelevisionBroadcast? broadcastToDelete = await _dbContext.Broadcasts.FirstWithIdAsync(broadcast.Id, cancellationToken);
 
-                if (broadcastToDelete != null)
-                {
-                    AssertIsArchived(broadcastToDelete);
-                }
-            }
-
-            await base.OnWritingAsync(broadcast, writeOperation, cancellationToken);
-        }
-
-        [AssertionMethod]
-        private static void AssertIsNotArchived(TelevisionBroadcast broadcast)
-        {
-            if (broadcast.ArchivedAt != null)
+            if (broadcastToDelete != null)
             {
-                throw new JsonApiException(new ErrorObject(HttpStatusCode.Forbidden)
-                {
-                    Title = "Television broadcasts cannot be created in archived state."
-                });
+                AssertIsArchived(broadcastToDelete);
             }
         }
 
-        [AssertionMethod]
-        private void AssertIsNotShiftingArchiveDate(TelevisionBroadcast broadcast)
+        await base.OnWritingAsync(broadcast, writeOperation, cancellationToken);
+    }
+
+    [AssertionMethod]
+    private static void AssertIsNotArchived(TelevisionBroadcast broadcast)
+    {
+        if (broadcast.ArchivedAt != null)
         {
-            if (_storedArchivedAt != null && broadcast.ArchivedAt != null && _storedArchivedAt != broadcast.ArchivedAt)
+            throw new JsonApiException(new ErrorObject(HttpStatusCode.Forbidden)
             {
-                throw new JsonApiException(new ErrorObject(HttpStatusCode.Forbidden)
-                {
-                    Title = "Archive date of television broadcasts cannot be shifted. Unarchive it first."
-                });
-            }
+                Title = "Television broadcasts cannot be created in archived state."
+            });
         }
+    }
 
-        [AssertionMethod]
-        private static void AssertIsArchived(TelevisionBroadcast broadcast)
+    [AssertionMethod]
+    private void AssertIsNotShiftingArchiveDate(TelevisionBroadcast broadcast)
+    {
+        if (_storedArchivedAt != null && broadcast.ArchivedAt != null && _storedArchivedAt != broadcast.ArchivedAt)
         {
-            if (broadcast.ArchivedAt == null)
+            throw new JsonApiException(new ErrorObject(HttpStatusCode.Forbidden)
             {
-                throw new JsonApiException(new ErrorObject(HttpStatusCode.Forbidden)
-                {
-                    Title = "Television broadcasts must first be archived before they can be deleted."
-                });
-            }
+                Title = "Archive date of television broadcasts cannot be shifted. Unarchive it first."
+            });
         }
+    }
 
-        private sealed class FilterWalker : QueryExpressionRewriter<object?>
+    [AssertionMethod]
+    private static void AssertIsArchived(TelevisionBroadcast broadcast)
+    {
+        if (broadcast.ArchivedAt == null)
         {
-            public bool HasFilterOnArchivedAt { get; private set; }
-
-            public override QueryExpression? VisitResourceFieldChain(ResourceFieldChainExpression expression, object? argument)
+            throw new JsonApiException(new ErrorObject(HttpStatusCode.Forbidden)
             {
-                if (expression.Fields[0].Property.Name == nameof(TelevisionBroadcast.ArchivedAt))
-                {
-                    HasFilterOnArchivedAt = true;
-                }
+                Title = "Television broadcasts must first be archived before they can be deleted."
+            });
+        }
+    }
 
-                return base.VisitResourceFieldChain(expression, argument);
+    private sealed class FilterWalker : QueryExpressionRewriter<object?>
+    {
+        public bool HasFilterOnArchivedAt { get; private set; }
+
+        public override QueryExpression? VisitResourceFieldChain(ResourceFieldChainExpression expression, object? argument)
+        {
+            if (expression.Fields[0].Property.Name == nameof(TelevisionBroadcast.ArchivedAt))
+            {
+                HasFilterOnArchivedAt = true;
             }
+
+            return base.VisitResourceFieldChain(expression, argument);
         }
     }
 }

@@ -3,40 +3,39 @@ using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 #pragma warning disable AV1008 // Class should not be static
 
-namespace JsonApiDotNetCore
+namespace JsonApiDotNetCore;
+
+internal static class ArgumentGuard
 {
-    internal static class ArgumentGuard
+    [AssertionMethod]
+    public static void NotNull<T>([NoEnumeration] [SysNotNull] T? value, [InvokerParameterName] string name)
+        where T : class
     {
-        [AssertionMethod]
-        public static void NotNull<T>([NoEnumeration] [SysNotNull] T? value, [InvokerParameterName] string name)
-            where T : class
+        if (value is null)
         {
-            if (value is null)
-            {
-                throw new ArgumentNullException(name);
-            }
+            throw new ArgumentNullException(name);
         }
+    }
 
-        [AssertionMethod]
-        public static void NotNullNorEmpty<T>([SysNotNull] IEnumerable<T>? value, [InvokerParameterName] string name, string? collectionName = null)
+    [AssertionMethod]
+    public static void NotNullNorEmpty<T>([SysNotNull] IEnumerable<T>? value, [InvokerParameterName] string name, string? collectionName = null)
+    {
+        NotNull(value, name);
+
+        if (!value.Any())
         {
-            NotNull(value, name);
-
-            if (!value.Any())
-            {
-                throw new ArgumentException($"Must have one or more {collectionName ?? name}.", name);
-            }
+            throw new ArgumentException($"Must have one or more {collectionName ?? name}.", name);
         }
+    }
 
-        [AssertionMethod]
-        public static void NotNullNorEmpty([SysNotNull] string? value, [InvokerParameterName] string name)
+    [AssertionMethod]
+    public static void NotNullNorEmpty([SysNotNull] string? value, [InvokerParameterName] string name)
+    {
+        NotNull(value, name);
+
+        if (value == string.Empty)
         {
-            NotNull(value, name);
-
-            if (value == string.Empty)
-            {
-                throw new ArgumentException("String cannot be null or empty.", name);
-            }
+            throw new ArgumentException("String cannot be null or empty.", name);
         }
     }
 }

@@ -1,50 +1,49 @@
 using Humanizer;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
+namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
+
+/// <summary>
+/// Produces unique names for lambda parameters.
+/// </summary>
+[PublicAPI]
+public sealed class LambdaParameterNameFactory
 {
-    /// <summary>
-    /// Produces unique names for lambda parameters.
-    /// </summary>
-    [PublicAPI]
-    public sealed class LambdaParameterNameFactory
+    private readonly HashSet<string> _namesInScope = new();
+
+    public LambdaParameterNameScope Create(string typeName)
     {
-        private readonly HashSet<string> _namesInScope = new();
+        ArgumentGuard.NotNullNorEmpty(typeName, nameof(typeName));
 
-        public LambdaParameterNameScope Create(string typeName)
+        string parameterName = typeName.Camelize();
+        parameterName = EnsureNameIsUnique(parameterName);
+
+        _namesInScope.Add(parameterName);
+        return new LambdaParameterNameScope(parameterName, this);
+    }
+
+    private string EnsureNameIsUnique(string name)
+    {
+        if (!_namesInScope.Contains(name))
         {
-            ArgumentGuard.NotNullNorEmpty(typeName, nameof(typeName));
-
-            string parameterName = typeName.Camelize();
-            parameterName = EnsureNameIsUnique(parameterName);
-
-            _namesInScope.Add(parameterName);
-            return new LambdaParameterNameScope(parameterName, this);
+            return name;
         }
 
-        private string EnsureNameIsUnique(string name)
+        int counter = 1;
+        string alternativeName;
+
+        do
         {
-            if (!_namesInScope.Contains(name))
-            {
-                return name;
-            }
-
-            int counter = 1;
-            string alternativeName;
-
-            do
-            {
-                counter++;
-                alternativeName = name + counter;
-            }
-            while (_namesInScope.Contains(alternativeName));
-
-            return alternativeName;
+            counter++;
+            alternativeName = name + counter;
         }
+        while (_namesInScope.Contains(alternativeName));
 
-        public void Release(string parameterName)
-        {
-            _namesInScope.Remove(parameterName);
-        }
+        return alternativeName;
+    }
+
+    public void Release(string parameterName)
+    {
+        _namesInScope.Remove(parameterName);
     }
 }

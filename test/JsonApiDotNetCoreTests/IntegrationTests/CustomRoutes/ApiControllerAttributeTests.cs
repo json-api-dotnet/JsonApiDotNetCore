@@ -4,36 +4,35 @@ using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
+namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes;
+
+public sealed class ApiControllerAttributeTests : IClassFixture<IntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>>
 {
-    public sealed class ApiControllerAttributeTests : IClassFixture<IntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> _testContext;
+
+    public ApiControllerAttributeTests(IntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> _testContext;
+        _testContext = testContext;
 
-        public ApiControllerAttributeTests(IntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> testContext)
-        {
-            _testContext = testContext;
+        testContext.UseController<CiviliansController>();
+    }
 
-            testContext.UseController<CiviliansController>();
-        }
+    [Fact]
+    public async Task ApiController_attribute_transforms_NotFound_action_result_without_arguments_into_ProblemDetails()
+    {
+        // Arrange
+        const string route = "/world-civilians/missing";
 
-        [Fact]
-        public async Task ApiController_attribute_transforms_NotFound_action_result_without_arguments_into_ProblemDetails()
-        {
-            // Arrange
-            const string route = "/world-civilians/missing";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.Links.ShouldNotBeNull();
-            error.Links.About.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.4");
-        }
+        ErrorObject error = responseDocument.Errors[0];
+        error.Links.ShouldNotBeNull();
+        error.Links.About.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.4");
     }
 }

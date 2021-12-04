@@ -1,32 +1,31 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.Serialization.Objects
+namespace JsonApiDotNetCore.Serialization.Objects;
+
+/// <summary>
+/// See https://jsonapi.org/ext/atomic/#operation-objects.
+/// </summary>
+[PublicAPI]
+public sealed class AtomicOperationObject
 {
-    /// <summary>
-    /// See https://jsonapi.org/ext/atomic/#operation-objects.
-    /// </summary>
-    [PublicAPI]
-    public sealed class AtomicOperationObject
-    {
-        [JsonPropertyName("data")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-        public SingleOrManyData<ResourceObject> Data { get; set; }
+    [JsonPropertyName("data")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public SingleOrManyData<ResourceObject> Data { get; set; }
 
-        [JsonPropertyName("op")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-        public AtomicOperationCode Code { get; set; }
+    [JsonPropertyName("op")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public AtomicOperationCode Code { get; set; }
 
-        [JsonPropertyName("ref")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public AtomicReference? Ref { get; set; }
+    [JsonPropertyName("ref")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public AtomicReference? Ref { get; set; }
 
-        [JsonPropertyName("href")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? Href { get; set; }
+    [JsonPropertyName("href")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Href { get; set; }
 
-        [JsonPropertyName("meta")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IDictionary<string, object?>? Meta { get; set; }
-    }
+    [JsonPropertyName("meta")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public IDictionary<string, object?>? Meta { get; set; }
 }

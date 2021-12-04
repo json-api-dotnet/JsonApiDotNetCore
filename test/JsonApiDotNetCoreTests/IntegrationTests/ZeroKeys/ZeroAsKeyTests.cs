@@ -7,578 +7,577 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
+namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys;
+
+public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext>>
 {
-    public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext> _testContext;
+    private readonly ZeroKeyFakers _fakers = new();
+
+    public ZeroAsKeyTests(IntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext> _testContext;
-        private readonly ZeroKeyFakers _fakers = new();
+        _testContext = testContext;
 
-        public ZeroAsKeyTests(IntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext> testContext)
+        testContext.UseController<GamesController>();
+        testContext.UseController<MapsController>();
+        testContext.UseController<PlayersController>();
+
+        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.UseRelativeLinks = true;
+        options.AllowClientGeneratedIds = true;
+    }
+
+    [Fact]
+    public async Task Can_filter_by_zero_ID_on_primary_resources()
+    {
+        // Arrange
+        List<Game> games = _fakers.Game.Generate(2);
+        games[0].Id = 0;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            _testContext = testContext;
+            await dbContext.ClearTableAsync<Game>();
+            dbContext.Games.AddRange(games);
+            await dbContext.SaveChangesAsync();
+        });
 
-            testContext.UseController<GamesController>();
-            testContext.UseController<MapsController>();
-            testContext.UseController<PlayersController>();
+        const string route = "/games?filter=equals(id,'0')";
 
-            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.UseRelativeLinks = true;
-            options.AllowClientGeneratedIds = true;
-        }
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-        [Fact]
-        public async Task Can_filter_by_zero_ID_on_primary_resources()
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be("0");
+
+        responseDocument.Data.ManyValue[0].With(resource =>
         {
-            // Arrange
-            List<Game> games = _fakers.Game.Generate(2);
-            games[0].Id = 0;
+            resource.Links.ShouldNotBeNull();
+            resource.Links.Self.Should().Be("/games/0");
+        });
+    }
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Game>();
-                dbContext.Games.AddRange(games);
-                await dbContext.SaveChangesAsync();
-            });
+    [Fact]
+    public async Task Can_get_primary_resource_by_zero_ID_with_include()
+    {
+        // Arrange
+        Game game = _fakers.Game.Generate();
+        game.Id = 0;
+        game.ActivePlayers = _fakers.Player.Generate(1);
 
-            const string route = "/games?filter=equals(id,'0')";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Id.Should().Be("0");
-
-            responseDocument.Data.ManyValue[0].With(resource =>
-            {
-                resource.Links.ShouldNotBeNull();
-                resource.Links.Self.Should().Be("/games/0");
-            });
-        }
-
-        [Fact]
-        public async Task Can_get_primary_resource_by_zero_ID_with_include()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Game game = _fakers.Game.Generate();
-            game.Id = 0;
-            game.ActivePlayers = _fakers.Player.Generate(1);
+            await dbContext.ClearTableAsync<Game>();
+            dbContext.Games.Add(game);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Game>();
-                dbContext.Games.Add(game);
-                await dbContext.SaveChangesAsync();
-            });
+        const string route = "/games/0?include=activePlayers";
 
-            const string route = "/games/0?include=activePlayers";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Id.Should().Be("0");
+        responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Links.Self.Should().Be("/games/0");
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Id.Should().Be("0");
-            responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Links.Self.Should().Be("/games/0");
+        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included[0].Id.Should().Be(game.ActivePlayers.ElementAt(0).StringId);
+    }
 
-            responseDocument.Included.ShouldHaveCount(1);
-            responseDocument.Included[0].Id.Should().Be(game.ActivePlayers.ElementAt(0).StringId);
-        }
+    [Fact]
+    public async Task Can_create_resource_with_zero_ID()
+    {
+        // Arrange
+        string newTitle = _fakers.Game.Generate().Title;
 
-        [Fact]
-        public async Task Can_create_resource_with_zero_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            string newTitle = _fakers.Game.Generate().Title;
+            await dbContext.ClearTableAsync<Game>();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        var requestBody = new
+        {
+            data = new
             {
-                await dbContext.ClearTableAsync<Game>();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "games",
+                id = "0",
+                attributes = new
                 {
-                    type = "games",
-                    id = "0",
-                    attributes = new
-                    {
-                        title = newTitle
-                    }
+                    title = newTitle
                 }
-            };
+            }
+        };
 
-            const string route = "/games";
+        const string route = "/games";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            httpResponse.Headers.Location.Should().Be("/games/0");
+        httpResponse.Headers.Location.Should().Be("/games/0");
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Id.Should().Be("0");
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Id.Should().Be("0");
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                Game gameInDatabase = await dbContext.Games.FirstWithIdAsync((int?)0);
-
-                gameInDatabase.ShouldNotBeNull();
-                gameInDatabase.Title.Should().Be(newTitle);
-            });
-        }
-
-        [Fact]
-        public async Task Can_update_resource_with_zero_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Game existingGame = _fakers.Game.Generate();
-            existingGame.Id = 0;
+            Game gameInDatabase = await dbContext.Games.FirstWithIdAsync((int?)0);
 
-            string newTitle = _fakers.Game.Generate().Title;
+            gameInDatabase.ShouldNotBeNull();
+            gameInDatabase.Title.Should().Be(newTitle);
+        });
+    }
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+    [Fact]
+    public async Task Can_update_resource_with_zero_ID()
+    {
+        // Arrange
+        Game existingGame = _fakers.Game.Generate();
+        existingGame.Id = 0;
+
+        string newTitle = _fakers.Game.Generate().Title;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Game>();
+            dbContext.Games.Add(existingGame);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
             {
-                await dbContext.ClearTableAsync<Game>();
-                dbContext.Games.Add(existingGame);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "games",
+                id = "0",
+                attributes = new
                 {
-                    type = "games",
-                    id = "0",
-                    attributes = new
-                    {
-                        title = newTitle
-                    }
+                    title = newTitle
                 }
-            };
+            }
+        };
 
-            const string route = "/games/0";
+        const string route = "/games/0";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Id.Should().Be("0");
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTitle));
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Id.Should().Be("0");
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTitle));
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                Game gameInDatabase = await dbContext.Games.FirstWithIdAsync((int?)0);
-
-                gameInDatabase.ShouldNotBeNull();
-                gameInDatabase.Title.Should().Be(newTitle);
-            });
-        }
-
-        [Fact]
-        public async Task Can_clear_ToOne_relationship_with_zero_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Player existingPlayer = _fakers.Player.Generate();
-            existingPlayer.ActiveGame = _fakers.Game.Generate();
-            existingPlayer.ActiveGame.Id = 0;
+            Game gameInDatabase = await dbContext.Games.FirstWithIdAsync((int?)0);
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Game>();
-                dbContext.Players.Add(existingPlayer);
-                await dbContext.SaveChangesAsync();
-            });
+            gameInDatabase.ShouldNotBeNull();
+            gameInDatabase.Title.Should().Be(newTitle);
+        });
+    }
 
-            var requestBody = new
-            {
-                data = (object?)null
-            };
+    [Fact]
+    public async Task Can_clear_ToOne_relationship_with_zero_ID()
+    {
+        // Arrange
+        Player existingPlayer = _fakers.Player.Generate();
+        existingPlayer.ActiveGame = _fakers.Game.Generate();
+        existingPlayer.ActiveGame.Id = 0;
 
-            string route = $"/players/{existingPlayer.StringId}/relationships/activeGame";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                Player playerInDatabase = await dbContext.Players.Include(player => player.ActiveGame).FirstWithIdAsync(existingPlayer.Id);
-
-                playerInDatabase.ShouldNotBeNull();
-                playerInDatabase.ActiveGame.Should().BeNull();
-            });
-        }
-
-        [Fact]
-        public async Task Can_assign_ToOne_relationship_with_zero_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Player existingPlayer = _fakers.Player.Generate();
+            await dbContext.ClearTableAsync<Game>();
+            dbContext.Players.Add(existingPlayer);
+            await dbContext.SaveChangesAsync();
+        });
 
-            Game existingGame = _fakers.Game.Generate();
-            existingGame.Id = 0;
+        var requestBody = new
+        {
+            data = (object?)null
+        };
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        string route = $"/players/{existingPlayer.StringId}/relationships/activeGame";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Player playerInDatabase = await dbContext.Players.Include(player => player.ActiveGame).FirstWithIdAsync(existingPlayer.Id);
+
+            playerInDatabase.ShouldNotBeNull();
+            playerInDatabase.ActiveGame.Should().BeNull();
+        });
+    }
+
+    [Fact]
+    public async Task Can_assign_ToOne_relationship_with_zero_ID()
+    {
+        // Arrange
+        Player existingPlayer = _fakers.Player.Generate();
+
+        Game existingGame = _fakers.Game.Generate();
+        existingGame.Id = 0;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Game>();
+            dbContext.AddInRange(existingPlayer, existingGame);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
             {
-                await dbContext.ClearTableAsync<Game>();
-                dbContext.AddInRange(existingPlayer, existingGame);
-                await dbContext.SaveChangesAsync();
-            });
+                type = "games",
+                id = "0"
+            }
+        };
 
-            var requestBody = new
+        string route = $"/players/{existingPlayer.StringId}/relationships/activeGame";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Player playerInDatabase = await dbContext.Players.Include(player => player.ActiveGame).FirstWithIdAsync(existingPlayer.Id);
+
+            playerInDatabase.ShouldNotBeNull();
+            playerInDatabase.ActiveGame.ShouldNotBeNull();
+            playerInDatabase.ActiveGame.Id.Should().Be(0);
+        });
+    }
+
+    [Fact]
+    public async Task Can_replace_ToOne_relationship_with_zero_ID()
+    {
+        // Arrange
+        Player existingPlayer = _fakers.Player.Generate();
+        existingPlayer.ActiveGame = _fakers.Game.Generate();
+
+        Game existingGame = _fakers.Game.Generate();
+        existingGame.Id = 0;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Game>();
+            dbContext.AddInRange(existingPlayer, existingGame);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
             {
-                data = new
+                type = "games",
+                id = "0"
+            }
+        };
+
+        string route = $"/players/{existingPlayer.StringId}/relationships/activeGame";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Player playerInDatabase = await dbContext.Players.Include(player => player.ActiveGame).FirstWithIdAsync(existingPlayer.Id);
+
+            playerInDatabase.ShouldNotBeNull();
+            playerInDatabase.ActiveGame.ShouldNotBeNull();
+            playerInDatabase.ActiveGame.Id.Should().Be(0);
+        });
+    }
+
+    [Fact]
+    public async Task Can_clear_ToMany_relationship_with_zero_ID()
+    {
+        // Arrange
+        Player existingPlayer = _fakers.Player.Generate();
+        existingPlayer.RecentlyPlayed = _fakers.Game.Generate(2);
+        existingPlayer.RecentlyPlayed.ElementAt(0).Id = 0;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Game>();
+            dbContext.Players.Add(existingPlayer);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = Array.Empty<object>()
+        };
+
+        string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
+
+            playerInDatabase.ShouldNotBeNull();
+            playerInDatabase.RecentlyPlayed.Should().BeEmpty();
+        });
+    }
+
+    [Fact]
+    public async Task Can_assign_ToMany_relationship_with_zero_ID()
+    {
+        // Arrange
+        Player existingPlayer = _fakers.Player.Generate();
+
+        Game existingGame = _fakers.Game.Generate();
+        existingGame.Id = 0;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Game>();
+            dbContext.AddInRange(existingPlayer, existingGame);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
                 {
                     type = "games",
                     id = "0"
                 }
-            };
+            }
+        };
 
-            string route = $"/players/{existingPlayer.StringId}/relationships/activeGame";
+        string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeEmpty();
+        responseDocument.Should().BeEmpty();
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                Player playerInDatabase = await dbContext.Players.Include(player => player.ActiveGame).FirstWithIdAsync(existingPlayer.Id);
-
-                playerInDatabase.ShouldNotBeNull();
-                playerInDatabase.ActiveGame.ShouldNotBeNull();
-                playerInDatabase.ActiveGame.Id.Should().Be(0);
-            });
-        }
-
-        [Fact]
-        public async Task Can_replace_ToOne_relationship_with_zero_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Player existingPlayer = _fakers.Player.Generate();
-            existingPlayer.ActiveGame = _fakers.Game.Generate();
+            Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
 
-            Game existingGame = _fakers.Game.Generate();
-            existingGame.Id = 0;
+            playerInDatabase.ShouldNotBeNull();
+            playerInDatabase.RecentlyPlayed.ShouldHaveCount(1);
+            playerInDatabase.RecentlyPlayed.ElementAt(0).Id.Should().Be(0);
+        });
+    }
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+    [Fact]
+    public async Task Can_replace_ToMany_relationship_with_zero_ID()
+    {
+        // Arrange
+        Player existingPlayer = _fakers.Player.Generate();
+        existingPlayer.RecentlyPlayed = _fakers.Game.Generate(2);
+
+        Game existingGame = _fakers.Game.Generate();
+        existingGame.Id = 0;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Game>();
+            dbContext.AddInRange(existingPlayer, existingGame);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
             {
-                await dbContext.ClearTableAsync<Game>();
-                dbContext.AddInRange(existingPlayer, existingGame);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                new
                 {
                     type = "games",
                     id = "0"
                 }
-            };
+            }
+        };
 
-            string route = $"/players/{existingPlayer.StringId}/relationships/activeGame";
+        string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeEmpty();
+        responseDocument.Should().BeEmpty();
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                Player playerInDatabase = await dbContext.Players.Include(player => player.ActiveGame).FirstWithIdAsync(existingPlayer.Id);
-
-                playerInDatabase.ShouldNotBeNull();
-                playerInDatabase.ActiveGame.ShouldNotBeNull();
-                playerInDatabase.ActiveGame.Id.Should().Be(0);
-            });
-        }
-
-        [Fact]
-        public async Task Can_clear_ToMany_relationship_with_zero_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Player existingPlayer = _fakers.Player.Generate();
-            existingPlayer.RecentlyPlayed = _fakers.Game.Generate(2);
-            existingPlayer.RecentlyPlayed.ElementAt(0).Id = 0;
+            Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Game>();
-                dbContext.Players.Add(existingPlayer);
-                await dbContext.SaveChangesAsync();
-            });
+            playerInDatabase.ShouldNotBeNull();
+            playerInDatabase.RecentlyPlayed.ShouldHaveCount(1);
+            playerInDatabase.RecentlyPlayed.ElementAt(0).Id.Should().Be(0);
+        });
+    }
 
-            var requestBody = new
-            {
-                data = Array.Empty<object>()
-            };
+    [Fact]
+    public async Task Can_add_to_ToMany_relationship_with_zero_ID()
+    {
+        // Arrange
+        Player existingPlayer = _fakers.Player.Generate();
+        existingPlayer.RecentlyPlayed = _fakers.Game.Generate(1);
 
-            string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
+        Game existingGame = _fakers.Game.Generate();
+        existingGame.Id = 0;
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
-
-                playerInDatabase.ShouldNotBeNull();
-                playerInDatabase.RecentlyPlayed.Should().BeEmpty();
-            });
-        }
-
-        [Fact]
-        public async Task Can_assign_ToMany_relationship_with_zero_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Player existingPlayer = _fakers.Player.Generate();
+            await dbContext.ClearTableAsync<Game>();
+            dbContext.AddInRange(existingPlayer, existingGame);
+            await dbContext.SaveChangesAsync();
+        });
 
-            Game existingGame = _fakers.Game.Generate();
-            existingGame.Id = 0;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        var requestBody = new
+        {
+            data = new[]
             {
-                await dbContext.ClearTableAsync<Game>();
-                dbContext.AddInRange(existingPlayer, existingGame);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
+                new
                 {
-                    new
-                    {
-                        type = "games",
-                        id = "0"
-                    }
+                    type = "games",
+                    id = "0"
                 }
-            };
+            }
+        };
 
-            string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
+        string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeEmpty();
+        responseDocument.Should().BeEmpty();
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
-
-                playerInDatabase.ShouldNotBeNull();
-                playerInDatabase.RecentlyPlayed.ShouldHaveCount(1);
-                playerInDatabase.RecentlyPlayed.ElementAt(0).Id.Should().Be(0);
-            });
-        }
-
-        [Fact]
-        public async Task Can_replace_ToMany_relationship_with_zero_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Player existingPlayer = _fakers.Player.Generate();
-            existingPlayer.RecentlyPlayed = _fakers.Game.Generate(2);
+            Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
 
-            Game existingGame = _fakers.Game.Generate();
-            existingGame.Id = 0;
+            playerInDatabase.ShouldNotBeNull();
+            playerInDatabase.RecentlyPlayed.ShouldHaveCount(2);
+            playerInDatabase.RecentlyPlayed.Should().ContainSingle(game => game.Id == 0);
+        });
+    }
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+    [Fact]
+    public async Task Can_remove_from_ToMany_relationship_with_zero_ID()
+    {
+        // Arrange
+        Player existingPlayer = _fakers.Player.Generate();
+        existingPlayer.RecentlyPlayed = _fakers.Game.Generate(2);
+        existingPlayer.RecentlyPlayed.ElementAt(0).Id = 0;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Game>();
+            dbContext.Players.Add(existingPlayer);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
             {
-                await dbContext.ClearTableAsync<Game>();
-                dbContext.AddInRange(existingPlayer, existingGame);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
+                new
                 {
-                    new
-                    {
-                        type = "games",
-                        id = "0"
-                    }
+                    type = "games",
+                    id = "0"
                 }
-            };
+            }
+        };
 
-            string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
+        string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeEmpty();
+        responseDocument.Should().BeEmpty();
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
-
-                playerInDatabase.ShouldNotBeNull();
-                playerInDatabase.RecentlyPlayed.ShouldHaveCount(1);
-                playerInDatabase.RecentlyPlayed.ElementAt(0).Id.Should().Be(0);
-            });
-        }
-
-        [Fact]
-        public async Task Can_add_to_ToMany_relationship_with_zero_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Player existingPlayer = _fakers.Player.Generate();
-            existingPlayer.RecentlyPlayed = _fakers.Game.Generate(1);
+            Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
 
-            Game existingGame = _fakers.Game.Generate();
-            existingGame.Id = 0;
+            playerInDatabase.ShouldNotBeNull();
+            playerInDatabase.RecentlyPlayed.ShouldHaveCount(1);
+            playerInDatabase.RecentlyPlayed.Should().ContainSingle(game => game.Id != 0);
+        });
+    }
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Game>();
-                dbContext.AddInRange(existingPlayer, existingGame);
-                await dbContext.SaveChangesAsync();
-            });
+    [Fact]
+    public async Task Can_delete_resource_with_zero_ID()
+    {
+        // Arrange
+        Game existingGame = _fakers.Game.Generate();
+        existingGame.Id = 0;
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "games",
-                        id = "0"
-                    }
-                }
-            };
-
-            string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
-
-                playerInDatabase.ShouldNotBeNull();
-                playerInDatabase.RecentlyPlayed.ShouldHaveCount(2);
-                playerInDatabase.RecentlyPlayed.Should().ContainSingle(game => game.Id == 0);
-            });
-        }
-
-        [Fact]
-        public async Task Can_remove_from_ToMany_relationship_with_zero_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Player existingPlayer = _fakers.Player.Generate();
-            existingPlayer.RecentlyPlayed = _fakers.Game.Generate(2);
-            existingPlayer.RecentlyPlayed.ElementAt(0).Id = 0;
+            await dbContext.ClearTableAsync<Game>();
+            dbContext.Games.Add(existingGame);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Game>();
-                dbContext.Players.Add(existingPlayer);
-                await dbContext.SaveChangesAsync();
-            });
+        const string route = "/games/0";
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "games",
-                        id = "0"
-                    }
-                }
-            };
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
-            string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+        responseDocument.Should().BeEmpty();
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                Player playerInDatabase = await dbContext.Players.Include(player => player.RecentlyPlayed).FirstWithIdAsync(existingPlayer.Id);
-
-                playerInDatabase.ShouldNotBeNull();
-                playerInDatabase.RecentlyPlayed.ShouldHaveCount(1);
-                playerInDatabase.RecentlyPlayed.Should().ContainSingle(game => game.Id != 0);
-            });
-        }
-
-        [Fact]
-        public async Task Can_delete_resource_with_zero_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Game existingGame = _fakers.Game.Generate();
-            existingGame.Id = 0;
+            Game? gameInDatabase = await dbContext.Games.FirstWithIdOrDefaultAsync(existingGame.Id);
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Game>();
-                dbContext.Games.Add(existingGame);
-                await dbContext.SaveChangesAsync();
-            });
-
-            const string route = "/games/0";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                Game? gameInDatabase = await dbContext.Games.FirstWithIdOrDefaultAsync(existingGame.Id);
-
-                gameInDatabase.Should().BeNull();
-            });
-        }
+            gameInDatabase.Should().BeNull();
+        });
     }
 }

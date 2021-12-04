@@ -1,12 +1,11 @@
-namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
+namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody;
+
+public enum WorkflowStage
 {
-    public enum WorkflowStage
-    {
-        Created,
-        InProgress,
-        OnHold,
-        Succeeded,
-        Failed,
-        Canceled
-    }
+    Created,
+    InProgress,
+    OnHold,
+    Succeeded,
+    Failed,
+    Canceled
 }

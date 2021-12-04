@@ -6,114 +6,113 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDelivery
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDelivery;
+
+public sealed partial class FireForgetTests : IClassFixture<IntegrationTestContext<TestableStartup<FireForgetDbContext>, FireForgetDbContext>>
 {
-    public sealed partial class FireForgetTests : IClassFixture<IntegrationTestContext<TestableStartup<FireForgetDbContext>, FireForgetDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<FireForgetDbContext>, FireForgetDbContext> _testContext;
+    private readonly DomainFakers _fakers = new();
+
+    public FireForgetTests(IntegrationTestContext<TestableStartup<FireForgetDbContext>, FireForgetDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<FireForgetDbContext>, FireForgetDbContext> _testContext;
-        private readonly DomainFakers _fakers = new();
+        _testContext = testContext;
 
-        public FireForgetTests(IntegrationTestContext<TestableStartup<FireForgetDbContext>, FireForgetDbContext> testContext)
+        testContext.UseController<DomainUsersController>();
+        testContext.UseController<DomainGroupsController>();
+
+        testContext.ConfigureServicesAfterStartup(services =>
         {
-            _testContext = testContext;
+            services.AddResourceDefinition<FireForgetUserDefinition>();
+            services.AddResourceDefinition<FireForgetGroupDefinition>();
 
-            testContext.UseController<DomainUsersController>();
-            testContext.UseController<DomainGroupsController>();
+            services.AddSingleton<MessageBroker>();
+            services.AddSingleton<ResourceDefinitionHitCounter>();
+        });
 
-            testContext.ConfigureServicesAfterStartup(services =>
-            {
-                services.AddResourceDefinition<FireForgetUserDefinition>();
-                services.AddResourceDefinition<FireForgetGroupDefinition>();
+        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        messageBroker.Reset();
 
-                services.AddSingleton<MessageBroker>();
-                services.AddSingleton<ResourceDefinitionHitCounter>();
-            });
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        hitCounter.Reset();
+    }
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
-            messageBroker.Reset();
+    [Fact]
+    public async Task Does_not_send_message_on_write_error()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-            hitCounter.Reset();
-        }
+        string unknownUserId = Unknown.StringId.For<DomainUser, Guid>();
 
-        [Fact]
-        public async Task Does_not_send_message_on_write_error()
+        string route = $"/domainUsers/{unknownUserId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'domainUsers' with ID '{unknownUserId}' does not exist.");
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+            (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync)
+        }, options => options.WithStrictOrdering());
 
-            string unknownUserId = Unknown.StringId.For<DomainUser, Guid>();
+        messageBroker.SentMessages.Should().BeEmpty();
+    }
 
-            string route = $"/domainUsers/{unknownUserId}";
+    [Fact]
+    public async Task Does_not_rollback_on_message_delivery_error()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
+        var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+        messageBroker.SimulateFailure = true;
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        DomainUser existingUser = _fakers.DomainUser.Generate();
 
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'domainUsers' with ID '{unknownUserId}' does not exist.");
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync)
-            }, options => options.WithStrictOrdering());
-
-            messageBroker.SentMessages.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Does_not_rollback_on_message_delivery_error()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            await dbContext.ClearTableAsync<DomainUser>();
+            dbContext.Users.Add(existingUser);
+            await dbContext.SaveChangesAsync();
+        });
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
-            messageBroker.SimulateFailure = true;
+        string route = $"/domainUsers/{existingUser.StringId}";
 
-            DomainUser existingUser = _fakers.DomainUser.Generate();
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<DomainUser>();
-                dbContext.Users.Add(existingUser);
-                await dbContext.SaveChangesAsync();
-            });
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.ServiceUnavailable);
 
-            string route = $"/domainUsers/{existingUser.StringId}";
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
+        error.Title.Should().Be("Message delivery failed.");
+        error.Detail.Should().BeNull();
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.ServiceUnavailable);
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+            (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
+        }, options => options.WithStrictOrdering());
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        messageBroker.SentMessages.ShouldHaveCount(1);
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
-            error.Title.Should().Be("Message delivery failed.");
-            error.Detail.Should().BeNull();
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
-                (typeof(DomainUser), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
-            }, options => options.WithStrictOrdering());
-
-            messageBroker.SentMessages.ShouldHaveCount(1);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                DomainUser? user = await dbContext.Users.FirstWithIdOrDefaultAsync(existingUser.Id);
-                user.Should().BeNull();
-            });
-        }
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            DomainUser? user = await dbContext.Users.FirstWithIdOrDefaultAsync(existingUser.Id);
+            user.Should().BeNull();
+        });
     }
 }

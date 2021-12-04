@@ -4,19 +4,18 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 #pragma warning disable AV1115 // Member or local function contains the word 'and', which suggests doing multiple things
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
+namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships")]
+public sealed class Shipment : Identifiable<int>
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships")]
-    public sealed class Shipment : Identifiable<int>
-    {
-        [Attr]
-        public string TrackAndTraceCode { get; set; } = null!;
+    [Attr]
+    public string TrackAndTraceCode { get; set; } = null!;
 
-        [Attr]
-        public DateTimeOffset ShippedAt { get; set; }
+    [Attr]
+    public DateTimeOffset ShippedAt { get; set; }
 
-        [HasOne]
-        public Order Order { get; set; } = null!;
-    }
+    [HasOne]
+    public Order Order { get; set; } = null!;
 }

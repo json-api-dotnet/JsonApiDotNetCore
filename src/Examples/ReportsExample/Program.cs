@@ -1,18 +1,17 @@
-namespace ReportsExample
-{
-    internal static class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+namespace ReportsExample;
 
-        private static IHostBuilder CreateHostBuilder(string[] args)
+internal static class Program
+{
+    public static void Main(string[] args)
+    {
+        CreateHostBuilder(args).Build().Run();
+    }
+
+    private static IHostBuilder CreateHostBuilder(string[] args)
+    {
+        return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
         {
-            return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            });
-        }
+            webBuilder.UseStartup<Startup>();
+        });
     }
 }

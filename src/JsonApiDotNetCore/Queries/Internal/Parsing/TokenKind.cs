@@ -1,15 +1,14 @@
-namespace JsonApiDotNetCore.Queries.Internal.Parsing
+namespace JsonApiDotNetCore.Queries.Internal.Parsing;
+
+public enum TokenKind
 {
-    public enum TokenKind
-    {
-        OpenParen,
-        CloseParen,
-        OpenBracket,
-        CloseBracket,
-        Comma,
-        Colon,
-        Minus,
-        Text,
-        QuotedText
-    }
+    OpenParen,
+    CloseParen,
+    OpenBracket,
+    CloseBracket,
+    Comma,
+    Colon,
+    Minus,
+    Text,
+    QuotedText
 }

@@ -1,35 +1,34 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace JsonApiDotNetCore.Serialization.JsonConverters
+namespace JsonApiDotNetCore.Serialization.JsonConverters;
+
+public abstract class JsonObjectConverter<TObject> : JsonConverter<TObject>
 {
-    public abstract class JsonObjectConverter<TObject> : JsonConverter<TObject>
+    protected static TValue? ReadSubTree<TValue>(ref Utf8JsonReader reader, JsonSerializerOptions options)
     {
-        protected static TValue? ReadSubTree<TValue>(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        if (typeof(TValue) != typeof(object) && options.GetConverter(typeof(TValue)) is JsonConverter<TValue> converter)
         {
-            if (typeof(TValue) != typeof(object) && options.GetConverter(typeof(TValue)) is JsonConverter<TValue> converter)
-            {
-                return converter.Read(ref reader, typeof(TValue), options);
-            }
-
-            return JsonSerializer.Deserialize<TValue>(ref reader, options);
+            return converter.Read(ref reader, typeof(TValue), options);
         }
 
-        protected static void WriteSubTree<TValue>(Utf8JsonWriter writer, TValue value, JsonSerializerOptions options)
-        {
-            if (typeof(TValue) != typeof(object) && options.GetConverter(typeof(TValue)) is JsonConverter<TValue> converter)
-            {
-                converter.Write(writer, value, options);
-            }
-            else
-            {
-                JsonSerializer.Serialize(writer, value, options);
-            }
-        }
+        return JsonSerializer.Deserialize<TValue>(ref reader, options);
+    }
 
-        protected static JsonException GetEndOfStreamError()
+    protected static void WriteSubTree<TValue>(Utf8JsonWriter writer, TValue value, JsonSerializerOptions options)
+    {
+        if (typeof(TValue) != typeof(object) && options.GetConverter(typeof(TValue)) is JsonConverter<TValue> converter)
         {
-            return new JsonException("Unexpected end of JSON stream.");
+            converter.Write(writer, value, options);
         }
+        else
+        {
+            JsonSerializer.Serialize(writer, value, options);
+        }
+    }
+
+    protected static JsonException GetEndOfStreamError()
+    {
+        return new JsonException("Unexpected end of JSON stream.");
     }
 }

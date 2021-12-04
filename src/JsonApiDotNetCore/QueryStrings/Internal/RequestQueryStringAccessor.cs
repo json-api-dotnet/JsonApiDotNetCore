@@ -1,30 +1,29 @@
 using Microsoft.AspNetCore.Http;
 
-namespace JsonApiDotNetCore.QueryStrings.Internal
+namespace JsonApiDotNetCore.QueryStrings.Internal;
+
+/// <inheritdoc />
+internal sealed class RequestQueryStringAccessor : IRequestQueryStringAccessor
 {
-    /// <inheritdoc />
-    internal sealed class RequestQueryStringAccessor : IRequestQueryStringAccessor
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public IQueryCollection Query
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public IQueryCollection Query
+        get
         {
-            get
+            if (_httpContextAccessor.HttpContext == null)
             {
-                if (_httpContextAccessor.HttpContext == null)
-                {
-                    throw new InvalidOperationException("An active HTTP request is required.");
-                }
-
-                return _httpContextAccessor.HttpContext.Request.Query;
+                throw new InvalidOperationException("An active HTTP request is required.");
             }
-        }
 
-        public RequestQueryStringAccessor(IHttpContextAccessor httpContextAccessor)
-        {
-            ArgumentGuard.NotNull(httpContextAccessor, nameof(httpContextAccessor));
-
-            _httpContextAccessor = httpContextAccessor;
+            return _httpContextAccessor.HttpContext.Request.Query;
         }
+    }
+
+    public RequestQueryStringAccessor(IHttpContextAccessor httpContextAccessor)
+    {
+        ArgumentGuard.NotNull(httpContextAccessor, nameof(httpContextAccessor));
+
+        _httpContextAccessor = httpContextAccessor;
     }
 }

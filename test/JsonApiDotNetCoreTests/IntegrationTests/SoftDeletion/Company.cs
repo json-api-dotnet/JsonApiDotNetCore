@@ -2,18 +2,17 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
+namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion")]
+public sealed class Company : Identifiable<int>, ISoftDeletable
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion")]
-    public sealed class Company : Identifiable<int>, ISoftDeletable
-    {
-        [Attr]
-        public string Name { get; set; } = null!;
+    [Attr]
+    public string Name { get; set; } = null!;
 
-        public DateTimeOffset? SoftDeletedAt { get; set; }
+    public DateTimeOffset? SoftDeletedAt { get; set; }
 
-        [HasMany]
-        public ICollection<Department> Departments { get; set; } = new List<Department>();
-    }
+    [HasMany]
+    public ICollection<Department> Departments { get; set; } = new List<Department>();
 }

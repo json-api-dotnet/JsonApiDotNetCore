@@ -1,44 +1,43 @@
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.Resources.Annotations
+namespace JsonApiDotNetCore.Resources.Annotations;
+
+/// <summary>
+/// Used to expose a property on a resource class as a JSON:API to-one relationship (https://jsonapi.org/format/#document-resource-object-relationships).
+/// </summary>
+/// <example>
+/// <code><![CDATA[
+/// public class Article : Identifiable
+/// {
+///     [HasOne]
+///     public Author Author { get; set; }
+/// }
+/// ]]></code>
+/// </example>
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Property)]
+public sealed class HasOneAttribute : RelationshipAttribute
 {
+    private readonly Lazy<bool> _lazyIsOneToOne;
+
     /// <summary>
-    /// Used to expose a property on a resource class as a JSON:API to-one relationship (https://jsonapi.org/format/#document-resource-object-relationships).
+    /// Inspects <see cref="RelationshipAttribute.InverseNavigationProperty" /> to determine if this is a one-to-one relationship.
     /// </summary>
-    /// <example>
-    /// <code><![CDATA[
-    /// public class Article : Identifiable
-    /// {
-    ///     [HasOne]
-    ///     public Author Author { get; set; }
-    /// }
-    /// ]]></code>
-    /// </example>
-    [PublicAPI]
-    [AttributeUsage(AttributeTargets.Property)]
-    public sealed class HasOneAttribute : RelationshipAttribute
+    internal bool IsOneToOne => _lazyIsOneToOne.Value;
+
+    public HasOneAttribute()
     {
-        private readonly Lazy<bool> _lazyIsOneToOne;
+        _lazyIsOneToOne = new Lazy<bool>(EvaluateIsOneToOne, LazyThreadSafetyMode.PublicationOnly);
+    }
 
-        /// <summary>
-        /// Inspects <see cref="RelationshipAttribute.InverseNavigationProperty" /> to determine if this is a one-to-one relationship.
-        /// </summary>
-        internal bool IsOneToOne => _lazyIsOneToOne.Value;
-
-        public HasOneAttribute()
+    private bool EvaluateIsOneToOne()
+    {
+        if (InverseNavigationProperty != null)
         {
-            _lazyIsOneToOne = new Lazy<bool>(EvaluateIsOneToOne, LazyThreadSafetyMode.PublicationOnly);
+            Type? elementType = CollectionConverter.FindCollectionElementType(InverseNavigationProperty.PropertyType);
+            return elementType == null;
         }
 
-        private bool EvaluateIsOneToOne()
-        {
-            if (InverseNavigationProperty != null)
-            {
-                Type? elementType = CollectionConverter.FindCollectionElementType(InverseNavigationProperty.PropertyType);
-                return elementType == null;
-            }
-
-            return false;
-        }
+        return false;
     }
 }

@@ -3,97 +3,96 @@ using JetBrains.Annotations;
 
 #pragma warning disable AV1008 // Class should not be static
 
-namespace JsonApiDotNetCore.Resources.Internal
+namespace JsonApiDotNetCore.Resources.Internal;
+
+[PublicAPI]
+public static class RuntimeTypeConverter
 {
-    [PublicAPI]
-    public static class RuntimeTypeConverter
+    public static object? ConvertType(object? value, Type type)
     {
-        public static object? ConvertType(object? value, Type type)
+        ArgumentGuard.NotNull(type, nameof(type));
+
+        if (value == null)
         {
-            ArgumentGuard.NotNull(type, nameof(type));
-
-            if (value == null)
+            if (!CanContainNull(type))
             {
-                if (!CanContainNull(type))
-                {
-                    string targetTypeName = type.GetFriendlyTypeName();
-                    throw new FormatException($"Failed to convert 'null' to type '{targetTypeName}'.");
-                }
-
-                return null;
+                string targetTypeName = type.GetFriendlyTypeName();
+                throw new FormatException($"Failed to convert 'null' to type '{targetTypeName}'.");
             }
 
-            Type runtimeType = value.GetType();
+            return null;
+        }
 
-            if (type == runtimeType || type.IsAssignableFrom(runtimeType))
+        Type runtimeType = value.GetType();
+
+        if (type == runtimeType || type.IsAssignableFrom(runtimeType))
+        {
+            return value;
+        }
+
+        string? stringValue = value.ToString();
+
+        if (string.IsNullOrEmpty(stringValue))
+        {
+            return GetDefaultValue(type);
+        }
+
+        bool isNullableTypeRequested = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+        Type nonNullableType = Nullable.GetUnderlyingType(type) ?? type;
+
+        try
+        {
+            if (nonNullableType == typeof(Guid))
             {
-                return value;
+                Guid convertedValue = Guid.Parse(stringValue);
+                return isNullableTypeRequested ? (Guid?)convertedValue : convertedValue;
             }
 
-            string? stringValue = value.ToString();
-
-            if (string.IsNullOrEmpty(stringValue))
+            if (nonNullableType == typeof(DateTime))
             {
-                return GetDefaultValue(type);
+                DateTime convertedValue = DateTime.Parse(stringValue, null, DateTimeStyles.RoundtripKind);
+                return isNullableTypeRequested ? (DateTime?)convertedValue : convertedValue;
             }
 
-            bool isNullableTypeRequested = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
-            Type nonNullableType = Nullable.GetUnderlyingType(type) ?? type;
-
-            try
+            if (nonNullableType == typeof(DateTimeOffset))
             {
-                if (nonNullableType == typeof(Guid))
-                {
-                    Guid convertedValue = Guid.Parse(stringValue);
-                    return isNullableTypeRequested ? (Guid?)convertedValue : convertedValue;
-                }
+                DateTimeOffset convertedValue = DateTimeOffset.Parse(stringValue, null, DateTimeStyles.RoundtripKind);
+                return isNullableTypeRequested ? (DateTimeOffset?)convertedValue : convertedValue;
+            }
 
-                if (nonNullableType == typeof(DateTime))
-                {
-                    DateTime convertedValue = DateTime.Parse(stringValue, null, DateTimeStyles.RoundtripKind);
-                    return isNullableTypeRequested ? (DateTime?)convertedValue : convertedValue;
-                }
+            if (nonNullableType == typeof(TimeSpan))
+            {
+                TimeSpan convertedValue = TimeSpan.Parse(stringValue);
+                return isNullableTypeRequested ? (TimeSpan?)convertedValue : convertedValue;
+            }
 
-                if (nonNullableType == typeof(DateTimeOffset))
-                {
-                    DateTimeOffset convertedValue = DateTimeOffset.Parse(stringValue, null, DateTimeStyles.RoundtripKind);
-                    return isNullableTypeRequested ? (DateTimeOffset?)convertedValue : convertedValue;
-                }
-
-                if (nonNullableType == typeof(TimeSpan))
-                {
-                    TimeSpan convertedValue = TimeSpan.Parse(stringValue);
-                    return isNullableTypeRequested ? (TimeSpan?)convertedValue : convertedValue;
-                }
-
-                if (nonNullableType.IsEnum)
-                {
-                    object convertedValue = Enum.Parse(nonNullableType, stringValue);
-
-                    // https://bradwilson.typepad.com/blog/2008/07/creating-nullab.html
-                    return convertedValue;
-                }
+            if (nonNullableType.IsEnum)
+            {
+                object convertedValue = Enum.Parse(nonNullableType, stringValue);
 
                 // https://bradwilson.typepad.com/blog/2008/07/creating-nullab.html
-                return Convert.ChangeType(stringValue, nonNullableType);
+                return convertedValue;
             }
-            catch (Exception exception) when (exception is FormatException or OverflowException or InvalidCastException or ArgumentException)
-            {
-                string runtimeTypeName = runtimeType.GetFriendlyTypeName();
-                string targetTypeName = type.GetFriendlyTypeName();
 
-                throw new FormatException($"Failed to convert '{value}' of type '{runtimeTypeName}' to type '{targetTypeName}'.", exception);
-            }
+            // https://bradwilson.typepad.com/blog/2008/07/creating-nullab.html
+            return Convert.ChangeType(stringValue, nonNullableType);
         }
-
-        public static bool CanContainNull(Type type)
+        catch (Exception exception) when (exception is FormatException or OverflowException or InvalidCastException or ArgumentException)
         {
-            return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
-        }
+            string runtimeTypeName = runtimeType.GetFriendlyTypeName();
+            string targetTypeName = type.GetFriendlyTypeName();
 
-        public static object? GetDefaultValue(Type type)
-        {
-            return type.IsValueType ? Activator.CreateInstance(type) : null;
+            throw new FormatException($"Failed to convert '{value}' of type '{runtimeTypeName}' to type '{targetTypeName}'.", exception);
         }
+    }
+
+    public static bool CanContainNull(Type type)
+    {
+        return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
+    }
+
+    public static object? GetDefaultValue(Type type)
+    {
+        return type.IsValueType ? Activator.CreateInstance(type) : null;
     }
 }

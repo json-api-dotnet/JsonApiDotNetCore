@@ -4,48 +4,47 @@ using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
-namespace JsonApiDotNetCore.Errors
+namespace JsonApiDotNetCore.Errors;
+
+/// <summary>
+/// The base class for an <see cref="Exception" /> that represents one or more JSON:API error objects in an unsuccessful response.
+/// </summary>
+[PublicAPI]
+public class JsonApiException : Exception
 {
-    /// <summary>
-    /// The base class for an <see cref="Exception" /> that represents one or more JSON:API error objects in an unsuccessful response.
-    /// </summary>
-    [PublicAPI]
-    public class JsonApiException : Exception
+    private static readonly JsonSerializerOptions SerializerOptions = new()
     {
-        private static readonly JsonSerializerOptions SerializerOptions = new()
-        {
-            WriteIndented = true,
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-        };
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
 
-        public IReadOnlyList<ErrorObject> Errors { get; }
+    public IReadOnlyList<ErrorObject> Errors { get; }
 
-        public JsonApiException(ErrorObject error, Exception? innerException = null)
-            : base(null, innerException)
-        {
-            ArgumentGuard.NotNull(error, nameof(error));
+    public JsonApiException(ErrorObject error, Exception? innerException = null)
+        : base(null, innerException)
+    {
+        ArgumentGuard.NotNull(error, nameof(error));
 
-            Errors = error.AsArray();
-        }
+        Errors = error.AsArray();
+    }
 
-        public JsonApiException(IEnumerable<ErrorObject> errors, Exception? innerException = null)
-            : base(null, innerException)
-        {
-            IReadOnlyList<ErrorObject>? errorList = ToErrorList(errors);
-            ArgumentGuard.NotNullNorEmpty(errorList, nameof(errors));
+    public JsonApiException(IEnumerable<ErrorObject> errors, Exception? innerException = null)
+        : base(null, innerException)
+    {
+        IReadOnlyList<ErrorObject>? errorList = ToErrorList(errors);
+        ArgumentGuard.NotNullNorEmpty(errorList, nameof(errors));
 
-            Errors = errorList;
-        }
+        Errors = errorList;
+    }
 
-        private static IReadOnlyList<ErrorObject>? ToErrorList(IEnumerable<ErrorObject>? errors)
-        {
-            return errors?.ToList();
-        }
+    private static IReadOnlyList<ErrorObject>? ToErrorList(IEnumerable<ErrorObject>? errors)
+    {
+        return errors?.ToList();
+    }
 
-        public string GetSummary()
-        {
-            return $"{nameof(JsonApiException)}: Errors = {JsonSerializer.Serialize(Errors, SerializerOptions)}";
-        }
+    public string GetSummary()
+    {
+        return $"{nameof(JsonApiException)}: Errors = {JsonSerializer.Serialize(Errors, SerializerOptions)}";
     }
 }

@@ -6,68 +6,67 @@ using JsonApiDotNetCore.Errors;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 
-namespace JsonApiDotNetCore.QueryStrings.Internal
+namespace JsonApiDotNetCore.QueryStrings.Internal;
+
+/// <inheritdoc />
+[PublicAPI]
+public class QueryStringReader : IQueryStringReader
 {
-    /// <inheritdoc />
-    [PublicAPI]
-    public class QueryStringReader : IQueryStringReader
+    private readonly IJsonApiOptions _options;
+    private readonly IRequestQueryStringAccessor _queryStringAccessor;
+    private readonly IEnumerable<IQueryStringParameterReader> _parameterReaders;
+    private readonly ILogger<QueryStringReader> _logger;
+
+    public QueryStringReader(IJsonApiOptions options, IRequestQueryStringAccessor queryStringAccessor,
+        IEnumerable<IQueryStringParameterReader> parameterReaders, ILoggerFactory loggerFactory)
     {
-        private readonly IJsonApiOptions _options;
-        private readonly IRequestQueryStringAccessor _queryStringAccessor;
-        private readonly IEnumerable<IQueryStringParameterReader> _parameterReaders;
-        private readonly ILogger<QueryStringReader> _logger;
+        ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+        ArgumentGuard.NotNull(options, nameof(options));
+        ArgumentGuard.NotNull(queryStringAccessor, nameof(queryStringAccessor));
+        ArgumentGuard.NotNull(parameterReaders, nameof(parameterReaders));
 
-        public QueryStringReader(IJsonApiOptions options, IRequestQueryStringAccessor queryStringAccessor,
-            IEnumerable<IQueryStringParameterReader> parameterReaders, ILoggerFactory loggerFactory)
+        _options = options;
+        _queryStringAccessor = queryStringAccessor;
+        _parameterReaders = parameterReaders;
+        _logger = loggerFactory.CreateLogger<QueryStringReader>();
+    }
+
+    /// <inheritdoc />
+    public virtual void ReadAll(DisableQueryStringAttribute? disableQueryStringAttribute)
+    {
+        using IDisposable _ = CodeTimingSessionManager.Current.Measure("Parse query string");
+
+        DisableQueryStringAttribute disableQueryStringAttributeNotNull = disableQueryStringAttribute ?? DisableQueryStringAttribute.Empty;
+
+        foreach ((string parameterName, StringValues parameterValue) in _queryStringAccessor.Query)
         {
-            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
-            ArgumentGuard.NotNull(options, nameof(options));
-            ArgumentGuard.NotNull(queryStringAccessor, nameof(queryStringAccessor));
-            ArgumentGuard.NotNull(parameterReaders, nameof(parameterReaders));
+            IQueryStringParameterReader? reader = _parameterReaders.FirstOrDefault(nextReader => nextReader.CanRead(parameterName));
 
-            _options = options;
-            _queryStringAccessor = queryStringAccessor;
-            _parameterReaders = parameterReaders;
-            _logger = loggerFactory.CreateLogger<QueryStringReader>();
-        }
-
-        /// <inheritdoc />
-        public virtual void ReadAll(DisableQueryStringAttribute? disableQueryStringAttribute)
-        {
-            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Parse query string");
-
-            DisableQueryStringAttribute disableQueryStringAttributeNotNull = disableQueryStringAttribute ?? DisableQueryStringAttribute.Empty;
-
-            foreach ((string parameterName, StringValues parameterValue) in _queryStringAccessor.Query)
+            if (reader != null)
             {
-                IQueryStringParameterReader? reader = _parameterReaders.FirstOrDefault(nextReader => nextReader.CanRead(parameterName));
+                _logger.LogDebug($"Query string parameter '{parameterName}' with value '{parameterValue}' was accepted by {reader.GetType().Name}.");
 
-                if (reader != null)
+                if (!reader.AllowEmptyValue && string.IsNullOrEmpty(parameterValue))
                 {
-                    _logger.LogDebug($"Query string parameter '{parameterName}' with value '{parameterValue}' was accepted by {reader.GetType().Name}.");
-
-                    if (!reader.AllowEmptyValue && string.IsNullOrEmpty(parameterValue))
-                    {
-                        throw new InvalidQueryStringParameterException(parameterName, "Missing query string parameter value.",
-                            $"Missing value for '{parameterName}' query string parameter.");
-                    }
-
-                    if (!reader.IsEnabled(disableQueryStringAttributeNotNull))
-                    {
-                        throw new InvalidQueryStringParameterException(parameterName,
-                            "Usage of one or more query string parameters is not allowed at the requested endpoint.",
-                            $"The parameter '{parameterName}' cannot be used at this endpoint.");
-                    }
-
-                    reader.Read(parameterName, parameterValue);
-                    _logger.LogDebug($"Query string parameter '{parameterName}' was successfully read.");
+                    throw new InvalidQueryStringParameterException(parameterName, "Missing query string parameter value.",
+                        $"Missing value for '{parameterName}' query string parameter.");
                 }
-                else if (!_options.AllowUnknownQueryStringParameters)
+
+                if (!reader.IsEnabled(disableQueryStringAttributeNotNull))
                 {
-                    throw new InvalidQueryStringParameterException(parameterName, "Unknown query string parameter.",
-                        $"Query string parameter '{parameterName}' is unknown. Set '{nameof(IJsonApiOptions.AllowUnknownQueryStringParameters)}' " +
-                        "to 'true' in options to ignore unknown parameters.");
+                    throw new InvalidQueryStringParameterException(parameterName,
+                        "Usage of one or more query string parameters is not allowed at the requested endpoint.",
+                        $"The parameter '{parameterName}' cannot be used at this endpoint.");
                 }
+
+                reader.Read(parameterName, parameterValue);
+                _logger.LogDebug($"Query string parameter '{parameterName}' was successfully read.");
+            }
+            else if (!_options.AllowUnknownQueryStringParameters)
+            {
+                throw new InvalidQueryStringParameterException(parameterName, "Unknown query string parameter.",
+                    $"Query string parameter '{parameterName}' is unknown. Set '{nameof(IJsonApiOptions.AllowUnknownQueryStringParameters)}' " +
+                    "to 'true' in options to ignore unknown parameters.");
             }
         }
     }

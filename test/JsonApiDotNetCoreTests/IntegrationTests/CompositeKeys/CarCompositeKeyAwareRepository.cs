@@ -6,47 +6,46 @@ using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
+namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys;
+
+[UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+public class CarCompositeKeyAwareRepository<TResource, TId> : EntityFrameworkCoreRepository<TResource, TId>
+    where TResource : class, IIdentifiable<TId>
 {
-    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public class CarCompositeKeyAwareRepository<TResource, TId> : EntityFrameworkCoreRepository<TResource, TId>
-        where TResource : class, IIdentifiable<TId>
+    private readonly CarExpressionRewriter _writer;
+
+    public CarCompositeKeyAwareRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
+        IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
+        IResourceDefinitionAccessor resourceDefinitionAccessor)
+        : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
     {
-        private readonly CarExpressionRewriter _writer;
+        _writer = new CarExpressionRewriter(resourceGraph);
+    }
 
-        public CarCompositeKeyAwareRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
-            IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
-            IResourceDefinitionAccessor resourceDefinitionAccessor)
-            : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
+    protected override IQueryable<TResource> ApplyQueryLayer(QueryLayer queryLayer)
+    {
+        RecursiveRewriteFilterInLayer(queryLayer);
+
+        return base.ApplyQueryLayer(queryLayer);
+    }
+
+    private void RecursiveRewriteFilterInLayer(QueryLayer queryLayer)
+    {
+        if (queryLayer.Filter != null)
         {
-            _writer = new CarExpressionRewriter(resourceGraph);
+            queryLayer.Filter = (FilterExpression?)_writer.Visit(queryLayer.Filter, null);
         }
 
-        protected override IQueryable<TResource> ApplyQueryLayer(QueryLayer queryLayer)
+        if (queryLayer.Sort != null)
         {
-            RecursiveRewriteFilterInLayer(queryLayer);
-
-            return base.ApplyQueryLayer(queryLayer);
+            queryLayer.Sort = (SortExpression?)_writer.Visit(queryLayer.Sort, null);
         }
 
-        private void RecursiveRewriteFilterInLayer(QueryLayer queryLayer)
+        if (queryLayer.Projection != null)
         {
-            if (queryLayer.Filter != null)
+            foreach (QueryLayer? nextLayer in queryLayer.Projection.Values.Where(layer => layer != null))
             {
-                queryLayer.Filter = (FilterExpression?)_writer.Visit(queryLayer.Filter, null);
-            }
-
-            if (queryLayer.Sort != null)
-            {
-                queryLayer.Sort = (SortExpression?)_writer.Visit(queryLayer.Sort, null);
-            }
-
-            if (queryLayer.Projection != null)
-            {
-                foreach (QueryLayer? nextLayer in queryLayer.Projection.Values.Where(layer => layer != null))
-                {
-                    RecursiveRewriteFilterInLayer(nextLayer!);
-                }
+                RecursiveRewriteFilterInLayer(nextLayer!);
             }
         }
     }

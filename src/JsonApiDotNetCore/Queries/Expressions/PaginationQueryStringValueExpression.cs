@@ -1,60 +1,59 @@
 using System.Collections.Immutable;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Expressions
+namespace JsonApiDotNetCore.Queries.Expressions;
+
+/// <summary>
+/// Represents pagination in a query string, resulting from text such as: 1,articles:2
+/// </summary>
+[PublicAPI]
+public class PaginationQueryStringValueExpression : QueryExpression
 {
-    /// <summary>
-    /// Represents pagination in a query string, resulting from text such as: 1,articles:2
-    /// </summary>
-    [PublicAPI]
-    public class PaginationQueryStringValueExpression : QueryExpression
+    public IImmutableList<PaginationElementQueryStringValueExpression> Elements { get; }
+
+    public PaginationQueryStringValueExpression(IImmutableList<PaginationElementQueryStringValueExpression> elements)
     {
-        public IImmutableList<PaginationElementQueryStringValueExpression> Elements { get; }
+        ArgumentGuard.NotNullNorEmpty(elements, nameof(elements));
 
-        public PaginationQueryStringValueExpression(IImmutableList<PaginationElementQueryStringValueExpression> elements)
+        Elements = elements;
+    }
+
+    public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
+    {
+        return visitor.PaginationQueryStringValue(this, argument);
+    }
+
+    public override string ToString()
+    {
+        return string.Join(",", Elements.Select(constant => constant.ToString()));
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj))
         {
-            ArgumentGuard.NotNullNorEmpty(elements, nameof(elements));
-
-            Elements = elements;
+            return true;
         }
 
-        public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
+        if (obj is null || GetType() != obj.GetType())
         {
-            return visitor.PaginationQueryStringValue(this, argument);
+            return false;
         }
 
-        public override string ToString()
+        var other = (PaginationQueryStringValueExpression)obj;
+
+        return Elements.SequenceEqual(other.Elements);
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = new HashCode();
+
+        foreach (PaginationElementQueryStringValueExpression element in Elements)
         {
-            return string.Join(",", Elements.Select(constant => constant.ToString()));
+            hashCode.Add(element);
         }
 
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj is null || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            var other = (PaginationQueryStringValueExpression)obj;
-
-            return Elements.SequenceEqual(other.Elements);
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = new HashCode();
-
-            foreach (PaginationElementQueryStringValueExpression element in Elements)
-            {
-                hashCode.Add(element);
-            }
-
-            return hashCode.ToHashCode();
-        }
+        return hashCode.ToHashCode();
     }
 }

@@ -2,61 +2,60 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.Resources
+namespace JsonApiDotNetCore.Resources;
+
+/// <summary>
+/// Represents a write operation on a JSON:API resource.
+/// </summary>
+[PublicAPI]
+public sealed class OperationContainer
 {
-    /// <summary>
-    /// Represents a write operation on a JSON:API resource.
-    /// </summary>
-    [PublicAPI]
-    public sealed class OperationContainer
+    private static readonly CollectionConverter CollectionConverter = new();
+
+    public IIdentifiable Resource { get; }
+    public ITargetedFields TargetedFields { get; }
+    public IJsonApiRequest Request { get; }
+
+    public OperationContainer(IIdentifiable resource, ITargetedFields targetedFields, IJsonApiRequest request)
     {
-        private static readonly CollectionConverter CollectionConverter = new();
+        ArgumentGuard.NotNull(resource, nameof(resource));
+        ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+        ArgumentGuard.NotNull(request, nameof(request));
 
-        public IIdentifiable Resource { get; }
-        public ITargetedFields TargetedFields { get; }
-        public IJsonApiRequest Request { get; }
+        Resource = resource;
+        TargetedFields = targetedFields;
+        Request = request;
+    }
 
-        public OperationContainer(IIdentifiable resource, ITargetedFields targetedFields, IJsonApiRequest request)
+    public void SetTransactionId(string transactionId)
+    {
+        ((JsonApiRequest)Request).TransactionId = transactionId;
+    }
+
+    public OperationContainer WithResource(IIdentifiable resource)
+    {
+        ArgumentGuard.NotNull(resource, nameof(resource));
+
+        return new OperationContainer(resource, TargetedFields, Request);
+    }
+
+    public ISet<IIdentifiable> GetSecondaryResources()
+    {
+        var secondaryResources = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
+
+        foreach (RelationshipAttribute relationship in TargetedFields.Relationships)
         {
-            ArgumentGuard.NotNull(resource, nameof(resource));
-            ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
-            ArgumentGuard.NotNull(request, nameof(request));
-
-            Resource = resource;
-            TargetedFields = targetedFields;
-            Request = request;
+            AddSecondaryResources(relationship, secondaryResources);
         }
 
-        public void SetTransactionId(string transactionId)
-        {
-            ((JsonApiRequest)Request).TransactionId = transactionId;
-        }
+        return secondaryResources;
+    }
 
-        public OperationContainer WithResource(IIdentifiable resource)
-        {
-            ArgumentGuard.NotNull(resource, nameof(resource));
+    private void AddSecondaryResources(RelationshipAttribute relationship, HashSet<IIdentifiable> secondaryResources)
+    {
+        object? rightValue = relationship.GetValue(Resource);
+        ICollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
 
-            return new OperationContainer(resource, TargetedFields, Request);
-        }
-
-        public ISet<IIdentifiable> GetSecondaryResources()
-        {
-            var secondaryResources = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
-
-            foreach (RelationshipAttribute relationship in TargetedFields.Relationships)
-            {
-                AddSecondaryResources(relationship, secondaryResources);
-            }
-
-            return secondaryResources;
-        }
-
-        private void AddSecondaryResources(RelationshipAttribute relationship, HashSet<IIdentifiable> secondaryResources)
-        {
-            object? rightValue = relationship.GetValue(Resource);
-            ICollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
-
-            secondaryResources.AddRange(rightResources);
-        }
+        secondaryResources.AddRange(rightResources);
     }
 }

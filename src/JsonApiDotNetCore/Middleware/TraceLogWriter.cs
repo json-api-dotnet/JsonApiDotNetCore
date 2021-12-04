@@ -6,149 +6,148 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCore.Middleware
+namespace JsonApiDotNetCore.Middleware;
+
+internal abstract class TraceLogWriter
 {
-    internal abstract class TraceLogWriter
+    protected static readonly JsonSerializerOptions SerializerOptions = new()
     {
-        protected static readonly JsonSerializerOptions SerializerOptions = new()
-        {
-            WriteIndented = true,
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            ReferenceHandler = ReferenceHandler.Preserve
-        };
+        WriteIndented = true,
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        ReferenceHandler = ReferenceHandler.Preserve
+    };
+}
+
+internal sealed class TraceLogWriter<T> : TraceLogWriter
+{
+    private readonly ILogger _logger;
+
+    private bool IsEnabled => _logger.IsEnabled(LogLevel.Trace);
+
+    public TraceLogWriter(ILoggerFactory loggerFactory)
+    {
+        _logger = loggerFactory.CreateLogger(typeof(T));
     }
 
-    internal sealed class TraceLogWriter<T> : TraceLogWriter
+    public void LogMethodStart(object? parameters = null, [CallerMemberName] string memberName = "")
     {
-        private readonly ILogger _logger;
-
-        private bool IsEnabled => _logger.IsEnabled(LogLevel.Trace);
-
-        public TraceLogWriter(ILoggerFactory loggerFactory)
+        if (IsEnabled)
         {
-            _logger = loggerFactory.CreateLogger(typeof(T));
+            string message = FormatMessage(memberName, parameters);
+            WriteMessageToLog(message);
         }
+    }
 
-        public void LogMethodStart(object? parameters = null, [CallerMemberName] string memberName = "")
+    public void LogMessage(Func<string> messageFactory)
+    {
+        if (IsEnabled)
         {
-            if (IsEnabled)
+            string message = messageFactory();
+            WriteMessageToLog(message);
+        }
+    }
+
+    private static string FormatMessage(string memberName, object? parameters)
+    {
+        var builder = new StringBuilder();
+
+        builder.Append("Entering ");
+        builder.Append(memberName);
+        builder.Append('(');
+        WriteProperties(builder, parameters);
+        builder.Append(')');
+
+        return builder.ToString();
+    }
+
+    private static void WriteProperties(StringBuilder builder, object? propertyContainer)
+    {
+        if (propertyContainer != null)
+        {
+            bool isFirstMember = true;
+
+            foreach (PropertyInfo property in propertyContainer.GetType().GetProperties())
             {
-                string message = FormatMessage(memberName, parameters);
-                WriteMessageToLog(message);
-            }
-        }
-
-        public void LogMessage(Func<string> messageFactory)
-        {
-            if (IsEnabled)
-            {
-                string message = messageFactory();
-                WriteMessageToLog(message);
-            }
-        }
-
-        private static string FormatMessage(string memberName, object? parameters)
-        {
-            var builder = new StringBuilder();
-
-            builder.Append("Entering ");
-            builder.Append(memberName);
-            builder.Append('(');
-            WriteProperties(builder, parameters);
-            builder.Append(')');
-
-            return builder.ToString();
-        }
-
-        private static void WriteProperties(StringBuilder builder, object? propertyContainer)
-        {
-            if (propertyContainer != null)
-            {
-                bool isFirstMember = true;
-
-                foreach (PropertyInfo property in propertyContainer.GetType().GetProperties())
+                if (isFirstMember)
                 {
-                    if (isFirstMember)
-                    {
-                        isFirstMember = false;
-                    }
-                    else
-                    {
-                        builder.Append(", ");
-                    }
-
-                    WriteProperty(builder, property, propertyContainer);
+                    isFirstMember = false;
                 }
-            }
-        }
-
-        private static void WriteProperty(StringBuilder builder, PropertyInfo property, object instance)
-        {
-            builder.Append(property.Name);
-            builder.Append(": ");
-
-            object? value = property.GetValue(instance);
-
-            if (value == null)
-            {
-                builder.Append("null");
-            }
-            else if (value is string stringValue)
-            {
-                builder.Append('"');
-                builder.Append(stringValue);
-                builder.Append('"');
-            }
-            else
-            {
-                WriteObject(builder, value);
-            }
-        }
-
-        private static void WriteObject(StringBuilder builder, object value)
-        {
-            if (HasToStringOverload(value.GetType()))
-            {
-                builder.Append(value);
-            }
-            else
-            {
-                string text = SerializeObject(value);
-                builder.Append(text);
-            }
-        }
-
-        private static bool HasToStringOverload(Type? type)
-        {
-            if (type != null)
-            {
-                MethodInfo? toStringMethod = type.GetMethod("ToString", Array.Empty<Type>());
-
-                if (toStringMethod != null && toStringMethod.DeclaringType != typeof(object))
+                else
                 {
-                    return true;
+                    builder.Append(", ");
                 }
+
+                WriteProperty(builder, property, propertyContainer);
             }
-
-            return false;
         }
+    }
 
-        private static string SerializeObject(object value)
+    private static void WriteProperty(StringBuilder builder, PropertyInfo property, object instance)
+    {
+        builder.Append(property.Name);
+        builder.Append(": ");
+
+        object? value = property.GetValue(instance);
+
+        if (value == null)
         {
-            try
+            builder.Append("null");
+        }
+        else if (value is string stringValue)
+        {
+            builder.Append('"');
+            builder.Append(stringValue);
+            builder.Append('"');
+        }
+        else
+        {
+            WriteObject(builder, value);
+        }
+    }
+
+    private static void WriteObject(StringBuilder builder, object value)
+    {
+        if (HasToStringOverload(value.GetType()))
+        {
+            builder.Append(value);
+        }
+        else
+        {
+            string text = SerializeObject(value);
+            builder.Append(text);
+        }
+    }
+
+    private static bool HasToStringOverload(Type? type)
+    {
+        if (type != null)
+        {
+            MethodInfo? toStringMethod = type.GetMethod("ToString", Array.Empty<Type>());
+
+            if (toStringMethod != null && toStringMethod.DeclaringType != typeof(object))
             {
-                return JsonSerializer.Serialize(value, SerializerOptions);
-            }
-            catch (JsonException)
-            {
-                // Never crash as a result of logging, this is best-effort only.
-                return "object";
+                return true;
             }
         }
 
-        private void WriteMessageToLog(string message)
+        return false;
+    }
+
+    private static string SerializeObject(object value)
+    {
+        try
         {
-            _logger.LogTrace(message);
+            return JsonSerializer.Serialize(value, SerializerOptions);
         }
+        catch (JsonException)
+        {
+            // Never crash as a result of logging, this is best-effort only.
+            return "object";
+        }
+    }
+
+    private void WriteMessageToLog(string message)
+    {
+        _logger.LogTrace(message);
     }
 }

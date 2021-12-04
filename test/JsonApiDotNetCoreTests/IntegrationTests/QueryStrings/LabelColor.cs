@@ -1,14 +1,13 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
+namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+[JsonConverter(typeof(JsonStringEnumMemberConverter))]
+public enum LabelColor
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    [JsonConverter(typeof(JsonStringEnumMemberConverter))]
-    public enum LabelColor
-    {
-        Red,
-        Green,
-        Blue
-    }
+    Red,
+    Green,
+    Blue
 }

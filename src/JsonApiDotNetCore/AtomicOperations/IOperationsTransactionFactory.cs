@@ -1,13 +1,12 @@
-namespace JsonApiDotNetCore.AtomicOperations
+namespace JsonApiDotNetCore.AtomicOperations;
+
+/// <summary>
+/// Provides a method to start the overarching transaction for an atomic:operations request.
+/// </summary>
+public interface IOperationsTransactionFactory
 {
     /// <summary>
-    /// Provides a method to start the overarching transaction for an atomic:operations request.
+    /// Starts a new transaction.
     /// </summary>
-    public interface IOperationsTransactionFactory
-    {
-        /// <summary>
-        /// Starts a new transaction.
-        /// </summary>
-        Task<IOperationsTransaction> BeginTransactionAsync(CancellationToken cancellationToken);
-    }
+    Task<IOperationsTransaction> BeginTransactionAsync(CancellationToken cancellationToken);
 }

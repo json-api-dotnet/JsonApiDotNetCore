@@ -8,1052 +8,1051 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
+namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy;
+
+public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext>>
 {
-    public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext>>
+    private static readonly Guid ThisTenantId = RouteTenantProvider.TenantRegistry["nld"];
+    private static readonly Guid OtherTenantId = RouteTenantProvider.TenantRegistry["ita"];
+
+    private readonly IntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext> _testContext;
+    private readonly MultiTenancyFakers _fakers = new();
+
+    public MultiTenancyTests(IntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext> testContext)
     {
-        private static readonly Guid ThisTenantId = RouteTenantProvider.TenantRegistry["nld"];
-        private static readonly Guid OtherTenantId = RouteTenantProvider.TenantRegistry["ita"];
+        _testContext = testContext;
 
-        private readonly IntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext> _testContext;
-        private readonly MultiTenancyFakers _fakers = new();
+        testContext.UseController<WebShopsController>();
+        testContext.UseController<WebProductsController>();
 
-        public MultiTenancyTests(IntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext> testContext)
+        testContext.ConfigureServicesBeforeStartup(services =>
         {
-            _testContext = testContext;
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<ITenantProvider, RouteTenantProvider>();
+        });
 
-            testContext.UseController<WebShopsController>();
-            testContext.UseController<WebProductsController>();
-
-            testContext.ConfigureServicesBeforeStartup(services =>
-            {
-                services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-                services.AddScoped<ITenantProvider, RouteTenantProvider>();
-            });
-
-            testContext.ConfigureServicesAfterStartup(services =>
-            {
-                services.AddResourceService<MultiTenantResourceService<WebShop, int>>();
-                services.AddResourceService<MultiTenantResourceService<WebProduct, int>>();
-            });
-
-            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.UseRelativeLinks = true;
-            options.IncludeTotalResourceCount = true;
-        }
-
-        [Fact]
-        public async Task Get_primary_resources_hides_other_tenants()
+        testContext.ConfigureServicesAfterStartup(services =>
         {
-            // Arrange
-            List<WebShop> shops = _fakers.WebShop.Generate(2);
-            shops[0].TenantId = OtherTenantId;
-            shops[1].TenantId = ThisTenantId;
+            services.AddResourceService<MultiTenantResourceService<WebShop, int>>();
+            services.AddResourceService<MultiTenantResourceService<WebProduct, int>>();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<WebShop>();
-                dbContext.WebShops.AddRange(shops);
-                await dbContext.SaveChangesAsync();
-            });
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.UseRelativeLinks = true;
+        options.IncludeTotalResourceCount = true;
+    }
 
-            const string route = "/nld/shops";
+    [Fact]
+    public async Task Get_primary_resources_hides_other_tenants()
+    {
+        // Arrange
+        List<WebShop> shops = _fakers.WebShop.Generate(2);
+        shops[0].TenantId = OtherTenantId;
+        shops[1].TenantId = ThisTenantId;
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Id.Should().Be(shops[1].StringId);
-        }
-
-        [Fact]
-        public async Task Filter_on_primary_resources_hides_other_tenants()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            List<WebShop> shops = _fakers.WebShop.Generate(2);
-            shops[0].TenantId = OtherTenantId;
-            shops[0].Products = _fakers.WebProduct.Generate(1);
+            await dbContext.ClearTableAsync<WebShop>();
+            dbContext.WebShops.AddRange(shops);
+            await dbContext.SaveChangesAsync();
+        });
 
-            shops[1].TenantId = ThisTenantId;
-            shops[1].Products = _fakers.WebProduct.Generate(1);
+        const string route = "/nld/shops";
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<WebShop>();
-                dbContext.WebShops.AddRange(shops);
-                await dbContext.SaveChangesAsync();
-            });
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            const string route = "/nld/shops?filter=has(products)";
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(shops[1].StringId);
+    }
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+    [Fact]
+    public async Task Filter_on_primary_resources_hides_other_tenants()
+    {
+        // Arrange
+        List<WebShop> shops = _fakers.WebShop.Generate(2);
+        shops[0].TenantId = OtherTenantId;
+        shops[0].Products = _fakers.WebProduct.Generate(1);
 
-            responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Id.Should().Be(shops[1].StringId);
-        }
+        shops[1].TenantId = ThisTenantId;
+        shops[1].Products = _fakers.WebProduct.Generate(1);
 
-        [Fact]
-        public async Task Get_primary_resources_with_include_hides_other_tenants()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            List<WebShop> shops = _fakers.WebShop.Generate(2);
-            shops[0].TenantId = OtherTenantId;
-            shops[0].Products = _fakers.WebProduct.Generate(1);
+            await dbContext.ClearTableAsync<WebShop>();
+            dbContext.WebShops.AddRange(shops);
+            await dbContext.SaveChangesAsync();
+        });
 
-            shops[1].TenantId = ThisTenantId;
-            shops[1].Products = _fakers.WebProduct.Generate(1);
+        const string route = "/nld/shops?filter=has(products)";
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<WebShop>();
-                dbContext.WebShops.AddRange(shops);
-                await dbContext.SaveChangesAsync();
-            });
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            const string route = "/nld/shops?include=products";
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(shops[1].StringId);
+    }
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+    [Fact]
+    public async Task Get_primary_resources_with_include_hides_other_tenants()
+    {
+        // Arrange
+        List<WebShop> shops = _fakers.WebShop.Generate(2);
+        shops[0].TenantId = OtherTenantId;
+        shops[0].Products = _fakers.WebProduct.Generate(1);
 
-            responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Type.Should().Be("webShops");
-            responseDocument.Data.ManyValue[0].Id.Should().Be(shops[1].StringId);
+        shops[1].TenantId = ThisTenantId;
+        shops[1].Products = _fakers.WebProduct.Generate(1);
 
-            responseDocument.Included.ShouldHaveCount(1);
-            responseDocument.Included[0].Type.Should().Be("webProducts");
-            responseDocument.Included[0].Id.Should().Be(shops[1].Products[0].StringId);
-        }
-
-        [Fact]
-        public async Task Cannot_get_primary_resource_by_ID_from_other_tenant()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebShop shop = _fakers.WebShop.Generate();
-            shop.TenantId = OtherTenantId;
+            await dbContext.ClearTableAsync<WebShop>();
+            dbContext.WebShops.AddRange(shops);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WebShops.Add(shop);
-                await dbContext.SaveChangesAsync();
-            });
+        const string route = "/nld/shops?include=products";
 
-            string route = $"/nld/shops/{shop.StringId}";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Type.Should().Be("webShops");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(shops[1].StringId);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included[0].Type.Should().Be("webProducts");
+        responseDocument.Included[0].Id.Should().Be(shops[1].Products[0].StringId);
+    }
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'webShops' with ID '{shop.StringId}' does not exist.");
-        }
+    [Fact]
+    public async Task Cannot_get_primary_resource_by_ID_from_other_tenant()
+    {
+        // Arrange
+        WebShop shop = _fakers.WebShop.Generate();
+        shop.TenantId = OtherTenantId;
 
-        [Fact]
-        public async Task Cannot_get_secondary_resources_from_other_parent_tenant()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebShop shop = _fakers.WebShop.Generate();
-            shop.TenantId = OtherTenantId;
-            shop.Products = _fakers.WebProduct.Generate(1);
+            dbContext.WebShops.Add(shop);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WebShops.Add(shop);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/nld/shops/{shop.StringId}";
 
-            string route = $"/nld/shops/{shop.StringId}/products";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'webShops' with ID '{shop.StringId}' does not exist.");
+    }
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'webShops' with ID '{shop.StringId}' does not exist.");
-        }
+    [Fact]
+    public async Task Cannot_get_secondary_resources_from_other_parent_tenant()
+    {
+        // Arrange
+        WebShop shop = _fakers.WebShop.Generate();
+        shop.TenantId = OtherTenantId;
+        shop.Products = _fakers.WebProduct.Generate(1);
 
-        [Fact]
-        public async Task Cannot_get_secondary_resource_from_other_parent_tenant()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebProduct product = _fakers.WebProduct.Generate();
-            product.Shop = _fakers.WebShop.Generate();
-            product.Shop.TenantId = OtherTenantId;
+            dbContext.WebShops.Add(shop);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WebProducts.Add(product);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/nld/shops/{shop.StringId}/products";
 
-            string route = $"/nld/products/{product.StringId}/shop";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'webShops' with ID '{shop.StringId}' does not exist.");
+    }
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{product.StringId}' does not exist.");
-        }
+    [Fact]
+    public async Task Cannot_get_secondary_resource_from_other_parent_tenant()
+    {
+        // Arrange
+        WebProduct product = _fakers.WebProduct.Generate();
+        product.Shop = _fakers.WebShop.Generate();
+        product.Shop.TenantId = OtherTenantId;
 
-        [Fact]
-        public async Task Cannot_get_ToMany_relationship_for_other_parent_tenant()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebShop shop = _fakers.WebShop.Generate();
-            shop.TenantId = OtherTenantId;
-            shop.Products = _fakers.WebProduct.Generate(1);
+            dbContext.WebProducts.Add(product);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WebShops.Add(shop);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/nld/products/{product.StringId}/shop";
 
-            string route = $"/nld/shops/{shop.StringId}/relationships/products";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{product.StringId}' does not exist.");
+    }
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'webShops' with ID '{shop.StringId}' does not exist.");
-        }
+    [Fact]
+    public async Task Cannot_get_ToMany_relationship_for_other_parent_tenant()
+    {
+        // Arrange
+        WebShop shop = _fakers.WebShop.Generate();
+        shop.TenantId = OtherTenantId;
+        shop.Products = _fakers.WebProduct.Generate(1);
 
-        [Fact]
-        public async Task Cannot_get_ToOne_relationship_for_other_parent_tenant()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebProduct product = _fakers.WebProduct.Generate();
-            product.Shop = _fakers.WebShop.Generate();
-            product.Shop.TenantId = OtherTenantId;
+            dbContext.WebShops.Add(shop);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WebProducts.Add(product);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/nld/shops/{shop.StringId}/relationships/products";
 
-            string route = $"/nld/products/{product.StringId}/relationships/shop";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'webShops' with ID '{shop.StringId}' does not exist.");
+    }
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{product.StringId}' does not exist.");
-        }
+    [Fact]
+    public async Task Cannot_get_ToOne_relationship_for_other_parent_tenant()
+    {
+        // Arrange
+        WebProduct product = _fakers.WebProduct.Generate();
+        product.Shop = _fakers.WebShop.Generate();
+        product.Shop.TenantId = OtherTenantId;
 
-        [Fact]
-        public async Task Can_create_resource()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            string newShopUrl = _fakers.WebShop.Generate().Url;
+            dbContext.WebProducts.Add(product);
+            await dbContext.SaveChangesAsync();
+        });
 
-            var requestBody = new
+        string route = $"/nld/products/{product.StringId}/relationships/shop";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{product.StringId}' does not exist.");
+    }
+
+    [Fact]
+    public async Task Can_create_resource()
+    {
+        // Arrange
+        string newShopUrl = _fakers.WebShop.Generate().Url;
+
+        var requestBody = new
+        {
+            data = new
             {
-                data = new
+                type = "webShops",
+                attributes = new
                 {
-                    type = "webShops",
-                    attributes = new
-                    {
-                        url = newShopUrl
-                    }
+                    url = newShopUrl
                 }
-            };
+            }
+        };
 
-            const string route = "/nld/shops";
+        const string route = "/nld/shops";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("url").With(value => value.Should().Be(newShopUrl));
-            responseDocument.Data.SingleValue.Relationships.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("url").With(value => value.Should().Be(newShopUrl));
+        responseDocument.Data.SingleValue.Relationships.ShouldNotBeNull();
 
-            int newShopId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+        int newShopId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                WebShop shopInDatabase = await dbContext.WebShops.IgnoreQueryFilters().FirstWithIdAsync(newShopId);
-
-                shopInDatabase.Url.Should().Be(newShopUrl);
-                shopInDatabase.TenantId.Should().Be(ThisTenantId);
-            });
-        }
-
-        [Fact]
-        public async Task Cannot_create_resource_with_ToMany_relationship_to_other_tenant()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebProduct existingProduct = _fakers.WebProduct.Generate();
-            existingProduct.Shop = _fakers.WebShop.Generate();
-            existingProduct.Shop.TenantId = OtherTenantId;
+            WebShop shopInDatabase = await dbContext.WebShops.IgnoreQueryFilters().FirstWithIdAsync(newShopId);
 
-            string newShopUrl = _fakers.WebShop.Generate().Url;
+            shopInDatabase.Url.Should().Be(newShopUrl);
+            shopInDatabase.TenantId.Should().Be(ThisTenantId);
+        });
+    }
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+    [Fact]
+    public async Task Cannot_create_resource_with_ToMany_relationship_to_other_tenant()
+    {
+        // Arrange
+        WebProduct existingProduct = _fakers.WebProduct.Generate();
+        existingProduct.Shop = _fakers.WebShop.Generate();
+        existingProduct.Shop.TenantId = OtherTenantId;
+
+        string newShopUrl = _fakers.WebShop.Generate().Url;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WebProducts.Add(existingProduct);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
             {
-                dbContext.WebProducts.Add(existingProduct);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "webShops",
+                attributes = new
                 {
-                    type = "webShops",
-                    attributes = new
+                    url = newShopUrl
+                },
+                relationships = new
+                {
+                    products = new
                     {
-                        url = newShopUrl
-                    },
-                    relationships = new
-                    {
-                        products = new
+                        data = new[]
                         {
-                            data = new[]
+                            new
                             {
-                                new
-                                {
-                                    type = "webProducts",
-                                    id = existingProduct.StringId
-                                }
+                                type = "webProducts",
+                                id = existingProduct.StringId
                             }
                         }
                     }
                 }
-            };
+            }
+        };
 
-            const string route = "/nld/shops";
+        const string route = "/nld/shops";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be($"Related resource of type 'webProducts' with ID '{existingProduct.StringId}' in relationship 'products' does not exist.");
-        }
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("A related resource does not exist.");
+        error.Detail.Should().Be($"Related resource of type 'webProducts' with ID '{existingProduct.StringId}' in relationship 'products' does not exist.");
+    }
 
-        [Fact]
-        public async Task Cannot_create_resource_with_ToOne_relationship_to_other_tenant()
+    [Fact]
+    public async Task Cannot_create_resource_with_ToOne_relationship_to_other_tenant()
+    {
+        // Arrange
+        WebShop existingShop = _fakers.WebShop.Generate();
+        existingShop.TenantId = OtherTenantId;
+
+        string newProductName = _fakers.WebProduct.Generate().Name;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebShop existingShop = _fakers.WebShop.Generate();
-            existingShop.TenantId = OtherTenantId;
+            dbContext.WebShops.Add(existingShop);
+            await dbContext.SaveChangesAsync();
+        });
 
-            string newProductName = _fakers.WebProduct.Generate().Name;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        var requestBody = new
+        {
+            data = new
             {
-                dbContext.WebShops.Add(existingShop);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "webProducts",
+                attributes = new
                 {
-                    type = "webProducts",
-                    attributes = new
+                    name = newProductName
+                },
+                relationships = new
+                {
+                    shop = new
                     {
-                        name = newProductName
-                    },
-                    relationships = new
-                    {
-                        shop = new
+                        data = new
                         {
-                            data = new
+                            type = "webShops",
+                            id = existingShop.StringId
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/nld/products";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("A related resource does not exist.");
+        error.Detail.Should().Be($"Related resource of type 'webShops' with ID '{existingShop.StringId}' in relationship 'shop' does not exist.");
+    }
+
+    [Fact]
+    public async Task Can_update_resource()
+    {
+        // Arrange
+        WebProduct existingProduct = _fakers.WebProduct.Generate();
+        existingProduct.Shop = _fakers.WebShop.Generate();
+        existingProduct.Shop.TenantId = ThisTenantId;
+
+        string newProductName = _fakers.WebProduct.Generate().Name;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WebProducts.Add(existingProduct);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "webProducts",
+                id = existingProduct.StringId,
+                attributes = new
+                {
+                    name = newProductName
+                }
+            }
+        };
+
+        string route = $"/nld/products/{existingProduct.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            WebProduct productInDatabase = await dbContext.WebProducts.IgnoreQueryFilters().FirstWithIdAsync(existingProduct.Id);
+
+            productInDatabase.Name.Should().Be(newProductName);
+            productInDatabase.Price.Should().Be(existingProduct.Price);
+        });
+    }
+
+    [Fact]
+    public async Task Cannot_update_resource_from_other_tenant()
+    {
+        // Arrange
+        WebProduct existingProduct = _fakers.WebProduct.Generate();
+        existingProduct.Shop = _fakers.WebShop.Generate();
+        existingProduct.Shop.TenantId = OtherTenantId;
+
+        string newProductName = _fakers.WebProduct.Generate().Name;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WebProducts.Add(existingProduct);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "webProducts",
+                id = existingProduct.StringId,
+                attributes = new
+                {
+                    name = newProductName
+                }
+            }
+        };
+
+        string route = $"/nld/products/{existingProduct.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{existingProduct.StringId}' does not exist.");
+    }
+
+    [Fact]
+    public async Task Cannot_update_resource_with_ToMany_relationship_to_other_tenant()
+    {
+        // Arrange
+        WebShop existingShop = _fakers.WebShop.Generate();
+        existingShop.TenantId = ThisTenantId;
+
+        WebProduct existingProduct = _fakers.WebProduct.Generate();
+        existingProduct.Shop = _fakers.WebShop.Generate();
+        existingProduct.Shop.TenantId = OtherTenantId;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.AddInRange(existingShop, existingProduct);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "webShops",
+                id = existingShop.StringId,
+                relationships = new
+                {
+                    products = new
+                    {
+                        data = new[]
+                        {
+                            new
                             {
-                                type = "webShops",
-                                id = existingShop.StringId
+                                type = "webProducts",
+                                id = existingProduct.StringId
                             }
                         }
                     }
                 }
-            };
+            }
+        };
 
-            const string route = "/nld/products";
+        string route = $"/nld/shops/{existingShop.StringId}";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be($"Related resource of type 'webShops' with ID '{existingShop.StringId}' in relationship 'shop' does not exist.");
-        }
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("A related resource does not exist.");
+        error.Detail.Should().Be($"Related resource of type 'webProducts' with ID '{existingProduct.StringId}' in relationship 'products' does not exist.");
+    }
 
-        [Fact]
-        public async Task Can_update_resource()
+    [Fact]
+    public async Task Cannot_update_resource_with_ToOne_relationship_to_other_tenant()
+    {
+        // Arrange
+        WebProduct existingProduct = _fakers.WebProduct.Generate();
+        existingProduct.Shop = _fakers.WebShop.Generate();
+        existingProduct.Shop.TenantId = ThisTenantId;
+
+        WebShop existingShop = _fakers.WebShop.Generate();
+        existingShop.TenantId = OtherTenantId;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebProduct existingProduct = _fakers.WebProduct.Generate();
-            existingProduct.Shop = _fakers.WebShop.Generate();
-            existingProduct.Shop.TenantId = ThisTenantId;
+            dbContext.AddInRange(existingProduct, existingShop);
+            await dbContext.SaveChangesAsync();
+        });
 
-            string newProductName = _fakers.WebProduct.Generate().Name;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WebProducts.Add(existingProduct);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "webProducts",
-                    id = existingProduct.StringId,
-                    attributes = new
-                    {
-                        name = newProductName
-                    }
-                }
-            };
-
-            string route = $"/nld/products/{existingProduct.StringId}";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                WebProduct productInDatabase = await dbContext.WebProducts.IgnoreQueryFilters().FirstWithIdAsync(existingProduct.Id);
-
-                productInDatabase.Name.Should().Be(newProductName);
-                productInDatabase.Price.Should().Be(existingProduct.Price);
-            });
-        }
-
-        [Fact]
-        public async Task Cannot_update_resource_from_other_tenant()
+        var requestBody = new
         {
-            // Arrange
-            WebProduct existingProduct = _fakers.WebProduct.Generate();
-            existingProduct.Shop = _fakers.WebShop.Generate();
-            existingProduct.Shop.TenantId = OtherTenantId;
-
-            string newProductName = _fakers.WebProduct.Generate().Name;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            data = new
             {
-                dbContext.WebProducts.Add(existingProduct);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "webProducts",
+                id = existingProduct.StringId,
+                relationships = new
                 {
-                    type = "webProducts",
-                    id = existingProduct.StringId,
-                    attributes = new
+                    shop = new
                     {
-                        name = newProductName
-                    }
-                }
-            };
-
-            string route = $"/nld/products/{existingProduct.StringId}";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{existingProduct.StringId}' does not exist.");
-        }
-
-        [Fact]
-        public async Task Cannot_update_resource_with_ToMany_relationship_to_other_tenant()
-        {
-            // Arrange
-            WebShop existingShop = _fakers.WebShop.Generate();
-            existingShop.TenantId = ThisTenantId;
-
-            WebProduct existingProduct = _fakers.WebProduct.Generate();
-            existingProduct.Shop = _fakers.WebShop.Generate();
-            existingProduct.Shop.TenantId = OtherTenantId;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddInRange(existingShop, existingProduct);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "webShops",
-                    id = existingShop.StringId,
-                    relationships = new
-                    {
-                        products = new
+                        data = new
                         {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "webProducts",
-                                    id = existingProduct.StringId
-                                }
-                            }
+                            type = "webShops",
+                            id = existingShop.StringId
                         }
                     }
                 }
-            };
+            }
+        };
 
-            string route = $"/nld/shops/{existingShop.StringId}";
+        string route = $"/nld/products/{existingProduct.StringId}";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be($"Related resource of type 'webProducts' with ID '{existingProduct.StringId}' in relationship 'products' does not exist.");
-        }
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("A related resource does not exist.");
+        error.Detail.Should().Be($"Related resource of type 'webShops' with ID '{existingShop.StringId}' in relationship 'shop' does not exist.");
+    }
 
-        [Fact]
-        public async Task Cannot_update_resource_with_ToOne_relationship_to_other_tenant()
+    [Fact]
+    public async Task Cannot_update_ToMany_relationship_for_other_parent_tenant()
+    {
+        // Arrange
+        WebShop existingShop = _fakers.WebShop.Generate();
+        existingShop.TenantId = OtherTenantId;
+        existingShop.Products = _fakers.WebProduct.Generate(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebProduct existingProduct = _fakers.WebProduct.Generate();
-            existingProduct.Shop = _fakers.WebShop.Generate();
-            existingProduct.Shop.TenantId = ThisTenantId;
+            dbContext.WebShops.Add(existingShop);
+            await dbContext.SaveChangesAsync();
+        });
 
-            WebShop existingShop = _fakers.WebShop.Generate();
-            existingShop.TenantId = OtherTenantId;
+        var requestBody = new
+        {
+            data = Array.Empty<object>()
+        };
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'webShops' with ID '{existingShop.StringId}' does not exist.");
+    }
+
+    [Fact]
+    public async Task Cannot_update_ToMany_relationship_to_other_tenant()
+    {
+        // Arrange
+        WebShop existingShop = _fakers.WebShop.Generate();
+        existingShop.TenantId = ThisTenantId;
+
+        WebProduct existingProduct = _fakers.WebProduct.Generate();
+        existingProduct.Shop = _fakers.WebShop.Generate();
+        existingProduct.Shop.TenantId = OtherTenantId;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.AddInRange(existingShop, existingProduct);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
             {
-                dbContext.AddInRange(existingProduct, existingShop);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                new
                 {
                     type = "webProducts",
-                    id = existingProduct.StringId,
-                    relationships = new
-                    {
-                        shop = new
-                        {
-                            data = new
-                            {
-                                type = "webShops",
-                                id = existingShop.StringId
-                            }
-                        }
-                    }
+                    id = existingProduct.StringId
                 }
-            };
+            }
+        };
 
-            string route = $"/nld/products/{existingProduct.StringId}";
+        string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be($"Related resource of type 'webShops' with ID '{existingShop.StringId}' in relationship 'shop' does not exist.");
-        }
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("A related resource does not exist.");
+        error.Detail.Should().Be($"Related resource of type 'webProducts' with ID '{existingProduct.StringId}' in relationship 'products' does not exist.");
+    }
 
-        [Fact]
-        public async Task Cannot_update_ToMany_relationship_for_other_parent_tenant()
+    [Fact]
+    public async Task Cannot_update_ToOne_relationship_for_other_parent_tenant()
+    {
+        // Arrange
+        WebProduct existingProduct = _fakers.WebProduct.Generate();
+        existingProduct.Shop = _fakers.WebShop.Generate();
+        existingProduct.Shop.TenantId = OtherTenantId;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebShop existingShop = _fakers.WebShop.Generate();
-            existingShop.TenantId = OtherTenantId;
-            existingShop.Products = _fakers.WebProduct.Generate(1);
+            dbContext.WebProducts.Add(existingProduct);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WebShops.Add(existingShop);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = Array.Empty<object>()
-            };
-
-            string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'webShops' with ID '{existingShop.StringId}' does not exist.");
-        }
-
-        [Fact]
-        public async Task Cannot_update_ToMany_relationship_to_other_tenant()
+        var requestBody = new
         {
-            // Arrange
-            WebShop existingShop = _fakers.WebShop.Generate();
-            existingShop.TenantId = ThisTenantId;
+            data = (object?)null
+        };
 
-            WebProduct existingProduct = _fakers.WebProduct.Generate();
-            existingProduct.Shop = _fakers.WebShop.Generate();
-            existingProduct.Shop.TenantId = OtherTenantId;
+        string route = $"/nld/products/{existingProduct.StringId}/relationships/shop";
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{existingProduct.StringId}' does not exist.");
+    }
+
+    [Fact]
+    public async Task Cannot_update_ToOne_relationship_to_other_tenant()
+    {
+        // Arrange
+        WebProduct existingProduct = _fakers.WebProduct.Generate();
+        existingProduct.Shop = _fakers.WebShop.Generate();
+        existingProduct.Shop.TenantId = ThisTenantId;
+
+        WebShop existingShop = _fakers.WebShop.Generate();
+        existingShop.TenantId = OtherTenantId;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.AddInRange(existingProduct, existingShop);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
             {
-                dbContext.AddInRange(existingShop, existingProduct);
-                await dbContext.SaveChangesAsync();
-            });
+                type = "webShops",
+                id = existingShop.StringId
+            }
+        };
 
-            var requestBody = new
+        string route = $"/nld/products/{existingProduct.StringId}/relationships/shop";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("A related resource does not exist.");
+        error.Detail.Should().Be($"Related resource of type 'webShops' with ID '{existingShop.StringId}' in relationship 'shop' does not exist.");
+    }
+
+    [Fact]
+    public async Task Cannot_add_to_ToMany_relationship_for_other_parent_tenant()
+    {
+        // Arrange
+        WebShop existingShop = _fakers.WebShop.Generate();
+        existingShop.TenantId = OtherTenantId;
+
+        WebProduct existingProduct = _fakers.WebProduct.Generate();
+        existingProduct.Shop = _fakers.WebShop.Generate();
+        existingProduct.Shop.TenantId = ThisTenantId;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.AddInRange(existingShop, existingProduct);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
             {
-                data = new[]
+                new
                 {
-                    new
-                    {
-                        type = "webProducts",
-                        id = existingProduct.StringId
-                    }
+                    type = "webProducts",
+                    id = existingProduct.StringId
                 }
-            };
+            }
+        };
 
-            string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
+        string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be($"Related resource of type 'webProducts' with ID '{existingProduct.StringId}' in relationship 'products' does not exist.");
-        }
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'webShops' with ID '{existingShop.StringId}' does not exist.");
+    }
 
-        [Fact]
-        public async Task Cannot_update_ToOne_relationship_for_other_parent_tenant()
+    [Fact]
+    public async Task Cannot_add_to_ToMany_relationship_with_other_tenant()
+    {
+        WebShop existingShop = _fakers.WebShop.Generate();
+        existingShop.TenantId = ThisTenantId;
+
+        WebProduct existingProduct = _fakers.WebProduct.Generate();
+        existingProduct.Shop = _fakers.WebShop.Generate();
+        existingProduct.Shop.TenantId = OtherTenantId;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebProduct existingProduct = _fakers.WebProduct.Generate();
-            existingProduct.Shop = _fakers.WebShop.Generate();
-            existingProduct.Shop.TenantId = OtherTenantId;
+            dbContext.AddInRange(existingShop, existingProduct);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WebProducts.Add(existingProduct);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = (object?)null
-            };
-
-            string route = $"/nld/products/{existingProduct.StringId}/relationships/shop";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{existingProduct.StringId}' does not exist.");
-        }
-
-        [Fact]
-        public async Task Cannot_update_ToOne_relationship_to_other_tenant()
+        var requestBody = new
         {
-            // Arrange
-            WebProduct existingProduct = _fakers.WebProduct.Generate();
-            existingProduct.Shop = _fakers.WebShop.Generate();
-            existingProduct.Shop.TenantId = ThisTenantId;
-
-            WebShop existingShop = _fakers.WebShop.Generate();
-            existingShop.TenantId = OtherTenantId;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            data = new[]
             {
-                dbContext.AddInRange(existingProduct, existingShop);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                new
                 {
-                    type = "webShops",
-                    id = existingShop.StringId
+                    type = "webProducts",
+                    id = existingProduct.StringId
                 }
-            };
+            }
+        };
 
-            string route = $"/nld/products/{existingProduct.StringId}/relationships/shop";
+        string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be($"Related resource of type 'webShops' with ID '{existingShop.StringId}' in relationship 'shop' does not exist.");
-        }
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("A related resource does not exist.");
+        error.Detail.Should().Be($"Related resource of type 'webProducts' with ID '{existingProduct.StringId}' in relationship 'products' does not exist.");
+    }
 
-        [Fact]
-        public async Task Cannot_add_to_ToMany_relationship_for_other_parent_tenant()
+    [Fact]
+    public async Task Cannot_remove_from_ToMany_relationship_for_other_parent_tenant()
+    {
+        // Arrange
+        WebShop existingShop = _fakers.WebShop.Generate();
+        existingShop.TenantId = OtherTenantId;
+        existingShop.Products = _fakers.WebProduct.Generate(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebShop existingShop = _fakers.WebShop.Generate();
-            existingShop.TenantId = OtherTenantId;
+            dbContext.WebShops.Add(existingShop);
+            await dbContext.SaveChangesAsync();
+        });
 
-            WebProduct existingProduct = _fakers.WebProduct.Generate();
-            existingProduct.Shop = _fakers.WebShop.Generate();
-            existingProduct.Shop.TenantId = ThisTenantId;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        var requestBody = new
+        {
+            data = new[]
             {
-                dbContext.AddInRange(existingShop, existingProduct);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
+                new
                 {
-                    new
-                    {
-                        type = "webProducts",
-                        id = existingProduct.StringId
-                    }
+                    type = "webProducts",
+                    id = existingShop.Products[0].StringId
                 }
-            };
+            }
+        };
 
-            string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
+        string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'webShops' with ID '{existingShop.StringId}' does not exist.");
-        }
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'webShops' with ID '{existingShop.StringId}' does not exist.");
+    }
 
-        [Fact]
-        public async Task Cannot_add_to_ToMany_relationship_with_other_tenant()
+    [Fact]
+    public async Task Can_delete_resource()
+    {
+        // Arrange
+        WebProduct existingProduct = _fakers.WebProduct.Generate();
+        existingProduct.Shop = _fakers.WebShop.Generate();
+        existingProduct.Shop.TenantId = ThisTenantId;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            WebShop existingShop = _fakers.WebShop.Generate();
-            existingShop.TenantId = ThisTenantId;
+            dbContext.WebProducts.Add(existingProduct);
+            await dbContext.SaveChangesAsync();
+        });
 
-            WebProduct existingProduct = _fakers.WebProduct.Generate();
-            existingProduct.Shop = _fakers.WebShop.Generate();
-            existingProduct.Shop.TenantId = OtherTenantId;
+        string route = $"/nld/products/{existingProduct.StringId}";
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddInRange(existingShop, existingProduct);
-                await dbContext.SaveChangesAsync();
-            });
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "webProducts",
-                        id = existingProduct.StringId
-                    }
-                }
-            };
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
+        responseDocument.Should().BeEmpty();
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be($"Related resource of type 'webProducts' with ID '{existingProduct.StringId}' in relationship 'products' does not exist.");
-        }
-
-        [Fact]
-        public async Task Cannot_remove_from_ToMany_relationship_for_other_parent_tenant()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebShop existingShop = _fakers.WebShop.Generate();
-            existingShop.TenantId = OtherTenantId;
-            existingShop.Products = _fakers.WebProduct.Generate(1);
+            WebProduct? productInDatabase = await dbContext.WebProducts.IgnoreQueryFilters().FirstWithIdOrDefaultAsync(existingProduct.Id);
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WebShops.Add(existingShop);
-                await dbContext.SaveChangesAsync();
-            });
+            productInDatabase.Should().BeNull();
+        });
+    }
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "webProducts",
-                        id = existingShop.Products[0].StringId
-                    }
-                }
-            };
+    [Fact]
+    public async Task Cannot_delete_resource_from_other_tenant()
+    {
+        // Arrange
+        WebProduct existingProduct = _fakers.WebProduct.Generate();
+        existingProduct.Shop = _fakers.WebShop.Generate();
+        existingProduct.Shop.TenantId = OtherTenantId;
 
-            string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'webShops' with ID '{existingShop.StringId}' does not exist.");
-        }
-
-        [Fact]
-        public async Task Can_delete_resource()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebProduct existingProduct = _fakers.WebProduct.Generate();
-            existingProduct.Shop = _fakers.WebShop.Generate();
-            existingProduct.Shop.TenantId = ThisTenantId;
+            dbContext.WebProducts.Add(existingProduct);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WebProducts.Add(existingProduct);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/nld/products/{existingProduct.StringId}";
 
-            string route = $"/nld/products/{existingProduct.StringId}";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            responseDocument.Should().BeEmpty();
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{existingProduct.StringId}' does not exist.");
+    }
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                WebProduct? productInDatabase = await dbContext.WebProducts.IgnoreQueryFilters().FirstWithIdOrDefaultAsync(existingProduct.Id);
+    [Fact]
+    public async Task Renders_links_with_tenant_route_parameter()
+    {
+        // Arrange
+        WebShop shop = _fakers.WebShop.Generate();
+        shop.TenantId = ThisTenantId;
+        shop.Products = _fakers.WebProduct.Generate(1);
 
-                productInDatabase.Should().BeNull();
-            });
-        }
-
-        [Fact]
-        public async Task Cannot_delete_resource_from_other_tenant()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WebProduct existingProduct = _fakers.WebProduct.Generate();
-            existingProduct.Shop = _fakers.WebShop.Generate();
-            existingProduct.Shop.TenantId = OtherTenantId;
+            await dbContext.ClearTableAsync<WebShop>();
+            dbContext.WebShops.Add(shop);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WebProducts.Add(existingProduct);
-                await dbContext.SaveChangesAsync();
-            });
+        const string route = "/nld/shops?include=products";
 
-            string route = $"/nld/products/{existingProduct.StringId}";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Self.Should().Be(route);
+        responseDocument.Links.Related.Should().BeNull();
+        responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
+        responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
+        responseDocument.Links.Prev.Should().BeNull();
+        responseDocument.Links.Next.Should().BeNull();
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{existingProduct.StringId}' does not exist.");
-        }
-
-        [Fact]
-        public async Task Renders_links_with_tenant_route_parameter()
+        responseDocument.Data.ManyValue[0].With(resource =>
         {
-            // Arrange
-            WebShop shop = _fakers.WebShop.Generate();
-            shop.TenantId = ThisTenantId;
-            shop.Products = _fakers.WebProduct.Generate(1);
+            string shopLink = $"/nld/shops/{shop.StringId}";
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            resource.Links.ShouldNotBeNull();
+            resource.Links.Self.Should().Be(shopLink);
+
+            resource.Relationships.ShouldContainKey("products").With(value =>
             {
-                await dbContext.ClearTableAsync<WebShop>();
-                dbContext.WebShops.Add(shop);
-                await dbContext.SaveChangesAsync();
+                value.ShouldNotBeNull();
+                value.Links.ShouldNotBeNull();
+                value.Links.Self.Should().Be($"{shopLink}/relationships/products");
+                value.Links.Related.Should().Be($"{shopLink}/products");
             });
+        });
 
-            const string route = "/nld/shops?include=products";
+        responseDocument.Included.ShouldHaveCount(1);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        responseDocument.Included[0].With(resource =>
+        {
+            string productLink = $"/nld/products/{shop.Products[0].StringId}";
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            resource.Links.ShouldNotBeNull();
+            resource.Links.Self.Should().Be(productLink);
 
-            responseDocument.Links.ShouldNotBeNull();
-            responseDocument.Links.Self.Should().Be(route);
-            responseDocument.Links.Related.Should().BeNull();
-            responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
-            responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
-            responseDocument.Links.Prev.Should().BeNull();
-            responseDocument.Links.Next.Should().BeNull();
-
-            responseDocument.Data.ManyValue.ShouldHaveCount(1);
-
-            responseDocument.Data.ManyValue[0].With(resource =>
+            resource.Relationships.ShouldContainKey("shop").With(value =>
             {
-                string shopLink = $"/nld/shops/{shop.StringId}";
-
-                resource.Links.ShouldNotBeNull();
-                resource.Links.Self.Should().Be(shopLink);
-
-                resource.Relationships.ShouldContainKey("products").With(value =>
-                {
-                    value.ShouldNotBeNull();
-                    value.Links.ShouldNotBeNull();
-                    value.Links.Self.Should().Be($"{shopLink}/relationships/products");
-                    value.Links.Related.Should().Be($"{shopLink}/products");
-                });
+                value.ShouldNotBeNull();
+                value.Links.ShouldNotBeNull();
+                value.Links.Self.Should().Be($"{productLink}/relationships/shop");
+                value.Links.Related.Should().Be($"{productLink}/shop");
             });
-
-            responseDocument.Included.ShouldHaveCount(1);
-
-            responseDocument.Included[0].With(resource =>
-            {
-                string productLink = $"/nld/products/{shop.Products[0].StringId}";
-
-                resource.Links.ShouldNotBeNull();
-                resource.Links.Self.Should().Be(productLink);
-
-                resource.Relationships.ShouldContainKey("shop").With(value =>
-                {
-                    value.ShouldNotBeNull();
-                    value.Links.ShouldNotBeNull();
-                    value.Links.Self.Should().Be($"{productLink}/relationships/shop");
-                    value.Links.Related.Should().Be($"{productLink}/shop");
-                });
-            });
-        }
+        });
     }
 }

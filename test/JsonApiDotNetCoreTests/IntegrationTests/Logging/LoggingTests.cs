@@ -5,115 +5,114 @@ using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
+namespace JsonApiDotNetCoreTests.IntegrationTests.Logging;
+
+public sealed class LoggingTests : IClassFixture<IntegrationTestContext<TestableStartup<LoggingDbContext>, LoggingDbContext>>
 {
-    public sealed class LoggingTests : IClassFixture<IntegrationTestContext<TestableStartup<LoggingDbContext>, LoggingDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<LoggingDbContext>, LoggingDbContext> _testContext;
+    private readonly LoggingFakers _fakers = new();
+
+    public LoggingTests(IntegrationTestContext<TestableStartup<LoggingDbContext>, LoggingDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<LoggingDbContext>, LoggingDbContext> _testContext;
-        private readonly LoggingFakers _fakers = new();
+        _testContext = testContext;
 
-        public LoggingTests(IntegrationTestContext<TestableStartup<LoggingDbContext>, LoggingDbContext> testContext)
+        testContext.UseController<AuditEntriesController>();
+
+        var loggerFactory = new FakeLoggerFactory(LogLevel.Trace);
+
+        testContext.ConfigureLogging(options =>
         {
-            _testContext = testContext;
+            options.ClearProviders();
+            options.AddProvider(loggerFactory);
+            options.SetMinimumLevel(LogLevel.Trace);
+        });
 
-            testContext.UseController<AuditEntriesController>();
-
-            var loggerFactory = new FakeLoggerFactory(LogLevel.Trace);
-
-            testContext.ConfigureLogging(options =>
-            {
-                options.ClearProviders();
-                options.AddProvider(loggerFactory);
-                options.SetMinimumLevel(LogLevel.Trace);
-            });
-
-            testContext.ConfigureServicesBeforeStartup(services =>
-            {
-                services.AddSingleton(loggerFactory);
-            });
-        }
-
-        [Fact]
-        public async Task Logs_request_body_at_Trace_level()
+        testContext.ConfigureServicesBeforeStartup(services =>
         {
-            // Arrange
-            var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-            loggerFactory.Logger.Clear();
+            services.AddSingleton(loggerFactory);
+        });
+    }
 
-            AuditEntry newEntry = _fakers.AuditEntry.Generate();
+    [Fact]
+    public async Task Logs_request_body_at_Trace_level()
+    {
+        // Arrange
+        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
+        loggerFactory.Logger.Clear();
 
-            var requestBody = new
+        AuditEntry newEntry = _fakers.AuditEntry.Generate();
+
+        var requestBody = new
+        {
+            data = new
             {
-                data = new
+                type = "auditEntries",
+                attributes = new
                 {
-                    type = "auditEntries",
-                    attributes = new
-                    {
-                        userName = newEntry.UserName,
-                        createdAt = newEntry.CreatedAt
-                    }
+                    userName = newEntry.UserName,
+                    createdAt = newEntry.CreatedAt
                 }
-            };
+            }
+        };
 
-            // Arrange
-            const string route = "/auditEntries";
+        // Arrange
+        const string route = "/auditEntries";
 
-            // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            loggerFactory.Logger.Messages.ShouldNotBeEmpty();
+        loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 
-            loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
-                message.Text.StartsWith("Received POST request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
-        }
+        loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
+            message.Text.StartsWith("Received POST request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
+    }
 
-        [Fact]
-        public async Task Logs_response_body_at_Trace_level()
-        {
-            // Arrange
-            var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-            loggerFactory.Logger.Clear();
+    [Fact]
+    public async Task Logs_response_body_at_Trace_level()
+    {
+        // Arrange
+        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
+        loggerFactory.Logger.Clear();
 
-            // Arrange
-            const string route = "/auditEntries";
+        // Arrange
+        const string route = "/auditEntries";
 
-            // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            loggerFactory.Logger.Messages.ShouldNotBeEmpty();
+        loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 
-            loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
-                message.Text.StartsWith("Sending 200 response for GET request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
-        }
+        loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
+            message.Text.StartsWith("Sending 200 response for GET request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
+    }
 
-        [Fact]
-        public async Task Logs_invalid_request_body_error_at_Information_level()
-        {
-            // Arrange
-            var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-            loggerFactory.Logger.Clear();
+    [Fact]
+    public async Task Logs_invalid_request_body_error_at_Information_level()
+    {
+        // Arrange
+        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
+        loggerFactory.Logger.Clear();
 
-            // Arrange
-            const string requestBody = "{ \"data\" {";
+        // Arrange
+        const string requestBody = "{ \"data\" {";
 
-            const string route = "/auditEntries";
+        const string route = "/auditEntries";
 
-            // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            loggerFactory.Logger.Messages.ShouldNotBeEmpty();
+        loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 
-            loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Information &&
-                message.Text.Contains("Failed to deserialize request body."));
-        }
+        loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Information &&
+            message.Text.Contains("Failed to deserialize request body."));
     }
 }
