@@ -60,8 +60,7 @@ public sealed class SortParseTests : BaseParseTests
     [InlineData("sort", "-", "Count function or field name expected.")]
     [InlineData("sort", "abc", "Attribute 'abc' does not exist on resource type 'blogs'.")]
     [InlineData("sort[posts]", "author", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
-    [InlineData("sort[posts]", "author.livingAddress",
-        "Attribute 'livingAddress' in 'author.livingAddress' does not exist on resource type 'webAccounts'.")]
+    [InlineData("sort[posts]", "author.livingAddress", "Attribute 'livingAddress' in 'author.livingAddress' does not exist on resource type 'webAccounts'.")]
     [InlineData("sort", "-count", "( expected.")]
     [InlineData("sort", "count", "( expected.")]
     [InlineData("sort", "count(posts", ") expected.")]

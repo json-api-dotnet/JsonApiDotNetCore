@@ -30,9 +30,9 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
 
-    public JsonApiResourceService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
-        IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
-        IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
+    public JsonApiResourceService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
+        IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker,
+        IResourceDefinitionAccessor resourceDefinitionAccessor)
     {
         ArgumentGuard.NotNull(repositoryAccessor, nameof(repositoryAccessor));
         ArgumentGuard.NotNull(queryLayerComposer, nameof(queryLayerComposer));
@@ -120,10 +120,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         }
 
         QueryLayer secondaryLayer = _queryLayerComposer.ComposeFromConstraints(_request.SecondaryResourceType!);
-
-        QueryLayer primaryLayer =
-            _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
-
+        QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
         IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
 
         TResource? primaryResource = primaryResources.SingleOrDefault();
@@ -164,10 +161,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         }
 
         QueryLayer secondaryLayer = _queryLayerComposer.ComposeSecondaryLayerForRelationship(_request.SecondaryResourceType!);
-
-        QueryLayer primaryLayer =
-            _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
-
+        QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
         IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
 
         TResource? primaryResource = primaryResources.SingleOrDefault();
@@ -256,8 +250,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
     {
         var missingResources = new List<MissingResourceInRelationship>();
 
-        foreach ((QueryLayer queryLayer, RelationshipAttribute relationship) in _queryLayerComposer.ComposeForGetTargetedSecondaryResourceIds(
-            primaryResource))
+        foreach ((QueryLayer queryLayer, RelationshipAttribute relationship) in _queryLayerComposer.ComposeForGetTargetedSecondaryResourceIds(primaryResource))
         {
             object? rightValue = relationship.GetValue(primaryResource);
             ICollection<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue);
@@ -328,8 +321,8 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         }
     }
 
-    private async Task RemoveExistingIdsFromRelationshipRightSideAsync(HasManyAttribute hasManyRelationship, TId leftId,
-        ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
+    private async Task RemoveExistingIdsFromRelationshipRightSideAsync(HasManyAttribute hasManyRelationship, TId leftId, ISet<IIdentifiable> rightResourceIds,
+        CancellationToken cancellationToken)
     {
         AssertRelationshipInJsonApiRequestIsNotNull(_request.Relationship);
 

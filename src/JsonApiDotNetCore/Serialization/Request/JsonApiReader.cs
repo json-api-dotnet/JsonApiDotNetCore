@@ -112,8 +112,8 @@ public sealed class JsonApiReader : IJsonApiReader
         }
         catch (ModelConversionException exception)
         {
-            throw new InvalidRequestBodyException(_options.IncludeRequestBodyInErrors ? requestBody : null, exception.GenericMessage,
-                exception.SpecificMessage, exception.SourcePointer, exception.StatusCode, exception);
+            throw new InvalidRequestBodyException(_options.IncludeRequestBodyInErrors ? requestBody : null, exception.GenericMessage, exception.SpecificMessage,
+                exception.SourcePointer, exception.StatusCode, exception);
         }
     }
 }

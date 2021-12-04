@@ -24,8 +24,8 @@ public static class ObjectAssertionsExtensions
     /// precision.
     /// </summary>
     [CustomAssertion]
-    public static AndConstraint<NumericAssertions<decimal>> BeApproximately(this NumericAssertions<decimal> parent, decimal expectedValue,
-        string because = "", params object[] becauseArgs)
+    public static AndConstraint<NumericAssertions<decimal>> BeApproximately(this NumericAssertions<decimal> parent, decimal expectedValue, string because = "",
+        params object[] becauseArgs)
     {
         return parent.BeApproximately(expectedValue, NumericPrecision, because, becauseArgs);
     }

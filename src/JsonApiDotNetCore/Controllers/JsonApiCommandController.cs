@@ -23,8 +23,8 @@ public abstract class JsonApiCommandController<TResource, TId> : JsonApiControll
     /// </summary>
     protected JsonApiCommandController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
         IResourceCommandService<TResource, TId> commandService)
-        : base(options, resourceGraph, loggerFactory, null, null, null, null, commandService, commandService, commandService, commandService,
-            commandService, commandService)
+        : base(options, resourceGraph, loggerFactory, null, null, null, null, commandService, commandService, commandService, commandService, commandService,
+            commandService)
     {
     }
 }

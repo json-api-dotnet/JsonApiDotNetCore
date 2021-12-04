@@ -134,8 +134,8 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     }
 
     /// <inheritdoc />
-    public async Task OnAddToRelationshipAsync<TResource, TId>(TId leftResourceId, HasManyAttribute hasManyRelationship,
-        ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
+    public async Task OnAddToRelationshipAsync<TResource, TId>(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+        CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>
     {
         ArgumentGuard.NotNull(hasManyRelationship, nameof(hasManyRelationship));

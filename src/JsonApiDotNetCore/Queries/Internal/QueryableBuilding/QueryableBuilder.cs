@@ -22,8 +22,8 @@ public class QueryableBuilder
     private readonly IModel _entityModel;
     private readonly LambdaScopeFactory _lambdaScopeFactory;
 
-    public QueryableBuilder(Expression source, Type elementType, Type extensionType, LambdaParameterNameFactory nameFactory,
-        IResourceFactory resourceFactory, IModel entityModel, LambdaScopeFactory? lambdaScopeFactory = null)
+    public QueryableBuilder(Expression source, Type elementType, Type extensionType, LambdaParameterNameFactory nameFactory, IResourceFactory resourceFactory,
+        IModel entityModel, LambdaScopeFactory? lambdaScopeFactory = null)
     {
         ArgumentGuard.NotNull(source, nameof(source));
         ArgumentGuard.NotNull(elementType, nameof(elementType));

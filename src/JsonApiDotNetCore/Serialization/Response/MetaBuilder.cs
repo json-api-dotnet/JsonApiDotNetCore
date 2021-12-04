@@ -39,11 +39,7 @@ public sealed class MetaBuilder : IMetaBuilder
         if (_paginationContext.TotalResourceCount != null)
         {
             const string keyName = "Total";
-
-            string key = _options.SerializerOptions.DictionaryKeyPolicy == null
-                ? keyName
-                : _options.SerializerOptions.DictionaryKeyPolicy.ConvertName(keyName);
-
+            string key = _options.SerializerOptions.DictionaryKeyPolicy == null ? keyName : _options.SerializerOptions.DictionaryKeyPolicy.ConvertName(keyName);
             _meta.Add(key, _paginationContext.TotalResourceCount);
         }
 

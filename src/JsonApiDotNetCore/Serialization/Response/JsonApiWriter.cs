@@ -123,8 +123,7 @@ public sealed class JsonApiWriter : IJsonApiWriter
 
     private string SerializeDocument(Document document)
     {
-        using IDisposable _ =
-            CodeTimingSessionManager.Current.Measure("JsonSerializer.Serialize", MeasurementSettings.ExcludeJsonSerializationInPercentages);
+        using IDisposable _ = CodeTimingSessionManager.Current.Measure("JsonSerializer.Serialize", MeasurementSettings.ExcludeJsonSerializationInPercentages);
 
         return JsonSerializer.Serialize(document, _options.SerializerWriteOptions);
     }
@@ -167,8 +166,7 @@ public sealed class JsonApiWriter : IJsonApiWriter
     {
         if (!string.IsNullOrEmpty(responseBody))
         {
-            httpResponse.ContentType =
-                _request.Kind == EndpointKind.AtomicOperations ? HeaderConstants.AtomicOperationsMediaType : HeaderConstants.MediaType;
+            httpResponse.ContentType = _request.Kind == EndpointKind.AtomicOperations ? HeaderConstants.AtomicOperationsMediaType : HeaderConstants.MediaType;
 
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Send response body");
 

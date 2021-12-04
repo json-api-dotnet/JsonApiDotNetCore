@@ -25,8 +25,8 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         _resourceFactory = resourceFactory;
     }
 
-    protected (IIdentifiable resource, ResourceType resourceType) ConvertResourceIdentity(IResourceIdentity identity,
-        ResourceIdentityRequirements requirements, RequestAdapterState state)
+    protected (IIdentifiable resource, ResourceType resourceType) ConvertResourceIdentity(IResourceIdentity identity, ResourceIdentityRequirements requirements,
+        RequestAdapterState state)
     {
         ArgumentGuard.NotNull(identity, nameof(identity));
         ArgumentGuard.NotNull(requirements, nameof(requirements));
@@ -79,8 +79,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         }
     }
 
-    private IIdentifiable CreateResource(IResourceIdentity identity, ResourceIdentityRequirements requirements, Type resourceClrType,
-        RequestAdapterState state)
+    private IIdentifiable CreateResource(IResourceIdentity identity, ResourceIdentityRequirements requirements, Type resourceClrType, RequestAdapterState state)
     {
         if (state.Request.Kind != EndpointKind.AtomicOperations)
         {

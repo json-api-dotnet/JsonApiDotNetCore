@@ -26,8 +26,7 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
         _visitedTable = new Dictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>>();
     }
 
-    private static IDictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>> BuildSourceTable(
-        IEnumerable<IQueryConstraintProvider> constraintProviders)
+    private static IDictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>> BuildSourceTable(IEnumerable<IQueryConstraintProvider> constraintProviders)
     {
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:keep_existing_linebreaks true
@@ -75,10 +74,9 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
 
         if (!_visitedTable.ContainsKey(resourceType))
         {
-            SparseFieldSetExpression? inputExpression =
-                _lazySourceTable.Value.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? inputFields)
-                    ? new SparseFieldSetExpression(inputFields)
-                    : null;
+            SparseFieldSetExpression? inputExpression = _lazySourceTable.Value.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? inputFields)
+                ? new SparseFieldSetExpression(inputFields)
+                : null;
 
             SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
 
@@ -118,10 +116,9 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
 
         if (!_visitedTable.ContainsKey(resourceType))
         {
-            SparseFieldSetExpression inputExpression =
-                _lazySourceTable.Value.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? inputFields)
-                    ? new SparseFieldSetExpression(inputFields)
-                    : GetCachedViewableFieldSet(resourceType);
+            SparseFieldSetExpression inputExpression = _lazySourceTable.Value.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? inputFields)
+                ? new SparseFieldSetExpression(inputFields)
+                : GetCachedViewableFieldSet(resourceType);
 
             SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
 

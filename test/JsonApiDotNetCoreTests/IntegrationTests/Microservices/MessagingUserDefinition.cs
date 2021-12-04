@@ -38,8 +38,8 @@ public abstract class MessagingUserDefinition : HitCountingResourceDefinition<Do
         }
     }
 
-    public override async Task<IIdentifiable?> OnSetToOneRelationshipAsync(DomainUser user, HasOneAttribute hasOneRelationship,
-        IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+    public override async Task<IIdentifiable?> OnSetToOneRelationshipAsync(DomainUser user, HasOneAttribute hasOneRelationship, IIdentifiable? rightResourceId,
+        WriteOperationKind writeOperation, CancellationToken cancellationToken)
     {
         await base.OnSetToOneRelationshipAsync(user, hasOneRelationship, rightResourceId, writeOperation, cancellationToken);
 

@@ -108,8 +108,8 @@ public class JsonApiResourceDefinition<TResource, TId> : IResourceDefinition<TRe
     }
 
     /// <inheritdoc />
-    public virtual Task<IIdentifiable?> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship,
-        IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+    public virtual Task<IIdentifiable?> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable? rightResourceId,
+        WriteOperationKind writeOperation, CancellationToken cancellationToken)
     {
         return Task.FromResult(rightResourceId);
     }

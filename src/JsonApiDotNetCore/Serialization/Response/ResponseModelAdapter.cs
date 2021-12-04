@@ -148,8 +148,8 @@ public class ResponseModelAdapter : IResponseModelAdapter
         };
     }
 
-    private void TraverseResource(IIdentifiable resource, ResourceType resourceType, EndpointKind kind,
-        IImmutableSet<IncludeElementExpression> includeElements, ResourceObjectTreeNode parentTreeNode, RelationshipAttribute? parentRelationship)
+    private void TraverseResource(IIdentifiable resource, ResourceType resourceType, EndpointKind kind, IImmutableSet<IncludeElementExpression> includeElements,
+        ResourceObjectTreeNode parentTreeNode, RelationshipAttribute? parentRelationship)
     {
         ResourceObjectTreeNode treeNode = GetOrCreateTreeNode(resource, resourceType, kind);
 
@@ -239,8 +239,8 @@ public class ResponseModelAdapter : IResponseModelAdapter
         return attrMap.Any() ? attrMap : null;
     }
 
-    private void TraverseRelationships(IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode,
-        IImmutableSet<IncludeElementExpression> includeElements, EndpointKind kind)
+    private void TraverseRelationships(IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode, IImmutableSet<IncludeElementExpression> includeElements,
+        EndpointKind kind)
     {
         foreach (IncludeElementExpression includeElement in includeElements)
         {

@@ -183,8 +183,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            Car? carInDatabase =
-                await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == newCar.RegionId && car.LicensePlate == newCar.LicensePlate);
+            Car? carInDatabase = await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == newCar.RegionId && car.LicensePlate == newCar.LicensePlate);
 
             carInDatabase.ShouldNotBeNull();
             carInDatabase.Id.Should().Be($"{newCar.RegionId}:{newCar.LicensePlate}");
@@ -330,8 +329,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            Dealership dealershipInDatabase =
-                await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
+            Dealership dealershipInDatabase = await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
 
             dealershipInDatabase.Inventory.ShouldHaveCount(1);
             dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingDealership.Inventory.ElementAt(1).Id);
@@ -376,8 +374,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            Dealership dealershipInDatabase =
-                await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
+            Dealership dealershipInDatabase = await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
 
             dealershipInDatabase.Inventory.ShouldHaveCount(1);
             dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);
@@ -429,8 +426,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            Dealership dealershipInDatabase =
-                await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
+            Dealership dealershipInDatabase = await dbContext.Dealerships.Include(dealership => dealership.Inventory).FirstWithIdAsync(existingDealership.Id);
 
             dealershipInDatabase.Inventory.ShouldHaveCount(2);
             dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);

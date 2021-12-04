@@ -41,9 +41,8 @@ public sealed class InvalidModelStateException : JsonApiException
         return errorObjects;
     }
 
-    private static IEnumerable<(ModelStateEntry entry, string? sourcePointer)> ResolveSourcePointers(
-        IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType, IResourceGraph resourceGraph,
-        Func<Type, int, Type?>? getCollectionElementTypeCallback)
+    private static IEnumerable<(ModelStateEntry entry, string? sourcePointer)> ResolveSourcePointers(IReadOnlyDictionary<string, ModelStateEntry?> modelState,
+        Type modelType, IResourceGraph resourceGraph, Func<Type, int, Type?>? getCollectionElementTypeCallback)
     {
         foreach (string key in modelState.Keys)
         {
@@ -245,9 +244,7 @@ public sealed class InvalidModelStateException : JsonApiException
         {
             ArgumentGuard.NotNull(modelType, nameof(modelType));
 
-            return _nextKey == string.Empty
-                ? null
-                : CreateSegment(modelType, _nextKey, isInComplexType, this, sourcePointer, GetCollectionElementTypeCallback);
+            return _nextKey == string.Empty ? null : CreateSegment(modelType, _nextKey, isInComplexType, this, sourcePointer, GetCollectionElementTypeCallback);
         }
 
         public static ModelStateKeySegment Create(Type modelType, string key, Func<Type, int, Type?>? getCollectionElementTypeCallback)
@@ -258,8 +255,8 @@ public sealed class InvalidModelStateException : JsonApiException
             return CreateSegment(modelType, key, false, null, null, getCollectionElementTypeCallback);
         }
 
-        private static ModelStateKeySegment CreateSegment(Type modelType, string key, bool isInComplexType, ModelStateKeySegment? parent,
-            string? sourcePointer, Func<Type, int, Type?>? getCollectionElementTypeCallback)
+        private static ModelStateKeySegment CreateSegment(Type modelType, string key, bool isInComplexType, ModelStateKeySegment? parent, string? sourcePointer,
+            Func<Type, int, Type?>? getCollectionElementTypeCallback)
         {
             string? segmentValue = null;
             string? nextKey = null;
@@ -321,8 +318,8 @@ public sealed class InvalidModelStateException : JsonApiException
 
         public int ArrayIndex { get; }
 
-        public ArrayIndexerSegment(int arrayIndex, Type modelType, bool isInComplexType, string nextKey, string? sourcePointer,
-            ModelStateKeySegment? parent, Func<Type, int, Type?>? getCollectionElementTypeCallback)
+        public ArrayIndexerSegment(int arrayIndex, Type modelType, bool isInComplexType, string nextKey, string? sourcePointer, ModelStateKeySegment? parent,
+            Func<Type, int, Type?>? getCollectionElementTypeCallback)
             : base(modelType, isInComplexType, nextKey, sourcePointer, parent, getCollectionElementTypeCallback)
         {
             ArrayIndex = arrayIndex;
@@ -358,8 +355,8 @@ public sealed class InvalidModelStateException : JsonApiException
     {
         public string PropertyName { get; }
 
-        public PropertySegment(string propertyName, Type modelType, bool isInComplexType, string nextKey, string? sourcePointer,
-            ModelStateKeySegment? parent, Func<Type, int, Type?>? getCollectionElementTypeCallback)
+        public PropertySegment(string propertyName, Type modelType, bool isInComplexType, string nextKey, string? sourcePointer, ModelStateKeySegment? parent,
+            Func<Type, int, Type?>? getCollectionElementTypeCallback)
             : base(modelType, isInComplexType, nextKey, sourcePointer, parent, getCollectionElementTypeCallback)
         {
             ArgumentGuard.NotNull(propertyName, nameof(propertyName));

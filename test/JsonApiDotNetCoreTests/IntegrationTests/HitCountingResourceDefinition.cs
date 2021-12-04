@@ -107,8 +107,8 @@ public abstract class HitCountingResourceDefinition<TResource, TId> : JsonApiRes
         return base.OnPrepareWriteAsync(resource, writeOperation, cancellationToken);
     }
 
-    public override Task<IIdentifiable?> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship,
-        IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+    public override Task<IIdentifiable?> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable? rightResourceId,
+        WriteOperationKind writeOperation, CancellationToken cancellationToken)
     {
         if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnSetToOneRelationshipAsync))
         {

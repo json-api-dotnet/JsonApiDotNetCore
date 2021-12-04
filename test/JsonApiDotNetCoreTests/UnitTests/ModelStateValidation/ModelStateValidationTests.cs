@@ -66,11 +66,9 @@ public sealed class ModelStateValidationTests
     [InlineData("[0].Resource.One", "/atomic:operations[0]/data/attributes/publicNameOfOne")]
     [InlineData("[0].Resource.ComplexObject", "/atomic:operations[0]/data/attributes/publicNameOfComplexObject")]
     [InlineData("[0].Resource.ComplexObject.First", "/atomic:operations[0]/data/attributes/publicNameOfComplexObject/jsonFirst")]
-    [InlineData("[0].Resource.ComplexObject.ParentObject.First",
-        "/atomic:operations[0]/data/attributes/publicNameOfComplexObject/jsonParentObject/jsonFirst")]
+    [InlineData("[0].Resource.ComplexObject.ParentObject.First", "/atomic:operations[0]/data/attributes/publicNameOfComplexObject/jsonParentObject/jsonFirst")]
     [InlineData("[0].Resource.ComplexObject.Elements[0]", "/atomic:operations[0]/data/attributes/publicNameOfComplexObject/jsonElements[0]")]
-    [InlineData("[0].Resource.ComplexObject.Elements[0].First",
-        "/atomic:operations[0]/data/attributes/publicNameOfComplexObject/jsonElements[0]/jsonFirst")]
+    [InlineData("[0].Resource.ComplexObject.Elements[0].First", "/atomic:operations[0]/data/attributes/publicNameOfComplexObject/jsonElements[0]/jsonFirst")]
     [InlineData("[0][Resource][ComplexObject][Elements][0][First]",
         "/atomic:operations[0]/data/attributes/publicNameOfComplexObject/jsonElements[0]/jsonFirst")]
     [InlineData("[0].Resource.ComplexList", "/atomic:operations[0]/data/attributes/publicNameOfComplexList")]
@@ -90,8 +88,7 @@ public sealed class ModelStateValidationTests
         var modelState = new ModelStateDictionary();
         modelState.AddModelError(modelStateKey, "(ignored error message)");
 
-        Func<Type, int, Type?> getOperationTypeCallback = (collectionType, _) =>
-            collectionType == typeof(IList<OperationContainer>) ? typeof(Parent) : null;
+        Func<Type, int, Type?> getOperationTypeCallback = (collectionType, _) => collectionType == typeof(IList<OperationContainer>) ? typeof(Parent) : null;
 
         // Act
         var exception = new InvalidModelStateException(modelState, typeof(IList<OperationContainer>), false, resourceGraph, getOperationTypeCallback);

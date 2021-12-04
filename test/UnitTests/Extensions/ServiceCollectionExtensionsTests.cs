@@ -218,8 +218,7 @@ public sealed class ServiceCollectionExtensionsTests
             throw new NotImplementedException();
         }
 
-        public Task AddToToManyRelationshipAsync(int leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
-            CancellationToken cancellationToken)
+        public Task AddToToManyRelationshipAsync(int leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -350,8 +349,7 @@ public sealed class ServiceCollectionExtensionsTests
             throw new NotImplementedException();
         }
 
-        public Task RemoveFromToManyRelationshipAsync(ResourceOfInt32 leftResource, ISet<IIdentifiable> rightResourceIds,
-            CancellationToken cancellationToken)
+        public Task RemoveFromToManyRelationshipAsync(ResourceOfInt32 leftResource, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -405,8 +403,7 @@ public sealed class ServiceCollectionExtensionsTests
             throw new NotImplementedException();
         }
 
-        public Task RemoveFromToManyRelationshipAsync(ResourceOfGuid leftResource, ISet<IIdentifiable> rightResourceIds,
-            CancellationToken cancellationToken)
+        public Task RemoveFromToManyRelationshipAsync(ResourceOfGuid leftResource, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -543,8 +540,8 @@ public sealed class ServiceCollectionExtensionsTests
             throw new NotImplementedException();
         }
 
-        public Task<IIdentifiable?> OnSetToOneRelationshipAsync(ResourceOfGuid leftResource, HasOneAttribute hasOneRelationship,
-            IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        public Task<IIdentifiable?> OnSetToOneRelationshipAsync(ResourceOfGuid leftResource, HasOneAttribute hasOneRelationship, IIdentifiable? rightResourceId,
+            WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

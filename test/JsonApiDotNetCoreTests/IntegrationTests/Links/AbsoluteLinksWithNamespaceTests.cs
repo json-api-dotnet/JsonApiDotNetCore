@@ -10,8 +10,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Links;
 
-public sealed class AbsoluteLinksWithNamespaceTests
-    : IClassFixture<IntegrationTestContext<AbsoluteLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext>>
+public sealed class AbsoluteLinksWithNamespaceTests : IClassFixture<IntegrationTestContext<AbsoluteLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext>>
 {
     private const string HostPrefix = "http://localhost";
     private const string PathPrefix = "/api";

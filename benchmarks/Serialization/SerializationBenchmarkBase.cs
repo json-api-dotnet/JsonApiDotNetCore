@@ -173,8 +173,8 @@ public abstract class SerializationBenchmarkBase
             return Task.FromResult(rightResourceId);
         }
 
-        public Task OnSetToManyRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship,
-            ISet<IIdentifiable> rightResourceIds, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        public Task OnSetToManyRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             return Task.CompletedTask;
@@ -187,8 +187,8 @@ public abstract class SerializationBenchmarkBase
             return Task.CompletedTask;
         }
 
-        public Task OnRemoveFromRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship,
-            ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
+        public Task OnRemoveFromRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             return Task.CompletedTask;

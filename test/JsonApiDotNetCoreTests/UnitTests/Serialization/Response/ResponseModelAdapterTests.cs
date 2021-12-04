@@ -663,8 +663,8 @@ public sealed class ResponseModelAdapterTests
             return Task.FromResult(rightResourceId);
         }
 
-        public Task OnSetToManyRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship,
-            ISet<IIdentifiable> rightResourceIds, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        public Task OnSetToManyRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             return Task.CompletedTask;
@@ -677,8 +677,8 @@ public sealed class ResponseModelAdapterTests
             return Task.CompletedTask;
         }
 
-        public Task OnRemoveFromRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship,
-            ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
+        public Task OnRemoveFromRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             return Task.CompletedTask;

@@ -28,8 +28,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
 
     public bool AllowEmptyValue => false;
 
-    public FilterQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
-        IJsonApiOptions options)
+    public FilterQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IResourceFactory resourceFactory, IJsonApiOptions options)
         : base(request, resourceGraph)
     {
         ArgumentGuard.NotNull(options, nameof(options));

@@ -117,8 +117,7 @@ public sealed class LegacyFilterNotationConverter
 
     private static string ExtractAttributeName(string parameterName)
     {
-        if (parameterName.StartsWith(ParameterNamePrefix, StringComparison.Ordinal) &&
-            parameterName.EndsWith(ParameterNameSuffix, StringComparison.Ordinal))
+        if (parameterName.StartsWith(ParameterNamePrefix, StringComparison.Ordinal) && parameterName.EndsWith(ParameterNameSuffix, StringComparison.Ordinal))
         {
             string attributeName = parameterName.Substring(ParameterNamePrefix.Length,
                 parameterName.Length - ParameterNamePrefix.Length - ParameterNameSuffix.Length);

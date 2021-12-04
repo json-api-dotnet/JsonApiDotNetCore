@@ -120,8 +120,7 @@ public sealed class JsonApiMiddleware
             : null;
     }
 
-    private static async Task<bool> ValidateContentTypeHeaderAsync(string allowedContentType, HttpContext httpContext,
-        JsonSerializerOptions serializerOptions)
+    private static async Task<bool> ValidateContentTypeHeaderAsync(string allowedContentType, HttpContext httpContext, JsonSerializerOptions serializerOptions)
     {
         string? contentType = httpContext.Request.ContentType;
 

@@ -7,8 +7,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState;
 
-public sealed class NoModelStateValidationTests
-    : IClassFixture<IntegrationTestContext<NoModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext>>
+public sealed class NoModelStateValidationTests : IClassFixture<IntegrationTestContext<NoModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext>>
 {
     private readonly IntegrationTestContext<NoModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext> _testContext;
     private readonly ModelStateFakers _fakers = new();

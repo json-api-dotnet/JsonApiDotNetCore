@@ -155,9 +155,7 @@ public sealed class JsonApiRequestTests
 
         controllerResourceMappingMock.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(() =>
         {
-            return pathSegments.Length > 0
-                ? resourceGraph.GetResourceTypes().FirstOrDefault(resourceType => resourceType.PublicName == pathSegments[0])
-                : null;
+            return pathSegments.Length > 0 ? resourceGraph.GetResourceTypes().FirstOrDefault(resourceType => resourceType.PublicName == pathSegments[0]) : null;
         });
 
         httpContext.SetEndpoint(new Endpoint(_ => Task.CompletedTask, new EndpointMetadataCollection(controllerActionDescriptor), null));

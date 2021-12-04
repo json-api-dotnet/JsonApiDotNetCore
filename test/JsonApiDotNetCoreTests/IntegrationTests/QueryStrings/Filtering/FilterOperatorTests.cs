@@ -392,8 +392,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData("2001-01-09", "2001-01-01", ComparisonOperator.GreaterThan, "2001-01-01Z")]
     [InlineData("2001-01-09", "2001-01-01", ComparisonOperator.GreaterOrEqual, "2001-01-05Z")]
     [InlineData("2001-01-09", "2001-01-01", ComparisonOperator.GreaterOrEqual, "2001-01-09Z")]
-    public async Task Can_filter_comparison_on_DateTime_in_UTC_time_zone(string matchingDateTime, string nonMatchingDateTime,
-        ComparisonOperator filterOperator, string filterDateTime)
+    public async Task Can_filter_comparison_on_DateTime_in_UTC_time_zone(string matchingDateTime, string nonMatchingDateTime, ComparisonOperator filterOperator,
+        string filterDateTime)
     {
         // Arrange
         var resource = new FilterableResource

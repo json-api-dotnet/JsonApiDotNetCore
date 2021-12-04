@@ -10,8 +10,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating;
 
-public sealed class CreateResourceWithClientGeneratedIdTests
-    : IClassFixture<IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
+public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
 {
     private readonly IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
     private readonly ReadWriteFakers _fakers = new();

@@ -18,6 +18,5 @@ public interface IRelationshipDataAdapter
     /// <summary>
     /// Validates and converts the specified <paramref name="data" />.
     /// </summary>
-    object? Convert(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship, bool useToManyElementType,
-        RequestAdapterState state);
+    object? Convert(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship, bool useToManyElementType, RequestAdapterState state);
 }

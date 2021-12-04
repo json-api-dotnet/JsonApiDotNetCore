@@ -79,8 +79,7 @@ public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<Pas
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/PublicApi/SwimmingPools/{pool.StringId}/WaterSlides" +
-            "?filter=greaterThan(LengthInMeters,'1')&fields[WaterSlides]=LengthInMeters";
+        string route = $"/PublicApi/SwimmingPools/{pool.StringId}/WaterSlides" + "?filter=greaterThan(LengthInMeters,'1')&fields[WaterSlides]=LengthInMeters";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

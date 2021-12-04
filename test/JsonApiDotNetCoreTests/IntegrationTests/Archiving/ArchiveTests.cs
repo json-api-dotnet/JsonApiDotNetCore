@@ -179,8 +179,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
             await dbContext.SaveChangesAsync();
         });
 
-        string route =
-            $"/televisionStations/{station.StringId}?include=broadcasts&filter[broadcasts]=or(equals(archivedAt,null),not(equals(archivedAt,null)))";
+        string route = $"/televisionStations/{station.StringId}?include=broadcasts&filter[broadcasts]=or(equals(archivedAt,null),not(equals(archivedAt,null)))";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -188,14 +187,12 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-        DateTimeOffset archivedAt0 = station.Broadcasts.ElementAt(0).ArchivedAt!.Value;
-
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(station.StringId);
 
         responseDocument.Included.ShouldHaveCount(2);
         responseDocument.Included[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(archivedAt0));
+        responseDocument.Included[0].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().Be(station.Broadcasts.ElementAt(0).ArchivedAt));
         responseDocument.Included[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
         responseDocument.Included[1].Attributes.ShouldContainKey("archivedAt").With(value => value.Should().BeNull());
     }

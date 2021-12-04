@@ -22,9 +22,7 @@ public class LinkBuilder : ILinkBuilder
     private const string PageNumberParameterName = "page[number]";
 
     private static readonly string GetPrimaryControllerActionName = NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable<int>, int>.GetAsync));
-
-    private static readonly string GetSecondaryControllerActionName =
-        NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable<int>, int>.GetSecondaryAsync));
+    private static readonly string GetSecondaryControllerActionName = NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable<int>, int>.GetSecondaryAsync));
 
     private static readonly string GetRelationshipControllerActionName =
         NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable<int>, int>.GetRelationshipAsync));

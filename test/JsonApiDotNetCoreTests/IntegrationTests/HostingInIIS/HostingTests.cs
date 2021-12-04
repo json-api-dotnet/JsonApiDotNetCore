@@ -69,8 +69,7 @@ public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingS
             });
         });
 
-        string paintingLink =
-            $"{HostPrefix}/iis-application-virtual-directory/custom/path/to/paintings-of-the-world/{gallery.Paintings.ElementAt(0).StringId}";
+        string paintingLink = $"{HostPrefix}/iis-application-virtual-directory/custom/path/to/paintings-of-the-world/{gallery.Paintings.ElementAt(0).StringId}";
 
         responseDocument.Included.ShouldHaveCount(1);
 

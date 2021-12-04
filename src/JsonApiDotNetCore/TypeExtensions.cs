@@ -47,9 +47,7 @@ internal static class TypeExtensions
 
         if (type.IsGenericType)
         {
-            string genericArguments = type.GetGenericArguments().Select(GetFriendlyTypeName)
-                .Aggregate((firstType, secondType) => $"{firstType}, {secondType}");
-
+            string genericArguments = type.GetGenericArguments().Select(GetFriendlyTypeName).Aggregate((firstType, secondType) => $"{firstType}, {secondType}");
             return $"{type.Name[..type.Name.IndexOf("`", StringComparison.Ordinal)]}<{genericArguments}>";
         }
 

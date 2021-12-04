@@ -66,8 +66,7 @@ public sealed class DependencyContainerRegistrationTests
         };
 
         // Assert
-        action.Should().ThrowExactly<AggregateException>()
-            .WithMessage("Some services are not able to be constructed * A circular dependency was detected *");
+        action.Should().ThrowExactly<AggregateException>().WithMessage("Some services are not able to be constructed * A circular dependency was detected *");
     }
 
     private static IHostBuilder CreateValidatingHostBuilder()

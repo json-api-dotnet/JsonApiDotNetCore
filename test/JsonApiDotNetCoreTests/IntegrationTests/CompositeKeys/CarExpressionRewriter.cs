@@ -100,14 +100,10 @@ internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object?>
         string licensePlateValue)
     {
         ResourceFieldChainExpression regionIdChain = ReplaceLastAttributeInChain(existingCarIdChain, _regionIdAttribute);
-
-        var regionIdComparison = new ComparisonExpression(ComparisonOperator.Equals, regionIdChain,
-            new LiteralConstantExpression(regionIdValue.ToString()));
+        var regionIdComparison = new ComparisonExpression(ComparisonOperator.Equals, regionIdChain, new LiteralConstantExpression(regionIdValue.ToString()));
 
         ResourceFieldChainExpression licensePlateChain = ReplaceLastAttributeInChain(existingCarIdChain, _licensePlateAttribute);
-
-        var licensePlateComparison = new ComparisonExpression(ComparisonOperator.Equals, licensePlateChain,
-            new LiteralConstantExpression(licensePlateValue));
+        var licensePlateComparison = new ComparisonExpression(ComparisonOperator.Equals, licensePlateChain, new LiteralConstantExpression(licensePlateValue));
 
         return new LogicalExpression(LogicalOperator.And, regionIdComparison, licensePlateComparison);
     }

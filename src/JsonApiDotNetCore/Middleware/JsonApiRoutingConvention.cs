@@ -46,9 +46,7 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
     /// <inheritdoc />
     public ResourceType? GetResourceTypeForController(Type? controllerType)
     {
-        return controllerType != null && _resourceTypePerControllerTypeMap.TryGetValue(controllerType, out ResourceType? resourceType)
-            ? resourceType
-            : null;
+        return controllerType != null && _resourceTypePerControllerTypeMap.TryGetValue(controllerType, out ResourceType? resourceType) ? resourceType : null;
     }
 
     /// <inheritdoc />
@@ -163,8 +161,7 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
 
             if ((nextBaseType == aspNetControllerType || nextBaseType == coreControllerType) && currentType.IsGenericType)
             {
-                Type? resourceClrType = currentType.GetGenericArguments()
-                    .FirstOrDefault(typeArgument => typeArgument.IsOrImplementsInterface<IIdentifiable>());
+                Type? resourceClrType = currentType.GetGenericArguments().FirstOrDefault(typeArgument => typeArgument.IsOrImplementsInterface<IIdentifiable>());
 
                 if (resourceClrType != null)
                 {

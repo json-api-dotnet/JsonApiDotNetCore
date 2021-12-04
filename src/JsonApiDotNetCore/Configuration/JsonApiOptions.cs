@@ -104,8 +104,7 @@ public sealed class JsonApiOptions : IJsonApiOptions
 
     public JsonApiOptions()
     {
-        _lazySerializerReadOptions =
-            new Lazy<JsonSerializerOptions>(() => new JsonSerializerOptions(SerializerOptions), LazyThreadSafetyMode.PublicationOnly);
+        _lazySerializerReadOptions = new Lazy<JsonSerializerOptions>(() => new JsonSerializerOptions(SerializerOptions), LazyThreadSafetyMode.PublicationOnly);
 
         _lazySerializerWriteOptions = new Lazy<JsonSerializerOptions>(() => new JsonSerializerOptions(SerializerOptions)
         {

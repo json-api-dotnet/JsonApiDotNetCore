@@ -158,8 +158,7 @@ public sealed class ServiceDiscoveryFacade
             ? ArrayFactory.Create(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType)
             : ArrayFactory.Create(resourceDescriptor.ResourceClrType);
 
-        (Type implementation, Type registrationInterface)? result =
-            _typeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);
+        (Type implementation, Type registrationInterface)? result = _typeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);
 
         if (result != null)
         {

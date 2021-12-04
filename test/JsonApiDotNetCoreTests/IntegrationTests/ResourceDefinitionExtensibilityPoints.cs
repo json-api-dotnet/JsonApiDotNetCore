@@ -28,8 +28,8 @@ public enum ResourceDefinitionExtensibilityPoints
     OnDeserialize = 1 << 14,
     OnSerialize = 1 << 15,
 
-    Reading = OnApplyIncludes | OnApplyFilter | OnApplySort | OnApplyPagination | OnApplySparseFieldSet |
-        OnRegisterQueryableHandlersForQueryStringParameters | GetMeta,
+    Reading = OnApplyIncludes | OnApplyFilter | OnApplySort | OnApplyPagination | OnApplySparseFieldSet | OnRegisterQueryableHandlersForQueryStringParameters |
+        GetMeta,
 
     Writing = OnPrepareWriteAsync | OnSetToOneRelationshipAsync | OnSetToManyRelationshipAsync | OnAddToRelationshipAsync | OnRemoveFromRelationshipAsync |
         OnWritingAsync | OnWriteSucceededAsync,

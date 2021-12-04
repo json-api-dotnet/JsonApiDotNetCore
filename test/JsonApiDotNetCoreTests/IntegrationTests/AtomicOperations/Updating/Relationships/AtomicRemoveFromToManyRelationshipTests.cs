@@ -7,8 +7,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Relationships;
 
-public sealed class AtomicRemoveFromToManyRelationshipTests
-    : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
 {
     private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
     private readonly OperationsFakers _fakers = new();

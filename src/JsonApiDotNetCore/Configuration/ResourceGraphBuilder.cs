@@ -289,8 +289,7 @@ public class ResourceGraphBuilder
 
         if (existingClrType != null)
         {
-            throw new InvalidConfigurationException(
-                $"Resource '{existingClrType}' and '{resourceType.ClrType}' both use public name '{effectivePublicName}'.");
+            throw new InvalidConfigurationException($"Resource '{existingClrType}' and '{resourceType.ClrType}' both use public name '{effectivePublicName}'.");
         }
     }
 
@@ -328,8 +327,8 @@ public class ResourceGraphBuilder
 
     private Type TypeOrElementType(Type type)
     {
-        Type[] interfaces = type.GetInterfaces()
-            .Where(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>)).ToArray();
+        Type[] interfaces = type.GetInterfaces().Where(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            .ToArray();
 
         return interfaces.Length == 1 ? interfaces.Single().GenericTypeArguments[0] : type;
     }

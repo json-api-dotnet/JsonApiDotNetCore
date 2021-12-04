@@ -119,8 +119,7 @@ public sealed class ResourceType
     {
         AttrAttribute? attribute = FindAttributeByPropertyName(propertyName);
 
-        return attribute ??
-            throw new InvalidOperationException($"Attribute for property '{propertyName}' does not exist on resource type '{ClrType.Name}'.");
+        return attribute ?? throw new InvalidOperationException($"Attribute for property '{propertyName}' does not exist on resource type '{ClrType.Name}'.");
     }
 
     public AttrAttribute? FindAttributeByPropertyName(string propertyName)

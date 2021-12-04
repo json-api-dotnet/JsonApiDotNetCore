@@ -58,8 +58,7 @@ public sealed class FilterParseTests : BaseParseTests
     [Theory]
     [InlineData("filter[", "equals(caption,'some')", "Field name expected.")]
     [InlineData("filter[caption]", "equals(url,'some')", "Relationship 'caption' does not exist on resource type 'blogs'.")]
-    [InlineData("filter[posts.caption]", "equals(firstName,'some')",
-        "Relationship 'caption' in 'posts.caption' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter[posts.caption]", "equals(firstName,'some')", "Relationship 'caption' in 'posts.caption' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter[posts.author]", "equals(firstName,'some')",
         "Relationship 'author' in 'posts.author' must be a to-many relationship on resource type 'blogPosts'.")]
     [InlineData("filter[posts.comments.author]", "equals(firstName,'some')",

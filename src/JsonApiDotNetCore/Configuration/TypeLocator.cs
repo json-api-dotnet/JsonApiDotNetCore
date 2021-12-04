@@ -61,11 +61,9 @@ internal sealed class TypeLocator
         ArgumentGuard.NotNull(openGenericInterface, nameof(openGenericInterface));
         ArgumentGuard.NotNull(interfaceGenericTypeArguments, nameof(interfaceGenericTypeArguments));
 
-        if (!openGenericInterface.IsInterface || !openGenericInterface.IsGenericType ||
-            openGenericInterface != openGenericInterface.GetGenericTypeDefinition())
+        if (!openGenericInterface.IsInterface || !openGenericInterface.IsGenericType || openGenericInterface != openGenericInterface.GetGenericTypeDefinition())
         {
-            throw new ArgumentException($"Specified type '{openGenericInterface.FullName}' is not an open generic interface.",
-                nameof(openGenericInterface));
+            throw new ArgumentException($"Specified type '{openGenericInterface.FullName}' is not an open generic interface.", nameof(openGenericInterface));
         }
 
         if (interfaceGenericTypeArguments.Length != openGenericInterface.GetGenericArguments().Length)

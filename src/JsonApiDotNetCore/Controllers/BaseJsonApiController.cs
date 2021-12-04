@@ -48,8 +48,8 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// </summary>
     protected BaseJsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
         IResourceQueryService<TResource, TId>? queryService = null, IResourceCommandService<TResource, TId>? commandService = null)
-        : this(options, resourceGraph, loggerFactory, queryService, queryService, queryService, queryService, commandService, commandService,
-            commandService, commandService, commandService, commandService)
+        : this(options, resourceGraph, loggerFactory, queryService, queryService, queryService, queryService, commandService, commandService, commandService,
+            commandService, commandService, commandService)
     {
     }
 

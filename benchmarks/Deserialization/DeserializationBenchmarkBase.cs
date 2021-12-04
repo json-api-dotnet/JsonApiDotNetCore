@@ -28,9 +28,7 @@ public abstract class DeserializationBenchmarkBase
         var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, serviceContainer);
 
         serviceContainer.AddService(typeof(IResourceDefinitionAccessor), resourceDefinitionAccessor);
-
-        serviceContainer.AddService(typeof(IResourceDefinition<IncomingResource, int>),
-            new JsonApiResourceDefinition<IncomingResource, int>(resourceGraph));
+        serviceContainer.AddService(typeof(IResourceDefinition<IncomingResource, int>), new JsonApiResourceDefinition<IncomingResource, int>(resourceGraph));
 
         // ReSharper disable once VirtualMemberCallInConstructor
         JsonApiRequest request = CreateJsonApiRequest(resourceGraph);

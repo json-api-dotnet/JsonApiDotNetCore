@@ -178,8 +178,7 @@ public sealed class ResourceGraph : IResourceGraph
         }
         else
         {
-            throw new ArgumentException(
-                $"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " +
+            throw new ArgumentException($"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " +
                 "For example: 'article => article.Title' or 'article => new { article.Title, article.PageCount }'.");
         }
     }

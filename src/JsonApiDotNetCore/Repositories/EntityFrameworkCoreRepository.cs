@@ -214,8 +214,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     {
         if (relationship is HasOneAttribute hasOneRelationship)
         {
-            return await _resourceDefinitionAccessor.OnSetToOneRelationshipAsync(leftResource, hasOneRelationship, (IIdentifiable?)rightValue,
-                writeOperation, cancellationToken);
+            return await _resourceDefinitionAccessor.OnSetToOneRelationshipAsync(leftResource, hasOneRelationship, (IIdentifiable?)rightValue, writeOperation,
+                cancellationToken);
         }
 
         if (relationship is HasManyAttribute hasManyRelationship)

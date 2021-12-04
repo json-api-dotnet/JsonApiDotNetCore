@@ -51,8 +51,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         }
     }
 
-    private void ConvertAttribute(IIdentifiable resource, string attributeName, object? attributeValue, ResourceType resourceType,
-        RequestAdapterState state)
+    private void ConvertAttribute(IIdentifiable resource, string attributeName, object? attributeValue, ResourceType resourceType, RequestAdapterState state)
     {
         using IDisposable _ = state.Position.PushElement(attributeName);
         AttrAttribute? attr = resourceType.FindAttributeByPublicName(attributeName);
@@ -124,8 +123,8 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         }
     }
 
-    private void ConvertRelationships(IDictionary<string, RelationshipObject?>? resourceObjectRelationships, IIdentifiable resource,
-        ResourceType resourceType, RequestAdapterState state)
+    private void ConvertRelationships(IDictionary<string, RelationshipObject?>? resourceObjectRelationships, IIdentifiable resource, ResourceType resourceType,
+        RequestAdapterState state)
     {
         using IDisposable _ = state.Position.PushElement("relationships");
 

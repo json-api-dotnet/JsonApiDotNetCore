@@ -112,8 +112,7 @@ public sealed class ResourceGraphBuilderTests
         Action action = () => builder.Add<ResourceWithDuplicateAttrPublicName, int>();
 
         // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage(
-            $"Properties '{typeof(ResourceWithDuplicateAttrPublicName)}.Value1' and " +
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"Properties '{typeof(ResourceWithDuplicateAttrPublicName)}.Value1' and " +
             $"'{typeof(ResourceWithDuplicateAttrPublicName)}.Value2' both use public name 'duplicate'.");
     }
 

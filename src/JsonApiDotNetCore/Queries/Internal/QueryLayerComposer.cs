@@ -104,16 +104,14 @@ public class QueryLayerComposer : IQueryLayerComposer
         return LogicalExpression.Compose(LogicalOperator.And, inverseFilter, primaryFilter, secondaryFilter);
     }
 
-    private static FilterExpression GetInverseRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship,
-        RelationshipAttribute inverseRelationship)
+    private static FilterExpression GetInverseRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship, RelationshipAttribute inverseRelationship)
     {
         return inverseRelationship is HasManyAttribute hasManyInverseRelationship
             ? GetInverseHasManyRelationshipFilter(primaryId, relationship, hasManyInverseRelationship)
             : GetInverseHasOneRelationshipFilter(primaryId, relationship, (HasOneAttribute)inverseRelationship);
     }
 
-    private static FilterExpression GetInverseHasOneRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship,
-        HasOneAttribute inverseRelationship)
+    private static FilterExpression GetInverseHasOneRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship, HasOneAttribute inverseRelationship)
     {
         AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
         var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(inverseRelationship, idAttribute));
@@ -121,8 +119,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         return new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId!.ToString()!));
     }
 
-    private static FilterExpression GetInverseHasManyRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship,
-        HasManyAttribute inverseRelationship)
+    private static FilterExpression GetInverseHasManyRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship, HasManyAttribute inverseRelationship)
     {
         AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
         var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(idAttribute));
@@ -190,8 +187,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         // @formatter:keep_existing_linebreaks restore
         // @formatter:wrap_chained_method_calls restore
 
-        IImmutableSet<IncludeElementExpression> includeElements =
-            ProcessIncludeSet(include.Elements, topLayer, new List<RelationshipAttribute>(), constraints);
+        IImmutableSet<IncludeElementExpression> includeElements = ProcessIncludeSet(include.Elements, topLayer, new List<RelationshipAttribute>(), constraints);
 
         return !ReferenceEquals(includeElements, include.Elements)
             ? includeElements.Any() ? new IncludeExpression(includeElements) : IncludeExpression.Empty
