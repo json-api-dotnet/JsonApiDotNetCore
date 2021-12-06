@@ -8,5 +8,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers;
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers")]
 public sealed class KnownResource : Identifiable<int>
 {
+    [Attr]
     public string? Value { get; set; }
 }
