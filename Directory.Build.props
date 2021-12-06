@@ -12,16 +12,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" PrivateAssets="All" />
+    <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" PrivateAssets="All" />
     <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.7.0" PrivateAssets="All" />
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)CSharpGuidelinesAnalyzer.config" Visible="False" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <NoWarn>$(NoWarn);1591</NoWarn>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <NoWarn>$(NoWarn);1591</NoWarn>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
 
   <!-- Test Project Dependencies -->
   <PropertyGroup>
@@ -31,5 +31,6 @@
     <MoqVersion>4.16.1</MoqVersion>
     <XUnitVersion>2.4.*</XUnitVersion>
     <TestSdkVersion>17.0.0</TestSdkVersion>
+    <BlushingPenguinVersion>1.0.*</BlushingPenguinVersion>
   </PropertyGroup>
 </Project>

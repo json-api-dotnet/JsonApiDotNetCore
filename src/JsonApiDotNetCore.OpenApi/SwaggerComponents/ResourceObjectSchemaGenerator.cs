@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             _allowClientGeneratedIds = options.AllowClientGeneratedIds;
 
             _resourceFieldObjectSchemaBuilderFactory = resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor,
-                defaultSchemaGenerator, _resourceTypeSchemaGenerator);
+                defaultSchemaGenerator, _resourceTypeSchemaGenerator, options.SerializerOptions.PropertyNamingPolicy);
         }
 
         public OpenApiSchema GenerateSchema(Type resourceObjectType)

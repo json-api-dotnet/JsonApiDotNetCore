@@ -59,7 +59,6 @@ namespace JsonApiDotNetCore.OpenApi
             var resourceGraph = scope.ServiceProvider.GetRequiredService<IResourceGraph>();
             var jsonApiOptions = scope.ServiceProvider.GetRequiredService<IJsonApiOptions>();
             JsonNamingPolicy? namingPolicy = jsonApiOptions.SerializerOptions.PropertyNamingPolicy;
-            ResourceNameFormatter resourceNameFormatter = new(namingPolicy);
 
             AddSchemaGenerator(services);
 
@@ -67,7 +66,7 @@ namespace JsonApiDotNetCore.OpenApi
             {
                 swaggerGenOptions.SupportNonNullableReferenceTypes();
                 SetOperationInfo(swaggerGenOptions, controllerResourceMapping, namingPolicy);
-                SetSchemaIdSelector(swaggerGenOptions, resourceGraph, resourceNameFormatter);
+                SetSchemaIdSelector(swaggerGenOptions, resourceGraph, namingPolicy);
                 swaggerGenOptions.DocumentFilter<EndpointOrderingFilter>();
 
                 setupSwaggerGenAction?.Invoke(swaggerGenOptions);
@@ -105,9 +104,9 @@ namespace JsonApiDotNetCore.OpenApi
             };
         }
 
-        private static void SetSchemaIdSelector(SwaggerGenOptions swaggerGenOptions, IResourceGraph resourceGraph, ResourceNameFormatter resourceNameFormatter)
+        private static void SetSchemaIdSelector(SwaggerGenOptions swaggerGenOptions, IResourceGraph resourceGraph, JsonNamingPolicy? namingPolicy)
         {
-            JsonApiSchemaIdSelector jsonApiObjectSchemaSelector = new(resourceNameFormatter, resourceGraph);
+            JsonApiSchemaIdSelector jsonApiObjectSchemaSelector = new(namingPolicy, resourceGraph);
 
             swaggerGenOptions.CustomSchemaIds(type => jsonApiObjectSchemaSelector.GetSchemaId(type));
         }

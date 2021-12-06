@@ -1,22 +1,27 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.OpenApi.Models;
 
 namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 {
     internal sealed class NullableReferenceSchemaGenerator
     {
+        private const string PascalCaseNullableSchemaReferenceId = "NullValue";
+        private readonly string _nullableSchemaReferenceId;
+
         private static readonly NullableReferenceSchemaStrategy NullableReferenceStrategy =
             Enum.Parse<NullableReferenceSchemaStrategy>(NullableReferenceSchemaStrategy.Implicit.ToString());
 
-        private static OpenApiSchema? _referenceSchemaForNullValue;
+        private static OpenApiSchema? _referenceSchemaForExplicitNullValue;
         private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
 
-        public NullableReferenceSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor)
+        public NullableReferenceSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor, JsonNamingPolicy? namingPolicy)
         {
             ArgumentGuard.NotNull(schemaRepositoryAccessor, nameof(schemaRepositoryAccessor));
 
             _schemaRepositoryAccessor = schemaRepositoryAccessor;
+            _nullableSchemaReferenceId = namingPolicy != null ? namingPolicy.ConvertName(PascalCaseNullableSchemaReferenceId) : PascalCaseNullableSchemaReferenceId;
         }
 
         public OpenApiSchema GenerateSchema(OpenApiSchema referenceSchema)
@@ -28,20 +33,13 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
                 OneOf = new List<OpenApiSchema>
                 {
                     referenceSchema,
-                    GetNullableReferenceSchema()
+                    NullableReferenceStrategy == NullableReferenceSchemaStrategy.Explicit ? GetExplicitNullSchema() : GetImplicitNullSchema()
                 }
             };
         }
 
-        private OpenApiSchema GetNullableReferenceSchema()
-        {
-            return NullableReferenceStrategy == NullableReferenceSchemaStrategy.Explicit
-                ? GetNullableReferenceSchemaUsingExplicitNullType()
-                : GetNullableReferenceSchemaUsingImplicitNullType();
-        }
-
         // This approach is supported in OAS starting from v3.1. See https://github.com/OAI/OpenAPI-Specification/issues/1368#issuecomment-580103688
-        private static OpenApiSchema GetNullableReferenceSchemaUsingExplicitNullType()
+        private static OpenApiSchema GetExplicitNullSchema()
         {
             return new OpenApiSchema
             {
@@ -50,48 +48,58 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
         }
 
         // This approach is supported starting from OAS v3.0. See https://github.com/OAI/OpenAPI-Specification/issues/1368#issuecomment-487314681
-        private OpenApiSchema GetNullableReferenceSchemaUsingImplicitNullType()
+        private OpenApiSchema GetImplicitNullSchema()
         {
-            if (_referenceSchemaForNullValue != null)
-            {
-                return _referenceSchemaForNullValue;
-            }
+            EnsureFullSchemaForNullValueExists();
 
-            var fullSchemaForNullValue = new OpenApiSchema
+            return _referenceSchemaForExplicitNullValue ??= new OpenApiSchema
             {
-                Nullable = true,
-                Not = new OpenApiSchema
+                Reference = new OpenApiReference
                 {
-                    AnyOf = new List<OpenApiSchema>
-                    {
-                        new()
-                        {
-                            Type = "string"
-                        },
-                        new()
-                        {
-                            Type = "number"
-                        },
-                        new()
-                        {
-                            Type = "boolean"
-                        },
-                        new()
-                        {
-                            Type = "object"
-                        },
-                        new()
-                        {
-                            Type = "array"
-                        }
-                    },
-                    Items = new OpenApiSchema()
+                    Id = _nullableSchemaReferenceId,
+                    Type = ReferenceType.Schema
                 }
             };
+        }
 
-            _referenceSchemaForNullValue = _schemaRepositoryAccessor.Current.AddDefinition("null-value", fullSchemaForNullValue);
+        private void EnsureFullSchemaForNullValueExists()
+        {
+            if (!_schemaRepositoryAccessor.Current.Schemas.ContainsKey(_nullableSchemaReferenceId))
+            {
+                var fullSchemaForNullValue = new OpenApiSchema
+                {
+                    Nullable = true,
+                    Not = new OpenApiSchema
+                    {
+                        AnyOf = new List<OpenApiSchema>
+                        {
+                            new()
+                            {
+                                Type = "string"
+                            },
+                            new()
+                            {
+                                Type = "number"
+                            },
+                            new()
+                            {
+                                Type = "boolean"
+                            },
+                            new()
+                            {
+                                Type = "object"
+                            },
+                            new()
+                            {
+                                Type = "array"
+                            }
+                        },
+                        Items = new OpenApiSchema()
+                    }
+                };
 
-            return _referenceSchemaForNullValue;
+                _schemaRepositoryAccessor.Current.AddDefinition(_nullableSchemaReferenceId, fullSchemaForNullValue);
+            }
         }
     }
 }

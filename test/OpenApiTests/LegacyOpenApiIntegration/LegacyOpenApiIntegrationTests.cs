@@ -19,6 +19,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
             UseController<FlightAttendantsController>();
         }
 
+        // TODO: This test fails when all tests are openapi tests run in parallel; something isn't going right with the fixtures.
         [Fact]
         public async Task Retrieved_document_matches_expected_document()
         {

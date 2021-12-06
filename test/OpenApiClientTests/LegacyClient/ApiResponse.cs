@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.OpenApi.Client;
-using OpenApiClientTests.LegacyClient.GeneratedCode;
+using JsonApiDotNetCore.OpenApi.Client.Exceptions;
 
 #pragma warning disable AV1008 // Class should not be static
 

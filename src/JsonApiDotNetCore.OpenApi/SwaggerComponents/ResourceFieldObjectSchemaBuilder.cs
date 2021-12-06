@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
@@ -14,8 +15,6 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 {
     internal sealed class ResourceFieldObjectSchemaBuilder
     {
-        private static readonly SchemaRepository ResourceSchemaRepository = new();
-
         private static readonly Type[] RelationshipInResponseOpenTypes =
         {
             typeof(ToOneRelationshipInResponse<>),
@@ -27,11 +26,12 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
         private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
         private readonly SchemaGenerator _defaultSchemaGenerator;
         private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
+        private readonly SchemaRepository _resourceSchemaRepository = new();
         private readonly NullableReferenceSchemaGenerator _nullableReferenceSchemaGenerator;
         private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
 
         public ResourceFieldObjectSchemaBuilder(ResourceTypeInfo resourceTypeInfo, ISchemaRepositoryAccessor schemaRepositoryAccessor,
-            SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator)
+            SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, JsonNamingPolicy? namingPolicy)
         {
             ArgumentGuard.NotNull(resourceTypeInfo, nameof(resourceTypeInfo));
             ArgumentGuard.NotNull(schemaRepositoryAccessor, nameof(schemaRepositoryAccessor));
@@ -43,18 +43,18 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             _defaultSchemaGenerator = defaultSchemaGenerator;
             _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
 
-            _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(schemaRepositoryAccessor);
+            _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(schemaRepositoryAccessor, namingPolicy);
             _schemasForResourceFields = GetFieldSchemas();
         }
 
         private IDictionary<string, OpenApiSchema> GetFieldSchemas()
         {
-            if (!ResourceSchemaRepository.TryLookupByType(_resourceTypeInfo.ResourceType.ClrType, out OpenApiSchema referenceSchemaForResource))
+            if (!_resourceSchemaRepository.TryLookupByType(_resourceTypeInfo.ResourceType.ClrType, out OpenApiSchema referenceSchemaForResource))
             {
-                referenceSchemaForResource = _defaultSchemaGenerator.GenerateSchema(_resourceTypeInfo.ResourceType.ClrType, ResourceSchemaRepository);
+                referenceSchemaForResource = _defaultSchemaGenerator.GenerateSchema(_resourceTypeInfo.ResourceType.ClrType, _resourceSchemaRepository);
             }
 
-            OpenApiSchema fullSchemaForResource = ResourceSchemaRepository.Schemas[referenceSchemaForResource.Reference.Id];
+            OpenApiSchema fullSchemaForResource = _resourceSchemaRepository.Schemas[referenceSchemaForResource.Reference.Id];
             return fullSchemaForResource.Properties;
         }
 
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
         private void ExposeSchema(OpenApiReference openApiReference, Type typeRepresentedBySchema)
         {
-            OpenApiSchema fullSchema = ResourceSchemaRepository.Schemas[openApiReference.Id];
+            OpenApiSchema fullSchema = _resourceSchemaRepository.Schemas[openApiReference.Id];
             _schemaRepositoryAccessor.Current.AddDefinition(openApiReference.Id, fullSchema);
             _schemaRepositoryAccessor.Current.RegisterType(typeRepresentedBySchema, openApiReference.Id);
         }

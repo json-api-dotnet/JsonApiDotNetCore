@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Specialized;
+using JsonApiDotNetCore.OpenApi.Client.Exceptions;
 using OpenApiClientTests.LegacyClient.GeneratedCode;
 using Xunit;
 

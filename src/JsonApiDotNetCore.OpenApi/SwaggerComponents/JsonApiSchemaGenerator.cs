@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             ArgumentGuard.NotNull(options, nameof(options));
 
             _defaultSchemaGenerator = defaultSchemaGenerator;
-            _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(_schemaRepositoryAccessor);
+            _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(_schemaRepositoryAccessor, options.SerializerOptions.PropertyNamingPolicy);
             _resourceObjectSchemaGenerator = new ResourceObjectSchemaGenerator(defaultSchemaGenerator, resourceGraph, options, _schemaRepositoryAccessor);
         }
 
