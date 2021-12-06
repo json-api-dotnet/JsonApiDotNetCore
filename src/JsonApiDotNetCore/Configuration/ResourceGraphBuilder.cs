@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Configuration
@@ -81,9 +80,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private static bool IsImplicitManyToManyJoinEntity(IEntityType entityType)
         {
-#pragma warning disable EF1001 // Internal Entity Framework Core API usage.
-            return entityType is EntityType { IsImplicitlyCreatedJoinEntityType: true };
-#pragma warning restore EF1001 // Internal Entity Framework Core API usage.
+            return entityType.IsPropertyBag && entityType.HasSharedClrType;
         }
 
         /// <summary>
