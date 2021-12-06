@@ -270,7 +270,7 @@ public class WhereClauseBuilder : QueryClauseBuilder<Type?>
     {
         object? convertedValue = expressionType != null ? ConvertTextToTargetType(expression.Value, expressionType) : expression.Value;
 
-        return CreateTupleAccessExpressionForConstant(convertedValue, expressionType ?? typeof(string));
+        return convertedValue.CreateTupleAccessExpressionForConstant(expressionType ?? typeof(string));
     }
 
     private static object? ConvertTextToTargetType(string text, Type targetType)

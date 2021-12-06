@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using System.Reflection;
+using JsonApiDotNetCore.Queries.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources;
@@ -72,8 +73,7 @@ internal sealed class ResourceFactory : IResourceFactory
             {
                 object constructorArgument = ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, constructorParameter.ParameterType);
 
-                Expression argumentExpression = CreateTupleAccessExpressionForConstant(constructorArgument, constructorArgument.GetType());
-
+                Expression argumentExpression = constructorArgument.CreateTupleAccessExpressionForConstant(constructorArgument.GetType());
                 constructorArguments.Add(argumentExpression);
             }
 #pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
@@ -86,19 +86,6 @@ internal sealed class ResourceFactory : IResourceFactory
         }
 
         return Expression.New(longestConstructor, constructorArguments);
-    }
-
-    private static Expression CreateTupleAccessExpressionForConstant(object value, Type type)
-    {
-        MethodInfo tupleCreateMethod = typeof(Tuple).GetMethods()
-            .Single(method => method.Name == "Create" && method.IsGenericMethod && method.GetGenericArguments().Length == 1);
-
-        MethodInfo constructedTupleCreateMethod = tupleCreateMethod.MakeGenericMethod(type);
-
-        ConstantExpression constantExpression = Expression.Constant(value, type);
-
-        MethodCallExpression tupleCreateCall = Expression.Call(constructedTupleCreateMethod, constantExpression);
-        return Expression.Property(tupleCreateCall, "Item1");
     }
 
     private static bool HasSingleConstructorWithoutParameters(Type type)
