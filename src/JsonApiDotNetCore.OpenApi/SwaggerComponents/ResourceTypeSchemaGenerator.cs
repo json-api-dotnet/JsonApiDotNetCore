@@ -1,3 +1,5 @@
+using System.Text.Json;
+using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -6,17 +8,20 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class ResourceTypeSchemaGenerator
 {
+    private const string ResourceTypeSchemaIdTemplate = "[ResourceName] Resource Type";
     private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
     private readonly IResourceGraph _resourceGraph;
+    private readonly JsonNamingPolicy? _namingPolicy;
     private readonly Dictionary<Type, OpenApiSchema> _resourceClrTypeSchemaCache = new();
 
-    public ResourceTypeSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor, IResourceGraph resourceGraph)
+    public ResourceTypeSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor, IResourceGraph resourceGraph, JsonNamingPolicy? namingPolicy)
     {
         ArgumentGuard.NotNull(schemaRepositoryAccessor, nameof(schemaRepositoryAccessor));
         ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
         _schemaRepositoryAccessor = schemaRepositoryAccessor;
         _resourceGraph = resourceGraph;
+        _namingPolicy = namingPolicy;
     }
 
     public OpenApiSchema Get(Type resourceClrType)
@@ -39,11 +44,13 @@ internal sealed class ResourceTypeSchemaGenerator
             }
         };
 
+        string schemaId = GetSchemaId(resourceType);
+
         referenceSchema = new OpenApiSchema
         {
             Reference = new OpenApiReference
             {
-                Id = $"{resourceType.PublicName}-resource-type",
+                Id = schemaId,
                 Type = ReferenceType.Schema
             }
         };
@@ -52,5 +59,12 @@ internal sealed class ResourceTypeSchemaGenerator
         _resourceClrTypeSchemaCache.Add(resourceType.ClrType, referenceSchema);
 
         return referenceSchema;
+    }
+
+    private string GetSchemaId(ResourceType resourceType)
+    {
+        string pascalCaseSchemaId = ResourceTypeSchemaIdTemplate.Replace("[ResourceName]", resourceType.PublicName.Singularize()).Pascalize();
+
+        return _namingPolicy != null ? _namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
     }
 }

@@ -31,19 +31,16 @@
     <OpenApiReference Include="..\OpenApiTests\LegacyOpenApiIntegration\swagger.json">
       <Namespace>OpenApiClientTests.LegacyClient.GeneratedCode</Namespace>
       <ClassName>OpenApiClient</ClassName>
+      <OutputPath>OpenApiClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/UseBaseUrl:false /GenerateClientInterfaces:true /ClientClassAccessModifier:internal</Options>
+      <Options>/UseBaseUrl:false /GenerateClientInterfaces:true /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\NamingConvention\KebabCase\swagger.json">
+      <Namespace>OpenApiClientTests.NamingConvention.KebabCase.GeneratedCode</Namespace>
+      <ClassName>KebabCaseClient</ClassName>
+      <OutputPath>KebabCaseClient.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
     </OpenApiReference>
   </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="..\OpenApiTests\LegacyOpenApiIntegration\swagger.json" />
-  </ItemGroup>
-
-  <!-- Fixes IntelliSense errors on openapi.json in Visual Studio 2019, which uses the schema for OpenAPI 3.1 by default. -->
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties swagger_1json__JsonSchema="https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json" />
-    </VisualStudio>
-  </ProjectExtensions>
 </Project>
