@@ -48,17 +48,16 @@ As previously discussed, this library uses Entity Framework Core by default.
 If you'd like to use another ORM that does not provide what JsonApiResourceService depends upon, you can use a custom `IResourceService<TResource, TId>` implementation.
 
 ```c#
-// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    // add the service override for Product
-    services.AddScoped<IResourceService<Product, int>, ProductService>();
+// Program.cs
 
-    // add your own Data Access Object
-    services.AddScoped<IProductDao, ProductDao>();
-}
+// Add the service override for Product.
+builder.Services.AddScoped<IResourceService<Product, int>, ProductService>();
+
+// Add your own Data Access Object.
+builder.Services.AddScoped<IProductDao, ProductDao>();
 
 // ProductService.cs
+
 public class ProductService : IResourceService<Product, int>
 {
     private readonly IProductDao _dao;
@@ -128,14 +127,9 @@ public class ArticleService : ICreateService<Article, int>, IDeleteService<Artic
     // ...
 }
 
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddScoped<ICreateService<Article, int>, ArticleService>();
-        services.AddScoped<IDeleteService<Article, int>, ArticleService>();
-    }
-}
+// Program.cs
+builder.Services.AddScoped<ICreateService<Article, int>, ArticleService>();
+builder.Services.AddScoped<IDeleteService<Article, int>, ArticleService>();
 ```
 
 In v3.0 we introduced an extension method that you can use to register a resource service on all of its JsonApiDotNetCore interfaces.
@@ -144,13 +138,8 @@ This is helpful when you implement (a subset of) the resource interfaces and wan
 **Note:** If you're using [auto-discovery](~/usage/resource-graph.md#auto-discovery), this happens automatically.
 
 ```c#
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddResourceService<ArticleService>();
-    }
-}
+// Program.cs
+builder.Services.AddResourceService<ArticleService>();
 ```
 
 Then on your model, pass in the set of endpoints to expose (the ones that you've registered services for):

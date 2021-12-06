@@ -5,15 +5,15 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using MultiDbContextExample;
+using MultiDbContextExample.Models;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace MultiDbContextTests;
 
-public sealed class ResourceTests : IntegrationTest, IClassFixture<WebApplicationFactory<Startup>>
+public sealed class ResourceTests : IntegrationTest, IClassFixture<WebApplicationFactory<ResourceA>>
 {
-    private readonly WebApplicationFactory<Startup> _factory;
+    private readonly WebApplicationFactory<ResourceA> _factory;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -24,7 +24,7 @@ public sealed class ResourceTests : IntegrationTest, IClassFixture<WebApplicatio
         }
     }
 
-    public ResourceTests(WebApplicationFactory<Startup> factory)
+    public ResourceTests(WebApplicationFactory<ResourceA> factory)
     {
         _factory = factory;
     }

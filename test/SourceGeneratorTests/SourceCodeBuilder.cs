@@ -24,18 +24,13 @@ internal sealed class SourceCodeBuilder
 
         if (_namespace != null)
         {
-            builder.AppendLine($"namespace {_namespace}");
-            builder.AppendLine("{");
+            builder.AppendLine($"namespace {_namespace};");
+            builder.AppendLine();
         }
 
         if (_code != null)
         {
             builder.Append(_code);
-        }
-
-        if (_namespace != null)
-        {
-            builder.AppendLine("}");
         }
 
         return builder.ToString();

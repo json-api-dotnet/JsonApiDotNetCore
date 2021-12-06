@@ -56,20 +56,15 @@ public class Article : Identifiable<int>
 ### Middleware
 
 ```c#
-public class Startup
-{
-    public IServiceProvider ConfigureServices(IServiceCollection services)
-    {
-        services.AddJsonApi<AppDbContext>();
-    }
+// Program.cs
 
-    public void Configure(IApplicationBuilder app)
-    {
-        app.UseRouting();
-        app.UseJsonApi();
-        app.UseEndpoints(endpoints => endpoints.MapControllers());
-    }
-}
+builder.Services.AddJsonApi<AppDbContext>();
+
+// ...
+
+app.UseRouting();
+app.UseJsonApi();
+app.MapControllers();
 ```
 
 ## Compatibility

@@ -1,17 +1,17 @@
-namespace ReportsExample;
+using JsonApiDotNetCore.Configuration;
 
-internal static class Program
-{
-    public static void Main(string[] args)
-    {
-        CreateHostBuilder(args).Build().Run();
-    }
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-    private static IHostBuilder CreateHostBuilder(string[] args)
-    {
-        return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
-        {
-            webBuilder.UseStartup<Startup>();
-        });
-    }
-}
+// Add services to the container.
+
+builder.Services.AddJsonApi(options => options.Namespace = "api", discovery => discovery.AddCurrentAssembly());
+
+WebApplication app = builder.Build();
+
+// Configure the HTTP request pipeline.
+
+app.UseRouting();
+app.UseJsonApi();
+app.MapControllers();
+
+app.Run();

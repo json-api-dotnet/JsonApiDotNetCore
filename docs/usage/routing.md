@@ -7,13 +7,11 @@ An endpoint URL provides access to a resource or a relationship. Resource endpoi
 In the relationship endpoint "/articles/1/relationships/comments", "articles" is the left side of the relationship and "comments" the right side.
 
 ## Namespacing and versioning of URLs
-You can add a namespace to all URLs by specifying it in ConfigureServices.
+You can add a namespace to all URLs by specifying it at startup.
 
 ```c#
-public void ConfigureServices(IServiceCollection services)
-{
-  services.AddJsonApi<AppDbContext>(options => options.Namespace = "api/v1");
-}
+// Program.cs
+builder.Services.AddJsonApi<AppDbContext>(options => options.Namespace = "api/v1");
 ```
 
 Which results in URLs like: https://yourdomain.com/api/v1/people
@@ -91,8 +89,6 @@ public class OrderLineController : JsonApiController<OrderLine, int>
 It is possible to replace the built-in routing convention with a [custom routing convention](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-3.1#sample-custom-routing-convention) by registering an implementation of `IJsonApiRoutingConvention`.
 
 ```c#
-public void ConfigureServices(IServiceCollection services)
-{
-	services.AddSingleton<IJsonApiRoutingConvention, CustomRoutingConvention>();
-}
+// Program.cs
+builder.Services.AddSingleton<IJsonApiRoutingConvention, CustomRoutingConvention>();
 ```

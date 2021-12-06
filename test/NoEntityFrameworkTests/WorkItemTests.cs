@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using NoEntityFrameworkExample;
 using NoEntityFrameworkExample.Data;
 using NoEntityFrameworkExample.Models;
 using TestBuildingBlocks;
@@ -13,9 +12,9 @@ using Xunit;
 
 namespace NoEntityFrameworkTests;
 
-public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicationFactory<Startup>>
+public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicationFactory<WorkItem>>
 {
-    private readonly WebApplicationFactory<Startup> _factory;
+    private readonly WebApplicationFactory<WorkItem> _factory;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -26,7 +25,7 @@ public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicatio
         }
     }
 
-    public WorkItemTests(WebApplicationFactory<Startup> factory)
+    public WorkItemTests(WebApplicationFactory<WorkItem> factory)
     {
         _factory = factory;
     }

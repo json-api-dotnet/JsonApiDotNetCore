@@ -1,19 +1,13 @@
 # Global Options
 
-Configuration can be applied when adding the services to the dependency injection container.
+Configuration can be applied when adding services to the dependency injection container at startup.
 
 ```c#
-public class Startup
+// Program.cs
+builder.Services.AddJsonApi<AppDbContext>(options =>
 {
-    // This method gets called by the runtime. Use this method to add services to the container.
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddJsonApi<AppDbContext>(options =>
-        {
-            // configure the options here
-        });
-    }
-}
+    // Configure the options here...
+});
 ```
 
 ## Client Generated IDs

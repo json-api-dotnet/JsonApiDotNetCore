@@ -10,20 +10,15 @@ In v4.2 we introduced an extension method that you can use to register your reso
 **Note:** If you're using [auto-discovery](~/usage/resource-graph.md#auto-discovery), this happens automatically.
 
 ```c#
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddResourceDefinition<ArticleDefinition>();
-    }
-}
+// Program.cs
+builder.Services.AddResourceDefinition<ArticleDefinition>();
 ```
 
 **Note:** Prior to the introduction of auto-discovery (in v3), you needed to register the
 resource definition on the container yourself:
 
 ```c#
-services.AddScoped<ResourceDefinition<Product, int>, ProductDefinition>();
+builder.Services.AddScoped<ResourceDefinition<Article, int>, ArticleDefinition>();
 ```
 
 ## Customizing queries

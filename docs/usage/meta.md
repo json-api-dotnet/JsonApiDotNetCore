@@ -8,11 +8,12 @@ Global metadata can be added to the root of the response document by registering
 This is useful if you need access to other registered services to build the meta object.
 
 ```c#
+// Program.cs
+builder.Services.AddSingleton<IResponseMeta, CopyrightResponseMeta>();
+
+// CopyrightResponseMeta.cs
+
 #nullable enable
-
-// In Startup.ConfigureServices
-services.AddSingleton<IResponseMeta, CopyrightResponseMeta>();
-
 public sealed class CopyrightResponseMeta : IResponseMeta
 {
     public IReadOnlyDictionary<string, object?> GetMeta()

@@ -1,17 +1,73 @@
-namespace GettingStarted;
+using GettingStarted.Data;
+using GettingStarted.Models;
+using JsonApiDotNetCore.Configuration;
 
-internal static class Program
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddSqlite<SampleDbContext>("Data Source=sample.db;Pooling=False");
+
+builder.Services.AddJsonApi<SampleDbContext>(options =>
 {
-    public static void Main(string[] args)
-    {
-        CreateHostBuilder(args).Build().Run();
-    }
+    options.Namespace = "api";
+    options.UseRelativeLinks = true;
+    options.IncludeTotalResourceCount = true;
+    options.SerializerOptions.WriteIndented = true;
+});
 
-    private static IHostBuilder CreateHostBuilder(string[] args)
+WebApplication app = builder.Build();
+
+// Configure the HTTP request pipeline.
+
+app.UseRouting();
+app.UseJsonApi();
+app.MapControllers();
+
+await CreateDatabaseAsync(app.Services);
+
+app.Run();
+
+static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
+{
+    await using AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
+
+    var dbContext = scope.ServiceProvider.GetRequiredService<SampleDbContext>();
+    await dbContext.Database.EnsureDeletedAsync();
+    await dbContext.Database.EnsureCreatedAsync();
+
+    await CreateSampleDataAsync(dbContext);
+}
+
+static async Task CreateSampleDataAsync(SampleDbContext dbContext)
+{
+    // Note: The generate-examples.ps1 script (to create example requests in documentation) depends on these.
+
+    dbContext.Books.AddRange(new Book
     {
-        return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
+        Title = "Frankenstein",
+        PublishYear = 1818,
+        Author = new Person
         {
-            webBuilder.UseStartup<Startup>();
-        });
-    }
+            Name = "Mary Shelley"
+        }
+    }, new Book
+    {
+        Title = "Robinson Crusoe",
+        PublishYear = 1719,
+        Author = new Person
+        {
+            Name = "Daniel Defoe"
+        }
+    }, new Book
+    {
+        Title = "Gulliver's Travels",
+        PublishYear = 1726,
+        Author = new Person
+        {
+            Name = "Jonathan Swift"
+        }
+    });
+
+    await dbContext.SaveChangesAsync();
 }

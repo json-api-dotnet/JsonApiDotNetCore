@@ -57,15 +57,14 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using ExampleApi.Models;
 
-namespace ExampleApi.Controllers
+namespace ExampleApi.Controllers;
+
+public sealed partial class ItemsController : JsonApiController<Item, long>
 {
-    public sealed partial class ItemsController : JsonApiController<Item, long>
+    public ItemsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+        IResourceService<Item, long> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
-        public ItemsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-            IResourceService<Item, long> resourceService)
-            : base(options, resourceGraph, loggerFactory, resourceService)
-        {
-        }
     }
 }
 ");
@@ -118,15 +117,14 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using ExampleApi.Models;
 
-namespace ExampleApi.Controllers
+namespace ExampleApi.Controllers;
+
+public sealed partial class ItemsController : JsonApiQueryController<Item, long>
 {
-    public sealed partial class ItemsController : JsonApiQueryController<Item, long>
+    public ItemsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+        IResourceQueryService<Item, long> queryService)
+        : base(options, resourceGraph, loggerFactory, queryService)
     {
-        public ItemsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-            IResourceQueryService<Item, long> queryService)
-            : base(options, resourceGraph, loggerFactory, queryService)
-        {
-        }
     }
 }
 ");
@@ -179,15 +177,14 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using ExampleApi.Models;
 
-namespace ExampleApi.Controllers
+namespace ExampleApi.Controllers;
+
+public sealed partial class ItemsController : JsonApiCommandController<Item, long>
 {
-    public sealed partial class ItemsController : JsonApiCommandController<Item, long>
+    public ItemsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+        IResourceCommandService<Item, long> commandService)
+        : base(options, resourceGraph, loggerFactory, commandService)
     {
-        public ItemsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-            IResourceCommandService<Item, long> commandService)
-            : base(options, resourceGraph, loggerFactory, commandService)
-        {
-        }
     }
 }
 ");
@@ -243,24 +240,23 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using ExampleApi.Models;
 
-namespace ExampleApi.Controllers
+namespace ExampleApi.Controllers;
+
+public sealed partial class ItemsController : JsonApiController<Item, long>
 {
-    public sealed partial class ItemsController : JsonApiController<Item, long>
+    public ItemsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+        IGetAllService<Item, long> getAll,
+        IGetByIdService<Item, long> getById,
+        ICreateService<Item, long> create,
+        IUpdateService<Item, long> update,
+        IDeleteService<Item, long> delete)
+        : base(options, resourceGraph, loggerFactory,
+            getAll: getAll,
+            getById: getById,
+            create: create,
+            update: update,
+            delete: delete)
     {
-        public ItemsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-            IGetAllService<Item, long> getAll,
-            IGetByIdService<Item, long> getById,
-            ICreateService<Item, long> create,
-            IUpdateService<Item, long> update,
-            IDeleteService<Item, long> delete)
-            : base(options, resourceGraph, loggerFactory,
-                getAll: getAll,
-                getById: getById,
-                create: create,
-                update: update,
-                delete: delete)
-        {
-        }
     }
 }
 ");
@@ -584,15 +580,14 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using ExampleApi.Models;
 
-namespace Some.Path.To.Generate.Code.In
+namespace Some.Path.To.Generate.Code.In;
+
+public sealed partial class ItemsController : JsonApiController<Item, long>
 {
-    public sealed partial class ItemsController : JsonApiController<Item, long>
+    public ItemsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+        IResourceService<Item, long> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
-        public ItemsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-            IResourceService<Item, long> resourceService)
-            : base(options, resourceGraph, loggerFactory, resourceService)
-        {
-        }
     }
 }
 ");
@@ -644,15 +639,14 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using TopLevel;
 
-namespace Controllers
+namespace Controllers;
+
+public sealed partial class ItemsController : JsonApiController<Item, long>
 {
-    public sealed partial class ItemsController : JsonApiController<Item, long>
+    public ItemsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+        IResourceService<Item, long> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
-        public ItemsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-            IResourceService<Item, long> resourceService)
-            : base(options, resourceGraph, loggerFactory, resourceService)
-        {
-        }
     }
 }
 ");
