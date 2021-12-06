@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Net;
 using FluentAssertions;
 using FluentAssertions.Specialized;
+using JsonApiDotNetCore.OpenApi.Client.Exceptions;
 using OpenApiClientTests.LegacyClient.GeneratedCode;
 using Xunit;
 
