@@ -213,7 +213,22 @@ public sealed class ResourceGraphBuilderTests
 
         FakeLoggerFactory.FakeLogMessage message = loggerFactory.Logger.Messages.ElementAt(0);
         message.LogLevel.Should().Be(LogLevel.Warning);
-        message.Text.Should().Be($"Skipping: Type '{typeof(NonResource)}' does not implement 'IIdentifiable'.");
+        message.Text.Should().Be($"Skipping: Type '{typeof(NonResource)}' does not implement 'IIdentifiable'. Add [NoResource] to suppress this warning.");
+    }
+
+    [Fact]
+    public void Logs_no_warning_when_adding_non_resource_type_with_suppression()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
+        var builder = new ResourceGraphBuilder(options, loggerFactory);
+
+        // Act
+        builder.Add(typeof(NonResourceWithSuppression));
+
+        // Assert
+        loggerFactory.Logger.Messages.Should().BeEmpty();
     }
 
     [Fact]
@@ -339,6 +354,12 @@ public sealed class ResourceGraphBuilderTests
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     private sealed class NonResource
+    {
+    }
+
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+    [NoResource]
+    private sealed class NonResourceWithSuppression
     {
     }
 

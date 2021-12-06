@@ -1,9 +1,11 @@
 using System.Text.Json;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+[NoResource]
 public sealed class OutgoingMessage
 {
     public long Id { get; set; }

@@ -139,7 +139,11 @@ public class ResourceGraphBuilder
         }
         else
         {
-            _logger.LogWarning($"Skipping: Type '{resourceClrType}' does not implement '{nameof(IIdentifiable)}'.");
+            if (resourceClrType.GetCustomAttribute<NoResourceAttribute>() == null)
+            {
+                _logger.LogWarning(
+                    $"Skipping: Type '{resourceClrType}' does not implement '{nameof(IIdentifiable)}'. Add [NoResource] to suppress this warning.");
+            }
         }
 
         return this;
