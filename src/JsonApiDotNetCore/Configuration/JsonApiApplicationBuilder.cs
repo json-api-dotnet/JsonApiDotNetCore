@@ -134,8 +134,8 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
 
             foreach (Type dbContextType in dbContextTypes)
             {
-                Type dbContextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
-                _services.AddScoped(typeof(IDbContextResolver), dbContextResolverType);
+                Type dbContextResolverClosedType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
+                _services.AddScoped(typeof(IDbContextResolver), dbContextResolverClosedType);
             }
 
             _services.AddScoped<IOperationsTransactionFactory, EntityFrameworkCoreTransactionFactory>();
@@ -182,7 +182,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
 
     private void AddResourceLayer()
     {
-        RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ResourceDefinitionInterfaces, typeof(JsonApiResourceDefinition<,>));
+        RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ResourceDefinitionOpenInterfaces, typeof(JsonApiResourceDefinition<,>));
 
         _services.AddScoped<IResourceDefinitionAccessor, ResourceDefinitionAccessor>();
         _services.AddScoped<IResourceFactory, ResourceFactory>();
@@ -190,21 +190,21 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
 
     private void AddRepositoryLayer()
     {
-        RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.RepositoryInterfaces, typeof(EntityFrameworkCoreRepository<,>));
+        RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.RepositoryOpenInterfaces, typeof(EntityFrameworkCoreRepository<,>));
 
         _services.AddScoped<IResourceRepositoryAccessor, ResourceRepositoryAccessor>();
     }
 
     private void AddServiceLayer()
     {
-        RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ServiceInterfaces, typeof(JsonApiResourceService<,>));
+        RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ServiceOpenInterfaces, typeof(JsonApiResourceService<,>));
     }
 
-    private void RegisterImplementationForOpenInterfaces(HashSet<Type> openGenericInterfaces, Type implementationType)
+    private void RegisterImplementationForOpenInterfaces(HashSet<Type> openInterfaces, Type implementationType)
     {
-        foreach (Type openGenericInterface in openGenericInterfaces)
+        foreach (Type openInterface in openInterfaces)
         {
-            _services.TryAddScoped(openGenericInterface, implementationType);
+            _services.TryAddScoped(openInterface, implementationType);
         }
     }
 

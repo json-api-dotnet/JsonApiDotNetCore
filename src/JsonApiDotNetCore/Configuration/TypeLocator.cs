@@ -8,15 +8,23 @@ namespace JsonApiDotNetCore.Configuration;
 /// </summary>
 internal sealed class TypeLocator
 {
+    // As a reminder, the following terminology is used for generic types:
+    // non-generic          string
+    // generic
+    //     unbound          Dictionary<,>
+    //     constructed
+    //         open         Dictionary<TKey,TValue>
+    //         closed       Dictionary<string,int>
+
     /// <summary>
     /// Attempts to lookup the ID type of the specified resource type. Returns <c>null</c> if it does not implement <see cref="IIdentifiable{TId}" />.
     /// </summary>
     public Type? LookupIdType(Type? resourceClrType)
     {
-        Type? identifiableInterface = resourceClrType?.GetInterfaces().FirstOrDefault(@interface =>
+        Type? identifiableClosedInterface = resourceClrType?.GetInterfaces().FirstOrDefault(@interface =>
             @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IIdentifiable<>));
 
-        return identifiableInterface?.GetGenericArguments()[0];
+        return identifiableClosedInterface?.GetGenericArguments()[0];
     }
 
     /// <summary>
@@ -38,62 +46,62 @@ internal sealed class TypeLocator
     }
 
     /// <summary>
-    /// Gets all implementations of a generic interface.
+    /// Gets the implementation type with service interface (to be registered in the IoC container) for the specified open interface and its type arguments,
+    /// by scanning for types in the specified assembly that match the signature.
     /// </summary>
     /// <param name="assembly">
-    /// The assembly to search in.
+    /// The assembly to search for matching types.
     /// </param>
-    /// <param name="openGenericInterface">
-    /// The open generic interface.
+    /// <param name="openInterface">
+    /// The open generic interface to match against.
     /// </param>
-    /// <param name="interfaceGenericTypeArguments">
-    /// Generic type parameters to construct the generic interface.
+    /// <param name="interfaceTypeArguments">
+    /// Generic type arguments to construct <paramref name="openInterface" />.
     /// </param>
     /// <example>
     /// <code><![CDATA[
-    /// GetGenericInterfaceImplementation(assembly, typeof(IResourceService<,>), typeof(Article), typeof(Guid));
+    /// GetContainerRegistrationFromAssembly(assembly, typeof(IResourceService<,>), typeof(Article), typeof(Guid));
     /// ]]></code>
     /// </example>
-    public (Type implementation, Type registrationInterface)? GetGenericInterfaceImplementation(Assembly assembly, Type openGenericInterface,
-        params Type[] interfaceGenericTypeArguments)
+    public (Type implementationType, Type serviceInterface)? GetContainerRegistrationFromAssembly(Assembly assembly, Type openInterface,
+        params Type[] interfaceTypeArguments)
     {
         ArgumentGuard.NotNull(assembly, nameof(assembly));
-        ArgumentGuard.NotNull(openGenericInterface, nameof(openGenericInterface));
-        ArgumentGuard.NotNull(interfaceGenericTypeArguments, nameof(interfaceGenericTypeArguments));
+        ArgumentGuard.NotNull(openInterface, nameof(openInterface));
+        ArgumentGuard.NotNull(interfaceTypeArguments, nameof(interfaceTypeArguments));
 
-        if (!openGenericInterface.IsInterface || !openGenericInterface.IsGenericType || openGenericInterface != openGenericInterface.GetGenericTypeDefinition())
+        if (!openInterface.IsInterface || !openInterface.IsGenericType || openInterface != openInterface.GetGenericTypeDefinition())
         {
-            throw new ArgumentException($"Specified type '{openGenericInterface.FullName}' is not an open generic interface.", nameof(openGenericInterface));
+            throw new ArgumentException($"Specified type '{openInterface.FullName}' is not an open generic interface.", nameof(openInterface));
         }
 
-        if (interfaceGenericTypeArguments.Length != openGenericInterface.GetGenericArguments().Length)
+        if (interfaceTypeArguments.Length != openInterface.GetGenericArguments().Length)
         {
             throw new ArgumentException(
-                $"Interface '{openGenericInterface.FullName}' requires {openGenericInterface.GetGenericArguments().Length} type parameters " +
-                $"instead of {interfaceGenericTypeArguments.Length}.", nameof(interfaceGenericTypeArguments));
+                $"Interface '{openInterface.FullName}' requires {openInterface.GetGenericArguments().Length} type arguments " +
+                $"instead of {interfaceTypeArguments.Length}.", nameof(interfaceTypeArguments));
         }
 
-        return assembly.GetTypes().Select(type => FindGenericInterfaceImplementationForType(type, openGenericInterface, interfaceGenericTypeArguments))
+        return assembly.GetTypes().Select(type => GetContainerRegistrationFromType(type, openInterface, interfaceTypeArguments))
             .FirstOrDefault(result => result != null);
     }
 
-    private static (Type implementation, Type registrationInterface)? FindGenericInterfaceImplementationForType(Type nextType, Type openGenericInterface,
-        Type[] interfaceGenericTypeArguments)
+    private static (Type implementationType, Type serviceInterface)? GetContainerRegistrationFromType(Type nextType, Type openInterface,
+        Type[] interfaceTypeArguments)
     {
         if (!nextType.IsNested)
         {
-            foreach (Type nextGenericInterface in nextType.GetInterfaces().Where(type => type.IsGenericType))
+            foreach (Type nextConstructedInterface in nextType.GetInterfaces().Where(type => type.IsGenericType))
             {
-                Type nextOpenGenericInterface = nextGenericInterface.GetGenericTypeDefinition();
+                Type nextOpenInterface = nextConstructedInterface.GetGenericTypeDefinition();
 
-                if (nextOpenGenericInterface == openGenericInterface)
+                if (nextOpenInterface == openInterface)
                 {
-                    Type[] nextGenericArguments = nextGenericInterface.GetGenericArguments();
+                    Type[] nextTypeArguments = nextConstructedInterface.GetGenericArguments();
 
-                    if (nextGenericArguments.Length == interfaceGenericTypeArguments.Length &&
-                        nextGenericArguments.SequenceEqual(interfaceGenericTypeArguments))
+                    if (nextTypeArguments.Length == interfaceTypeArguments.Length && nextTypeArguments.SequenceEqual(interfaceTypeArguments))
                     {
-                        return (nextType, nextOpenGenericInterface.MakeGenericType(interfaceGenericTypeArguments));
+                        return (nextType, nextOpenInterface.MakeGenericType(interfaceTypeArguments));
                     }
                 }
             }
@@ -103,30 +111,30 @@ internal sealed class TypeLocator
     }
 
     /// <summary>
-    /// Gets all derivatives of the concrete, generic type.
+    /// Scans for types in the specified assembly that derive from the specified open type.
     /// </summary>
     /// <param name="assembly">
-    /// The assembly to search.
+    /// The assembly to search for derived types.
     /// </param>
-    /// <param name="openGenericType">
-    /// The open generic type, e.g. `typeof(ResourceDefinition&lt;&gt;)`.
+    /// <param name="openType">
+    /// The open generic interface to match against.
     /// </param>
-    /// <param name="genericArguments">
-    /// Parameters to the generic type.
+    /// <param name="typeArguments">
+    /// Generic type arguments to construct <paramref name="openType" />.
     /// </param>
     /// <example>
     /// <code><![CDATA[
-    /// GetDerivedGenericTypes(assembly, typeof(ResourceDefinition<>), typeof(Article))
+    /// GetDerivedTypesForOpenType(assembly, typeof(ResourceDefinition<,>), typeof(Article), typeof(int))
     /// ]]></code>
     /// </example>
-    public IReadOnlyCollection<Type> GetDerivedGenericTypes(Assembly assembly, Type openGenericType, params Type[] genericArguments)
+    public IReadOnlyCollection<Type> GetDerivedTypesForOpenType(Assembly assembly, Type openType, params Type[] typeArguments)
     {
         ArgumentGuard.NotNull(assembly, nameof(assembly));
-        ArgumentGuard.NotNull(openGenericType, nameof(openGenericType));
-        ArgumentGuard.NotNull(genericArguments, nameof(genericArguments));
+        ArgumentGuard.NotNull(openType, nameof(openType));
+        ArgumentGuard.NotNull(typeArguments, nameof(typeArguments));
 
-        Type genericType = openGenericType.MakeGenericType(genericArguments);
-        return GetDerivedTypes(assembly, genericType).ToArray();
+        Type closedType = openType.MakeGenericType(typeArguments);
+        return GetDerivedTypes(assembly, closedType).ToArray();
     }
 
     /// <summary>
@@ -135,22 +143,22 @@ internal sealed class TypeLocator
     /// <param name="assembly">
     /// The assembly to search.
     /// </param>
-    /// <param name="inheritedType">
+    /// <param name="baseType">
     /// The inherited type.
     /// </param>
     /// <example>
     /// <code>
-    /// GetDerivedGenericTypes(assembly, typeof(DbContext))
+    /// GetDerivedTypes(assembly, typeof(DbContext))
     /// </code>
     /// </example>
-    public IEnumerable<Type> GetDerivedTypes(Assembly assembly, Type inheritedType)
+    public IEnumerable<Type> GetDerivedTypes(Assembly assembly, Type baseType)
     {
         ArgumentGuard.NotNull(assembly, nameof(assembly));
-        ArgumentGuard.NotNull(inheritedType, nameof(inheritedType));
+        ArgumentGuard.NotNull(baseType, nameof(baseType));
 
         foreach (Type type in assembly.GetTypes())
         {
-            if (inheritedType.IsAssignableFrom(type))
+            if (baseType.IsAssignableFrom(type))
             {
                 yield return type;
             }

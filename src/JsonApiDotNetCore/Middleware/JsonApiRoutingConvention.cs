@@ -146,14 +146,14 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
     }
 
     /// <summary>
-    /// Determines the resource associated to a controller by inspecting generic arguments in its inheritance tree.
+    /// Determines the resource type associated to a controller by inspecting generic type arguments in its inheritance tree.
     /// </summary>
-    private Type? ExtractResourceClrTypeFromController(Type type)
+    private Type? ExtractResourceClrTypeFromController(Type controllerType)
     {
         Type aspNetControllerType = typeof(ControllerBase);
         Type coreControllerType = typeof(CoreJsonApiController);
         Type baseControllerType = typeof(BaseJsonApiController<,>);
-        Type? currentType = type;
+        Type? currentType = controllerType;
 
         while (!currentType.IsGenericType || currentType.GetGenericTypeDefinition() != baseControllerType)
         {

@@ -59,7 +59,7 @@ public static class ServiceCollectionExtensions
     {
         ArgumentGuard.NotNull(services, nameof(services));
 
-        RegisterForConstructedType(services, typeof(TService), ServiceDiscoveryFacade.ServiceInterfaces);
+        RegisterTypeForOpenInterfaces(services, typeof(TService), ServiceDiscoveryFacade.ServiceOpenInterfaces);
 
         return services;
     }
@@ -72,7 +72,7 @@ public static class ServiceCollectionExtensions
     {
         ArgumentGuard.NotNull(services, nameof(services));
 
-        RegisterForConstructedType(services, typeof(TRepository), ServiceDiscoveryFacade.RepositoryInterfaces);
+        RegisterTypeForOpenInterfaces(services, typeof(TRepository), ServiceDiscoveryFacade.RepositoryOpenInterfaces);
 
         return services;
     }
@@ -85,25 +85,25 @@ public static class ServiceCollectionExtensions
     {
         ArgumentGuard.NotNull(services, nameof(services));
 
-        RegisterForConstructedType(services, typeof(TResourceDefinition), ServiceDiscoveryFacade.ResourceDefinitionInterfaces);
+        RegisterTypeForOpenInterfaces(services, typeof(TResourceDefinition), ServiceDiscoveryFacade.ResourceDefinitionOpenInterfaces);
 
         return services;
     }
 
-    private static void RegisterForConstructedType(IServiceCollection services, Type implementationType, IEnumerable<Type> openGenericInterfaces)
+    private static void RegisterTypeForOpenInterfaces(IServiceCollection serviceCollection, Type implementationType, IEnumerable<Type> openInterfaces)
     {
         bool seenCompatibleInterface = false;
         ResourceDescriptor? resourceDescriptor = ResolveResourceTypeFromServiceImplementation(implementationType);
 
         if (resourceDescriptor != null)
         {
-            foreach (Type openGenericInterface in openGenericInterfaces)
+            foreach (Type openInterface in openInterfaces)
             {
-                Type constructedType = openGenericInterface.MakeGenericType(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType);
+                Type closedInterface = openInterface.MakeGenericType(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType);
 
-                if (constructedType.IsAssignableFrom(implementationType))
+                if (closedInterface.IsAssignableFrom(implementationType))
                 {
-                    services.AddScoped(constructedType, implementationType);
+                    serviceCollection.AddScoped(closedInterface, implementationType);
                     seenCompatibleInterface = true;
                 }
             }
@@ -121,8 +121,8 @@ public static class ServiceCollectionExtensions
         {
             foreach (Type @interface in serviceType.GetInterfaces())
             {
-                Type? firstGenericArgument = @interface.IsGenericType ? @interface.GenericTypeArguments.First() : null;
-                ResourceDescriptor? resourceDescriptor = TypeLocator.ResolveResourceDescriptor(firstGenericArgument);
+                Type? firstTypeArgument = @interface.IsGenericType ? @interface.GenericTypeArguments.First() : null;
+                ResourceDescriptor? resourceDescriptor = TypeLocator.ResolveResourceDescriptor(firstTypeArgument);
 
                 if (resourceDescriptor != null)
                 {

@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Configuration;
 [PublicAPI]
 public sealed class ServiceDiscoveryFacade
 {
-    internal static readonly HashSet<Type> ServiceInterfaces = new()
+    internal static readonly HashSet<Type> ServiceOpenInterfaces = new()
     {
         typeof(IResourceService<,>),
         typeof(IResourceCommandService<,>),
@@ -32,14 +32,14 @@ public sealed class ServiceDiscoveryFacade
         typeof(IRemoveFromRelationshipService<,>)
     };
 
-    internal static readonly HashSet<Type> RepositoryInterfaces = new()
+    internal static readonly HashSet<Type> RepositoryOpenInterfaces = new()
     {
         typeof(IResourceRepository<,>),
         typeof(IResourceWriteRepository<,>),
         typeof(IResourceReadRepository<,>)
     };
 
-    internal static readonly HashSet<Type> ResourceDefinitionInterfaces = new()
+    internal static readonly HashSet<Type> ResourceDefinitionOpenInterfaces = new()
     {
         typeof(IResourceDefinition<,>)
     };
@@ -118,8 +118,8 @@ public sealed class ServiceDiscoveryFacade
 
         foreach (Type dbContextType in dbContextTypes)
         {
-            Type dbContextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
-            _services.AddScoped(typeof(IDbContextResolver), dbContextResolverType);
+            Type dbContextResolverClosedType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
+            _services.AddScoped(typeof(IDbContextResolver), dbContextResolverClosedType);
         }
     }
 
@@ -130,7 +130,7 @@ public sealed class ServiceDiscoveryFacade
 
     private void AddServices(Assembly assembly, ResourceDescriptor resourceDescriptor)
     {
-        foreach (Type serviceInterface in ServiceInterfaces)
+        foreach (Type serviceInterface in ServiceOpenInterfaces)
         {
             RegisterImplementations(assembly, serviceInterface, resourceDescriptor);
         }
@@ -138,7 +138,7 @@ public sealed class ServiceDiscoveryFacade
 
     private void AddRepositories(Assembly assembly, ResourceDescriptor resourceDescriptor)
     {
-        foreach (Type repositoryInterface in RepositoryInterfaces)
+        foreach (Type repositoryInterface in RepositoryOpenInterfaces)
         {
             RegisterImplementations(assembly, repositoryInterface, resourceDescriptor);
         }
@@ -146,7 +146,7 @@ public sealed class ServiceDiscoveryFacade
 
     private void AddResourceDefinitions(Assembly assembly, ResourceDescriptor resourceDescriptor)
     {
-        foreach (Type resourceDefinitionInterface in ResourceDefinitionInterfaces)
+        foreach (Type resourceDefinitionInterface in ResourceDefinitionOpenInterfaces)
         {
             RegisterImplementations(assembly, resourceDefinitionInterface, resourceDescriptor);
         }
@@ -154,16 +154,16 @@ public sealed class ServiceDiscoveryFacade
 
     private void RegisterImplementations(Assembly assembly, Type interfaceType, ResourceDescriptor resourceDescriptor)
     {
-        Type[] genericArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2
+        Type[] typeArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2
             ? ArrayFactory.Create(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType)
             : ArrayFactory.Create(resourceDescriptor.ResourceClrType);
 
-        (Type implementation, Type registrationInterface)? result = _typeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);
+        (Type implementationType, Type serviceInterface)? result = _typeLocator.GetContainerRegistrationFromAssembly(assembly, interfaceType, typeArguments);
 
         if (result != null)
         {
-            (Type implementation, Type registrationInterface) = result.Value;
-            _services.AddScoped(registrationInterface, implementation);
+            (Type implementationType, Type serviceInterface) = result.Value;
+            _services.AddScoped(serviceInterface, implementationType);
         }
     }
 }

@@ -32,7 +32,7 @@ internal static class TypeExtensions
     }
 
     /// <summary>
-    /// Gets the name of a type, including the names of its generic type parameters.
+    /// Gets the name of a type, including the names of its generic type arguments.
     /// <example>
     /// <code><![CDATA[
     /// KeyValuePair<TimeSpan, Nullable<DateTimeOffset>>
@@ -47,8 +47,8 @@ internal static class TypeExtensions
 
         if (type.IsGenericType)
         {
-            string genericArguments = type.GetGenericArguments().Select(GetFriendlyTypeName).Aggregate((firstType, secondType) => $"{firstType}, {secondType}");
-            return $"{type.Name[..type.Name.IndexOf("`", StringComparison.Ordinal)]}<{genericArguments}>";
+            string typeArguments = type.GetGenericArguments().Select(GetFriendlyTypeName).Aggregate((firstType, secondType) => $"{firstType}, {secondType}");
+            return $"{type.Name[..type.Name.IndexOf("`", StringComparison.Ordinal)]}<{typeArguments}>";
         }
 
         return type.Name;

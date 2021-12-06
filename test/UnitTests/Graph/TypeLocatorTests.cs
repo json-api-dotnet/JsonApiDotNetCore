@@ -9,45 +9,40 @@ namespace UnitTests.Graph;
 public sealed class TypeLocatorTests
 {
     [Fact]
-    public void GetGenericInterfaceImplementation_Gets_Implementation()
+    public void GetContainerRegistrationFromAssembly_Gets_Implementation()
     {
         // Arrange
         Assembly assembly = GetType().Assembly;
-        Type openGeneric = typeof(IGenericInterface<>);
-        Type genericArg = typeof(int);
-
-        Type expectedImplementation = typeof(Implementation);
-        Type expectedInterface = typeof(IGenericInterface<int>);
+        Type openInterface = typeof(IGenericInterface<>);
+        Type typeArgument = typeof(int);
 
         var typeLocator = new TypeLocator();
 
         // Act
-        (Type implementation, Type registrationInterface)? result = typeLocator.GetGenericInterfaceImplementation(assembly, openGeneric, genericArg);
+        (Type implementationType, Type serviceInterface)? result = typeLocator.GetContainerRegistrationFromAssembly(assembly, openInterface, typeArgument);
 
         // Assert
         result.ShouldNotBeNull();
-        result.Value.implementation.Should().Be(expectedImplementation);
-        result.Value.registrationInterface.Should().Be(expectedInterface);
+        result.Value.implementationType.Should().Be(typeof(Implementation));
+        result.Value.serviceInterface.Should().Be(typeof(IGenericInterface<int>));
     }
 
     [Fact]
-    public void GetDerivedGenericTypes_Gets_Implementation()
+    public void GetDerivedTypesForOpenType_Gets_Implementation()
     {
         // Arrange
         Assembly assembly = GetType().Assembly;
-        Type openGeneric = typeof(BaseType<>);
-        Type genericArg = typeof(int);
-
-        Type expectedImplementation = typeof(DerivedType);
+        Type openType = typeof(BaseType<>);
+        Type typeArgument = typeof(int);
 
         var typeLocator = new TypeLocator();
 
         // Act
-        IReadOnlyCollection<Type> results = typeLocator.GetDerivedGenericTypes(assembly, openGeneric, genericArg);
+        IReadOnlyCollection<Type> results = typeLocator.GetDerivedTypesForOpenType(assembly, openType, typeArgument);
 
         // Assert
         results.ShouldHaveCount(1);
-        results.ElementAt(0).Should().Be(expectedImplementation);
+        results.ElementAt(0).Should().Be(typeof(DerivedType));
     }
 
     [Fact]
