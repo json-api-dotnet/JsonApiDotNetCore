@@ -72,16 +72,14 @@ app.MapControllers();
 The following chart should help you pick the best version, based on your environment.
 See also our [versioning policy](./VERSIONING_POLICY.md).
 
-| JsonApiDotNetCore | .NET     | Entity Framework Core | Status                     |
-| ----------------- | -------- | --------------------- | -------------------------- |
-| 3.x               | Core 2.x | 2.x                   | Released                   |
-| 4.x               | Core 3.1 | 3.1                   | Released                   |
-|                   | Core 3.1 | 5                     |                            |
-|                   | 5        | 5                     |                            |
-|                   | 6        | 5                     |                            |
-| v5.x (pending)    | 5        | 5                     | On AppVeyor, to-be-dropped |
-|                   | 6        | 5                     | On AppVeyor, to-be-dropped |
-|                   | 6        | 6                     | Requires build from master |
+| JsonApiDotNetCore | Status      | .NET     | Entity Framework Core |
+| ----------------- | ----------- | -------- | --------------------- |
+| 3.x               | Stable      | Core 2.x | 2.x                   |
+| 4.x               | Stable      | Core 3.1 | 3.1                   |
+|                   |             | Core 3.1 | 5                     |
+|                   |             | 5        | 5                     |
+|                   |             | 6        | 5                     |
+| v5.x              | Pre-release | 6        | 6                     |
 
 ## Contributing
 
