@@ -100,8 +100,9 @@ CheckLastExitCode
 dotnet build -c Release
 CheckLastExitCode
 
-RunInspectCode
-RunCleanupCode
+# TODO: Revert after experimenting
+#RunInspectCode
+#RunCleanupCode
 
 dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
 CheckLastExitCode
