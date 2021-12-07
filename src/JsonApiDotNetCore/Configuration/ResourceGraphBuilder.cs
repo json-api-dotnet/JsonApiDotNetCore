@@ -171,27 +171,22 @@ public class ResourceGraphBuilder
 
         foreach (PropertyInfo property in resourceClrType.GetProperties())
         {
-            // Although strictly not correct, 'id' is added to the list of attributes for convenience.
-            // For example, it enables to filter on ID, without the need to special-case existing logic.
-            // And when using sparse fields, it silently adds 'id' to the set of attributes to retrieve.
-            if (property.Name == nameof(Identifiable<object>.Id))
-            {
-                var idAttr = new AttrAttribute
-                {
-                    PublicName = FormatPropertyName(property),
-                    Property = property,
-                    Capabilities = _options.DefaultAttrCapabilities
-                };
-
-                IncludeField(attributesByName, idAttr);
-                continue;
-            }
-
             var attribute = property.GetCustomAttribute<AttrAttribute>(true);
 
             if (attribute == null)
             {
-                continue;
+                if (property.Name == nameof(Identifiable<object>.Id))
+                {
+                    // Although strictly not correct, 'id' is added to the list of attributes for convenience.
+                    // For example, it enables to filter on ID, without the need to special-case existing logic.
+                    // And when using sparse fieldsets, it silently adds 'id' to the set of attributes to retrieve.
+
+                    attribute = new AttrAttribute();
+                }
+                else
+                {
+                    continue;
+                }
             }
 
             SetPublicName(attribute, property);

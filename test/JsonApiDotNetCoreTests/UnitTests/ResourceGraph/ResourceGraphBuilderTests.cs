@@ -289,6 +289,28 @@ public sealed class ResourceGraphBuilderTests
         resourceType.ClrType.Should().Be(typeof(ResourceOfInt32));
     }
 
+    [Fact]
+    public void Can_override_capabilities_on_Id_property()
+    {
+        // Arrange
+        var options = new JsonApiOptions
+        {
+            DefaultAttrCapabilities = AttrCapabilities.None
+        };
+
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        // Act
+        builder.Add<ResourceWithIdOverride, long>();
+
+        // Assert
+        IResourceGraph resourceGraph = builder.Build();
+        ResourceType resourceType = resourceGraph.GetResourceType<ResourceWithIdOverride>();
+
+        AttrAttribute idAttribute = resourceType.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable<object>.Id));
+        idAttribute.Capabilities.Should().Be(AttrCapabilities.AllowFilter);
+    }
+
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     private sealed class ResourceWithHasOneRelationship : Identifiable<int>
     {
@@ -375,5 +397,12 @@ public sealed class ResourceGraphBuilderTests
 
         [HasMany]
         public IList<ResourceOfInt32> Children { get; set; } = new List<ResourceOfInt32>();
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class ResourceWithIdOverride : Identifiable<long>
+    {
+        [Attr(Capabilities = AttrCapabilities.AllowFilter)]
+        public override long Id { get; set; }
     }
 }
