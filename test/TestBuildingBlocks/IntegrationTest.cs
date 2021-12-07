@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Middleware;
 
@@ -13,6 +14,11 @@ namespace TestBuildingBlocks
     /// </summary>
     public abstract class IntegrationTest
     {
+        // Throttles the number of HTTP requests that run concurrently, in an attempt to
+        // prevent PostgreSQL from failing due to too many open connections at the same time.
+        // https://github.com/xunit/xunit/issues/2003
+        private static readonly SemaphoreSlim ThrottleRequestsSemaphore = new(10);
+
         protected abstract JsonSerializerOptions SerializerOptions { get; }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteHeadAsync<TResponseDocument>(string requestUrl,
@@ -72,12 +78,26 @@ namespace TestBuildingBlocks
             setRequestHeaders?.Invoke(request.Headers);
 
             using HttpClient client = CreateClient();
-            HttpResponseMessage responseMessage = await client.SendAsync(request);
+            HttpResponseMessage responseMessage = await SendAsync(client, request);
 
             string responseText = await responseMessage.Content.ReadAsStringAsync();
             var responseDocument = DeserializeResponse<TResponseDocument>(responseText);
 
             return (responseMessage, responseDocument!);
+        }
+
+        private static async Task<HttpResponseMessage> SendAsync(HttpClient client, HttpRequestMessage request)
+        {
+            await ThrottleRequestsSemaphore.WaitAsync();
+
+            try
+            {
+                return await client.SendAsync(request);
+            }
+            finally
+            {
+                ThrottleRequestsSemaphore.Release();
+            }
         }
 
         private string? SerializeRequest(object? requestBody)
