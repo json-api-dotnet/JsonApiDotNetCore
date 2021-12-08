@@ -1,116 +1,86 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Queries.Expressions;
 
-namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
+namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
+
+/// <summary>
+/// Base class for transforming <see cref="QueryExpression" /> trees into system <see cref="Expression" /> trees.
+/// </summary>
+public abstract class QueryClauseBuilder<TArgument> : QueryExpressionVisitor<TArgument, Expression>
 {
-    /// <summary>
-    /// Base class for transforming <see cref="QueryExpression" /> trees into system <see cref="Expression" /> trees.
-    /// </summary>
-    public abstract class QueryClauseBuilder<TArgument> : QueryExpressionVisitor<TArgument, Expression>
+    protected LambdaScope LambdaScope { get; }
+
+    protected QueryClauseBuilder(LambdaScope lambdaScope)
     {
-        protected LambdaScope LambdaScope { get; }
+        ArgumentGuard.NotNull(lambdaScope, nameof(lambdaScope));
 
-        protected QueryClauseBuilder(LambdaScope lambdaScope)
+        LambdaScope = lambdaScope;
+    }
+
+    public override Expression VisitCount(CountExpression expression, TArgument argument)
+    {
+        Expression collectionExpression = Visit(expression.TargetCollection, argument);
+
+        Expression? propertyExpression = GetCollectionCount(collectionExpression);
+
+        if (propertyExpression == null)
         {
-            ArgumentGuard.NotNull(lambdaScope, nameof(lambdaScope));
-
-            LambdaScope = lambdaScope;
+            throw new InvalidOperationException($"Field '{expression.TargetCollection}' must be a collection.");
         }
 
-        public override Expression VisitCount(CountExpression expression, TArgument argument)
+        return propertyExpression;
+    }
+
+    private static Expression? GetCollectionCount(Expression? collectionExpression)
+    {
+        if (collectionExpression != null)
         {
-            Expression collectionExpression = Visit(expression.TargetCollection, argument);
+            var properties = new HashSet<PropertyInfo>(collectionExpression.Type.GetProperties());
 
-            Expression? propertyExpression = GetCollectionCount(collectionExpression);
-
-            if (propertyExpression == null)
+            if (collectionExpression.Type.IsInterface)
             {
-                throw new InvalidOperationException($"Field '{expression.TargetCollection}' must be a collection.");
-            }
-
-            return propertyExpression;
-        }
-
-        private static Expression? GetCollectionCount(Expression? collectionExpression)
-        {
-            if (collectionExpression != null)
-            {
-                var properties = new HashSet<PropertyInfo>(collectionExpression.Type.GetProperties());
-
-                if (collectionExpression.Type.IsInterface)
+                foreach (PropertyInfo item in collectionExpression.Type.GetInterfaces().SelectMany(@interface => @interface.GetProperties()))
                 {
-                    foreach (PropertyInfo item in collectionExpression.Type.GetInterfaces().SelectMany(@interface => @interface.GetProperties()))
-                    {
-                        properties.Add(item);
-                    }
-                }
-
-                foreach (PropertyInfo property in properties)
-                {
-                    if (property.Name is "Count" or "Length")
-                    {
-                        return Expression.Property(collectionExpression, property);
-                    }
+                    properties.Add(item);
                 }
             }
 
-            return null;
-        }
-
-        public override Expression VisitResourceFieldChain(ResourceFieldChainExpression expression, TArgument argument)
-        {
-            string[] components = expression.Fields.Select(field => field.Property.Name).ToArray();
-
-            return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
-        }
-
-        private static MemberExpression CreatePropertyExpressionFromComponents(Expression source, IEnumerable<string> components)
-        {
-            MemberExpression? property = null;
-
-            foreach (string propertyName in components)
+            foreach (PropertyInfo property in properties)
             {
-                Type parentType = property == null ? source.Type : property.Type;
-
-                if (parentType.GetProperty(propertyName) == null)
+                if (property.Name is "Count" or "Length")
                 {
-                    throw new InvalidOperationException($"Type '{parentType.Name}' does not contain a property named '{propertyName}'.");
+                    return Expression.Property(collectionExpression, property);
                 }
+            }
+        }
 
-                property = property == null ? Expression.Property(source, propertyName) : Expression.Property(property, propertyName);
+        return null;
+    }
+
+    public override Expression VisitResourceFieldChain(ResourceFieldChainExpression expression, TArgument argument)
+    {
+        string[] components = expression.Fields.Select(field => field.Property.Name).ToArray();
+
+        return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
+    }
+
+    private static MemberExpression CreatePropertyExpressionFromComponents(Expression source, IEnumerable<string> components)
+    {
+        MemberExpression? property = null;
+
+        foreach (string propertyName in components)
+        {
+            Type parentType = property == null ? source.Type : property.Type;
+
+            if (parentType.GetProperty(propertyName) == null)
+            {
+                throw new InvalidOperationException($"Type '{parentType.Name}' does not contain a property named '{propertyName}'.");
             }
 
-            return property!;
+            property = property == null ? Expression.Property(source, propertyName) : Expression.Property(property, propertyName);
         }
 
-        protected Expression CreateTupleAccessExpressionForConstant(object? value, Type type)
-        {
-            // To enable efficient query plan caching, inline constants (that vary per request) should be converted into query parameters.
-            // https://stackoverflow.com/questions/54075758/building-a-parameterized-entityframework-core-expression
-
-            // This method can be used to change a query like:
-            //   SELECT ... FROM ... WHERE x."Age" = 3
-            // into:
-            //   SELECT ... FROM ... WHERE x."Age" = @p0
-
-            // The code below builds the next expression for a type T that is unknown at compile time:
-            //   Expression.Property(Expression.Constant(Tuple.Create<T>(value)), "Item1")
-            // Which represents the next C# code:
-            //   Tuple.Create<T>(value).Item1;
-
-            MethodInfo tupleCreateMethod = typeof(Tuple).GetMethods()
-                .Single(method => method.Name == "Create" && method.IsGenericMethod && method.GetGenericArguments().Length == 1);
-
-            MethodInfo constructedTupleCreateMethod = tupleCreateMethod.MakeGenericMethod(type);
-
-            ConstantExpression constantExpression = Expression.Constant(value, type);
-
-            MethodCallExpression tupleCreateCall = Expression.Call(constructedTupleCreateMethod, constantExpression);
-            return Expression.Property(tupleCreateCall, "Item1");
-        }
+        return property!;
     }
 }

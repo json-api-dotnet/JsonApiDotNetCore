@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
@@ -11,92 +9,91 @@ using JsonApiDotNetCore.Queries.Internal.Parsing;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Primitives;
 
-namespace JsonApiDotNetCore.QueryStrings.Internal
+namespace JsonApiDotNetCore.QueryStrings.Internal;
+
+[PublicAPI]
+public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQueryStringParameterReader
 {
-    [PublicAPI]
-    public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQueryStringParameterReader
+    private readonly QueryStringParameterScopeParser _scopeParser;
+    private readonly SortParser _sortParser;
+    private readonly List<ExpressionInScope> _constraints = new();
+    private string? _lastParameterName;
+
+    public bool AllowEmptyValue => false;
+
+    public SortQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
+        : base(request, resourceGraph)
     {
-        private readonly QueryStringParameterScopeParser _scopeParser;
-        private readonly SortParser _sortParser;
-        private readonly List<ExpressionInScope> _constraints = new();
-        private string? _lastParameterName;
+        _scopeParser = new QueryStringParameterScopeParser(FieldChainRequirements.EndsInToMany);
+        _sortParser = new SortParser(ValidateSingleField);
+    }
 
-        public bool AllowEmptyValue => false;
-
-        public SortQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
-            : base(request, resourceGraph)
+    protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
+    {
+        if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
         {
-            _scopeParser = new QueryStringParameterScopeParser(FieldChainRequirements.EndsInToMany);
-            _sortParser = new SortParser(ValidateSingleField);
+            throw new InvalidQueryStringParameterException(_lastParameterName!, "Sorting on the requested attribute is not allowed.",
+                $"Sorting on attribute '{attribute.PublicName}' is not allowed.");
+        }
+    }
+
+    /// <inheritdoc />
+    public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
+    {
+        ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
+
+        return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Sort);
+    }
+
+    /// <inheritdoc />
+    public virtual bool CanRead(string parameterName)
+    {
+        ArgumentGuard.NotNullNorEmpty(parameterName, nameof(parameterName));
+
+        bool isNested = parameterName.StartsWith("sort[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
+        return parameterName == "sort" || isNested;
+    }
+
+    /// <inheritdoc />
+    public virtual void Read(string parameterName, StringValues parameterValue)
+    {
+        _lastParameterName = parameterName;
+
+        try
+        {
+            ResourceFieldChainExpression? scope = GetScope(parameterName);
+            SortExpression sort = GetSort(parameterValue, scope);
+
+            var expressionInScope = new ExpressionInScope(scope, sort);
+            _constraints.Add(expressionInScope);
+        }
+        catch (QueryParseException exception)
+        {
+            throw new InvalidQueryStringParameterException(parameterName, "The specified sort is invalid.", exception.Message, exception);
+        }
+    }
+
+    private ResourceFieldChainExpression? GetScope(string parameterName)
+    {
+        QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResourceType);
+
+        if (parameterScope.Scope == null)
+        {
+            AssertIsCollectionRequest();
         }
 
-        protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
-        {
-            if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
-            {
-                throw new InvalidQueryStringParameterException(_lastParameterName!, "Sorting on the requested attribute is not allowed.",
-                    $"Sorting on attribute '{attribute.PublicName}' is not allowed.");
-            }
-        }
+        return parameterScope.Scope;
+    }
 
-        /// <inheritdoc />
-        public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
-        {
-            ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
+    private SortExpression GetSort(string parameterValue, ResourceFieldChainExpression? scope)
+    {
+        ResourceType resourceTypeInScope = GetResourceTypeForScope(scope);
+        return _sortParser.Parse(parameterValue, resourceTypeInScope);
+    }
 
-            return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Sort);
-        }
-
-        /// <inheritdoc />
-        public virtual bool CanRead(string parameterName)
-        {
-            ArgumentGuard.NotNullNorEmpty(parameterName, nameof(parameterName));
-
-            bool isNested = parameterName.StartsWith("sort[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
-            return parameterName == "sort" || isNested;
-        }
-
-        /// <inheritdoc />
-        public virtual void Read(string parameterName, StringValues parameterValue)
-        {
-            _lastParameterName = parameterName;
-
-            try
-            {
-                ResourceFieldChainExpression? scope = GetScope(parameterName);
-                SortExpression sort = GetSort(parameterValue, scope);
-
-                var expressionInScope = new ExpressionInScope(scope, sort);
-                _constraints.Add(expressionInScope);
-            }
-            catch (QueryParseException exception)
-            {
-                throw new InvalidQueryStringParameterException(parameterName, "The specified sort is invalid.", exception.Message, exception);
-            }
-        }
-
-        private ResourceFieldChainExpression? GetScope(string parameterName)
-        {
-            QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResourceType);
-
-            if (parameterScope.Scope == null)
-            {
-                AssertIsCollectionRequest();
-            }
-
-            return parameterScope.Scope;
-        }
-
-        private SortExpression GetSort(string parameterValue, ResourceFieldChainExpression? scope)
-        {
-            ResourceType resourceTypeInScope = GetResourceTypeForScope(scope);
-            return _sortParser.Parse(parameterValue, resourceTypeInScope);
-        }
-
-        /// <inheritdoc />
-        public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
-        {
-            return _constraints;
-        }
+    /// <inheritdoc />
+    public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
+    {
+        return _constraints;
     }
 }

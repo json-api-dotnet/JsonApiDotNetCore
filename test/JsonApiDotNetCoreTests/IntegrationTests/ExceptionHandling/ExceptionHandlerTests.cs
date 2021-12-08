@@ -1,9 +1,5 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -13,169 +9,168 @@ using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
+namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling;
+
+public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext>>
 {
-    public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> _testContext;
+
+    public ExceptionHandlerTests(IntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> _testContext;
+        _testContext = testContext;
 
-        public ExceptionHandlerTests(IntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> testContext)
+        testContext.UseController<ThrowingArticlesController>();
+        testContext.UseController<ConsumerArticlesController>();
+
+        var loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
+
+        testContext.ConfigureLogging(options =>
         {
-            _testContext = testContext;
+            options.ClearProviders();
+            options.AddProvider(loggerFactory);
+        });
 
-            testContext.UseController<ThrowingArticlesController>();
-            testContext.UseController<ConsumerArticlesController>();
-
-            var loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
-
-            testContext.ConfigureLogging(options =>
-            {
-                options.ClearProviders();
-                options.AddProvider(loggerFactory);
-            });
-
-            testContext.ConfigureServicesBeforeStartup(services =>
-            {
-                services.AddSingleton(loggerFactory);
-            });
-
-            testContext.ConfigureServicesAfterStartup(services =>
-            {
-                services.AddResourceService<ConsumerArticleService>();
-                services.AddScoped<IExceptionHandler, AlternateExceptionHandler>();
-            });
-        }
-
-        [Fact]
-        public async Task Logs_and_produces_error_response_for_custom_exception()
+        testContext.ConfigureServicesBeforeStartup(services =>
         {
-            // Arrange
-            var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-            loggerFactory.Logger.Clear();
+            services.AddSingleton(loggerFactory);
+        });
 
-            var consumerArticle = new ConsumerArticle
-            {
-                Code = $"{ConsumerArticleService.UnavailableArticlePrefix}123"
-            };
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.ConsumerArticles.Add(consumerArticle);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/consumerArticles/{consumerArticle.StringId}";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Gone);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.Gone);
-            error.Title.Should().Be("The requested article is no longer available.");
-            error.Detail.Should().Be("Article with code 'X123' is no longer available.");
-
-            error.Meta.ShouldContainKey("support").With(value =>
-            {
-                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-                element.GetString().Should().Be("Please contact us for info about similar articles at company@email.com.");
-            });
-
-            responseDocument.Meta.Should().BeNull();
-
-            loggerFactory.Logger.Messages.ShouldHaveCount(1);
-            loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Warning);
-            loggerFactory.Logger.Messages.Single().Text.Should().Contain("Article with code 'X123' is no longer available.");
-        }
-
-        [Fact]
-        public async Task Logs_and_produces_error_response_on_deserialization_failure()
+        testContext.ConfigureServicesAfterStartup(services =>
         {
-            // Arrange
-            var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-            loggerFactory.Logger.Clear();
+            services.AddResourceService<ConsumerArticleService>();
+            services.AddScoped<IExceptionHandler, AlternateExceptionHandler>();
+        });
+    }
 
-            const string requestBody = @"{ ""data"": { ""type"": """" } }";
+    [Fact]
+    public async Task Logs_and_produces_error_response_for_custom_exception()
+    {
+        // Arrange
+        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
+        loggerFactory.Logger.Clear();
 
-            const string route = "/consumerArticles";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
-            error.Detail.Should().Be("Resource type '' does not exist.");
-
-            error.Meta.ShouldContainKey("requestBody").With(value =>
-            {
-                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-                element.GetString().Should().Be(requestBody);
-            });
-
-            error.Meta.ShouldContainKey("stackTrace").With(value =>
-            {
-                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-                IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
-
-                stackTraceLines.ShouldNotBeEmpty();
-            });
-
-            loggerFactory.Logger.Messages.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Logs_and_produces_error_response_on_serialization_failure()
+        var consumerArticle = new ConsumerArticle
         {
-            // Arrange
-            var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
-            loggerFactory.Logger.Clear();
+            Code = $"{ConsumerArticleService.UnavailableArticlePrefix}123"
+        };
 
-            var throwingArticle = new ThrowingArticle();
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.ConsumerArticles.Add(consumerArticle);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.ThrowingArticles.Add(throwingArticle);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/consumerArticles/{consumerArticle.StringId}";
 
-            string route = $"/throwingArticles/{throwingArticle.StringId}";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Gone);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.Gone);
+        error.Title.Should().Be("The requested article is no longer available.");
+        error.Detail.Should().Be("Article with code 'X123' is no longer available.");
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-            error.Title.Should().Be("An unhandled error occurred while processing this request.");
-            error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
+        error.Meta.ShouldContainKey("support").With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be("Please contact us for info about similar articles at company@email.com.");
+        });
 
-            error.Meta.ShouldContainKey("stackTrace").With(value =>
-            {
-                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-                IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
+        responseDocument.Meta.Should().BeNull();
 
-                stackTraceLines.Should().ContainMatch("*ThrowingArticle*");
-            });
+        loggerFactory.Logger.Messages.ShouldHaveCount(1);
+        loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Warning);
+        loggerFactory.Logger.Messages.Single().Text.Should().Contain("Article with code 'X123' is no longer available.");
+    }
 
-            responseDocument.Meta.Should().BeNull();
+    [Fact]
+    public async Task Logs_and_produces_error_response_on_deserialization_failure()
+    {
+        // Arrange
+        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
+        loggerFactory.Logger.Clear();
 
-            loggerFactory.Logger.Messages.ShouldHaveCount(1);
-            loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Error);
-            loggerFactory.Logger.Messages.Single().Text.Should().Contain("Exception has been thrown by the target of an invocation.");
-        }
+        const string requestBody = @"{ ""data"": { ""type"": """" } }";
+
+        const string route = "/consumerArticles";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
+        error.Detail.Should().Be("Resource type '' does not exist.");
+
+        error.Meta.ShouldContainKey("requestBody").With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetString().Should().Be(requestBody);
+        });
+
+        error.Meta.ShouldContainKey("stackTrace").With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
+
+            stackTraceLines.ShouldNotBeEmpty();
+        });
+
+        loggerFactory.Logger.Messages.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Logs_and_produces_error_response_on_serialization_failure()
+    {
+        // Arrange
+        var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
+        loggerFactory.Logger.Clear();
+
+        var throwingArticle = new ThrowingArticle();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.ThrowingArticles.Add(throwingArticle);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/throwingArticles/{throwingArticle.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+        error.Title.Should().Be("An unhandled error occurred while processing this request.");
+        error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
+
+        error.Meta.ShouldContainKey("stackTrace").With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
+
+            stackTraceLines.Should().ContainMatch("*ThrowingArticle*");
+        });
+
+        responseDocument.Meta.Should().BeNull();
+
+        loggerFactory.Logger.Messages.ShouldHaveCount(1);
+        loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Error);
+        loggerFactory.Logger.Messages.Single().Text.Should().Contain("Exception has been thrown by the target of an invocation.");
     }
 }

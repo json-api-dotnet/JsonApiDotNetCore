@@ -1,16 +1,15 @@
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.Repositories
+namespace JsonApiDotNetCore.Repositories;
+
+/// <summary>
+/// Used to indicate that an <see cref="IResourceRepository{TResource, TId}" /> supports execution inside a transaction.
+/// </summary>
+[PublicAPI]
+public interface IRepositorySupportsTransaction
 {
     /// <summary>
-    /// Used to indicate that an <see cref="IResourceRepository{TResource, TId}" /> supports execution inside a transaction.
+    /// Identifies the currently active transaction.
     /// </summary>
-    [PublicAPI]
-    public interface IRepositorySupportsTransaction
-    {
-        /// <summary>
-        /// Identifies the currently active transaction.
-        /// </summary>
-        string? TransactionId { get; }
-    }
+    string? TransactionId { get; }
 }

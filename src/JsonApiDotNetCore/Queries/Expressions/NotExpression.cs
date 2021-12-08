@@ -1,53 +1,52 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 
-namespace JsonApiDotNetCore.Queries.Expressions
+namespace JsonApiDotNetCore.Queries.Expressions;
+
+/// <summary>
+/// Represents the "not" filter function, resulting from text such as: not(equals(title,'Work'))
+/// </summary>
+[PublicAPI]
+public class NotExpression : FilterExpression
 {
-    /// <summary>
-    /// Represents the "not" filter function, resulting from text such as: not(equals(title,'Work'))
-    /// </summary>
-    [PublicAPI]
-    public class NotExpression : FilterExpression
+    public FilterExpression Child { get; }
+
+    public NotExpression(FilterExpression child)
     {
-        public FilterExpression Child { get; }
+        ArgumentGuard.NotNull(child, nameof(child));
 
-        public NotExpression(FilterExpression child)
+        Child = child;
+    }
+
+    public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
+    {
+        return visitor.VisitNot(this, argument);
+    }
+
+    public override string ToString()
+    {
+        return $"{Keywords.Not}({Child})";
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj))
         {
-            ArgumentGuard.NotNull(child, nameof(child));
-
-            Child = child;
+            return true;
         }
 
-        public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
+        if (obj is null || GetType() != obj.GetType())
         {
-            return visitor.VisitNot(this, argument);
+            return false;
         }
 
-        public override string ToString()
-        {
-            return $"{Keywords.Not}({Child})";
-        }
+        var other = (NotExpression)obj;
 
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
+        return Child.Equals(other.Child);
+    }
 
-            if (obj is null || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            var other = (NotExpression)obj;
-
-            return Child.Equals(other.Child);
-        }
-
-        public override int GetHashCode()
-        {
-            return Child.GetHashCode();
-        }
+    public override int GetHashCode()
+    {
+        return Child.GetHashCode();
     }
 }

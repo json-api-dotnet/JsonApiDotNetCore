@@ -1,26 +1,32 @@
-using System;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Controllers;
 
-namespace JsonApiDotNetCore.Resources.Annotations
+// ReSharper disable CheckNamespace
+#pragma warning disable AV1505 // Namespace should match with assembly name
+
+namespace JsonApiDotNetCore.Resources.Annotations;
+
+/// <summary>
+/// When put on a resource class, overrides the convention-based public resource name and auto-generates an ASP.NET controller.
+/// </summary>
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+public sealed class ResourceAttribute : Attribute
 {
     /// <summary>
-    /// When put on a resource class, overrides the convention-based resource name.
+    /// Optional. The publicly exposed name of this resource type.
     /// </summary>
-    [PublicAPI]
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
-    public sealed class ResourceAttribute : Attribute
-    {
-        /// <summary>
-        /// The publicly exposed name of this resource type. When not explicitly assigned, the configured naming convention is applied on the pluralized resource
-        /// class name.
-        /// </summary>
-        public string PublicName { get; }
+    public string? PublicName { get; set; }
 
-        public ResourceAttribute(string publicName)
-        {
-            ArgumentGuard.NotNullNorEmpty(publicName, nameof(publicName));
+    /// <summary>
+    /// The set of endpoints to auto-generate an ASP.NET controller for. Defaults to <see cref="JsonApiEndpoints.All" />. Set to
+    /// <see cref="JsonApiEndpoints.None" /> to disable controller generation.
+    /// </summary>
+    public JsonApiEndpoints GenerateControllerEndpoints { get; set; } = JsonApiEndpoints.All;
 
-            PublicName = publicName;
-        }
-    }
+    /// <summary>
+    /// Optional. The full namespace in which to auto-generate the ASP.NET controller. Defaults to the sibling namespace "Controllers". For example, a
+    /// resource class that is declared in namespace "ExampleCompany.ExampleApi.Models" will use "ExampleCompany.ExampleApi.Controllers" by default.
+    /// </summary>
+    public string? ControllerNamespace { get; set; }
 }

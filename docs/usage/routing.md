@@ -6,27 +6,28 @@ An endpoint URL provides access to a resource or a relationship. Resource endpoi
 
 In the relationship endpoint "/articles/1/relationships/comments", "articles" is the left side of the relationship and "comments" the right side.
 
-## Namespacing and Versioning URLs
-You can add a namespace to all URLs by specifying it in ConfigureServices.
+## Namespacing and versioning of URLs
+You can add a namespace to all URLs by specifying it at startup.
 
 ```c#
-public void ConfigureServices(IServiceCollection services)
-{
-  services.AddJsonApi<AppDbContext>(options => options.Namespace = "api/v1");
-}
+// Program.cs
+builder.Services.AddJsonApi<AppDbContext>(options => options.Namespace = "api/v1");
 ```
 
 Which results in URLs like: https://yourdomain.com/api/v1/people
 
-## Default Routing Convention
+## Default routing convention
 
-The library will configure routes for all controllers in your project. By default, routes are camel-cased. This is based on the [recommendations](https://jsonapi.org/recommendations/) outlined in the JSON:API spec.
+The library will configure routes for all auto-generated and hand-written controllers in your project. By default, routes are camel-cased. This is based on the [recommendations](https://jsonapi.org/recommendations/) outlined in the JSON:API spec.
 
 ```c#
-public class OrderLine : Identifiable<int>
+// Auto-generated
+[Resource]
+public class OrderSummary : Identifiable<int>
 {
 }
 
+// Hand-written
 public class OrderLineController : JsonApiController<OrderLine, int>
 {
     public OrderLineController(IJsonApiOptions options, IResourceGraph resourceGraph,
@@ -38,6 +39,7 @@ public class OrderLineController : JsonApiController<OrderLine, int>
 ```
 
 ```http
+GET /orderSummaries HTTP/1.1
 GET /orderLines HTTP/1.1
 ```
 
@@ -57,12 +59,21 @@ public class OrderLineController : ControllerBase
 GET /orderLines HTTP/1.1
 ```
 
-## Disabling the Default Routing Convention
+### Customized routes
 
-It is possible to bypass the default routing convention for a controller.
+It is possible to override the default routing convention for an auto-generated or hand-written controller.
 
 ```c#
-[Route("v1/custom/route/lines-in-order"), DisableRoutingConvention]
+// Auto-generated
+[DisableRoutingConvention]
+[Route("v1/custom/route/summaries-for-orders")]
+partial class OrderSummariesController
+{
+}
+
+// Hand-written
+[DisableRoutingConvention]
+[Route("v1/custom/route/lines-in-order")]
 public class OrderLineController : JsonApiController<OrderLine, int>
 {
     public OrderLineController(IJsonApiOptions options, IResourceGraph resourceGraph,
@@ -73,13 +84,11 @@ public class OrderLineController : JsonApiController<OrderLine, int>
 }
 ```
 
-## Advanced Usage: Custom Routing Convention
+## Advanced usage: custom routing convention
 
 It is possible to replace the built-in routing convention with a [custom routing convention](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-3.1#sample-custom-routing-convention) by registering an implementation of `IJsonApiRoutingConvention`.
 
 ```c#
-public void ConfigureServices(IServiceCollection services)
-{
-	services.AddSingleton<IJsonApiRoutingConvention, CustomRoutingConvention>();
-}
+// Program.cs
+builder.Services.AddSingleton<IJsonApiRoutingConvention, CustomRoutingConvention>();
 ```

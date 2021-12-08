@@ -1,38 +1,35 @@
-using System.Collections.Generic;
-
 #pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type
 
-namespace JsonApiDotNetCore
+namespace JsonApiDotNetCore;
+
+internal static class ObjectExtensions
 {
-    internal static class ObjectExtensions
+    public static IEnumerable<T> AsEnumerable<T>(this T element)
     {
-        public static IEnumerable<T> AsEnumerable<T>(this T element)
-        {
-            yield return element;
-        }
+        yield return element;
+    }
 
-        public static T[] AsArray<T>(this T element)
+    public static T[] AsArray<T>(this T element)
+    {
+        return new[]
         {
-            return new[]
-            {
-                element
-            };
-        }
+            element
+        };
+    }
 
-        public static List<T> AsList<T>(this T element)
+    public static List<T> AsList<T>(this T element)
+    {
+        return new List<T>
         {
-            return new List<T>
-            {
-                element
-            };
-        }
+            element
+        };
+    }
 
-        public static HashSet<T> AsHashSet<T>(this T element)
+    public static HashSet<T> AsHashSet<T>(this T element)
+    {
+        return new HashSet<T>
         {
-            return new HashSet<T>
-            {
-                element
-            };
-        }
+            element
+        };
     }
 }

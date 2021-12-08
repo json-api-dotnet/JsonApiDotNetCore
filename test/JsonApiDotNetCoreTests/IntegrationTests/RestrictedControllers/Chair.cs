@@ -1,20 +1,23 @@
-using System.Collections.Generic;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
+namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+[Resource(GenerateControllerEndpoints = NoRelationshipEndpoints, ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers")]
+public sealed class Chair : Identifiable<int>
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Chair : Identifiable<int>
-    {
-        [Attr]
-        public int LegCount { get; set; }
+    private const JsonApiEndpoints NoRelationshipEndpoints = JsonApiEndpoints.GetCollection | JsonApiEndpoints.GetSingle | JsonApiEndpoints.Post |
+        JsonApiEndpoints.Patch | JsonApiEndpoints.Delete;
 
-        [HasMany]
-        public IList<Pillow> Pillows { get; set; } = new List<Pillow>();
+    [Attr]
+    public int LegCount { get; set; }
 
-        [HasOne]
-        public Room? Room { get; set; }
-    }
+    [HasMany]
+    public IList<Pillow> Pillows { get; set; } = new List<Pillow>();
+
+    [HasOne]
+    public Room? Room { get; set; }
 }

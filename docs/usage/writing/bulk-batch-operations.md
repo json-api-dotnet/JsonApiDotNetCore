@@ -85,10 +85,11 @@ For example requests, see our suite of tests in JsonApiDotNetCoreTests.Integrati
 
 ## Configuration
 
-The maximum number of operations per request defaults to 10, which you can change from Startup.cs:
+The maximum number of operations per request defaults to 10, which you can change at startup:
 
 ```c#
-services.AddJsonApi(options => options.MaximumOperationsPerRequest = 250);
+// Program.cs
+builder.Services.AddJsonApi(options => options.MaximumOperationsPerRequest = 250);
 ```
 
 Or, if you want to allow unconstrained, set it to `null` instead.

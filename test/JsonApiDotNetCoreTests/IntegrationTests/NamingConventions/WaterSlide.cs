@@ -2,12 +2,11 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
+namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+public sealed class WaterSlide : Identifiable<int>
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class WaterSlide : Identifiable<int>
-    {
-        [Attr]
-        public decimal LengthInMeters { get; set; }
-    }
+    [Attr]
+    public decimal LengthInMeters { get; set; }
 }

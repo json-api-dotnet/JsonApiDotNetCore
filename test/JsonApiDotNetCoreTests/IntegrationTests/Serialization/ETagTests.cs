@@ -1,252 +1,247 @@
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
+namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization;
+
+public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext>>
 {
-    public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> _testContext;
+    private readonly SerializationFakers _fakers = new();
+
+    public ETagTests(IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> _testContext;
-        private readonly SerializationFakers _fakers = new();
+        _testContext = testContext;
 
-        public ETagTests(IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> testContext)
+        testContext.UseController<MeetingAttendeesController>();
+        testContext.UseController<MeetingsController>();
+    }
+
+    [Fact]
+    public async Task Returns_ETag_for_HEAD_request()
+    {
+        // Arrange
+        List<Meeting> meetings = _fakers.Meeting.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            _testContext = testContext;
+            await dbContext.ClearTableAsync<Meeting>();
+            dbContext.Meetings.AddRange(meetings);
+            await dbContext.SaveChangesAsync();
+        });
 
-            testContext.UseController<MeetingAttendeesController>();
-            testContext.UseController<MeetingsController>();
-        }
+        const string route = "/meetings";
 
-        [Fact]
-        public async Task Returns_ETag_for_HEAD_request()
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteHeadAsync<string>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        httpResponse.Headers.ETag.ShouldNotBeNull();
+        httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
+        httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+
+        responseDocument.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Returns_ETag_for_GET_request()
+    {
+        // Arrange
+        List<Meeting> meetings = _fakers.Meeting.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            List<Meeting> meetings = _fakers.Meeting.Generate(2);
+            await dbContext.ClearTableAsync<Meeting>();
+            dbContext.Meetings.AddRange(meetings);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        const string route = "/meetings";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        httpResponse.Headers.ETag.ShouldNotBeNull();
+        httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
+        httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+
+        responseDocument.ShouldNotBeEmpty();
+    }
+
+    [Fact]
+    public async Task Returns_no_ETag_for_failed_GET_request()
+    {
+        // Arrange
+        string route = $"/meetings/{Unknown.StringId.For<Meeting, Guid>()}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        httpResponse.Headers.ETag.Should().BeNull();
+
+        responseDocument.ShouldNotBeEmpty();
+    }
+
+    [Fact]
+    public async Task Returns_no_ETag_for_POST_request()
+    {
+        // Arrange
+        string newTitle = _fakers.Meeting.Generate().Title;
+
+        var requestBody = new
+        {
+            data = new
             {
-                await dbContext.ClearTableAsync<Meeting>();
-                dbContext.Meetings.AddRange(meetings);
-                await dbContext.SaveChangesAsync();
-            });
-
-            const string route = "/meetings";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteHeadAsync<string>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            httpResponse.Headers.ETag.ShouldNotBeNull();
-            httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
-            httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
-
-            responseDocument.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Returns_ETag_for_GET_request()
-        {
-            // Arrange
-            List<Meeting> meetings = _fakers.Meeting.Generate(2);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Meeting>();
-                dbContext.Meetings.AddRange(meetings);
-                await dbContext.SaveChangesAsync();
-            });
-
-            const string route = "/meetings";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            httpResponse.Headers.ETag.ShouldNotBeNull();
-            httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
-            httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
-
-            responseDocument.ShouldNotBeEmpty();
-        }
-
-        [Fact]
-        public async Task Returns_no_ETag_for_failed_GET_request()
-        {
-            // Arrange
-            string route = $"/meetings/{Unknown.StringId.For<Meeting, Guid>()}";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            httpResponse.Headers.ETag.Should().BeNull();
-
-            responseDocument.ShouldNotBeEmpty();
-        }
-
-        [Fact]
-        public async Task Returns_no_ETag_for_POST_request()
-        {
-            // Arrange
-            string newTitle = _fakers.Meeting.Generate().Title;
-
-            var requestBody = new
-            {
-                data = new
+                type = "meetings",
+                attributes = new
                 {
-                    type = "meetings",
-                    attributes = new
-                    {
-                        title = newTitle
-                    }
+                    title = newTitle
                 }
-            };
+            }
+        };
 
-            const string route = "/meetings";
+        const string route = "/meetings";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            httpResponse.Headers.ETag.Should().BeNull();
+        httpResponse.Headers.ETag.Should().BeNull();
 
-            responseDocument.ShouldNotBeEmpty();
-        }
+        responseDocument.ShouldNotBeEmpty();
+    }
 
-        [Fact]
-        public async Task Fails_on_ETag_in_PATCH_request()
+    [Fact]
+    public async Task Fails_on_ETag_in_PATCH_request()
+    {
+        // Arrange
+        Meeting existingMeeting = _fakers.Meeting.Generate();
+
+        string newTitle = _fakers.Meeting.Generate().Title;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Meeting existingMeeting = _fakers.Meeting.Generate();
+            dbContext.Meetings.Add(existingMeeting);
+            await dbContext.SaveChangesAsync();
+        });
 
-            string newTitle = _fakers.Meeting.Generate().Title;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        var requestBody = new
+        {
+            data = new
             {
-                dbContext.Meetings.Add(existingMeeting);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "meetings",
+                id = existingMeeting.StringId,
+                attributes = new
                 {
-                    type = "meetings",
-                    id = existingMeeting.StringId,
-                    attributes = new
-                    {
-                        title = newTitle
-                    }
+                    title = newTitle
                 }
-            };
+            }
+        };
 
-            string route = $"/meetings/{existingMeeting.StringId}";
+        string route = $"/meetings/{existingMeeting.StringId}";
 
-            Action<HttpRequestHeaders> setRequestHeaders = headers =>
-            {
-                headers.IfMatch.ParseAdd("\"12345\"");
-            };
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) =
-                await _testContext.ExecutePatchAsync<Document>(route, requestBody, setRequestHeaders: setRequestHeaders);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.PreconditionFailed);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.PreconditionFailed);
-            error.Title.Should().Be("Detection of mid-air edit collisions using ETags is not supported.");
-            error.Detail.Should().BeNull();
-            error.Source.ShouldNotBeNull();
-            error.Source.Header.Should().Be("If-Match");
-        }
-
-        [Fact]
-        public async Task Returns_NotModified_for_matching_ETag()
+        Action<HttpRequestHeaders> setRequestHeaders = headers =>
         {
-            // Arrange
-            List<Meeting> meetings = _fakers.Meeting.Generate(2);
+            headers.IfMatch.ParseAdd("\"12345\"");
+        };
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Meeting>();
-                dbContext.Meetings.AddRange(meetings);
-                await dbContext.SaveChangesAsync();
-            });
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) =
+            await _testContext.ExecutePatchAsync<Document>(route, requestBody, setRequestHeaders: setRequestHeaders);
 
-            const string route = "/meetings";
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.PreconditionFailed);
 
-            (HttpResponseMessage httpResponse1, _) = await _testContext.ExecuteGetAsync<string>(route);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            string responseETag = httpResponse1.Headers.ETag!.Tag;
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.PreconditionFailed);
+        error.Title.Should().Be("Detection of mid-air edit collisions using ETags is not supported.");
+        error.Detail.Should().BeNull();
+        error.Source.ShouldNotBeNull();
+        error.Source.Header.Should().Be("If-Match");
+    }
 
-            Action<HttpRequestHeaders> setRequestHeaders2 = headers =>
-            {
-                headers.IfNoneMatch.ParseAdd($"\"12345\", W/\"67890\", {responseETag}");
-            };
+    [Fact]
+    public async Task Returns_NotModified_for_matching_ETag()
+    {
+        // Arrange
+        List<Meeting> meetings = _fakers.Meeting.Generate(2);
 
-            // Act
-            (HttpResponseMessage httpResponse2, string responseDocument2) = await _testContext.ExecuteGetAsync<string>(route, setRequestHeaders2);
-
-            // Assert
-            httpResponse2.Should().HaveStatusCode(HttpStatusCode.NotModified);
-
-            httpResponse2.Headers.ETag.ShouldNotBeNull();
-            httpResponse2.Headers.ETag.IsWeak.Should().BeFalse();
-            httpResponse2.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
-
-            responseDocument2.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Returns_content_for_mismatching_ETag()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            List<Meeting> meetings = _fakers.Meeting.Generate(2);
+            await dbContext.ClearTableAsync<Meeting>();
+            dbContext.Meetings.AddRange(meetings);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Meeting>();
-                dbContext.Meetings.AddRange(meetings);
-                await dbContext.SaveChangesAsync();
-            });
+        const string route = "/meetings";
 
-            const string route = "/meetings";
+        (HttpResponseMessage httpResponse1, _) = await _testContext.ExecuteGetAsync<string>(route);
 
-            Action<HttpRequestHeaders> setRequestHeaders = headers =>
-            {
-                headers.IfNoneMatch.ParseAdd("\"Not-a-matching-value\"");
-            };
+        string responseETag = httpResponse1.Headers.ETag!.Tag;
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route, setRequestHeaders);
+        Action<HttpRequestHeaders> setRequestHeaders2 = headers =>
+        {
+            headers.IfNoneMatch.ParseAdd($"\"12345\", W/\"67890\", {responseETag}");
+        };
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        // Act
+        (HttpResponseMessage httpResponse2, string responseDocument2) = await _testContext.ExecuteGetAsync<string>(route, setRequestHeaders2);
 
-            httpResponse.Headers.ETag.ShouldNotBeNull();
-            httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
-            httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+        // Assert
+        httpResponse2.Should().HaveStatusCode(HttpStatusCode.NotModified);
 
-            responseDocument.ShouldNotBeEmpty();
-        }
+        httpResponse2.Headers.ETag.ShouldNotBeNull();
+        httpResponse2.Headers.ETag.IsWeak.Should().BeFalse();
+        httpResponse2.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+
+        responseDocument2.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Returns_content_for_mismatching_ETag()
+    {
+        // Arrange
+        List<Meeting> meetings = _fakers.Meeting.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Meeting>();
+            dbContext.Meetings.AddRange(meetings);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/meetings";
+
+        Action<HttpRequestHeaders> setRequestHeaders = headers =>
+        {
+            headers.IfNoneMatch.ParseAdd("\"Not-a-matching-value\"");
+        };
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route, setRequestHeaders);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        httpResponse.Headers.ETag.ShouldNotBeNull();
+        httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
+        httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
+
+        responseDocument.ShouldNotBeEmpty();
     }
 }

@@ -1,20 +1,15 @@
-using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Controllers.Annotations;
-using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
+namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS;
+
+// Workaround for https://youtrack.jetbrains.com/issue/RSRP-487028
+public partial class PaintingsController
 {
-    [DisableRoutingConvention]
-    [Route("custom/path/to/paintings-of-the-world")]
-    public sealed class PaintingsController : JsonApiController<Painting, int>
-    {
-        public PaintingsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-            IResourceService<Painting, int> resourceService)
-            : base(options, resourceGraph, loggerFactory, resourceService)
-        {
-        }
-    }
+}
+
+[DisableRoutingConvention]
+[Route("custom/path/to/paintings-of-the-world")]
+partial class PaintingsController
+{
 }

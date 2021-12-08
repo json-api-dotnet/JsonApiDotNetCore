@@ -1,142 +1,140 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Internal.Parsing
+namespace JsonApiDotNetCore.Queries.Internal.Parsing;
+
+[PublicAPI]
+public sealed class QueryTokenizer
 {
-    [PublicAPI]
-    public sealed class QueryTokenizer
+    public static readonly IReadOnlyDictionary<char, TokenKind> SingleCharacterToTokenKinds = new ReadOnlyDictionary<char, TokenKind>(
+        new Dictionary<char, TokenKind>
+        {
+            ['('] = TokenKind.OpenParen,
+            [')'] = TokenKind.CloseParen,
+            ['['] = TokenKind.OpenBracket,
+            [']'] = TokenKind.CloseBracket,
+            [','] = TokenKind.Comma,
+            [':'] = TokenKind.Colon,
+            ['-'] = TokenKind.Minus
+        });
+
+    private readonly string _source;
+    private readonly StringBuilder _textBuffer = new();
+    private int _offset;
+    private bool _isInQuotedSection;
+
+    public QueryTokenizer(string source)
     {
-        public static readonly IReadOnlyDictionary<char, TokenKind> SingleCharacterToTokenKinds = new ReadOnlyDictionary<char, TokenKind>(
-            new Dictionary<char, TokenKind>
-            {
-                ['('] = TokenKind.OpenParen,
-                [')'] = TokenKind.CloseParen,
-                ['['] = TokenKind.OpenBracket,
-                [']'] = TokenKind.CloseBracket,
-                [','] = TokenKind.Comma,
-                [':'] = TokenKind.Colon,
-                ['-'] = TokenKind.Minus
-            });
+        ArgumentGuard.NotNull(source, nameof(source));
 
-        private readonly string _source;
-        private readonly StringBuilder _textBuffer = new();
-        private int _offset;
-        private bool _isInQuotedSection;
+        _source = source;
+    }
 
-        public QueryTokenizer(string source)
+    public IEnumerable<Token> EnumerateTokens()
+    {
+        _textBuffer.Clear();
+        _isInQuotedSection = false;
+        _offset = 0;
+
+        while (_offset < _source.Length)
         {
-            ArgumentGuard.NotNull(source, nameof(source));
+            char ch = _source[_offset];
 
-            _source = source;
-        }
-
-        public IEnumerable<Token> EnumerateTokens()
-        {
-            _textBuffer.Clear();
-            _isInQuotedSection = false;
-            _offset = 0;
-
-            while (_offset < _source.Length)
+            if (ch == '\'')
             {
-                char ch = _source[_offset];
-
-                if (ch == '\'')
+                if (_isInQuotedSection)
                 {
-                    if (_isInQuotedSection)
+                    char? peeked = PeekChar();
+
+                    if (peeked == '\'')
                     {
-                        char? peeked = PeekChar();
-
-                        if (peeked == '\'')
-                        {
-                            _textBuffer.Append(ch);
-                            _offset += 2;
-                            continue;
-                        }
-
-                        _isInQuotedSection = false;
-
-                        Token literalToken = ProduceTokenFromTextBuffer(true)!;
-                        yield return literalToken;
+                        _textBuffer.Append(ch);
+                        _offset += 2;
+                        continue;
                     }
-                    else
-                    {
-                        if (_textBuffer.Length > 0)
-                        {
-                            throw new QueryParseException("Unexpected ' outside text.");
-                        }
 
-                        _isInQuotedSection = true;
-                    }
+                    _isInQuotedSection = false;
+
+                    Token literalToken = ProduceTokenFromTextBuffer(true)!;
+                    yield return literalToken;
                 }
                 else
                 {
-                    TokenKind? singleCharacterTokenKind = _isInQuotedSection ? null : TryGetSingleCharacterTokenKind(ch);
-
-                    if (singleCharacterTokenKind != null && !IsMinusInsideText(singleCharacterTokenKind.Value))
+                    if (_textBuffer.Length > 0)
                     {
-                        Token? identifierToken = ProduceTokenFromTextBuffer(false);
-
-                        if (identifierToken != null)
-                        {
-                            yield return identifierToken;
-                        }
-
-                        yield return new Token(singleCharacterTokenKind.Value);
+                        throw new QueryParseException("Unexpected ' outside text.");
                     }
-                    else
-                    {
-                        if (_textBuffer.Length == 0 && ch == ' ' && !_isInQuotedSection)
-                        {
-                            throw new QueryParseException("Unexpected whitespace.");
-                        }
 
-                        _textBuffer.Append(ch);
-                    }
+                    _isInQuotedSection = true;
                 }
-
-                _offset++;
             }
-
-            if (_isInQuotedSection)
+            else
             {
-                throw new QueryParseException("' expected.");
+                TokenKind? singleCharacterTokenKind = _isInQuotedSection ? null : TryGetSingleCharacterTokenKind(ch);
+
+                if (singleCharacterTokenKind != null && !IsMinusInsideText(singleCharacterTokenKind.Value))
+                {
+                    Token? identifierToken = ProduceTokenFromTextBuffer(false);
+
+                    if (identifierToken != null)
+                    {
+                        yield return identifierToken;
+                    }
+
+                    yield return new Token(singleCharacterTokenKind.Value);
+                }
+                else
+                {
+                    if (_textBuffer.Length == 0 && ch == ' ' && !_isInQuotedSection)
+                    {
+                        throw new QueryParseException("Unexpected whitespace.");
+                    }
+
+                    _textBuffer.Append(ch);
+                }
             }
 
-            Token? lastToken = ProduceTokenFromTextBuffer(false);
-
-            if (lastToken != null)
-            {
-                yield return lastToken;
-            }
+            _offset++;
         }
 
-        private bool IsMinusInsideText(TokenKind kind)
+        if (_isInQuotedSection)
         {
-            return kind == TokenKind.Minus && _textBuffer.Length > 0;
+            throw new QueryParseException("' expected.");
         }
 
-        private char? PeekChar()
+        Token? lastToken = ProduceTokenFromTextBuffer(false);
+
+        if (lastToken != null)
         {
-            return _offset + 1 < _source.Length ? _source[_offset + 1] : null;
+            yield return lastToken;
         }
+    }
 
-        private static TokenKind? TryGetSingleCharacterTokenKind(char ch)
+    private bool IsMinusInsideText(TokenKind kind)
+    {
+        return kind == TokenKind.Minus && _textBuffer.Length > 0;
+    }
+
+    private char? PeekChar()
+    {
+        return _offset + 1 < _source.Length ? _source[_offset + 1] : null;
+    }
+
+    private static TokenKind? TryGetSingleCharacterTokenKind(char ch)
+    {
+        return SingleCharacterToTokenKinds.TryGetValue(ch, out TokenKind tokenKind) ? tokenKind : null;
+    }
+
+    private Token? ProduceTokenFromTextBuffer(bool isQuotedText)
+    {
+        if (isQuotedText || _textBuffer.Length > 0)
         {
-            return SingleCharacterToTokenKinds.TryGetValue(ch, out TokenKind tokenKind) ? tokenKind : null;
+            string text = _textBuffer.ToString();
+            _textBuffer.Clear();
+            return new Token(isQuotedText ? TokenKind.QuotedText : TokenKind.Text, text);
         }
 
-        private Token? ProduceTokenFromTextBuffer(bool isQuotedText)
-        {
-            if (isQuotedText || _textBuffer.Length > 0)
-            {
-                string text = _textBuffer.ToString();
-                _textBuffer.Clear();
-                return new Token(isQuotedText ? TokenKind.QuotedText : TokenKind.Text, text);
-            }
-
-            return null;
-        }
+        return null;
     }
 }

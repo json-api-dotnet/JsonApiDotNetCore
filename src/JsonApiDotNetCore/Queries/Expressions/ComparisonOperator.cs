@@ -1,11 +1,10 @@
-namespace JsonApiDotNetCore.Queries.Expressions
+namespace JsonApiDotNetCore.Queries.Expressions;
+
+public enum ComparisonOperator
 {
-    public enum ComparisonOperator
-    {
-        Equals,
-        GreaterThan,
-        GreaterOrEqual,
-        LessThan,
-        LessOrEqual
-    }
+    Equals,
+    GreaterThan,
+    GreaterOrEqual,
+    LessThan,
+    LessOrEqual
 }
