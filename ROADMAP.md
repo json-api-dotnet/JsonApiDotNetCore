@@ -26,11 +26,11 @@ The need for breaking changes has blocked several efforts in the v4.x release, s
 - [x] Configuration validation [#170](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/170)
 - [x] Auto-generated controllers [#732](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/732) [#365](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/365)
 - [x] Support .NET 6 with EF Core 6 [#1109](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1109)
+- [x] Extract annotations into separate package [#730](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/730)
 
 Aside from the list above, we have interest in the following topics. It's too soon yet to decide whether they'll make it into v5.x or in a later major version.
 
 - Optimistic concurrency [#1004](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1004)
-- Extract annotations into separate package [#730](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/730)
 - OpenAPI (Swagger) [#1046](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1046)
 - Fluent API [#776](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/776)
 - Resource inheritance [#844](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/844)
