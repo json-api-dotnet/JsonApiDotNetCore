@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Links;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
@@ -10,10 +11,13 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 internal sealed class ResourceCollectionResponseDocument<TResource> : ManyData<ResourceObjectInResponse<TResource>>
     where TResource : IIdentifiable
 {
+    [JsonPropertyName("meta")]
     public IDictionary<string, object> Meta { get; set; } = null!;
 
+    [JsonPropertyName("jsonapi")]
     public JsonapiObject Jsonapi { get; set; } = null!;
 
     [Required]
+    [JsonPropertyName("links")]
     public LinksInResourceCollectionDocument Links { get; set; } = null!;
 }

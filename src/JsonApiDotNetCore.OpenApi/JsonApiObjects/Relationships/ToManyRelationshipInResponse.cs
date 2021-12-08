@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Links;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
@@ -11,7 +12,9 @@ internal sealed class ToManyRelationshipInResponse<TResource> : ManyData<Resourc
     where TResource : IIdentifiable
 {
     [Required]
+    [JsonPropertyName("links")]
     public LinksInRelationshipObject Links { get; set; } = null!;
 
+    [JsonPropertyName("meta")]
     public IDictionary<string, object> Meta { get; set; } = null!;
 }
