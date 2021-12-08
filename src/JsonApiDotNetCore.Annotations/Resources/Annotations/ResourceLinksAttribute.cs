@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Resources.Annotations;
 

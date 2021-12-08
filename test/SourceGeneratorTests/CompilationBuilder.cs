@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -58,7 +59,8 @@ internal sealed class CompilationBuilder
         foreach (PortableExecutableReference reference in new[]
         {
             MetadataReference.CreateFromFile(typeof(ControllerBase).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(AttrAttribute).Assembly.Location)
+            MetadataReference.CreateFromFile(typeof(AttrAttribute).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(JsonApiController<,>).Assembly.Location)
         })
         {
             _references.Add(reference);
