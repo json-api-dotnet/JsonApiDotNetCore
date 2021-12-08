@@ -48,8 +48,8 @@ public sealed class ResourceType
     public IReadOnlyCollection<EagerLoadAttribute> EagerLoads { get; }
 
     /// <summary>
-    /// Configures which links to show in the <see cref="Serialization.Objects.TopLevelLinks" /> object for this resource type. Defaults to
-    /// <see cref="LinkTypes.NotConfigured" />, which falls back to <see cref="IJsonApiOptions.TopLevelLinks" />.
+    /// Configures which links to write in the top-level links object for this resource type. Defaults to <see cref="LinkTypes.NotConfigured" />, which falls
+    /// back to TopLevelLinks in global options.
     /// </summary>
     /// <remarks>
     /// In the process of building the resource graph, this value is set based on <see cref="ResourceLinksAttribute.TopLevelLinks" /> usage.
@@ -57,8 +57,8 @@ public sealed class ResourceType
     public LinkTypes TopLevelLinks { get; }
 
     /// <summary>
-    /// Configures which links to show in the <see cref="Serialization.Objects.ResourceLinks" /> object for this resource type. Defaults to
-    /// <see cref="LinkTypes.NotConfigured" />, which falls back to <see cref="IJsonApiOptions.ResourceLinks" />.
+    /// Configures which links to write in the resource-level links object for this resource type. Defaults to <see cref="LinkTypes.NotConfigured" />, which
+    /// falls back to ResourceLinks in global options.
     /// </summary>
     /// <remarks>
     /// In the process of building the resource graph, this value is set based on <see cref="ResourceLinksAttribute.ResourceLinks" /> usage.
@@ -66,9 +66,9 @@ public sealed class ResourceType
     public LinkTypes ResourceLinks { get; }
 
     /// <summary>
-    /// Configures which links to show in the <see cref="Serialization.Objects.RelationshipLinks" /> object for all relationships of this resource type.
-    /// Defaults to <see cref="LinkTypes.NotConfigured" />, which falls back to <see cref="IJsonApiOptions.RelationshipLinks" />. This can be overruled per
-    /// relationship by setting <see cref="RelationshipAttribute.Links" />.
+    /// Configures which links to write in the relationship-level links object for all relationships of this resource type. Defaults to
+    /// <see cref="LinkTypes.NotConfigured" />, which falls back to RelationshipLinks in global options. This can be overruled per relationship by setting
+    /// <see cref="RelationshipAttribute.Links" />.
     /// </summary>
     /// <remarks>
     /// In the process of building the resource graph, this value is set based on <see cref="ResourceLinksAttribute.RelationshipLinks" /> usage.
