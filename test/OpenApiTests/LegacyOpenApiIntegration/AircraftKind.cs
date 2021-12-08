@@ -1,13 +1,12 @@
 using JetBrains.Annotations;
 
-namespace OpenApiTests.LegacyOpenApiIntegration
+namespace OpenApiTests.LegacyOpenApiIntegration;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+public enum AircraftKind
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public enum AircraftKind
-    {
-        Turboprops,
-        LightJet,
-        MidSizeJet,
-        JumboJet
-    }
+    Turboprops,
+    LightJet,
+    MidSizeJet,
+    JumboJet
 }

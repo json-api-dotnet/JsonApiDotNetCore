@@ -1,12 +1,11 @@
 using JetBrains.Annotations;
 
-namespace OpenApiTests.LegacyOpenApiIntegration
+namespace OpenApiTests.LegacyOpenApiIntegration;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+public enum CabinArea
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public enum CabinArea
-    {
-        FirstClass,
-        BusinessClass,
-        EconomyClass
-    }
+    FirstClass,
+    BusinessClass,
+    EconomyClass
 }

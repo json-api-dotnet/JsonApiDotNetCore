@@ -1,16 +1,13 @@
-using System;
+namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 
-namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
+internal sealed class PrimaryRequestMetadata : IJsonApiRequestMetadata
 {
-    internal sealed class PrimaryRequestMetadata : IJsonApiRequestMetadata
+    public Type DocumentType { get; }
+
+    public PrimaryRequestMetadata(Type documentType)
     {
-        public Type DocumentType { get; }
+        ArgumentGuard.NotNull(documentType, nameof(documentType));
 
-        public PrimaryRequestMetadata(Type documentType)
-        {
-            ArgumentGuard.NotNull(documentType, nameof(documentType));
-
-            DocumentType = documentType;
-        }
+        DocumentType = documentType;
     }
 }

@@ -1,46 +1,45 @@
 using System.Net;
-using System.Threading.Tasks;
 using FluentAssertions;
 using OpenApiClientTests.LegacyClient.GeneratedCode;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace OpenApiClientTests.LegacyClient
+namespace OpenApiClientTests.LegacyClient;
+
+public sealed class ClientAttributeRegistrationLifetimeTests
 {
-    public sealed class ClientAttributeRegistrationLifetimeTests
+    [Fact]
+    public async Task Disposed_attribute_registration_for_document_does_not_affect_request()
     {
-        [Fact]
-        public async Task Disposed_attribute_registration_for_document_does_not_affect_request()
+        // Arrange
+        using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
+        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+
+        const string airplaneId = "XUuiP";
+
+        var requestDocument = new AirplanePatchRequestDocument
         {
-            // Arrange
-            using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
-
-            const string airplaneId = "XUuiP";
-
-            var requestDocument = new AirplanePatchRequestDocument
+            Data = new AirplaneDataInPatchRequest
             {
-                Data = new AirplaneDataInPatchRequest
-                {
-                    Id = airplaneId,
-                    Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest()
-                }
-            };
-
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
-                airplane => airplane.AirtimeInHours))
-            {
-                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
+                Id = airplaneId,
+                Type = AirplanesResourceType.Airplanes,
+                Attributes = new AirplaneAttributesInPatchRequest()
             }
+        };
 
-            wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
-
-            // Act
+        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+            airplane => airplane.AirtimeInHours))
+        {
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
+        }
 
-            // Assert
-            wrapper.RequestBody.Should().BeJson(@"{
+        wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
+
+        // Act
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
+
+        // Assert
+        wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId + @""",
@@ -49,45 +48,45 @@ namespace OpenApiClientTests.LegacyClient
     }
   }
 }");
+    }
+
+    [Fact]
+    public async Task Attribute_registration_can_be_used_for_multiple_requests()
+    {
+        // Arrange
+        using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
+        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+
+        const string airplaneId = "XUuiP";
+
+        var requestDocument = new AirplanePatchRequestDocument
+        {
+            Data = new AirplaneDataInPatchRequest
+            {
+                Id = airplaneId,
+                Type = AirplanesResourceType.Airplanes,
+                Attributes = new AirplaneAttributesInPatchRequest
+                {
+                    AirtimeInHours = 100
+                }
+            }
+        };
+
+        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+            airplane => airplane.AirtimeInHours))
+        {
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
+
+            wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
+
+            requestDocument.Data.Attributes.AirtimeInHours = null;
+
+            // Act
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
         }
 
-        [Fact]
-        public async Task Attribute_registration_can_be_used_for_multiple_requests()
-        {
-            // Arrange
-            using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
-
-            const string airplaneId = "XUuiP";
-
-            var requestDocument = new AirplanePatchRequestDocument
-            {
-                Data = new AirplaneDataInPatchRequest
-                {
-                    Id = airplaneId,
-                    Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest
-                    {
-                        AirtimeInHours = 100
-                    }
-                }
-            };
-
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
-                airplane => airplane.AirtimeInHours))
-            {
-                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
-
-                wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
-
-                requestDocument.Data.Attributes.AirtimeInHours = null;
-
-                // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
-            }
-
-            // Assert
-            wrapper.RequestBody.Should().BeJson(@"{
+        // Assert
+        wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId + @""",
@@ -96,53 +95,53 @@ namespace OpenApiClientTests.LegacyClient
     }
   }
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Request_is_unaffected_by_attribute_registration_for_different_document_of_same_type()
+    [Fact]
+    public async Task Request_is_unaffected_by_attribute_registration_for_different_document_of_same_type()
+    {
+        // Arrange
+        using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
+        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+
+        const string airplaneId1 = "XUuiP";
+
+        var requestDocument1 = new AirplanePatchRequestDocument
         {
-            // Arrange
-            using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
-
-            const string airplaneId1 = "XUuiP";
-
-            var requestDocument1 = new AirplanePatchRequestDocument
+            Data = new AirplaneDataInPatchRequest
             {
-                Data = new AirplaneDataInPatchRequest
-                {
-                    Id = airplaneId1,
-                    Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest()
-                }
-            };
+                Id = airplaneId1,
+                Type = AirplanesResourceType.Airplanes,
+                Attributes = new AirplaneAttributesInPatchRequest()
+            }
+        };
 
-            const string airplaneId2 = "DJy1u";
+        const string airplaneId2 = "DJy1u";
 
-            var requestDocument2 = new AirplanePatchRequestDocument
+        var requestDocument2 = new AirplanePatchRequestDocument
+        {
+            Data = new AirplaneDataInPatchRequest
             {
-                Data = new AirplaneDataInPatchRequest
-                {
-                    Id = airplaneId2,
-                    Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest()
-                }
-            };
+                Id = airplaneId2,
+                Type = AirplanesResourceType.Airplanes,
+                Attributes = new AirplaneAttributesInPatchRequest()
+            }
+        };
 
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
-                airplane => airplane.AirtimeInHours))
+        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+            airplane => airplane.AirtimeInHours))
+        {
+            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+                airplane => airplane.SerialNumber))
             {
-                using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
-                    airplane => airplane.SerialNumber))
-                {
-                }
-
-                // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId2, requestDocument2));
             }
 
-            // Assert
-            wrapper.RequestBody.Should().BeJson(@"{
+            // Act
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId2, requestDocument2));
+        }
+
+        // Assert
+        wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId2 + @""",
@@ -151,41 +150,41 @@ namespace OpenApiClientTests.LegacyClient
     }
   }
 }");
+    }
+
+    [Fact]
+    public async Task Attribute_values_can_be_changed_after_attribute_registration()
+    {
+        // Arrange
+        using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
+        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+
+        const string airplaneId = "XUuiP";
+
+        var requestDocument = new AirplanePatchRequestDocument
+        {
+            Data = new AirplaneDataInPatchRequest
+            {
+                Id = airplaneId,
+                Type = AirplanesResourceType.Airplanes,
+                Attributes = new AirplaneAttributesInPatchRequest
+                {
+                    IsInMaintenance = true
+                }
+            }
+        };
+
+        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+            airplane => airplane.IsInMaintenance))
+        {
+            requestDocument.Data.Attributes.IsInMaintenance = false;
+
+            // Act
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
         }
 
-        [Fact]
-        public async Task Attribute_values_can_be_changed_after_attribute_registration()
-        {
-            // Arrange
-            using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
-
-            const string airplaneId = "XUuiP";
-
-            var requestDocument = new AirplanePatchRequestDocument
-            {
-                Data = new AirplaneDataInPatchRequest
-                {
-                    Id = airplaneId,
-                    Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest
-                    {
-                        IsInMaintenance = true
-                    }
-                }
-            };
-
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
-                airplane => airplane.IsInMaintenance))
-            {
-                requestDocument.Data.Attributes.IsInMaintenance = false;
-
-                // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
-            }
-
-            // Assert
-            wrapper.RequestBody.Should().BeJson(@"{
+        // Assert
+        wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId + @""",
@@ -194,49 +193,49 @@ namespace OpenApiClientTests.LegacyClient
     }
   }
 }");
+    }
+
+    [Fact]
+    public async Task Attribute_registration_is_unaffected_by_successive_attribute_registration_for_document_of_different_type()
+    {
+        // Arrange
+        using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
+        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+
+        const string airplaneId1 = "XUuiP";
+
+        var requestDocument1 = new AirplanePatchRequestDocument
+        {
+            Data = new AirplaneDataInPatchRequest
+            {
+                Id = airplaneId1,
+                Type = AirplanesResourceType.Airplanes,
+                Attributes = new AirplaneAttributesInPatchRequest()
+            }
+        };
+
+        var requestDocument2 = new AirplanePostRequestDocument
+        {
+            Data = new AirplaneDataInPostRequest
+            {
+                Type = AirplanesResourceType.Airplanes,
+                Attributes = new AirplaneAttributesInPostRequest()
+            }
+        };
+
+        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+            airplane => airplane.IsInMaintenance))
+        {
+            using (apiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument2,
+                airplane => airplane.AirtimeInHours))
+            {
+                // Act
+                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId1, requestDocument1));
+            }
         }
 
-        [Fact]
-        public async Task Attribute_registration_is_unaffected_by_successive_attribute_registration_for_document_of_different_type()
-        {
-            // Arrange
-            using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
-
-            const string airplaneId1 = "XUuiP";
-
-            var requestDocument1 = new AirplanePatchRequestDocument
-            {
-                Data = new AirplaneDataInPatchRequest
-                {
-                    Id = airplaneId1,
-                    Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest()
-                }
-            };
-
-            var requestDocument2 = new AirplanePostRequestDocument
-            {
-                Data = new AirplaneDataInPostRequest
-                {
-                    Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPostRequest()
-                }
-            };
-
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
-                airplane => airplane.IsInMaintenance))
-            {
-                using (apiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument2,
-                    airplane => airplane.AirtimeInHours))
-                {
-                    // Act
-                    _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId1, requestDocument1));
-                }
-            }
-
-            // Assert
-            wrapper.RequestBody.Should().BeJson(@"{
+        // Assert
+        wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId1 + @""",
@@ -245,59 +244,59 @@ namespace OpenApiClientTests.LegacyClient
     }
   }
 }");
+    }
+
+    [Fact]
+    public async Task Attribute_registration_is_unaffected_by_preceding_disposed_attribute_registration_for_different_document_of_same_type()
+    {
+        // Arrange
+        using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
+        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+
+        const string airplaneId1 = "XUuiP";
+
+        var requestDocument1 = new AirplanePatchRequestDocument
+        {
+            Data = new AirplaneDataInPatchRequest
+            {
+                Id = airplaneId1,
+                Type = AirplanesResourceType.Airplanes,
+                Attributes = new AirplaneAttributesInPatchRequest()
+            }
+        };
+
+        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+            airplane => airplane.AirtimeInHours))
+        {
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId1, requestDocument1));
         }
 
-        [Fact]
-        public async Task Attribute_registration_is_unaffected_by_preceding_disposed_attribute_registration_for_different_document_of_same_type()
+        const string airplaneId2 = "DJy1u";
+
+        var requestDocument2 = new AirplanePatchRequestDocument
         {
-            // Arrange
-            using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
-
-            const string airplaneId1 = "XUuiP";
-
-            var requestDocument1 = new AirplanePatchRequestDocument
+            Data = new AirplaneDataInPatchRequest
             {
-                Data = new AirplaneDataInPatchRequest
+                Id = airplaneId2,
+                Type = AirplanesResourceType.Airplanes,
+                Attributes = new AirplaneAttributesInPatchRequest
                 {
-                    Id = airplaneId1,
-                    Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest()
+                    ManufacturedInCity = "Everett"
                 }
-            };
-
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
-                airplane => airplane.AirtimeInHours))
-            {
-                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId1, requestDocument1));
             }
+        };
 
-            const string airplaneId2 = "DJy1u";
+        wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
-            var requestDocument2 = new AirplanePatchRequestDocument
-            {
-                Data = new AirplaneDataInPatchRequest
-                {
-                    Id = airplaneId2,
-                    Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest
-                    {
-                        ManufacturedInCity = "Everett"
-                    }
-                }
-            };
+        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+            airplane => airplane.SerialNumber))
+        {
+            // Act
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId2, requestDocument2));
+        }
 
-            wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
-
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
-                airplane => airplane.SerialNumber))
-            {
-                // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId2, requestDocument2));
-            }
-
-            // Assert
-            wrapper.RequestBody.Should().BeJson(@"{
+        // Assert
+        wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId2 + @""",
@@ -307,56 +306,56 @@ namespace OpenApiClientTests.LegacyClient
     }
   }
 }");
+    }
+
+    [Fact]
+    public async Task Attribute_registration_is_unaffected_by_preceding_disposed_attribute_registration_for_document_of_different_type()
+    {
+        // Arrange
+        using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
+        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+
+        var requestDocument1 = new AirplanePostRequestDocument
+        {
+            Data = new AirplaneDataInPostRequest
+            {
+                Type = AirplanesResourceType.Airplanes,
+                Attributes = new AirplaneAttributesInPostRequest()
+            }
+        };
+
+        using (apiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument1,
+            airplane => airplane.AirtimeInHours))
+        {
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(requestDocument1));
         }
 
-        [Fact]
-        public async Task Attribute_registration_is_unaffected_by_preceding_disposed_attribute_registration_for_document_of_different_type()
+        const string airplaneId = "DJy1u";
+
+        var requestDocument2 = new AirplanePatchRequestDocument
         {
-            // Arrange
-            using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
-
-            var requestDocument1 = new AirplanePostRequestDocument
+            Data = new AirplaneDataInPatchRequest
             {
-                Data = new AirplaneDataInPostRequest
+                Id = airplaneId,
+                Type = AirplanesResourceType.Airplanes,
+                Attributes = new AirplaneAttributesInPatchRequest
                 {
-                    Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPostRequest()
+                    ManufacturedInCity = "Everett"
                 }
-            };
-
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument1,
-                airplane => airplane.AirtimeInHours))
-            {
-                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(requestDocument1));
             }
+        };
 
-            const string airplaneId = "DJy1u";
+        wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
-            var requestDocument2 = new AirplanePatchRequestDocument
-            {
-                Data = new AirplaneDataInPatchRequest
-                {
-                    Id = airplaneId,
-                    Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest
-                    {
-                        ManufacturedInCity = "Everett"
-                    }
-                }
-            };
+        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+            airplane => airplane.SerialNumber))
+        {
+            // Act
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument2));
+        }
 
-            wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
-
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
-                airplane => airplane.SerialNumber))
-            {
-                // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument2));
-            }
-
-            // Assert
-            wrapper.RequestBody.Should().BeJson(@"{
+        // Assert
+        wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId + @""",
@@ -366,52 +365,52 @@ namespace OpenApiClientTests.LegacyClient
     }
   }
 }");
+    }
+
+    [Fact]
+    public async Task Attribute_registration_is_unaffected_by_preceding_attribute_registration_for_different_document_of_same_type()
+    {
+        // Arrange
+        using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
+        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+
+        const string airplaneId1 = "XUuiP";
+
+        var requestDocument1 = new AirplanePatchRequestDocument
+        {
+            Data = new AirplaneDataInPatchRequest
+            {
+                Id = airplaneId1,
+                Type = AirplanesResourceType.Airplanes,
+                Attributes = new AirplaneAttributesInPatchRequest()
+            }
+        };
+
+        const string airplaneId2 = "DJy1u";
+
+        var requestDocument2 = new AirplanePatchRequestDocument
+        {
+            Data = new AirplaneDataInPatchRequest
+            {
+                Id = airplaneId2,
+                Type = AirplanesResourceType.Airplanes,
+                Attributes = new AirplaneAttributesInPatchRequest()
+            }
+        };
+
+        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+            airplane => airplane.SerialNumber))
+        {
+            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+                airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))
+            {
+                // Act
+                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId2, requestDocument2));
+            }
         }
 
-        [Fact]
-        public async Task Attribute_registration_is_unaffected_by_preceding_attribute_registration_for_different_document_of_same_type()
-        {
-            // Arrange
-            using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
-
-            const string airplaneId1 = "XUuiP";
-
-            var requestDocument1 = new AirplanePatchRequestDocument
-            {
-                Data = new AirplaneDataInPatchRequest
-                {
-                    Id = airplaneId1,
-                    Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest()
-                }
-            };
-
-            const string airplaneId2 = "DJy1u";
-
-            var requestDocument2 = new AirplanePatchRequestDocument
-            {
-                Data = new AirplaneDataInPatchRequest
-                {
-                    Id = airplaneId2,
-                    Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest()
-                }
-            };
-
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
-                airplane => airplane.SerialNumber))
-            {
-                using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
-                    airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))
-                {
-                    // Act
-                    _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId2, requestDocument2));
-                }
-            }
-
-            // Assert
-            wrapper.RequestBody.Should().BeJson(@"{
+        // Assert
+        wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId2 + @""",
@@ -421,6 +420,5 @@ namespace OpenApiClientTests.LegacyClient
     }
   }
 }");
-        }
     }
 }

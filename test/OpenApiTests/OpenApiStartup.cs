@@ -7,26 +7,25 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 
-namespace OpenApiTests
+namespace OpenApiTests;
+
+public abstract class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
+    where TDbContext : DbContext
 {
-    public abstract class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
-        where TDbContext : DbContext
+    public override void ConfigureServices(IServiceCollection services)
     {
-        public override void ConfigureServices(IServiceCollection services)
-        {
-            IMvcCoreBuilder mvcBuilder = services.AddMvcCore();
+        IMvcCoreBuilder mvcBuilder = services.AddMvcCore();
 
-            services.AddJsonApi<TDbContext>(SetJsonApiOptions, mvcBuilder: mvcBuilder);
+        services.AddJsonApi<TDbContext>(SetJsonApiOptions, mvcBuilder: mvcBuilder);
 
-            services.AddOpenApi(mvcBuilder);
-        }
+        services.AddOpenApi(mvcBuilder);
+    }
 
-        public override void Configure(IApplicationBuilder app, IWebHostEnvironment environment, ILoggerFactory loggerFactory)
-        {
-            app.UseRouting();
-            app.UseJsonApi();
-            app.UseSwagger();
-            app.UseEndpoints(endpoints => endpoints.MapControllers());
-        }
+    public override void Configure(IApplicationBuilder app, IWebHostEnvironment environment, ILoggerFactory loggerFactory)
+    {
+        app.UseRouting();
+        app.UseJsonApi();
+        app.UseSwagger();
+        app.UseEndpoints(endpoints => endpoints.MapControllers());
     }
 }

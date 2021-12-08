@@ -1,8 +1,7 @@
-namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
+namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
+
+internal enum NullableReferenceSchemaStrategy
 {
-    internal enum NullableReferenceSchemaStrategy
-    {
-        Implicit,
-        Explicit
-    }
+    Implicit,
+    Explicit
 }
