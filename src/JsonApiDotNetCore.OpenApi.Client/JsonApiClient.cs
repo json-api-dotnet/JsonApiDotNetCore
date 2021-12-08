@@ -113,31 +113,33 @@ namespace JsonApiDotNetCore.OpenApi.Client
                 return !_isSerializing && _requestDocumentInstancesPerRequestDocumentType.ContainsKey(objectType);
             }
 
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
             {
                 throw new Exception("This code should not be reachable.");
             }
 
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
             {
                 ArgumentGuard.NotNull(writer, nameof(writer));
-                ArgumentGuard.NotNull(value, nameof(value));
                 ArgumentGuard.NotNull(serializer, nameof(serializer));
 
-                if (_alwaysIncludedAttributesPerRequestDocumentInstance.ContainsKey(value))
+                if (value != null)
                 {
-                    AttributeNamesContainer attributeNamesContainer = _alwaysIncludedAttributesPerRequestDocumentInstance[value];
-                    serializer.ContractResolver = new JsonApiDocumentContractResolver(attributeNamesContainer);
-                }
+                    if (_alwaysIncludedAttributesPerRequestDocumentInstance.ContainsKey(value))
+                    {
+                        AttributeNamesContainer attributeNamesContainer = _alwaysIncludedAttributesPerRequestDocumentInstance[value];
+                        serializer.ContractResolver = new JsonApiDocumentContractResolver(attributeNamesContainer);
+                    }
 
-                try
-                {
-                    _isSerializing = true;
-                    serializer.Serialize(writer, value);
-                }
-                finally
-                {
-                    _isSerializing = false;
+                    try
+                    {
+                        _isSerializing = true;
+                        serializer.Serialize(writer, value);
+                    }
+                    finally
+                    {
+                        _isSerializing = false;
+                    }
                 }
             }
         }
