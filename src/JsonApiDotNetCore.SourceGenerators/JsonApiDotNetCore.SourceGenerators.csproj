@@ -1,6 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>$(JsonApiDotNetCoreVersionPrefix)</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -12,6 +11,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <VersionPrefix>$(JsonApiDotNetCoreVersionPrefix)</VersionPrefix>
     <PackageTags>jsonapidotnetcore;jsonapi;json:api;dotnet;asp.net;rest;web-api</PackageTags>
     <Description>Source generators for JsonApiDotNetCore</Description>
     <Authors>json-api-dotnet</Authors>
