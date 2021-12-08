@@ -8,7 +8,8 @@ function CheckLastExitCode {
 
 function RunInspectCode {
     $outputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
-    dotnet jb inspectcode JsonApiDotNetCore.sln --no-build --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+    # passing --build instead of --no-build as workaround for https://youtrack.jetbrains.com/issue/RSRP-487054
+    dotnet jb inspectcode JsonApiDotNetCore.sln --build --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
     CheckLastExitCode
 
     [xml]$xml = Get-Content "$outputPath"
@@ -94,8 +95,8 @@ function CreateNuGetPackage {
 }
 
 # In a PR the base branch needs to be fetched in order for regitlint to work.
-function FetchBaseBranchIfNotMaster(){
-    if ($env:APPVEYOR_PULL_REQUEST_NUMBER -And $env:APPVEYOR_REPO_BRANCH -ne "master"){
+function FetchBaseBranchIfNotMaster() {
+    if ($env:APPVEYOR_PULL_REQUEST_NUMBER -And $env:APPVEYOR_REPO_BRANCH -ne "master") {
         git fetch -q origin ${env:APPVEYOR_REPO_BRANCH}:${env:APPVEYOR_REPO_BRANCH}
     }
 }
