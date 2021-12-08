@@ -82,18 +82,15 @@ Likewise, <code>IResourceDefinition.OnSetToOneRelationshipAsync</code> is called
 on your needs, you may want to replace other parts by deriving from the built-in classes and override virtual methods or call their protected base methods.</p>
 <h2 id="replacing-injected-services">Replacing injected services</h2>
 <p><strong>Note:</strong> If you&#39;re using <a href="../resource-graph.html#auto-discovery">auto-discovery</a>, then resource services, repositories and resource definitions will be automatically registered for you.</p>
-<p>Replacing built-in services is done on a per-resource basis and can be done through dependency injection in your Startup.cs file.
+<p>Replacing built-in services is done on a per-resource basis and can be done at startup.
 For convenience, extension methods are provided to register layers on all their implemented interfaces.</p>
-<pre><code class="lang-c#">// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddResourceService&lt;ProductService&gt;();
-    services.AddResourceRepository&lt;ProductRepository&gt;();
-    services.AddResourceDefinition&lt;ProductDefinition&gt;();
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddResourceService&lt;ProductService&gt;();
+builder.Services.AddResourceRepository&lt;ProductRepository&gt;();
+builder.Services.AddResourceDefinition&lt;ProductDefinition&gt;();
 
-    services.AddScoped&lt;IResourceFactory, CustomResourceFactory&gt;();
-    services.AddScoped&lt;IJsonApiSerializerFactory, CustomResponseSerializerFactory&gt;();
-}
+builder.Services.AddScoped&lt;IResourceFactory, CustomResourceFactory&gt;();
+builder.Services.AddScoped&lt;IResponseModelAdapter, CustomResponseModelAdapter&gt;();
 </code></pre></article>
           </div>
           

@@ -74,43 +74,51 @@ Based on routing configuration, it fills <code>IJsonApiRequest</code>, an inject
 <p>It is possible to replace the built-in middleware components by configuring the IoC container and by configuring <code>MvcOptions</code>. </p>
 <h2 id="configuring-the-ioc-container">Configuring the IoC container</h2>
 <p>The following example replaces the internal exception filter with a custom implementation.</p>
-<pre><code class="lang-c#">/// In Startup.ConfigureServices
-services.AddService&lt;IAsyncJsonApiExceptionFilter, CustomAsyncExceptionFilter&gt;();
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddService&lt;IAsyncJsonApiExceptionFilter, CustomAsyncExceptionFilter&gt;();
 </code></pre><h2 id="configuring-mvcoptions">Configuring <code>MvcOptions</code></h2>
-<p>The following example replaces all internal filters with a custom filter.</p>
-<pre><code class="lang-c#">public class Startup
+<p>The following example replaces the built-in query string action filter with a custom filter.</p>
+<pre><code class="lang-c#">// Program.cs
+
+// Add services to the container.
+
+builder.Services.AddScoped&lt;CustomAsyncQueryStringActionFilter&gt;();
+
+IMvcCoreBuilder mvcCoreBuilder = builder.Services.AddMvcCore();
+builder.Services.AddJsonApi&lt;AppDbContext&gt;(mvcBuilder: mvcCoreBuilder);
+
+Action&lt;MvcOptions&gt;? postConfigureMvcOptions = null;
+
+// Ensure this is placed after the AddJsonApi() call.
+mvcCoreBuilder.AddMvcOptions(mvcOptions =&gt;
 {
-    private Action&lt;MvcOptions&gt; _postConfigureMvcOptions;
+    postConfigureMvcOptions?.Invoke(mvcOptions);
+});
 
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddSingleton&lt;CustomAsyncQueryStringActionFilter&gt;();
+// Configure the HTTP request pipeline.
 
-        IMvcCoreBuilder builder = services.AddMvcCore();
-        services.AddJsonApi&lt;AppDbContext&gt;(mvcBuilder: builder);
+// Ensure this is placed before the MapControllers() call.
+postConfigureMvcOptions = mvcOptions =&gt;
+{
+    IFilterMetadata existingFilter = mvcOptions.Filters.Single(filter =&gt;
+        filter is ServiceFilterAttribute serviceFilter &amp;&amp;
+        serviceFilter.ServiceType == typeof(IAsyncQueryStringActionFilter));
 
-        // Ensure this call is placed after the AddJsonApi call.
-        builder.AddMvcOptions(mvcOptions =&gt;
-        {
-            _postConfigureMvcOptions.Invoke(mvcOptions);
-        });
-    }
+    mvcOptions.Filters.Remove(existingFilter);
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        // Ensure this call is placed before the UseEndpoints call.
-        _postConfigureMvcOptions = mvcOptions =&gt;
-        {
-            mvcOptions.Filters.Clear();
-            mvcOptions.Filters.Insert(0,
-                app.ApplicationServices.GetService&lt;CustomAsyncQueryStringActionFilter&gt;());
-        };
+    using IServiceScope scope = app.Services.CreateScope();
 
-        app.UseRouting();
-        app.UseJsonApi();
-        app.UseEndpoints(endpoints =&gt; endpoints.MapControllers());
-    }
-}
+    var newFilter =
+        scope.ServiceProvider.GetRequiredService&lt;CustomAsyncQueryStringActionFilter&gt;();
+
+    mvcOptions.Filters.Insert(0, newFilter);
+};
+
+app.UseRouting();
+app.UseJsonApi();
+app.MapControllers();
+
+app.Run();
 </code></pre></article>
           </div>
           

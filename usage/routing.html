@@ -76,11 +76,9 @@
 </ul>
 <p>In the relationship endpoint &quot;/articles/1/relationships/comments&quot;, &quot;articles&quot; is the left side of the relationship and &quot;comments&quot; the right side.</p>
 <h2 id="namespacing-and-versioning-of-urls">Namespacing and versioning of URLs</h2>
-<p>You can add a namespace to all URLs by specifying it in ConfigureServices.</p>
-<pre><code class="lang-c#">public void ConfigureServices(IServiceCollection services)
-{
-  services.AddJsonApi&lt;AppDbContext&gt;(options =&gt; options.Namespace = &quot;api/v1&quot;);
-}
+<p>You can add a namespace to all URLs by specifying it at startup.</p>
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddJsonApi&lt;AppDbContext&gt;(options =&gt; options.Namespace = &quot;api/v1&quot;);
 </code></pre><p>Which results in URLs like: <a href="https://yourdomain.com/api/v1/people">https://yourdomain.com/api/v1/people</a></p>
 <h2 id="default-routing-convention">Default routing convention</h2>
 <p>The library will configure routes for all auto-generated and hand-written controllers in your project. By default, routes are camel-cased. This is based on the <a href="https://jsonapi.org/recommendations/">recommendations</a> outlined in the JSON:API spec.</p>
@@ -130,10 +128,8 @@ public class OrderLineController : JsonApiController&lt;OrderLine, int&gt;
 }
 </code></pre><h2 id="advanced-usage-custom-routing-convention">Advanced usage: custom routing convention</h2>
 <p>It is possible to replace the built-in routing convention with a <a href="https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-3.1#sample-custom-routing-convention">custom routing convention</a> by registering an implementation of <code>IJsonApiRoutingConvention</code>.</p>
-<pre><code class="lang-c#">public void ConfigureServices(IServiceCollection services)
-{
-    services.AddSingleton&lt;IJsonApiRoutingConvention, CustomRoutingConvention&gt;();
-}
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddSingleton&lt;IJsonApiRoutingConvention, CustomRoutingConvention&gt;();
 </code></pre></article>
           </div>
           

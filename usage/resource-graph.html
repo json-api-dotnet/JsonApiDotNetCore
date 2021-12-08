@@ -86,42 +86,29 @@ is prioritized by the list above in descending order.</p>
 <p>Auto-discovery refers to the process of reflecting on an assembly and
 detecting all of the JSON:API resources, resource definitions, resource services and repositories.</p>
 <p>The following command builds the resource graph using all <code>IIdentifiable</code> implementations and registers the services mentioned.
-You can enable auto-discovery for the current assembly by adding the following to your <code>Startup</code> class.</p>
-<pre><code class="lang-c#">// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddJsonApi(discovery =&gt; discovery.AddCurrentAssembly());
-}
+You can enable auto-discovery for the current assembly by adding the following at startup.</p>
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddJsonApi(discovery =&gt; discovery.AddCurrentAssembly());
 </code></pre><h3 id="specifying-an-entity-framework-core-dbcontext">Specifying an Entity Framework Core DbContext</h3>
-<p>If you are using Entity Framework Core as your ORM, you can add all the models of a <code>DbContext</code>  to the resource graph.</p>
-<pre><code class="lang-c#">// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddJsonApi&lt;AppDbContext&gt;();
-}
+<p>If you are using Entity Framework Core as your ORM, you can add all the models of a <code>DbContext</code> to the resource graph.</p>
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddJsonApi&lt;AppDbContext&gt;();
 </code></pre><p>Be aware that this does not register resource definitions, resource services and repositories. You can combine it with auto-discovery to achieve this.</p>
-<pre><code class="lang-c#">// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddJsonApi&lt;AppDbContext&gt;(discovery =&gt; discovery.AddCurrentAssembly());
-}
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddJsonApi&lt;AppDbContext&gt;(discovery =&gt; discovery.AddCurrentAssembly());
 </code></pre><h3 id="manual-specification">Manual Specification</h3>
 <p>You can manually construct the graph.</p>
-<pre><code class="lang-c#">// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddJsonApi(resources: builder =&gt;
-    {
-        builder.Add&lt;Person, int&gt;();
-    });
-}
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddJsonApi(resources: resourceGraphBuilder =&gt;
+    resourceGraphBuilder.Add&lt;Person, int&gt;());
 </code></pre><h2 id="resource-name">Resource Name</h2>
 <p>The public resource name is exposed through the <code>type</code> member in the JSON:API payload. This can be configured using the following approaches (in order of priority):</p>
 <ol>
 <li><p>The <code>publicName</code> parameter when manually adding a resource to the graph.</p>
-<pre><code class="lang-c#">services.AddJsonApi(resources: builder =&gt;
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddJsonApi(resources: resourceGraphBuilder =&gt;
 {
- builder.Add&lt;Person, int&gt;(publicName: &quot;individuals&quot;);
+ resourceGraphBuilder.Add&lt;Person, int&gt;(publicName: &quot;individuals&quot;);
 });
 </code></pre></li>
 <li><p>The <code>PublicName</code> property when a model is decorated with a <code>ResourceAttribute</code>.</p>

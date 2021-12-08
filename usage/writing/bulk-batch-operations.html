@@ -134,8 +134,9 @@ Content-Type: application/vnd.api+json;ext=&quot;https://jsonapi.org/ext/atomic&
 }
 </code></pre><p>For example requests, see our suite of tests in JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.</p>
 <h2 id="configuration">Configuration</h2>
-<p>The maximum number of operations per request defaults to 10, which you can change from Startup.cs:</p>
-<pre><code class="lang-c#">services.AddJsonApi(options =&gt; options.MaximumOperationsPerRequest = 250);
+<p>The maximum number of operations per request defaults to 10, which you can change at startup:</p>
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddJsonApi(options =&gt; options.MaximumOperationsPerRequest = 250);
 </code></pre><p>Or, if you want to allow unconstrained, set it to <code>null</code> instead.</p>
 <h3 id="multiple-controllers">Multiple controllers</h3>
 <p>You can register multiple operations controllers using custom routes, for example:</p>

@@ -73,11 +73,12 @@
 <h2 id="global-meta">Global Meta</h2>
 <p>Global metadata can be added to the root of the response document by registering a service that implements <code>IResponseMeta</code>.
 This is useful if you need access to other registered services to build the meta object.</p>
-<pre><code class="lang-c#">#nullable enable
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddSingleton&lt;IResponseMeta, CopyrightResponseMeta&gt;();
 
-// In Startup.ConfigureServices
-services.AddSingleton&lt;IResponseMeta, CopyrightResponseMeta&gt;();
+// CopyrightResponseMeta.cs
 
+#nullable enable
 public sealed class CopyrightResponseMeta : IResponseMeta
 {
     public IReadOnlyDictionary&lt;string, object?&gt; GetMeta()

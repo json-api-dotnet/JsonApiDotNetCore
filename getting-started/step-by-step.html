@@ -72,18 +72,18 @@
 <p>The most basic use case leverages Entity Framework Core.
 The shortest path to a running API looks like:</p>
 <ul>
-<li>Create a new web app</li>
+<li>Create a new API project</li>
 <li>Install</li>
 <li>Define models</li>
 <li>Define the DbContext</li>
-<li>Add Middleware and Services</li>
+<li>Add services and middleware</li>
 <li>Seed the database</li>
-<li>Start the app</li>
+<li>Start the API</li>
 </ul>
 <p>This page will walk you through the <strong>simplest</strong> use case. More detailed examples can be found in the detailed usage subsections.</p>
-<h3 id="create-a-new-web-app">Create A New Web App</h3>
-<pre><code>mkdir MyApp
-cd MyApp
+<h3 id="create-a-new-api-project">Create a new API project</h3>
+<pre><code>mkdir MyApi
+cd MyApi
 dotnet new webapi
 </code></pre><h3 id="install">Install</h3>
 <pre><code>dotnet add package JsonApiDotNetCore
@@ -91,7 +91,7 @@ dotnet new webapi
 - or -
 
 Install-Package JsonApiDotNetCore
-</code></pre><h3 id="define-models">Define Models</h3>
+</code></pre><h3 id="define-models">Define models</h3>
 <p>Define your domain models such that they implement <code>IIdentifiable&lt;TId&gt;</code>.
 The easiest way to do this is to inherit from <code>Identifiable&lt;TId&gt;</code>.</p>
 <pre><code class="lang-c#">#nullable enable
@@ -102,7 +102,7 @@ public class Person : Identifiable&lt;int&gt;
     [Attr]
     public string Name { get; set; } = null!;
 }
-</code></pre><h3 id="define-dbcontext">Define DbContext</h3>
+</code></pre><h3 id="define-the-dbcontext">Define the DbContext</h3>
 <p>Nothing special here, just an ordinary <code>DbContext</code>.</p>
 <pre><code>public class AppDbContext : DbContext
 {
@@ -113,34 +113,48 @@ public class Person : Identifiable&lt;int&gt;
     {
     }
 }
-</code></pre><h3 id="middleware-and-services">Middleware and Services</h3>
-<p>Finally, add the services by adding the following to your Startup.ConfigureServices:</p>
-<pre><code class="lang-c#">// This method gets called by the runtime. Use this method to add services to the container.
-public void ConfigureServices(IServiceCollection services)
-{
-    // Add the Entity Framework Core DbContext like you normally would
-    services.AddDbContext&lt;AppDbContext&gt;(options =&gt;
-    {
-        // Use whatever provider you want, this is just an example
-        options.UseNpgsql(GetDbConnectionString());
-    });
+</code></pre><h3 id="add-services-and-middleware">Add services and middleware</h3>
+<p>Finally, register the services and middleware by adding them to your Program.cs:</p>
+<pre><code class="lang-c#">WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-    // Add JsonApiDotNetCore
-    services.AddJsonApi&lt;AppDbContext&gt;();
-}
-</code></pre><p>Add the middleware to the Startup.Configure method.</p>
-<pre><code class="lang-c#">// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-public void Configure(IApplicationBuilder app)
+// Add services to the container.
+
+// Add the Entity Framework Core DbContext like you normally would.
+builder.Services.AddDbContext&lt;AppDbContext&gt;(options =&gt;
 {
-    app.UseRouting();
-    app.UseJsonApi();
-    app.UseEndpoints(endpoints =&gt; endpoints.MapControllers());
-}
-</code></pre><h3 id="seeding-the-database">Seeding the Database</h3>
-<p>One way to seed the database is in your Configure method:</p>
-<pre><code class="lang-c#">public void Configure(IApplicationBuilder app, AppDbContext dbContext)
+    string connectionString = GetConnectionString();
+
+    // Use whatever provider you want, this is just an example.
+    options.UseNpgsql(connectionString);
+});
+
+// Add JsonApiDotNetCore services.
+builder.Services.AddJsonApi&lt;AppDbContext&gt;();
+
+WebApplication app = builder.Build();
+
+// Configure the HTTP request pipeline.
+
+app.UseRouting();
+
+// Add JsonApiDotNetCore middleware.
+app.UseJsonApi();
+
+app.MapControllers();
+
+app.Run();
+</code></pre><h3 id="seed-the-database">Seed the database</h3>
+<p>One way to seed the database is from your Program.cs:</p>
+<pre><code class="lang-c#">await CreateDatabaseAsync(app.Services);
+
+app.Run();
+
+static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
 {
-    dbContext.Database.EnsureCreated();
+    await using AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
+
+    var dbContext = scope.ServiceProvider.GetRequiredService&lt;AppDbContext&gt;();
+    await dbContext.Database.EnsureCreatedAsync();
 
     if (!dbContext.People.Any())
     {
@@ -149,14 +163,10 @@ public void Configure(IApplicationBuilder app)
             Name = &quot;John Doe&quot;
         });
 
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
     }
-
-    app.UseRouting();
-    app.UseJsonApi();
-    app.UseEndpoints(endpoints =&gt; endpoints.MapControllers());
 }
-</code></pre><h3 id="start-the-app">Start the App</h3>
+</code></pre><h3 id="start-the-api">Start the API</h3>
 <pre><code>dotnet run
 curl http://localhost:5000/people
 </code></pre></article>

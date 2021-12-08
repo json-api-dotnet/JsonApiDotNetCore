@@ -80,12 +80,14 @@ Those types also implement <code>IQueryConstraintProvider</code>, which they use
 See <a href="resource-definitions.html#custom-query-string-parameters">here</a> for details.</p>
 <h2 id="custom-query-string-parsing">Custom query string parsing</h2>
 <p>In order to add parsing of custom query string parameters, you can implement the <code>IQueryStringParameterReader</code> interface and register your reader.</p>
-<pre><code class="lang-c#">public class YourQueryStringParameterReader : IQueryStringParameterReader
+<pre><code class="lang-c#">public class CustomQueryStringParameterReader : IQueryStringParameterReader
 {
     // ...
 }
-</code></pre><pre><code class="lang-c#">services.AddScoped&lt;YourQueryStringParameterReader&gt;();
-services.AddScoped&lt;IQueryStringParameterReader&gt;(sp =&gt; sp.GetService&lt;YourQueryStringParameterReader&gt;());
+</code></pre><pre><code class="lang-c#">// Program.cs
+builder.Services.AddScoped&lt;CustomQueryStringParameterReader&gt;();
+builder.Services.AddScoped&lt;IQueryStringParameterReader&gt;(serviceProvider =&gt;
+    serviceProvider.GetRequiredService&lt;CustomQueryStringParameterReader&gt;());
 </code></pre><p>Now you can inject your custom reader in resource services, repositories, resource definitions etc.</p>
 </article>
           </div>

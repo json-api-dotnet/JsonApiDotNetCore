@@ -128,7 +128,7 @@ public readonly struct SingleOrManyData&lt;T&gt;
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1__ctor_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.SingleOrManyData%601.%23ctor(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/SingleOrManyData.cs/#L33">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/SingleOrManyData.cs/#L29">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1__ctor_" data-uid="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData`1.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1__ctor_System_Object_" data-uid="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData`1.#ctor(System.Object)">SingleOrManyData(Object)</h4>
@@ -162,7 +162,7 @@ public readonly struct SingleOrManyData&lt;T&gt;
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1_IsAssigned.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.SingleOrManyData%601.IsAssigned%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/SingleOrManyData.cs/#L24">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/SingleOrManyData.cs/#L20">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1_IsAssigned_" data-uid="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData`1.IsAssigned*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1_IsAssigned" data-uid="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData`1.IsAssigned">IsAssigned</h4>
@@ -193,7 +193,7 @@ public readonly bool IsAssigned { get; }</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1_ManyValue.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.SingleOrManyData%601.ManyValue%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/SingleOrManyData.cs/#L30">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/SingleOrManyData.cs/#L26">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1_ManyValue_" data-uid="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData`1.ManyValue*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1_ManyValue" data-uid="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData`1.ManyValue">ManyValue</h4>
@@ -202,7 +202,7 @@ public readonly bool IsAssigned { get; }</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonIgnore]
-public readonly IList&lt;T&gt; ManyValue { get; }</code></pre>
+public readonly IList&lt;T&gt;? ManyValue { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -214,7 +214,7 @@ public readonly IList&lt;T&gt; ManyValue { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;T&gt;</td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">IList</span>&lt;T&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -224,7 +224,7 @@ public readonly IList&lt;T&gt; ManyValue { get; }</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1_SingleValue.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.SingleOrManyData%601.SingleValue%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/SingleOrManyData.cs/#L27">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/SingleOrManyData.cs/#L23">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1_SingleValue_" data-uid="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData`1.SingleValue*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1_SingleValue" data-uid="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData`1.SingleValue">SingleValue</h4>
@@ -255,7 +255,7 @@ public readonly T SingleValue { get; }</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1_Value.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.SingleOrManyData%601.Value%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/SingleOrManyData.cs/#L22">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/SingleOrManyData.cs/#L18">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1_Value_" data-uid="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData`1.Value*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1_Value" data-uid="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData`1.Value">Value</h4>
@@ -291,7 +291,7 @@ public readonly T SingleValue { get; }</code></pre>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.SingleOrManyData%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/SingleOrManyData.cs/#L14" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/SingleOrManyData.cs/#L12" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

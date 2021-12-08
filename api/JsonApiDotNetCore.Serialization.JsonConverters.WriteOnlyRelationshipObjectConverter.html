@@ -99,6 +99,15 @@
       <span class="xref">System.Text.Json.Serialization.JsonConverter&lt;JsonApiDotNetCore.Serialization.Objects.RelationshipObject&gt;.CanConvert(System.Type)</span>
     </div>
     <div>
+      <span class="xref">System.Text.Json.Serialization.JsonConverter&lt;JsonApiDotNetCore.Serialization.Objects.RelationshipObject&gt;.Read(System.Text.Json.Utf8JsonReader, System.Type, System.Text.Json.JsonSerializerOptions)</span>
+    </div>
+    <div>
+      <span class="xref">System.Text.Json.Serialization.JsonConverter&lt;JsonApiDotNetCore.Serialization.Objects.RelationshipObject&gt;.ReadAsPropertyName(System.Text.Json.Utf8JsonReader, System.Type, System.Text.Json.JsonSerializerOptions)</span>
+    </div>
+    <div>
+      <span class="xref">System.Text.Json.Serialization.JsonConverter&lt;JsonApiDotNetCore.Serialization.Objects.RelationshipObject&gt;.WriteAsPropertyName(System.Text.Json.Utf8JsonWriter, JsonApiDotNetCore.Serialization.Objects.RelationshipObject, System.Text.Json.JsonSerializerOptions)</span>
+    </div>
+    <div>
       <span class="xref">System.Text.Json.Serialization.JsonConverter&lt;JsonApiDotNetCore.Serialization.Objects.RelationshipObject&gt;.HandleNull</span>
     </div>
     <div>
@@ -134,13 +143,13 @@ public sealed class WriteOnlyRelationshipObjectConverter : JsonObjectConverter&l
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_JsonConverters_WriteOnlyRelationshipObjectConverter_Read_System_Text_Json_Utf8JsonReader__System_Type_System_Text_Json_JsonSerializerOptions_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.JsonConverters.WriteOnlyRelationshipObjectConverter.Read(System.Text.Json.Utf8JsonReader%40%2CSystem.Type%2CSystem.Text.Json.JsonSerializerOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_JsonConverters_WriteOnlyRelationshipObjectConverter_Read_System_Text_Json_Utf8JsonReader__Type_System_Text_Json_JsonSerializerOptions_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.JsonConverters.WriteOnlyRelationshipObjectConverter.Read(System.Text.Json.Utf8JsonReader%40%2CType%2CSystem.Text.Json.JsonSerializerOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonConverters/WriteOnlyRelationshipObjectConverter.cs/#L18">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonConverters/WriteOnlyRelationshipObjectConverter.cs/#L17">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_JsonConverters_WriteOnlyRelationshipObjectConverter_Read_" data-uid="JsonApiDotNetCore.Serialization.JsonConverters.WriteOnlyRelationshipObjectConverter.Read*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_JsonConverters_WriteOnlyRelationshipObjectConverter_Read_System_Text_Json_Utf8JsonReader__System_Type_System_Text_Json_JsonSerializerOptions_" data-uid="JsonApiDotNetCore.Serialization.JsonConverters.WriteOnlyRelationshipObjectConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">Read(ref Utf8JsonReader, Type, JsonSerializerOptions)</h4>
+  <h4 id="JsonApiDotNetCore_Serialization_JsonConverters_WriteOnlyRelationshipObjectConverter_Read_System_Text_Json_Utf8JsonReader__Type_System_Text_Json_JsonSerializerOptions_" data-uid="JsonApiDotNetCore.Serialization.JsonConverters.WriteOnlyRelationshipObjectConverter.Read(System.Text.Json.Utf8JsonReader@,Type,System.Text.Json.JsonSerializerOptions)">Read(ref Utf8JsonReader, Type, JsonSerializerOptions)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -163,7 +172,7 @@ public sealed class WriteOnlyRelationshipObjectConverter : JsonObjectConverter&l
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Type</span></td>
+        <td><span class="xref">Type</span></td>
         <td><span class="parametername">typeToConvert</span></td>
         <td></td>
       </tr>
@@ -189,14 +198,12 @@ public sealed class WriteOnlyRelationshipObjectConverter : JsonObjectConverter&l
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Text.Json.Serialization.JsonConverter&lt;JsonApiDotNetCore.Serialization.Objects.RelationshipObject&gt;.Read(System.Text.Json.Utf8JsonReader, System.Type, System.Text.Json.JsonSerializerOptions)</span></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_JsonConverters_WriteOnlyRelationshipObjectConverter_Write_System_Text_Json_Utf8JsonWriter_JsonApiDotNetCore_Serialization_Objects_RelationshipObject_System_Text_Json_JsonSerializerOptions_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.JsonConverters.WriteOnlyRelationshipObjectConverter.Write(System.Text.Json.Utf8JsonWriter%2CJsonApiDotNetCore.Serialization.Objects.RelationshipObject%2CSystem.Text.Json.JsonSerializerOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonConverters/WriteOnlyRelationshipObjectConverter.cs/#L26">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonConverters/WriteOnlyRelationshipObjectConverter.cs/#L25">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_JsonConverters_WriteOnlyRelationshipObjectConverter_Write_" data-uid="JsonApiDotNetCore.Serialization.JsonConverters.WriteOnlyRelationshipObjectConverter.Write*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_JsonConverters_WriteOnlyRelationshipObjectConverter_Write_System_Text_Json_Utf8JsonWriter_JsonApiDotNetCore_Serialization_Objects_RelationshipObject_System_Text_Json_JsonSerializerOptions_" data-uid="JsonApiDotNetCore.Serialization.JsonConverters.WriteOnlyRelationshipObjectConverter.Write(System.Text.Json.Utf8JsonWriter,JsonApiDotNetCore.Serialization.Objects.RelationshipObject,System.Text.Json.JsonSerializerOptions)">Write(Utf8JsonWriter, RelationshipObject, JsonSerializerOptions)</h4>
@@ -247,7 +254,7 @@ public sealed class WriteOnlyRelationshipObjectConverter : JsonObjectConverter&l
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_JsonConverters_WriteOnlyRelationshipObjectConverter.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.JsonConverters.WriteOnlyRelationshipObjectConverter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonConverters/WriteOnlyRelationshipObjectConverter.cs/#L11" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonConverters/WriteOnlyRelationshipObjectConverter.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

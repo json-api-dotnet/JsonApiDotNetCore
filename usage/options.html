@@ -69,18 +69,12 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="global-options">Global Options</h1>
 
-<p>Configuration can be applied when adding the services to the dependency injection container.</p>
-<pre><code class="lang-c#">public class Startup
+<p>Configuration can be applied when adding services to the dependency injection container at startup.</p>
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddJsonApi&lt;AppDbContext&gt;(options =&gt;
 {
-    // This method gets called by the runtime. Use this method to add services to the container.
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddJsonApi&lt;AppDbContext&gt;(options =&gt;
-        {
-            // configure the options here
-        });
-    }
-}
+    // Configure the options here...
+});
 </code></pre><h2 id="client-generated-ids">Client Generated IDs</h2>
 <p>By default, the server will respond with a 403 Forbidden HTTP Status Code if a POST request is received with a client-generated ID.</p>
 <p>However, this can be allowed by setting the AllowClientGeneratedIds flag in the options:</p>

@@ -107,17 +107,16 @@ In simple cases, you can also just wrap the base implementation with your custom
 </code></pre><h2 id="not-using-entity-framework-core">Not Using Entity Framework Core?</h2>
 <p>As previously discussed, this library uses Entity Framework Core by default.
 If you&#39;d like to use another ORM that does not provide what JsonApiResourceService depends upon, you can use a custom <code>IResourceService&lt;TResource, TId&gt;</code> implementation.</p>
-<pre><code class="lang-c#">// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    // add the service override for Product
-    services.AddScoped&lt;IResourceService&lt;Product, int&gt;, ProductService&gt;();
+<pre><code class="lang-c#">// Program.cs
 
-    // add your own Data Access Object
-    services.AddScoped&lt;IProductDao, ProductDao&gt;();
-}
+// Add the service override for Product.
+builder.Services.AddScoped&lt;IResourceService&lt;Product, int&gt;, ProductService&gt;();
+
+// Add your own Data Access Object.
+builder.Services.AddScoped&lt;IProductDao, ProductDao&gt;();
 
 // ProductService.cs
+
 public class ProductService : IResourceService&lt;Product, int&gt;
 {
     private readonly IProductDao _dao;
@@ -177,24 +176,14 @@ public class ProductService : IResourceService&lt;Product, int&gt;
     // ...
 }
 
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddScoped&lt;ICreateService&lt;Article, int&gt;, ArticleService&gt;();
-        services.AddScoped&lt;IDeleteService&lt;Article, int&gt;, ArticleService&gt;();
-    }
-}
+// Program.cs
+builder.Services.AddScoped&lt;ICreateService&lt;Article, int&gt;, ArticleService&gt;();
+builder.Services.AddScoped&lt;IDeleteService&lt;Article, int&gt;, ArticleService&gt;();
 </code></pre><p>In v3.0 we introduced an extension method that you can use to register a resource service on all of its JsonApiDotNetCore interfaces.
 This is helpful when you implement (a subset of) the resource interfaces and want to register them all in one go.</p>
 <p><strong>Note:</strong> If you&#39;re using <a href="../resource-graph.html#auto-discovery">auto-discovery</a>, this happens automatically.</p>
-<pre><code class="lang-c#">public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddResourceService&lt;ArticleService&gt;();
-    }
-}
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddResourceService&lt;ArticleService&gt;();
 </code></pre><p>Then on your model, pass in the set of endpoints to expose (the ones that you&#39;ve registered services for):</p>
 <pre><code class="lang-c#">[Resource(GenerateControllerEndpoints =
     JsonApiEndpoints.Create | JsonApiEndpoints.Delete)]

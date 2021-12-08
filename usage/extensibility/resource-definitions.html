@@ -74,16 +74,11 @@
 They are resolved from the dependency injection container, so you can inject dependencies in their constructor.</p>
 <p>In v4.2 we introduced an extension method that you can use to register your resource definition.</p>
 <p><strong>Note:</strong> If you&#39;re using <a href="../resource-graph.html#auto-discovery">auto-discovery</a>, this happens automatically.</p>
-<pre><code class="lang-c#">public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddResourceDefinition&lt;ArticleDefinition&gt;();
-    }
-}
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddResourceDefinition&lt;ArticleDefinition&gt;();
 </code></pre><p><strong>Note:</strong> Prior to the introduction of auto-discovery (in v3), you needed to register the
 resource definition on the container yourself:</p>
-<pre><code class="lang-c#">services.AddScoped&lt;ResourceDefinition&lt;Product, int&gt;, ProductDefinition&gt;();
+<pre><code class="lang-c#">builder.Services.AddScoped&lt;ResourceDefinition&lt;Article, int&gt;, ArticleDefinition&gt;();
 </code></pre><h2 id="customizing-queries">Customizing queries</h2>
 <p><em>since v4.0</em></p>
 <p>For various reasons (see examples below) you may need to change parts of the query, depending on resource type.

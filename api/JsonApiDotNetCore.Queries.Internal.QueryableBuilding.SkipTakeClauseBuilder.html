@@ -73,7 +73,8 @@
   
   <h1 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SkipTakeClauseBuilder" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder" class="text-break">Class SkipTakeClauseBuilder
   </h1>
-  <div class="markdown level0 summary"><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html">PaginationExpression</a> into <span class="xref">System.Linq.Queryable.Skip``1(System.Linq.IQueryable{``0},System.Int32)</span> and <span class="xref">System.Linq.Queryable.Take``1(System.Linq.IQueryable{``0},System.Int32)</span> calls.</p>
+  <div class="markdown level0 summary"><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html">PaginationExpression</a> into <see cref="!:Queryable.Skip&lt;TSource>"></see> and
+<see cref="!:Queryable.Take&lt;TSource>(IQueryable&lt;TSource>,int)"></see> calls.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -93,9 +94,6 @@
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryClauseBuilder_1_VisitResourceFieldChain_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression__0_">QueryClauseBuilder&lt;Object&gt;.VisitResourceFieldChain(ResourceFieldChainExpression, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryClauseBuilder_1_CreateTupleAccessExpressionForConstant_System_Object_System_Type_">QueryClauseBuilder&lt;Object&gt;.CreateTupleAccessExpressionForConstant(Object, Type)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_Visit_JsonApiDotNetCore_Queries_Expressions_QueryExpression__0_">QueryExpressionVisitor&lt;Object, Expression&gt;.Visit(QueryExpression, Object)</a>
@@ -199,13 +197,13 @@ public class SkipTakeClauseBuilder : QueryClauseBuilder&lt;object&gt;</code></pr
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SkipTakeClauseBuilder__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder.%23ctor(System.Linq.Expressions.Expression%2CJsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope%2CSystem.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SkipTakeClauseBuilder__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder.%23ctor(System.Linq.Expressions.Expression%2CJsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope%2CType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/SkipTakeClauseBuilder.cs/#L18">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/SkipTakeClauseBuilder.cs/#L17">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SkipTakeClauseBuilder__ctor_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SkipTakeClauseBuilder__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_System_Type_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope,System.Type)">SkipTakeClauseBuilder(Expression, LambdaScope, Type)</h4>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SkipTakeClauseBuilder__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_Type_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope,Type)">SkipTakeClauseBuilder(Expression, LambdaScope, Type)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -233,7 +231,7 @@ public class SkipTakeClauseBuilder : QueryClauseBuilder&lt;object&gt;</code></pr
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Type</span></td>
+        <td><span class="xref">Type</span></td>
         <td><span class="parametername">extensionType</span></td>
         <td></td>
       </tr>
@@ -246,7 +244,7 @@ public class SkipTakeClauseBuilder : QueryClauseBuilder&lt;object&gt;</code></pr
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SkipTakeClauseBuilder_ApplySkipTake_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder.ApplySkipTake(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/SkipTakeClauseBuilder.cs/#L28">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/SkipTakeClauseBuilder.cs/#L27">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SkipTakeClauseBuilder_ApplySkipTake_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder.ApplySkipTake*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SkipTakeClauseBuilder_ApplySkipTake_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder.ApplySkipTake(JsonApiDotNetCore.Queries.Expressions.PaginationExpression)">ApplySkipTake(PaginationExpression)</h4>
@@ -293,7 +291,7 @@ public class SkipTakeClauseBuilder : QueryClauseBuilder&lt;object&gt;</code></pr
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SkipTakeClauseBuilder_VisitPagination_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder.VisitPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/SkipTakeClauseBuilder.cs/#L35">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/SkipTakeClauseBuilder.cs/#L34">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SkipTakeClauseBuilder_VisitPagination_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder.VisitPagination*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SkipTakeClauseBuilder_VisitPagination_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_System_Object_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder.VisitPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression,System.Object)">VisitPagination(PaginationExpression, Object)</h4>
@@ -353,7 +351,7 @@ public class SkipTakeClauseBuilder : QueryClauseBuilder&lt;object&gt;</code></pr
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SkipTakeClauseBuilder.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/SkipTakeClauseBuilder.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/SkipTakeClauseBuilder.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
