@@ -201,9 +201,9 @@ public abstract class JsonApiClient : IJsonApiClient
         {
             JsonProperty property = base.CreateProperty(member, memberSerialization);
 
-            if (_attributeNamesContainer.ContainerMatchesType(property.DeclaringType))
+            if (_attributeNamesContainer.ContainerMatchesType(property.DeclaringType!))
             {
-                if (_attributeNamesContainer.ContainsAttribute(property.UnderlyingName))
+                if (_attributeNamesContainer.ContainsAttribute(property.UnderlyingName!))
                 {
                     property.NullValueHandling = NullValueHandling.Include;
                     property.DefaultValueHandling = DefaultValueHandling.Include;

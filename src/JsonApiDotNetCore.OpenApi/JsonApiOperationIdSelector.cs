@@ -109,7 +109,12 @@ internal sealed class JsonApiOperationIdSelector
 
     private string ApplyTemplate(string operationIdTemplate, Type resourceClrType, ApiDescription endpoint)
     {
-        string method = endpoint.HttpMethod!.ToLowerInvariant();
+        if (endpoint.RelativePath == null || endpoint.HttpMethod == null)
+        {
+            throw new UnreachableCodeException();
+        }
+
+        string method = endpoint.HttpMethod.ToLowerInvariant();
         string primaryResourceName = _formatter.FormatResourceName(resourceClrType).Singularize();
         string relationshipName = operationIdTemplate.Contains("[RelationshipName]") ? endpoint.RelativePath.Split("/").Last() : string.Empty;
 
