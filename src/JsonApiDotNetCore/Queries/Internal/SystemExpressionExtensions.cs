@@ -20,10 +20,10 @@ internal static class SystemExpressionExtensions
         // Which represents the next C# code:
         //   Tuple.Create<T>(value).Item1;
 
-        MethodInfo tupleCreateOpenMethod = typeof(Tuple).GetMethods()
+        MethodInfo tupleCreateUnboundMethod = typeof(Tuple).GetMethods()
             .Single(method => method.Name == "Create" && method.IsGenericMethod && method.GetGenericArguments().Length == 1);
 
-        MethodInfo tupleCreateClosedMethod = tupleCreateOpenMethod.MakeGenericMethod(type);
+        MethodInfo tupleCreateClosedMethod = tupleCreateUnboundMethod.MakeGenericMethod(type);
 
         ConstantExpression constantExpression = Expression.Constant(value, type);
 

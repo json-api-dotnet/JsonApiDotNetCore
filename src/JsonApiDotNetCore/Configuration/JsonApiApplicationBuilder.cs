@@ -182,7 +182,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
 
     private void AddResourceLayer()
     {
-        RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ResourceDefinitionOpenInterfaces, typeof(JsonApiResourceDefinition<,>));
+        RegisterImplementationForInterfaces(ServiceDiscoveryFacade.ResourceDefinitionUnboundInterfaces, typeof(JsonApiResourceDefinition<,>));
 
         _services.AddScoped<IResourceDefinitionAccessor, ResourceDefinitionAccessor>();
         _services.AddScoped<IResourceFactory, ResourceFactory>();
@@ -190,21 +190,21 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
 
     private void AddRepositoryLayer()
     {
-        RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.RepositoryOpenInterfaces, typeof(EntityFrameworkCoreRepository<,>));
+        RegisterImplementationForInterfaces(ServiceDiscoveryFacade.RepositoryUnboundInterfaces, typeof(EntityFrameworkCoreRepository<,>));
 
         _services.AddScoped<IResourceRepositoryAccessor, ResourceRepositoryAccessor>();
     }
 
     private void AddServiceLayer()
     {
-        RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ServiceOpenInterfaces, typeof(JsonApiResourceService<,>));
+        RegisterImplementationForInterfaces(ServiceDiscoveryFacade.ServiceUnboundInterfaces, typeof(JsonApiResourceService<,>));
     }
 
-    private void RegisterImplementationForOpenInterfaces(HashSet<Type> openInterfaces, Type implementationType)
+    private void RegisterImplementationForInterfaces(HashSet<Type> unboundInterfaces, Type unboundImplementationType)
     {
-        foreach (Type openInterface in openInterfaces)
+        foreach (Type unboundInterface in unboundInterfaces)
         {
-            _services.TryAddScoped(openInterface, implementationType);
+            _services.TryAddScoped(unboundInterface, unboundImplementationType);
         }
     }
 

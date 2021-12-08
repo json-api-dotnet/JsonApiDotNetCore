@@ -13,13 +13,13 @@ public sealed class TypeLocatorTests
     {
         // Arrange
         Assembly assembly = GetType().Assembly;
-        Type openInterface = typeof(IGenericInterface<>);
+        Type unboundInterface = typeof(IGenericInterface<>);
         Type typeArgument = typeof(int);
 
         var typeLocator = new TypeLocator();
 
         // Act
-        (Type implementationType, Type serviceInterface)? result = typeLocator.GetContainerRegistrationFromAssembly(assembly, openInterface, typeArgument);
+        (Type implementationType, Type serviceInterface)? result = typeLocator.GetContainerRegistrationFromAssembly(assembly, unboundInterface, typeArgument);
 
         // Assert
         result.ShouldNotBeNull();
@@ -28,17 +28,17 @@ public sealed class TypeLocatorTests
     }
 
     [Fact]
-    public void GetDerivedTypesForOpenType_Gets_Implementation()
+    public void GetDerivedTypesForUnboundType_Gets_Implementation()
     {
         // Arrange
         Assembly assembly = GetType().Assembly;
-        Type openType = typeof(BaseType<>);
+        Type unboundType = typeof(BaseType<>);
         Type typeArgument = typeof(int);
 
         var typeLocator = new TypeLocator();
 
         // Act
-        IReadOnlyCollection<Type> results = typeLocator.GetDerivedTypesForOpenType(assembly, openType, typeArgument);
+        IReadOnlyCollection<Type> results = typeLocator.GetDerivedTypesForUnboundType(assembly, unboundType, typeArgument);
 
         // Assert
         results.ShouldHaveCount(1);

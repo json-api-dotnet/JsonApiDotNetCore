@@ -59,7 +59,7 @@ public static class ServiceCollectionExtensions
     {
         ArgumentGuard.NotNull(services, nameof(services));
 
-        RegisterTypeForOpenInterfaces(services, typeof(TService), ServiceDiscoveryFacade.ServiceOpenInterfaces);
+        RegisterTypeForUnboundInterfaces(services, typeof(TService), ServiceDiscoveryFacade.ServiceUnboundInterfaces);
 
         return services;
     }
@@ -72,7 +72,7 @@ public static class ServiceCollectionExtensions
     {
         ArgumentGuard.NotNull(services, nameof(services));
 
-        RegisterTypeForOpenInterfaces(services, typeof(TRepository), ServiceDiscoveryFacade.RepositoryOpenInterfaces);
+        RegisterTypeForUnboundInterfaces(services, typeof(TRepository), ServiceDiscoveryFacade.RepositoryUnboundInterfaces);
 
         return services;
     }
@@ -85,21 +85,21 @@ public static class ServiceCollectionExtensions
     {
         ArgumentGuard.NotNull(services, nameof(services));
 
-        RegisterTypeForOpenInterfaces(services, typeof(TResourceDefinition), ServiceDiscoveryFacade.ResourceDefinitionOpenInterfaces);
+        RegisterTypeForUnboundInterfaces(services, typeof(TResourceDefinition), ServiceDiscoveryFacade.ResourceDefinitionUnboundInterfaces);
 
         return services;
     }
 
-    private static void RegisterTypeForOpenInterfaces(IServiceCollection serviceCollection, Type implementationType, IEnumerable<Type> openInterfaces)
+    private static void RegisterTypeForUnboundInterfaces(IServiceCollection serviceCollection, Type implementationType, IEnumerable<Type> unboundInterfaces)
     {
         bool seenCompatibleInterface = false;
         ResourceDescriptor? resourceDescriptor = ResolveResourceTypeFromServiceImplementation(implementationType);
 
         if (resourceDescriptor != null)
         {
-            foreach (Type openInterface in openInterfaces)
+            foreach (Type unboundInterface in unboundInterfaces)
             {
-                Type closedInterface = openInterface.MakeGenericType(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType);
+                Type closedInterface = unboundInterface.MakeGenericType(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType);
 
                 if (closedInterface.IsAssignableFrom(implementationType))
                 {

@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Configuration;
 [PublicAPI]
 public sealed class ServiceDiscoveryFacade
 {
-    internal static readonly HashSet<Type> ServiceOpenInterfaces = new()
+    internal static readonly HashSet<Type> ServiceUnboundInterfaces = new()
     {
         typeof(IResourceService<,>),
         typeof(IResourceCommandService<,>),
@@ -32,14 +32,14 @@ public sealed class ServiceDiscoveryFacade
         typeof(IRemoveFromRelationshipService<,>)
     };
 
-    internal static readonly HashSet<Type> RepositoryOpenInterfaces = new()
+    internal static readonly HashSet<Type> RepositoryUnboundInterfaces = new()
     {
         typeof(IResourceRepository<,>),
         typeof(IResourceWriteRepository<,>),
         typeof(IResourceReadRepository<,>)
     };
 
-    internal static readonly HashSet<Type> ResourceDefinitionOpenInterfaces = new()
+    internal static readonly HashSet<Type> ResourceDefinitionUnboundInterfaces = new()
     {
         typeof(IResourceDefinition<,>)
     };
@@ -130,25 +130,25 @@ public sealed class ServiceDiscoveryFacade
 
     private void AddServices(Assembly assembly, ResourceDescriptor resourceDescriptor)
     {
-        foreach (Type serviceInterface in ServiceOpenInterfaces)
+        foreach (Type serviceUnboundInterface in ServiceUnboundInterfaces)
         {
-            RegisterImplementations(assembly, serviceInterface, resourceDescriptor);
+            RegisterImplementations(assembly, serviceUnboundInterface, resourceDescriptor);
         }
     }
 
     private void AddRepositories(Assembly assembly, ResourceDescriptor resourceDescriptor)
     {
-        foreach (Type repositoryInterface in RepositoryOpenInterfaces)
+        foreach (Type repositoryUnboundInterface in RepositoryUnboundInterfaces)
         {
-            RegisterImplementations(assembly, repositoryInterface, resourceDescriptor);
+            RegisterImplementations(assembly, repositoryUnboundInterface, resourceDescriptor);
         }
     }
 
     private void AddResourceDefinitions(Assembly assembly, ResourceDescriptor resourceDescriptor)
     {
-        foreach (Type resourceDefinitionInterface in ResourceDefinitionOpenInterfaces)
+        foreach (Type resourceDefinitionUnboundInterface in ResourceDefinitionUnboundInterfaces)
         {
-            RegisterImplementations(assembly, resourceDefinitionInterface, resourceDescriptor);
+            RegisterImplementations(assembly, resourceDefinitionUnboundInterface, resourceDescriptor);
         }
     }
 

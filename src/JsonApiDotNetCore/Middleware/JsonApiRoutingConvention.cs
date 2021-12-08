@@ -152,10 +152,10 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
     {
         Type aspNetControllerType = typeof(ControllerBase);
         Type coreControllerType = typeof(CoreJsonApiController);
-        Type baseControllerType = typeof(BaseJsonApiController<,>);
+        Type baseControllerUnboundType = typeof(BaseJsonApiController<,>);
         Type? currentType = controllerType;
 
-        while (!currentType.IsGenericType || currentType.GetGenericTypeDefinition() != baseControllerType)
+        while (!currentType.IsGenericType || currentType.GetGenericTypeDefinition() != baseControllerUnboundType)
         {
             Type? nextBaseType = currentType.BaseType;
 

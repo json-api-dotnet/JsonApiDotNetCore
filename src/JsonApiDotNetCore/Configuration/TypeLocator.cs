@@ -46,62 +46,62 @@ internal sealed class TypeLocator
     }
 
     /// <summary>
-    /// Gets the implementation type with service interface (to be registered in the IoC container) for the specified open interface and its type arguments,
-    /// by scanning for types in the specified assembly that match the signature.
+    /// Gets the implementation type with service interface (to be registered in the IoC container) for the specified unbound generic interface and its type
+    /// arguments, by scanning for types in the specified assembly that match the signature.
     /// </summary>
     /// <param name="assembly">
     /// The assembly to search for matching types.
     /// </param>
-    /// <param name="openInterface">
-    /// The open generic interface to match against.
+    /// <param name="unboundInterface">
+    /// The unbound generic interface to match against.
     /// </param>
     /// <param name="interfaceTypeArguments">
-    /// Generic type arguments to construct <paramref name="openInterface" />.
+    /// Generic type arguments to construct <paramref name="unboundInterface" />.
     /// </param>
     /// <example>
     /// <code><![CDATA[
     /// GetContainerRegistrationFromAssembly(assembly, typeof(IResourceService<,>), typeof(Article), typeof(Guid));
     /// ]]></code>
     /// </example>
-    public (Type implementationType, Type serviceInterface)? GetContainerRegistrationFromAssembly(Assembly assembly, Type openInterface,
+    public (Type implementationType, Type serviceInterface)? GetContainerRegistrationFromAssembly(Assembly assembly, Type unboundInterface,
         params Type[] interfaceTypeArguments)
     {
         ArgumentGuard.NotNull(assembly, nameof(assembly));
-        ArgumentGuard.NotNull(openInterface, nameof(openInterface));
+        ArgumentGuard.NotNull(unboundInterface, nameof(unboundInterface));
         ArgumentGuard.NotNull(interfaceTypeArguments, nameof(interfaceTypeArguments));
 
-        if (!openInterface.IsInterface || !openInterface.IsGenericType || openInterface != openInterface.GetGenericTypeDefinition())
+        if (!unboundInterface.IsInterface || !unboundInterface.IsGenericType || unboundInterface != unboundInterface.GetGenericTypeDefinition())
         {
-            throw new ArgumentException($"Specified type '{openInterface.FullName}' is not an open generic interface.", nameof(openInterface));
+            throw new ArgumentException($"Specified type '{unboundInterface.FullName}' is not an unbound generic interface.", nameof(unboundInterface));
         }
 
-        if (interfaceTypeArguments.Length != openInterface.GetGenericArguments().Length)
+        if (interfaceTypeArguments.Length != unboundInterface.GetGenericArguments().Length)
         {
             throw new ArgumentException(
-                $"Interface '{openInterface.FullName}' requires {openInterface.GetGenericArguments().Length} type arguments " +
+                $"Interface '{unboundInterface.FullName}' requires {unboundInterface.GetGenericArguments().Length} type arguments " +
                 $"instead of {interfaceTypeArguments.Length}.", nameof(interfaceTypeArguments));
         }
 
-        return assembly.GetTypes().Select(type => GetContainerRegistrationFromType(type, openInterface, interfaceTypeArguments))
+        return assembly.GetTypes().Select(type => GetContainerRegistrationFromType(type, unboundInterface, interfaceTypeArguments))
             .FirstOrDefault(result => result != null);
     }
 
-    private static (Type implementationType, Type serviceInterface)? GetContainerRegistrationFromType(Type nextType, Type openInterface,
+    private static (Type implementationType, Type serviceInterface)? GetContainerRegistrationFromType(Type nextType, Type unboundInterface,
         Type[] interfaceTypeArguments)
     {
         if (!nextType.IsNested)
         {
             foreach (Type nextConstructedInterface in nextType.GetInterfaces().Where(type => type.IsGenericType))
             {
-                Type nextOpenInterface = nextConstructedInterface.GetGenericTypeDefinition();
+                Type nextUnboundInterface = nextConstructedInterface.GetGenericTypeDefinition();
 
-                if (nextOpenInterface == openInterface)
+                if (nextUnboundInterface == unboundInterface)
                 {
                     Type[] nextTypeArguments = nextConstructedInterface.GetGenericArguments();
 
                     if (nextTypeArguments.Length == interfaceTypeArguments.Length && nextTypeArguments.SequenceEqual(interfaceTypeArguments))
                     {
-                        return (nextType, nextOpenInterface.MakeGenericType(interfaceTypeArguments));
+                        return (nextType, nextUnboundInterface.MakeGenericType(interfaceTypeArguments));
                     }
                 }
             }
@@ -111,29 +111,29 @@ internal sealed class TypeLocator
     }
 
     /// <summary>
-    /// Scans for types in the specified assembly that derive from the specified open type.
+    /// Scans for types in the specified assembly that derive from the specified unbound generic type.
     /// </summary>
     /// <param name="assembly">
     /// The assembly to search for derived types.
     /// </param>
-    /// <param name="openType">
-    /// The open generic interface to match against.
+    /// <param name="unboundType">
+    /// The unbound generic type to match against.
     /// </param>
     /// <param name="typeArguments">
-    /// Generic type arguments to construct <paramref name="openType" />.
+    /// Generic type arguments to construct <paramref name="unboundType" />.
     /// </param>
     /// <example>
     /// <code><![CDATA[
-    /// GetDerivedTypesForOpenType(assembly, typeof(ResourceDefinition<,>), typeof(Article), typeof(int))
+    /// GetDerivedTypesForUnboundType(assembly, typeof(ResourceDefinition<,>), typeof(Article), typeof(int))
     /// ]]></code>
     /// </example>
-    public IReadOnlyCollection<Type> GetDerivedTypesForOpenType(Assembly assembly, Type openType, params Type[] typeArguments)
+    public IReadOnlyCollection<Type> GetDerivedTypesForUnboundType(Assembly assembly, Type unboundType, params Type[] typeArguments)
     {
         ArgumentGuard.NotNull(assembly, nameof(assembly));
-        ArgumentGuard.NotNull(openType, nameof(openType));
+        ArgumentGuard.NotNull(unboundType, nameof(unboundType));
         ArgumentGuard.NotNull(typeArguments, nameof(typeArguments));
 
-        Type closedType = openType.MakeGenericType(typeArguments);
+        Type closedType = unboundType.MakeGenericType(typeArguments);
         return GetDerivedTypes(assembly, closedType).ToArray();
     }
 
