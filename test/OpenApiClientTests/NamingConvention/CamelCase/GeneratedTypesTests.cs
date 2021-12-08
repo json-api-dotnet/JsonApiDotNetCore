@@ -1,38 +1,38 @@
 using FluentAssertions;
-using OpenApiClientTests.NamingConvention.KebabCase.GeneratedCode;
+using OpenApiClientTests.NamingConvention.CamelCase.GeneratedCode;
 using Xunit;
 
-namespace OpenApiClientTests.NamingConvention.KebabCase;
+namespace OpenApiClientTests.NamingConvention.CamelCase;
 
 public sealed class GeneratedTypesTests
 {
     [Fact]
     public void Generated_code_is_named_as_expected()
     {
-        nameof(KebabCaseClient.GetSupermarketCollectionAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketCollectionAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.PostSupermarketAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.PatchSupermarketAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.DeleteSupermarketAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketBackupStoreManagerAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketBackupStoreManagerAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketBackupStoreManagerRelationshipAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketBackupStoreManagerRelationshipAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.PatchSupermarketBackupStoreManagerRelationshipAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketCashiersAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketCashiersAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketCashiersRelationshipAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketCashiersRelationshipAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.PostSupermarketCashiersRelationshipAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.PatchSupermarketCashiersRelationshipAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.DeleteSupermarketCashiersRelationshipAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketStoreManagerAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketStoreManagerAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketStoreManagerRelationshipAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketStoreManagerRelationshipAsync).Should().NotBeNull();
-        nameof(KebabCaseClient.PatchSupermarketStoreManagerRelationshipAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketCollectionAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketCollectionAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.PostSupermarketAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.PatchSupermarketAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.DeleteSupermarketAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketBackupStoreManagerAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketBackupStoreManagerAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketBackupStoreManagerRelationshipAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketBackupStoreManagerRelationshipAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.PatchSupermarketBackupStoreManagerRelationshipAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketCashiersAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketCashiersAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketCashiersRelationshipAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketCashiersRelationshipAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.PostSupermarketCashiersRelationshipAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.PatchSupermarketCashiersRelationshipAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.DeleteSupermarketCashiersRelationshipAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketStoreManagerAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketStoreManagerAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketStoreManagerRelationshipAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketStoreManagerRelationshipAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.PatchSupermarketStoreManagerRelationshipAsync).Should().NotBeNull();
 
         nameof(SupermarketCollectionResponseDocument).Should().NotBeNull();
         nameof(LinksInResourceCollectionDocument).Should().NotBeNull();
@@ -44,13 +44,12 @@ public sealed class GeneratedTypesTests
         nameof(SupermarketRelationshipsInResponse.BackupStoreManager).Should().NotBeNull();
         nameof(LinksInResourceObject).Should().NotBeNull();
         nameof(SupermarketType).Should().NotBeNull();
-        nameof(KebabCaseClient.GetSupermarketAsync).Should().NotBeNull();
+        nameof(CamelCaseClient.GetSupermarketAsync).Should().NotBeNull();
         nameof(ToOneStaffMemberInResponse).Should().NotBeNull();
         nameof(NullableToOneStaffMemberInResponse).Should().NotBeNull();
         nameof(ToManyStaffMemberInResponse).Should().NotBeNull();
         nameof(LinksInRelationshipObject).Should().NotBeNull();
         nameof(StaffMemberIdentifier).Should().NotBeNull();
-        nameof(StaffMemberResourceType).Should().NotBeNull();
         nameof(StaffMemberResourceType.StaffMembers).Should().NotBeNull();
         nameof(SupermarketPrimaryResponseDocument).Should().NotBeNull();
         nameof(LinksInResourceDocument).Should().NotBeNull();

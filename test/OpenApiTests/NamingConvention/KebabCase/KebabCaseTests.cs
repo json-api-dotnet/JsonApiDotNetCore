@@ -1,44 +1,24 @@
-using System.Text.Json;
-using OpenApiTests.Controllers;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace OpenApiTests.NamingConvention.KebabCase;
 
-public sealed class KebabCaseTests
-    : IClassFixture<IntegrationTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext>>
+public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext>>
 {
-    private static Lazy<Task<JsonElement>>? _lazyOpenApiDocument;
-    private readonly IntegrationTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> _testContext;
+    private readonly OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> _testContext;
 
-    public KebabCaseTests(IntegrationTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> testContext)
+    public KebabCaseTests(OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> testContext)
     {
         _testContext = testContext;
-
-        _lazyOpenApiDocument ??= new Lazy<Task<JsonElement>>(async () =>
-        {
-            testContext.UseController<SupermarketsController>();
-
-            string content = await GetAsync("swagger/v1/swagger.json");
-
-            await WriteSwaggerDocumentToFileAsync(content);
-
-            JsonDocument document = JsonDocument.Parse(content);
-
-            return document.ToJsonElement();
-        }, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_GetCollection_endpoint()
+    public void Kebab_casing_convention_is_applied_to_GetCollection_endpoint()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
         string? documentSchemaRefId = null;
 
-        document.ShouldContainPath("paths./supermarkets.get").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -49,7 +29,7 @@ public sealed class KebabCaseTests
                 .ShouldBeReferenceSchemaId("supermarket-collection-response-document").SchemaReferenceId;
         });
 
-        document.ShouldContainPath("components.schemas").With(schemasElement =>
+        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             string? resourceDataSchemaRefId = null;
 
@@ -68,7 +48,7 @@ public sealed class KebabCaseTests
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                primaryResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeReferenceSchemaId("supermarkets-resource-type")
+                primaryResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeReferenceSchemaId("supermarket-resource-type")
                     .SchemaReferenceId;
 
                 resourceAttributesInResponseSchemaRefId = propertiesElement.ShouldContainPath("attributes.$ref")
@@ -123,7 +103,7 @@ public sealed class KebabCaseTests
 
             schemasElement.ShouldContainPath($"{relatedResourceIdentifierSchemaRefId}.properties").With(propertiesElement =>
             {
-                relatedResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeReferenceSchemaId("staff-members-resource-type")
+                relatedResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeReferenceSchemaId("staff-member-resource-type")
                     .SchemaReferenceId;
             });
 
@@ -132,15 +112,12 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_GetSingle_endpoint()
+    public void Kebab_casing_convention_is_applied_to_GetSingle_endpoint()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
         string? documentSchemaRefId = null;
 
-        document.ShouldContainPath("paths./supermarkets/{id}.get").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -151,7 +128,7 @@ public sealed class KebabCaseTests
                 .ShouldBeReferenceSchemaId("supermarket-primary-response-document").SchemaReferenceId;
         });
 
-        document.ShouldContainPath("components.schemas").With(schemasElement =>
+        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
@@ -161,15 +138,12 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_GetSecondary_endpoint_with_single_resource()
+    public void Kebab_casing_convention_is_applied_to_GetSecondary_endpoint_with_single_resource()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
         string? documentSchemaRefId = null;
 
-        document.ShouldContainPath("paths./supermarkets/{id}/store-manager.get").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/store-manager.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -180,7 +154,7 @@ public sealed class KebabCaseTests
                 .ShouldBeReferenceSchemaId("staff-member-secondary-response-document").SchemaReferenceId;
         });
 
-        document.ShouldContainPath("components.schemas").With(schemasElement =>
+        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             string? resourceDataSchemaRefId = null;
 
@@ -198,13 +172,10 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_GetSecondary_endpoint_with_nullable_resource()
+    public void Kebab_casing_convention_is_applied_to_GetSecondary_endpoint_with_nullable_resource()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
-        document.ShouldContainPath("paths./supermarkets/{id}/backup-store-manager.get").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/backup-store-manager.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -217,13 +188,10 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_GetSecondary_endpoint_with_resources()
+    public void Kebab_casing_convention_is_applied_to_GetSecondary_endpoint_with_resources()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
-        document.ShouldContainPath("paths./supermarkets/{id}/cashiers.get").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/cashiers.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -236,15 +204,12 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_GetRelationship_endpoint_with_ToOne_relationship()
+    public void Kebab_casing_convention_is_applied_to_GetRelationship_endpoint_with_ToOne_relationship()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
         string? documentSchemaRefId = null;
 
-        document.ShouldContainPath("paths./supermarkets/{id}/relationships/store-manager.get").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/store-manager.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -255,7 +220,7 @@ public sealed class KebabCaseTests
                 .ShouldBeReferenceSchemaId("staff-member-identifier-response-document").SchemaReferenceId;
         });
 
-        document.ShouldContainPath("components.schemas").With(schemasElement =>
+        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
@@ -265,13 +230,10 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_GetRelationship_endpoint_with_nullable_ToOne_relationship()
+    public void Kebab_casing_convention_is_applied_to_GetRelationship_endpoint_with_nullable_ToOne_relationship()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
-        document.ShouldContainPath("paths./supermarkets/{id}/relationships/backup-store-manager.get").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/backup-store-manager.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -284,15 +246,12 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_GetRelationship_endpoint_with_ToMany_relationship()
+    public void Kebab_casing_convention_is_applied_to_GetRelationship_endpoint_with_ToMany_relationship()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
         string? documentSchemaRefId = null;
 
-        document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.get").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -303,7 +262,7 @@ public sealed class KebabCaseTests
                 .ShouldBeReferenceSchemaId("staff-member-identifier-collection-response-document").SchemaReferenceId;
         });
 
-        document.ShouldContainPath("components.schemas").With(schemasElement =>
+        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
@@ -313,15 +272,12 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_Post_endpoint()
+    public void Kebab_casing_convention_is_applied_to_Post_endpoint()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
         string? documentSchemaRefId = null;
 
-        document.ShouldContainPath("paths./supermarkets.post").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets.post").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -332,7 +288,7 @@ public sealed class KebabCaseTests
                 .ShouldBeReferenceSchemaId("supermarket-post-request-document").SchemaReferenceId;
         });
 
-        document.ShouldContainPath("components.schemas").With(schemasElement =>
+        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             string? resourceDataSchemaRefId = null;
 
@@ -367,13 +323,10 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_PostRelationship_endpoint()
+    public void Kebab_casing_convention_is_applied_to_PostRelationship_endpoint()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
-        document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.post").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.post").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -383,15 +336,12 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_Patch_endpoint()
+    public void Kebab_casing_convention_is_applied_to_Patch_endpoint()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
         string? documentSchemaRefId = null;
 
-        document.ShouldContainPath("paths./supermarkets/{id}.patch").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}.patch").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -402,7 +352,7 @@ public sealed class KebabCaseTests
                 .ShouldBeReferenceSchemaId("supermarket-patch-request-document").SchemaReferenceId;
         });
 
-        document.ShouldContainPath("components.schemas").With(schemasElement =>
+        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             string? resourceDataSchemaRefId = null;
 
@@ -421,13 +371,10 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToOne_relationship()
+    public void Kebab_casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToOne_relationship()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
-        document.ShouldContainPath("paths./supermarkets/{id}/relationships/store-manager.patch").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/store-manager.patch").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -437,13 +384,10 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_PatchRelationship_endpoint_with_nullable_ToOne_relationship()
+    public void Kebab_casing_convention_is_applied_to_PatchRelationship_endpoint_with_nullable_ToOne_relationship()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
-        document.ShouldContainPath("paths./supermarkets/{id}/relationships/backup-store-manager.patch").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/backup-store-manager.patch").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -453,13 +397,10 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToMany_relationship()
+    public void Kebab_casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToMany_relationship()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
-        document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.patch").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.patch").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -469,13 +410,10 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_Delete_endpoint()
+    public void Kebab_casing_convention_is_applied_to_Delete_endpoint()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
-        document.ShouldContainPath("paths./supermarkets/{id}.delete").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}.delete").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -485,43 +423,15 @@ public sealed class KebabCaseTests
     }
 
     [Fact]
-    public async Task Kebab_casing_convention_is_applied_to_DeleteRelationship_endpoint()
+    public void Kebab_casing_convention_is_applied_to_DeleteRelationship_endpoint()
     {
-        // Act
-        JsonElement document = await _lazyOpenApiDocument!.Value;
-
         // Assert
-        document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.delete").With(getElement =>
+        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.delete").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
                 operationElement.ShouldBeString("delete-supermarket-cashiers-relationship");
             });
         });
-    }
-
-    private async Task<string> GetAsync(string requestUrl)
-    {
-        var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
-
-        using HttpClient client = _testContext.Factory.CreateClient();
-        using HttpResponseMessage responseMessage = await client.SendAsync(request);
-
-        return await responseMessage.Content.ReadAsStringAsync();
-    }
-
-    private async Task WriteSwaggerDocumentToFileAsync(string document)
-    {
-        string testSuitePath = GetTestSuitePath();
-        string documentPath = Path.Join(testSuitePath, "swagger.json");
-        await File.WriteAllTextAsync(documentPath, document);
-    }
-
-    private string GetTestSuitePath()
-    {
-        string solutionTestDirectoryPath = Directory.GetParent(Environment.CurrentDirectory)!.Parent!.Parent!.Parent!.FullName;
-        string currentNamespacePathRelativeToTestDirectory = Path.Join(GetType().Namespace!.Split('.'));
-
-        return Path.Join(solutionTestDirectoryPath, currentNamespacePathRelativeToTestDirectory);
     }
 }

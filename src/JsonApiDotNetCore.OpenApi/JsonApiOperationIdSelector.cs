@@ -36,7 +36,6 @@ internal sealed class JsonApiOperationIdSelector
 
     private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly JsonNamingPolicy? _namingPolicy;
-    private readonly ResourceNameFormatter _formatter;
 
     public JsonApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, JsonNamingPolicy? namingPolicy)
     {
@@ -44,7 +43,6 @@ internal sealed class JsonApiOperationIdSelector
 
         _controllerResourceMapping = controllerResourceMapping;
         _namingPolicy = namingPolicy;
-        _formatter = new ResourceNameFormatter(namingPolicy);
     }
 
     public string GetOperationId(ApiDescription endpoint)
@@ -60,7 +58,7 @@ internal sealed class JsonApiOperationIdSelector
 
         string template = GetTemplate(primaryResourceType.ClrType, endpoint);
 
-        return ApplyTemplate(template, primaryResourceType.ClrType, endpoint);
+        return ApplyTemplate(template, primaryResourceType, endpoint);
     }
 
     private static string GetTemplate(Type resourceClrType, ApiDescription endpoint)
@@ -107,28 +105,28 @@ internal sealed class JsonApiOperationIdSelector
         return type.IsConstructedGenericType ? type.GetGenericTypeDefinition() : null;
     }
 
-    private string ApplyTemplate(string operationIdTemplate, Type resourceClrType, ApiDescription endpoint)
+    private string ApplyTemplate(string operationIdTemplate, ResourceType resourceType, ApiDescription endpoint)
     {
         if (endpoint.RelativePath == null || endpoint.HttpMethod == null)
         {
             throw new UnreachableCodeException();
         }
 
-        string method = endpoint.HttpMethod.ToLowerInvariant();
-        string primaryResourceName = _formatter.FormatResourceName(resourceClrType).Singularize();
+        string method = endpoint.HttpMethod!.ToLowerInvariant();
         string relationshipName = operationIdTemplate.Contains("[RelationshipName]") ? endpoint.RelativePath.Split("/").Last() : string.Empty;
 
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:keep_existing_linebreaks true
 
-        string pascalCaseId = operationIdTemplate
+        string pascalCaseOperationId = operationIdTemplate
             .Replace("[Method]", method)
-            .Replace("[PrimaryResourceName]", primaryResourceName)
-            .Replace("[RelationshipName]", relationshipName);
+            .Replace("[PrimaryResourceName]", resourceType.PublicName.Singularize())
+            .Replace("[RelationshipName]", relationshipName)
+            .Pascalize();
 
         // @formatter:keep_existing_linebreaks restore
         // @formatter:wrap_chained_method_calls restore
 
-        return _namingPolicy != null ? _namingPolicy.ConvertName(pascalCaseId) : pascalCaseId;
+        return _namingPolicy != null ? _namingPolicy.ConvertName(pascalCaseOperationId) : pascalCaseOperationId;
     }
 }

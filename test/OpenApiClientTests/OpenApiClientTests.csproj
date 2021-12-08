@@ -42,5 +42,25 @@
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
     </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\NamingConvention\CamelCase\swagger.json">
+      <Namespace>OpenApiClientTests.NamingConvention.CamelCase.GeneratedCode</Namespace>
+      <ClassName>CamelCaseClient</ClassName>
+      <OutputPath>CamelCaseClient.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\NamingConvention\PascalCase\swagger.json">
+      <Namespace>OpenApiClientTests.NamingConvention.PascalCase.GeneratedCode</Namespace>
+      <ClassName>PascalCaseClient</ClassName>
+      <OutputPath>PascalCaseClient.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+    </OpenApiReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
