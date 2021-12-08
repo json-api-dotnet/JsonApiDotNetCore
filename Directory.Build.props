@@ -1,22 +1,23 @@
 <Project>
   <PropertyGroup>
-    <NetCoreAppVersion>net5.0</NetCoreAppVersion>
-    <AspNetCoreVersion>5.0.*</AspNetCoreVersion>
-    <EFCoreVersion>5.0.*</EFCoreVersion>
-    <NpgsqlPostgreSQLVersion>5.0.*</NpgsqlPostgreSQLVersion>
-    <MicrosoftCodeAnalysisVersion>3.*</MicrosoftCodeAnalysisVersion>
-    <HumanizerVersion>2.11.10</HumanizerVersion>
+    <TargetFrameworkName>net6.0</TargetFrameworkName>
+    <AspNetVersion>6.0.*</AspNetVersion>
+    <EFCoreVersion>6.0.*</EFCoreVersion>
+    <EFCorePostgresVersion>6.0.*</EFCorePostgresVersion>
+    <MicrosoftCodeAnalysisVersion>4.*</MicrosoftCodeAnalysisVersion>
+    <HumanizerVersion>2.*</HumanizerVersion>
     <JsonApiDotNetCoreVersionPrefix>5.0.0</JsonApiDotNetCoreVersionPrefix>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>9999</WarningLevel>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" PrivateAssets="All" />
-    <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.7.0" PrivateAssets="All" />
+    <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.7.1" PrivateAssets="All" />
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)CSharpGuidelinesAnalyzer.config" Visible="False" />
   </ItemGroup>
 
@@ -28,11 +29,8 @@
 
   <!-- Test Project Dependencies -->
   <PropertyGroup>
-    <BogusVersion>33.1.1</BogusVersion>
     <CoverletVersion>3.1.0</CoverletVersion>
-    <FluentAssertionsVersion>6.2.0</FluentAssertionsVersion>
     <MoqVersion>4.16.1</MoqVersion>
-    <XUnitVersion>2.4.*</XUnitVersion>
     <TestSdkVersion>17.0.0</TestSdkVersion>
   </PropertyGroup>
 </Project>

@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using FluentAssertions;
-using FluentAssertions.Common;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Authentication;
@@ -13,367 +8,360 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection;
+
+public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext>>
 {
-    public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> _testContext;
+    private readonly InjectionFakers _fakers;
+
+    public ResourceInjectionTests(IntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> _testContext;
-        private readonly InjectionFakers _fakers;
+        _testContext = testContext;
 
-        public ResourceInjectionTests(IntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> testContext)
+        testContext.UseController<GiftCertificatesController>();
+        testContext.UseController<PostOfficesController>();
+
+        testContext.ConfigureServicesBeforeStartup(services =>
         {
-            _testContext = testContext;
+            services.AddSingleton<ISystemClock, FrozenSystemClock>();
+        });
 
-            testContext.UseController<GiftCertificatesController>();
-            testContext.UseController<PostOfficesController>();
+        _fakers = new InjectionFakers(testContext.Factory.Services);
+    }
 
-            testContext.ConfigureServicesBeforeStartup(services =>
-            {
-                services.AddSingleton<ISystemClock, FrozenSystemClock>();
-            });
+    [Fact]
+    public async Task Can_get_resource_by_ID()
+    {
+        // Arrange
+        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
+        clock.UtcNow = 27.January(2021).AsUtc();
 
-            _fakers = new InjectionFakers(testContext.Factory.Services);
-        }
+        GiftCertificate certificate = _fakers.GiftCertificate.Generate();
+        certificate.IssueDate = 28.January(2020).AsUtc();
 
-        [Fact]
-        public async Task Can_get_resource_by_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-            clock.UtcNow = 27.January(2021);
+            dbContext.GiftCertificates.Add(certificate);
+            await dbContext.SaveChangesAsync();
+        });
 
-            GiftCertificate certificate = _fakers.GiftCertificate.Generate();
-            certificate.IssueDate = 28.January(2020);
+        string route = $"/giftCertificates/{certificate.StringId}";
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.GiftCertificates.Add(certificate);
-                await dbContext.SaveChangesAsync();
-            });
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            string route = $"/giftCertificates/{certificate.StringId}";
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Id.Should().Be(certificate.StringId);
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("issueDate").With(value => value.Should().Be(certificate.IssueDate));
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("hasExpired").With(value => value.Should().Be(false));
+    }
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+    [Fact]
+    public async Task Can_filter_resources_by_ID()
+    {
+        // Arrange
+        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
+        clock.UtcNow = 27.January(2021).At(13, 53).AsUtc();
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Id.Should().Be(certificate.StringId);
+        List<PostOffice> postOffices = _fakers.PostOffice.Generate(2);
 
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("issueDate")
-                .With(value => value.As<DateTimeOffset>().Should().BeCloseTo(certificate.IssueDate));
-
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("hasExpired").With(value => value.Should().Be(false));
-        }
-
-        [Fact]
-        public async Task Can_filter_resources_by_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-            clock.UtcNow = 27.January(2021).At(13, 53);
+            await dbContext.ClearTableAsync<PostOffice>();
+            dbContext.PostOffice.AddRange(postOffices);
+            await dbContext.SaveChangesAsync();
+        });
 
-            List<PostOffice> postOffices = _fakers.PostOffice.Generate(2);
+        string route = $"/postOffices?filter=equals(id,'{postOffices[1].StringId}')";
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<PostOffice>();
-                dbContext.PostOffice.AddRange(postOffices);
-                await dbContext.SaveChangesAsync();
-            });
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            string route = $"/postOffices?filter=equals(id,'{postOffices[1].StringId}')";
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(postOffices[1].StringId);
+        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("address").With(value => value.Should().Be(postOffices[1].Address));
+        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(true));
+    }
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+    [Fact]
+    public async Task Can_get_secondary_resource_with_fieldset()
+    {
+        // Arrange
+        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
+        clock.UtcNow = 27.January(2021).At(13, 53).AsUtc();
 
-            responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Id.Should().Be(postOffices[1].StringId);
-            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("address").With(value => value.Should().Be(postOffices[1].Address));
-            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(true));
-        }
+        GiftCertificate certificate = _fakers.GiftCertificate.Generate();
+        certificate.Issuer = _fakers.PostOffice.Generate();
 
-        [Fact]
-        public async Task Can_get_secondary_resource_with_fieldset()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-            clock.UtcNow = 27.January(2021).At(13, 53);
+            dbContext.GiftCertificates.Add(certificate);
+            await dbContext.SaveChangesAsync();
+        });
 
-            GiftCertificate certificate = _fakers.GiftCertificate.Generate();
-            certificate.Issuer = _fakers.PostOffice.Generate();
+        string route = $"/giftCertificates/{certificate.StringId}/issuer?fields[postOffices]=id,isOpen";
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.GiftCertificates.Add(certificate);
-                await dbContext.SaveChangesAsync();
-            });
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            string route = $"/giftCertificates/{certificate.StringId}/issuer?fields[postOffices]=id,isOpen";
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Id.Should().Be(certificate.Issuer.StringId);
+        responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(true));
+    }
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+    [Fact]
+    public async Task Can_create_resource_with_ToOne_relationship_and_include()
+    {
+        // Arrange
+        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
+        clock.UtcNow = 19.March(1998).At(6, 34).AsUtc();
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Id.Should().Be(certificate.Issuer.StringId);
-            responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(true));
-        }
+        PostOffice existingOffice = _fakers.PostOffice.Generate();
 
-        [Fact]
-        public async Task Can_create_resource_with_ToOne_relationship_and_include()
+        DateTimeOffset newIssueDate = 18.March(1997).AsUtc();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-            clock.UtcNow = 19.March(1998).At(6, 34);
+            dbContext.PostOffice.Add(existingOffice);
+            await dbContext.SaveChangesAsync();
+        });
 
-            PostOffice existingOffice = _fakers.PostOffice.Generate();
-
-            var newIssueDate = 18.March(1997).ToDateTimeOffset();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        var requestBody = new
+        {
+            data = new
             {
-                dbContext.PostOffice.Add(existingOffice);
-                await dbContext.SaveChangesAsync();
-            });
+                type = "giftCertificates",
+                attributes = new
+                {
+                    issueDate = newIssueDate
+                },
+                relationships = new
+                {
+                    issuer = new
+                    {
+                        data = new
+                        {
+                            type = "postOffices",
+                            id = existingOffice.StringId
+                        }
+                    }
+                }
+            }
+        };
 
-            var requestBody = new
+        const string route = "/giftCertificates?include=issuer";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("issueDate").With(value => value.Should().Be(newIssueDate));
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("hasExpired").With(value => value.Should().Be(true));
+
+        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("issuer").With(value =>
+        {
+            value.ShouldNotBeNull();
+            value.Data.SingleValue.ShouldNotBeNull();
+            value.Data.SingleValue.Id.Should().Be(existingOffice.StringId);
+        });
+
+        responseDocument.Included.ShouldHaveCount(1);
+
+        responseDocument.Included[0].With(resource =>
+        {
+            resource.Id.Should().Be(existingOffice.StringId);
+            resource.Attributes.ShouldContainKey("address").With(value => value.Should().Be(existingOffice.Address));
+            resource.Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(false));
+        });
+
+        int newCertificateId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            GiftCertificate certificateInDatabase = await dbContext.GiftCertificates
+                .Include(certificate => certificate.Issuer).FirstWithIdAsync(newCertificateId);
+
+            certificateInDatabase.IssueDate.Should().Be(newIssueDate);
+
+            certificateInDatabase.Issuer.ShouldNotBeNull();
+            certificateInDatabase.Issuer.Id.Should().Be(existingOffice.Id);
+        });
+    }
+
+    [Fact]
+    public async Task Can_update_resource_with_ToMany_relationship()
+    {
+        // Arrange
+        var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
+        clock.UtcNow = 19.March(1998).At(6, 34).AsUtc();
+
+        PostOffice existingOffice = _fakers.PostOffice.Generate();
+        existingOffice.GiftCertificates = _fakers.GiftCertificate.Generate(1);
+
+        string newAddress = _fakers.PostOffice.Generate().Address;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.PostOffice.Add(existingOffice);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
             {
-                data = new
+                type = "postOffices",
+                id = existingOffice.StringId,
+                attributes = new
+                {
+                    address = newAddress
+                },
+                relationships = new
+                {
+                    giftCertificates = new
+                    {
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "giftCertificates",
+                                id = existingOffice.GiftCertificates[0].StringId
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        string route = $"/postOffices/{existingOffice.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            PostOffice officeInDatabase = await dbContext.PostOffice.Include(postOffice => postOffice.GiftCertificates).FirstWithIdAsync(existingOffice.Id);
+
+            officeInDatabase.Address.Should().Be(newAddress);
+
+            officeInDatabase.GiftCertificates.ShouldHaveCount(1);
+            officeInDatabase.GiftCertificates[0].Id.Should().Be(existingOffice.GiftCertificates[0].Id);
+        });
+    }
+
+    [Fact]
+    public async Task Can_delete_resource()
+    {
+        // Arrange
+        PostOffice existingOffice = _fakers.PostOffice.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.PostOffice.Add(existingOffice);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/postOffices/{existingOffice.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            PostOffice? officeInDatabase = await dbContext.PostOffice.FirstWithIdOrDefaultAsync(existingOffice.Id);
+
+            officeInDatabase.Should().BeNull();
+        });
+    }
+
+    [Fact]
+    public async Task Cannot_delete_unknown_resource()
+    {
+        // Arrange
+        string officeId = Unknown.StringId.For<PostOffice, int>();
+
+        string route = $"/postOffices/{officeId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'postOffices' with ID '{officeId}' does not exist.");
+    }
+
+    [Fact]
+    public async Task Can_add_to_ToMany_relationship()
+    {
+        // Arrange
+        PostOffice existingOffice = _fakers.PostOffice.Generate();
+        existingOffice.GiftCertificates = _fakers.GiftCertificate.Generate(1);
+
+        GiftCertificate existingCertificate = _fakers.GiftCertificate.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.AddInRange(existingOffice, existingCertificate);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
                 {
                     type = "giftCertificates",
-                    attributes = new
-                    {
-                        issueDate = newIssueDate
-                    },
-                    relationships = new
-                    {
-                        issuer = new
-                        {
-                            data = new
-                            {
-                                type = "postOffices",
-                                id = existingOffice.StringId
-                            }
-                        }
-                    }
+                    id = existingCertificate.StringId
                 }
-            };
+            }
+        };
 
-            const string route = "/giftCertificates?include=issuer";
+        string route = $"/postOffices/{existingOffice.StringId}/relationships/giftCertificates";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Should().BeEmpty();
 
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("issueDate")
-                .With(value => value.As<DateTimeOffset>().Should().BeCloseTo(newIssueDate));
-
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("hasExpired").With(value => value.Should().Be(true));
-
-            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("issuer").With(value =>
-            {
-                value.ShouldNotBeNull();
-                value.Data.SingleValue.ShouldNotBeNull();
-                value.Data.SingleValue.Id.Should().Be(existingOffice.StringId);
-            });
-
-            responseDocument.Included.ShouldHaveCount(1);
-
-            responseDocument.Included[0].With(resource =>
-            {
-                resource.Id.Should().Be(existingOffice.StringId);
-                resource.Attributes.ShouldContainKey("address").With(value => value.Should().Be(existingOffice.Address));
-                resource.Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(false));
-            });
-
-            int newCertificateId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                GiftCertificate certificateInDatabase = await dbContext.GiftCertificates
-                    .Include(certificate => certificate.Issuer).FirstWithIdAsync(newCertificateId);
-
-                certificateInDatabase.IssueDate.Should().Be(newIssueDate);
-
-                certificateInDatabase.Issuer.ShouldNotBeNull();
-                certificateInDatabase.Issuer.Id.Should().Be(existingOffice.Id);
-            });
-        }
-
-        [Fact]
-        public async Task Can_update_resource_with_ToMany_relationship()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
-            clock.UtcNow = 19.March(1998).At(6, 34);
+            PostOffice officeInDatabase = await dbContext.PostOffice.Include(postOffice => postOffice.GiftCertificates).FirstWithIdAsync(existingOffice.Id);
 
-            PostOffice existingOffice = _fakers.PostOffice.Generate();
-            existingOffice.GiftCertificates = _fakers.GiftCertificate.Generate(1);
-
-            string newAddress = _fakers.PostOffice.Generate().Address;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.PostOffice.Add(existingOffice);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "postOffices",
-                    id = existingOffice.StringId,
-                    attributes = new
-                    {
-                        address = newAddress
-                    },
-                    relationships = new
-                    {
-                        giftCertificates = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "giftCertificates",
-                                    id = existingOffice.GiftCertificates[0].StringId
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            string route = $"/postOffices/{existingOffice.StringId}";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                PostOffice officeInDatabase = await dbContext.PostOffice.Include(postOffice => postOffice.GiftCertificates).FirstWithIdAsync(existingOffice.Id);
-
-                officeInDatabase.Address.Should().Be(newAddress);
-
-                officeInDatabase.GiftCertificates.ShouldHaveCount(1);
-                officeInDatabase.GiftCertificates[0].Id.Should().Be(existingOffice.GiftCertificates[0].Id);
-            });
-        }
-
-        [Fact]
-        public async Task Can_delete_resource()
-        {
-            // Arrange
-            PostOffice existingOffice = _fakers.PostOffice.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.PostOffice.Add(existingOffice);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/postOffices/{existingOffice.StringId}";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                PostOffice? officeInDatabase = await dbContext.PostOffice.FirstWithIdOrDefaultAsync(existingOffice.Id);
-
-                officeInDatabase.Should().BeNull();
-            });
-        }
-
-        [Fact]
-        public async Task Cannot_delete_unknown_resource()
-        {
-            // Arrange
-            string officeId = Unknown.StringId.For<PostOffice, int>();
-
-            string route = $"/postOffices/{officeId}";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'postOffices' with ID '{officeId}' does not exist.");
-        }
-
-        [Fact]
-        public async Task Can_add_to_ToMany_relationship()
-        {
-            // Arrange
-            PostOffice existingOffice = _fakers.PostOffice.Generate();
-            existingOffice.GiftCertificates = _fakers.GiftCertificate.Generate(1);
-
-            GiftCertificate existingCertificate = _fakers.GiftCertificate.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddInRange(existingOffice, existingCertificate);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "giftCertificates",
-                        id = existingCertificate.StringId
-                    }
-                }
-            };
-
-            string route = $"/postOffices/{existingOffice.StringId}/relationships/giftCertificates";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                PostOffice officeInDatabase = await dbContext.PostOffice.Include(postOffice => postOffice.GiftCertificates).FirstWithIdAsync(existingOffice.Id);
-
-                officeInDatabase.GiftCertificates.ShouldHaveCount(2);
-            });
-        }
+            officeInDatabase.GiftCertificates.ShouldHaveCount(2);
+        });
     }
 }

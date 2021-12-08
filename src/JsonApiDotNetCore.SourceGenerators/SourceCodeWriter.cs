@@ -16,8 +16,7 @@ namespace JsonApiDotNetCore.SourceGenerators
             [0] = string.Empty,
             [1] = new string(' ', 1 * SpacesPerIndent),
             [2] = new string(' ', 2 * SpacesPerIndent),
-            [3] = new string(' ', 3 * SpacesPerIndent),
-            [4] = new string(' ', 4 * SpacesPerIndent)
+            [3] = new string(' ', 3 * SpacesPerIndent)
         };
 
         private static readonly IDictionary<JsonApiEndpointsCopy, (string ServiceName, string ParameterName)> AggregateEndpointToServiceNameMap =
@@ -70,8 +69,7 @@ namespace JsonApiDotNetCore.SourceGenerators
 
             if (controllerNamespace != null)
             {
-                WriteOpenNamespaceDeclaration(controllerNamespace);
-                _depth++;
+                WriteNamespaceDeclaration(controllerNamespace);
             }
 
             WriteOpenClassDeclaration(controllerName, endpointsToGenerate, resourceType, idType);
@@ -81,12 +79,6 @@ namespace JsonApiDotNetCore.SourceGenerators
 
             _depth--;
             WriteCloseCurly();
-
-            if (controllerNamespace != null)
-            {
-                _depth--;
-                WriteCloseCurly();
-            }
 
             return _sourceBuilder.ToString();
         }
@@ -113,11 +105,10 @@ namespace JsonApiDotNetCore.SourceGenerators
             _sourceBuilder.AppendLine();
         }
 
-        private void WriteOpenNamespaceDeclaration(string controllerNamespace)
+        private void WriteNamespaceDeclaration(string controllerNamespace)
         {
-            _sourceBuilder.AppendLine($"namespace {controllerNamespace}");
-
-            WriteOpenCurly();
+            _sourceBuilder.AppendLine($"namespace {controllerNamespace};");
+            _sourceBuilder.AppendLine();
         }
 
         private void WriteOpenClassDeclaration(string controllerName, JsonApiEndpointsCopy endpointsToGenerate, INamedTypeSymbol resourceType,

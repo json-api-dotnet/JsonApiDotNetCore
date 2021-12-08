@@ -1,25 +1,23 @@
-using System;
 using Bogus;
 using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 // @formatter:keep_existing_linebreaks true
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
+namespace JsonApiDotNetCoreTests.IntegrationTests.Meta;
+
+internal sealed class MetaFakers : FakerContainer
 {
-    internal sealed class MetaFakers : FakerContainer
-    {
-        private readonly Lazy<Faker<ProductFamily>> _lazyProductFamilyFaker = new(() =>
-            new Faker<ProductFamily>()
-                .UseSeed(GetFakerSeed())
-                .RuleFor(productFamily => productFamily.Name, faker => faker.Commerce.ProductName()));
+    private readonly Lazy<Faker<ProductFamily>> _lazyProductFamilyFaker = new(() =>
+        new Faker<ProductFamily>()
+            .UseSeed(GetFakerSeed())
+            .RuleFor(productFamily => productFamily.Name, faker => faker.Commerce.ProductName()));
 
-        private readonly Lazy<Faker<SupportTicket>> _lazySupportTicketFaker = new(() =>
-            new Faker<SupportTicket>()
-                .UseSeed(GetFakerSeed())
-                .RuleFor(supportTicket => supportTicket.Description, faker => faker.Lorem.Paragraph()));
+    private readonly Lazy<Faker<SupportTicket>> _lazySupportTicketFaker = new(() =>
+        new Faker<SupportTicket>()
+            .UseSeed(GetFakerSeed())
+            .RuleFor(supportTicket => supportTicket.Description, faker => faker.Lorem.Paragraph()));
 
-        public Faker<ProductFamily> ProductFamily => _lazyProductFamilyFaker.Value;
-        public Faker<SupportTicket> SupportTicket => _lazySupportTicketFaker.Value;
-    }
+    public Faker<ProductFamily> ProductFamily => _lazyProductFamilyFaker.Value;
+    public Faker<SupportTicket> SupportTicket => _lazySupportTicketFaker.Value;
 }

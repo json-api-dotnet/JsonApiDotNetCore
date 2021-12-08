@@ -1,312 +1,308 @@
-using System;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
+namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers;
+
+public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext>>
 {
-    public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
+    private readonly RestrictionFakers _fakers = new();
+
+    public WriteOnlyControllerTests(IntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
-        private readonly RestrictionFakers _fakers = new();
+        _testContext = testContext;
 
-        public WriteOnlyControllerTests(IntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> testContext)
+        testContext.UseController<TablesController>();
+    }
+
+    [Fact]
+    public async Task Cannot_get_resources()
+    {
+        // Arrange
+        const string route = "/tables?fields[tables]=legCount";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        error.Title.Should().Be("The requested endpoint is not accessible.");
+        error.Detail.Should().Be("Endpoint '/tables' is not accessible for GET requests.");
+    }
+
+    [Fact]
+    public async Task Cannot_get_resource()
+    {
+        // Arrange
+        Table table = _fakers.Table.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            _testContext = testContext;
+            dbContext.Tables.Add(table);
+            await dbContext.SaveChangesAsync();
+        });
 
-            testContext.UseController<TablesController>();
-        }
+        string route = $"/tables/{table.StringId}";
 
-        [Fact]
-        public async Task Cannot_get_resources()
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        error.Title.Should().Be("The requested endpoint is not accessible.");
+        error.Detail.Should().Be($"Endpoint '{route}' is not accessible for GET requests.");
+    }
+
+    [Fact]
+    public async Task Cannot_get_secondary_resources()
+    {
+        // Arrange
+        Table table = _fakers.Table.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            const string route = "/tables?fields[tables]=legCount";
+            dbContext.Tables.Add(table);
+            await dbContext.SaveChangesAsync();
+        });
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        string route = $"/tables/{table.StringId}/chairs";
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            error.Title.Should().Be("The requested endpoint is not accessible.");
-            error.Detail.Should().Be("Endpoint '/tables' is not accessible for GET requests.");
-        }
+        responseDocument.Errors.ShouldHaveCount(1);
 
-        [Fact]
-        public async Task Cannot_get_resource()
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        error.Title.Should().Be("The requested endpoint is not accessible.");
+        error.Detail.Should().Be($"Endpoint '{route}' is not accessible for GET requests.");
+    }
+
+    [Fact]
+    public async Task Cannot_get_secondary_resource()
+    {
+        // Arrange
+        Table table = _fakers.Table.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Table table = _fakers.Table.Generate();
+            dbContext.Tables.Add(table);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        string route = $"/tables/{table.StringId}/room";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        error.Title.Should().Be("The requested endpoint is not accessible.");
+        error.Detail.Should().Be($"Endpoint '{route}' is not accessible for GET requests.");
+    }
+
+    [Fact]
+    public async Task Cannot_get_relationship()
+    {
+        // Arrange
+        Table table = _fakers.Table.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Tables.Add(table);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/tables/{table.StringId}/relationships/chairs";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        error.Title.Should().Be("The requested endpoint is not accessible.");
+        error.Detail.Should().Be($"Endpoint '{route}' is not accessible for GET requests.");
+    }
+
+    [Fact]
+    public async Task Can_create_resource()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
             {
-                dbContext.Tables.Add(table);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/tables/{table.StringId}";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            error.Title.Should().Be("The requested endpoint is not accessible.");
-            error.Detail.Should().Be($"Endpoint '{route}' is not accessible for GET requests.");
-        }
-
-        [Fact]
-        public async Task Cannot_get_secondary_resources()
-        {
-            // Arrange
-            Table table = _fakers.Table.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Tables.Add(table);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/tables/{table.StringId}/chairs";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            error.Title.Should().Be("The requested endpoint is not accessible.");
-            error.Detail.Should().Be($"Endpoint '{route}' is not accessible for GET requests.");
-        }
-
-        [Fact]
-        public async Task Cannot_get_secondary_resource()
-        {
-            // Arrange
-            Table table = _fakers.Table.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Tables.Add(table);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/tables/{table.StringId}/room";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            error.Title.Should().Be("The requested endpoint is not accessible.");
-            error.Detail.Should().Be($"Endpoint '{route}' is not accessible for GET requests.");
-        }
-
-        [Fact]
-        public async Task Cannot_get_relationship()
-        {
-            // Arrange
-            Table table = _fakers.Table.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Tables.Add(table);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/tables/{table.StringId}/relationships/chairs";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            error.Title.Should().Be("The requested endpoint is not accessible.");
-            error.Detail.Should().Be($"Endpoint '{route}' is not accessible for GET requests.");
-        }
-
-        [Fact]
-        public async Task Can_create_resource()
-        {
-            // Arrange
-            var requestBody = new
-            {
-                data = new
+                type = "tables",
+                attributes = new
                 {
-                    type = "tables",
-                    attributes = new
-                    {
-                    }
                 }
-            };
+            }
+        };
 
-            const string route = "/tables";
+        const string route = "/tables";
 
-            // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
-        }
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+    }
 
-        [Fact]
-        public async Task Can_update_resource()
+    [Fact]
+    public async Task Can_update_resource()
+    {
+        // Arrange
+        Table existingTable = _fakers.Table.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Table existingTable = _fakers.Table.Generate();
+            dbContext.Tables.Add(existingTable);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        var requestBody = new
+        {
+            data = new
             {
-                dbContext.Tables.Add(existingTable);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "tables",
+                id = existingTable.StringId,
+                attributes = new
                 {
-                    type = "tables",
-                    id = existingTable.StringId,
-                    attributes = new
-                    {
-                    }
                 }
-            };
+            }
+        };
 
-            string route = $"/tables/{existingTable.StringId}";
+        string route = $"/tables/{existingTable.StringId}";
 
-            // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-        }
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+    }
 
-        [Fact]
-        public async Task Can_delete_resource()
+    [Fact]
+    public async Task Can_delete_resource()
+    {
+        // Arrange
+        Table existingTable = _fakers.Table.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Table existingTable = _fakers.Table.Generate();
+            dbContext.Tables.Add(existingTable);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Tables.Add(existingTable);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/tables/{existingTable.StringId}";
 
-            string route = $"/tables/{existingTable.StringId}";
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+    }
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-        }
+    [Fact]
+    public async Task Can_update_relationship()
+    {
+        // Arrange
+        Table existingTable = _fakers.Table.Generate();
 
-        [Fact]
-        public async Task Can_update_relationship()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Table existingTable = _fakers.Table.Generate();
+            dbContext.Tables.Add(existingTable);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Tables.Add(existingTable);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = (object?)null
-            };
-
-            string route = $"/tables/{existingTable.StringId}/relationships/room";
-
-            // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-        }
-
-        [Fact]
-        public async Task Can_add_to_ToMany_relationship()
+        var requestBody = new
         {
-            // Arrange
-            Table existingTable = _fakers.Table.Generate();
+            data = (object?)null
+        };
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Tables.Add(existingTable);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/tables/{existingTable.StringId}/relationships/room";
 
-            var requestBody = new
-            {
-                data = Array.Empty<object>()
-            };
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
-            string route = $"/tables/{existingTable.StringId}/relationships/chairs";
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+    }
 
-            // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+    [Fact]
+    public async Task Can_add_to_ToMany_relationship()
+    {
+        // Arrange
+        Table existingTable = _fakers.Table.Generate();
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-        }
-
-        [Fact]
-        public async Task Can_remove_from_ToMany_relationship()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Table existingTable = _fakers.Table.Generate();
+            dbContext.Tables.Add(existingTable);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Tables.Add(existingTable);
-                await dbContext.SaveChangesAsync();
-            });
+        var requestBody = new
+        {
+            data = Array.Empty<object>()
+        };
 
-            var requestBody = new
-            {
-                data = Array.Empty<object>()
-            };
+        string route = $"/tables/{existingTable.StringId}/relationships/chairs";
 
-            string route = $"/tables/{existingTable.StringId}/relationships/chairs";
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
-            // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+    }
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-        }
+    [Fact]
+    public async Task Can_remove_from_ToMany_relationship()
+    {
+        // Arrange
+        Table existingTable = _fakers.Table.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Tables.Add(existingTable);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = Array.Empty<object>()
+        };
+
+        string route = $"/tables/{existingTable.StringId}/relationships/chairs";
+
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
     }
 }

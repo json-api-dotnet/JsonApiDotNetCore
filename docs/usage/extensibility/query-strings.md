@@ -24,15 +24,17 @@ See [here](~/usage/extensibility/resource-definitions.md#custom-query-string-par
 In order to add parsing of custom query string parameters, you can implement the `IQueryStringParameterReader` interface and register your reader.
 
 ```c#
-public class YourQueryStringParameterReader : IQueryStringParameterReader
+public class CustomQueryStringParameterReader : IQueryStringParameterReader
 {
     // ...
 }
 ```
 
 ```c#
-services.AddScoped<YourQueryStringParameterReader>();
-services.AddScoped<IQueryStringParameterReader>(sp => sp.GetService<YourQueryStringParameterReader>());
+// Program.cs
+builder.Services.AddScoped<CustomQueryStringParameterReader>();
+builder.Services.AddScoped<IQueryStringParameterReader>(serviceProvider =>
+    serviceProvider.GetRequiredService<CustomQueryStringParameterReader>());
 ```
 
 Now you can inject your custom reader in resource services, repositories, resource definitions etc.

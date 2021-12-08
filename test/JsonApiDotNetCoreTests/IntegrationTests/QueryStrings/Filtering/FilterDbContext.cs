@@ -1,16 +1,24 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
-{
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class FilterDbContext : DbContext
-    {
-        public DbSet<FilterableResource> FilterableResources => Set<FilterableResource>();
+// @formatter:wrap_chained_method_calls chop_always
 
-        public FilterDbContext(DbContextOptions<FilterDbContext> options)
-            : base(options)
-        {
-        }
+namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+public sealed class FilterDbContext : DbContext
+{
+    public DbSet<FilterableResource> FilterableResources => Set<FilterableResource>();
+
+    public FilterDbContext(DbContextOptions<FilterDbContext> options)
+        : base(options)
+    {
+    }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<FilterableResource>()
+            .Property(resource => resource.SomeDateTimeInLocalZone)
+            .HasColumnType("timestamp without time zone");
     }
 }

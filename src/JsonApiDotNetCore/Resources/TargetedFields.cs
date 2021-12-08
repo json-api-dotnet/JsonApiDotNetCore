@@ -1,32 +1,30 @@
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.Resources
+namespace JsonApiDotNetCore.Resources;
+
+/// <inheritdoc />
+[PublicAPI]
+public sealed class TargetedFields : ITargetedFields
 {
+    IReadOnlySet<AttrAttribute> ITargetedFields.Attributes => Attributes;
+    IReadOnlySet<RelationshipAttribute> ITargetedFields.Relationships => Relationships;
+
+    public HashSet<AttrAttribute> Attributes { get; } = new();
+    public HashSet<RelationshipAttribute> Relationships { get; } = new();
+
     /// <inheritdoc />
-    [PublicAPI]
-    public sealed class TargetedFields : ITargetedFields
+    public void CopyFrom(ITargetedFields other)
     {
-        IReadOnlySet<AttrAttribute> ITargetedFields.Attributes => Attributes;
-        IReadOnlySet<RelationshipAttribute> ITargetedFields.Relationships => Relationships;
+        Clear();
 
-        public HashSet<AttrAttribute> Attributes { get; } = new();
-        public HashSet<RelationshipAttribute> Relationships { get; } = new();
+        Attributes.AddRange(other.Attributes);
+        Relationships.AddRange(other.Relationships);
+    }
 
-        /// <inheritdoc />
-        public void CopyFrom(ITargetedFields other)
-        {
-            Clear();
-
-            Attributes.AddRange(other.Attributes);
-            Relationships.AddRange(other.Relationships);
-        }
-
-        public void Clear()
-        {
-            Attributes.Clear();
-            Relationships.Clear();
-        }
+    public void Clear()
+    {
+        Attributes.Clear();
+        Relationships.Clear();
     }
 }

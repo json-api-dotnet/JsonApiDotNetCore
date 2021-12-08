@@ -1,14 +1,13 @@
 using JsonApiDotNetCore.Controllers.Annotations;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
-{
-    // Workaround for https://youtrack.jetbrains.com/issue/RSRP-487028
-    public partial class PillowsController
-    {
-    }
+namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers;
 
-    [DisableQueryString("skipCache")]
-    partial class PillowsController
-    {
-    }
+// Workaround for https://youtrack.jetbrains.com/issue/RSRP-487028
+public partial class PillowsController
+{
+}
+
+[DisableQueryString("skipCache")]
+partial class PillowsController
+{
 }

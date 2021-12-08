@@ -1,389 +1,378 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
+namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching;
+
+public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
 {
-    public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
+    private readonly ReadWriteFakers _fakers = new();
+
+    public FetchResourceTests(IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
-        private readonly ReadWriteFakers _fakers = new();
+        _testContext = testContext;
 
-        public FetchResourceTests(IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
+        testContext.UseController<WorkItemsController>();
+        testContext.UseController<UserAccountsController>();
+    }
+
+    [Fact]
+    public async Task Can_get_primary_resources()
+    {
+        // Arrange
+        List<WorkItem> workItems = _fakers.WorkItem.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            _testContext = testContext;
+            await dbContext.ClearTableAsync<WorkItem>();
+            dbContext.WorkItems.AddRange(workItems);
+            await dbContext.SaveChangesAsync();
+        });
 
-            testContext.UseController<WorkItemsController>();
-            testContext.UseController<UserAccountsController>();
-        }
+        const string route = "/workItems";
 
-        [Fact]
-        public async Task Can_get_primary_resources()
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+
+        ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItems[0].StringId);
+        item1.Type.Should().Be("workItems");
+        item1.Attributes.ShouldContainKey("description").With(value => value.Should().Be(workItems[0].Description));
+        item1.Attributes.ShouldContainKey("dueAt").With(value => value.Should().Be(workItems[0].DueAt));
+        item1.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(workItems[0].Priority));
+        item1.Relationships.ShouldNotBeEmpty();
+
+        ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItems[1].StringId);
+        item2.Type.Should().Be("workItems");
+        item2.Attributes.ShouldContainKey("description").With(value => value.Should().Be(workItems[1].Description));
+        item2.Attributes.ShouldContainKey("dueAt").With(value => value.Should().Be(workItems[1].DueAt));
+        item2.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(workItems[1].Priority));
+        item2.Relationships.ShouldNotBeEmpty();
+    }
+
+    [Fact]
+    public async Task Cannot_get_primary_resources_for_unknown_type()
+    {
+        // Arrange
+        const string route = "/" + Unknown.ResourceType;
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Can_get_primary_resource_by_ID()
+    {
+        // Arrange
+        WorkItem workItem = _fakers.WorkItem.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            List<WorkItem> workItems = _fakers.WorkItem.Generate(2);
+            dbContext.WorkItems.Add(workItem);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<WorkItem>();
-                dbContext.WorkItems.AddRange(workItems);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/workItems/{workItem.StringId}";
 
-            const string route = "/workItems";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+        responseDocument.Data.SingleValue.Id.Should().Be(workItem.StringId);
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(workItem.Description));
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("dueAt").With(value => value.Should().Be(workItem.DueAt));
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(workItem.Priority));
+        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+    }
 
-            responseDocument.Data.ManyValue.ShouldHaveCount(2);
+    [Fact]
+    public async Task Cannot_get_primary_resource_for_unknown_type()
+    {
+        // Arrange
+        string route = $"/{Unknown.ResourceType}/{Unknown.StringId.Int32}";
 
-            ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItems[0].StringId);
-            item1.Type.Should().Be("workItems");
-            item1.Attributes.ShouldContainKey("description").With(value => value.Should().Be(workItems[0].Description));
-            item1.Attributes.ShouldContainKey("dueAt").With(value => value.As<DateTimeOffset?>().Should().BeCloseTo(workItems[0].DueAt!.Value));
-            item1.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(workItems[0].Priority));
-            item1.Relationships.ShouldNotBeEmpty();
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItems[1].StringId);
-            item2.Type.Should().Be("workItems");
-            item2.Attributes.ShouldContainKey("description").With(value => value.Should().Be(workItems[1].Description));
-            item2.Attributes.ShouldContainKey("dueAt").With(value => value.As<DateTimeOffset?>().Should().BeCloseTo(workItems[1].DueAt!.Value));
-            item2.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(workItems[1].Priority));
-            item2.Relationships.ShouldNotBeEmpty();
-        }
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-        [Fact]
-        public async Task Cannot_get_primary_resources_for_unknown_type()
+        responseDocument.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Cannot_get_primary_resource_for_unknown_ID()
+    {
+        // Arrange
+        string workItemId = Unknown.StringId.For<WorkItem, int>();
+
+        string route = $"/workItems/{workItemId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");
+    }
+
+    [Fact]
+    public async Task Can_get_secondary_ManyToOne_resource()
+    {
+        // Arrange
+        WorkItem workItem = _fakers.WorkItem.Generate();
+        workItem.Assignee = _fakers.UserAccount.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            const string route = "/" + Unknown.ResourceType;
+            dbContext.WorkItems.Add(workItem);
+            await dbContext.SaveChangesAsync();
+        });
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+        string route = $"/workItems/{workItem.StringId}/assignee";
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            responseDocument.Should().BeEmpty();
-        }
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-        [Fact]
-        public async Task Can_get_primary_resource_by_ID()
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
+        responseDocument.Data.SingleValue.Id.Should().Be(workItem.Assignee.StringId);
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(workItem.Assignee.FirstName));
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(workItem.Assignee.LastName));
+        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+    }
+
+    [Fact]
+    public async Task Can_get_unknown_secondary_ManyToOne_resource()
+    {
+        // Arrange
+        WorkItem workItem = _fakers.WorkItem.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WorkItem workItem = _fakers.WorkItem.Generate();
+            dbContext.WorkItems.Add(workItem);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WorkItems.Add(workItem);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/workItems/{workItem.StringId}/assignee";
 
-            string route = $"/workItems/{workItem.StringId}";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        responseDocument.Data.Value.Should().BeNull();
+    }
 
-            DateTimeOffset dueAt = workItem.DueAt!.Value;
+    [Fact]
+    public async Task Can_get_secondary_OneToMany_resources()
+    {
+        // Arrange
+        UserAccount userAccount = _fakers.UserAccount.Generate();
+        userAccount.AssignedItems = _fakers.WorkItem.Generate(2).ToHashSet();
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
-            responseDocument.Data.SingleValue.Id.Should().Be(workItem.StringId);
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(workItem.Description));
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("dueAt").With(value => value.As<DateTimeOffset?>().Should().BeCloseTo(dueAt));
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(workItem.Priority));
-            responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
-        }
-
-        [Fact]
-        public async Task Cannot_get_primary_resource_for_unknown_type()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            string route = $"/{Unknown.ResourceType}/{Unknown.StringId.Int32}";
+            dbContext.UserAccounts.Add(userAccount);
+            await dbContext.SaveChangesAsync();
+        });
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+        string route = $"/userAccounts/{userAccount.StringId}/assignedItems";
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            responseDocument.Should().BeEmpty();
-        }
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-        [Fact]
-        public async Task Cannot_get_primary_resource_for_unknown_ID()
+        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+
+        ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
+        item1.Type.Should().Be("workItems");
+        item1.Attributes.ShouldContainKey("description").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(0).Description));
+        item1.Attributes.ShouldContainKey("dueAt").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(0).DueAt));
+        item1.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(0).Priority));
+        item1.Relationships.ShouldNotBeEmpty();
+
+        ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(1).StringId);
+        item2.Type.Should().Be("workItems");
+        item2.Attributes.ShouldContainKey("description").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(1).Description));
+        item2.Attributes.ShouldContainKey("dueAt").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(1).DueAt));
+        item2.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(1).Priority));
+        item2.Relationships.ShouldNotBeEmpty();
+    }
+
+    [Fact]
+    public async Task Can_get_unknown_secondary_OneToMany_resource()
+    {
+        // Arrange
+        UserAccount userAccount = _fakers.UserAccount.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            string workItemId = Unknown.StringId.For<WorkItem, int>();
+            dbContext.UserAccounts.Add(userAccount);
+            await dbContext.SaveChangesAsync();
+        });
 
-            string route = $"/workItems/{workItemId}";
+        string route = $"/userAccounts/{userAccount.StringId}/assignedItems";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue.Should().BeEmpty();
+    }
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");
-        }
+    [Fact]
+    public async Task Can_get_secondary_ManyToMany_resources()
+    {
+        // Arrange
+        WorkItem workItem = _fakers.WorkItem.Generate();
+        workItem.Tags = _fakers.WorkTag.Generate(2).ToHashSet();
 
-        [Fact]
-        public async Task Can_get_secondary_ManyToOne_resource()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WorkItem workItem = _fakers.WorkItem.Generate();
-            workItem.Assignee = _fakers.UserAccount.Generate();
+            dbContext.WorkItems.Add(workItem);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WorkItems.Add(workItem);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/workItems/{workItem.StringId}/tags";
 
-            string route = $"/workItems/{workItem.StringId}/assignee";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        responseDocument.Data.ManyValue.ShouldHaveCount(2);
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
-            responseDocument.Data.SingleValue.Id.Should().Be(workItem.Assignee.StringId);
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(workItem.Assignee.FirstName));
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(workItem.Assignee.LastName));
-            responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
-        }
+        ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(0).StringId);
+        item1.Type.Should().Be("workTags");
+        item1.Attributes.ShouldContainKey("text").With(value => value.Should().Be(workItem.Tags.ElementAt(0).Text));
+        item1.Attributes.ShouldContainKey("isBuiltIn").With(value => value.Should().Be(workItem.Tags.ElementAt(0).IsBuiltIn));
+        item1.Relationships.ShouldNotBeEmpty();
 
-        [Fact]
-        public async Task Can_get_unknown_secondary_ManyToOne_resource()
+        ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(1).StringId);
+        item2.Type.Should().Be("workTags");
+        item2.Attributes.ShouldContainKey("text").With(value => value.Should().Be(workItem.Tags.ElementAt(1).Text));
+        item2.Attributes.ShouldContainKey("isBuiltIn").With(value => value.Should().Be(workItem.Tags.ElementAt(1).IsBuiltIn));
+        item2.Relationships.ShouldNotBeEmpty();
+    }
+
+    [Fact]
+    public async Task Can_get_unknown_secondary_ManyToMany_resources()
+    {
+        // Arrange
+        WorkItem workItem = _fakers.WorkItem.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            WorkItem workItem = _fakers.WorkItem.Generate();
+            dbContext.WorkItems.Add(workItem);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WorkItems.Add(workItem);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/workItems/{workItem.StringId}/tags";
 
-            string route = $"/workItems/{workItem.StringId}/assignee";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        responseDocument.Data.ManyValue.Should().BeEmpty();
+    }
 
-            responseDocument.Data.Value.Should().BeNull();
-        }
+    [Fact]
+    public async Task Cannot_get_secondary_resource_for_unknown_primary_type()
+    {
+        // Arrange
+        string route = $"/{Unknown.ResourceType}/{Unknown.StringId.Int32}/assignee";
 
-        [Fact]
-        public async Task Can_get_secondary_OneToMany_resources()
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Cannot_get_secondary_resource_for_unknown_primary_ID()
+    {
+        // Arrange
+        string workItemId = Unknown.StringId.For<WorkItem, int>();
+
+        string route = $"/workItems/{workItemId}/assignee";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");
+    }
+
+    [Fact]
+    public async Task Cannot_get_secondary_resource_for_unknown_secondary_type()
+    {
+        // Arrange
+        WorkItem workItem = _fakers.WorkItem.Generate();
+        workItem.Assignee = _fakers.UserAccount.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            UserAccount userAccount = _fakers.UserAccount.Generate();
-            userAccount.AssignedItems = _fakers.WorkItem.Generate(2).ToHashSet();
+            dbContext.WorkItems.Add(workItem);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.UserAccounts.Add(userAccount);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/workItems/{workItem.StringId}/{Unknown.Relationship}";
 
-            string route = $"/userAccounts/{userAccount.StringId}/assignedItems";
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            responseDocument.Data.ManyValue.ShouldHaveCount(2);
-
-            DateTimeOffset dueAt1 = userAccount.AssignedItems.ElementAt(0).DueAt!.Value;
-            DateTimeOffset dueAt2 = userAccount.AssignedItems.ElementAt(1).DueAt!.Value;
-
-            ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
-            item1.Type.Should().Be("workItems");
-            item1.Attributes.ShouldContainKey("description").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(0).Description));
-            item1.Attributes.ShouldContainKey("dueAt").With(value => value.As<DateTimeOffset?>().Should().BeCloseTo(dueAt1));
-            item1.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(0).Priority));
-            item1.Relationships.ShouldNotBeEmpty();
-
-            ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(1).StringId);
-            item2.Type.Should().Be("workItems");
-            item2.Attributes.ShouldContainKey("description").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(1).Description));
-            item2.Attributes.ShouldContainKey("dueAt").With(value => value.As<DateTimeOffset?>().Should().BeCloseTo(dueAt2));
-            item2.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(1).Priority));
-            item2.Relationships.ShouldNotBeEmpty();
-        }
-
-        [Fact]
-        public async Task Can_get_unknown_secondary_OneToMany_resource()
-        {
-            // Arrange
-            UserAccount userAccount = _fakers.UserAccount.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.UserAccounts.Add(userAccount);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/userAccounts/{userAccount.StringId}/assignedItems";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.ManyValue.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Can_get_secondary_ManyToMany_resources()
-        {
-            // Arrange
-            WorkItem workItem = _fakers.WorkItem.Generate();
-            workItem.Tags = _fakers.WorkTag.Generate(2).ToHashSet();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WorkItems.Add(workItem);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/workItems/{workItem.StringId}/tags";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.ManyValue.ShouldHaveCount(2);
-
-            ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(0).StringId);
-            item1.Type.Should().Be("workTags");
-            item1.Attributes.ShouldContainKey("text").With(value => value.Should().Be(workItem.Tags.ElementAt(0).Text));
-            item1.Attributes.ShouldContainKey("isBuiltIn").With(value => value.Should().Be(workItem.Tags.ElementAt(0).IsBuiltIn));
-            item1.Relationships.ShouldNotBeEmpty();
-
-            ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(1).StringId);
-            item2.Type.Should().Be("workTags");
-            item2.Attributes.ShouldContainKey("text").With(value => value.Should().Be(workItem.Tags.ElementAt(1).Text));
-            item2.Attributes.ShouldContainKey("isBuiltIn").With(value => value.Should().Be(workItem.Tags.ElementAt(1).IsBuiltIn));
-            item2.Relationships.ShouldNotBeEmpty();
-        }
-
-        [Fact]
-        public async Task Can_get_unknown_secondary_ManyToMany_resources()
-        {
-            // Arrange
-            WorkItem workItem = _fakers.WorkItem.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WorkItems.Add(workItem);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/workItems/{workItem.StringId}/tags";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.ManyValue.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Cannot_get_secondary_resource_for_unknown_primary_type()
-        {
-            // Arrange
-            string route = $"/{Unknown.ResourceType}/{Unknown.StringId.Int32}/assignee";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Cannot_get_secondary_resource_for_unknown_primary_ID()
-        {
-            // Arrange
-            string workItemId = Unknown.StringId.For<WorkItem, int>();
-
-            string route = $"/workItems/{workItemId}/assignee";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");
-        }
-
-        [Fact]
-        public async Task Cannot_get_secondary_resource_for_unknown_secondary_type()
-        {
-            // Arrange
-            WorkItem workItem = _fakers.WorkItem.Generate();
-            workItem.Assignee = _fakers.UserAccount.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.WorkItems.Add(workItem);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/workItems/{workItem.StringId}/{Unknown.Relationship}";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested relationship does not exist.");
-            error.Detail.Should().Be($"Resource of type 'workItems' does not contain a relationship named '{Unknown.Relationship}'.");
-        }
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested relationship does not exist.");
+        error.Detail.Should().Be($"Resource of type 'workItems' does not contain a relationship named '{Unknown.Relationship}'.");
     }
 }

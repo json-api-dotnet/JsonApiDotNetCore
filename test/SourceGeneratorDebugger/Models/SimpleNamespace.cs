@@ -4,13 +4,12 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 // ReSharper disable CheckNamespace
 
-namespace SourceGeneratorDebugger
+namespace SourceGeneratorDebugger;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+[Resource]
+public sealed class SimpleNamespace : Identifiable<int>
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    [Resource]
-    public sealed class SimpleNamespace : Identifiable<int>
-    {
-        [Attr]
-        public string? Value { get; set; }
-    }
+    [Attr]
+    public string? Value { get; set; }
 }

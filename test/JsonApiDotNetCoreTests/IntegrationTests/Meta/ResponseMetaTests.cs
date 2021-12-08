@@ -1,6 +1,4 @@
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Response;
@@ -8,46 +6,46 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
+namespace JsonApiDotNetCoreTests.IntegrationTests.Meta;
+
+public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext>>
 {
-    public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext> _testContext;
+
+    public ResponseMetaTests(IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext> _testContext;
+        _testContext = testContext;
 
-        public ResponseMetaTests(IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext> testContext)
+        testContext.UseController<ProductFamiliesController>();
+        testContext.UseController<SupportTicketsController>();
+
+        testContext.ConfigureServicesAfterStartup(services =>
         {
-            _testContext = testContext;
+            services.AddSingleton<IResponseMeta, SupportResponseMeta>();
+        });
 
-            testContext.UseController<ProductFamiliesController>();
-            testContext.UseController<SupportTicketsController>();
+        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.IncludeTotalResourceCount = false;
+    }
 
-            testContext.ConfigureServicesAfterStartup(services =>
-            {
-                services.AddSingleton<IResponseMeta, SupportResponseMeta>();
-            });
-
-            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.IncludeTotalResourceCount = false;
-        }
-
-        [Fact]
-        public async Task Returns_top_level_meta()
+    [Fact]
+    public async Task Returns_top_level_meta()
+    {
+        // Arrange
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<SupportTicket>();
-            });
+            await dbContext.ClearTableAsync<SupportTicket>();
+        });
 
-            const string route = "/supportTickets";
+        const string route = "/supportTickets";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/supportTickets"",
     ""first"": ""http://localhost/supportTickets""
@@ -64,6 +62,5 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
     ]
   }
 }");
-        }
     }
 }

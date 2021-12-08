@@ -88,11 +88,6 @@ public class CustomExceptionHandler : ExceptionHandler
     }
 }
 
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddScoped<IExceptionHandler, CustomExceptionHandler>();
-    }
-}
+// Program.cs
+builder.Services.AddScoped<IExceptionHandler, CustomExceptionHandler>();
 ```

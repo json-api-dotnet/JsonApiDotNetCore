@@ -25,18 +25,15 @@ on your needs, you may want to replace other parts by deriving from the built-in
 
 **Note:** If you're using [auto-discovery](~/usage/resource-graph.md#auto-discovery), then resource services, repositories and resource definitions will be automatically registered for you.
 
-Replacing built-in services is done on a per-resource basis and can be done through dependency injection in your Startup.cs file.
+Replacing built-in services is done on a per-resource basis and can be done at startup.
 For convenience, extension methods are provided to register layers on all their implemented interfaces.
 
 ```c#
-// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddResourceService<ProductService>();
-    services.AddResourceRepository<ProductRepository>();
-    services.AddResourceDefinition<ProductDefinition>();
+// Program.cs
+builder.Services.AddResourceService<ProductService>();
+builder.Services.AddResourceRepository<ProductRepository>();
+builder.Services.AddResourceDefinition<ProductDefinition>();
 
-    services.AddScoped<IResourceFactory, CustomResourceFactory>();
-    services.AddScoped<IJsonApiSerializerFactory, CustomResponseSerializerFactory>();
-}
+builder.Services.AddScoped<IResourceFactory, CustomResourceFactory>();
+builder.Services.AddScoped<IResponseModelAdapter, CustomResponseModelAdapter>();
 ```
