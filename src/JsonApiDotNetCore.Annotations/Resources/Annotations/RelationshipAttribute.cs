@@ -63,9 +63,8 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
     public ResourceType RightType { get; internal set; } = null!;
 
     /// <summary>
-    /// Configures which links to show in the <see cref="Serialization.Objects.RelationshipLinks" /> object for this relationship. Defaults to
-    /// <see cref="LinkTypes.NotConfigured" />, which falls back to <see cref="ResourceLinksAttribute.RelationshipLinks" /> and then falls back to
-    /// <see cref="IJsonApiOptions.RelationshipLinks" />.
+    /// Configures which links to write in the relationship-level links object for this relationship. Defaults to <see cref="LinkTypes.NotConfigured" />,
+    /// which falls back to <see cref="ResourceLinksAttribute.RelationshipLinks" /> and then falls back to RelationshipLinks in global options.
     /// </summary>
     public LinkTypes Links { get; set; } = LinkTypes.NotConfigured;
 

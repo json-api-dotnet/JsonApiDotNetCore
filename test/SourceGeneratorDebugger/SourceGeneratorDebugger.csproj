@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\src\JsonApiDotNetCore\Controllers\JsonApiEndpoints.cs" Link="JsonApiDotNetCore\JsonApiEndpoints.cs" />
-    <Compile Include="..\..\src\JsonApiDotNetCore\Resources\Annotations\ResourceAttribute.cs" Link="JsonApiDotNetCore\ResourceAttribute.cs" />
+    <Compile Include="..\..\src\JsonApiDotNetCore.Annotations\Controllers\JsonApiEndpoints.cs" Link="JsonApiDotNetCore\JsonApiEndpoints.cs" />
+    <Compile Include="..\..\src\JsonApiDotNetCore.Annotations\Resources\Annotations\ResourceAttribute.cs" Link="JsonApiDotNetCore\ResourceAttribute.cs" />
   </ItemGroup>
 
   <ItemGroup>
