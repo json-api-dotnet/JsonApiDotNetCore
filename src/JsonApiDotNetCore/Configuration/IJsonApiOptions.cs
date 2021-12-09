@@ -63,19 +63,19 @@ public interface IJsonApiOptions
     bool UseRelativeLinks { get; }
 
     /// <summary>
-    /// Configures which links to show in the <see cref="Serialization.Objects.TopLevelLinks" /> object. Defaults to <see cref="LinkTypes.All" />. This
+    /// Configures which links to write in the <see cref="Serialization.Objects.TopLevelLinks" /> object. Defaults to <see cref="LinkTypes.All" />. This
     /// setting can be overruled per resource type by adding <see cref="ResourceLinksAttribute" /> on the class definition of a resource.
     /// </summary>
     LinkTypes TopLevelLinks { get; }
 
     /// <summary>
-    /// Configures which links to show in the <see cref="Serialization.Objects.ResourceLinks" /> object. Defaults to <see cref="LinkTypes.All" />. This
+    /// Configures which links to write in the <see cref="Serialization.Objects.ResourceLinks" /> object. Defaults to <see cref="LinkTypes.All" />. This
     /// setting can be overruled per resource type by adding <see cref="ResourceLinksAttribute" /> on the class definition of a resource.
     /// </summary>
     LinkTypes ResourceLinks { get; }
 
     /// <summary>
-    /// Configures which links to show in the <see cref="Serialization.Objects.RelationshipLinks" /> object. Defaults to <see cref="LinkTypes.All" />. This
+    /// Configures which links to write in the <see cref="Serialization.Objects.RelationshipLinks" /> object. Defaults to <see cref="LinkTypes.All" />. This
     /// setting can be overruled for all relationships per resource type by adding <see cref="ResourceLinksAttribute" /> on the class definition of a
     /// resource. This can be further overruled per relationship by setting <see cref="RelationshipAttribute.Links" />.
     /// </summary>

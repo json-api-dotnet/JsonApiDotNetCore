@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JsonApiDotNetCore.Annotations\JsonApiDotNetCore.Annotations.csproj" />
     <ProjectReference Include="..\JsonApiDotNetCore.SourceGenerators\JsonApiDotNetCore.SourceGenerators.csproj" IncludeAssets="analyzers" />
   </ItemGroup>
 
