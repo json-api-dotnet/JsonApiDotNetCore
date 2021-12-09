@@ -75,8 +75,8 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     private static bool IsSecondaryOrRelationshipEndpoint(JsonApiEndpoint endpoint)
     {
-        return endpoint is JsonApiEndpoint.GetSecondary or JsonApiEndpoint.GetRelationship
-            or JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship;
+        return endpoint is JsonApiEndpoint.GetSecondary or JsonApiEndpoint.GetRelationship or JsonApiEndpoint.PostRelationship
+            or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship;
     }
 
     private void SetResponseMetadata(ActionModel action, JsonApiEndpoint endpoint)
@@ -160,7 +160,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     private static bool RequiresRequestBody(JsonApiEndpoint endpoint)
     {
-        return endpoint is JsonApiEndpoint.Post or JsonApiEndpoint.Patch
-            or JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship;
+        return endpoint is JsonApiEndpoint.Post or JsonApiEndpoint.Patch or JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship
+            or JsonApiEndpoint.DeleteRelationship;
     }
 }
