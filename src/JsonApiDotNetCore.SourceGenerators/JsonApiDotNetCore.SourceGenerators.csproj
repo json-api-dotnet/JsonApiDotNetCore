@@ -13,7 +13,7 @@
   <PropertyGroup>
     <VersionPrefix>$(JsonApiDotNetCoreVersionPrefix)</VersionPrefix>
     <PackageTags>jsonapidotnetcore;jsonapi;json:api;dotnet;asp.net;rest;web-api</PackageTags>
-    <Description>Source generators for JsonApiDotNetCore</Description>
+    <Description>Source generators for JsonApiDotNetCore, a framework for building JSON:API compliant REST APIs using ASP.NET and Entity Framework Core.</Description>
     <Authors>json-api-dotnet</Authors>
     <PackageProjectUrl>https://www.jsonapi.net/</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
