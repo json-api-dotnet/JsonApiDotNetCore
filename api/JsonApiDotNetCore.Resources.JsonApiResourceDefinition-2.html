@@ -229,7 +229,7 @@ public class JsonApiResourceDefinition&lt;TResource, TId&gt; : IResourceDefiniti
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
+        <td><span class="xref">JsonApiDotNetCore.Configuration.ResourceType</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -376,13 +376,13 @@ Implementing this method enables to perform validations and make changes to <cod
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></td>
+        <td><span class="xref">JsonApiDotNetCore.Resources.Annotations.HasManyAttribute</span></td>
         <td><span class="parametername">hasManyRelationship</span></td>
         <td><p>The to-many relationship being added to.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
+        <td><span class="xref">ISet</span>&lt;<span class="xref">JsonApiDotNetCore.Resources.IIdentifiable</span>&gt;</td>
         <td><span class="parametername">rightResourceIds</span></td>
         <td><p>The set of resource identifiers to add to the to-many relationship, coming from the request.</p>
 </td>
@@ -846,13 +846,13 @@ resources to be removed.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></td>
+        <td><span class="xref">JsonApiDotNetCore.Resources.Annotations.HasManyAttribute</span></td>
         <td><span class="parametername">hasManyRelationship</span></td>
         <td><p>The to-many relationship being removed from.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
+        <td><span class="xref">ISet</span>&lt;<span class="xref">JsonApiDotNetCore.Resources.IIdentifiable</span>&gt;</td>
         <td><span class="parametername">rightResourceIds</span></td>
         <td><p>The set of resource identifiers to remove from the to-many relationship, coming from the request.</p>
 </td>
@@ -951,13 +951,13 @@ declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TRes
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></td>
+        <td><span class="xref">JsonApiDotNetCore.Resources.Annotations.HasManyAttribute</span></td>
         <td><span class="parametername">hasManyRelationship</span></td>
         <td><p>The to-many relationship being set.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
+        <td><span class="xref">ISet</span>&lt;<span class="xref">JsonApiDotNetCore.Resources.IIdentifiable</span>&gt;</td>
         <td><span class="parametername">rightResourceIds</span></td>
         <td><p>The set of resource identifiers to replace any existing set with, coming from the request.</p>
 </td>
@@ -1029,13 +1029,13 @@ declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TRes
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html">HasOneAttribute</a></td>
+        <td><span class="xref">JsonApiDotNetCore.Resources.Annotations.HasOneAttribute</span></td>
         <td><span class="parametername">hasOneRelationship</span></td>
         <td><p>The to-one relationship being set.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a></td>
+        <td><span class="xref">JsonApiDotNetCore.Resources.IIdentifiable</span></td>
         <td><span class="parametername">rightResourceId</span></td>
         <td><p>The new resource identifier (or <code>null</code> to clear the relationship), coming from the request.</p>
 </td>
@@ -1065,7 +1065,7 @@ declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TRes
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">JsonApiDotNetCore.Resources.IIdentifiable</span>&gt;</td>
         <td><p>The replacement resource identifier, or <code>null</code> to clear the relationship. Returns <code data-dev-comment-type="paramref" class="paramref">rightResourceId</code> by default.</p>
 </td>
       </tr>
@@ -1180,7 +1180,7 @@ Another use case is to add a notification message to an outbox table, which gets
         <td><p>The original resource retrieved from the underlying data store (or a freshly instantiated resource in case of a POST resource request), updated with
 the changes from the incoming request. Exception: In case <code data-dev-comment-type="paramref" class="paramref">writeOperation</code> is <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_DeleteResource">DeleteResource</a>,
 <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_AddToRelationship">AddToRelationship</a> or <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_RemoveFromRelationship">RemoveFromRelationship</a>, this is an empty object with only
-the <a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_Id">Id</a> property set, because for those endpoints no resource is retrieved upfront.</p>
+the <span class="xref">JsonApiDotNetCore.Resources.Identifiable`1.Id</span> property set, because for those endpoints no resource is retrieved upfront.</p>
 </td>
       </tr>
       <tr>
