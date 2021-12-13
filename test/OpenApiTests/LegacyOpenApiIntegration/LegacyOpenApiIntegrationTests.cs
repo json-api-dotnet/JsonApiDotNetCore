@@ -1,5 +1,6 @@
 using System.Reflection;
 using FluentAssertions;
+using OpenApiTests.Controllers;
 using TestBuildingBlocks;
 using Xunit;
 

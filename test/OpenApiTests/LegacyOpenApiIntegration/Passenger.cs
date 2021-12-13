@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace OpenApiTests.LegacyOpenApiIntegration;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+[Resource]
 public sealed class Passenger : Identifiable<string>
 {
     [Attr(PublicName = "document-number", Capabilities = AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]

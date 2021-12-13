@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace OpenApiTests.LegacyOpenApiIntegration;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+[Resource]
 public sealed class FlightAttendant : Identifiable<string>
 {
     [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowFilter)]
