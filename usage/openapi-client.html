@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>OpenAPI Client </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="OpenAPI Client ">
+    <meta name="generator" content="docfx 2.58.9.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="openapi-client">OpenAPI Client</h1>
+
+<p>You can generate a JSON:API client in various programming languages from the <a href="https://swagger.io/specification/">OpenAPI specification</a> file that JsonApiDotNetCore APIs provide.</p>
+<p>For C# .NET clients generated using <a href="https://github.com/RicoSuter/NSwag">NSwag</a>, we provide an additional package that introduces support for partial PATCH/POST requests. The issue here is that a property on a generated C# class being <code>null</code> could mean &quot;set the value to <code>null</code> in the request&quot; or &quot;this is <code>null</code> because I never touched it&quot;.</p>
+<h2 id="getting-started">Getting started</h2>
+<h3 id="visual-studio">Visual Studio</h3>
+<p>The easiest way to get started is by using the built-in capabilities of Visual Studio. The next steps describe how to generate a JSON:API client library and use our package.</p>
+<ol>
+<li><p>In <strong>Solution Explorer</strong>, right-click your client project, select <strong>Add</strong> &gt; <strong>Service Reference</strong> and choose <strong>OpenAPI</strong>.</p>
+</li>
+<li><p>On the next page, specify the OpenAPI URL to your JSON:API server, for example: <code>http://localhost:14140/swagger/v1/swagger.json</code>.
+Optionally provide a class name and namespace and click <strong>Finish</strong>.
+Visual Studio now downloads your swagger.json and updates your project file. This results in a pre-build step that generates the client code.</p>
+<p>Tip: To later re-download swagger.json and regenerate the client code, right-click <strong>Dependencies</strong> &gt; <strong>Manage Connected Services</strong> and click the <strong>Refresh</strong> icon.</p>
+</li>
+<li><p>Although not strictly required, we recommend to run package update now, which fixes some issues and removes the <code>Stream</code> parameter from generated calls.</p>
+</li>
+<li><p>Add some demo code that calls one of your JSON:API endpoints. For example:</p>
+<pre><code class="lang-c#">using var httpClient = new HttpClient();
+var apiClient = new ExampleApiClient(&quot;http://localhost:14140&quot;, httpClient);
+
+PersonCollectionResponseDocument getResponse =
+    await apiClient.GetPersonCollectionAsync();
+
+foreach (PersonDataInResponse person in getResponse.Data)
+{
+    Console.WriteLine($&quot;Found user {person.Id} named &quot; +
+        $&quot;&#39;{person.Attributes.FirstName} {person.Attributes.LastName}&#39;.&quot;);
+}
+</code></pre></li>
+<li><p>Add our client package to your project:</p>
+<pre><code>dotnet add package JsonApiDotNetCore.OpenApi.Client
+</code></pre></li>
+<li><p>Add the following glue code to connect our package with your generated code. The code below assumes you specified <code>ExampleApiClient</code> as class name in step 2.</p>
+<pre><code class="lang-c#">using JsonApiDotNetCore.OpenApi.Client;
+using Newtonsoft.Json;
+
+partial class ExampleApiClient : JsonApiClient
+{
+    partial void UpdateJsonSerializerSettings(JsonSerializerSettings settings)
+    {
+        SetSerializerSettingsForJsonApi(settings);
+    }
+}
+</code></pre></li>
+<li><p>Extend your demo code to send a partial PATCH request with the help of our package:</p>
+<pre><code class="lang-c#">var patchRequest = new PersonPatchRequestDocument
+{
+    Data = new PersonDataInPatchRequest
+    {
+        Id = &quot;1&quot;,
+        Attributes = new PersonAttributesInPatchRequest
+        {
+            FirstName = &quot;Jack&quot;
+        }
+    }
+};
+
+// This line results in sending &quot;lastName: null&quot; instead of omitting it.
+using (apiClient.RegisterAttributesForRequestDocument&lt;PersonPatchRequestDocument,
+    PersonAttributesInPatchRequest&gt;(patchRequest, person =&gt; person.LastName))
+{
+    PersonPrimaryResponseDocument patchResponse =
+        await apiClient.PatchPersonAsync(&quot;1&quot;, patchRequest);
+
+    // The sent request looks like this:
+    // {
+    //   &quot;data&quot;: {
+    //     &quot;type&quot;: &quot;people&quot;,
+    //     &quot;id&quot;: &quot;1&quot;,
+    //     &quot;attributes&quot;: {
+    //       &quot;firstName&quot;: &quot;Jack&quot;,
+    //       &quot;lastName&quot;: null
+    //     }
+    //   }
+    // }
+}
+</code></pre></li>
+</ol>
+<h3 id="other-ides">Other IDEs</h3>
+<p>When using the command-line, you can try the <a href="https://docs.microsoft.com/en-us/aspnet/core/web-api/microsoft.dotnet-openapi?view=aspnetcore-5.0">Microsoft.dotnet-openapi Global Tool</a>.</p>
+<p>Alternatively, the next section shows what to add to your client project file directly:</p>
+<pre><code class="lang-xml">&lt;ItemGroup&gt;
+  &lt;PackageReference Include=&quot;Microsoft.Extensions.ApiDescription.Client&quot; Version=&quot;3.0.0&quot;&gt;
+    &lt;PrivateAssets&gt;all&lt;/PrivateAssets&gt;
+    &lt;IncludeAssets&gt;runtime; build; native; contentfiles; analyzers; buildtransitive&lt;/IncludeAssets&gt;
+  &lt;/PackageReference&gt;
+  &lt;PackageReference Include=&quot;Newtonsoft.Json&quot; Version=&quot;12.0.2&quot; /&gt;
+  &lt;PackageReference Include=&quot;NSwag.ApiDescription.Client&quot; Version=&quot;13.0.5&quot;&gt;
+    &lt;PrivateAssets&gt;all&lt;/PrivateAssets&gt;
+    &lt;IncludeAssets&gt;runtime; build; native; contentfiles; analyzers; buildtransitive&lt;/IncludeAssets&gt;
+  &lt;/PackageReference&gt;
+&lt;/ItemGroup&gt;
+
+&lt;ItemGroup&gt;
+  &lt;OpenApiReference Include=&quot;OpenAPIs\swagger.json&quot; CodeGenerator=&quot;NSwagCSharp&quot; ClassName=&quot;ExampleApiClient&quot;&gt;
+    &lt;SourceUri&gt;http://localhost:14140/swagger/v1/swagger.json&lt;/SourceUri&gt;
+  &lt;/OpenApiReference&gt;
+&lt;/ItemGroup&gt;
+</code></pre><p>From here, continue from step 3 in the list of steps for Visual Studio.</p>
+<h2 id="configuration">Configuration</h2>
+<h3 id="nswag">NSwag</h3>
+<p>The <code>OpenApiReference</code> element in the project file accepts an <code>Options</code> element to pass additional settings to the client generator,
+which are listed <a href="https://github.com/RicoSuter/NSwag/blob/master/src/NSwag.Commands/Commands/CodeGeneration/OpenApiToCSharpClientCommand.cs">here</a>.</p>
+<p>For example, the next section puts the generated code in a namespace, removes the <code>baseUrl</code> parameter and generates an interface (which is handy for dependency injection):</p>
+<pre><code class="lang-xml">&lt;OpenApiReference Include=&quot;swagger.json&quot;&gt;
+  &lt;Namespace&gt;ExampleProject.GeneratedCode&lt;/Namespace&gt;
+  &lt;ClassName&gt;SalesApiClient&lt;/ClassName&gt;
+  &lt;CodeGenerator&gt;NSwagCSharp&lt;/CodeGenerator&gt;
+  &lt;Options&gt;/UseBaseUrl:false /GenerateClientInterfaces:true&lt;/Options&gt;
+&lt;/OpenApiReference&gt;
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/openapi-client.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
