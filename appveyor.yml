@@ -15,7 +15,6 @@ environment:
 branches:
   only:
   - master
-  - openapi
   - develop
   - unstable
   - /release\/.+/
@@ -72,7 +71,7 @@ for:
         CD _site
         git add -A 2>&1
         git commit -m "Automated commit from cibuild" -q
-        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE -And $env:APPVEYOR_REPO_BRANCH -eq 'master') {
+        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
             git push origin gh-pages -q
             echo "Documentation updated successfully."
         }

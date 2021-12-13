@@ -7,12 +7,10 @@
     <ProjectReference Include="..\..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
     <ProjectReference Include="..\..\JsonApiDotNetCore.SourceGenerators\JsonApiDotNetCore.SourceGenerators.csproj" OutputItemType="Analyzer"
       ReferenceOutputAssembly="false" />
-    <ProjectReference Include="..\..\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EFCoreVersion)" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(EFCorePostgresVersion)" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="$(SwashbuckleVersion)" />
   </ItemGroup>
 </Project>

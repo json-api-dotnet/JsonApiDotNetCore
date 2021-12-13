@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
-using JsonApiDotNetCore.OpenApi;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -54,8 +53,6 @@ static void ConfigureServices(WebApplicationBuilder builder)
 #endif
     });
 
-    IMvcCoreBuilder mvcCoreBuilder = builder.Services.AddMvcCore();
-
     using (CodeTimingSessionManager.Current.Measure("AddJsonApi()"))
     {
         builder.Services.AddJsonApi<AppDbContext>(options =>
@@ -69,12 +66,7 @@ static void ConfigureServices(WebApplicationBuilder builder)
             options.IncludeExceptionStackTraceInErrors = true;
             options.IncludeRequestBodyInErrors = true;
 #endif
-        }, discovery => discovery.AddCurrentAssembly(), mvcBuilder: mvcCoreBuilder);
-    }
-
-    using (CodeTimingSessionManager.Current.Measure("AddOpenApi()"))
-    {
-        builder.Services.AddOpenApi(mvcCoreBuilder);
+        }, discovery => discovery.AddCurrentAssembly());
     }
 }
 
@@ -94,9 +86,6 @@ static void ConfigurePipeline(WebApplication webApplication)
     {
         webApplication.UseJsonApi();
     }
-
-    webApplication.UseSwagger();
-    webApplication.UseSwaggerUI();
 
     webApplication.MapControllers();
 }
