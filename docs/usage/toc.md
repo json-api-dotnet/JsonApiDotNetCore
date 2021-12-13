@@ -23,6 +23,9 @@
 # [Metadata](meta.md)
 # [Caching](caching.md)
 
+# [OpenAPI](openapi.md)
+## [Client](openapi-client.md)
+
 # Extensibility
 ## [Layer Overview](extensibility/layer-overview.md)
 ## [Resource Definitions](extensibility/resource-definitions.md)
@@ -31,3 +34,4 @@
 ## [Resource Repositories](extensibility/repositories.md)
 ## [Middleware](extensibility/middleware.md)
 ## [Query Strings](extensibility/query-strings.md)
+
