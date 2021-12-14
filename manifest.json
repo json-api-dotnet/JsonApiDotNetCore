@@ -3985,30 +3985,6 @@
     },
     {
       "type": "Conceptual",
-      "source_relative_path": "usage/openapi-client.md",
-      "output": {
-        ".html": {
-          "relative_path": "usage/openapi-client.html",
-          "hash": "s+oLP4yjgs1mnR4O7tdE4GNr38vGFFfehTd7+u0yi6s="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
-      "source_relative_path": "usage/openapi.md",
-      "output": {
-        ".html": {
-          "relative_path": "usage/openapi.html",
-          "hash": "gxxZ7g1zA3c5JUtNMCPyrFrI+/ycPluTmvQv9bP7wS0="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "Conceptual",
       "source_relative_path": "usage/options.md",
       "output": {
         ".html": {
@@ -4157,7 +4133,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/toc.html",
-          "hash": "uanoEVAjjsY5Aee8FrBgA7ttiplwAR8wNGKZegPu+y4="
+          "hash": "W7pHapK4pN2OSu5rQHXwNJIp3RqcBop9WuBcGq1lJmM="
         }
       },
       "is_incremental": false,
@@ -4226,7 +4202,7 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 37,
+          "total_file_count": 35,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
