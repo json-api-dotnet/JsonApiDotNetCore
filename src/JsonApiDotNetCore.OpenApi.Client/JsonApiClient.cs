@@ -113,12 +113,12 @@ namespace JsonApiDotNetCore.OpenApi.Client
                 return !_isSerializing && _requestDocumentInstancesPerRequestDocumentType.ContainsKey(objectType);
             }
 
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
             {
                 throw new Exception("This code should not be reachable.");
             }
 
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
             {
                 ArgumentGuard.NotNull(writer, nameof(writer));
                 ArgumentGuard.NotNull(value, nameof(value));
@@ -202,9 +202,9 @@ namespace JsonApiDotNetCore.OpenApi.Client
             {
                 JsonProperty property = base.CreateProperty(member, memberSerialization);
 
-                if (_attributeNamesContainer.ContainerMatchesType(property.DeclaringType))
+                if (_attributeNamesContainer.ContainerMatchesType(property.DeclaringType!))
                 {
-                    if (_attributeNamesContainer.ContainsAttribute(property.UnderlyingName))
+                    if (_attributeNamesContainer.ContainsAttribute(property.UnderlyingName!))
                     {
                         property.NullValueHandling = NullValueHandling.Include;
                         property.DefaultValueHandling = DefaultValueHandling.Include;

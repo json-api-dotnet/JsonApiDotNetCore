@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>$(JsonApiDotNetCoreVersionPrefix)</VersionPrefix>
-    <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
+    <TargetFramework>$(TargetFrameworkName)</TargetFramework>
+    <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup>
+    <VersionPrefix>$(JsonApiDotNetCoreVersionPrefix)</VersionPrefix>
     <PackageTags>jsonapidotnetcore;jsonapi;json:api;dotnet;asp.net;openapi;swagger;swaggerui;swashbuckle</PackageTags>
     <Description>A Swashbuckle integration that enables you to describe a JsonApiDotNetCore API with an OpenAPI specification.</Description>
     <Authors>json-api-dotnet</Authors>

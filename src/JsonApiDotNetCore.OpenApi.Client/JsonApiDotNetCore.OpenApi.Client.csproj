@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>$(JsonApiDotNetCoreVersionPrefix)</VersionPrefix>
-    <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
+    <TargetFramework>$(TargetFrameworkName)</TargetFramework>
+    <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup>
+    <VersionPrefix>$(JsonApiDotNetCoreVersionPrefix)</VersionPrefix>
     <PackageTags>jsonapidotnetcore;jsonapi;json:api;dotnet;asp.net;openapi;swagger;client;nswag</PackageTags>
     <Description>Provides support for OpenAPI generated clients in sending partial POST/PATCH requests against JSON:API endpoints.</Description>
     <Authors>json-api-dotnet</Authors>
