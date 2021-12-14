@@ -52,7 +52,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
                 return true;
             }
 
-            if (endpoint == JsonApiEndpoint.DeleteRelationship || endpoint == JsonApiEndpoint.PostRelationship)
+            if (endpoint is JsonApiEndpoint.DeleteRelationship or JsonApiEndpoint.PostRelationship)
             {
                 return !relationships.OfType<HasManyAttribute>().Any();
             }
@@ -75,8 +75,8 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     private static bool IsSecondaryOrRelationshipEndpoint(JsonApiEndpoint endpoint)
     {
-        return endpoint == JsonApiEndpoint.GetSecondary || endpoint == JsonApiEndpoint.GetRelationship || endpoint == JsonApiEndpoint.PostRelationship ||
-            endpoint == JsonApiEndpoint.PatchRelationship || endpoint == JsonApiEndpoint.DeleteRelationship;
+        return endpoint is JsonApiEndpoint.GetSecondary or JsonApiEndpoint.GetRelationship or JsonApiEndpoint.PostRelationship
+            or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship;
     }
 
     private void SetResponseMetadata(ActionModel action, JsonApiEndpoint endpoint)
@@ -160,7 +160,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     private static bool RequiresRequestBody(JsonApiEndpoint endpoint)
     {
-        return endpoint is JsonApiEndpoint.Post || endpoint is JsonApiEndpoint.Patch || endpoint is JsonApiEndpoint.PostRelationship ||
-            endpoint is JsonApiEndpoint.PatchRelationship || endpoint is JsonApiEndpoint.DeleteRelationship;
+        return endpoint is JsonApiEndpoint.Post or JsonApiEndpoint.Patch or JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship
+            or JsonApiEndpoint.DeleteRelationship;
     }
 }

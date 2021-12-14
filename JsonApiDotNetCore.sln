@@ -52,15 +52,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SourceGeneratorTests", "tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore.Annotations", "src\JsonApiDotNetCore.Annotations\JsonApiDotNetCore.Annotations.csproj", "{83FF097C-C8C6-477B-9FAB-DF99B84978B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonApiDotNetCore.OpenApi", "src\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj", "{71287D6F-6C3B-44B4-9FCA-E78FE3F02289}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore.OpenApi", "src\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj", "{71287D6F-6C3B-44B4-9FCA-E78FE3F02289}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApiTests", "test\OpenApiTests\OpenApiTests.csproj", "{B693DE14-BB28-496F-AB39-B4E674ABCA80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiTests", "test\OpenApiTests\OpenApiTests.csproj", "{B693DE14-BB28-496F-AB39-B4E674ABCA80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonApiDotNetCore.OpenApi.Client", "src\JsonApiDotNetCore.OpenApi.Client\JsonApiDotNetCore.OpenApi.Client.csproj", "{5ADAA902-5A75-4ECB-B4B4-03291D63CE9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore.OpenApi.Client", "src\JsonApiDotNetCore.OpenApi.Client\JsonApiDotNetCore.OpenApi.Client.csproj", "{5ADAA902-5A75-4ECB-B4B4-03291D63CE9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonApiDotNetCoreExampleClient", "src\Examples\JsonApiDotNetCoreExampleClient\JsonApiDotNetCoreExampleClient.csproj", "{7FC5DFA3-6F66-4FD8-820D-81E93856F252}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCoreExampleClient", "src\Examples\JsonApiDotNetCoreExampleClient\JsonApiDotNetCoreExampleClient.csproj", "{7FC5DFA3-6F66-4FD8-820D-81E93856F252}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApiClientTests", "test\OpenApiClientTests\OpenApiClientTests.csproj", "{77F98215-3085-422E-B99D-4C404C2114CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiClientTests", "test\OpenApiClientTests\OpenApiClientTests.csproj", "{77F98215-3085-422E-B99D-4C404C2114CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

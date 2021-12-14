@@ -17,11 +17,4 @@
   <ItemGroup>
     <EmbeddedResource Include="LegacyOpenApiIntegration\swagger.json" />
   </ItemGroup>
-
-  <!-- Fixes IntelliSense errors on openapi.json in Visual Studio 2019, which uses the schema for OpenAPI 3.1 by default. -->
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties swagger_1json__JsonSchema="https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json" />
-    </VisualStudio>
-  </ProjectExtensions>
 </Project>

@@ -118,23 +118,25 @@ public abstract class JsonApiClient : IJsonApiClient
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             ArgumentGuard.NotNull(writer, nameof(writer));
-            ArgumentGuard.NotNull(value, nameof(value));
             ArgumentGuard.NotNull(serializer, nameof(serializer));
 
-            if (_alwaysIncludedAttributesPerRequestDocumentInstance.ContainsKey(value))
+            if (value != null)
             {
-                AttributeNamesContainer attributeNamesContainer = _alwaysIncludedAttributesPerRequestDocumentInstance[value];
-                serializer.ContractResolver = new JsonApiDocumentContractResolver(attributeNamesContainer);
-            }
+                if (_alwaysIncludedAttributesPerRequestDocumentInstance.ContainsKey(value))
+                {
+                    AttributeNamesContainer attributeNamesContainer = _alwaysIncludedAttributesPerRequestDocumentInstance[value];
+                    serializer.ContractResolver = new JsonApiDocumentContractResolver(attributeNamesContainer);
+                }
 
-            try
-            {
-                _isSerializing = true;
-                serializer.Serialize(writer, value);
-            }
-            finally
-            {
-                _isSerializing = false;
+                try
+                {
+                    _isSerializing = true;
+                    serializer.Serialize(writer, value);
+                }
+                finally
+                {
+                    _isSerializing = false;
+                }
             }
         }
     }
