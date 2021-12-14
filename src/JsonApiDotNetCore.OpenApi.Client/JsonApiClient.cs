@@ -1,223 +1,219 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace JsonApiDotNetCore.OpenApi.Client
+namespace JsonApiDotNetCore.OpenApi.Client;
+
+/// <summary>
+/// Base class to inherit auto-generated client from. Enables to mark fields to be explicitly included in a request body, even if they are null or
+/// default.
+/// </summary>
+[PublicAPI]
+public abstract class JsonApiClient : IJsonApiClient
 {
-    /// <summary>
-    /// Base class to inherit auto-generated client from. Enables to mark fields to be explicitly included in a request body, even if they are null or
-    /// default.
-    /// </summary>
-    [PublicAPI]
-    public abstract class JsonApiClient : IJsonApiClient
+    private readonly JsonApiJsonConverter _jsonApiJsonConverter = new();
+
+    protected void SetSerializerSettingsForJsonApi(JsonSerializerSettings settings)
     {
-        private readonly JsonApiJsonConverter _jsonApiJsonConverter = new();
+        ArgumentGuard.NotNull(settings, nameof(settings));
 
-        protected void SetSerializerSettingsForJsonApi(JsonSerializerSettings settings)
+        settings.Converters.Add(_jsonApiJsonConverter);
+    }
+
+    /// <inheritdoc />
+    public IDisposable RegisterAttributesForRequestDocument<TRequestDocument, TAttributesObject>(TRequestDocument requestDocument,
+        params Expression<Func<TAttributesObject, object?>>[] alwaysIncludedAttributeSelectors)
+        where TRequestDocument : class
+    {
+        ArgumentGuard.NotNull(requestDocument, nameof(requestDocument));
+
+        var attributeNames = new HashSet<string>();
+
+        foreach (Expression<Func<TAttributesObject, object?>> selector in alwaysIncludedAttributeSelectors)
         {
-            ArgumentGuard.NotNull(settings, nameof(settings));
-
-            settings.Converters.Add(_jsonApiJsonConverter);
-        }
-
-        /// <inheritdoc />
-        public IDisposable RegisterAttributesForRequestDocument<TRequestDocument, TAttributesObject>(TRequestDocument requestDocument,
-            params Expression<Func<TAttributesObject, object?>>[] alwaysIncludedAttributeSelectors)
-            where TRequestDocument : class
-        {
-            ArgumentGuard.NotNull(requestDocument, nameof(requestDocument));
-
-            var attributeNames = new HashSet<string>();
-
-            foreach (Expression<Func<TAttributesObject, object?>> selector in alwaysIncludedAttributeSelectors)
+            if (RemoveConvert(selector.Body) is MemberExpression selectorBody)
             {
-                if (RemoveConvert(selector.Body) is MemberExpression selectorBody)
-                {
-                    attributeNames.Add(selectorBody.Member.Name);
-                }
-                else
-                {
-                    throw new ArgumentException($"The expression '{selector}' should select a single property. For example: 'article => article.Title'.");
-                }
+                attributeNames.Add(selectorBody.Member.Name);
             }
-
-            _jsonApiJsonConverter.RegisterRequestDocument(requestDocument, new AttributeNamesContainer(attributeNames, typeof(TAttributesObject)));
-
-            return new AttributesRegistrationScope(_jsonApiJsonConverter, requestDocument);
-        }
-
-        private static Expression RemoveConvert(Expression expression)
-        {
-            Expression innerExpression = expression;
-
-            while (true)
+            else
             {
-                if (innerExpression is UnaryExpression { NodeType: ExpressionType.Convert } unaryExpression)
-                {
-                    innerExpression = unaryExpression.Operand;
-                }
-                else
-                {
-                    return innerExpression;
-                }
+                throw new ArgumentException($"The expression '{selector}' should select a single property. For example: 'article => article.Title'.");
             }
         }
 
-        private sealed class JsonApiJsonConverter : JsonConverter
+        _jsonApiJsonConverter.RegisterRequestDocument(requestDocument, new AttributeNamesContainer(attributeNames, typeof(TAttributesObject)));
+
+        return new AttributesRegistrationScope(_jsonApiJsonConverter, requestDocument);
+    }
+
+    private static Expression RemoveConvert(Expression expression)
+    {
+        Expression innerExpression = expression;
+
+        while (true)
         {
-            private readonly Dictionary<object, AttributeNamesContainer> _alwaysIncludedAttributesPerRequestDocumentInstance = new();
-            private readonly Dictionary<Type, ISet<object>> _requestDocumentInstancesPerRequestDocumentType = new();
-            private bool _isSerializing;
-
-            public override bool CanRead => false;
-
-            public void RegisterRequestDocument(object requestDocument, AttributeNamesContainer attributes)
+            if (innerExpression is UnaryExpression { NodeType: ExpressionType.Convert } unaryExpression)
             {
-                _alwaysIncludedAttributesPerRequestDocumentInstance[requestDocument] = attributes;
+                innerExpression = unaryExpression.Operand;
+            }
+            else
+            {
+                return innerExpression;
+            }
+        }
+    }
+
+    private sealed class JsonApiJsonConverter : JsonConverter
+    {
+        private readonly Dictionary<object, AttributeNamesContainer> _alwaysIncludedAttributesPerRequestDocumentInstance = new();
+        private readonly Dictionary<Type, ISet<object>> _requestDocumentInstancesPerRequestDocumentType = new();
+        private bool _isSerializing;
+
+        public override bool CanRead => false;
+
+        public void RegisterRequestDocument(object requestDocument, AttributeNamesContainer attributes)
+        {
+            _alwaysIncludedAttributesPerRequestDocumentInstance[requestDocument] = attributes;
+
+            Type requestDocumentType = requestDocument.GetType();
+
+            if (!_requestDocumentInstancesPerRequestDocumentType.ContainsKey(requestDocumentType))
+            {
+                _requestDocumentInstancesPerRequestDocumentType[requestDocumentType] = new HashSet<object>();
+            }
+
+            _requestDocumentInstancesPerRequestDocumentType[requestDocumentType].Add(requestDocument);
+        }
+
+        public void RemoveAttributeRegistration(object requestDocument)
+        {
+            if (_alwaysIncludedAttributesPerRequestDocumentInstance.ContainsKey(requestDocument))
+            {
+                _alwaysIncludedAttributesPerRequestDocumentInstance.Remove(requestDocument);
 
                 Type requestDocumentType = requestDocument.GetType();
+                _requestDocumentInstancesPerRequestDocumentType[requestDocumentType].Remove(requestDocument);
 
-                if (!_requestDocumentInstancesPerRequestDocumentType.ContainsKey(requestDocumentType))
+                if (!_requestDocumentInstancesPerRequestDocumentType[requestDocumentType].Any())
                 {
-                    _requestDocumentInstancesPerRequestDocumentType[requestDocumentType] = new HashSet<object>();
-                }
-
-                _requestDocumentInstancesPerRequestDocumentType[requestDocumentType].Add(requestDocument);
-            }
-
-            public void RemoveAttributeRegistration(object requestDocument)
-            {
-                if (_alwaysIncludedAttributesPerRequestDocumentInstance.ContainsKey(requestDocument))
-                {
-                    _alwaysIncludedAttributesPerRequestDocumentInstance.Remove(requestDocument);
-
-                    Type requestDocumentType = requestDocument.GetType();
-                    _requestDocumentInstancesPerRequestDocumentType[requestDocumentType].Remove(requestDocument);
-
-                    if (!_requestDocumentInstancesPerRequestDocumentType[requestDocumentType].Any())
-                    {
-                        _requestDocumentInstancesPerRequestDocumentType.Remove(requestDocumentType);
-                    }
-                }
-            }
-
-            public override bool CanConvert(Type objectType)
-            {
-                ArgumentGuard.NotNull(objectType, nameof(objectType));
-
-                return !_isSerializing && _requestDocumentInstancesPerRequestDocumentType.ContainsKey(objectType);
-            }
-
-            public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-            {
-                throw new Exception("This code should not be reachable.");
-            }
-
-            public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-            {
-                ArgumentGuard.NotNull(writer, nameof(writer));
-                ArgumentGuard.NotNull(value, nameof(value));
-                ArgumentGuard.NotNull(serializer, nameof(serializer));
-
-                if (_alwaysIncludedAttributesPerRequestDocumentInstance.ContainsKey(value))
-                {
-                    AttributeNamesContainer attributeNamesContainer = _alwaysIncludedAttributesPerRequestDocumentInstance[value];
-                    serializer.ContractResolver = new JsonApiDocumentContractResolver(attributeNamesContainer);
-                }
-
-                try
-                {
-                    _isSerializing = true;
-                    serializer.Serialize(writer, value);
-                }
-                finally
-                {
-                    _isSerializing = false;
+                    _requestDocumentInstancesPerRequestDocumentType.Remove(requestDocumentType);
                 }
             }
         }
 
-        private sealed class AttributeNamesContainer
+        public override bool CanConvert(Type objectType)
         {
-            private readonly ISet<string> _attributeNames;
-            private readonly Type _containerType;
+            ArgumentGuard.NotNull(objectType, nameof(objectType));
 
-            public AttributeNamesContainer(ISet<string> attributeNames, Type containerType)
-            {
-                ArgumentGuard.NotNull(attributeNames, nameof(attributeNames));
-                ArgumentGuard.NotNull(containerType, nameof(containerType));
-
-                _attributeNames = attributeNames;
-                _containerType = containerType;
-            }
-
-            public bool ContainsAttribute(string name)
-            {
-                return _attributeNames.Contains(name);
-            }
-
-            public bool ContainerMatchesType(Type type)
-            {
-                return _containerType == type;
-            }
+            return !_isSerializing && _requestDocumentInstancesPerRequestDocumentType.ContainsKey(objectType);
         }
 
-        private sealed class AttributesRegistrationScope : IDisposable
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            private readonly JsonApiJsonConverter _jsonApiJsonConverter;
-            private readonly object _requestDocument;
-
-            public AttributesRegistrationScope(JsonApiJsonConverter jsonApiJsonConverter, object requestDocument)
-            {
-                ArgumentGuard.NotNull(jsonApiJsonConverter, nameof(jsonApiJsonConverter));
-                ArgumentGuard.NotNull(requestDocument, nameof(requestDocument));
-
-                _jsonApiJsonConverter = jsonApiJsonConverter;
-                _requestDocument = requestDocument;
-            }
-
-            public void Dispose()
-            {
-                _jsonApiJsonConverter.RemoveAttributeRegistration(_requestDocument);
-            }
+            throw new Exception("This code should not be reachable.");
         }
 
-        private sealed class JsonApiDocumentContractResolver : DefaultContractResolver
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            private readonly AttributeNamesContainer _attributeNamesContainer;
+            ArgumentGuard.NotNull(writer, nameof(writer));
+            ArgumentGuard.NotNull(value, nameof(value));
+            ArgumentGuard.NotNull(serializer, nameof(serializer));
 
-            public JsonApiDocumentContractResolver(AttributeNamesContainer attributeNamesContainer)
+            if (_alwaysIncludedAttributesPerRequestDocumentInstance.ContainsKey(value))
             {
-                ArgumentGuard.NotNull(attributeNamesContainer, nameof(attributeNamesContainer));
-
-                _attributeNamesContainer = attributeNamesContainer;
+                AttributeNamesContainer attributeNamesContainer = _alwaysIncludedAttributesPerRequestDocumentInstance[value];
+                serializer.ContractResolver = new JsonApiDocumentContractResolver(attributeNamesContainer);
             }
 
-            protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+            try
             {
-                JsonProperty property = base.CreateProperty(member, memberSerialization);
+                _isSerializing = true;
+                serializer.Serialize(writer, value);
+            }
+            finally
+            {
+                _isSerializing = false;
+            }
+        }
+    }
 
-                if (_attributeNamesContainer.ContainerMatchesType(property.DeclaringType!))
+    private sealed class AttributeNamesContainer
+    {
+        private readonly ISet<string> _attributeNames;
+        private readonly Type _containerType;
+
+        public AttributeNamesContainer(ISet<string> attributeNames, Type containerType)
+        {
+            ArgumentGuard.NotNull(attributeNames, nameof(attributeNames));
+            ArgumentGuard.NotNull(containerType, nameof(containerType));
+
+            _attributeNames = attributeNames;
+            _containerType = containerType;
+        }
+
+        public bool ContainsAttribute(string name)
+        {
+            return _attributeNames.Contains(name);
+        }
+
+        public bool ContainerMatchesType(Type type)
+        {
+            return _containerType == type;
+        }
+    }
+
+    private sealed class AttributesRegistrationScope : IDisposable
+    {
+        private readonly JsonApiJsonConverter _jsonApiJsonConverter;
+        private readonly object _requestDocument;
+
+        public AttributesRegistrationScope(JsonApiJsonConverter jsonApiJsonConverter, object requestDocument)
+        {
+            ArgumentGuard.NotNull(jsonApiJsonConverter, nameof(jsonApiJsonConverter));
+            ArgumentGuard.NotNull(requestDocument, nameof(requestDocument));
+
+            _jsonApiJsonConverter = jsonApiJsonConverter;
+            _requestDocument = requestDocument;
+        }
+
+        public void Dispose()
+        {
+            _jsonApiJsonConverter.RemoveAttributeRegistration(_requestDocument);
+        }
+    }
+
+    private sealed class JsonApiDocumentContractResolver : DefaultContractResolver
+    {
+        private readonly AttributeNamesContainer _attributeNamesContainer;
+
+        public JsonApiDocumentContractResolver(AttributeNamesContainer attributeNamesContainer)
+        {
+            ArgumentGuard.NotNull(attributeNamesContainer, nameof(attributeNamesContainer));
+
+            _attributeNamesContainer = attributeNamesContainer;
+        }
+
+        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+        {
+            JsonProperty property = base.CreateProperty(member, memberSerialization);
+
+            if (_attributeNamesContainer.ContainerMatchesType(property.DeclaringType!))
+            {
+                if (_attributeNamesContainer.ContainsAttribute(property.UnderlyingName!))
                 {
-                    if (_attributeNamesContainer.ContainsAttribute(property.UnderlyingName!))
-                    {
-                        property.NullValueHandling = NullValueHandling.Include;
-                        property.DefaultValueHandling = DefaultValueHandling.Include;
-                    }
-                    else
-                    {
-                        property.NullValueHandling = NullValueHandling.Ignore;
-                        property.DefaultValueHandling = DefaultValueHandling.Ignore;
-                    }
+                    property.NullValueHandling = NullValueHandling.Include;
+                    property.DefaultValueHandling = DefaultValueHandling.Include;
                 }
-
-                return property;
+                else
+                {
+                    property.NullValueHandling = NullValueHandling.Ignore;
+                    property.DefaultValueHandling = DefaultValueHandling.Ignore;
+                }
             }
+
+            return property;
         }
     }
 }

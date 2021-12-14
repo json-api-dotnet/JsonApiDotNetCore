@@ -1,6 +1,5 @@
-namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
+namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata;
+
+internal interface IJsonApiRequestMetadata : IJsonApiEndpointMetadata
 {
-    internal interface IJsonApiRequestMetadata : IJsonApiEndpointMetadata
-    {
-    }
 }

@@ -3,14 +3,13 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace OpenApiTests.LegacyOpenApiIntegration
+namespace OpenApiTests.LegacyOpenApiIntegration;
+
+public sealed class FlightAttendantsController : JsonApiController<FlightAttendant, string>
 {
-    public sealed class FlightAttendantsController : JsonApiController<FlightAttendant, string>
+    public FlightAttendantsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+        IResourceService<FlightAttendant, string> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
-        public FlightAttendantsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-            IResourceService<FlightAttendant, string> resourceService)
-            : base(options, resourceGraph, loggerFactory, resourceService)
-        {
-        }
     }
 }

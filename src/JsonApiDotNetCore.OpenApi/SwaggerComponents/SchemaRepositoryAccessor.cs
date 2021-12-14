@@ -1,29 +1,27 @@
-using System;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
+namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
+
+internal sealed class SchemaRepositoryAccessor : ISchemaRepositoryAccessor
 {
-    internal sealed class SchemaRepositoryAccessor : ISchemaRepositoryAccessor
+    private SchemaRepository? _schemaRepository;
+
+    public SchemaRepository Current
     {
-        private SchemaRepository? _schemaRepository;
-
-        public SchemaRepository Current
+        get
         {
-            get
+            if (_schemaRepository == null)
             {
-                if (_schemaRepository == null)
-                {
-                    throw new InvalidOperationException("SchemaRepository unavailable.");
-                }
-
-                return _schemaRepository;
+                throw new InvalidOperationException("SchemaRepository unavailable.");
             }
-            set
-            {
-                ArgumentGuard.NotNull(value, nameof(Current));
 
-                _schemaRepository = value;
-            }
+            return _schemaRepository;
+        }
+        set
+        {
+            ArgumentGuard.NotNull(value, nameof(Current));
+
+            _schemaRepository = value;
         }
     }
 }

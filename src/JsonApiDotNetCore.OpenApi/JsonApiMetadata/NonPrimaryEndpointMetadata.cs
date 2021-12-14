@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
+namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 
-namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
+internal abstract class NonPrimaryEndpointMetadata
 {
-    internal abstract class NonPrimaryEndpointMetadata
+    public IDictionary<string, Type> DocumentTypesByRelationshipName { get; }
+
+    protected NonPrimaryEndpointMetadata(IDictionary<string, Type> documentTypesByRelationshipName)
     {
-        public IDictionary<string, Type> DocumentTypesByRelationshipName { get; }
+        ArgumentGuard.NotNull(documentTypesByRelationshipName, nameof(documentTypesByRelationshipName));
 
-        protected NonPrimaryEndpointMetadata(IDictionary<string, Type> documentTypesByRelationshipName)
-        {
-            ArgumentGuard.NotNull(documentTypesByRelationshipName, nameof(documentTypesByRelationshipName));
-
-            DocumentTypesByRelationshipName = documentTypesByRelationshipName;
-        }
+        DocumentTypesByRelationshipName = documentTypesByRelationshipName;
     }
 }

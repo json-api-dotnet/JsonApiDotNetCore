@@ -3,19 +3,18 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.LegacyOpenApiIntegration
+namespace OpenApiTests.LegacyOpenApiIntegration;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+public sealed class Passenger : Identifiable<string>
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Passenger : Identifiable<string>
-    {
-        [Attr(PublicName = "document-number", Capabilities = AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
-        [MaxLength(9)]
-        public string PassportNumber { get; set; } = null!;
+    [Attr(PublicName = "document-number", Capabilities = AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
+    [MaxLength(9)]
+    public string PassportNumber { get; set; } = null!;
 
-        [Attr]
-        public string? FullName { get; set; }
+    [Attr]
+    public string? FullName { get; set; }
 
-        [Attr]
-        public CabinArea CabinArea { get; set; }
-    }
+    [Attr]
+    public CabinArea CabinArea { get; set; }
 }
