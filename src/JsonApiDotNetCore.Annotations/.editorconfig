@@ -1,0 +1,4 @@
+[*.cs]
+
+# AV1505: Namespace should match with assembly name
+dotnet_diagnostic.AV1505.severity = none

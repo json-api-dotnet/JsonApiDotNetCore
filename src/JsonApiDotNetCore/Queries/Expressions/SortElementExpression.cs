@@ -1,81 +1,79 @@
-using System;
 using System.Text;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Expressions
+namespace JsonApiDotNetCore.Queries.Expressions;
+
+/// <summary>
+/// Represents an element in <see cref="SortExpression" />.
+/// </summary>
+[PublicAPI]
+public class SortElementExpression : QueryExpression
 {
-    /// <summary>
-    /// Represents an element in <see cref="SortExpression" />.
-    /// </summary>
-    [PublicAPI]
-    public class SortElementExpression : QueryExpression
+    public ResourceFieldChainExpression? TargetAttribute { get; }
+    public CountExpression? Count { get; }
+    public bool IsAscending { get; }
+
+    public SortElementExpression(ResourceFieldChainExpression targetAttribute, bool isAscending)
     {
-        public ResourceFieldChainExpression? TargetAttribute { get; }
-        public CountExpression? Count { get; }
-        public bool IsAscending { get; }
+        ArgumentGuard.NotNull(targetAttribute, nameof(targetAttribute));
 
-        public SortElementExpression(ResourceFieldChainExpression targetAttribute, bool isAscending)
+        TargetAttribute = targetAttribute;
+        IsAscending = isAscending;
+    }
+
+    public SortElementExpression(CountExpression count, bool isAscending)
+    {
+        ArgumentGuard.NotNull(count, nameof(count));
+
+        Count = count;
+        IsAscending = isAscending;
+    }
+
+    public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
+    {
+        return visitor.VisitSortElement(this, argument);
+    }
+
+    public override string ToString()
+    {
+        var builder = new StringBuilder();
+
+        if (!IsAscending)
         {
-            ArgumentGuard.NotNull(targetAttribute, nameof(targetAttribute));
-
-            TargetAttribute = targetAttribute;
-            IsAscending = isAscending;
+            builder.Append('-');
         }
 
-        public SortElementExpression(CountExpression count, bool isAscending)
+        if (TargetAttribute != null)
         {
-            ArgumentGuard.NotNull(count, nameof(count));
-
-            Count = count;
-            IsAscending = isAscending;
+            builder.Append(TargetAttribute);
+        }
+        else if (Count != null)
+        {
+            builder.Append(Count);
         }
 
-        public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
+        return builder.ToString();
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj))
         {
-            return visitor.VisitSortElement(this, argument);
+            return true;
         }
 
-        public override string ToString()
+        if (obj is null || GetType() != obj.GetType())
         {
-            var builder = new StringBuilder();
-
-            if (!IsAscending)
-            {
-                builder.Append('-');
-            }
-
-            if (TargetAttribute != null)
-            {
-                builder.Append(TargetAttribute);
-            }
-            else if (Count != null)
-            {
-                builder.Append(Count);
-            }
-
-            return builder.ToString();
+            return false;
         }
 
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
+        var other = (SortElementExpression)obj;
 
-            if (obj is null || GetType() != obj.GetType())
-            {
-                return false;
-            }
+        return Equals(TargetAttribute, other.TargetAttribute) && Equals(Count, other.Count) && IsAscending == other.IsAscending;
+    }
 
-            var other = (SortElementExpression)obj;
-
-            return Equals(TargetAttribute, other.TargetAttribute) && Equals(Count, other.Count) && IsAscending == other.IsAscending;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(TargetAttribute, Count, IsAscending);
-        }
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(TargetAttribute, Count, IsAscending);
     }
 }

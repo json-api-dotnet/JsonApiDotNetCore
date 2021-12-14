@@ -1,75 +1,73 @@
-using System;
 using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Internal.Parsing
+namespace JsonApiDotNetCore.Queries.Internal.Parsing;
+
+[PublicAPI]
+public class SparseFieldTypeParser : QueryExpressionParser
 {
-    [PublicAPI]
-    public class SparseFieldTypeParser : QueryExpressionParser
+    private readonly IResourceGraph _resourceGraph;
+
+    public SparseFieldTypeParser(IResourceGraph resourceGraph)
     {
-        private readonly IResourceGraph _resourceGraph;
+        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
-        public SparseFieldTypeParser(IResourceGraph resourceGraph)
+        _resourceGraph = resourceGraph;
+    }
+
+    public ResourceType Parse(string source)
+    {
+        Tokenize(source);
+
+        ResourceType resourceType = ParseSparseFieldTarget();
+
+        AssertTokenStackIsEmpty();
+
+        return resourceType;
+    }
+
+    private ResourceType ParseSparseFieldTarget()
+    {
+        if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text)
         {
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-
-            _resourceGraph = resourceGraph;
+            throw new QueryParseException("Parameter name expected.");
         }
 
-        public ResourceType Parse(string source)
+        EatSingleCharacterToken(TokenKind.OpenBracket);
+
+        ResourceType resourceType = ParseResourceName();
+
+        EatSingleCharacterToken(TokenKind.CloseBracket);
+
+        return resourceType;
+    }
+
+    private ResourceType ParseResourceName()
+    {
+        if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text)
         {
-            Tokenize(source);
-
-            ResourceType resourceType = ParseSparseFieldTarget();
-
-            AssertTokenStackIsEmpty();
-
-            return resourceType;
+            return GetResourceType(token.Value!);
         }
 
-        private ResourceType ParseSparseFieldTarget()
+        throw new QueryParseException("Resource type expected.");
+    }
+
+    private ResourceType GetResourceType(string publicName)
+    {
+        ResourceType? resourceType = _resourceGraph.FindResourceType(publicName);
+
+        if (resourceType == null)
         {
-            if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text)
-            {
-                throw new QueryParseException("Parameter name expected.");
-            }
-
-            EatSingleCharacterToken(TokenKind.OpenBracket);
-
-            ResourceType resourceType = ParseResourceName();
-
-            EatSingleCharacterToken(TokenKind.CloseBracket);
-
-            return resourceType;
+            throw new QueryParseException($"Resource type '{publicName}' does not exist.");
         }
 
-        private ResourceType ParseResourceName()
-        {
-            if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text)
-            {
-                return GetResourceType(token.Value!);
-            }
+        return resourceType;
+    }
 
-            throw new QueryParseException("Resource type expected.");
-        }
-
-        private ResourceType GetResourceType(string publicName)
-        {
-            ResourceType? resourceType = _resourceGraph.FindResourceType(publicName);
-
-            if (resourceType == null)
-            {
-                throw new QueryParseException($"Resource type '{publicName}' does not exist.");
-            }
-
-            return resourceType;
-        }
-
-        protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
-        {
-            throw new NotSupportedException();
-        }
+    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+    {
+        throw new NotSupportedException();
     }
 }

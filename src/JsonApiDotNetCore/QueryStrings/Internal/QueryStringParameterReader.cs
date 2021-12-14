@@ -4,51 +4,50 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.QueryStrings.Internal
+namespace JsonApiDotNetCore.QueryStrings.Internal;
+
+public abstract class QueryStringParameterReader
 {
-    public abstract class QueryStringParameterReader
+    private readonly IResourceGraph _resourceGraph;
+    private readonly bool _isCollectionRequest;
+
+    protected ResourceType RequestResourceType { get; }
+    protected bool IsAtomicOperationsRequest { get; }
+
+    protected QueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
     {
-        private readonly IResourceGraph _resourceGraph;
-        private readonly bool _isCollectionRequest;
+        ArgumentGuard.NotNull(request, nameof(request));
+        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
-        protected ResourceType RequestResourceType { get; }
-        protected bool IsAtomicOperationsRequest { get; }
+        _resourceGraph = resourceGraph;
+        _isCollectionRequest = request.IsCollection;
+        // There are currently no query string readers that work with operations, so non-nullable for convenience.
+        RequestResourceType = (request.SecondaryResourceType ?? request.PrimaryResourceType)!;
+        IsAtomicOperationsRequest = request.Kind == EndpointKind.AtomicOperations;
+    }
 
-        protected QueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
+    protected ResourceType GetResourceTypeForScope(ResourceFieldChainExpression? scope)
+    {
+        if (scope == null)
         {
-            ArgumentGuard.NotNull(request, nameof(request));
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-
-            _resourceGraph = resourceGraph;
-            _isCollectionRequest = request.IsCollection;
-            // There are currently no query string readers that work with operations, so non-nullable for convenience.
-            RequestResourceType = (request.SecondaryResourceType ?? request.PrimaryResourceType)!;
-            IsAtomicOperationsRequest = request.Kind == EndpointKind.AtomicOperations;
+            return RequestResourceType;
         }
 
-        protected ResourceType GetResourceTypeForScope(ResourceFieldChainExpression? scope)
+        ResourceFieldAttribute lastField = scope.Fields[^1];
+
+        if (lastField is RelationshipAttribute relationship)
         {
-            if (scope == null)
-            {
-                return RequestResourceType;
-            }
-
-            ResourceFieldAttribute lastField = scope.Fields[^1];
-
-            if (lastField is RelationshipAttribute relationship)
-            {
-                return relationship.RightType;
-            }
-
-            return _resourceGraph.GetResourceType(lastField.Property.PropertyType);
+            return relationship.RightType;
         }
 
-        protected void AssertIsCollectionRequest()
+        return _resourceGraph.GetResourceType(lastField.Property.PropertyType);
+    }
+
+    protected void AssertIsCollectionRequest()
+    {
+        if (!_isCollectionRequest)
         {
-            if (!_isCollectionRequest)
-            {
-                throw new QueryParseException("This query string parameter can only be used on a collection of resources (not on a single resource).");
-            }
+            throw new QueryParseException("This query string parameter can only be used on a collection of resources (not on a single resource).");
         }
     }
 }

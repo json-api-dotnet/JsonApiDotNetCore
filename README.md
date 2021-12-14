@@ -45,6 +45,7 @@ See [our documentation](https://www.jsonapi.net/) for detailed usage.
 ```c#
 #nullable enable
 
+[Resource]
 public class Article : Identifiable<int>
 {
     [Attr]
@@ -52,36 +53,18 @@ public class Article : Identifiable<int>
 }
 ```
 
-### Controllers
-
-```c#
-public class ArticlesController : JsonApiController<Article, int>
-{
-    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
-        ILoggerFactory loggerFactory, IResourceService<Article, int> resourceService)
-        : base(options, resourceGraph, loggerFactory, resourceService)
-    {
-    }
-}
-```
-
 ### Middleware
 
 ```c#
-public class Startup
-{
-    public IServiceProvider ConfigureServices(IServiceCollection services)
-    {
-        services.AddJsonApi<AppDbContext>();
-    }
+// Program.cs
 
-    public void Configure(IApplicationBuilder app)
-    {
-        app.UseRouting();
-        app.UseJsonApi();
-        app.UseEndpoints(endpoints => endpoints.MapControllers());
-    }
-}
+builder.Services.AddJsonApi<AppDbContext>();
+
+// ...
+
+app.UseRouting();
+app.UseJsonApi();
+app.MapControllers();
 ```
 
 ## Compatibility
@@ -89,16 +72,14 @@ public class Startup
 The following chart should help you pick the best version, based on your environment.
 See also our [versioning policy](./VERSIONING_POLICY.md).
 
-| JsonApiDotNetCore | .NET     | Entity Framework Core | Status                     |
-| ----------------- | -------- | --------------------- | -------------------------- |
-| 3.x               | Core 2.x | 2.x                   | Released                   |
-| 4.x               | Core 3.1 | 3.1                   | Released                   |
-|                   | Core 3.1 | 5                     |                            |
-|                   | 5        | 5                     |                            |
-|                   | 6        | 5                     |                            |
-| v5.x (pending)    | 5        | 5                     | On AppVeyor, to-be-dropped |
-|                   | 6        | 5                     | On AppVeyor, to-be-dropped |
-|                   | 6        | 6                     | Requires build from master |
+| JsonApiDotNetCore | Status      | .NET     | Entity Framework Core |
+| ----------------- | ----------- | -------- | --------------------- |
+| 3.x               | Stable      | Core 2.x | 2.x                   |
+| 4.x               | Stable      | Core 3.1 | 3.1                   |
+|                   |             | Core 3.1 | 5                     |
+|                   |             | 5        | 5                     |
+|                   |             | 6        | 5                     |
+| v5.x              | Pre-release | 6        | 6                     |
 
 ## Contributing
 

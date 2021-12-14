@@ -1,14 +1,11 @@
-using System.Collections.Generic;
+namespace JsonApiDotNetCore.Serialization.Response;
 
-namespace JsonApiDotNetCore.Serialization.Response
+/// <inheritdoc />
+public sealed class EmptyResponseMeta : IResponseMeta
 {
     /// <inheritdoc />
-    public sealed class EmptyResponseMeta : IResponseMeta
+    public IReadOnlyDictionary<string, object?>? GetMeta()
     {
-        /// <inheritdoc />
-        public IReadOnlyDictionary<string, object?>? GetMeta()
-        {
-            return null;
-        }
+        return null;
     }
 }

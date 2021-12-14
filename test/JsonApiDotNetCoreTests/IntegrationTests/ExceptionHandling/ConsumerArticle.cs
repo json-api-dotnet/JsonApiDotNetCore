@@ -2,12 +2,12 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
+namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling")]
+public sealed class ConsumerArticle : Identifiable<int>
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class ConsumerArticle : Identifiable<int>
-    {
-        [Attr]
-        public string Code { get; set; } = null!;
-    }
+    [Attr]
+    public string Code { get; set; } = null!;
 }

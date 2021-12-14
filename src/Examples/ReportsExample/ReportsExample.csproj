@@ -1,14 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
+    <TargetFramework>$(TargetFrameworkName)</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+    <ProjectReference Include="..\..\JsonApiDotNetCore.SourceGenerators\JsonApiDotNetCore.SourceGenerators.csproj" OutputItemType="Analyzer"
+      ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EFCoreVersion)" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlPostgreSQLVersion)" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(EFCorePostgresVersion)" />
   </ItemGroup>
 </Project>

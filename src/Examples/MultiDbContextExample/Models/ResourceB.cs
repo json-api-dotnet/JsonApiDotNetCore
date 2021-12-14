@@ -2,12 +2,12 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace MultiDbContextExample.Models
+namespace MultiDbContextExample.Models;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+[Resource]
+public sealed class ResourceB : Identifiable<int>
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class ResourceB : Identifiable<int>
-    {
-        [Attr]
-        public string? NameB { get; set; }
-    }
+    [Attr]
+    public string? NameB { get; set; }
 }

@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
@@ -11,201 +9,200 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 using Microsoft.Extensions.Primitives;
 
-namespace JsonApiDotNetCore.QueryStrings.Internal
+namespace JsonApiDotNetCore.QueryStrings.Internal;
+
+[PublicAPI]
+public class PaginationQueryStringParameterReader : QueryStringParameterReader, IPaginationQueryStringParameterReader
 {
-    [PublicAPI]
-    public class PaginationQueryStringParameterReader : QueryStringParameterReader, IPaginationQueryStringParameterReader
+    private const string PageSizeParameterName = "page[size]";
+    private const string PageNumberParameterName = "page[number]";
+
+    private readonly IJsonApiOptions _options;
+    private readonly PaginationParser _paginationParser;
+
+    private PaginationQueryStringValueExpression? _pageSizeConstraint;
+    private PaginationQueryStringValueExpression? _pageNumberConstraint;
+
+    public bool AllowEmptyValue => false;
+
+    public PaginationQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
+        : base(request, resourceGraph)
     {
-        private const string PageSizeParameterName = "page[size]";
-        private const string PageNumberParameterName = "page[number]";
+        ArgumentGuard.NotNull(options, nameof(options));
 
-        private readonly IJsonApiOptions _options;
-        private readonly PaginationParser _paginationParser;
+        _options = options;
+        _paginationParser = new PaginationParser();
+    }
 
-        private PaginationQueryStringValueExpression? _pageSizeConstraint;
-        private PaginationQueryStringValueExpression? _pageNumberConstraint;
+    /// <inheritdoc />
+    public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
+    {
+        ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
-        public bool AllowEmptyValue => false;
+        return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Page);
+    }
 
-        public PaginationQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
-            : base(request, resourceGraph)
+    /// <inheritdoc />
+    public virtual bool CanRead(string parameterName)
+    {
+        return parameterName is PageSizeParameterName or PageNumberParameterName;
+    }
+
+    /// <inheritdoc />
+    public virtual void Read(string parameterName, StringValues parameterValue)
+    {
+        try
         {
-            ArgumentGuard.NotNull(options, nameof(options));
+            PaginationQueryStringValueExpression constraint = GetPageConstraint(parameterValue);
 
-            _options = options;
-            _paginationParser = new PaginationParser();
-        }
-
-        /// <inheritdoc />
-        public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
-        {
-            ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
-
-            return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Page);
-        }
-
-        /// <inheritdoc />
-        public virtual bool CanRead(string parameterName)
-        {
-            return parameterName is PageSizeParameterName or PageNumberParameterName;
-        }
-
-        /// <inheritdoc />
-        public virtual void Read(string parameterName, StringValues parameterValue)
-        {
-            try
+            if (constraint.Elements.Any(element => element.Scope == null))
             {
-                PaginationQueryStringValueExpression constraint = GetPageConstraint(parameterValue);
-
-                if (constraint.Elements.Any(element => element.Scope == null))
-                {
-                    AssertIsCollectionRequest();
-                }
-
-                if (parameterName == PageSizeParameterName)
-                {
-                    ValidatePageSize(constraint);
-                    _pageSizeConstraint = constraint;
-                }
-                else
-                {
-                    ValidatePageNumber(constraint);
-                    _pageNumberConstraint = constraint;
-                }
-            }
-            catch (QueryParseException exception)
-            {
-                throw new InvalidQueryStringParameterException(parameterName, "The specified paging is invalid.", exception.Message, exception);
-            }
-        }
-
-        private PaginationQueryStringValueExpression GetPageConstraint(string parameterValue)
-        {
-            return _paginationParser.Parse(parameterValue, RequestResourceType);
-        }
-
-        protected virtual void ValidatePageSize(PaginationQueryStringValueExpression constraint)
-        {
-            if (_options.MaximumPageSize != null)
-            {
-                if (constraint.Elements.Any(element => element.Value > _options.MaximumPageSize.Value))
-                {
-                    throw new QueryParseException($"Page size cannot be higher than {_options.MaximumPageSize}.");
-                }
-
-                if (constraint.Elements.Any(element => element.Value == 0))
-                {
-                    throw new QueryParseException("Page size cannot be unconstrained.");
-                }
+                AssertIsCollectionRequest();
             }
 
-            if (constraint.Elements.Any(element => element.Value < 0))
+            if (parameterName == PageSizeParameterName)
             {
-                throw new QueryParseException("Page size cannot be negative.");
+                ValidatePageSize(constraint);
+                _pageSizeConstraint = constraint;
+            }
+            else
+            {
+                ValidatePageNumber(constraint);
+                _pageNumberConstraint = constraint;
+            }
+        }
+        catch (QueryParseException exception)
+        {
+            throw new InvalidQueryStringParameterException(parameterName, "The specified paging is invalid.", exception.Message, exception);
+        }
+    }
+
+    private PaginationQueryStringValueExpression GetPageConstraint(string parameterValue)
+    {
+        return _paginationParser.Parse(parameterValue, RequestResourceType);
+    }
+
+    protected virtual void ValidatePageSize(PaginationQueryStringValueExpression constraint)
+    {
+        if (_options.MaximumPageSize != null)
+        {
+            if (constraint.Elements.Any(element => element.Value > _options.MaximumPageSize.Value))
+            {
+                throw new QueryParseException($"Page size cannot be higher than {_options.MaximumPageSize}.");
+            }
+
+            if (constraint.Elements.Any(element => element.Value == 0))
+            {
+                throw new QueryParseException("Page size cannot be unconstrained.");
             }
         }
 
-        [AssertionMethod]
-        protected virtual void ValidatePageNumber(PaginationQueryStringValueExpression constraint)
+        if (constraint.Elements.Any(element => element.Value < 0))
         {
-            if (_options.MaximumPageNumber != null && constraint.Elements.Any(element => element.Value > _options.MaximumPageNumber.OneBasedValue))
+            throw new QueryParseException("Page size cannot be negative.");
+        }
+    }
+
+    [AssertionMethod]
+    protected virtual void ValidatePageNumber(PaginationQueryStringValueExpression constraint)
+    {
+        if (_options.MaximumPageNumber != null && constraint.Elements.Any(element => element.Value > _options.MaximumPageNumber.OneBasedValue))
+        {
+            throw new QueryParseException($"Page number cannot be higher than {_options.MaximumPageNumber}.");
+        }
+
+        if (constraint.Elements.Any(element => element.Value < 1))
+        {
+            throw new QueryParseException("Page number cannot be negative or zero.");
+        }
+    }
+
+    /// <inheritdoc />
+    public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
+    {
+        var paginationState = new PaginationState();
+
+        foreach (PaginationElementQueryStringValueExpression element in _pageSizeConstraint?.Elements ??
+            ImmutableArray<PaginationElementQueryStringValueExpression>.Empty)
+        {
+            MutablePaginationEntry entry = paginationState.ResolveEntryInScope(element.Scope);
+            entry.PageSize = element.Value == 0 ? null : new PageSize(element.Value);
+            entry.HasSetPageSize = true;
+        }
+
+        foreach (PaginationElementQueryStringValueExpression element in _pageNumberConstraint?.Elements ??
+            ImmutableArray<PaginationElementQueryStringValueExpression>.Empty)
+        {
+            MutablePaginationEntry entry = paginationState.ResolveEntryInScope(element.Scope);
+            entry.PageNumber = new PageNumber(element.Value);
+        }
+
+        paginationState.ApplyOptions(_options);
+
+        return paginationState.GetExpressionsInScope();
+    }
+
+    private sealed class PaginationState
+    {
+        private readonly MutablePaginationEntry _globalScope = new();
+        private readonly Dictionary<ResourceFieldChainExpression, MutablePaginationEntry> _nestedScopes = new();
+
+        public MutablePaginationEntry ResolveEntryInScope(ResourceFieldChainExpression? scope)
+        {
+            if (scope == null)
             {
-                throw new QueryParseException($"Page number cannot be higher than {_options.MaximumPageNumber}.");
+                return _globalScope;
             }
 
-            if (constraint.Elements.Any(element => element.Value < 1))
+            if (!_nestedScopes.ContainsKey(scope))
             {
-                throw new QueryParseException("Page number cannot be negative or zero.");
+                _nestedScopes.Add(scope, new MutablePaginationEntry());
+            }
+
+            return _nestedScopes[scope];
+        }
+
+        public void ApplyOptions(IJsonApiOptions options)
+        {
+            ApplyOptionsInEntry(_globalScope, options);
+
+            foreach ((_, MutablePaginationEntry entry) in _nestedScopes)
+            {
+                ApplyOptionsInEntry(entry, options);
             }
         }
 
-        /// <inheritdoc />
-        public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
+        private void ApplyOptionsInEntry(MutablePaginationEntry entry, IJsonApiOptions options)
         {
-            var paginationState = new PaginationState();
-
-            foreach (PaginationElementQueryStringValueExpression element in _pageSizeConstraint?.Elements ??
-                ImmutableArray<PaginationElementQueryStringValueExpression>.Empty)
+            if (!entry.HasSetPageSize)
             {
-                MutablePaginationEntry entry = paginationState.ResolveEntryInScope(element.Scope);
-                entry.PageSize = element.Value == 0 ? null : new PageSize(element.Value);
-                entry.HasSetPageSize = true;
+                entry.PageSize = options.DefaultPageSize;
             }
 
-            foreach (PaginationElementQueryStringValueExpression element in _pageNumberConstraint?.Elements ??
-                ImmutableArray<PaginationElementQueryStringValueExpression>.Empty)
-            {
-                MutablePaginationEntry entry = paginationState.ResolveEntryInScope(element.Scope);
-                entry.PageNumber = new PageNumber(element.Value);
-            }
-
-            paginationState.ApplyOptions(_options);
-
-            return paginationState.GetExpressionsInScope();
+            entry.PageNumber ??= PageNumber.ValueOne;
         }
 
-        private sealed class PaginationState
+        public IReadOnlyCollection<ExpressionInScope> GetExpressionsInScope()
         {
-            private readonly MutablePaginationEntry _globalScope = new();
-            private readonly Dictionary<ResourceFieldChainExpression, MutablePaginationEntry> _nestedScopes = new();
-
-            public MutablePaginationEntry ResolveEntryInScope(ResourceFieldChainExpression? scope)
-            {
-                if (scope == null)
-                {
-                    return _globalScope;
-                }
-
-                if (!_nestedScopes.ContainsKey(scope))
-                {
-                    _nestedScopes.Add(scope, new MutablePaginationEntry());
-                }
-
-                return _nestedScopes[scope];
-            }
-
-            public void ApplyOptions(IJsonApiOptions options)
-            {
-                ApplyOptionsInEntry(_globalScope, options);
-
-                foreach ((_, MutablePaginationEntry entry) in _nestedScopes)
-                {
-                    ApplyOptionsInEntry(entry, options);
-                }
-            }
-
-            private void ApplyOptionsInEntry(MutablePaginationEntry entry, IJsonApiOptions options)
-            {
-                if (!entry.HasSetPageSize)
-                {
-                    entry.PageSize = options.DefaultPageSize;
-                }
-
-                entry.PageNumber ??= PageNumber.ValueOne;
-            }
-
-            public IReadOnlyCollection<ExpressionInScope> GetExpressionsInScope()
-            {
-                return EnumerateExpressionsInScope().ToArray();
-            }
-
-            private IEnumerable<ExpressionInScope> EnumerateExpressionsInScope()
-            {
-                yield return new ExpressionInScope(null, new PaginationExpression(_globalScope.PageNumber!, _globalScope.PageSize));
-
-                foreach ((ResourceFieldChainExpression scope, MutablePaginationEntry entry) in _nestedScopes)
-                {
-                    yield return new ExpressionInScope(scope, new PaginationExpression(entry.PageNumber!, entry.PageSize));
-                }
-            }
+            return EnumerateExpressionsInScope().ToArray();
         }
 
-        private sealed class MutablePaginationEntry
+        private IEnumerable<ExpressionInScope> EnumerateExpressionsInScope()
         {
-            public PageSize? PageSize { get; set; }
-            public bool HasSetPageSize { get; set; }
+            yield return new ExpressionInScope(null, new PaginationExpression(_globalScope.PageNumber!, _globalScope.PageSize));
 
-            public PageNumber? PageNumber { get; set; }
+            foreach ((ResourceFieldChainExpression scope, MutablePaginationEntry entry) in _nestedScopes)
+            {
+                yield return new ExpressionInScope(scope, new PaginationExpression(entry.PageNumber!, entry.PageSize));
+            }
         }
+    }
+
+    private sealed class MutablePaginationEntry
+    {
+        public PageSize? PageSize { get; set; }
+        public bool HasSetPageSize { get; set; }
+
+        public PageNumber? PageNumber { get; set; }
     }
 }

@@ -1,478 +1,474 @@
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
+namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation;
+
+public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext>>
 {
-    public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> _testContext;
+    private readonly ObfuscationFakers _fakers = new();
+
+    public IdObfuscationTests(IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> _testContext;
-        private readonly ObfuscationFakers _fakers = new();
+        _testContext = testContext;
 
-        public IdObfuscationTests(IntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> testContext)
+        testContext.UseController<BankAccountsController>();
+        testContext.UseController<DebitCardsController>();
+    }
+
+    [Fact]
+    public async Task Can_filter_equality_in_primary_resources()
+    {
+        // Arrange
+        List<BankAccount> accounts = _fakers.BankAccount.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            _testContext = testContext;
+            await dbContext.ClearTableAsync<BankAccount>();
+            dbContext.BankAccounts.AddRange(accounts);
+            await dbContext.SaveChangesAsync();
+        });
 
-            testContext.UseController<BankAccountsController>();
-            testContext.UseController<DebitCardsController>();
-        }
+        string route = $"/bankAccounts?filter=equals(id,'{accounts[1].StringId}')";
 
-        [Fact]
-        public async Task Can_filter_equality_in_primary_resources()
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_any_in_primary_resources()
+    {
+        // Arrange
+        List<BankAccount> accounts = _fakers.BankAccount.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            List<BankAccount> accounts = _fakers.BankAccount.Generate(2);
+            await dbContext.ClearTableAsync<BankAccount>();
+            dbContext.BankAccounts.AddRange(accounts);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        var codec = new HexadecimalCodec();
+        string route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{codec.Encode(Unknown.TypedId.Int32)}')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
+    }
+
+    [Fact]
+    public async Task Cannot_get_primary_resource_for_invalid_ID()
+    {
+        // Arrange
+        const string route = "/bankAccounts/not-a-hex-value";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("Invalid ID value.");
+        error.Detail.Should().Be("The value 'not-a-hex-value' is not a valid hexadecimal value.");
+    }
+
+    [Fact]
+    public async Task Can_get_primary_resource_by_ID()
+    {
+        // Arrange
+        DebitCard card = _fakers.DebitCard.Generate();
+        card.Account = _fakers.BankAccount.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.DebitCards.Add(card);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/debitCards/{card.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Id.Should().Be(card.StringId);
+    }
+
+    [Fact]
+    public async Task Can_get_secondary_resources()
+    {
+        // Arrange
+        BankAccount account = _fakers.BankAccount.Generate();
+        account.Cards = _fakers.DebitCard.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.BankAccounts.Add(account);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/bankAccounts/{account.StringId}/cards";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
+        responseDocument.Data.ManyValue[1].Id.Should().Be(account.Cards[1].StringId);
+    }
+
+    [Fact]
+    public async Task Can_include_resource_with_sparse_fieldset()
+    {
+        // Arrange
+        BankAccount account = _fakers.BankAccount.Generate();
+        account.Cards = _fakers.DebitCard.Generate(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.BankAccounts.Add(account);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/bankAccounts/{account.StringId}?include=cards&fields[debitCards]=ownerName";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
+
+        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included[0].Id.Should().Be(account.Cards[0].StringId);
+        responseDocument.Included[0].Attributes.ShouldHaveCount(1);
+        responseDocument.Included[0].Relationships.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Can_get_relationship()
+    {
+        // Arrange
+        BankAccount account = _fakers.BankAccount.Generate();
+        account.Cards = _fakers.DebitCard.Generate(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.BankAccounts.Add(account);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/bankAccounts/{account.StringId}/relationships/cards";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
+    }
+
+    [Fact]
+    public async Task Can_create_resource_with_relationship()
+    {
+        // Arrange
+        BankAccount existingAccount = _fakers.BankAccount.Generate();
+        DebitCard newCard = _fakers.DebitCard.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.BankAccounts.Add(existingAccount);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
             {
-                await dbContext.ClearTableAsync<BankAccount>();
-                dbContext.BankAccounts.AddRange(accounts);
-                await dbContext.SaveChangesAsync();
-            });
+                type = "debitCards",
+                attributes = new
+                {
+                    ownerName = newCard.OwnerName,
+                    pinCode = newCard.PinCode
+                },
+                relationships = new
+                {
+                    account = new
+                    {
+                        data = new
+                        {
+                            type = "bankAccounts",
+                            id = existingAccount.StringId
+                        }
+                    }
+                }
+            }
+        };
 
-            string route = $"/bankAccounts?filter=equals(id,'{accounts[1].StringId}')";
+        const string route = "/debitCards";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
-        }
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("ownerName").With(value => value.Should().Be(newCard.OwnerName));
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("pinCode").With(value => value.Should().Be(newCard.PinCode));
 
-        [Fact]
-        public async Task Can_filter_any_in_primary_resources()
+        var codec = new HexadecimalCodec();
+        int newCardId = codec.Decode(responseDocument.Data.SingleValue.Id);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            List<BankAccount> accounts = _fakers.BankAccount.Generate(2);
+            DebitCard cardInDatabase = await dbContext.DebitCards.Include(card => card.Account).FirstWithIdAsync(newCardId);
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<BankAccount>();
-                dbContext.BankAccounts.AddRange(accounts);
-                await dbContext.SaveChangesAsync();
-            });
+            cardInDatabase.OwnerName.Should().Be(newCard.OwnerName);
+            cardInDatabase.PinCode.Should().Be(newCard.PinCode);
 
-            var codec = new HexadecimalCodec();
-            string route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{codec.Encode(Unknown.TypedId.Int32)}')";
+            cardInDatabase.Account.ShouldNotBeNull();
+            cardInDatabase.Account.Id.Should().Be(existingAccount.Id);
+            cardInDatabase.Account.StringId.Should().Be(existingAccount.StringId);
+        });
+    }
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+    [Fact]
+    public async Task Can_update_resource_with_relationship()
+    {
+        // Arrange
+        BankAccount existingAccount = _fakers.BankAccount.Generate();
+        existingAccount.Cards = _fakers.DebitCard.Generate(1);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        DebitCard existingCard = _fakers.DebitCard.Generate();
+        existingCard.Account = _fakers.BankAccount.Generate();
 
-            responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
-        }
+        string newIban = _fakers.BankAccount.Generate().Iban;
 
-        [Fact]
-        public async Task Cannot_get_primary_resource_for_invalid_ID()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            const string route = "/bankAccounts/not-a-hex-value";
+            dbContext.AddInRange(existingAccount, existingCard);
+            await dbContext.SaveChangesAsync();
+        });
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("Invalid ID value.");
-            error.Detail.Should().Be("The value 'not-a-hex-value' is not a valid hexadecimal value.");
-        }
-
-        [Fact]
-        public async Task Can_get_primary_resource_by_ID()
+        var requestBody = new
         {
-            // Arrange
-            DebitCard card = _fakers.DebitCard.Generate();
-            card.Account = _fakers.BankAccount.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            data = new
             {
-                dbContext.DebitCards.Add(card);
-                await dbContext.SaveChangesAsync();
-            });
+                type = "bankAccounts",
+                id = existingAccount.StringId,
+                attributes = new
+                {
+                    iban = newIban
+                },
+                relationships = new
+                {
+                    cards = new
+                    {
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "debitCards",
+                                id = existingCard.StringId
+                            }
+                        }
+                    }
+                }
+            }
+        };
 
-            string route = $"/debitCards/{card.StringId}";
+        string route = $"/bankAccounts/{existingAccount.StringId}";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Id.Should().Be(card.StringId);
-        }
+        responseDocument.Should().BeEmpty();
 
-        [Fact]
-        public async Task Can_get_secondary_resources()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            BankAccount account = _fakers.BankAccount.Generate();
-            account.Cards = _fakers.DebitCard.Generate(2);
+            BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.BankAccounts.Add(account);
-                await dbContext.SaveChangesAsync();
-            });
+            accountInDatabase.Iban.Should().Be(newIban);
 
-            string route = $"/bankAccounts/{account.StringId}/cards";
+            accountInDatabase.Cards.ShouldHaveCount(1);
+            accountInDatabase.Cards[0].Id.Should().Be(existingCard.Id);
+            accountInDatabase.Cards[0].StringId.Should().Be(existingCard.StringId);
+        });
+    }
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+    [Fact]
+    public async Task Can_add_to_ToMany_relationship()
+    {
+        // Arrange
+        BankAccount existingAccount = _fakers.BankAccount.Generate();
+        existingAccount.Cards = _fakers.DebitCard.Generate(1);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        DebitCard existingDebitCard = _fakers.DebitCard.Generate();
+        existingDebitCard.Account = _fakers.BankAccount.Generate();
 
-            responseDocument.Data.ManyValue.ShouldHaveCount(2);
-            responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
-            responseDocument.Data.ManyValue[1].Id.Should().Be(account.Cards[1].StringId);
-        }
-
-        [Fact]
-        public async Task Can_include_resource_with_sparse_fieldset()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            BankAccount account = _fakers.BankAccount.Generate();
-            account.Cards = _fakers.DebitCard.Generate(1);
+            dbContext.AddInRange(existingAccount, existingDebitCard);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.BankAccounts.Add(account);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/bankAccounts/{account.StringId}?include=cards&fields[debitCards]=ownerName";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
-
-            responseDocument.Included.ShouldHaveCount(1);
-            responseDocument.Included[0].Id.Should().Be(account.Cards[0].StringId);
-            responseDocument.Included[0].Attributes.ShouldHaveCount(1);
-            responseDocument.Included[0].Relationships.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task Can_get_relationship()
+        var requestBody = new
         {
-            // Arrange
-            BankAccount account = _fakers.BankAccount.Generate();
-            account.Cards = _fakers.DebitCard.Generate(1);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            data = new[]
             {
-                dbContext.BankAccounts.Add(account);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/bankAccounts/{account.StringId}/relationships/cards";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
-        }
-
-        [Fact]
-        public async Task Can_create_resource_with_relationship()
-        {
-            // Arrange
-            BankAccount existingAccount = _fakers.BankAccount.Generate();
-            DebitCard newCard = _fakers.DebitCard.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.BankAccounts.Add(existingAccount);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                new
                 {
                     type = "debitCards",
-                    attributes = new
-                    {
-                        ownerName = newCard.OwnerName,
-                        pinCode = newCard.PinCode
-                    },
-                    relationships = new
-                    {
-                        account = new
-                        {
-                            data = new
-                            {
-                                type = "bankAccounts",
-                                id = existingAccount.StringId
-                            }
-                        }
-                    }
+                    id = existingDebitCard.StringId
                 }
-            };
+            }
+        };
 
-            const string route = "/debitCards";
+        string route = $"/bankAccounts/{existingAccount.StringId}/relationships/cards";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("ownerName").With(value => value.Should().Be(newCard.OwnerName));
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("pinCode").With(value => value.Should().Be(newCard.PinCode));
+        responseDocument.Should().BeEmpty();
 
-            var codec = new HexadecimalCodec();
-            int newCardId = codec.Decode(responseDocument.Data.SingleValue.Id);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                DebitCard cardInDatabase = await dbContext.DebitCards.Include(card => card.Account).FirstWithIdAsync(newCardId);
-
-                cardInDatabase.OwnerName.Should().Be(newCard.OwnerName);
-                cardInDatabase.PinCode.Should().Be(newCard.PinCode);
-
-                cardInDatabase.Account.ShouldNotBeNull();
-                cardInDatabase.Account.Id.Should().Be(existingAccount.Id);
-                cardInDatabase.Account.StringId.Should().Be(existingAccount.StringId);
-            });
-        }
-
-        [Fact]
-        public async Task Can_update_resource_with_relationship()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            BankAccount existingAccount = _fakers.BankAccount.Generate();
-            existingAccount.Cards = _fakers.DebitCard.Generate(1);
+            BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
-            DebitCard existingCard = _fakers.DebitCard.Generate();
-            existingCard.Account = _fakers.BankAccount.Generate();
+            accountInDatabase.Cards.ShouldHaveCount(2);
+        });
+    }
 
-            string newIban = _fakers.BankAccount.Generate().Iban;
+    [Fact]
+    public async Task Can_remove_from_ToMany_relationship()
+    {
+        // Arrange
+        BankAccount existingAccount = _fakers.BankAccount.Generate();
+        existingAccount.Cards = _fakers.DebitCard.Generate(2);
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.BankAccounts.Add(existingAccount);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
             {
-                dbContext.AddInRange(existingAccount, existingCard);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                new
                 {
-                    type = "bankAccounts",
-                    id = existingAccount.StringId,
-                    attributes = new
-                    {
-                        iban = newIban
-                    },
-                    relationships = new
-                    {
-                        cards = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "debitCards",
-                                    id = existingCard.StringId
-                                }
-                            }
-                        }
-                    }
+                    type = "debitCards",
+                    id = existingAccount.Cards[0].StringId
                 }
-            };
+            }
+        };
 
-            string route = $"/bankAccounts/{existingAccount.StringId}";
+        string route = $"/bankAccounts/{existingAccount.StringId}/relationships/cards";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeEmpty();
+        responseDocument.Should().BeEmpty();
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
-
-                accountInDatabase.Iban.Should().Be(newIban);
-
-                accountInDatabase.Cards.ShouldHaveCount(1);
-                accountInDatabase.Cards[0].Id.Should().Be(existingCard.Id);
-                accountInDatabase.Cards[0].StringId.Should().Be(existingCard.StringId);
-            });
-        }
-
-        [Fact]
-        public async Task Can_add_to_ToMany_relationship()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            BankAccount existingAccount = _fakers.BankAccount.Generate();
-            existingAccount.Cards = _fakers.DebitCard.Generate(1);
+            BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
-            DebitCard existingDebitCard = _fakers.DebitCard.Generate();
-            existingDebitCard.Account = _fakers.BankAccount.Generate();
+            accountInDatabase.Cards.ShouldHaveCount(1);
+        });
+    }
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.AddInRange(existingAccount, existingDebitCard);
-                await dbContext.SaveChangesAsync();
-            });
+    [Fact]
+    public async Task Can_delete_resource()
+    {
+        // Arrange
+        BankAccount existingAccount = _fakers.BankAccount.Generate();
+        existingAccount.Cards = _fakers.DebitCard.Generate(1);
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "debitCards",
-                        id = existingDebitCard.StringId
-                    }
-                }
-            };
-
-            string route = $"/bankAccounts/{existingAccount.StringId}/relationships/cards";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
-
-                accountInDatabase.Cards.ShouldHaveCount(2);
-            });
-        }
-
-        [Fact]
-        public async Task Can_remove_from_ToMany_relationship()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            BankAccount existingAccount = _fakers.BankAccount.Generate();
-            existingAccount.Cards = _fakers.DebitCard.Generate(2);
+            dbContext.BankAccounts.Add(existingAccount);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.BankAccounts.Add(existingAccount);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/bankAccounts/{existingAccount.StringId}";
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "debitCards",
-                        id = existingAccount.Cards[0].StringId
-                    }
-                }
-            };
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
-            string route = $"/bankAccounts/{existingAccount.StringId}/relationships/cards";
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+        responseDocument.Should().BeEmpty();
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
-
-                accountInDatabase.Cards.ShouldHaveCount(1);
-            });
-        }
-
-        [Fact]
-        public async Task Can_delete_resource()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            BankAccount existingAccount = _fakers.BankAccount.Generate();
-            existingAccount.Cards = _fakers.DebitCard.Generate(1);
+            BankAccount? accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdOrDefaultAsync(existingAccount.Id);
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.BankAccounts.Add(existingAccount);
-                await dbContext.SaveChangesAsync();
-            });
+            accountInDatabase.Should().BeNull();
+        });
+    }
 
-            string route = $"/bankAccounts/{existingAccount.StringId}";
+    [Fact]
+    public async Task Cannot_delete_unknown_resource()
+    {
+        // Arrange
+        var codec = new HexadecimalCodec();
+        string? stringId = codec.Encode(Unknown.TypedId.Int32);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
+        string route = $"/bankAccounts/{stringId}";
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
-            responseDocument.Should().BeEmpty();
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                BankAccount? accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdOrDefaultAsync(existingAccount.Id);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-                accountInDatabase.Should().BeNull();
-            });
-        }
-
-        [Fact]
-        public async Task Cannot_delete_unknown_resource()
-        {
-            // Arrange
-            var codec = new HexadecimalCodec();
-            string? stringId = codec.Encode(Unknown.TypedId.Int32);
-
-            string route = $"/bankAccounts/{stringId}";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
-            error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'bankAccounts' with ID '{stringId}' does not exist.");
-        }
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'bankAccounts' with ID '{stringId}' does not exist.");
     }
 }

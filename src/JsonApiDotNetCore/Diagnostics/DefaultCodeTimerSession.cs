@@ -1,52 +1,48 @@
-using System;
-using System.Threading;
+namespace JsonApiDotNetCore.Diagnostics;
 
-namespace JsonApiDotNetCore.Diagnostics
+/// <summary>
+/// General code timing session management. Can be used with async/wait, but it cannot distinguish between concurrently running threads, so you'll need
+/// to pass an <see cref="CascadingCodeTimer" /> instance through the entire call chain in that case.
+/// </summary>
+public sealed class DefaultCodeTimerSession : ICodeTimerSession
 {
-    /// <summary>
-    /// General code timing session management. Can be used with async/wait, but it cannot distinguish between concurrently running threads, so you'll need
-    /// to pass an <see cref="CascadingCodeTimer" /> instance through the entire call chain in that case.
-    /// </summary>
-    public sealed class DefaultCodeTimerSession : ICodeTimerSession
+    private readonly AsyncLocal<ICodeTimer?> _codeTimerInContext = new();
+
+    public ICodeTimer CodeTimer
     {
-        private readonly AsyncLocal<ICodeTimer?> _codeTimerInContext = new();
-
-        public ICodeTimer CodeTimer
+        get
         {
-            get
-            {
-                AssertNotDisposed();
+            AssertNotDisposed();
 
-                return _codeTimerInContext.Value!;
-            }
+            return _codeTimerInContext.Value!;
         }
+    }
 
-        public event EventHandler? Disposed;
+    public event EventHandler? Disposed;
 
-        public DefaultCodeTimerSession()
+    public DefaultCodeTimerSession()
+    {
+        _codeTimerInContext.Value = new CascadingCodeTimer();
+    }
+
+    private void AssertNotDisposed()
+    {
+        if (_codeTimerInContext.Value == null)
         {
-            _codeTimerInContext.Value = new CascadingCodeTimer();
+            throw new ObjectDisposedException(nameof(DefaultCodeTimerSession));
         }
+    }
 
-        private void AssertNotDisposed()
-        {
-            if (_codeTimerInContext.Value == null)
-            {
-                throw new ObjectDisposedException(nameof(DefaultCodeTimerSession));
-            }
-        }
+    public void Dispose()
+    {
+        _codeTimerInContext.Value?.Dispose();
+        _codeTimerInContext.Value = null;
 
-        public void Dispose()
-        {
-            _codeTimerInContext.Value?.Dispose();
-            _codeTimerInContext.Value = null;
+        OnDisposed();
+    }
 
-            OnDisposed();
-        }
-
-        private void OnDisposed()
-        {
-            Disposed?.Invoke(this, EventArgs.Empty);
-        }
+    private void OnDisposed()
+    {
+        Disposed?.Invoke(this, EventArgs.Empty);
     }
 }

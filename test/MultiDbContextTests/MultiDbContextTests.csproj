@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
+    <TargetFramework>$(TargetFrameworkName)</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
     <PackageReference Include="Moq" Version="$(MoqVersion)" />
   </ItemGroup>

@@ -1,8 +1,7 @@
-namespace JsonApiDotNetCore.Queries.Expressions
+namespace JsonApiDotNetCore.Queries.Expressions;
+
+public enum LogicalOperator
 {
-    public enum LogicalOperator
-    {
-        And,
-        Or
-    }
+    And,
+    Or
 }

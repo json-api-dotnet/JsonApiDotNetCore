@@ -23,36 +23,27 @@ Auto-discovery refers to the process of reflecting on an assembly and
 detecting all of the JSON:API resources, resource definitions, resource services and repositories.
 
 The following command builds the resource graph using all `IIdentifiable` implementations and registers the services mentioned.
-You can enable auto-discovery for the current assembly by adding the following to your `Startup` class.
+You can enable auto-discovery for the current assembly by adding the following at startup.
 
 ```c#
-// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddJsonApi(discovery => discovery.AddCurrentAssembly());
-}
+// Program.cs
+builder.Services.AddJsonApi(discovery => discovery.AddCurrentAssembly());
 ```
 
 ### Specifying an Entity Framework Core DbContext
 
-If you are using Entity Framework Core as your ORM, you can add all the models of a `DbContext`  to the resource graph.
+If you are using Entity Framework Core as your ORM, you can add all the models of a `DbContext` to the resource graph.
 
 ```c#
-// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddJsonApi<AppDbContext>();
-}
+// Program.cs
+builder.Services.AddJsonApi<AppDbContext>();
 ```
 
 Be aware that this does not register resource definitions, resource services and repositories. You can combine it with auto-discovery to achieve this.
 
 ```c#
-// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddJsonApi<AppDbContext>(discovery => discovery.AddCurrentAssembly());
-}
+// Program.cs
+builder.Services.AddJsonApi<AppDbContext>(discovery => discovery.AddCurrentAssembly());
 ```
 
 ### Manual Specification
@@ -60,40 +51,36 @@ public void ConfigureServices(IServiceCollection services)
 You can manually construct the graph.
 
 ```c#
-// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddJsonApi(resources: builder =>
-    {
-        builder.Add<Person, int>();
-    });
-}
+// Program.cs
+builder.Services.AddJsonApi(resources: resourceGraphBuilder =>
+    resourceGraphBuilder.Add<Person, int>());
 ```
 
 ## Resource Name
 
-The public resource name is exposed through the `type` member in the JSON:API payload. This can be configured by the following approaches (in order of priority):
+The public resource name is exposed through the `type` member in the JSON:API payload. This can be configured using the following approaches (in order of priority):
 
-1. The `publicName` parameter when manually adding a resource to the graph
+1. The `publicName` parameter when manually adding a resource to the graph.
 ```c#
-services.AddJsonApi(resources: builder =>
+// Program.cs
+builder.Services.AddJsonApi(resources: resourceGraphBuilder =>
 {
-    builder.Add<Person, int>(publicName: "people");
+    resourceGraphBuilder.Add<Person, int>(publicName: "individuals");
 });
 ```
 
-2. The model is decorated with a `ResourceAttribute`
+2. The `PublicName` property when a model is decorated with a `ResourceAttribute`.
 ```c#
-[Resource("myResources")]
-public class MyModel : Identifiable<int>
+[Resource(PublicName = "individuals")]
+public class Person : Identifiable<int>
 {
 }
 ```
 
-3. The configured naming convention (by default this is camel-case).
+3. The configured naming convention (by default this is camel-case), after pluralization.
 ```c#
-// this will be registered as "myModels"
-public class MyModel : Identifiable<int>
+// this will be registered as "people"
+public class Person : Identifiable<int>
 {
 }
 ```

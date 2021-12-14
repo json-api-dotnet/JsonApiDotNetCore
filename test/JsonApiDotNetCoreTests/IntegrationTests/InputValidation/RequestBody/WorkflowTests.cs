@@ -1,174 +1,171 @@
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
+namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody;
+
+public sealed class WorkflowTests : IClassFixture<IntegrationTestContext<TestableStartup<WorkflowDbContext>, WorkflowDbContext>>
 {
-    public sealed class WorkflowTests : IClassFixture<IntegrationTestContext<TestableStartup<WorkflowDbContext>, WorkflowDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<WorkflowDbContext>, WorkflowDbContext> _testContext;
+
+    public WorkflowTests(IntegrationTestContext<TestableStartup<WorkflowDbContext>, WorkflowDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<WorkflowDbContext>, WorkflowDbContext> _testContext;
+        _testContext = testContext;
 
-        public WorkflowTests(IntegrationTestContext<TestableStartup<WorkflowDbContext>, WorkflowDbContext> testContext)
+        testContext.UseController<WorkflowsController>();
+
+        testContext.ConfigureServicesAfterStartup(services =>
         {
-            _testContext = testContext;
+            services.AddResourceDefinition<WorkflowDefinition>();
+        });
+    }
 
-            testContext.UseController<WorkflowsController>();
-
-            testContext.ConfigureServicesAfterStartup(services =>
-            {
-                services.AddResourceDefinition<WorkflowDefinition>();
-            });
-        }
-
-        [Fact]
-        public async Task Can_create_in_valid_stage()
+    [Fact]
+    public async Task Can_create_in_valid_stage()
+    {
+        // Arrange
+        var requestBody = new
         {
-            // Arrange
-            var requestBody = new
+            data = new
             {
-                data = new
+                type = "workflows",
+                attributes = new
                 {
-                    type = "workflows",
-                    attributes = new
-                    {
-                        stage = WorkflowStage.Created
-                    }
+                    stage = WorkflowStage.Created
                 }
-            };
+            }
+        };
 
-            const string route = "/workflows";
+        const string route = "/workflows";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-        }
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+    }
 
-        [Fact]
-        public async Task Cannot_create_in_invalid_stage()
+    [Fact]
+    public async Task Cannot_create_in_invalid_stage()
+    {
+        // Arrange
+        var requestBody = new
         {
-            // Arrange
-            var requestBody = new
+            data = new
             {
-                data = new
+                type = "workflows",
+                attributes = new
                 {
-                    type = "workflows",
-                    attributes = new
-                    {
-                        stage = WorkflowStage.Canceled
-                    }
+                    stage = WorkflowStage.Canceled
                 }
-            };
+            }
+        };
 
-            const string route = "/workflows";
+        const string route = "/workflows";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+        responseDocument.Errors.ShouldHaveCount(1);
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Invalid workflow stage.");
-            error.Detail.Should().Be("Initial stage of workflow must be 'Created'.");
-            error.Source.ShouldNotBeNull();
-            error.Source.Pointer.Should().Be("/data/attributes/stage");
-        }
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Invalid workflow stage.");
+        error.Detail.Should().Be("Initial stage of workflow must be 'Created'.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/stage");
+    }
 
-        [Fact]
-        public async Task Cannot_transition_to_invalid_stage()
+    [Fact]
+    public async Task Cannot_transition_to_invalid_stage()
+    {
+        // Arrange
+        var existingWorkflow = new Workflow
         {
-            // Arrange
-            var existingWorkflow = new Workflow
-            {
-                Stage = WorkflowStage.OnHold
-            };
+            Stage = WorkflowStage.OnHold
+        };
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Workflows.Add(existingWorkflow);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workflows",
-                    id = existingWorkflow.StringId,
-                    attributes = new
-                    {
-                        stage = WorkflowStage.Succeeded
-                    }
-                }
-            };
-
-            string route = $"/workflows/{existingWorkflow.StringId}";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-
-            responseDocument.Errors.ShouldHaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Invalid workflow stage.");
-            error.Detail.Should().Be("Cannot transition from 'OnHold' to 'Succeeded'.");
-            error.Source.ShouldNotBeNull();
-            error.Source.Pointer.Should().Be("/data/attributes/stage");
-        }
-
-        [Fact]
-        public async Task Can_transition_to_valid_stage()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var existingWorkflow = new Workflow
-            {
-                Stage = WorkflowStage.InProgress
-            };
+            dbContext.Workflows.Add(existingWorkflow);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        var requestBody = new
+        {
+            data = new
             {
-                dbContext.Workflows.Add(existingWorkflow);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "workflows",
+                id = existingWorkflow.StringId,
+                attributes = new
                 {
-                    type = "workflows",
-                    id = existingWorkflow.StringId,
-                    attributes = new
-                    {
-                        stage = WorkflowStage.Failed
-                    }
+                    stage = WorkflowStage.Succeeded
                 }
-            };
+            }
+        };
 
-            string route = $"/workflows/{existingWorkflow.StringId}";
+        string route = $"/workflows/{existingWorkflow.StringId}";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Should().BeEmpty();
-        }
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Invalid workflow stage.");
+        error.Detail.Should().Be("Cannot transition from 'OnHold' to 'Succeeded'.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/stage");
+    }
+
+    [Fact]
+    public async Task Can_transition_to_valid_stage()
+    {
+        // Arrange
+        var existingWorkflow = new Workflow
+        {
+            Stage = WorkflowStage.InProgress
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Workflows.Add(existingWorkflow);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workflows",
+                id = existingWorkflow.StringId,
+                attributes = new
+                {
+                    stage = WorkflowStage.Failed
+                }
+            }
+        };
+
+        string route = $"/workflows/{existingWorkflow.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
     }
 }

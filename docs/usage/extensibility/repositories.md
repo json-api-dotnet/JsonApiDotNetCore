@@ -3,15 +3,11 @@
 If you want to use a data access technology other than Entity Framework Core, you can create an implementation of `IResourceRepository<TResource, TId>`.
 If you only need minor changes you can override the methods defined in `EntityFrameworkCoreRepository<TResource, TId>`.
 
-The repository should then be registered in Startup.cs.
-
 ```c#
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddScoped<IResourceRepository<Article, int>, ArticleRepository>();
-    services.AddScoped<IResourceReadRepository<Article, int>, ArticleRepository>();
-    services.AddScoped<IResourceWriteRepository<Article, int>, ArticleRepository>();
-}
+// Program.cs
+builder.Services.AddScoped<IResourceRepository<Article, int>, ArticleRepository>();
+builder.Services.AddScoped<IResourceReadRepository<Article, int>, ArticleRepository>();
+builder.Services.AddScoped<IResourceWriteRepository<Article, int>, ArticleRepository>();
 ```
 
 In v4.0 we introduced an extension method that you can use to register a resource repository on all of its JsonApiDotNetCore interfaces.
@@ -20,13 +16,8 @@ This is helpful when you implement (a subset of) the resource interfaces and wan
 **Note:** If you're using [auto-discovery](~/usage/resource-graph.md#auto-discovery), this happens automatically.
 
 ```c#
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddResourceRepository<ArticleRepository>();
-    }
-}
+// Program.cs
+builder.Services.AddResourceRepository<ArticleRepository>();
 ```
 
 A sample implementation that performs authorization might look like this.
@@ -64,7 +55,8 @@ If you need to use multiple Entity Framework Core DbContexts, first create a rep
 This example shows a single `DbContextARepository` for all entities that are members of `DbContextA`.
 
 ```c#
-public class DbContextARepository<TResource, TId> : EntityFrameworkCoreRepository<TResource, TId>
+public class DbContextARepository<TResource, TId>
+    : EntityFrameworkCoreRepository<TResource, TId>
     where TResource : class, IIdentifiable<TId>
 {
     public DbContextARepository(ITargetedFields targetedFields,
@@ -83,13 +75,12 @@ public class DbContextARepository<TResource, TId> : EntityFrameworkCoreRepositor
 Then register the added types and use the non-generic overload of `AddJsonApi` to add their resources to the graph.
 
 ```c#
-// In Startup.ConfigureServices
+// Program.cs
+builder.Services.AddDbContext<DbContextA>(options => options.UseSqlite("Data Source=A.db"));
+builder.Services.AddDbContext<DbContextB>(options => options.UseSqlite("Data Source=B.db"));
 
-services.AddDbContext<DbContextA>(options => options.UseSqlite("Data Source=A.db"));
-services.AddDbContext<DbContextB>(options => options.UseSqlite("Data Source=B.db"));
+builder.Services.AddJsonApi(dbContextTypes: new[] { typeof(DbContextA), typeof(DbContextB) });
 
-services.AddScoped<IResourceRepository<ResourceA>, DbContextARepository<ResourceA>>();
-services.AddScoped<IResourceRepository<ResourceB>, DbContextBRepository<ResourceB>>();
-
-services.AddJsonApi(dbContextTypes: new[] { typeof(DbContextA), typeof(DbContextB) });
+builder.Services.AddScoped<IResourceRepository<ResourceA>, DbContextARepository<ResourceA>>();
+builder.Services.AddScoped<IResourceRepository<ResourceB>, DbContextBRepository<ResourceB>>();
 ```

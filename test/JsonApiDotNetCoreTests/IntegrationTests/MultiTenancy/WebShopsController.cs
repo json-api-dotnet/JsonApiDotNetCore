@@ -1,20 +1,15 @@
-using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Controllers.Annotations;
-using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
+namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy;
+
+// Workaround for https://youtrack.jetbrains.com/issue/RSRP-487028
+public partial class WebShopsController
 {
-    [DisableRoutingConvention]
-    [Route("{countryCode}/shops")]
-    public sealed class WebShopsController : JsonApiController<WebShop, int>
-    {
-        public WebShopsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-            IResourceService<WebShop, int> resourceService)
-            : base(options, resourceGraph, loggerFactory, resourceService)
-        {
-        }
-    }
+}
+
+[DisableRoutingConvention]
+[Route("{countryCode}/shops")]
+partial class WebShopsController
+{
 }

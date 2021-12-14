@@ -1,53 +1,51 @@
-using System;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.Configuration
+namespace JsonApiDotNetCore.Configuration;
+
+[PublicAPI]
+public sealed class PageNumber : IEquatable<PageNumber>
 {
-    [PublicAPI]
-    public sealed class PageNumber : IEquatable<PageNumber>
+    public static readonly PageNumber ValueOne = new(1);
+
+    public int OneBasedValue { get; }
+
+    public PageNumber(int oneBasedValue)
     {
-        public static readonly PageNumber ValueOne = new(1);
-
-        public int OneBasedValue { get; }
-
-        public PageNumber(int oneBasedValue)
+        if (oneBasedValue < 1)
         {
-            if (oneBasedValue < 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(oneBasedValue));
-            }
-
-            OneBasedValue = oneBasedValue;
+            throw new ArgumentOutOfRangeException(nameof(oneBasedValue));
         }
 
-        public bool Equals(PageNumber? other)
+        OneBasedValue = oneBasedValue;
+    }
+
+    public bool Equals(PageNumber? other)
+    {
+        if (ReferenceEquals(null, other))
         {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return OneBasedValue == other.OneBasedValue;
+            return false;
         }
 
-        public override bool Equals(object? other)
+        if (ReferenceEquals(this, other))
         {
-            return Equals(other as PageNumber);
+            return true;
         }
 
-        public override int GetHashCode()
-        {
-            return OneBasedValue.GetHashCode();
-        }
+        return OneBasedValue == other.OneBasedValue;
+    }
 
-        public override string ToString()
-        {
-            return OneBasedValue.ToString();
-        }
+    public override bool Equals(object? other)
+    {
+        return Equals(other as PageNumber);
+    }
+
+    public override int GetHashCode()
+    {
+        return OneBasedValue.GetHashCode();
+    }
+
+    public override string ToString()
+    {
+        return OneBasedValue.ToString();
     }
 }

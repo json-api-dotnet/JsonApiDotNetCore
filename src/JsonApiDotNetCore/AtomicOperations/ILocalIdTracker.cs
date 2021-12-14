@@ -1,30 +1,29 @@
 using JsonApiDotNetCore.Configuration;
 
-namespace JsonApiDotNetCore.AtomicOperations
+namespace JsonApiDotNetCore.AtomicOperations;
+
+/// <summary>
+/// Used to track declarations, assignments and references to local IDs an in atomic:operations request.
+/// </summary>
+public interface ILocalIdTracker
 {
     /// <summary>
-    /// Used to track declarations, assignments and references to local IDs an in atomic:operations request.
+    /// Removes all declared and assigned values.
     /// </summary>
-    public interface ILocalIdTracker
-    {
-        /// <summary>
-        /// Removes all declared and assigned values.
-        /// </summary>
-        void Reset();
+    void Reset();
 
-        /// <summary>
-        /// Declares a local ID without assigning a server-generated value.
-        /// </summary>
-        void Declare(string localId, ResourceType resourceType);
+    /// <summary>
+    /// Declares a local ID without assigning a server-generated value.
+    /// </summary>
+    void Declare(string localId, ResourceType resourceType);
 
-        /// <summary>
-        /// Assigns a server-generated ID value to a previously declared local ID.
-        /// </summary>
-        void Assign(string localId, ResourceType resourceType, string stringId);
+    /// <summary>
+    /// Assigns a server-generated ID value to a previously declared local ID.
+    /// </summary>
+    void Assign(string localId, ResourceType resourceType, string stringId);
 
-        /// <summary>
-        /// Gets the server-assigned ID for the specified local ID.
-        /// </summary>
-        string GetValue(string localId, ResourceType resourceType);
-    }
+    /// <summary>
+    /// Gets the server-assigned ID for the specified local ID.
+    /// </summary>
+    string GetValue(string localId, ResourceType resourceType);
 }

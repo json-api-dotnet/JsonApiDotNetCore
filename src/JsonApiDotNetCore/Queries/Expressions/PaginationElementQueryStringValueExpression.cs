@@ -1,53 +1,51 @@
-using System;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Expressions
+namespace JsonApiDotNetCore.Queries.Expressions;
+
+/// <summary>
+/// Represents an element in <see cref="PaginationQueryStringValueExpression" />.
+/// </summary>
+[PublicAPI]
+public class PaginationElementQueryStringValueExpression : QueryExpression
 {
-    /// <summary>
-    /// Represents an element in <see cref="PaginationQueryStringValueExpression" />.
-    /// </summary>
-    [PublicAPI]
-    public class PaginationElementQueryStringValueExpression : QueryExpression
+    public ResourceFieldChainExpression? Scope { get; }
+    public int Value { get; }
+
+    public PaginationElementQueryStringValueExpression(ResourceFieldChainExpression? scope, int value)
     {
-        public ResourceFieldChainExpression? Scope { get; }
-        public int Value { get; }
+        Scope = scope;
+        Value = value;
+    }
 
-        public PaginationElementQueryStringValueExpression(ResourceFieldChainExpression? scope, int value)
+    public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
+    {
+        return visitor.PaginationElementQueryStringValue(this, argument);
+    }
+
+    public override string ToString()
+    {
+        return Scope == null ? Value.ToString() : $"{Scope}: {Value}";
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj))
         {
-            Scope = scope;
-            Value = value;
+            return true;
         }
 
-        public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
+        if (obj is null || GetType() != obj.GetType())
         {
-            return visitor.PaginationElementQueryStringValue(this, argument);
+            return false;
         }
 
-        public override string ToString()
-        {
-            return Scope == null ? Value.ToString() : $"{Scope}: {Value}";
-        }
+        var other = (PaginationElementQueryStringValueExpression)obj;
 
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
+        return Equals(Scope, other.Scope) && Value == other.Value;
+    }
 
-            if (obj is null || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            var other = (PaginationElementQueryStringValueExpression)obj;
-
-            return Equals(Scope, other.Scope) && Value == other.Value;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Scope, Value);
-        }
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Scope, Value);
     }
 }
