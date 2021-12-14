@@ -1,73 +1,69 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Expressions
+namespace JsonApiDotNetCore.Queries.Expressions;
+
+/// <summary>
+/// Represents an inclusion tree, resulting from text such as: owner,articles.revisions
+/// </summary>
+[PublicAPI]
+public class IncludeExpression : QueryExpression
 {
-    /// <summary>
-    /// Represents an inclusion tree, resulting from text such as: owner,articles.revisions
-    /// </summary>
-    [PublicAPI]
-    public class IncludeExpression : QueryExpression
+    private static readonly IncludeChainConverter IncludeChainConverter = new();
+
+    public static readonly IncludeExpression Empty = new();
+
+    public IImmutableSet<IncludeElementExpression> Elements { get; }
+
+    public IncludeExpression(IImmutableSet<IncludeElementExpression> elements)
     {
-        private static readonly IncludeChainConverter IncludeChainConverter = new();
+        ArgumentGuard.NotNullNorEmpty(elements, nameof(elements));
 
-        public static readonly IncludeExpression Empty = new();
+        Elements = elements;
+    }
 
-        public IImmutableSet<IncludeElementExpression> Elements { get; }
+    private IncludeExpression()
+    {
+        Elements = ImmutableHashSet<IncludeElementExpression>.Empty;
+    }
 
-        public IncludeExpression(IImmutableSet<IncludeElementExpression> elements)
+    public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
+    {
+        return visitor.VisitInclude(this, argument);
+    }
+
+    public override string ToString()
+    {
+        IReadOnlyCollection<ResourceFieldChainExpression> chains = IncludeChainConverter.GetRelationshipChains(this);
+        return string.Join(",", chains.Select(child => child.ToString()).OrderBy(name => name));
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj))
         {
-            ArgumentGuard.NotNullNorEmpty(elements, nameof(elements));
-
-            Elements = elements;
+            return true;
         }
 
-        private IncludeExpression()
+        if (obj is null || GetType() != obj.GetType())
         {
-            Elements = ImmutableHashSet<IncludeElementExpression>.Empty;
+            return false;
         }
 
-        public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
+        var other = (IncludeExpression)obj;
+
+        return Elements.SetEquals(other.Elements);
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = new HashCode();
+
+        foreach (IncludeElementExpression element in Elements)
         {
-            return visitor.VisitInclude(this, argument);
+            hashCode.Add(element);
         }
 
-        public override string ToString()
-        {
-            IReadOnlyCollection<ResourceFieldChainExpression> chains = IncludeChainConverter.GetRelationshipChains(this);
-            return string.Join(",", chains.Select(child => child.ToString()).OrderBy(name => name));
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj is null || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            var other = (IncludeExpression)obj;
-
-            return Elements.SetEquals(other.Elements);
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = new HashCode();
-
-            foreach (IncludeElementExpression element in Elements)
-            {
-                hashCode.Add(element);
-            }
-
-            return hashCode.ToHashCode();
-        }
+        return hashCode.ToHashCode();
     }
 }

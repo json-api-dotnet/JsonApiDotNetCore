@@ -1,118 +1,109 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace UnitTests.Graph
+namespace UnitTests.Graph;
+
+public sealed class TypeLocatorTests
 {
-    public sealed class TypeLocatorTests
+    [Fact]
+    public void GetContainerRegistrationFromAssembly_Gets_Implementation()
     {
-        [Fact]
-        public void GetGenericInterfaceImplementation_Gets_Implementation()
-        {
-            // Arrange
-            Assembly assembly = GetType().Assembly;
-            Type openGeneric = typeof(IGenericInterface<>);
-            Type genericArg = typeof(int);
+        // Arrange
+        Assembly assembly = GetType().Assembly;
+        Type unboundInterface = typeof(IGenericInterface<>);
+        Type typeArgument = typeof(int);
 
-            Type expectedImplementation = typeof(Implementation);
-            Type expectedInterface = typeof(IGenericInterface<int>);
+        var typeLocator = new TypeLocator();
 
-            var typeLocator = new TypeLocator();
+        // Act
+        (Type implementationType, Type serviceInterface)? result = typeLocator.GetContainerRegistrationFromAssembly(assembly, unboundInterface, typeArgument);
 
-            // Act
-            (Type implementation, Type registrationInterface)? result = typeLocator.GetGenericInterfaceImplementation(assembly, openGeneric, genericArg);
+        // Assert
+        result.ShouldNotBeNull();
+        result.Value.implementationType.Should().Be(typeof(Implementation));
+        result.Value.serviceInterface.Should().Be(typeof(IGenericInterface<int>));
+    }
 
-            // Assert
-            result.ShouldNotBeNull();
-            result.Value.implementation.Should().Be(expectedImplementation);
-            result.Value.registrationInterface.Should().Be(expectedInterface);
-        }
+    [Fact]
+    public void GetDerivedTypesForUnboundType_Gets_Implementation()
+    {
+        // Arrange
+        Assembly assembly = GetType().Assembly;
+        Type unboundType = typeof(BaseType<>);
+        Type typeArgument = typeof(int);
 
-        [Fact]
-        public void GetDerivedGenericTypes_Gets_Implementation()
-        {
-            // Arrange
-            Assembly assembly = GetType().Assembly;
-            Type openGeneric = typeof(BaseType<>);
-            Type genericArg = typeof(int);
+        var typeLocator = new TypeLocator();
 
-            Type expectedImplementation = typeof(DerivedType);
+        // Act
+        IReadOnlyCollection<Type> results = typeLocator.GetDerivedTypesForUnboundType(assembly, unboundType, typeArgument);
 
-            var typeLocator = new TypeLocator();
+        // Assert
+        results.ShouldHaveCount(1);
+        results.ElementAt(0).Should().Be(typeof(DerivedType));
+    }
 
-            // Act
-            IReadOnlyCollection<Type> results = typeLocator.GetDerivedGenericTypes(assembly, openGeneric, genericArg);
+    [Fact]
+    public void GetIdType_Correctly_Identifies_JsonApiResource()
+    {
+        // Arrange
+        Type type = typeof(Model);
 
-            // Assert
-            results.ShouldHaveCount(1);
-            results.ElementAt(0).Should().Be(expectedImplementation);
-        }
+        var typeLocator = new TypeLocator();
 
-        [Fact]
-        public void GetIdType_Correctly_Identifies_JsonApiResource()
-        {
-            // Arrange
-            Type type = typeof(Model);
+        // Act
+        Type? idType = typeLocator.LookupIdType(type);
 
-            var typeLocator = new TypeLocator();
+        // Assert
+        idType.Should().Be(typeof(int));
+    }
 
-            // Act
-            Type? idType = typeLocator.LookupIdType(type);
+    [Fact]
+    public void GetIdType_Correctly_Identifies_NonJsonApiResource()
+    {
+        // Arrange
+        Type type = typeof(DerivedType);
 
-            // Assert
-            idType.Should().Be(typeof(int));
-        }
+        var typeLocator = new TypeLocator();
 
-        [Fact]
-        public void GetIdType_Correctly_Identifies_NonJsonApiResource()
-        {
-            // Arrange
-            Type type = typeof(DerivedType);
+        // Act
+        Type? idType = typeLocator.LookupIdType(type);
 
-            var typeLocator = new TypeLocator();
+        // Assert
+        idType.Should().BeNull();
+    }
 
-            // Act
-            Type? idType = typeLocator.LookupIdType(type);
+    [Fact]
+    public void ResolveResourceDescriptor_Returns_Type_If_Type_Is_IIdentifiable()
+    {
+        // Arrange
+        Type resourceClrType = typeof(Model);
 
-            // Assert
-            idType.Should().BeNull();
-        }
+        var typeLocator = new TypeLocator();
 
-        [Fact]
-        public void ResolveResourceDescriptor_Returns_Type_If_Type_Is_IIdentifiable()
-        {
-            // Arrange
-            Type resourceClrType = typeof(Model);
+        // Act
+        ResourceDescriptor? descriptor = typeLocator.ResolveResourceDescriptor(resourceClrType);
 
-            var typeLocator = new TypeLocator();
+        // Assert
+        descriptor.ShouldNotBeNull();
+        descriptor.ResourceClrType.Should().Be(resourceClrType);
+        descriptor.IdClrType.Should().Be(typeof(int));
+    }
 
-            // Act
-            ResourceDescriptor? descriptor = typeLocator.ResolveResourceDescriptor(resourceClrType);
+    [Fact]
+    public void ResolveResourceDescriptor_Returns_False_If_Type_Is_IIdentifiable()
+    {
+        // Arrange
+        Type resourceClrType = typeof(string);
 
-            // Assert
-            descriptor.ShouldNotBeNull();
-            descriptor.ResourceClrType.Should().Be(resourceClrType);
-            descriptor.IdClrType.Should().Be(typeof(int));
-        }
+        var typeLocator = new TypeLocator();
 
-        [Fact]
-        public void ResolveResourceDescriptor_Returns_False_If_Type_Is_IIdentifiable()
-        {
-            // Arrange
-            Type resourceClrType = typeof(string);
+        // Act
+        ResourceDescriptor? descriptor = typeLocator.ResolveResourceDescriptor(resourceClrType);
 
-            var typeLocator = new TypeLocator();
-
-            // Act
-            ResourceDescriptor? descriptor = typeLocator.ResolveResourceDescriptor(resourceClrType);
-
-            // Assert
-            descriptor.Should().BeNull();
-        }
+        // Assert
+        descriptor.Should().BeNull();
     }
 }

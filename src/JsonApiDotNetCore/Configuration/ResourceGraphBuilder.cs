@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -8,349 +5,343 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCore.Configuration
+namespace JsonApiDotNetCore.Configuration;
+
+/// <summary>
+/// Builds and configures the <see cref="ResourceGraph" />.
+/// </summary>
+[PublicAPI]
+public class ResourceGraphBuilder
 {
-    /// <summary>
-    /// Builds and configures the <see cref="ResourceGraph" />.
-    /// </summary>
-    [PublicAPI]
-    public class ResourceGraphBuilder
+    private readonly IJsonApiOptions _options;
+    private readonly ILogger<ResourceGraphBuilder> _logger;
+    private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = new();
+    private readonly TypeLocator _typeLocator = new();
+
+    public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
     {
-        private readonly IJsonApiOptions _options;
-        private readonly ILogger<ResourceGraphBuilder> _logger;
-        private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = new();
-        private readonly TypeLocator _typeLocator = new();
+        ArgumentGuard.NotNull(options, nameof(options));
+        ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
 
-        public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
+        _options = options;
+        _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
+    }
+
+    /// <summary>
+    /// Constructs the <see cref="ResourceGraph" />.
+    /// </summary>
+    public IResourceGraph Build()
+    {
+        HashSet<ResourceType> resourceTypes = _resourceTypesByClrType.Values.ToHashSet();
+
+        if (!resourceTypes.Any())
         {
-            ArgumentGuard.NotNull(options, nameof(options));
-            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
-
-            _options = options;
-            _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
+            _logger.LogWarning("The resource graph is empty.");
         }
 
-        /// <summary>
-        /// Constructs the <see cref="ResourceGraph" />.
-        /// </summary>
-        public IResourceGraph Build()
+        var resourceGraph = new ResourceGraph(resourceTypes);
+
+        foreach (RelationshipAttribute relationship in resourceTypes.SelectMany(resourceType => resourceType.Relationships))
         {
-            HashSet<ResourceType> resourceTypes = _resourceTypesByClrType.Values.ToHashSet();
+            relationship.LeftType = resourceGraph.GetResourceType(relationship.LeftClrType!);
+            ResourceType? rightType = resourceGraph.FindResourceType(relationship.RightClrType!);
 
-            if (!resourceTypes.Any())
+            if (rightType == null)
             {
-                _logger.LogWarning("The resource graph is empty.");
+                throw new InvalidConfigurationException($"Resource type '{relationship.LeftClrType}' depends on " +
+                    $"'{relationship.RightClrType}', which was not added to the resource graph.");
             }
 
-            var resourceGraph = new ResourceGraph(resourceTypes);
-
-            foreach (RelationshipAttribute relationship in resourceTypes.SelectMany(resourceType => resourceType.Relationships))
-            {
-                relationship.LeftType = resourceGraph.GetResourceType(relationship.LeftClrType!);
-                ResourceType? rightType = resourceGraph.FindResourceType(relationship.RightClrType!);
-
-                if (rightType == null)
-                {
-                    throw new InvalidConfigurationException($"Resource type '{relationship.LeftClrType}' depends on " +
-                        $"'{relationship.RightClrType}', which was not added to the resource graph.");
-                }
-
-                relationship.RightType = rightType;
-            }
-
-            return resourceGraph;
+            relationship.RightType = rightType;
         }
 
-        public ResourceGraphBuilder Add(DbContext dbContext)
+        return resourceGraph;
+    }
+
+    public ResourceGraphBuilder Add(DbContext dbContext)
+    {
+        ArgumentGuard.NotNull(dbContext, nameof(dbContext));
+
+        foreach (IEntityType entityType in dbContext.Model.GetEntityTypes())
         {
-            ArgumentGuard.NotNull(dbContext, nameof(dbContext));
-
-            foreach (IEntityType entityType in dbContext.Model.GetEntityTypes())
+            if (!IsImplicitManyToManyJoinEntity(entityType))
             {
-                if (!IsImplicitManyToManyJoinEntity(entityType))
-                {
-                    Add(entityType.ClrType);
-                }
+                Add(entityType.ClrType);
             }
+        }
 
+        return this;
+    }
+
+    private static bool IsImplicitManyToManyJoinEntity(IEntityType entityType)
+    {
+        return entityType.IsPropertyBag && entityType.HasSharedClrType;
+    }
+
+    /// <summary>
+    /// Adds a JSON:API resource.
+    /// </summary>
+    /// <typeparam name="TResource">
+    /// The resource CLR type.
+    /// </typeparam>
+    /// <typeparam name="TId">
+    /// The resource identifier CLR type.
+    /// </typeparam>
+    /// <param name="publicName">
+    /// The name under which the resource is publicly exposed by the API. If nothing is specified, the naming convention is applied on the pluralized CLR
+    /// type name.
+    /// </param>
+    public ResourceGraphBuilder Add<TResource, TId>(string? publicName = null)
+        where TResource : class, IIdentifiable<TId>
+    {
+        return Add(typeof(TResource), typeof(TId), publicName);
+    }
+
+    /// <summary>
+    /// Adds a JSON:API resource.
+    /// </summary>
+    /// <param name="resourceClrType">
+    /// The resource CLR type.
+    /// </param>
+    /// <param name="idClrType">
+    /// The resource identifier CLR type.
+    /// </param>
+    /// <param name="publicName">
+    /// The name under which the resource is publicly exposed by the API. If nothing is specified, the naming convention is applied on the pluralized CLR
+    /// type name.
+    /// </param>
+    public ResourceGraphBuilder Add(Type resourceClrType, Type? idClrType = null, string? publicName = null)
+    {
+        ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
+
+        if (_resourceTypesByClrType.ContainsKey(resourceClrType))
+        {
             return this;
         }
 
-        private static bool IsImplicitManyToManyJoinEntity(IEntityType entityType)
+        if (resourceClrType.IsOrImplementsInterface<IIdentifiable>())
         {
-#pragma warning disable EF1001 // Internal Entity Framework Core API usage.
-            return entityType is EntityType { IsImplicitlyCreatedJoinEntityType: true };
-#pragma warning restore EF1001 // Internal Entity Framework Core API usage.
-        }
+            string effectivePublicName = publicName ?? FormatResourceName(resourceClrType);
+            Type? effectiveIdType = idClrType ?? _typeLocator.LookupIdType(resourceClrType);
 
-        /// <summary>
-        /// Adds a JSON:API resource.
-        /// </summary>
-        /// <typeparam name="TResource">
-        /// The resource CLR type.
-        /// </typeparam>
-        /// <typeparam name="TId">
-        /// The resource identifier CLR type.
-        /// </typeparam>
-        /// <param name="publicName">
-        /// The name under which the resource is publicly exposed by the API. If nothing is specified, the naming convention is applied on the pluralized CLR
-        /// type name.
-        /// </param>
-        public ResourceGraphBuilder Add<TResource, TId>(string? publicName = null)
-            where TResource : class, IIdentifiable<TId>
-        {
-            return Add(typeof(TResource), typeof(TId), publicName);
-        }
-
-        /// <summary>
-        /// Adds a JSON:API resource.
-        /// </summary>
-        /// <param name="resourceClrType">
-        /// The resource CLR type.
-        /// </param>
-        /// <param name="idClrType">
-        /// The resource identifier CLR type.
-        /// </param>
-        /// <param name="publicName">
-        /// The name under which the resource is publicly exposed by the API. If nothing is specified, the naming convention is applied on the pluralized CLR
-        /// type name.
-        /// </param>
-        public ResourceGraphBuilder Add(Type resourceClrType, Type? idClrType = null, string? publicName = null)
-        {
-            ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
-
-            if (_resourceTypesByClrType.ContainsKey(resourceClrType))
+            if (effectiveIdType == null)
             {
-                return this;
+                throw new InvalidConfigurationException($"Resource type '{resourceClrType}' implements 'IIdentifiable', but not 'IIdentifiable<TId>'.");
             }
 
-            if (resourceClrType.IsOrImplementsInterface<IIdentifiable>())
+            ResourceType resourceType = CreateResourceType(effectivePublicName, resourceClrType, effectiveIdType);
+
+            AssertNoDuplicatePublicName(resourceType, effectivePublicName);
+
+            _resourceTypesByClrType.Add(resourceClrType, resourceType);
+        }
+        else
+        {
+            if (resourceClrType.GetCustomAttribute<NoResourceAttribute>() == null)
             {
-                string effectivePublicName = publicName ?? FormatResourceName(resourceClrType);
-                Type? effectiveIdType = idClrType ?? _typeLocator.LookupIdType(resourceClrType);
-
-                if (effectiveIdType == null)
-                {
-                    throw new InvalidConfigurationException($"Resource type '{resourceClrType}' implements 'IIdentifiable', but not 'IIdentifiable<TId>'.");
-                }
-
-                ResourceType resourceType = CreateResourceType(effectivePublicName, resourceClrType, effectiveIdType);
-
-                AssertNoDuplicatePublicName(resourceType, effectivePublicName);
-
-                _resourceTypesByClrType.Add(resourceClrType, resourceType);
+                _logger.LogWarning(
+                    $"Skipping: Type '{resourceClrType}' does not implement '{nameof(IIdentifiable)}'. Add [NoResource] to suppress this warning.");
             }
-            else
-            {
-                _logger.LogWarning($"Skipping: Type '{resourceClrType}' does not implement '{nameof(IIdentifiable)}'.");
-            }
-
-            return this;
         }
 
-        private ResourceType CreateResourceType(string publicName, Type resourceClrType, Type idClrType)
+        return this;
+    }
+
+    private ResourceType CreateResourceType(string publicName, Type resourceClrType, Type idClrType)
+    {
+        IReadOnlyCollection<AttrAttribute> attributes = GetAttributes(resourceClrType);
+        IReadOnlyCollection<RelationshipAttribute> relationships = GetRelationships(resourceClrType);
+        IReadOnlyCollection<EagerLoadAttribute> eagerLoads = GetEagerLoads(resourceClrType);
+
+        AssertNoDuplicatePublicName(attributes, relationships);
+
+        var linksAttribute = resourceClrType.GetCustomAttribute<ResourceLinksAttribute>(true);
+
+        return linksAttribute == null
+            ? new ResourceType(publicName, resourceClrType, idClrType, attributes, relationships, eagerLoads)
+            : new ResourceType(publicName, resourceClrType, idClrType, attributes, relationships, eagerLoads, linksAttribute.TopLevelLinks,
+                linksAttribute.ResourceLinks, linksAttribute.RelationshipLinks);
+    }
+
+    private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceClrType)
+    {
+        var attributesByName = new Dictionary<string, AttrAttribute>();
+
+        foreach (PropertyInfo property in resourceClrType.GetProperties())
         {
-            IReadOnlyCollection<AttrAttribute> attributes = GetAttributes(resourceClrType);
-            IReadOnlyCollection<RelationshipAttribute> relationships = GetRelationships(resourceClrType);
-            IReadOnlyCollection<EagerLoadAttribute> eagerLoads = GetEagerLoads(resourceClrType);
+            var attribute = property.GetCustomAttribute<AttrAttribute>(true);
 
-            AssertNoDuplicatePublicName(attributes, relationships);
-
-            var linksAttribute = (ResourceLinksAttribute?)resourceClrType.GetCustomAttribute(typeof(ResourceLinksAttribute));
-
-            return linksAttribute == null
-                ? new ResourceType(publicName, resourceClrType, idClrType, attributes, relationships, eagerLoads)
-                : new ResourceType(publicName, resourceClrType, idClrType, attributes, relationships, eagerLoads, linksAttribute.TopLevelLinks,
-                    linksAttribute.ResourceLinks, linksAttribute.RelationshipLinks);
-        }
-
-        private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceClrType)
-        {
-            var attributesByName = new Dictionary<string, AttrAttribute>();
-
-            foreach (PropertyInfo property in resourceClrType.GetProperties())
+            if (attribute == null)
             {
-                // Although strictly not correct, 'id' is added to the list of attributes for convenience.
-                // For example, it enables to filter on ID, without the need to special-case existing logic.
-                // And when using sparse fields, it silently adds 'id' to the set of attributes to retrieve.
                 if (property.Name == nameof(Identifiable<object>.Id))
                 {
-                    var idAttr = new AttrAttribute
-                    {
-                        PublicName = FormatPropertyName(property),
-                        Property = property,
-                        Capabilities = _options.DefaultAttrCapabilities
-                    };
+                    // Although strictly not correct, 'id' is added to the list of attributes for convenience.
+                    // For example, it enables to filter on ID, without the need to special-case existing logic.
+                    // And when using sparse fieldsets, it silently adds 'id' to the set of attributes to retrieve.
 
-                    IncludeField(attributesByName, idAttr);
-                    continue;
+                    attribute = new AttrAttribute();
                 }
-
-                var attribute = (AttrAttribute?)property.GetCustomAttribute(typeof(AttrAttribute));
-
-                if (attribute == null)
+                else
                 {
                     continue;
                 }
-
-                SetPublicName(attribute, property);
-                attribute.Property = property;
-
-                if (!attribute.HasExplicitCapabilities)
-                {
-                    attribute.Capabilities = _options.DefaultAttrCapabilities;
-                }
-
-                IncludeField(attributesByName, attribute);
             }
 
-            if (attributesByName.Count < 2)
+            SetPublicName(attribute, property);
+            attribute.Property = property;
+
+            if (!attribute.HasExplicitCapabilities)
             {
-                _logger.LogWarning($"Type '{resourceClrType}' does not contain any attributes.");
+                attribute.Capabilities = _options.DefaultAttrCapabilities;
             }
 
-            return attributesByName.Values;
+            IncludeField(attributesByName, attribute);
         }
 
-        private IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceClrType)
+        if (attributesByName.Count < 2)
         {
-            var relationshipsByName = new Dictionary<string, RelationshipAttribute>();
-            PropertyInfo[] properties = resourceClrType.GetProperties();
+            _logger.LogWarning($"Type '{resourceClrType}' does not contain any attributes.");
+        }
 
-            foreach (PropertyInfo property in properties)
+        return attributesByName.Values;
+    }
+
+    private IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceClrType)
+    {
+        var relationshipsByName = new Dictionary<string, RelationshipAttribute>();
+        PropertyInfo[] properties = resourceClrType.GetProperties();
+
+        foreach (PropertyInfo property in properties)
+        {
+            var relationship = property.GetCustomAttribute<RelationshipAttribute>(true);
+
+            if (relationship != null)
             {
-                var relationship = (RelationshipAttribute?)property.GetCustomAttribute(typeof(RelationshipAttribute));
+                relationship.Property = property;
+                SetPublicName(relationship, property);
+                relationship.LeftClrType = resourceClrType;
+                relationship.RightClrType = GetRelationshipType(relationship, property);
 
-                if (relationship != null)
-                {
-                    relationship.Property = property;
-                    SetPublicName(relationship, property);
-                    relationship.LeftClrType = resourceClrType;
-                    relationship.RightClrType = GetRelationshipType(relationship, property);
-
-                    IncludeField(relationshipsByName, relationship);
-                }
+                IncludeField(relationshipsByName, relationship);
             }
-
-            return relationshipsByName.Values;
         }
 
-        private void SetPublicName(ResourceFieldAttribute field, PropertyInfo property)
+        return relationshipsByName.Values;
+    }
+
+    private void SetPublicName(ResourceFieldAttribute field, PropertyInfo property)
+    {
+        // ReSharper disable once ConstantNullCoalescingCondition
+        field.PublicName ??= FormatPropertyName(property);
+    }
+
+    private Type GetRelationshipType(RelationshipAttribute relationship, PropertyInfo property)
+    {
+        ArgumentGuard.NotNull(relationship, nameof(relationship));
+        ArgumentGuard.NotNull(property, nameof(property));
+
+        return relationship is HasOneAttribute ? property.PropertyType : property.PropertyType.GetGenericArguments()[0];
+    }
+
+    private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceClrType, int recursionDepth = 0)
+    {
+        AssertNoInfiniteRecursion(recursionDepth);
+
+        var attributes = new List<EagerLoadAttribute>();
+        PropertyInfo[] properties = resourceClrType.GetProperties();
+
+        foreach (PropertyInfo property in properties)
         {
-            // ReSharper disable once ConstantNullCoalescingCondition
-            field.PublicName ??= FormatPropertyName(property);
-        }
+            var eagerLoad = property.GetCustomAttribute<EagerLoadAttribute>(true);
 
-        private Type GetRelationshipType(RelationshipAttribute relationship, PropertyInfo property)
-        {
-            ArgumentGuard.NotNull(relationship, nameof(relationship));
-            ArgumentGuard.NotNull(property, nameof(property));
-
-            return relationship is HasOneAttribute ? property.PropertyType : property.PropertyType.GetGenericArguments()[0];
-        }
-
-        private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceClrType, int recursionDepth = 0)
-        {
-            AssertNoInfiniteRecursion(recursionDepth);
-
-            var attributes = new List<EagerLoadAttribute>();
-            PropertyInfo[] properties = resourceClrType.GetProperties();
-
-            foreach (PropertyInfo property in properties)
+            if (eagerLoad == null)
             {
-                var eagerLoad = (EagerLoadAttribute?)property.GetCustomAttribute(typeof(EagerLoadAttribute));
-
-                if (eagerLoad == null)
-                {
-                    continue;
-                }
-
-                Type innerType = TypeOrElementType(property.PropertyType);
-                eagerLoad.Children = GetEagerLoads(innerType, recursionDepth + 1);
-                eagerLoad.Property = property;
-
-                attributes.Add(eagerLoad);
+                continue;
             }
 
-            return attributes;
+            Type innerType = TypeOrElementType(property.PropertyType);
+            eagerLoad.Children = GetEagerLoads(innerType, recursionDepth + 1);
+            eagerLoad.Property = property;
+
+            attributes.Add(eagerLoad);
         }
 
-        private static void IncludeField<TField>(Dictionary<string, TField> fieldsByName, TField field)
-            where TField : ResourceFieldAttribute
+        return attributes;
+    }
+
+    private static void IncludeField<TField>(Dictionary<string, TField> fieldsByName, TField field)
+        where TField : ResourceFieldAttribute
+    {
+        if (fieldsByName.TryGetValue(field.PublicName, out TField? existingField))
         {
-            if (fieldsByName.TryGetValue(field.PublicName, out var existingField))
-            {
-                throw CreateExceptionForDuplicatePublicName(field.Property.DeclaringType!, existingField, field);
-            }
-
-            fieldsByName.Add(field.PublicName, field);
+            throw CreateExceptionForDuplicatePublicName(field.Property.DeclaringType!, existingField, field);
         }
 
-        private void AssertNoDuplicatePublicName(ResourceType resourceType, string effectivePublicName)
+        fieldsByName.Add(field.PublicName, field);
+    }
+
+    private void AssertNoDuplicatePublicName(ResourceType resourceType, string effectivePublicName)
+    {
+        (Type? existingClrType, _) = _resourceTypesByClrType.FirstOrDefault(type => type.Value.PublicName == resourceType.PublicName);
+
+        if (existingClrType != null)
         {
-            var (existingClrType, _) = _resourceTypesByClrType.FirstOrDefault(type => type.Value.PublicName == resourceType.PublicName);
-
-            if (existingClrType != null)
-            {
-                throw new InvalidConfigurationException(
-                    $"Resource '{existingClrType}' and '{resourceType.ClrType}' both use public name '{effectivePublicName}'.");
-            }
+            throw new InvalidConfigurationException($"Resource '{existingClrType}' and '{resourceType.ClrType}' both use public name '{effectivePublicName}'.");
         }
+    }
 
-        private void AssertNoDuplicatePublicName(IReadOnlyCollection<AttrAttribute> attributes, IReadOnlyCollection<RelationshipAttribute> relationships)
+    private void AssertNoDuplicatePublicName(IReadOnlyCollection<AttrAttribute> attributes, IReadOnlyCollection<RelationshipAttribute> relationships)
+    {
+        IEnumerable<(AttrAttribute attribute, RelationshipAttribute relationship)> query =
+            from attribute in attributes
+            from relationship in relationships
+            where attribute.PublicName == relationship.PublicName
+            select (attribute, relationship);
+
+        (AttrAttribute? duplicateAttribute, RelationshipAttribute? duplicateRelationship) = query.FirstOrDefault();
+
+        if (duplicateAttribute != null && duplicateRelationship != null)
         {
-            IEnumerable<(AttrAttribute attribute, RelationshipAttribute relationship)> query =
-                from attribute in attributes
-                from relationship in relationships
-                where attribute.PublicName == relationship.PublicName
-                select (attribute, relationship);
-
-            (AttrAttribute? duplicateAttribute, RelationshipAttribute? duplicateRelationship) = query.FirstOrDefault();
-
-            if (duplicateAttribute != null && duplicateRelationship != null)
-            {
-                throw CreateExceptionForDuplicatePublicName(duplicateAttribute.Property.DeclaringType!, duplicateAttribute, duplicateRelationship);
-            }
+            throw CreateExceptionForDuplicatePublicName(duplicateAttribute.Property.DeclaringType!, duplicateAttribute, duplicateRelationship);
         }
+    }
 
-        private static InvalidConfigurationException CreateExceptionForDuplicatePublicName(Type containingClrType, ResourceFieldAttribute existingField,
-            ResourceFieldAttribute field)
+    private static InvalidConfigurationException CreateExceptionForDuplicatePublicName(Type containingClrType, ResourceFieldAttribute existingField,
+        ResourceFieldAttribute field)
+    {
+        return new InvalidConfigurationException(
+            $"Properties '{containingClrType}.{existingField.Property.Name}' and '{containingClrType}.{field.Property.Name}' both use public name '{field.PublicName}'.");
+    }
+
+    [AssertionMethod]
+    private static void AssertNoInfiniteRecursion(int recursionDepth)
+    {
+        if (recursionDepth >= 500)
         {
-            return new InvalidConfigurationException(
-                $"Properties '{containingClrType}.{existingField.Property.Name}' and '{containingClrType}.{field.Property.Name}' both use public name '{field.PublicName}'.");
+            throw new InvalidOperationException("Infinite recursion detected in eager-load chain.");
         }
+    }
 
-        [AssertionMethod]
-        private static void AssertNoInfiniteRecursion(int recursionDepth)
-        {
-            if (recursionDepth >= 500)
-            {
-                throw new InvalidOperationException("Infinite recursion detected in eager-load chain.");
-            }
-        }
+    private Type TypeOrElementType(Type type)
+    {
+        Type[] interfaces = type.GetInterfaces().Where(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            .ToArray();
 
-        private Type TypeOrElementType(Type type)
-        {
-            Type[] interfaces = type.GetInterfaces()
-                .Where(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>)).ToArray();
+        return interfaces.Length == 1 ? interfaces.Single().GenericTypeArguments[0] : type;
+    }
 
-            return interfaces.Length == 1 ? interfaces.Single().GenericTypeArguments[0] : type;
-        }
+    private string FormatResourceName(Type resourceClrType)
+    {
+        var formatter = new ResourceNameFormatter(_options.SerializerOptions.PropertyNamingPolicy);
+        return formatter.FormatResourceName(resourceClrType);
+    }
 
-        private string FormatResourceName(Type resourceClrType)
-        {
-            var formatter = new ResourceNameFormatter(_options.SerializerOptions.PropertyNamingPolicy);
-            return formatter.FormatResourceName(resourceClrType);
-        }
-
-        private string FormatPropertyName(PropertyInfo resourceProperty)
-        {
-            return _options.SerializerOptions.PropertyNamingPolicy == null
-                ? resourceProperty.Name
-                : _options.SerializerOptions.PropertyNamingPolicy.ConvertName(resourceProperty.Name);
-        }
+    private string FormatPropertyName(PropertyInfo resourceProperty)
+    {
+        return _options.SerializerOptions.PropertyNamingPolicy == null
+            ? resourceProperty.Name
+            : _options.SerializerOptions.PropertyNamingPolicy.ConvertName(resourceProperty.Name);
     }
 }

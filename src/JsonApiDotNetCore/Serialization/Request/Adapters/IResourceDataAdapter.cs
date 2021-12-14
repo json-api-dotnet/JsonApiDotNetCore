@@ -1,16 +1,15 @@
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 
-namespace JsonApiDotNetCore.Serialization.Request.Adapters
+namespace JsonApiDotNetCore.Serialization.Request.Adapters;
+
+/// <summary>
+/// Validates and converts the data from a resource in a POST/PATCH resource request.
+/// </summary>
+public interface IResourceDataAdapter
 {
     /// <summary>
-    /// Validates and converts the data from a resource in a POST/PATCH resource request.
+    /// Validates and converts the specified <paramref name="data" />.
     /// </summary>
-    public interface IResourceDataAdapter
-    {
-        /// <summary>
-        /// Validates and converts the specified <paramref name="data" />.
-        /// </summary>
-        IIdentifiable Convert(SingleOrManyData<ResourceObject> data, ResourceIdentityRequirements requirements, RequestAdapterState state);
-    }
+    IIdentifiable Convert(SingleOrManyData<ResourceObject> data, ResourceIdentityRequirements requirements, RequestAdapterState state);
 }

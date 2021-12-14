@@ -1,12 +1,11 @@
 using JetBrains.Annotations;
 
-namespace OpenApiTests.LegacyOpenApiIntegration
+namespace OpenApiTests.LegacyOpenApiIntegration;
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+public enum Airline : byte
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public enum Airline : byte
-    {
-        DeltaAirLines,
-        LufthansaGroup,
-        AirFranceKlm
-    }
+    DeltaAirLines,
+    LufthansaGroup,
+    AirFranceKlm
 }

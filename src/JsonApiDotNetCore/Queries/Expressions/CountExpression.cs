@@ -1,53 +1,52 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 
-namespace JsonApiDotNetCore.Queries.Expressions
+namespace JsonApiDotNetCore.Queries.Expressions;
+
+/// <summary>
+/// Represents the "count" function, resulting from text such as: count(articles)
+/// </summary>
+[PublicAPI]
+public class CountExpression : FunctionExpression
 {
-    /// <summary>
-    /// Represents the "count" function, resulting from text such as: count(articles)
-    /// </summary>
-    [PublicAPI]
-    public class CountExpression : FunctionExpression
+    public ResourceFieldChainExpression TargetCollection { get; }
+
+    public CountExpression(ResourceFieldChainExpression targetCollection)
     {
-        public ResourceFieldChainExpression TargetCollection { get; }
+        ArgumentGuard.NotNull(targetCollection, nameof(targetCollection));
 
-        public CountExpression(ResourceFieldChainExpression targetCollection)
+        TargetCollection = targetCollection;
+    }
+
+    public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
+    {
+        return visitor.VisitCount(this, argument);
+    }
+
+    public override string ToString()
+    {
+        return $"{Keywords.Count}({TargetCollection})";
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj))
         {
-            ArgumentGuard.NotNull(targetCollection, nameof(targetCollection));
-
-            TargetCollection = targetCollection;
+            return true;
         }
 
-        public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
+        if (obj is null || GetType() != obj.GetType())
         {
-            return visitor.VisitCount(this, argument);
+            return false;
         }
 
-        public override string ToString()
-        {
-            return $"{Keywords.Count}({TargetCollection})";
-        }
+        var other = (CountExpression)obj;
 
-        public override bool Equals(object? obj)
-        {
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
+        return TargetCollection.Equals(other.TargetCollection);
+    }
 
-            if (obj is null || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            var other = (CountExpression)obj;
-
-            return TargetCollection.Equals(other.TargetCollection);
-        }
-
-        public override int GetHashCode()
-        {
-            return TargetCollection.GetHashCode();
-        }
+    public override int GetHashCode()
+    {
+        return TargetCollection.GetHashCode();
     }
 }

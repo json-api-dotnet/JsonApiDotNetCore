@@ -2,14 +2,13 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 
-namespace DiscoveryTests
+namespace DiscoveryTests;
+
+[UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+public sealed class PrivateResourceDefinition : JsonApiResourceDefinition<PrivateResource, int>
 {
-    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class PrivateResourceDefinition : JsonApiResourceDefinition<PrivateResource, int>
+    public PrivateResourceDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
-        public PrivateResourceDefinition(IResourceGraph resourceGraph)
-            : base(resourceGraph)
-        {
-        }
     }
 }

@@ -1,10 +1,6 @@
-using System;
 using System.Globalization;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -12,104 +8,104 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
+namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization;
+
+public sealed class SerializationTests : IClassFixture<IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext>>
 {
-    public sealed class SerializationTests : IClassFixture<IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext>>
+    private const string JsonDateTimeOffsetFormatSpecifier = "yyyy-MM-ddTHH:mm:ss.FFFFFFFK";
+
+    private readonly IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> _testContext;
+    private readonly SerializationFakers _fakers = new();
+
+    public SerializationTests(IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> testContext)
     {
-        private const string JsonDateTimeOffsetFormatSpecifier = "yyyy-MM-ddTHH:mm:ss.FFFFFFFK";
+        _testContext = testContext;
 
-        private readonly IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> _testContext;
-        private readonly SerializationFakers _fakers = new();
+        testContext.UseController<MeetingAttendeesController>();
+        testContext.UseController<MeetingsController>();
 
-        public SerializationTests(IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> testContext)
+        testContext.ConfigureServicesAfterStartup(services =>
         {
-            _testContext = testContext;
+            services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
+        });
 
-            testContext.UseController<MeetingAttendeesController>();
-            testContext.UseController<MeetingsController>();
+        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.IncludeExceptionStackTraceInErrors = false;
+        options.AllowClientGeneratedIds = true;
+        options.IncludeJsonApiVersion = false;
+        options.IncludeTotalResourceCount = true;
 
-            testContext.ConfigureServicesAfterStartup(services =>
-            {
-                services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
-            });
-
-            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.IncludeExceptionStackTraceInErrors = false;
-            options.AllowClientGeneratedIds = true;
-            options.IncludeJsonApiVersion = false;
-            options.IncludeTotalResourceCount = true;
-
-            if (!options.SerializerOptions.Converters.Any(converter => converter is JsonTimeSpanConverter))
-            {
-                options.SerializerOptions.Converters.Add(new JsonTimeSpanConverter());
-            }
+        if (!options.SerializerOptions.Converters.Any(converter => converter is JsonTimeSpanConverter))
+        {
+            options.SerializerOptions.Converters.Add(new JsonTimeSpanConverter());
         }
+    }
 
-        [Fact]
-        public async Task Returns_no_body_for_successful_HEAD_request()
+    [Fact]
+    public async Task Returns_no_body_for_successful_HEAD_request()
+    {
+        // Arrange
+        Meeting meeting = _fakers.Meeting.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Meeting meeting = _fakers.Meeting.Generate();
+            dbContext.Meetings.Add(meeting);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Meetings.Add(meeting);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/meetings/{meeting.StringId}";
 
-            string route = $"/meetings/{meeting.StringId}";
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteHeadAsync<string>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteHeadAsync<string>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.Content.Headers.ContentLength.Should().BeGreaterThan(0);
 
-            httpResponse.Content.Headers.ContentLength.Should().BeGreaterThan(0);
+        responseDocument.Should().BeEmpty();
+    }
 
-            responseDocument.Should().BeEmpty();
-        }
+    [Fact]
+    public async Task Returns_no_body_for_failed_HEAD_request()
+    {
+        // Arrange
+        string route = $"/meetings/{Unknown.StringId.For<Meeting, Guid>()}";
 
-        [Fact]
-        public async Task Returns_no_body_for_failed_HEAD_request()
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteHeadAsync<string>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        httpResponse.Content.Headers.ContentLength.Should().BeGreaterThan(0);
+
+        responseDocument.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Can_get_primary_resources_with_include()
+    {
+        // Arrange
+        Meeting meeting = _fakers.Meeting.Generate();
+        meeting.Attendees = _fakers.MeetingAttendee.Generate(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            string route = $"/meetings/{Unknown.StringId.For<Meeting, Guid>()}";
+            await dbContext.ClearTableAsync<Meeting>();
+            dbContext.Meetings.Add(meeting);
+            await dbContext.SaveChangesAsync();
+        });
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteHeadAsync<string>(route);
+        const string route = "/meetings?include=attendees";
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            httpResponse.Content.Headers.ContentLength.Should().BeGreaterThan(0);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task Can_get_primary_resources_with_include()
-        {
-            // Arrange
-            Meeting meeting = _fakers.Meeting.Generate();
-            meeting.Attendees = _fakers.MeetingAttendee.Generate(1);
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Meeting>();
-                dbContext.Meetings.Add(meeting);
-                await dbContext.SaveChangesAsync();
-            });
-
-            const string route = "/meetings?include=attendees";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetings?include=attendees"",
     ""first"": ""http://localhost/meetings?include=attendees"",
@@ -171,29 +167,29 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     ""total"": 1
   }
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Can_get_primary_resource_with_empty_ToOne_include()
+    [Fact]
+    public async Task Can_get_primary_resource_with_empty_ToOne_include()
+    {
+        // Arrange
+        MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+            dbContext.Attendees.Add(attendee);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Attendees.Add(attendee);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/meetingAttendees/{attendee.StringId}?include=meeting";
 
-            string route = $"/meetingAttendees/{attendee.StringId}?include=meeting";
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"?include=meeting""
   },
@@ -218,30 +214,30 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
   },
   ""included"": []
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Can_get_primary_resources_with_empty_ToMany_include()
+    [Fact]
+    public async Task Can_get_primary_resources_with_empty_ToMany_include()
+    {
+        // Arrange
+        Meeting meeting = _fakers.Meeting.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Meeting meeting = _fakers.Meeting.Generate();
+            await dbContext.ClearTableAsync<Meeting>();
+            dbContext.Meetings.Add(meeting);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<Meeting>();
-                dbContext.Meetings.Add(meeting);
-                await dbContext.SaveChangesAsync();
-            });
+        const string route = "/meetings/?include=attendees";
 
-            const string route = "/meetings/?include=attendees";
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetings/?include=attendees"",
     ""first"": ""http://localhost/meetings/?include=attendees"",
@@ -279,29 +275,29 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     ""total"": 1
   }
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Can_get_primary_resource_by_ID()
+    [Fact]
+    public async Task Can_get_primary_resource_by_ID()
+    {
+        // Arrange
+        Meeting meeting = _fakers.Meeting.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Meeting meeting = _fakers.Meeting.Generate();
+            dbContext.Meetings.Add(meeting);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Meetings.Add(meeting);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/meetings/{meeting.StringId}";
 
-            string route = $"/meetings/{meeting.StringId}";
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetings/" + meeting.StringId + @"""
   },
@@ -330,25 +326,25 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     }
   }
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Cannot_get_unknown_primary_resource_by_ID()
-        {
-            // Arrange
-            string meetingId = Unknown.StringId.For<Meeting, Guid>();
+    [Fact]
+    public async Task Cannot_get_unknown_primary_resource_by_ID()
+    {
+        // Arrange
+        string meetingId = Unknown.StringId.For<Meeting, Guid>();
 
-            string route = $"/meetings/{meetingId}";
+        string route = $"/meetings/{meetingId}";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
+        string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
 
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetings/ffffffff-ffff-ffff-ffff-ffffffffffff""
   },
@@ -361,30 +357,30 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     }
   ]
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Can_get_secondary_resource()
+    [Fact]
+    public async Task Can_get_secondary_resource()
+    {
+        // Arrange
+        MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+        attendee.Meeting = _fakers.Meeting.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
-            attendee.Meeting = _fakers.Meeting.Generate();
+            dbContext.Attendees.Add(attendee);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Attendees.Add(attendee);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/meetingAttendees/{attendee.StringId}/meeting";
 
-            string route = $"/meetingAttendees/{attendee.StringId}/meeting";
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/meeting""
   },
@@ -413,58 +409,58 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     }
   }
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Can_get_unknown_secondary_resource()
+    [Fact]
+    public async Task Can_get_unknown_secondary_resource()
+    {
+        // Arrange
+        MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+            dbContext.Attendees.Add(attendee);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Attendees.Add(attendee);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/meetingAttendees/{attendee.StringId}/meeting";
 
-            string route = $"/meetingAttendees/{attendee.StringId}/meeting";
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/meeting""
   },
   ""data"": null
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Can_get_secondary_resources()
+    [Fact]
+    public async Task Can_get_secondary_resources()
+    {
+        // Arrange
+        Meeting meeting = _fakers.Meeting.Generate();
+        meeting.Attendees = _fakers.MeetingAttendee.Generate(1);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Meeting meeting = _fakers.Meeting.Generate();
-            meeting.Attendees = _fakers.MeetingAttendee.Generate(1);
+            dbContext.Meetings.Add(meeting);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Meetings.Add(meeting);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/meetings/{meeting.StringId}/attendees";
 
-            string route = $"/meetings/{meeting.StringId}/attendees";
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees"",
     ""first"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees"",
@@ -494,29 +490,29 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     ""total"": 1
   }
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Can_get_unknown_secondary_resources()
+    [Fact]
+    public async Task Can_get_unknown_secondary_resources()
+    {
+        // Arrange
+        Meeting meeting = _fakers.Meeting.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Meeting meeting = _fakers.Meeting.Generate();
+            dbContext.Meetings.Add(meeting);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Meetings.Add(meeting);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/meetings/{meeting.StringId}/attendees";
 
-            string route = $"/meetings/{meeting.StringId}/attendees";
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees"",
     ""first"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees""
@@ -526,30 +522,30 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     ""total"": 0
   }
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Can_get_ToOne_relationship()
+    [Fact]
+    public async Task Can_get_ToOne_relationship()
+    {
+        // Arrange
+        MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+        attendee.Meeting = _fakers.Meeting.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
-            attendee.Meeting = _fakers.Meeting.Generate();
+            dbContext.Attendees.Add(attendee);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Attendees.Add(attendee);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/meetingAttendees/{attendee.StringId}/relationships/meeting";
 
-            string route = $"/meetingAttendees/{attendee.StringId}/relationships/meeting";
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/relationships/meeting"",
     ""related"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/meeting""
@@ -559,32 +555,32 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     ""id"": """ + attendee.Meeting.StringId + @"""
   }
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Can_get_ToMany_relationship()
+    [Fact]
+    public async Task Can_get_ToMany_relationship()
+    {
+        // Arrange
+        Meeting meeting = _fakers.Meeting.Generate();
+        meeting.Attendees = _fakers.MeetingAttendee.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            Meeting meeting = _fakers.Meeting.Generate();
-            meeting.Attendees = _fakers.MeetingAttendee.Generate(2);
+            dbContext.Meetings.Add(meeting);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Meetings.Add(meeting);
-                await dbContext.SaveChangesAsync();
-            });
+        string route = $"/meetings/{meeting.StringId}/relationships/attendees";
 
-            string route = $"/meetings/{meeting.StringId}/relationships/attendees";
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        string[] meetingIds = meeting.Attendees.Select(attendee => attendee.StringId!).OrderBy(id => id).ToArray();
 
-            string[] meetingIds = meeting.Attendees.Select(attendee => attendee.StringId!).OrderBy(id => id).ToArray();
-
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees"",
     ""related"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees"",
@@ -605,44 +601,44 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     ""total"": 2
   }
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Can_create_resource_with_side_effects()
+    [Fact]
+    public async Task Can_create_resource_with_side_effects()
+    {
+        // Arrange
+        Meeting newMeeting = _fakers.Meeting.Generate();
+        newMeeting.Id = Guid.NewGuid();
+
+        var requestBody = new
         {
-            // Arrange
-            Meeting newMeeting = _fakers.Meeting.Generate();
-            newMeeting.Id = Guid.NewGuid();
-
-            var requestBody = new
+            data = new
             {
-                data = new
+                type = "meetings",
+                id = newMeeting.StringId,
+                attributes = new
                 {
-                    type = "meetings",
-                    id = newMeeting.StringId,
-                    attributes = new
+                    title = newMeeting.Title,
+                    startTime = newMeeting.StartTime,
+                    duration = newMeeting.Duration,
+                    location = new
                     {
-                        title = newMeeting.Title,
-                        startTime = newMeeting.StartTime,
-                        duration = newMeeting.Duration,
-                        location = new
-                        {
-                            lat = newMeeting.Latitude,
-                            lng = newMeeting.Longitude
-                        }
+                        lat = newMeeting.Latitude,
+                        lng = newMeeting.Longitude
                     }
                 }
-            };
+            }
+        };
 
-            const string route = "/meetings";
+        const string route = "/meetings";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetings""
   },
@@ -671,42 +667,42 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     }
   }
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Can_update_resource_with_side_effects()
+    [Fact]
+    public async Task Can_update_resource_with_side_effects()
+    {
+        // Arrange
+        MeetingAttendee existingAttendee = _fakers.MeetingAttendee.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            MeetingAttendee existingAttendee = _fakers.MeetingAttendee.Generate();
+            dbContext.Attendees.Add(existingAttendee);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        var requestBody = new
+        {
+            data = new
             {
-                dbContext.Attendees.Add(existingAttendee);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "meetingAttendees",
+                id = existingAttendee.StringId,
+                attributes = new
                 {
-                    type = "meetingAttendees",
-                    id = existingAttendee.StringId,
-                    attributes = new
-                    {
-                        displayName = existingAttendee.DisplayName
-                    }
+                    displayName = existingAttendee.DisplayName
                 }
-            };
+            }
+        };
 
-            string route = $"/meetingAttendees/{existingAttendee.StringId}";
+        string route = $"/meetingAttendees/{existingAttendee.StringId}";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""links"": {
     ""self"": ""http://localhost/meetingAttendees/" + existingAttendee.StringId + @"""
   },
@@ -729,78 +725,78 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     }
   }
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Can_update_resource_with_relationship_for_type_at_end()
+    [Fact]
+    public async Task Can_update_resource_with_relationship_for_type_at_end()
+    {
+        // Arrange
+        MeetingAttendee existingAttendee = _fakers.MeetingAttendee.Generate();
+        existingAttendee.Meeting = _fakers.Meeting.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            MeetingAttendee existingAttendee = _fakers.MeetingAttendee.Generate();
-            existingAttendee.Meeting = _fakers.Meeting.Generate();
+            dbContext.Attendees.Add(existingAttendee);
+            await dbContext.SaveChangesAsync();
+        });
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        var requestBody = new
+        {
+            data = new
             {
-                dbContext.Attendees.Add(existingAttendee);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                id = existingAttendee.StringId,
+                attributes = new
                 {
-                    id = existingAttendee.StringId,
-                    attributes = new
+                    displayName = existingAttendee.DisplayName
+                },
+                relationships = new
+                {
+                    meeting = new
                     {
-                        displayName = existingAttendee.DisplayName
-                    },
-                    relationships = new
-                    {
-                        meeting = new
+                        data = new
                         {
-                            data = new
-                            {
-                                id = existingAttendee.Meeting.StringId,
-                                type = "meetings"
-                            }
+                            id = existingAttendee.Meeting.StringId,
+                            type = "meetings"
                         }
-                    },
-                    type = "meetingAttendees"
-                }
-            };
+                    }
+                },
+                type = "meetingAttendees"
+            }
+        };
 
-            string route = $"/meetingAttendees/{existingAttendee.StringId}";
+        string route = $"/meetingAttendees/{existingAttendee.StringId}";
 
-            // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-        }
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+    }
 
-        [Fact]
-        public async Task Includes_version_on_resource_endpoint()
+    [Fact]
+    public async Task Includes_version_on_resource_endpoint()
+    {
+        // Arrange
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.IncludeJsonApiVersion = true;
+
+        MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.IncludeJsonApiVersion = true;
+            dbContext.Attendees.Add(attendee);
+            await dbContext.SaveChangesAsync();
+        });
 
-            MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+        string route = $"/meetingAttendees/{attendee.StringId}/meeting";
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Attendees.Add(attendee);
-                await dbContext.SaveChangesAsync();
-            });
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
-            string route = $"/meetingAttendees/{attendee.StringId}/meeting";
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""jsonapi"": {
     ""version"": ""1.1""
   },
@@ -809,28 +805,28 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
   },
   ""data"": null
 }");
-        }
+    }
 
-        [Fact]
-        public async Task Includes_version_on_error_in_resource_endpoint()
-        {
-            // Arrange
-            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.IncludeJsonApiVersion = true;
+    [Fact]
+    public async Task Includes_version_on_error_in_resource_endpoint()
+    {
+        // Arrange
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.IncludeJsonApiVersion = true;
 
-            string attendeeId = Unknown.StringId.For<MeetingAttendee, Guid>();
+        string attendeeId = Unknown.StringId.For<MeetingAttendee, Guid>();
 
-            string route = $"/meetingAttendees/{attendeeId}";
+        string route = $"/meetingAttendees/{attendeeId}";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
+        string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
 
-            responseDocument.Should().BeJson(@"{
+        responseDocument.Should().BeJson(@"{
   ""jsonapi"": {
     ""version"": ""1.1""
   },
@@ -846,6 +842,5 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     }
   ]
 }");
-        }
     }
 }

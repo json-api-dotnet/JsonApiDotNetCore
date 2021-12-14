@@ -1,9 +1,8 @@
-namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization
-{
-    public interface IEncryptionService
-    {
-        string Encrypt(string value);
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization;
 
-        string Decrypt(string value);
-    }
+public interface IEncryptionService
+{
+    string Encrypt(string value);
+
+    string Decrypt(string value);
 }

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Controllers.Annotations;
@@ -13,98 +10,97 @@ using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
+namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters;
+
+public sealed class SparseFieldSetParseTests : BaseParseTests
 {
-    public sealed class SparseFieldSetParseTests : BaseParseTests
+    private readonly SparseFieldSetQueryStringParameterReader _reader;
+
+    public SparseFieldSetParseTests()
     {
-        private readonly SparseFieldSetQueryStringParameterReader _reader;
+        _reader = new SparseFieldSetQueryStringParameterReader(Request, ResourceGraph);
+    }
 
-        public SparseFieldSetParseTests()
-        {
-            _reader = new SparseFieldSetQueryStringParameterReader(Request, ResourceGraph);
-        }
+    [Theory]
+    [InlineData("fields", false)]
+    [InlineData("fields[articles]", true)]
+    [InlineData("fields[]", true)]
+    [InlineData("fieldset", false)]
+    [InlineData("fields[", false)]
+    [InlineData("fields]", false)]
+    public void Reader_Supports_Parameter_Name(string parameterName, bool expectCanParse)
+    {
+        // Act
+        bool canParse = _reader.CanRead(parameterName);
 
-        [Theory]
-        [InlineData("fields", false)]
-        [InlineData("fields[articles]", true)]
-        [InlineData("fields[]", true)]
-        [InlineData("fieldset", false)]
-        [InlineData("fields[", false)]
-        [InlineData("fields]", false)]
-        public void Reader_Supports_Parameter_Name(string parameterName, bool expectCanParse)
-        {
-            // Act
-            bool canParse = _reader.CanRead(parameterName);
+        // Assert
+        canParse.Should().Be(expectCanParse);
+    }
 
-            // Assert
-            canParse.Should().Be(expectCanParse);
-        }
+    [Theory]
+    [InlineData(JsonApiQueryStringParameters.Fields, false)]
+    [InlineData(JsonApiQueryStringParameters.All, false)]
+    [InlineData(JsonApiQueryStringParameters.None, true)]
+    [InlineData(JsonApiQueryStringParameters.Filter, true)]
+    public void Reader_Is_Enabled(JsonApiQueryStringParameters parametersDisabled, bool expectIsEnabled)
+    {
+        // Act
+        bool isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
 
-        [Theory]
-        [InlineData(JsonApiQueryStringParameters.Fields, false)]
-        [InlineData(JsonApiQueryStringParameters.All, false)]
-        [InlineData(JsonApiQueryStringParameters.None, true)]
-        [InlineData(JsonApiQueryStringParameters.Filter, true)]
-        public void Reader_Is_Enabled(JsonApiQueryStringParameters parametersDisabled, bool expectIsEnabled)
-        {
-            // Act
-            bool isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
+        // Assert
+        isEnabled.Should().Be(expectIsEnabled);
+    }
 
-            // Assert
-            isEnabled.Should().Be(expectIsEnabled);
-        }
+    [Theory]
+    [InlineData("fields", "", "[ expected.")]
+    [InlineData("fields]", "", "[ expected.")]
+    [InlineData("fields[", "", "Resource type expected.")]
+    [InlineData("fields[]", "", "Resource type expected.")]
+    [InlineData("fields[ ]", "", "Unexpected whitespace.")]
+    [InlineData("fields[owner]", "", "Resource type 'owner' does not exist.")]
+    [InlineData("fields[owner.posts]", "id", "Resource type 'owner.posts' does not exist.")]
+    [InlineData("fields[blogPosts]", " ", "Unexpected whitespace.")]
+    [InlineData("fields[blogPosts]", "some", "Field 'some' does not exist on resource type 'blogPosts'.")]
+    [InlineData("fields[blogPosts]", "id,owner.name", "Field 'owner.name' does not exist on resource type 'blogPosts'.")]
+    [InlineData("fields[blogPosts]", "id(", ", expected.")]
+    [InlineData("fields[blogPosts]", "id,", "Field name expected.")]
+    [InlineData("fields[blogPosts]", "author.id,", "Field 'author.id' does not exist on resource type 'blogPosts'.")]
+    public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
+    {
+        // Act
+        Action action = () => _reader.Read(parameterName, parameterValue);
 
-        [Theory]
-        [InlineData("fields", "", "[ expected.")]
-        [InlineData("fields]", "", "[ expected.")]
-        [InlineData("fields[", "", "Resource type expected.")]
-        [InlineData("fields[]", "", "Resource type expected.")]
-        [InlineData("fields[ ]", "", "Unexpected whitespace.")]
-        [InlineData("fields[owner]", "", "Resource type 'owner' does not exist.")]
-        [InlineData("fields[owner.posts]", "id", "Resource type 'owner.posts' does not exist.")]
-        [InlineData("fields[blogPosts]", " ", "Unexpected whitespace.")]
-        [InlineData("fields[blogPosts]", "some", "Field 'some' does not exist on resource type 'blogPosts'.")]
-        [InlineData("fields[blogPosts]", "id,owner.name", "Field 'owner.name' does not exist on resource type 'blogPosts'.")]
-        [InlineData("fields[blogPosts]", "id(", ", expected.")]
-        [InlineData("fields[blogPosts]", "id,", "Field name expected.")]
-        [InlineData("fields[blogPosts]", "author.id,", "Field 'author.id' does not exist on resource type 'blogPosts'.")]
-        public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
-        {
-            // Act
-            Action action = () => _reader.Read(parameterName, parameterValue);
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
-            // Assert
-            InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+        exception.ParameterName.Should().Be(parameterName);
+        exception.Errors.ShouldHaveCount(1);
 
-            exception.ParameterName.Should().Be(parameterName);
-            exception.Errors.ShouldHaveCount(1);
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified fieldset is invalid.");
+        error.Detail.Should().Be(errorMessage);
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be(parameterName);
+    }
 
-            ErrorObject error = exception.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("The specified fieldset is invalid.");
-            error.Detail.Should().Be(errorMessage);
-            error.Source.ShouldNotBeNull();
-            error.Source.Parameter.Should().Be(parameterName);
-        }
+    [Theory]
+    [InlineData("fields[blogPosts]", "caption,url,author", "blogPosts(author,caption,url)")]
+    [InlineData("fields[blogPosts]", "author,comments,labels", "blogPosts(author,comments,labels)")]
+    [InlineData("fields[blogs]", "id", "blogs(id)")]
+    [InlineData("fields[blogs]", "", "blogs(id)")]
+    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string valueExpected)
+    {
+        // Act
+        _reader.Read(parameterName, parameterValue);
 
-        [Theory]
-        [InlineData("fields[blogPosts]", "caption,url,author", "blogPosts(author,caption,url)")]
-        [InlineData("fields[blogPosts]", "author,comments,labels", "blogPosts(author,comments,labels)")]
-        [InlineData("fields[blogs]", "id", "blogs(id)")]
-        [InlineData("fields[blogs]", "", "blogs(id)")]
-        public void Reader_Read_Succeeds(string parameterName, string parameterValue, string valueExpected)
-        {
-            // Act
-            _reader.Read(parameterName, parameterValue);
+        IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
 
-            IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
+        // Assert
+        ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
+        scope.Should().BeNull();
 
-            // Assert
-            ResourceFieldChainExpression? scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
-            scope.Should().BeNull();
-
-            QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
-            value.ToString().Should().Be(valueExpected);
-        }
+        QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
+        value.ToString().Should().Be(valueExpected);
     }
 }

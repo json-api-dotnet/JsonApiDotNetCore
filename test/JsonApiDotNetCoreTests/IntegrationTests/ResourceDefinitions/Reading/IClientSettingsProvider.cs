@@ -1,9 +1,8 @@
-namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
+
+public interface IClientSettingsProvider
 {
-    public interface IClientSettingsProvider
-    {
-        bool IsIncludePlanetMoonsBlocked { get; }
-        bool ArePlanetsWithPrivateNameHidden { get; }
-        bool IsMoonOrbitingPlanetAutoIncluded { get; }
-    }
+    bool IsIncludePlanetMoonsBlocked { get; }
+    bool ArePlanetsWithPrivateNameHidden { get; }
+    bool IsMoonOrbitingPlanetAutoIncluded { get; }
 }

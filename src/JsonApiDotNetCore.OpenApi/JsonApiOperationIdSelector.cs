@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
@@ -11,124 +8,127 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
-namespace JsonApiDotNetCore.OpenApi
+namespace JsonApiDotNetCore.OpenApi;
+
+internal sealed class JsonApiOperationIdSelector
 {
-    internal sealed class JsonApiOperationIdSelector
+    private const string ResourceOperationIdTemplate = "[Method] [PrimaryResourceName]";
+    private const string ResourceCollectionOperationIdTemplate = ResourceOperationIdTemplate + " Collection";
+    private const string SecondaryOperationIdTemplate = ResourceOperationIdTemplate + " [RelationshipName]";
+    private const string RelationshipOperationIdTemplate = SecondaryOperationIdTemplate + " Relationship";
+
+    private static readonly IDictionary<Type, string> DocumentOpenTypeToOperationIdTemplateMap = new Dictionary<Type, string>
     {
-        private const string ResourceOperationIdTemplate = "[Method] [PrimaryResourceName]";
-        private const string ResourceCollectionOperationIdTemplate = ResourceOperationIdTemplate + " Collection";
-        private const string SecondaryOperationIdTemplate = ResourceOperationIdTemplate + " [RelationshipName]";
-        private const string RelationshipOperationIdTemplate = SecondaryOperationIdTemplate + " Relationship";
+        [typeof(ResourceCollectionResponseDocument<>)] = ResourceCollectionOperationIdTemplate,
+        [typeof(PrimaryResourceResponseDocument<>)] = ResourceOperationIdTemplate,
+        [typeof(ResourcePostRequestDocument<>)] = ResourceOperationIdTemplate,
+        [typeof(ResourcePatchRequestDocument<>)] = ResourceOperationIdTemplate,
+        [typeof(void)] = ResourceOperationIdTemplate,
+        [typeof(SecondaryResourceResponseDocument<>)] = SecondaryOperationIdTemplate,
+        [typeof(NullableSecondaryResourceResponseDocument<>)] = SecondaryOperationIdTemplate,
+        [typeof(ResourceIdentifierCollectionResponseDocument<>)] = RelationshipOperationIdTemplate,
+        [typeof(ResourceIdentifierResponseDocument<>)] = RelationshipOperationIdTemplate,
+        [typeof(NullableResourceIdentifierResponseDocument<>)] = RelationshipOperationIdTemplate,
+        [typeof(ToOneRelationshipInRequest<>)] = RelationshipOperationIdTemplate,
+        [typeof(NullableToOneRelationshipInRequest<>)] = RelationshipOperationIdTemplate,
+        [typeof(ToManyRelationshipInRequest<>)] = RelationshipOperationIdTemplate
+    };
 
-        private static readonly IDictionary<Type, string> DocumentOpenTypeToOperationIdTemplateMap = new Dictionary<Type, string>
+    private readonly IControllerResourceMapping _controllerResourceMapping;
+    private readonly JsonNamingPolicy? _namingPolicy;
+    private readonly ResourceNameFormatter _formatter;
+
+    public JsonApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, JsonNamingPolicy? namingPolicy)
+    {
+        ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
+
+        _controllerResourceMapping = controllerResourceMapping;
+        _namingPolicy = namingPolicy;
+        _formatter = new ResourceNameFormatter(namingPolicy);
+    }
+
+    public string GetOperationId(ApiDescription endpoint)
+    {
+        ArgumentGuard.NotNull(endpoint, nameof(endpoint));
+
+        ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(endpoint.ActionDescriptor.GetActionMethod().ReflectedType);
+
+        if (primaryResourceType == null)
         {
-            [typeof(ResourceCollectionResponseDocument<>)] = ResourceCollectionOperationIdTemplate,
-            [typeof(PrimaryResourceResponseDocument<>)] = ResourceOperationIdTemplate,
-            [typeof(ResourcePostRequestDocument<>)] = ResourceOperationIdTemplate,
-            [typeof(ResourcePatchRequestDocument<>)] = ResourceOperationIdTemplate,
-            [typeof(void)] = ResourceOperationIdTemplate,
-            [typeof(SecondaryResourceResponseDocument<>)] = SecondaryOperationIdTemplate,
-            [typeof(NullableSecondaryResourceResponseDocument<>)] = SecondaryOperationIdTemplate,
-            [typeof(ResourceIdentifierCollectionResponseDocument<>)] = RelationshipOperationIdTemplate,
-            [typeof(ResourceIdentifierResponseDocument<>)] = RelationshipOperationIdTemplate,
-            [typeof(NullableResourceIdentifierResponseDocument<>)] = RelationshipOperationIdTemplate,
-            [typeof(ToOneRelationshipInRequest<>)] = RelationshipOperationIdTemplate,
-            [typeof(NullableToOneRelationshipInRequest<>)] = RelationshipOperationIdTemplate,
-            [typeof(ToManyRelationshipInRequest<>)] = RelationshipOperationIdTemplate
-        };
-
-        private readonly IControllerResourceMapping _controllerResourceMapping;
-        private readonly JsonNamingPolicy? _namingPolicy;
-        private readonly ResourceNameFormatter _formatter;
-
-        public JsonApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, JsonNamingPolicy? namingPolicy)
-        {
-            ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
-
-            _controllerResourceMapping = controllerResourceMapping;
-            _namingPolicy = namingPolicy;
-            _formatter = new ResourceNameFormatter(namingPolicy);
+            throw new UnreachableCodeException();
         }
 
-        public string GetOperationId(ApiDescription endpoint)
+        string template = GetTemplate(primaryResourceType.ClrType, endpoint);
+
+        return ApplyTemplate(template, primaryResourceType.ClrType, endpoint);
+    }
+
+    private static string GetTemplate(Type resourceClrType, ApiDescription endpoint)
+    {
+        Type requestDocumentType = GetDocumentType(resourceClrType, endpoint);
+
+        if (!DocumentOpenTypeToOperationIdTemplateMap.TryGetValue(requestDocumentType, out string? template))
         {
-            ArgumentGuard.NotNull(endpoint, nameof(endpoint));
+            throw new UnreachableCodeException();
+        }
 
-            ResourceType? primaryResourceType =
-                _controllerResourceMapping.GetResourceTypeForController(endpoint.ActionDescriptor.GetActionMethod().ReflectedType);
+        return template;
+    }
 
-            if (primaryResourceType == null)
+    private static Type GetDocumentType(Type primaryResourceClrType, ApiDescription endpoint)
+    {
+        var producesResponseTypeAttribute = endpoint.ActionDescriptor.GetFilterMetadata<ProducesResponseTypeAttribute>();
+
+        if (producesResponseTypeAttribute == null)
+        {
+            throw new UnreachableCodeException();
+        }
+
+        ControllerParameterDescriptor? requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
+
+        Type documentType = requestBodyDescriptor?.ParameterType.GetGenericTypeDefinition() ??
+            GetGenericTypeDefinition(producesResponseTypeAttribute.Type) ?? producesResponseTypeAttribute.Type;
+
+        if (documentType == typeof(ResourceCollectionResponseDocument<>))
+        {
+            Type documentResourceType = producesResponseTypeAttribute.Type.GetGenericArguments()[0];
+
+            if (documentResourceType != primaryResourceClrType)
             {
-                throw new UnreachableCodeException();
+                documentType = typeof(SecondaryResourceResponseDocument<>);
             }
-
-            string template = GetTemplate(primaryResourceType.ClrType, endpoint);
-
-            return ApplyTemplate(template, primaryResourceType.ClrType, endpoint);
         }
 
-        private static string GetTemplate(Type resourceClrType, ApiDescription endpoint)
+        return documentType;
+    }
+
+    private static Type? GetGenericTypeDefinition(Type type)
+    {
+        return type.IsConstructedGenericType ? type.GetGenericTypeDefinition() : null;
+    }
+
+    private string ApplyTemplate(string operationIdTemplate, Type resourceClrType, ApiDescription endpoint)
+    {
+        if (endpoint.RelativePath == null || endpoint.HttpMethod == null)
         {
-            Type requestDocumentType = GetDocumentType(resourceClrType, endpoint);
-
-            if (!DocumentOpenTypeToOperationIdTemplateMap.TryGetValue(requestDocumentType, out string? template))
-            {
-                throw new UnreachableCodeException();
-            }
-
-            return template;
+            throw new UnreachableCodeException();
         }
 
-        private static Type GetDocumentType(Type primaryResourceClrType, ApiDescription endpoint)
-        {
-            var producesResponseTypeAttribute = endpoint.ActionDescriptor.GetFilterMetadata<ProducesResponseTypeAttribute>();
+        string method = endpoint.HttpMethod.ToLowerInvariant();
+        string primaryResourceName = _formatter.FormatResourceName(resourceClrType).Singularize();
+        string relationshipName = operationIdTemplate.Contains("[RelationshipName]") ? endpoint.RelativePath.Split("/").Last() : string.Empty;
 
-            if (producesResponseTypeAttribute == null)
-            {
-                throw new UnreachableCodeException();
-            }
+        // @formatter:wrap_chained_method_calls chop_always
+        // @formatter:keep_existing_linebreaks true
 
-            ControllerParameterDescriptor? requestBodyDescriptor = endpoint.ActionDescriptor.GetBodyParameterDescriptor();
+        string pascalCaseId = operationIdTemplate
+            .Replace("[Method]", method)
+            .Replace("[PrimaryResourceName]", primaryResourceName)
+            .Replace("[RelationshipName]", relationshipName);
 
-            Type documentType = requestBodyDescriptor?.ParameterType.GetGenericTypeDefinition() ??
-                GetGenericTypeDefinition(producesResponseTypeAttribute.Type) ?? producesResponseTypeAttribute.Type;
+        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_chained_method_calls restore
 
-            if (documentType == typeof(ResourceCollectionResponseDocument<>))
-            {
-                Type documentResourceType = producesResponseTypeAttribute.Type.GetGenericArguments()[0];
-
-                if (documentResourceType != primaryResourceClrType)
-                {
-                    documentType = typeof(SecondaryResourceResponseDocument<>);
-                }
-            }
-
-            return documentType;
-        }
-
-        private static Type? GetGenericTypeDefinition(Type type)
-        {
-            return type.IsConstructedGenericType ? type.GetGenericTypeDefinition() : null;
-        }
-
-        private string ApplyTemplate(string operationIdTemplate, Type resourceClrType, ApiDescription endpoint)
-        {
-            string method = endpoint.HttpMethod!.ToLowerInvariant();
-            string primaryResourceName = _formatter.FormatResourceName(resourceClrType).Singularize();
-            string relationshipName = operationIdTemplate.Contains("[RelationshipName]") ? endpoint.RelativePath.Split("/").Last() : string.Empty;
-
-            // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
-
-            string pascalCaseId = operationIdTemplate
-                .Replace("[Method]", method)
-                .Replace("[PrimaryResourceName]", primaryResourceName)
-                .Replace("[RelationshipName]", relationshipName);
-
-            // @formatter:keep_existing_linebreaks restore
-            // @formatter:wrap_chained_method_calls restore
-
-            return _namingPolicy != null ? _namingPolicy.ConvertName(pascalCaseId) : pascalCaseId;
-        }
+        return _namingPolicy != null ? _namingPolicy.ConvertName(pascalCaseId) : pascalCaseId;
     }
 }

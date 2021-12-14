@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
+namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 
-namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
+internal sealed class RelationshipResponseMetadata : NonPrimaryEndpointMetadata, IJsonApiResponseMetadata
 {
-    internal sealed class RelationshipResponseMetadata : NonPrimaryEndpointMetadata, IJsonApiResponseMetadata
+    public RelationshipResponseMetadata(IDictionary<string, Type> documentTypesByRelationshipName)
+        : base(documentTypesByRelationshipName)
     {
-        public RelationshipResponseMetadata(IDictionary<string, Type> documentTypesByRelationshipName)
-            : base(documentTypesByRelationshipName)
-        {
-        }
     }
 }

@@ -1,9 +1,8 @@
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
+namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
+
+internal interface ISchemaRepositoryAccessor
 {
-    internal interface ISchemaRepositoryAccessor
-    {
-        SchemaRepository Current { get; }
-    }
+    SchemaRepository Current { get; }
 }

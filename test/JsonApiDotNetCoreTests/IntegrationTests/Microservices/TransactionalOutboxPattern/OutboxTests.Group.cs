@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages;
@@ -12,619 +7,618 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOutboxPattern
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOutboxPattern;
+
+public sealed partial class OutboxTests
 {
-    public sealed partial class OutboxTests
+    [Fact]
+    public async Task Create_group_writes_to_outbox()
     {
-        [Fact]
-        public async Task Create_group_writes_to_outbox()
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        string newGroupName = _fakers.DomainGroup.Generate().Name;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            await dbContext.ClearTableAsync<OutgoingMessage>();
+        });
 
-            string newGroupName = _fakers.DomainGroup.Generate().Name;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        var requestBody = new
+        {
+            data = new
             {
-                await dbContext.ClearTableAsync<OutgoingMessage>();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "domainGroups",
+                attributes = new
                 {
-                    type = "domainGroups",
-                    attributes = new
-                    {
-                        name = newGroupName
-                    }
+                    name = newGroupName
                 }
-            };
+            }
+        };
 
-            const string route = "/domainGroups";
+        const string route = "/domainGroups";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
 
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
-            }, options => options.WithStrictOrdering());
-
-            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.ShouldHaveCount(1);
-
-                var content = messages[0].GetContentAs<GroupCreatedContent>();
-                content.GroupId.Should().Be(newGroupId);
-                content.GroupName.Should().Be(newGroupName);
-            });
-        }
-
-        [Fact]
-        public async Task Create_group_with_users_writes_to_outbox()
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
+        }, options => options.WithStrictOrdering());
 
-            DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
+        Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
-            DomainUser existingUserWithOtherGroup = _fakers.DomainUser.Generate();
-            existingUserWithOtherGroup.Group = _fakers.DomainGroup.Generate();
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
+            messages.ShouldHaveCount(1);
 
-            string newGroupName = _fakers.DomainGroup.Generate().Name;
+            var content = messages[0].GetContentAs<GroupCreatedContent>();
+            content.GroupId.Should().Be(newGroupId);
+            content.GroupName.Should().Be(newGroupName);
+        });
+    }
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+    [Fact]
+    public async Task Create_group_with_users_writes_to_outbox()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
+
+        DomainUser existingUserWithOtherGroup = _fakers.DomainUser.Generate();
+        existingUserWithOtherGroup.Group = _fakers.DomainGroup.Generate();
+
+        string newGroupName = _fakers.DomainGroup.Generate().Name;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<OutgoingMessage>();
+            dbContext.Users.AddRange(existingUserWithoutGroup, existingUserWithOtherGroup);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
             {
-                await dbContext.ClearTableAsync<OutgoingMessage>();
-                dbContext.Users.AddRange(existingUserWithoutGroup, existingUserWithOtherGroup);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "domainGroups",
+                attributes = new
                 {
-                    type = "domainGroups",
-                    attributes = new
+                    name = newGroupName
+                },
+                relationships = new
+                {
+                    users = new
                     {
-                        name = newGroupName
-                    },
-                    relationships = new
-                    {
-                        users = new
+                        data = new[]
                         {
-                            data = new[]
+                            new
                             {
-                                new
-                                {
-                                    type = "domainUsers",
-                                    id = existingUserWithoutGroup.StringId
-                                },
-                                new
-                                {
-                                    type = "domainUsers",
-                                    id = existingUserWithOtherGroup.StringId
-                                }
+                                type = "domainUsers",
+                                id = existingUserWithoutGroup.StringId
+                            },
+                            new
+                            {
+                                type = "domainUsers",
+                                id = existingUserWithOtherGroup.StringId
                             }
                         }
                     }
                 }
-            };
+            }
+        };
 
-            const string route = "/domainGroups";
+        const string route = "/domainGroups";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
 
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
-            }, options => options.WithStrictOrdering());
-
-            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.ShouldHaveCount(3);
-
-                var content1 = messages[0].GetContentAs<GroupCreatedContent>();
-                content1.GroupId.Should().Be(newGroupId);
-                content1.GroupName.Should().Be(newGroupName);
-
-                var content2 = messages[1].GetContentAs<UserAddedToGroupContent>();
-                content2.UserId.Should().Be(existingUserWithoutGroup.Id);
-                content2.GroupId.Should().Be(newGroupId);
-
-                var content3 = messages[2].GetContentAs<UserMovedToGroupContent>();
-                content3.UserId.Should().Be(existingUserWithOtherGroup.Id);
-                content3.BeforeGroupId.Should().Be(existingUserWithOtherGroup.Group.Id);
-                content3.AfterGroupId.Should().Be(newGroupId);
-            });
-        }
-
-        [Fact]
-        public async Task Update_group_writes_to_outbox()
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
+        }, options => options.WithStrictOrdering());
 
-            DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
-            string newGroupName = _fakers.DomainGroup.Generate().Name;
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
+            messages.ShouldHaveCount(3);
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            var content1 = messages[0].GetContentAs<GroupCreatedContent>();
+            content1.GroupId.Should().Be(newGroupId);
+            content1.GroupName.Should().Be(newGroupName);
+
+            var content2 = messages[1].GetContentAs<UserAddedToGroupContent>();
+            content2.UserId.Should().Be(existingUserWithoutGroup.Id);
+            content2.GroupId.Should().Be(newGroupId);
+
+            var content3 = messages[2].GetContentAs<UserMovedToGroupContent>();
+            content3.UserId.Should().Be(existingUserWithOtherGroup.Id);
+            content3.BeforeGroupId.Should().Be(existingUserWithOtherGroup.Group.Id);
+            content3.AfterGroupId.Should().Be(newGroupId);
+        });
+    }
+
+    [Fact]
+    public async Task Update_group_writes_to_outbox()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+
+        string newGroupName = _fakers.DomainGroup.Generate().Name;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<OutgoingMessage>();
+            dbContext.Groups.Add(existingGroup);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
             {
-                await dbContext.ClearTableAsync<OutgoingMessage>();
-                dbContext.Groups.Add(existingGroup);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "domainGroups",
+                id = existingGroup.StringId,
+                attributes = new
                 {
-                    type = "domainGroups",
-                    id = existingGroup.StringId,
-                    attributes = new
-                    {
-                        name = newGroupName
-                    }
+                    name = newGroupName
                 }
-            };
+            }
+        };
 
-            string route = $"/domainGroups/{existingGroup.StringId}";
+        string route = $"/domainGroups/{existingGroup.StringId}";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeEmpty();
+        responseDocument.Should().BeEmpty();
 
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
-            }, options => options.WithStrictOrdering());
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.ShouldHaveCount(1);
-
-                var content = messages[0].GetContentAs<GroupRenamedContent>();
-                content.GroupId.Should().Be(existingGroup.StringId);
-                content.BeforeGroupName.Should().Be(existingGroup.Name);
-                content.AfterGroupName.Should().Be(newGroupName);
-            });
-        }
-
-        [Fact]
-        public async Task Update_group_with_users_writes_to_outbox()
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
+        }, options => options.WithStrictOrdering());
 
-            DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
+            messages.ShouldHaveCount(1);
 
-            DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
+            var content = messages[0].GetContentAs<GroupRenamedContent>();
+            content.GroupId.Should().Be(existingGroup.StringId);
+            content.BeforeGroupName.Should().Be(existingGroup.Name);
+            content.AfterGroupName.Should().Be(newGroupName);
+        });
+    }
 
-            DomainUser existingUserWithSameGroup1 = _fakers.DomainUser.Generate();
-            existingUserWithSameGroup1.Group = existingGroup;
+    [Fact]
+    public async Task Update_group_with_users_writes_to_outbox()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-            DomainUser existingUserWithSameGroup2 = _fakers.DomainUser.Generate();
-            existingUserWithSameGroup2.Group = existingGroup;
+        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
-            DomainUser existingUserWithOtherGroup = _fakers.DomainUser.Generate();
-            existingUserWithOtherGroup.Group = _fakers.DomainGroup.Generate();
+        DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        DomainUser existingUserWithSameGroup1 = _fakers.DomainUser.Generate();
+        existingUserWithSameGroup1.Group = existingGroup;
+
+        DomainUser existingUserWithSameGroup2 = _fakers.DomainUser.Generate();
+        existingUserWithSameGroup2.Group = existingGroup;
+
+        DomainUser existingUserWithOtherGroup = _fakers.DomainUser.Generate();
+        existingUserWithOtherGroup.Group = _fakers.DomainGroup.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<OutgoingMessage>();
+            dbContext.Users.AddRange(existingUserWithoutGroup, existingUserWithSameGroup1, existingUserWithSameGroup2, existingUserWithOtherGroup);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
             {
-                await dbContext.ClearTableAsync<OutgoingMessage>();
-                dbContext.Users.AddRange(existingUserWithoutGroup, existingUserWithSameGroup1, existingUserWithSameGroup2, existingUserWithOtherGroup);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
+                type = "domainGroups",
+                id = existingGroup.StringId,
+                relationships = new
                 {
-                    type = "domainGroups",
-                    id = existingGroup.StringId,
-                    relationships = new
+                    users = new
                     {
-                        users = new
+                        data = new[]
                         {
-                            data = new[]
+                            new
                             {
-                                new
-                                {
-                                    type = "domainUsers",
-                                    id = existingUserWithoutGroup.StringId
-                                },
-                                new
-                                {
-                                    type = "domainUsers",
-                                    id = existingUserWithSameGroup1.StringId
-                                },
-                                new
-                                {
-                                    type = "domainUsers",
-                                    id = existingUserWithOtherGroup.StringId
-                                }
+                                type = "domainUsers",
+                                id = existingUserWithoutGroup.StringId
+                            },
+                            new
+                            {
+                                type = "domainUsers",
+                                id = existingUserWithSameGroup1.StringId
+                            },
+                            new
+                            {
+                                type = "domainUsers",
+                                id = existingUserWithOtherGroup.StringId
                             }
                         }
                     }
                 }
-            };
+            }
+        };
 
-            string route = $"/domainGroups/{existingGroup.StringId}";
+        string route = $"/domainGroups/{existingGroup.StringId}";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeEmpty();
+        responseDocument.Should().BeEmpty();
 
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
-            }, options => options.WithStrictOrdering());
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.ShouldHaveCount(3);
-
-                var content1 = messages[0].GetContentAs<UserAddedToGroupContent>();
-                content1.UserId.Should().Be(existingUserWithoutGroup.Id);
-                content1.GroupId.Should().Be(existingGroup.Id);
-
-                var content2 = messages[1].GetContentAs<UserMovedToGroupContent>();
-                content2.UserId.Should().Be(existingUserWithOtherGroup.Id);
-                content2.BeforeGroupId.Should().Be(existingUserWithOtherGroup.Group.Id);
-                content2.AfterGroupId.Should().Be(existingGroup.Id);
-
-                var content3 = messages[2].GetContentAs<UserRemovedFromGroupContent>();
-                content3.UserId.Should().Be(existingUserWithSameGroup2.Id);
-                content3.GroupId.Should().Be(existingGroup.Id);
-            });
-        }
-
-        [Fact]
-        public async Task Delete_group_writes_to_outbox()
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
+        }, options => options.WithStrictOrdering());
 
-            DomainGroup existingGroup = _fakers.DomainGroup.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<OutgoingMessage>();
-                dbContext.Groups.Add(existingGroup);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/domainGroups/{existingGroup.StringId}";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
-            }, options => options.WithStrictOrdering());
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.ShouldHaveCount(1);
-
-                var content = messages[0].GetContentAs<GroupDeletedContent>();
-                content.GroupId.Should().Be(existingGroup.StringId);
-            });
-        }
-
-        [Fact]
-        public async Task Delete_group_with_users_writes_to_outbox()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
+            messages.ShouldHaveCount(3);
 
-            DomainGroup existingGroup = _fakers.DomainGroup.Generate();
-            existingGroup.Users = _fakers.DomainUser.Generate(1).ToHashSet();
+            var content1 = messages[0].GetContentAs<UserAddedToGroupContent>();
+            content1.UserId.Should().Be(existingUserWithoutGroup.Id);
+            content1.GroupId.Should().Be(existingGroup.Id);
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<OutgoingMessage>();
-                dbContext.Groups.Add(existingGroup);
-                await dbContext.SaveChangesAsync();
-            });
+            var content2 = messages[1].GetContentAs<UserMovedToGroupContent>();
+            content2.UserId.Should().Be(existingUserWithOtherGroup.Id);
+            content2.BeforeGroupId.Should().Be(existingUserWithOtherGroup.Group.Id);
+            content2.AfterGroupId.Should().Be(existingGroup.Id);
 
-            string route = $"/domainGroups/{existingGroup.StringId}";
+            var content3 = messages[2].GetContentAs<UserRemovedFromGroupContent>();
+            content3.UserId.Should().Be(existingUserWithSameGroup2.Id);
+            content3.GroupId.Should().Be(existingGroup.Id);
+        });
+    }
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
+    [Fact]
+    public async Task Delete_group_writes_to_outbox()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
-            responseDocument.Should().BeEmpty();
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
-            }, options => options.WithStrictOrdering());
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.ShouldHaveCount(2);
-
-                var content1 = messages[0].GetContentAs<UserRemovedFromGroupContent>();
-                content1.UserId.Should().Be(existingGroup.Users.ElementAt(0).Id);
-                content1.GroupId.Should().Be(existingGroup.StringId);
-
-                var content2 = messages[1].GetContentAs<GroupDeletedContent>();
-                content2.GroupId.Should().Be(existingGroup.StringId);
-            });
-        }
-
-        [Fact]
-        public async Task Replace_users_in_group_writes_to_outbox()
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            await dbContext.ClearTableAsync<OutgoingMessage>();
+            dbContext.Groups.Add(existingGroup);
+            await dbContext.SaveChangesAsync();
+        });
 
-            DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        string route = $"/domainGroups/{existingGroup.StringId}";
 
-            DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
-            DomainUser existingUserWithSameGroup1 = _fakers.DomainUser.Generate();
-            existingUserWithSameGroup1.Group = existingGroup;
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            DomainUser existingUserWithSameGroup2 = _fakers.DomainUser.Generate();
-            existingUserWithSameGroup2.Group = existingGroup;
+        responseDocument.Should().BeEmpty();
 
-            DomainUser existingUserWithOtherGroup = _fakers.DomainUser.Generate();
-            existingUserWithOtherGroup.Group = _fakers.DomainGroup.Generate();
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
+        }, options => options.WithStrictOrdering());
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
+            messages.ShouldHaveCount(1);
+
+            var content = messages[0].GetContentAs<GroupDeletedContent>();
+            content.GroupId.Should().Be(existingGroup.StringId);
+        });
+    }
+
+    [Fact]
+    public async Task Delete_group_with_users_writes_to_outbox()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+        existingGroup.Users = _fakers.DomainUser.Generate(1).ToHashSet();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<OutgoingMessage>();
+            dbContext.Groups.Add(existingGroup);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/domainGroups/{existingGroup.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
+        }, options => options.WithStrictOrdering());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
+            messages.ShouldHaveCount(2);
+
+            var content1 = messages[0].GetContentAs<UserRemovedFromGroupContent>();
+            content1.UserId.Should().Be(existingGroup.Users.ElementAt(0).Id);
+            content1.GroupId.Should().Be(existingGroup.StringId);
+
+            var content2 = messages[1].GetContentAs<GroupDeletedContent>();
+            content2.GroupId.Should().Be(existingGroup.StringId);
+        });
+    }
+
+    [Fact]
+    public async Task Replace_users_in_group_writes_to_outbox()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+
+        DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
+
+        DomainUser existingUserWithSameGroup1 = _fakers.DomainUser.Generate();
+        existingUserWithSameGroup1.Group = existingGroup;
+
+        DomainUser existingUserWithSameGroup2 = _fakers.DomainUser.Generate();
+        existingUserWithSameGroup2.Group = existingGroup;
+
+        DomainUser existingUserWithOtherGroup = _fakers.DomainUser.Generate();
+        existingUserWithOtherGroup.Group = _fakers.DomainGroup.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<OutgoingMessage>();
+            dbContext.Users.AddRange(existingUserWithoutGroup, existingUserWithSameGroup1, existingUserWithSameGroup2, existingUserWithOtherGroup);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
             {
-                await dbContext.ClearTableAsync<OutgoingMessage>();
-                dbContext.Users.AddRange(existingUserWithoutGroup, existingUserWithSameGroup1, existingUserWithSameGroup2, existingUserWithOtherGroup);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
+                new
                 {
-                    new
-                    {
-                        type = "domainUsers",
-                        id = existingUserWithoutGroup.StringId
-                    },
-                    new
-                    {
-                        type = "domainUsers",
-                        id = existingUserWithSameGroup1.StringId
-                    },
-                    new
-                    {
-                        type = "domainUsers",
-                        id = existingUserWithOtherGroup.StringId
-                    }
-                }
-            };
-
-            string route = $"/domainGroups/{existingGroup.StringId}/relationships/users";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
-            }, options => options.WithStrictOrdering());
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.ShouldHaveCount(3);
-
-                var content1 = messages[0].GetContentAs<UserAddedToGroupContent>();
-                content1.UserId.Should().Be(existingUserWithoutGroup.Id);
-                content1.GroupId.Should().Be(existingGroup.Id);
-
-                var content2 = messages[1].GetContentAs<UserMovedToGroupContent>();
-                content2.UserId.Should().Be(existingUserWithOtherGroup.Id);
-                content2.BeforeGroupId.Should().Be(existingUserWithOtherGroup.Group.Id);
-                content2.AfterGroupId.Should().Be(existingGroup.Id);
-
-                var content3 = messages[2].GetContentAs<UserRemovedFromGroupContent>();
-                content3.UserId.Should().Be(existingUserWithSameGroup2.Id);
-                content3.GroupId.Should().Be(existingGroup.Id);
-            });
-        }
-
-        [Fact]
-        public async Task Add_users_to_group_writes_to_outbox()
-        {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-
-            DomainGroup existingGroup = _fakers.DomainGroup.Generate();
-
-            DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
-
-            DomainUser existingUserWithSameGroup = _fakers.DomainUser.Generate();
-            existingUserWithSameGroup.Group = existingGroup;
-
-            DomainUser existingUserWithOtherGroup = _fakers.DomainUser.Generate();
-            existingUserWithOtherGroup.Group = _fakers.DomainGroup.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<OutgoingMessage>();
-                dbContext.Users.AddRange(existingUserWithoutGroup, existingUserWithSameGroup, existingUserWithOtherGroup);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
+                    type = "domainUsers",
+                    id = existingUserWithoutGroup.StringId
+                },
+                new
                 {
-                    new
-                    {
-                        type = "domainUsers",
-                        id = existingUserWithoutGroup.StringId
-                    },
-                    new
-                    {
-                        type = "domainUsers",
-                        id = existingUserWithOtherGroup.StringId
-                    }
-                }
-            };
-
-            string route = $"/domainGroups/{existingGroup.StringId}/relationships/users";
-
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
-
-            responseDocument.Should().BeEmpty();
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnAddToRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
-            }, options => options.WithStrictOrdering());
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.ShouldHaveCount(2);
-
-                var content1 = messages[0].GetContentAs<UserAddedToGroupContent>();
-                content1.UserId.Should().Be(existingUserWithoutGroup.Id);
-                content1.GroupId.Should().Be(existingGroup.Id);
-
-                var content2 = messages[1].GetContentAs<UserMovedToGroupContent>();
-                content2.UserId.Should().Be(existingUserWithOtherGroup.Id);
-                content2.BeforeGroupId.Should().Be(existingUserWithOtherGroup.Group.Id);
-                content2.AfterGroupId.Should().Be(existingGroup.Id);
-            });
-        }
-
-        [Fact]
-        public async Task Remove_users_from_group_writes_to_outbox()
-        {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-
-            DomainGroup existingGroup = _fakers.DomainGroup.Generate();
-
-            DomainUser existingUserWithSameGroup1 = _fakers.DomainUser.Generate();
-            existingUserWithSameGroup1.Group = existingGroup;
-
-            DomainUser existingUserWithSameGroup2 = _fakers.DomainUser.Generate();
-            existingUserWithSameGroup2.Group = existingGroup;
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                await dbContext.ClearTableAsync<OutgoingMessage>();
-                dbContext.Users.AddRange(existingUserWithSameGroup1, existingUserWithSameGroup2);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new[]
+                    type = "domainUsers",
+                    id = existingUserWithSameGroup1.StringId
+                },
+                new
                 {
-                    new
-                    {
-                        type = "domainUsers",
-                        id = existingUserWithSameGroup2.StringId
-                    }
+                    type = "domainUsers",
+                    id = existingUserWithOtherGroup.StringId
                 }
-            };
+            }
+        };
 
-            string route = $"/domainGroups/{existingGroup.StringId}/relationships/users";
+        string route = $"/domainGroups/{existingGroup.StringId}/relationships/users";
 
-            // Act
-            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeEmpty();
+        responseDocument.Should().BeEmpty();
 
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnSetToManyRelationshipAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
+        }, options => options.WithStrictOrdering());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
+            messages.ShouldHaveCount(3);
+
+            var content1 = messages[0].GetContentAs<UserAddedToGroupContent>();
+            content1.UserId.Should().Be(existingUserWithoutGroup.Id);
+            content1.GroupId.Should().Be(existingGroup.Id);
+
+            var content2 = messages[1].GetContentAs<UserMovedToGroupContent>();
+            content2.UserId.Should().Be(existingUserWithOtherGroup.Id);
+            content2.BeforeGroupId.Should().Be(existingUserWithOtherGroup.Group.Id);
+            content2.AfterGroupId.Should().Be(existingGroup.Id);
+
+            var content3 = messages[2].GetContentAs<UserRemovedFromGroupContent>();
+            content3.UserId.Should().Be(existingUserWithSameGroup2.Id);
+            content3.GroupId.Should().Be(existingGroup.Id);
+        });
+    }
+
+    [Fact]
+    public async Task Add_users_to_group_writes_to_outbox()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+
+        DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
+
+        DomainUser existingUserWithSameGroup = _fakers.DomainUser.Generate();
+        existingUserWithSameGroup.Group = existingGroup;
+
+        DomainUser existingUserWithOtherGroup = _fakers.DomainUser.Generate();
+        existingUserWithOtherGroup.Group = _fakers.DomainGroup.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<OutgoingMessage>();
+            dbContext.Users.AddRange(existingUserWithoutGroup, existingUserWithSameGroup, existingUserWithOtherGroup);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnRemoveFromRelationshipAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
-                (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
-            }, options => options.WithStrictOrdering());
+                new
+                {
+                    type = "domainUsers",
+                    id = existingUserWithoutGroup.StringId
+                },
+                new
+                {
+                    type = "domainUsers",
+                    id = existingUserWithOtherGroup.StringId
+                }
+            }
+        };
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+        string route = $"/domainGroups/{existingGroup.StringId}/relationships/users";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnAddToRelationshipAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
+        }, options => options.WithStrictOrdering());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
+            messages.ShouldHaveCount(2);
+
+            var content1 = messages[0].GetContentAs<UserAddedToGroupContent>();
+            content1.UserId.Should().Be(existingUserWithoutGroup.Id);
+            content1.GroupId.Should().Be(existingGroup.Id);
+
+            var content2 = messages[1].GetContentAs<UserMovedToGroupContent>();
+            content2.UserId.Should().Be(existingUserWithOtherGroup.Id);
+            content2.BeforeGroupId.Should().Be(existingUserWithOtherGroup.Group.Id);
+            content2.AfterGroupId.Should().Be(existingGroup.Id);
+        });
+    }
+
+    [Fact]
+    public async Task Remove_users_from_group_writes_to_outbox()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        DomainGroup existingGroup = _fakers.DomainGroup.Generate();
+
+        DomainUser existingUserWithSameGroup1 = _fakers.DomainUser.Generate();
+        existingUserWithSameGroup1.Group = existingGroup;
+
+        DomainUser existingUserWithSameGroup2 = _fakers.DomainUser.Generate();
+        existingUserWithSameGroup2.Group = existingGroup;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<OutgoingMessage>();
+            dbContext.Users.AddRange(existingUserWithSameGroup1, existingUserWithSameGroup2);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
             {
-                List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.ShouldHaveCount(1);
+                new
+                {
+                    type = "domainUsers",
+                    id = existingUserWithSameGroup2.StringId
+                }
+            }
+        };
 
-                var content = messages[0].GetContentAs<UserRemovedFromGroupContent>();
-                content.UserId.Should().Be(existingUserWithSameGroup2.Id);
-                content.GroupId.Should().Be(existingGroup.Id);
-            });
-        }
+        string route = $"/domainGroups/{existingGroup.StringId}/relationships/users";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnRemoveFromRelationshipAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)
+        }, options => options.WithStrictOrdering());
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
+            messages.ShouldHaveCount(1);
+
+            var content = messages[0].GetContentAs<UserRemovedFromGroupContent>();
+            content.UserId.Should().Be(existingUserWithSameGroup2.Id);
+            content.GroupId.Should().Be(existingGroup.Id);
+        });
     }
 }

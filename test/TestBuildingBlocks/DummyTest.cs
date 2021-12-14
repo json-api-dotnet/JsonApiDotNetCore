@@ -1,14 +1,13 @@
 using Xunit;
 
-namespace TestBuildingBlocks
+namespace TestBuildingBlocks;
+
+public sealed class DummyTest
 {
-    public sealed class DummyTest
+    [Fact]
+    public void Empty()
     {
-        [Fact]
-        public void Empty()
-        {
-            // This dummy test exists solely to suppress the warning
-            // during test runs that no tests were found in this project.
-        }
+        // This dummy test exists solely to suppress the warning
+        // during test runs that no tests were found in this project.
     }
 }

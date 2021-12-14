@@ -1,9 +1,8 @@
-namespace JsonApiDotNetCore.Queries.Expressions
+namespace JsonApiDotNetCore.Queries.Expressions;
+
+public enum TextMatchKind
 {
-    public enum TextMatchKind
-    {
-        Contains,
-        StartsWith,
-        EndsWith
-    }
+    Contains,
+    StartsWith,
+    EndsWith
 }

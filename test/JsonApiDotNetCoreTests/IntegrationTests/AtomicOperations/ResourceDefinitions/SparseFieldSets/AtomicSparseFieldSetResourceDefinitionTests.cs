@@ -1,7 +1,4 @@
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -10,185 +7,184 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefinitions.SparseFieldSets
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefinitions.SparseFieldSets;
+
+public sealed class AtomicSparseFieldSetResourceDefinitionTests
+    : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
 {
-    public sealed class AtomicSparseFieldSetResourceDefinitionTests
-        : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+    private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
+    private readonly OperationsFakers _fakers = new();
+
+    public AtomicSparseFieldSetResourceDefinitionTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
     {
-        private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
-        private readonly OperationsFakers _fakers = new();
+        _testContext = testContext;
 
-        public AtomicSparseFieldSetResourceDefinitionTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        testContext.UseController<OperationsController>();
+
+        testContext.ConfigureServicesAfterStartup(services =>
         {
-            _testContext = testContext;
+            services.AddResourceDefinition<LyricTextDefinition>();
 
-            testContext.UseController<OperationsController>();
+            services.AddSingleton<LyricPermissionProvider>();
+            services.AddSingleton<ResourceDefinitionHitCounter>();
+            services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
+        });
 
-            testContext.ConfigureServicesAfterStartup(services =>
-            {
-                services.AddResourceDefinition<LyricTextDefinition>();
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+        hitCounter.Reset();
+    }
 
-                services.AddSingleton<LyricPermissionProvider>();
-                services.AddSingleton<ResourceDefinitionHitCounter>();
-                services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
-            });
+    [Fact]
+    public async Task Hides_text_in_create_resource_with_side_effects()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-            hitCounter.Reset();
-        }
+        var provider = _testContext.Factory.Services.GetRequiredService<LyricPermissionProvider>();
+        provider.CanViewText = false;
 
-        [Fact]
-        public async Task Hides_text_in_create_resource_with_side_effects()
+        List<Lyric> newLyrics = _fakers.Lyric.Generate(2);
+
+        var requestBody = new
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
-
-            var provider = _testContext.Factory.Services.GetRequiredService<LyricPermissionProvider>();
-            provider.CanViewText = false;
-
-            List<Lyric> newLyrics = _fakers.Lyric.Generate(2);
-
-            var requestBody = new
+            atomic__operations = new[]
             {
-                atomic__operations = new[]
+                new
                 {
-                    new
+                    op = "add",
+                    data = new
                     {
-                        op = "add",
-                        data = new
+                        type = "lyrics",
+                        attributes = new
                         {
-                            type = "lyrics",
-                            attributes = new
-                            {
-                                format = newLyrics[0].Format,
-                                text = newLyrics[0].Text
-                            }
+                            format = newLyrics[0].Format,
+                            text = newLyrics[0].Text
                         }
-                    },
-                    new
+                    }
+                },
+                new
+                {
+                    op = "add",
+                    data = new
                     {
-                        op = "add",
-                        data = new
+                        type = "lyrics",
+                        attributes = new
                         {
-                            type = "lyrics",
-                            attributes = new
-                            {
-                                format = newLyrics[1].Format,
-                                text = newLyrics[1].Text
-                            }
+                            format = newLyrics[1].Format,
+                            text = newLyrics[1].Text
                         }
                     }
                 }
-            };
+            }
+        };
 
-            const string route = "/operations";
+        const string route = "/operations";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
-            {
-                resource.Attributes.ShouldContainKey("format").With(value => value.Should().Be(newLyrics[0].Format));
-                resource.Attributes.Should().NotContainKey("text");
-            });
-
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
-            {
-                resource.Attributes.ShouldContainKey("format").With(value => value.Should().Be(newLyrics[1].Format));
-                resource.Attributes.Should().NotContainKey("text");
-            });
-
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet)
-            }, options => options.WithStrictOrdering());
-        }
-
-        [Fact]
-        public async Task Hides_text_in_update_resource_with_side_effects()
+        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
         {
-            // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            resource.Attributes.ShouldContainKey("format").With(value => value.Should().Be(newLyrics[0].Format));
+            resource.Attributes.Should().NotContainKey("text");
+        });
 
-            var provider = _testContext.Factory.Services.GetRequiredService<LyricPermissionProvider>();
-            provider.CanViewText = false;
+        responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        {
+            resource.Attributes.ShouldContainKey("format").With(value => value.Should().Be(newLyrics[1].Format));
+            resource.Attributes.Should().NotContainKey("text");
+        });
 
-            List<Lyric> existingLyrics = _fakers.Lyric.Generate(2);
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet)
+        }, options => options.WithStrictOrdering());
+    }
 
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
+    [Fact]
+    public async Task Hides_text_in_update_resource_with_side_effects()
+    {
+        // Arrange
+        var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+        var provider = _testContext.Factory.Services.GetRequiredService<LyricPermissionProvider>();
+        provider.CanViewText = false;
+
+        List<Lyric> existingLyrics = _fakers.Lyric.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Lyrics.AddRange(existingLyrics);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
             {
-                dbContext.Lyrics.AddRange(existingLyrics);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                atomic__operations = new[]
+                new
                 {
-                    new
+                    op = "update",
+                    data = new
                     {
-                        op = "update",
-                        data = new
+                        type = "lyrics",
+                        id = existingLyrics[0].StringId,
+                        attributes = new
                         {
-                            type = "lyrics",
-                            id = existingLyrics[0].StringId,
-                            attributes = new
-                            {
-                            }
                         }
-                    },
-                    new
+                    }
+                },
+                new
+                {
+                    op = "update",
+                    data = new
                     {
-                        op = "update",
-                        data = new
+                        type = "lyrics",
+                        id = existingLyrics[1].StringId,
+                        attributes = new
                         {
-                            type = "lyrics",
-                            id = existingLyrics[1].StringId,
-                            attributes = new
-                            {
-                            }
                         }
                     }
                 }
-            };
+            }
+        };
 
-            const string route = "/operations";
+        const string route = "/operations";
 
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.ShouldHaveCount(2);
+        responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
-            {
-                resource.Attributes.ShouldContainKey("format").With(value => value.Should().Be(existingLyrics[0].Format));
-                resource.Attributes.Should().NotContainKey("text");
-            });
+        responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        {
+            resource.Attributes.ShouldContainKey("format").With(value => value.Should().Be(existingLyrics[0].Format));
+            resource.Attributes.Should().NotContainKey("text");
+        });
 
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
-            {
-                resource.Attributes.ShouldContainKey("format").With(value => value.Should().Be(existingLyrics[1].Format));
-                resource.Attributes.Should().NotContainKey("text");
-            });
+        responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+        {
+            resource.Attributes.ShouldContainKey("format").With(value => value.Should().Be(existingLyrics[1].Format));
+            resource.Attributes.Should().NotContainKey("text");
+        });
 
-            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
-            {
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-                (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet)
-            }, options => options.WithStrictOrdering());
-        }
+        hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+        {
+            (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Lyric), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet)
+        }, options => options.WithStrictOrdering());
     }
 }
