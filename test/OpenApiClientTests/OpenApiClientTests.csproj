@@ -1,66 +1,66 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>$(TargetFrameworkName)</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>$(TargetFrameworkName)</TargetFramework>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi.Client\JsonApiDotNetCore.OpenApi.Client.csproj" />
-    <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi.Client\JsonApiDotNetCore.OpenApi.Client.csproj"/>
+        <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Update="xunit.runner.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetVersion)" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.10.9">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="5.0.9">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.13.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetVersion)"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+        <PackageReference Include="NSwag.ApiDescription.Client" Version="13.10.9">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="5.0.9">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="NSwag.ApiDescription.Client" Version="13.13.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-  <ItemGroup>
-    <OpenApiReference Include="..\OpenApiTests\LegacyOpenApiIntegration\swagger.json">
-      <Namespace>OpenApiClientTests.LegacyClient.GeneratedCode</Namespace>
-      <ClassName>OpenApiClient</ClassName>
-      <OutputPath>OpenApiClient.cs</OutputPath>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/UseBaseUrl:false /GenerateClientInterfaces:true /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
-    </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\NamingConvention\KebabCase\swagger.json">
-      <Namespace>OpenApiClientTests.NamingConvention.KebabCase.GeneratedCode</Namespace>
-      <ClassName>KebabCaseClient</ClassName>
-      <OutputPath>KebabCaseClient.cs</OutputPath>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
-    </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\NamingConvention\CamelCase\swagger.json">
-      <Namespace>OpenApiClientTests.NamingConvention.CamelCase.GeneratedCode</Namespace>
-      <ClassName>CamelCaseClient</ClassName>
-      <OutputPath>CamelCaseClient.cs</OutputPath>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
-    </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\NamingConvention\PascalCase\swagger.json">
-      <Namespace>OpenApiClientTests.NamingConvention.PascalCase.GeneratedCode</Namespace>
-      <ClassName>PascalCaseClient</ClassName>
-      <OutputPath>PascalCaseClient.cs</OutputPath>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
-    </OpenApiReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="xunit.runner.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <OpenApiReference Include="..\OpenApiTests\LegacyOpenApiIntegration\swagger.json">
+            <Namespace>OpenApiClientTests.LegacyClient.GeneratedCode</Namespace>
+            <ClassName>OpenApiClient</ClassName>
+            <OutputPath>OpenApiClient.cs</OutputPath>
+            <CodeGenerator>NSwagCSharp</CodeGenerator>
+            <Options>/UseBaseUrl:false /GenerateClientInterfaces:true /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+        </OpenApiReference>
+        <OpenApiReference Include="..\OpenApiTests\NamingConventions\KebabCase\swagger.json">
+            <Namespace>OpenApiClientTests.NamingConventions.KebabCase.GeneratedCode</Namespace>
+            <ClassName>KebabCaseClient</ClassName>
+            <OutputPath>KebabCaseClient.cs</OutputPath>
+            <CodeGenerator>NSwagCSharp</CodeGenerator>
+            <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+        </OpenApiReference>
+        <OpenApiReference Include="..\OpenApiTests\NamingConventions\CamelCase\swagger.json">
+            <Namespace>OpenApiClientTests.NamingConventions.CamelCase.GeneratedCode</Namespace>
+            <ClassName>CamelCaseClient</ClassName>
+            <OutputPath>CamelCaseClient.cs</OutputPath>
+            <CodeGenerator>NSwagCSharp</CodeGenerator>
+            <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+        </OpenApiReference>
+        <OpenApiReference Include="..\OpenApiTests\NamingConventions\PascalCase\swagger.json">
+            <Namespace>OpenApiClientTests.NamingConventions.PascalCase.GeneratedCode</Namespace>
+            <ClassName>PascalCaseClient</ClassName>
+            <OutputPath>PascalCaseClient.cs</OutputPath>
+            <CodeGenerator>NSwagCSharp</CodeGenerator>
+            <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+        </OpenApiReference>
+    </ItemGroup>
 </Project>

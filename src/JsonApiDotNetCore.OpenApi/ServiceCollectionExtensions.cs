@@ -41,7 +41,6 @@ public static class ServiceCollectionExtensions
             var apiDescriptionProviders = provider.GetRequiredService<IEnumerable<IApiDescriptionProvider>>();
 
             JsonApiActionDescriptorCollectionProvider descriptorCollectionProviderWrapper = new(controllerResourceMapping, actionDescriptorCollectionProvider);
-
             return new ApiDescriptionGroupCollectionProvider(descriptorCollectionProviderWrapper, apiDescriptionProviders);
         });
 

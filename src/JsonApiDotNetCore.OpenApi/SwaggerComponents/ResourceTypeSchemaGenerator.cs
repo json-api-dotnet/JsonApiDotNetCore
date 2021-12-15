@@ -63,7 +63,7 @@ internal sealed class ResourceTypeSchemaGenerator
 
     private string GetSchemaId(ResourceType resourceType)
     {
-        string pascalCaseSchemaId = ResourceTypeSchemaIdTemplate.Replace("[ResourceName]", resourceType.PublicName.Singularize()).Pascalize();
+        string pascalCaseSchemaId = ResourceTypeSchemaIdTemplate.Replace("[ResourceName]", resourceType.PublicName.Singularize()).ToPascalCase();
 
         return _namingPolicy != null ? _namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
     }

@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.EntityFrameworkCore;
 
-namespace OpenApiTests.NamingConvention.CamelCase;
+namespace OpenApiTests.NamingConventions.CamelCase;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class CamelCaseNamingConventionStartup<TDbContext> : OpenApiStartup<TDbContext>

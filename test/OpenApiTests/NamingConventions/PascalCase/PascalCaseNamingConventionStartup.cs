@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.EntityFrameworkCore;
 
-namespace OpenApiTests.NamingConvention.PascalCase;
+namespace OpenApiTests.NamingConventions.PascalCase;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class PascalCaseNamingConventionStartup<TDbContext> : OpenApiStartup<TDbContext>

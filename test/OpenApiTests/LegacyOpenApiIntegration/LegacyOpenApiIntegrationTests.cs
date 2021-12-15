@@ -1,12 +1,10 @@
 using System.Reflection;
-using FluentAssertions;
-using TestBuildingBlocks;
+using System.Text.Json;
 using Xunit;
 
 namespace OpenApiTests.LegacyOpenApiIntegration;
 
-public sealed class LegacyOpenApiIntegrationTests
-    : IntegrationTestContext<LegacyOpenApiIntegrationStartup<LegacyIntegrationDbContext>, LegacyIntegrationDbContext>
+public sealed class LegacyOpenApiIntegrationTests : OpenApiTestContext<LegacyOpenApiIntegrationStartup<LegacyIntegrationDbContext>, LegacyIntegrationDbContext>
 {
     public LegacyOpenApiIntegrationTests()
     {
@@ -21,23 +19,12 @@ public sealed class LegacyOpenApiIntegrationTests
         // Arrange
         const string embeddedResourceName = $"{nameof(OpenApiTests)}.{nameof(LegacyOpenApiIntegration)}.swagger.json";
         string expectedDocument = await LoadEmbeddedResourceAsync(embeddedResourceName);
-        const string requestUrl = "swagger/v1/swagger.json";
 
         // Act
-        string actualDocument = await GetAsync(requestUrl);
+        JsonElement actualDocument = await LazyDocument.Value;
 
         // Assert
         actualDocument.Should().BeJson(expectedDocument);
-    }
-
-    private async Task<string> GetAsync(string requestUrl)
-    {
-        var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
-
-        using HttpClient client = Factory.CreateClient();
-        HttpResponseMessage responseMessage = await client.SendAsync(request);
-
-        return await responseMessage.Content.ReadAsStringAsync();
     }
 
     private static async Task<string> LoadEmbeddedResourceAsync(string name)

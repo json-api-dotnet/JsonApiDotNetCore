@@ -1,24 +1,27 @@
+using System.Text.Json;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace OpenApiTests.NamingConvention.KebabCase;
+namespace OpenApiTests.NamingConventions.KebabCase;
 
-public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext>>
+public sealed class KebabCaseTests : OpenApiTestSuite<KebabCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext>
 {
-    private readonly OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> _testContext;
-
-    public KebabCaseTests(OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> testContext)
+    public KebabCaseTests(OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext> testContext)
+        : base(testContext)
     {
-        _testContext = testContext;
+        UseController<SupermarketsController>();
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_GetCollection_endpoint()
+    public async Task Casing_convention_is_applied_to_GetCollection_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -26,10 +29,10 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("supermarket-collection-response-document").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("supermarket-collection-response-document").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             string? resourceDataSchemaRefId = null;
 
@@ -39,7 +42,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 propertiesElement.ShouldContainPath("jsonapi.$ref").ShouldBeReferenceSchemaId("jsonapi-object");
 
                 resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.items.$ref").ShouldBeReferenceSchemaId("supermarket-data-in-response")
-                    .SchemaReferenceId;
+                    .ReferenceSchemaId;
             });
 
             string? resourceAttributesInResponseSchemaRefId = null;
@@ -49,13 +52,13 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
                 primaryResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeReferenceSchemaId("supermarket-resource-type")
-                    .SchemaReferenceId;
+                    .ReferenceSchemaId;
 
                 resourceAttributesInResponseSchemaRefId = propertiesElement.ShouldContainPath("attributes.$ref")
-                    .ShouldBeReferenceSchemaId("supermarket-attributes-in-response").SchemaReferenceId;
+                    .ShouldBeReferenceSchemaId("supermarket-attributes-in-response").ReferenceSchemaId;
 
                 resourceRelationshipInResponseSchemaRefId = propertiesElement.ShouldContainPath("relationships.$ref")
-                    .ShouldBeReferenceSchemaId("supermarket-relationships-in-response").SchemaReferenceId;
+                    .ShouldBeReferenceSchemaId("supermarket-relationships-in-response").ReferenceSchemaId;
 
                 propertiesElement.ShouldContainPath("links.$ref").ShouldBeReferenceSchemaId("links-in-resource-object");
             });
@@ -81,7 +84,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 propertiesElement.ShouldContainPath("store-manager.$ref").ShouldBeReferenceSchemaId("to-one-staff-member-in-response");
 
                 nullableToOneResourceResponseDataSchemaRefId = propertiesElement.ShouldContainPath("backup-store-manager.$ref")
-                    .ShouldBeReferenceSchemaId("nullable-to-one-staff-member-in-response").SchemaReferenceId;
+                    .ShouldBeReferenceSchemaId("nullable-to-one-staff-member-in-response").ReferenceSchemaId;
 
                 propertiesElement.Should().ContainProperty("cashiers");
                 propertiesElement.ShouldContainPath("cashiers.$ref").ShouldBeReferenceSchemaId("to-many-staff-member-in-response");
@@ -94,7 +97,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 propertiesElement.ShouldContainPath("links.$ref").ShouldBeReferenceSchemaId("links-in-relationship-object");
 
                 relatedResourceIdentifierSchemaRefId = propertiesElement.ShouldContainPath("data.oneOf[0].$ref")
-                    .ShouldBeReferenceSchemaId("staff-member-identifier").SchemaReferenceId;
+                    .ShouldBeReferenceSchemaId("staff-member-identifier").ReferenceSchemaId;
 
                 propertiesElement.ShouldContainPath("data.oneOf[1].$ref").ShouldBeReferenceSchemaId("null-value");
             });
@@ -104,7 +107,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             schemasElement.ShouldContainPath($"{relatedResourceIdentifierSchemaRefId}.properties").With(propertiesElement =>
             {
                 relatedResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeReferenceSchemaId("staff-member-resource-type")
-                    .SchemaReferenceId;
+                    .ReferenceSchemaId;
             });
 
             schemasElement.ShouldContainPath($"{relatedResourceTypeSchemaRefId}.enum[0]").ShouldBeReferenceSchemaId("staff-members");
@@ -112,12 +115,15 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_GetSingle_endpoint()
+    public async Task Casing_convention_is_applied_to_GetSingle_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -125,10 +131,10 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("supermarket-primary-response-document").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("supermarket-primary-response-document").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
@@ -138,12 +144,15 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_GetSecondary_endpoint_with_single_resource()
+    public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_single_resource()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/store-manager.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/store-manager.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -151,17 +160,17 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("staff-member-secondary-response-document").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("staff-member-secondary-response-document").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             string? resourceDataSchemaRefId = null;
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
                 resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeReferenceSchemaId("staff-member-data-in-response")
-                    .SchemaReferenceId;
+                    .ReferenceSchemaId;
             });
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
@@ -172,10 +181,13 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_GetSecondary_endpoint_with_nullable_resource()
+    public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_nullable_resource()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/backup-store-manager.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/backup-store-manager.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -188,10 +200,13 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_GetSecondary_endpoint_with_resources()
+    public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_resources()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/cashiers.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/cashiers.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -204,12 +219,15 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_GetRelationship_endpoint_with_ToOne_relationship()
+    public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_ToOne_relationship()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/store-manager.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/store-manager.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -217,10 +235,10 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("staff-member-identifier-response-document").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("staff-member-identifier-response-document").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
@@ -230,10 +248,13 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_GetRelationship_endpoint_with_nullable_ToOne_relationship()
+    public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_nullable_ToOne_relationship()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/backup-store-manager.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/backup-store-manager.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -246,12 +267,15 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_GetRelationship_endpoint_with_ToMany_relationship()
+    public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_ToMany_relationship()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -259,10 +283,10 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("staff-member-identifier-collection-response-document").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("staff-member-identifier-collection-response-document").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
@@ -272,12 +296,15 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_Post_endpoint()
+    public async Task Casing_convention_is_applied_to_Post_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets.post").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets.post").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -285,17 +312,17 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("requestBody.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("supermarket-post-request-document").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("supermarket-post-request-document").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             string? resourceDataSchemaRefId = null;
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
                 resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeReferenceSchemaId("supermarket-data-in-post-request")
-                    .SchemaReferenceId;
+                    .ReferenceSchemaId;
             });
 
             string? resourceRelationshipInPostRequestSchemaRefId = null;
@@ -305,7 +332,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 propertiesElement.ShouldContainPath("attributes.$ref").ShouldBeReferenceSchemaId("supermarket-attributes-in-post-request");
 
                 resourceRelationshipInPostRequestSchemaRefId = propertiesElement.ShouldContainPath("relationships.$ref")
-                    .ShouldBeReferenceSchemaId("supermarket-relationships-in-post-request").SchemaReferenceId;
+                    .ShouldBeReferenceSchemaId("supermarket-relationships-in-post-request").ReferenceSchemaId;
             });
 
             schemasElement.ShouldContainPath($"{resourceRelationshipInPostRequestSchemaRefId}.properties").With(propertiesElement =>
@@ -323,10 +350,13 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_PostRelationship_endpoint()
+    public async Task Casing_convention_is_applied_to_PostRelationship_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.post").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.post").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -336,12 +366,15 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_Patch_endpoint()
+    public async Task Casing_convention_is_applied_to_Patch_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}.patch").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}.patch").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -349,17 +382,17 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("requestBody.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("supermarket-patch-request-document").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("supermarket-patch-request-document").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             string? resourceDataSchemaRefId = null;
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
                 resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeReferenceSchemaId("supermarket-data-in-patch-request")
-                    .SchemaReferenceId;
+                    .ReferenceSchemaId;
             });
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
@@ -371,10 +404,13 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToOne_relationship()
+    public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToOne_relationship()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/store-manager.patch").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/store-manager.patch").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -384,10 +420,13 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_PatchRelationship_endpoint_with_nullable_ToOne_relationship()
+    public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_nullable_ToOne_relationship()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/backup-store-manager.patch").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/backup-store-manager.patch").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -397,10 +436,13 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToMany_relationship()
+    public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToMany_relationship()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.patch").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.patch").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -410,10 +452,13 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_Delete_endpoint()
+    public async Task Casing_convention_is_applied_to_Delete_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}.delete").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}.delete").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -423,10 +468,13 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
     }
 
     [Fact]
-    public void Kebab_casing_convention_is_applied_to_DeleteRelationship_endpoint()
+    public async Task Casing_convention_is_applied_to_DeleteRelationship_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.delete").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.delete").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {

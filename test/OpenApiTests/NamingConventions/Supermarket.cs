@@ -2,10 +2,10 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.NamingConvention;
+namespace OpenApiTests.NamingConventions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests")]
+[Resource(ControllerNamespace = "OpenApiTests.NamingConventions")]
 public sealed class Supermarket : Identifiable<int>
 {
     [Attr]

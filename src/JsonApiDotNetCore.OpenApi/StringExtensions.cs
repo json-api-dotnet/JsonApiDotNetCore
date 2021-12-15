@@ -4,8 +4,10 @@ namespace JsonApiDotNetCore.OpenApi;
 
 internal static class StringExtensions
 {
-    public static string Pascalize(this string source)
+    private static readonly Regex Pattern = new("(?:^|-|_| +)(.)", RegexOptions.Compiled);
+
+    public static string ToPascalCase(this string source)
     {
-        return Regex.Replace(source, "(?:^|-|_| +)(.)", match => match.Groups[1].Value.ToUpper());
+        return Pattern.Replace(source, match => match.Groups[1].Value.ToUpper());
     }
 }

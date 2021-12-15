@@ -2,10 +2,11 @@
 using BlushingPenguin.JsonPath;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using TestBuildingBlocks;
 
-namespace TestBuildingBlocks;
+namespace OpenApiTests;
 
-public static class JsonElementExtensions
+internal static class JsonElementExtensions
 {
     public static JsonElementAssertions Should(this JsonElement source)
     {
@@ -14,12 +15,8 @@ public static class JsonElementExtensions
 
     public static JsonElement ShouldContainPath(this JsonElement source, string path)
     {
-        JsonElement value = default;
-
-        Action action = () => value = source.SelectToken(path, true)!.Value;
-        action.Should().NotThrow();
-
-        return value;
+        Func<JsonElement> elementSelector = () => source.SelectToken(path, true)!.Value;
+        return elementSelector.Should().NotThrow().Subject;
     }
 
     public static void ShouldBeString(this JsonElement source, string value)
@@ -28,7 +25,7 @@ public static class JsonElementExtensions
         source.GetString().Should().Be(value);
     }
 
-    public static ReferenceSchemaIdAssertion ShouldBeReferenceSchemaId(this JsonElement source, string value)
+    public static ReferenceSchemaIdContainer ShouldBeReferenceSchemaId(this JsonElement source, string value)
     {
         source.ValueKind.Should().Be(JsonValueKind.String);
 
@@ -38,20 +35,20 @@ public static class JsonElementExtensions
         string referenceSchemaId = jsonElementValue.Split('/').Last();
         referenceSchemaId.Should().Be(value);
 
-        return new ReferenceSchemaIdAssertion
+        return new ReferenceSchemaIdContainer
         {
-            SchemaReferenceId = value
+            ReferenceSchemaId = value
         };
     }
 
-    public sealed class ReferenceSchemaIdAssertion
+    public sealed class ReferenceSchemaIdContainer
     {
-        public string SchemaReferenceId { get; internal init; } = null!;
+        internal string ReferenceSchemaId { get; init; } = null!;
     }
 
     public sealed class JsonElementAssertions : JsonElementAssertions<JsonElementAssertions>
     {
-        internal JsonElementAssertions(JsonElement subject)
+        public JsonElementAssertions(JsonElement subject)
             : base(subject)
         {
         }
@@ -71,12 +68,17 @@ public static class JsonElementExtensions
         {
             string json = _subject.ToString();
 
-            json.ShouldNotBeNull();
-
             string escapedJson = json.Replace("{", "{{").Replace("}", "}}");
 
             Execute.Assertion.ForCondition(_subject.TryGetProperty(propertyName, out _))
                 .FailWith($"Expected JSON element '{escapedJson}' to contain a property named '{propertyName}'.");
+        }
+
+        public void BeJson(string expectedDocument)
+        {
+            string json = _subject.ToString();
+
+            json.Should().BeJson(expectedDocument);
         }
     }
 }

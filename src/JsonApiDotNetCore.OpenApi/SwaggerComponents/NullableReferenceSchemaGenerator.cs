@@ -10,8 +10,8 @@ internal sealed class NullableReferenceSchemaGenerator
     private readonly NullableReferenceSchemaStrategy _nullableReferenceStrategy =
         Enum.Parse<NullableReferenceSchemaStrategy>(NullableReferenceSchemaStrategy.Implicit.ToString());
 
-    private readonly string _nullableSchemaReferenceId;
     private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
+    private readonly string _nullableSchemaReferenceId;
 
     private OpenApiSchema? _referenceSchemaForExplicitNullValue;
 

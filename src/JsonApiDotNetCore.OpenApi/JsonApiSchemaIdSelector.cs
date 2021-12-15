@@ -71,7 +71,7 @@ internal sealed class JsonApiSchemaIdSelector
                 throw new UnreachableCodeException();
             }
 
-            string pascalCaseSchemaId = OpenTypeToSchemaTemplateMap[openType].Replace("[ResourceName]", resourceType.PublicName.Singularize()).Pascalize();
+            string pascalCaseSchemaId = OpenTypeToSchemaTemplateMap[openType].Replace("[ResourceName]", resourceType.PublicName.Singularize()).ToPascalCase();
 
             return _namingPolicy != null ? _namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
         }

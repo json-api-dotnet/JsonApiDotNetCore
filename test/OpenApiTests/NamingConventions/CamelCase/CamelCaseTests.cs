@@ -1,24 +1,27 @@
+using System.Text.Json;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace OpenApiTests.NamingConvention.CamelCase;
+namespace OpenApiTests.NamingConventions.CamelCase;
 
-public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext>>
+public sealed class CamelCaseTests : OpenApiTestSuite<CamelCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext>
 {
-    private readonly OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> _testContext;
-
-    public CamelCaseTests(OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> testContext)
+    public CamelCaseTests(OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext> testContext)
+        : base(testContext)
     {
-        _testContext = testContext;
+        UseController<SupermarketsController>();
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_GetCollection_endpoint()
+    public async Task Casing_convention_is_applied_to_GetCollection_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -26,10 +29,10 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("supermarketCollectionResponseDocument").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("supermarketCollectionResponseDocument").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             string? resourceDataSchemaRefId = null;
 
@@ -39,7 +42,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                 propertiesElement.ShouldContainPath("jsonapi.$ref").ShouldBeReferenceSchemaId("jsonapiObject");
 
                 resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.items.$ref").ShouldBeReferenceSchemaId("supermarketDataInResponse")
-                    .SchemaReferenceId;
+                    .ReferenceSchemaId;
             });
 
             string? resourceAttributesInResponseSchemaRefId = null;
@@ -49,13 +52,13 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
                 primaryResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeReferenceSchemaId("supermarketResourceType")
-                    .SchemaReferenceId;
+                    .ReferenceSchemaId;
 
                 resourceAttributesInResponseSchemaRefId = propertiesElement.ShouldContainPath("attributes.$ref")
-                    .ShouldBeReferenceSchemaId("supermarketAttributesInResponse").SchemaReferenceId;
+                    .ShouldBeReferenceSchemaId("supermarketAttributesInResponse").ReferenceSchemaId;
 
                 resourceRelationshipInResponseSchemaRefId = propertiesElement.ShouldContainPath("relationships.$ref")
-                    .ShouldBeReferenceSchemaId("supermarketRelationshipsInResponse").SchemaReferenceId;
+                    .ShouldBeReferenceSchemaId("supermarketRelationshipsInResponse").ReferenceSchemaId;
 
                 propertiesElement.ShouldContainPath("links.$ref").ShouldBeReferenceSchemaId("linksInResourceObject");
             });
@@ -81,7 +84,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                 propertiesElement.ShouldContainPath("storeManager.$ref").ShouldBeReferenceSchemaId("toOneStaffMemberInResponse");
 
                 nullableToOneResourceResponseDataSchemaRefId = propertiesElement.ShouldContainPath("backupStoreManager.$ref")
-                    .ShouldBeReferenceSchemaId("nullableToOneStaffMemberInResponse").SchemaReferenceId;
+                    .ShouldBeReferenceSchemaId("nullableToOneStaffMemberInResponse").ReferenceSchemaId;
 
                 propertiesElement.Should().ContainProperty("cashiers");
                 propertiesElement.ShouldContainPath("cashiers.$ref").ShouldBeReferenceSchemaId("toManyStaffMemberInResponse");
@@ -94,7 +97,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                 propertiesElement.ShouldContainPath("links.$ref").ShouldBeReferenceSchemaId("linksInRelationshipObject");
 
                 relatedResourceIdentifierSchemaRefId = propertiesElement.ShouldContainPath("data.oneOf[0].$ref")
-                    .ShouldBeReferenceSchemaId("staffMemberIdentifier").SchemaReferenceId;
+                    .ShouldBeReferenceSchemaId("staffMemberIdentifier").ReferenceSchemaId;
 
                 propertiesElement.ShouldContainPath("data.oneOf[1].$ref").ShouldBeReferenceSchemaId("nullValue");
             });
@@ -104,7 +107,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
             schemasElement.ShouldContainPath($"{relatedResourceIdentifierSchemaRefId}.properties").With(propertiesElement =>
             {
                 relatedResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeReferenceSchemaId("staffMemberResourceType")
-                    .SchemaReferenceId;
+                    .ReferenceSchemaId;
             });
 
             schemasElement.ShouldContainPath($"{relatedResourceTypeSchemaRefId}.enum[0]").ShouldBeReferenceSchemaId("staffMembers");
@@ -112,12 +115,15 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_GetSingle_endpoint()
+    public async Task Casing_convention_is_applied_to_GetSingle_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -125,10 +131,10 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("supermarketPrimaryResponseDocument").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("supermarketPrimaryResponseDocument").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
@@ -138,12 +144,15 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_GetSecondary_endpoint_with_single_resource()
+    public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_single_resource()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/storeManager.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/storeManager.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -151,17 +160,17 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("staffMemberSecondaryResponseDocument").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("staffMemberSecondaryResponseDocument").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             string? resourceDataSchemaRefId = null;
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
                 resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeReferenceSchemaId("staffMemberDataInResponse")
-                    .SchemaReferenceId;
+                    .ReferenceSchemaId;
             });
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
@@ -172,10 +181,13 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_GetSecondary_endpoint_with_nullable_resource()
+    public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_nullable_resource()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/backupStoreManager.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/backupStoreManager.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -188,10 +200,13 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_GetSecondary_endpoint_with_resources()
+    public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_resources()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/cashiers.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/cashiers.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -204,12 +219,15 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_GetRelationship_endpoint_with_ToOne_relationship()
+    public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_ToOne_relationship()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/storeManager.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/storeManager.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -217,10 +235,10 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("staffMemberIdentifierResponseDocument").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("staffMemberIdentifierResponseDocument").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
@@ -230,10 +248,13 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_GetRelationship_endpoint_with_nullable_ToOne_relationship()
+    public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_nullable_ToOne_relationship()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/backupStoreManager.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/backupStoreManager.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -246,12 +267,15 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_GetRelationship_endpoint_with_ToMany_relationship()
+    public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_ToMany_relationship()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.get").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.get").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -259,10 +283,10 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("staffMemberIdentifierCollectionResponseDocument").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("staffMemberIdentifierCollectionResponseDocument").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
@@ -272,12 +296,15 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_Post_endpoint()
+    public async Task Casing_convention_is_applied_to_Post_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets.post").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets.post").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -285,17 +312,17 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("requestBody.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("supermarketPostRequestDocument").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("supermarketPostRequestDocument").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             string? resourceDataSchemaRefId = null;
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
                 resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeReferenceSchemaId("supermarketDataInPostRequest")
-                    .SchemaReferenceId;
+                    .ReferenceSchemaId;
             });
 
             string? resourceRelationshipInPostRequestSchemaRefId = null;
@@ -305,7 +332,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                 propertiesElement.ShouldContainPath("attributes.$ref").ShouldBeReferenceSchemaId("supermarketAttributesInPostRequest");
 
                 resourceRelationshipInPostRequestSchemaRefId = propertiesElement.ShouldContainPath("relationships.$ref")
-                    .ShouldBeReferenceSchemaId("supermarketRelationshipsInPostRequest").SchemaReferenceId;
+                    .ShouldBeReferenceSchemaId("supermarketRelationshipsInPostRequest").ReferenceSchemaId;
             });
 
             schemasElement.ShouldContainPath($"{resourceRelationshipInPostRequestSchemaRefId}.properties").With(propertiesElement =>
@@ -323,10 +350,13 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_PostRelationship_endpoint()
+    public async Task Casing_convention_is_applied_to_PostRelationship_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.post").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.post").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -336,12 +366,15 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_Patch_endpoint()
+    public async Task Casing_convention_is_applied_to_Patch_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
         string? documentSchemaRefId = null;
 
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}.patch").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}.patch").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -349,17 +382,17 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("requestBody.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("supermarketPatchRequestDocument").SchemaReferenceId;
+                .ShouldBeReferenceSchemaId("supermarketPatchRequestDocument").ReferenceSchemaId;
         });
 
-        _testContext.Document.ShouldContainPath("components.schemas").With(schemasElement =>
+        document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
             string? resourceDataSchemaRefId = null;
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
                 resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeReferenceSchemaId("supermarketDataInPatchRequest")
-                    .SchemaReferenceId;
+                    .ReferenceSchemaId;
             });
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
@@ -371,10 +404,13 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToOne_relationship()
+    public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToOne_relationship()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/storeManager.patch").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/storeManager.patch").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -384,10 +420,13 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_PatchRelationship_endpoint_with_nullable_ToOne_relationship()
+    public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_nullable_ToOne_relationship()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/backupStoreManager.patch").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/backupStoreManager.patch").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -397,10 +436,13 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToMany_relationship()
+    public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToMany_relationship()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.patch").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.patch").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -410,10 +452,13 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_Delete_endpoint()
+    public async Task Casing_convention_is_applied_to_Delete_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}.delete").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}.delete").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {
@@ -423,10 +468,13 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
     }
 
     [Fact]
-    public void Camel_casing_convention_is_applied_to_DeleteRelationship_endpoint()
+    public async Task Casing_convention_is_applied_to_DeleteRelationship_endpoint()
     {
+        // Act
+        JsonElement document = await GetDocumentAsync();
+
         // Assert
-        _testContext.Document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.delete").With(getElement =>
+        document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.delete").With(getElement =>
         {
             getElement.ShouldContainPath("operationId").With(operationElement =>
             {

@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace OpenApiTests.NamingConvention;
+namespace OpenApiTests.NamingConventions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public enum SupermarketType

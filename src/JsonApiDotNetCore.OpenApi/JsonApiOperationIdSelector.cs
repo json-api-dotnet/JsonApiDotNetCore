@@ -112,7 +112,7 @@ internal sealed class JsonApiOperationIdSelector
             throw new UnreachableCodeException();
         }
 
-        string method = endpoint.HttpMethod!.ToLowerInvariant();
+        string method = endpoint.HttpMethod.ToLowerInvariant();
         string relationshipName = operationIdTemplate.Contains("[RelationshipName]") ? endpoint.RelativePath.Split("/").Last() : string.Empty;
 
         // @formatter:wrap_chained_method_calls chop_always
@@ -122,7 +122,7 @@ internal sealed class JsonApiOperationIdSelector
             .Replace("[Method]", method)
             .Replace("[PrimaryResourceName]", resourceType.PublicName.Singularize())
             .Replace("[RelationshipName]", relationshipName)
-            .Pascalize();
+            .ToPascalCase();
 
         // @formatter:keep_existing_linebreaks restore
         // @formatter:wrap_chained_method_calls restore

@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using Microsoft.EntityFrameworkCore;
 using OpenApiTests.LegacyOpenApiIntegration;
 
-namespace OpenApiTests.NamingConvention.KebabCase;
+namespace OpenApiTests.NamingConventions.KebabCase;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class KebabCaseNamingConventionStartup<TDbContext> : OpenApiStartup<TDbContext>
