@@ -1,7 +1,6 @@
 using System.Text.Json;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
-using OpenApiTests.Controllers;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -47,7 +46,7 @@ public sealed class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestCo
     private string GetTestSuitePath()
     {
         string solutionTestDirectoryPath = Directory.GetParent(Environment.CurrentDirectory)!.Parent!.Parent!.Parent!.FullName;
-        string currentNamespacePathRelativeToTestDirectory = Path.Join(GetType().Namespace!.Split('.'));
+        string currentNamespacePathRelativeToTestDirectory = Path.Join(typeof(TStartup).Namespace!.Split('.'));
 
         return Path.Join(solutionTestDirectoryPath, currentNamespacePathRelativeToTestDirectory);
     }

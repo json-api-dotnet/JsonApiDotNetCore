@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace OpenApiTests.NamingConvention;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource]
+[Resource(ControllerNamespace = "OpenApiTests")]
 public sealed class Supermarket : Identifiable<int>
 {
     [Attr]

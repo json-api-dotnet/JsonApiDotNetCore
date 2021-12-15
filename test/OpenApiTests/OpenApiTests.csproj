@@ -19,4 +19,10 @@
   <ItemGroup>
     <EmbeddedResource Include="LegacyOpenApiIntegration\swagger.json" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
