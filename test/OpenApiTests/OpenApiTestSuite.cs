@@ -10,18 +10,18 @@ public abstract class OpenApiTestSuite<TStartup, TDbContext> : IClassFixture<Ope
     where TDbContext : DbContext
 {
     private readonly OpenApiTestContext<TStartup, TDbContext> _testContext;
-    private readonly bool _shouldWriteDocumentToDisk;
+    private readonly bool _isFirstTestRunInTestSuite;
 
     protected OpenApiTestSuite(OpenApiTestContext<TStartup, TDbContext> testContext)
     {
         _testContext = testContext;
-        _shouldWriteDocumentToDisk = !testContext.LazyDocument.IsValueCreated;
+        _isFirstTestRunInTestSuite = !testContext.LazyDocument.IsValueCreated;
     }
 
     protected void UseController<TController>()
         where TController : ControllerBase
     {
-        if (!_testContext.LazyDocument.IsValueCreated)
+        if (_isFirstTestRunInTestSuite)
         {
             _testContext.UseController<TController>();
         }
@@ -31,7 +31,7 @@ public abstract class OpenApiTestSuite<TStartup, TDbContext> : IClassFixture<Ope
     {
         JsonElement document = await _testContext.LazyDocument.Value;
 
-        if (_shouldWriteDocumentToDisk)
+        if (_isFirstTestRunInTestSuite)
         {
             await WriteSwaggerDocumentToFileAsync(document);
         }
@@ -51,6 +51,7 @@ public abstract class OpenApiTestSuite<TStartup, TDbContext> : IClassFixture<Ope
     {
         string pathToSolutionTestDirectory = Path.Combine(Environment.CurrentDirectory, "../../../../");
         pathToSolutionTestDirectory = Path.GetFullPath(pathToSolutionTestDirectory);
+
         string pathToCurrentNamespaceRelativeToTestDirectory = Path.Combine(typeof(TStartup).Namespace!.Split('.'));
 
         return Path.Join(pathToSolutionTestDirectory, pathToCurrentNamespaceRelativeToTestDirectory);

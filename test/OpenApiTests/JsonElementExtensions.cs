@@ -35,15 +35,17 @@ internal static class JsonElementExtensions
         string referenceSchemaId = jsonElementValue.Split('/').Last();
         referenceSchemaId.Should().Be(value);
 
-        return new ReferenceSchemaIdContainer
-        {
-            ReferenceSchemaId = value
-        };
+        return new ReferenceSchemaIdContainer(value);
     }
 
     public sealed class ReferenceSchemaIdContainer
     {
-        internal string ReferenceSchemaId { get; init; } = null!;
+        public string ReferenceSchemaId { get; }
+
+        public ReferenceSchemaIdContainer(string referenceSchemaId)
+        {
+            ReferenceSchemaId = referenceSchemaId;
+        }
     }
 
     public sealed class JsonElementAssertions : JsonElementAssertions<JsonElementAssertions>
