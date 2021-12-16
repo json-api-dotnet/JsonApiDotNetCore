@@ -1,5 +1,7 @@
 using System.Reflection;
 using System.Text.Json;
+using FluentAssertions;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace OpenApiTests.LegacyOpenApiIntegration;
@@ -21,10 +23,11 @@ public sealed class LegacyOpenApiIntegrationTests : OpenApiTestContext<LegacyOpe
         string expectedDocument = await LoadEmbeddedResourceAsync(embeddedResourceName);
 
         // Act
-        JsonElement actualDocument = await LazyDocument.Value;
+        JsonElement jsonElement = await LazyDocument.Value;
 
         // Assert
-        actualDocument.Should().BeJson(expectedDocument);
+        string jsonText = jsonElement.ToString();
+        jsonText.Should().BeJson(expectedDocument);
     }
 
     private static async Task<string> LoadEmbeddedResourceAsync(string name)

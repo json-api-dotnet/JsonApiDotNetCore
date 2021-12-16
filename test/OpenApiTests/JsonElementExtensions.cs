@@ -75,12 +75,5 @@ internal static class JsonElementExtensions
             Execute.Assertion.ForCondition(_subject.TryGetProperty(propertyName, out _))
                 .FailWith($"Expected JSON element '{escapedJson}' to contain a property named '{propertyName}'.");
         }
-
-        public void BeJson(string expectedDocument)
-        {
-            string json = _subject.ToString();
-
-            json.Should().BeJson(expectedDocument);
-        }
     }
 }
