@@ -4,19 +4,23 @@ using Xunit;
 
 namespace OpenApiTests.NamingConventions.PascalCase;
 
-public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext>
+public sealed class PascalCaseTests
+    : IClassFixture<OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext>>
 {
+    private readonly OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext> _testContext;
+
     public PascalCaseTests(OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext> testContext)
-        : base(testContext)
     {
-        UseController<SupermarketsController>();
+        _testContext = testContext;
+        testContext.UseController<SupermarketsController>();
+        testContext.GeneratedDocumentNamespace = "OpenApiClientTests.NamingConventions.PascalCase";
     }
 
     [Fact]
     public async Task Casing_convention_is_applied_to_GetCollection_endpoint()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         string? documentSchemaRefId = null;
@@ -118,7 +122,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_GetSingle_endpoint()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         string? documentSchemaRefId = null;
@@ -147,7 +151,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_single_resource()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         string? documentSchemaRefId = null;
@@ -184,7 +188,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_nullable_resource()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         document.ShouldContainPath("paths./Supermarkets/{id}/BackupStoreManager.get").With(getElement =>
@@ -203,7 +207,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_resources()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         document.ShouldContainPath("paths./Supermarkets/{id}/Cashiers.get").With(getElement =>
@@ -222,7 +226,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_ToOne_relationship()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         string? documentSchemaRefId = null;
@@ -251,7 +255,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_nullable_ToOne_relationship()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         document.ShouldContainPath("paths./Supermarkets/{id}/relationships/BackupStoreManager.get").With(getElement =>
@@ -270,7 +274,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_ToMany_relationship()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         string? documentSchemaRefId = null;
@@ -299,7 +303,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_Post_endpoint()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         string? documentSchemaRefId = null;
@@ -353,7 +357,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_PostRelationship_endpoint()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         document.ShouldContainPath("paths./Supermarkets/{id}/relationships/Cashiers.post").With(getElement =>
@@ -369,7 +373,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_Patch_endpoint()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         string? documentSchemaRefId = null;
@@ -407,7 +411,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToOne_relationship()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         document.ShouldContainPath("paths./Supermarkets/{id}/relationships/StoreManager.patch").With(getElement =>
@@ -423,7 +427,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_nullable_ToOne_relationship()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         document.ShouldContainPath("paths./Supermarkets/{id}/relationships/BackupStoreManager.patch").With(getElement =>
@@ -439,7 +443,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToMany_relationship()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         document.ShouldContainPath("paths./Supermarkets/{id}/relationships/Cashiers.patch").With(getElement =>
@@ -455,7 +459,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_Delete_endpoint()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         document.ShouldContainPath("paths./Supermarkets/{id}.delete").With(getElement =>
@@ -471,7 +475,7 @@ public sealed class PascalCaseTests : OpenApiTestSuite<PascalCaseNamingConventio
     public async Task Casing_convention_is_applied_to_DeleteRelationship_endpoint()
     {
         // Act
-        JsonElement document = await GetDocumentAsync();
+        JsonElement document = await _testContext.LazyDocument.Value;
 
         // Assert
         document.ShouldContainPath("paths./Supermarkets/{id}/relationships/Cashiers.delete").With(getElement =>

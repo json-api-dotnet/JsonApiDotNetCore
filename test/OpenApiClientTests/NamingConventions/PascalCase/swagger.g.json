@@ -5,19 +5,19 @@
     "version": "1.0"
   },
   "paths": {
-    "/supermarkets": {
+    "/Supermarkets": {
       "get": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "get-supermarket-collection",
+        "operationId": "GetSupermarketCollection",
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/supermarket-collection-response-document"
+                  "$ref": "#/components/schemas/SupermarketCollectionResponseDocument"
                 }
               }
             }
@@ -26,16 +26,16 @@
       },
       "head": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "head-supermarket-collection",
+        "operationId": "HeadSupermarketCollection",
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/supermarket-collection-response-document"
+                  "$ref": "#/components/schemas/SupermarketCollectionResponseDocument"
                 }
               }
             }
@@ -44,14 +44,14 @@
       },
       "post": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "post-supermarket",
+        "operationId": "PostSupermarket",
         "requestBody": {
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/supermarket-post-request-document"
+                "$ref": "#/components/schemas/SupermarketPostRequestDocument"
               }
             }
           }
@@ -62,7 +62,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/supermarket-primary-response-document"
+                  "$ref": "#/components/schemas/SupermarketPrimaryResponseDocument"
                 }
               }
             }
@@ -73,12 +73,12 @@
         }
       }
     },
-    "/supermarkets/{id}": {
+    "/Supermarkets/{id}": {
       "get": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "get-supermarket",
+        "operationId": "GetSupermarket",
         "parameters": [
           {
             "name": "id",
@@ -96,7 +96,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/supermarket-primary-response-document"
+                  "$ref": "#/components/schemas/SupermarketPrimaryResponseDocument"
                 }
               }
             }
@@ -105,9 +105,9 @@
       },
       "head": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "head-supermarket",
+        "operationId": "HeadSupermarket",
         "parameters": [
           {
             "name": "id",
@@ -125,7 +125,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/supermarket-primary-response-document"
+                  "$ref": "#/components/schemas/SupermarketPrimaryResponseDocument"
                 }
               }
             }
@@ -134,9 +134,9 @@
       },
       "patch": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "patch-supermarket",
+        "operationId": "PatchSupermarket",
         "parameters": [
           {
             "name": "id",
@@ -152,7 +152,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/supermarket-patch-request-document"
+                "$ref": "#/components/schemas/SupermarketPatchRequestDocument"
               }
             }
           }
@@ -163,7 +163,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/supermarket-primary-response-document"
+                  "$ref": "#/components/schemas/SupermarketPrimaryResponseDocument"
                 }
               }
             }
@@ -175,9 +175,9 @@
       },
       "delete": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "delete-supermarket",
+        "operationId": "DeleteSupermarket",
         "parameters": [
           {
             "name": "id",
@@ -196,12 +196,12 @@
         }
       }
     },
-    "/supermarkets/{id}/backup-store-manager": {
+    "/Supermarkets/{id}/BackupStoreManager": {
       "get": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "get-supermarket-backup-store-manager",
+        "operationId": "GetSupermarketBackupStoreManager",
         "parameters": [
           {
             "name": "id",
@@ -219,7 +219,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/nullable-staff-member-secondary-response-document"
+                  "$ref": "#/components/schemas/NullableStaffMemberSecondaryResponseDocument"
                 }
               }
             }
@@ -228,9 +228,9 @@
       },
       "head": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "head-supermarket-backup-store-manager",
+        "operationId": "HeadSupermarketBackupStoreManager",
         "parameters": [
           {
             "name": "id",
@@ -248,7 +248,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/nullable-staff-member-secondary-response-document"
+                  "$ref": "#/components/schemas/NullableStaffMemberSecondaryResponseDocument"
                 }
               }
             }
@@ -256,12 +256,12 @@
         }
       }
     },
-    "/supermarkets/{id}/relationships/backup-store-manager": {
+    "/Supermarkets/{id}/relationships/BackupStoreManager": {
       "get": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "get-supermarket-backup-store-manager-relationship",
+        "operationId": "GetSupermarketBackupStoreManagerRelationship",
         "parameters": [
           {
             "name": "id",
@@ -279,7 +279,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/nullable-staff-member-identifier-response-document"
+                  "$ref": "#/components/schemas/NullableStaffMemberIdentifierResponseDocument"
                 }
               }
             }
@@ -288,9 +288,9 @@
       },
       "head": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "head-supermarket-backup-store-manager-relationship",
+        "operationId": "HeadSupermarketBackupStoreManagerRelationship",
         "parameters": [
           {
             "name": "id",
@@ -308,7 +308,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/nullable-staff-member-identifier-response-document"
+                  "$ref": "#/components/schemas/NullableStaffMemberIdentifierResponseDocument"
                 }
               }
             }
@@ -317,9 +317,9 @@
       },
       "patch": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "patch-supermarket-backup-store-manager-relationship",
+        "operationId": "PatchSupermarketBackupStoreManagerRelationship",
         "parameters": [
           {
             "name": "id",
@@ -335,7 +335,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/nullable-to-one-staff-member-in-request"
+                "$ref": "#/components/schemas/NullableToOneStaffMemberInRequest"
               }
             }
           }
@@ -347,12 +347,12 @@
         }
       }
     },
-    "/supermarkets/{id}/cashiers": {
+    "/Supermarkets/{id}/Cashiers": {
       "get": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "get-supermarket-cashiers",
+        "operationId": "GetSupermarketCashiers",
         "parameters": [
           {
             "name": "id",
@@ -370,7 +370,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/staff-member-collection-response-document"
+                  "$ref": "#/components/schemas/StaffMemberCollectionResponseDocument"
                 }
               }
             }
@@ -379,9 +379,9 @@
       },
       "head": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "head-supermarket-cashiers",
+        "operationId": "HeadSupermarketCashiers",
         "parameters": [
           {
             "name": "id",
@@ -399,7 +399,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/staff-member-collection-response-document"
+                  "$ref": "#/components/schemas/StaffMemberCollectionResponseDocument"
                 }
               }
             }
@@ -407,12 +407,12 @@
         }
       }
     },
-    "/supermarkets/{id}/relationships/cashiers": {
+    "/Supermarkets/{id}/relationships/Cashiers": {
       "get": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "get-supermarket-cashiers-relationship",
+        "operationId": "GetSupermarketCashiersRelationship",
         "parameters": [
           {
             "name": "id",
@@ -430,7 +430,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/staff-member-identifier-collection-response-document"
+                  "$ref": "#/components/schemas/StaffMemberIdentifierCollectionResponseDocument"
                 }
               }
             }
@@ -439,9 +439,9 @@
       },
       "head": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "head-supermarket-cashiers-relationship",
+        "operationId": "HeadSupermarketCashiersRelationship",
         "parameters": [
           {
             "name": "id",
@@ -459,7 +459,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/staff-member-identifier-collection-response-document"
+                  "$ref": "#/components/schemas/StaffMemberIdentifierCollectionResponseDocument"
                 }
               }
             }
@@ -468,9 +468,9 @@
       },
       "post": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "post-supermarket-cashiers-relationship",
+        "operationId": "PostSupermarketCashiersRelationship",
         "parameters": [
           {
             "name": "id",
@@ -486,7 +486,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-staff-member-in-request"
+                "$ref": "#/components/schemas/ToManyStaffMemberInRequest"
               }
             }
           }
@@ -499,9 +499,9 @@
       },
       "patch": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "patch-supermarket-cashiers-relationship",
+        "operationId": "PatchSupermarketCashiersRelationship",
         "parameters": [
           {
             "name": "id",
@@ -517,7 +517,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-staff-member-in-request"
+                "$ref": "#/components/schemas/ToManyStaffMemberInRequest"
               }
             }
           }
@@ -530,9 +530,9 @@
       },
       "delete": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "delete-supermarket-cashiers-relationship",
+        "operationId": "DeleteSupermarketCashiersRelationship",
         "parameters": [
           {
             "name": "id",
@@ -548,7 +548,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-staff-member-in-request"
+                "$ref": "#/components/schemas/ToManyStaffMemberInRequest"
               }
             }
           }
@@ -560,12 +560,12 @@
         }
       }
     },
-    "/supermarkets/{id}/store-manager": {
+    "/Supermarkets/{id}/StoreManager": {
       "get": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "get-supermarket-store-manager",
+        "operationId": "GetSupermarketStoreManager",
         "parameters": [
           {
             "name": "id",
@@ -583,7 +583,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/staff-member-secondary-response-document"
+                  "$ref": "#/components/schemas/StaffMemberSecondaryResponseDocument"
                 }
               }
             }
@@ -592,9 +592,9 @@
       },
       "head": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "head-supermarket-store-manager",
+        "operationId": "HeadSupermarketStoreManager",
         "parameters": [
           {
             "name": "id",
@@ -612,7 +612,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/staff-member-secondary-response-document"
+                  "$ref": "#/components/schemas/StaffMemberSecondaryResponseDocument"
                 }
               }
             }
@@ -620,12 +620,12 @@
         }
       }
     },
-    "/supermarkets/{id}/relationships/store-manager": {
+    "/Supermarkets/{id}/relationships/StoreManager": {
       "get": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "get-supermarket-store-manager-relationship",
+        "operationId": "GetSupermarketStoreManagerRelationship",
         "parameters": [
           {
             "name": "id",
@@ -643,7 +643,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/staff-member-identifier-response-document"
+                  "$ref": "#/components/schemas/StaffMemberIdentifierResponseDocument"
                 }
               }
             }
@@ -652,9 +652,9 @@
       },
       "head": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "head-supermarket-store-manager-relationship",
+        "operationId": "HeadSupermarketStoreManagerRelationship",
         "parameters": [
           {
             "name": "id",
@@ -672,7 +672,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/staff-member-identifier-response-document"
+                  "$ref": "#/components/schemas/StaffMemberIdentifierResponseDocument"
                 }
               }
             }
@@ -681,9 +681,9 @@
       },
       "patch": {
         "tags": [
-          "supermarkets"
+          "Supermarkets"
         ],
-        "operationId": "patch-supermarket-store-manager-relationship",
+        "operationId": "PatchSupermarketStoreManagerRelationship",
         "parameters": [
           {
             "name": "id",
@@ -699,7 +699,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-one-staff-member-in-request"
+                "$ref": "#/components/schemas/ToOneStaffMemberInRequest"
               }
             }
           }
@@ -714,7 +714,7 @@
   },
   "components": {
     "schemas": {
-      "jsonapi-object": {
+      "JsonapiObject": {
         "type": "object",
         "properties": {
           "version": {
@@ -734,12 +734,12 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
       },
-      "links-in-relationship-object": {
+      "LinksInRelationshipObject": {
         "required": [
           "related",
           "self"
@@ -755,7 +755,7 @@
         },
         "additionalProperties": false
       },
-      "links-in-resource-collection-document": {
+      "LinksInResourceCollectionDocument": {
         "required": [
           "first",
           "self"
@@ -783,7 +783,7 @@
         },
         "additionalProperties": false
       },
-      "links-in-resource-document": {
+      "LinksInResourceDocument": {
         "required": [
           "self"
         ],
@@ -798,7 +798,7 @@
         },
         "additionalProperties": false
       },
-      "links-in-resource-identifier-collection-document": {
+      "LinksInResourceIdentifierCollectionDocument": {
         "required": [
           "first",
           "related",
@@ -830,7 +830,7 @@
         },
         "additionalProperties": false
       },
-      "links-in-resource-identifier-document": {
+      "LinksInResourceIdentifierDocument": {
         "required": [
           "related",
           "self"
@@ -849,7 +849,7 @@
         },
         "additionalProperties": false
       },
-      "links-in-resource-object": {
+      "LinksInResourceObject": {
         "required": [
           "self"
         ],
@@ -861,7 +861,7 @@
         },
         "additionalProperties": false
       },
-      "null-value": {
+      "NullValue": {
         "not": {
           "anyOf": [
             {
@@ -880,11 +880,11 @@
               "type": "array"
             }
           ],
-          "items": {}
+          "items": { }
         },
         "nullable": true
       },
-      "nullable-staff-member-identifier-response-document": {
+      "NullableStaffMemberIdentifierResponseDocument": {
         "required": [
           "data",
           "links"
@@ -894,27 +894,27 @@
           "data": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/staff-member-identifier"
+                "$ref": "#/components/schemas/StaffMemberIdentifier"
               },
               {
-                "$ref": "#/components/schemas/null-value"
+                "$ref": "#/components/schemas/NullValue"
               }
             ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "$ref": "#/components/schemas/JsonapiObject"
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-identifier-document"
+            "$ref": "#/components/schemas/LinksInResourceIdentifierDocument"
           }
         },
         "additionalProperties": false
       },
-      "nullable-staff-member-secondary-response-document": {
+      "NullableStaffMemberSecondaryResponseDocument": {
         "required": [
           "data",
           "links"
@@ -924,27 +924,27 @@
           "data": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/staff-member-data-in-response"
+                "$ref": "#/components/schemas/StaffMemberDataInResponse"
               },
               {
-                "$ref": "#/components/schemas/null-value"
+                "$ref": "#/components/schemas/NullValue"
               }
             ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "$ref": "#/components/schemas/JsonapiObject"
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-document"
+            "$ref": "#/components/schemas/LinksInResourceDocument"
           }
         },
         "additionalProperties": false
       },
-      "nullable-to-one-staff-member-in-request": {
+      "NullableToOneStaffMemberInRequest": {
         "required": [
           "data"
         ],
@@ -953,17 +953,17 @@
           "data": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/staff-member-identifier"
+                "$ref": "#/components/schemas/StaffMemberIdentifier"
               },
               {
-                "$ref": "#/components/schemas/null-value"
+                "$ref": "#/components/schemas/NullValue"
               }
             ]
           }
         },
         "additionalProperties": false
       },
-      "nullable-to-one-staff-member-in-response": {
+      "NullableToOneStaffMemberInResponse": {
         "required": [
           "links"
         ],
@@ -972,37 +972,37 @@
           "data": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/staff-member-identifier"
+                "$ref": "#/components/schemas/StaffMemberIdentifier"
               },
               {
-                "$ref": "#/components/schemas/null-value"
+                "$ref": "#/components/schemas/NullValue"
               }
             ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-relationship-object"
+            "$ref": "#/components/schemas/LinksInRelationshipObject"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
       },
-      "staff-member-attributes-in-response": {
+      "StaffMemberAttributesInResponse": {
         "type": "object",
         "properties": {
-          "name": {
+          "Name": {
             "type": "string"
           },
-          "age": {
+          "Age": {
             "type": "integer",
             "format": "int32"
           }
         },
         "additionalProperties": false
       },
-      "staff-member-collection-response-document": {
+      "StaffMemberCollectionResponseDocument": {
         "required": [
           "data",
           "links"
@@ -1012,23 +1012,23 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/staff-member-data-in-response"
+              "$ref": "#/components/schemas/StaffMemberDataInResponse"
             }
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "$ref": "#/components/schemas/JsonapiObject"
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-collection-document"
+            "$ref": "#/components/schemas/LinksInResourceCollectionDocument"
           }
         },
         "additionalProperties": false
       },
-      "staff-member-data-in-response": {
+      "StaffMemberDataInResponse": {
         "required": [
           "id",
           "links",
@@ -1037,25 +1037,25 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/staff-member-resource-type"
+            "$ref": "#/components/schemas/StaffMemberResourceType"
           },
           "id": {
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/staff-member-attributes-in-response"
+            "$ref": "#/components/schemas/StaffMemberAttributesInResponse"
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-object"
+            "$ref": "#/components/schemas/LinksInResourceObject"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
       },
-      "staff-member-identifier": {
+      "StaffMemberIdentifier": {
         "required": [
           "id",
           "type"
@@ -1063,7 +1063,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/staff-member-resource-type"
+            "$ref": "#/components/schemas/StaffMemberResourceType"
           },
           "id": {
             "type": "string"
@@ -1071,7 +1071,7 @@
         },
         "additionalProperties": false
       },
-      "staff-member-identifier-collection-response-document": {
+      "StaffMemberIdentifierCollectionResponseDocument": {
         "required": [
           "data",
           "links"
@@ -1081,23 +1081,23 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/staff-member-identifier"
+              "$ref": "#/components/schemas/StaffMemberIdentifier"
             }
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "$ref": "#/components/schemas/JsonapiObject"
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+            "$ref": "#/components/schemas/LinksInResourceIdentifierCollectionDocument"
           }
         },
         "additionalProperties": false
       },
-      "staff-member-identifier-response-document": {
+      "StaffMemberIdentifierResponseDocument": {
         "required": [
           "data",
           "links"
@@ -1105,28 +1105,28 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/staff-member-identifier"
+            "$ref": "#/components/schemas/StaffMemberIdentifier"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "$ref": "#/components/schemas/JsonapiObject"
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-identifier-document"
+            "$ref": "#/components/schemas/LinksInResourceIdentifierDocument"
           }
         },
         "additionalProperties": false
       },
-      "staff-member-resource-type": {
+      "StaffMemberResourceType": {
         "enum": [
-          "staff-members"
+          "StaffMembers"
         ],
         "type": "string"
       },
-      "staff-member-secondary-response-document": {
+      "StaffMemberSecondaryResponseDocument": {
         "required": [
           "data",
           "links"
@@ -1134,61 +1134,61 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/staff-member-data-in-response"
+            "$ref": "#/components/schemas/StaffMemberDataInResponse"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "$ref": "#/components/schemas/JsonapiObject"
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-document"
+            "$ref": "#/components/schemas/LinksInResourceDocument"
           }
         },
         "additionalProperties": false
       },
-      "supermarket-attributes-in-patch-request": {
+      "SupermarketAttributesInPatchRequest": {
         "type": "object",
         "properties": {
-          "name-of-city": {
+          "NameOfCity": {
             "type": "string"
           },
-          "kind": {
-            "$ref": "#/components/schemas/supermarket-type"
+          "Kind": {
+            "$ref": "#/components/schemas/SupermarketType"
           }
         },
         "additionalProperties": false
       },
-      "supermarket-attributes-in-post-request": {
+      "SupermarketAttributesInPostRequest": {
         "required": [
-          "name-of-city"
+          "NameOfCity"
         ],
         "type": "object",
         "properties": {
-          "name-of-city": {
+          "NameOfCity": {
             "type": "string"
           },
-          "kind": {
-            "$ref": "#/components/schemas/supermarket-type"
+          "Kind": {
+            "$ref": "#/components/schemas/SupermarketType"
           }
         },
         "additionalProperties": false
       },
-      "supermarket-attributes-in-response": {
+      "SupermarketAttributesInResponse": {
         "type": "object",
         "properties": {
-          "name-of-city": {
+          "NameOfCity": {
             "type": "string"
           },
-          "kind": {
-            "$ref": "#/components/schemas/supermarket-type"
+          "Kind": {
+            "$ref": "#/components/schemas/SupermarketType"
           }
         },
         "additionalProperties": false
       },
-      "supermarket-collection-response-document": {
+      "SupermarketCollectionResponseDocument": {
         "required": [
           "data",
           "links"
@@ -1198,23 +1198,23 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/supermarket-data-in-response"
+              "$ref": "#/components/schemas/SupermarketDataInResponse"
             }
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "$ref": "#/components/schemas/JsonapiObject"
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-collection-document"
+            "$ref": "#/components/schemas/LinksInResourceCollectionDocument"
           }
         },
         "additionalProperties": false
       },
-      "supermarket-data-in-patch-request": {
+      "SupermarketDataInPatchRequest": {
         "required": [
           "id",
           "type"
@@ -1222,39 +1222,39 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/supermarket-resource-type"
+            "$ref": "#/components/schemas/SupermarketResourceType"
           },
           "id": {
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/supermarket-attributes-in-patch-request"
+            "$ref": "#/components/schemas/SupermarketAttributesInPatchRequest"
           },
           "relationships": {
-            "$ref": "#/components/schemas/supermarket-relationships-in-patch-request"
+            "$ref": "#/components/schemas/SupermarketRelationshipsInPatchRequest"
           }
         },
         "additionalProperties": false
       },
-      "supermarket-data-in-post-request": {
+      "SupermarketDataInPostRequest": {
         "required": [
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/supermarket-resource-type"
+            "$ref": "#/components/schemas/SupermarketResourceType"
           },
           "attributes": {
-            "$ref": "#/components/schemas/supermarket-attributes-in-post-request"
+            "$ref": "#/components/schemas/SupermarketAttributesInPostRequest"
           },
           "relationships": {
-            "$ref": "#/components/schemas/supermarket-relationships-in-post-request"
+            "$ref": "#/components/schemas/SupermarketRelationshipsInPostRequest"
           }
         },
         "additionalProperties": false
       },
-      "supermarket-data-in-response": {
+      "SupermarketDataInResponse": {
         "required": [
           "id",
           "links",
@@ -1263,52 +1263,52 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/supermarket-resource-type"
+            "$ref": "#/components/schemas/SupermarketResourceType"
           },
           "id": {
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/supermarket-attributes-in-response"
+            "$ref": "#/components/schemas/SupermarketAttributesInResponse"
           },
           "relationships": {
-            "$ref": "#/components/schemas/supermarket-relationships-in-response"
+            "$ref": "#/components/schemas/SupermarketRelationshipsInResponse"
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-object"
+            "$ref": "#/components/schemas/LinksInResourceObject"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
       },
-      "supermarket-patch-request-document": {
+      "SupermarketPatchRequestDocument": {
         "required": [
           "data"
         ],
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/supermarket-data-in-patch-request"
+            "$ref": "#/components/schemas/SupermarketDataInPatchRequest"
           }
         },
         "additionalProperties": false
       },
-      "supermarket-post-request-document": {
+      "SupermarketPostRequestDocument": {
         "required": [
           "data"
         ],
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/supermarket-data-in-post-request"
+            "$ref": "#/components/schemas/SupermarketDataInPostRequest"
           }
         },
         "additionalProperties": false
       },
-      "supermarket-primary-response-document": {
+      "SupermarketPrimaryResponseDocument": {
         "required": [
           "data",
           "links"
@@ -1316,76 +1316,76 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/supermarket-data-in-response"
+            "$ref": "#/components/schemas/SupermarketDataInResponse"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "$ref": "#/components/schemas/JsonapiObject"
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-document"
+            "$ref": "#/components/schemas/LinksInResourceDocument"
           }
         },
         "additionalProperties": false
       },
-      "supermarket-relationships-in-patch-request": {
+      "SupermarketRelationshipsInPatchRequest": {
         "type": "object",
         "properties": {
-          "store-manager": {
-            "$ref": "#/components/schemas/to-one-staff-member-in-request"
+          "StoreManager": {
+            "$ref": "#/components/schemas/ToOneStaffMemberInRequest"
           },
-          "backup-store-manager": {
-            "$ref": "#/components/schemas/nullable-to-one-staff-member-in-request"
+          "BackupStoreManager": {
+            "$ref": "#/components/schemas/NullableToOneStaffMemberInRequest"
           },
-          "cashiers": {
-            "$ref": "#/components/schemas/to-many-staff-member-in-request"
+          "Cashiers": {
+            "$ref": "#/components/schemas/ToManyStaffMemberInRequest"
           }
         },
         "additionalProperties": false
       },
-      "supermarket-relationships-in-post-request": {
+      "SupermarketRelationshipsInPostRequest": {
         "required": [
-          "store-manager"
+          "StoreManager"
         ],
         "type": "object",
         "properties": {
-          "store-manager": {
-            "$ref": "#/components/schemas/to-one-staff-member-in-request"
+          "StoreManager": {
+            "$ref": "#/components/schemas/ToOneStaffMemberInRequest"
           },
-          "backup-store-manager": {
-            "$ref": "#/components/schemas/nullable-to-one-staff-member-in-request"
+          "BackupStoreManager": {
+            "$ref": "#/components/schemas/NullableToOneStaffMemberInRequest"
           },
-          "cashiers": {
-            "$ref": "#/components/schemas/to-many-staff-member-in-request"
+          "Cashiers": {
+            "$ref": "#/components/schemas/ToManyStaffMemberInRequest"
           }
         },
         "additionalProperties": false
       },
-      "supermarket-relationships-in-response": {
+      "SupermarketRelationshipsInResponse": {
         "type": "object",
         "properties": {
-          "store-manager": {
-            "$ref": "#/components/schemas/to-one-staff-member-in-response"
+          "StoreManager": {
+            "$ref": "#/components/schemas/ToOneStaffMemberInResponse"
           },
-          "backup-store-manager": {
-            "$ref": "#/components/schemas/nullable-to-one-staff-member-in-response"
+          "BackupStoreManager": {
+            "$ref": "#/components/schemas/NullableToOneStaffMemberInResponse"
           },
-          "cashiers": {
-            "$ref": "#/components/schemas/to-many-staff-member-in-response"
+          "Cashiers": {
+            "$ref": "#/components/schemas/ToManyStaffMemberInResponse"
           }
         },
         "additionalProperties": false
       },
-      "supermarket-resource-type": {
+      "SupermarketResourceType": {
         "enum": [
-          "supermarkets"
+          "Supermarkets"
         ],
         "type": "string"
       },
-      "supermarket-type": {
+      "SupermarketType": {
         "enum": [
           "Traditional",
           "Budget",
@@ -1393,7 +1393,7 @@
         ],
         "type": "string"
       },
-      "to-many-staff-member-in-request": {
+      "ToManyStaffMemberInRequest": {
         "required": [
           "data"
         ],
@@ -1402,13 +1402,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/staff-member-identifier"
+              "$ref": "#/components/schemas/StaffMemberIdentifier"
             }
           }
         },
         "additionalProperties": false
       },
-      "to-many-staff-member-in-response": {
+      "ToManyStaffMemberInResponse": {
         "required": [
           "links"
         ],
@@ -1417,46 +1417,46 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/staff-member-identifier"
+              "$ref": "#/components/schemas/StaffMemberIdentifier"
             }
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-relationship-object"
+            "$ref": "#/components/schemas/LinksInRelationshipObject"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
       },
-      "to-one-staff-member-in-request": {
+      "ToOneStaffMemberInRequest": {
         "required": [
           "data"
         ],
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/staff-member-identifier"
+            "$ref": "#/components/schemas/StaffMemberIdentifier"
           }
         },
         "additionalProperties": false
       },
-      "to-one-staff-member-in-response": {
+      "ToOneStaffMemberInResponse": {
         "required": [
           "links"
         ],
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/staff-member-identifier"
+            "$ref": "#/components/schemas/StaffMemberIdentifier"
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-relationship-object"
+            "$ref": "#/components/schemas/LinksInRelationshipObject"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false

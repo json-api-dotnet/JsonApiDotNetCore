@@ -10,7 +10,10 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
     where TStartup : class
     where TDbContext : DbContext
 {
+    private const string GeneratedDocumentName = "swagger.g.json";
+
     internal readonly Lazy<Task<JsonElement>> LazyDocument;
+    internal string? GeneratedDocumentNamespace;
 
     public OpenApiTestContext()
     {
@@ -21,12 +24,15 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
     {
         string content = await GetAsync("swagger/v1/swagger.json");
 
-        JsonDocument parsedContent = JsonDocument.Parse(content);
+        JsonDocument document = JsonDocument.Parse(content);
 
-        using (parsedContent)
+        using (document)
         {
-            JsonElement clonedRoot = parsedContent.RootElement.Clone();
-            return clonedRoot;
+            JsonElement clonedDocument = document.RootElement.Clone();
+
+            await WriteDocumentToFileAsync(clonedDocument);
+
+            return clonedDocument;
         }
     }
 
@@ -38,5 +44,37 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
         using HttpResponseMessage responseMessage = await client.SendAsync(request);
 
         return await responseMessage.Content.ReadAsStringAsync();
+    }
+
+    public override void UseController<TController>()
+    {
+        if (!LazyDocument.IsValueCreated)
+        {
+            base.UseController<TController>();
+        }
+    }
+
+    private async Task WriteDocumentToFileAsync(JsonElement document)
+    {
+        string pathToTestSuiteDirectory = GetTestSuitePath();
+        string pathToDocument = Path.Join(pathToTestSuiteDirectory, GeneratedDocumentName);
+        string json = document.ToString();
+        await File.WriteAllTextAsync(pathToDocument, json);
+    }
+
+    private string GetTestSuitePath()
+    {
+        string pathToSolutionTestDirectory = Path.Combine(Environment.CurrentDirectory, "../../../../");
+        pathToSolutionTestDirectory = Path.GetFullPath(pathToSolutionTestDirectory);
+
+        if (GeneratedDocumentNamespace == null)
+        {
+            throw new Exception(
+                $"Failed to write {GeneratedDocumentName} to disk. Ensure '{nameof(OpenApiTestContext<object, DbContext>)}.{nameof(GeneratedDocumentNamespace)}' is set.");
+        }
+
+        string pathToCurrentNamespaceRelativeToTestDirectory = Path.Combine(GeneratedDocumentNamespace.Split('.'));
+
+        return Path.Join(pathToSolutionTestDirectory, pathToCurrentNamespaceRelativeToTestDirectory);
     }
 }

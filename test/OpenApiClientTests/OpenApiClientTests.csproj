@@ -34,28 +34,28 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="..\OpenApiTests\LegacyOpenApiIntegration\swagger.json">
+    <OpenApiReference Include="LegacyClient\swagger.g.json">
       <Namespace>OpenApiClientTests.LegacyClient.GeneratedCode</Namespace>
       <ClassName>OpenApiClient</ClassName>
       <OutputPath>OpenApiClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/UseBaseUrl:false /GenerateClientInterfaces:true /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\NamingConventions\KebabCase\swagger.json">
+    <OpenApiReference Include="NamingConventions\KebabCase\swagger.g.json">
       <Namespace>OpenApiClientTests.NamingConventions.KebabCase.GeneratedCode</Namespace>
       <ClassName>KebabCaseClient</ClassName>
       <OutputPath>KebabCaseClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\NamingConventions\CamelCase\swagger.json">
+    <OpenApiReference Include="NamingConventions\CamelCase\swagger.g.json">
       <Namespace>OpenApiClientTests.NamingConventions.CamelCase.GeneratedCode</Namespace>
       <ClassName>CamelCaseClient</ClassName>
       <OutputPath>CamelCaseClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
     </OpenApiReference>
-    <OpenApiReference Include="..\OpenApiTests\NamingConventions\PascalCase\swagger.json">
+    <OpenApiReference Include="NamingConventions\PascalCase\swagger.g.json">
       <Namespace>OpenApiClientTests.NamingConventions.PascalCase.GeneratedCode</Namespace>
       <ClassName>PascalCaseClient</ClassName>
       <OutputPath>PascalCaseClient.cs</OutputPath>

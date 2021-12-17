@@ -50,7 +50,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IDi
         _lazyFactory = new Lazy<WebApplicationFactory<TStartup>>(CreateFactory);
     }
 
-    public void UseController<TController>()
+    public virtual void UseController<TController>()
         where TController : ControllerBase
     {
         _testControllerProvider.AddController(typeof(TController));

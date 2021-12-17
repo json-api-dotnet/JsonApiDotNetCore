@@ -13,19 +13,19 @@ public sealed class LegacyOpenApiIntegrationTests : OpenApiTestContext<LegacyOpe
         UseController<AirplanesController>();
         UseController<FlightsController>();
         UseController<FlightAttendantsController>();
+        GeneratedDocumentNamespace = "OpenApiClientTests.LegacyClient";
     }
 
     [Fact]
     public async Task Retrieved_document_matches_expected_document()
     {
-        // Arrange
-        const string embeddedResourceName = $"{nameof(OpenApiTests)}.{nameof(LegacyOpenApiIntegration)}.swagger.json";
-        string expectedDocument = await LoadEmbeddedResourceAsync(embeddedResourceName);
-
         // Act
         JsonElement jsonElement = await LazyDocument.Value;
 
         // Assert
+        const string embeddedResourceName = $"{nameof(OpenApiTests)}.{nameof(LegacyOpenApiIntegration)}.swagger.json";
+        string expectedDocument = await LoadEmbeddedResourceAsync(embeddedResourceName);
+
         string jsonText = jsonElement.ToString();
         jsonText.Should().BeJson(expectedDocument);
     }
