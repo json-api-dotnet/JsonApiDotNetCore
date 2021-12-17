@@ -49,7 +49,6 @@ public sealed class GeneratedTypesTests
         _ = nameof(ToManyStaffMemberInResponse);
         _ = nameof(LinksInRelationshipObject);
         _ = nameof(StaffMemberIdentifier);
-        _ = nameof(StaffMemberResourceType);
         _ = nameof(StaffMemberResourceType.StaffMembers);
         _ = nameof(SupermarketPrimaryResponseDocument);
         _ = nameof(LinksInResourceDocument);

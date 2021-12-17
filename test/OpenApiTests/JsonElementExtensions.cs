@@ -25,26 +25,26 @@ internal static class JsonElementExtensions
         source.GetString().Should().Be(value);
     }
 
-    public static ReferenceSchemaIdContainer ShouldBeReferenceSchemaId(this JsonElement source, string value)
+    public static SchemaReferenceIdContainer ShouldBeSchemaReferenceId(this JsonElement source, string value)
     {
         source.ValueKind.Should().Be(JsonValueKind.String);
 
         string? jsonElementValue = source.GetString();
         jsonElementValue.ShouldNotBeNull();
 
-        string referenceSchemaId = jsonElementValue.Split('/').Last();
-        referenceSchemaId.Should().Be(value);
+        string schemaReferenceId = jsonElementValue.Split('/').Last();
+        schemaReferenceId.Should().Be(value);
 
-        return new ReferenceSchemaIdContainer(value);
+        return new SchemaReferenceIdContainer(value);
     }
 
-    public sealed class ReferenceSchemaIdContainer
+    public sealed class SchemaReferenceIdContainer
     {
-        public string ReferenceSchemaId { get; }
+        public string SchemaReferenceId { get; }
 
-        public ReferenceSchemaIdContainer(string referenceSchemaId)
+        public SchemaReferenceIdContainer(string schemaReferenceId)
         {
-            ReferenceSchemaId = referenceSchemaId;
+            SchemaReferenceId = schemaReferenceId;
         }
     }
 

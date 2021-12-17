@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.OpenApi.Client.Exceptions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal class ApiException : Exception
+public sealed class ApiException : Exception
 {
     public int StatusCode { get; }
 
@@ -26,18 +26,5 @@ internal class ApiException : Exception
     public override string ToString()
     {
         return $"HTTP Response: \n\n{Response}\n\n{base.ToString()}";
-    }
-}
-
-[UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class ApiException<TResult> : ApiException
-{
-    public TResult Result { get; }
-
-    public ApiException(string message, int statusCode, string? response, IReadOnlyDictionary<string, IEnumerable<string>> headers, TResult result,
-        Exception innerException)
-        : base(message, statusCode, response, headers, innerException)
-    {
-        Result = result;
     }
 }

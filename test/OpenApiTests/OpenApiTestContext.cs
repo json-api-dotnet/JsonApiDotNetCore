@@ -1,7 +1,9 @@
+using System.Reflection;
 using System.Text.Json;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
+using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace OpenApiTests;
 
@@ -10,29 +12,47 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
     where TStartup : class
     where TDbContext : DbContext
 {
-    private const string GeneratedDocumentName = "swagger.g.json";
+    private readonly Lazy<Task<JsonElement>> _lazySwaggerDocument;
 
-    internal readonly Lazy<Task<JsonElement>> LazyDocument;
-    internal string? GeneratedDocumentNamespace;
+    internal string? SwaggerDocumentOutputPath { private get; set; }
 
     public OpenApiTestContext()
     {
-        LazyDocument = new Lazy<Task<JsonElement>>(GetDocumentAsync, LazyThreadSafetyMode.ExecutionAndPublication);
+        _lazySwaggerDocument = new Lazy<Task<JsonElement>>(CreateSwaggerDocumentAsync, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    private async Task<JsonElement> GetDocumentAsync()
+    internal async Task<JsonElement> GetSwaggerDocumentAsync()
     {
+        return await _lazySwaggerDocument.Value;
+    }
+
+    private async Task<JsonElement> CreateSwaggerDocumentAsync()
+    {
+        string swaggerDocumentOutputPath = GetSwaggerDocumentAbsoluteOutputPath(SwaggerDocumentOutputPath);
+
         string content = await GetAsync("swagger/v1/swagger.json");
 
-        JsonDocument document = JsonDocument.Parse(content);
+        JsonElement swaggerDocument = ParseSwaggerDocument(content);
+        await WriteToDiskAsync(swaggerDocumentOutputPath, swaggerDocument);
 
-        using (document)
+        return swaggerDocument;
+    }
+
+    private static string GetSwaggerDocumentAbsoluteOutputPath(string? relativePath)
+    {
+        AssertHasSwaggerDocumentOutputPath(relativePath);
+
+        string solutionRoot = Path.Combine(Assembly.GetExecutingAssembly().Location, "../../../../../../");
+        string outputPath = Path.Join(solutionRoot, relativePath, "swagger.g.json");
+
+        return Path.GetFullPath(outputPath);
+    }
+
+    private static void AssertHasSwaggerDocumentOutputPath([SysNotNull] string? relativePath)
+    {
+        if (relativePath is null)
         {
-            JsonElement clonedDocument = document.RootElement.Clone();
-
-            await WriteDocumentToFileAsync(clonedDocument);
-
-            return clonedDocument;
+            throw new Exception($"Property '{nameof(OpenApiTestContext<object, DbContext>)}.{nameof(SwaggerDocumentOutputPath)}' must be set.");
         }
     }
 
@@ -46,35 +66,15 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
         return await responseMessage.Content.ReadAsStringAsync();
     }
 
-    public override void UseController<TController>()
+    private static JsonElement ParseSwaggerDocument(string content)
     {
-        if (!LazyDocument.IsValueCreated)
-        {
-            base.UseController<TController>();
-        }
+        using JsonDocument jsonDocument = JsonDocument.Parse(content);
+        return jsonDocument.RootElement.Clone();
     }
 
-    private async Task WriteDocumentToFileAsync(JsonElement document)
+    private static async Task WriteToDiskAsync(string path, JsonElement jsonElement)
     {
-        string pathToTestSuiteDirectory = GetTestSuitePath();
-        string pathToDocument = Path.Join(pathToTestSuiteDirectory, GeneratedDocumentName);
-        string json = document.ToString();
-        await File.WriteAllTextAsync(pathToDocument, json);
-    }
-
-    private string GetTestSuitePath()
-    {
-        string pathToSolutionTestDirectory = Path.Combine(Environment.CurrentDirectory, "../../../../");
-        pathToSolutionTestDirectory = Path.GetFullPath(pathToSolutionTestDirectory);
-
-        if (GeneratedDocumentNamespace == null)
-        {
-            throw new Exception(
-                $"Failed to write {GeneratedDocumentName} to disk. Ensure '{nameof(OpenApiTestContext<object, DbContext>)}.{nameof(GeneratedDocumentNamespace)}' is set.");
-        }
-
-        string pathToCurrentNamespaceRelativeToTestDirectory = Path.Combine(GeneratedDocumentNamespace.Split('.'));
-
-        return Path.Join(pathToSolutionTestDirectory, pathToCurrentNamespaceRelativeToTestDirectory);
+        string contents = jsonElement.ToString();
+        await File.WriteAllTextAsync(path, contents);
     }
 }

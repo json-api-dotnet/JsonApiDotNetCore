@@ -13,31 +13,32 @@ public sealed class LegacyOpenApiIntegrationTests : OpenApiTestContext<LegacyOpe
         UseController<AirplanesController>();
         UseController<FlightsController>();
         UseController<FlightAttendantsController>();
-        GeneratedDocumentNamespace = "OpenApiClientTests.LegacyClient";
+
+        SwaggerDocumentOutputPath = "test/OpenApiClientTests/LegacyClient";
     }
 
     [Fact]
-    public async Task Retrieved_document_matches_expected_document()
+    public async Task Retrieved_swagger_document_matches_expected_document()
     {
         // Act
-        JsonElement jsonElement = await LazyDocument.Value;
+        JsonElement jsonElement = await GetSwaggerDocumentAsync();
 
         // Assert
-        const string embeddedResourceName = $"{nameof(OpenApiTests)}.{nameof(LegacyOpenApiIntegration)}.swagger.json";
-        string expectedDocument = await LoadEmbeddedResourceAsync(embeddedResourceName);
-
-        string jsonText = jsonElement.ToString();
-        jsonText.Should().BeJson(expectedDocument);
+        string expectedJsonText = await GetExpectedSwaggerDocumentAsync();
+        string actualJsonText = jsonElement.ToString();
+        actualJsonText.Should().BeJson(expectedJsonText);
     }
 
-    private static async Task<string> LoadEmbeddedResourceAsync(string name)
+    private static async Task<string> GetExpectedSwaggerDocumentAsync()
     {
+        const string embeddedResourceName = $"{nameof(OpenApiTests)}.{nameof(LegacyOpenApiIntegration)}.swagger.json";
         var assembly = Assembly.GetExecutingAssembly();
-        await using Stream? stream = assembly.GetManifestResourceStream(name);
+
+        await using Stream? stream = assembly.GetManifestResourceStream(embeddedResourceName);
 
         if (stream == null)
         {
-            throw new Exception($"Failed to load embedded resource '{name}'. Set Build Action to Embedded Resource in properties.");
+            throw new Exception($"Failed to load embedded resource '{embeddedResourceName}'. Set Build Action to Embedded Resource in properties.");
         }
 
         using var reader = new StreamReader(stream);

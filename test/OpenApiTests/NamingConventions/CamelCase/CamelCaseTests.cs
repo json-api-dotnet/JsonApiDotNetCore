@@ -12,15 +12,16 @@ public sealed class PascalCaseTests
     public PascalCaseTests(OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext> testContext)
     {
         _testContext = testContext;
+
         testContext.UseController<SupermarketsController>();
-        testContext.GeneratedDocumentNamespace = "OpenApiClientTests.NamingConventions.CamelCase";
+        testContext.SwaggerDocumentOutputPath = "test/OpenApiClientTests/NamingConventions/CamelCase";
     }
 
     [Fact]
     public async Task Casing_convention_is_applied_to_GetCollection_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -33,38 +34,57 @@ public sealed class PascalCaseTests
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("supermarketCollectionResponseDocument").ReferenceSchemaId;
+                .ShouldBeSchemaReferenceId("supermarketCollectionResponseDocument").SchemaReferenceId;
         });
 
         document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
+            string? linksInResourceCollectionDocumentSchemaRefId = null;
             string? resourceDataSchemaRefId = null;
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.ShouldContainPath("links.$ref").ShouldBeReferenceSchemaId("linksInResourceCollectionDocument");
-                propertiesElement.ShouldContainPath("jsonapi.$ref").ShouldBeReferenceSchemaId("jsonapiObject");
+                propertiesElement.ShouldContainPath("jsonapi.$ref").ShouldBeSchemaReferenceId("jsonapiObject");
 
-                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.items.$ref").ShouldBeReferenceSchemaId("supermarketDataInResponse")
-                    .ReferenceSchemaId;
+                linksInResourceCollectionDocumentSchemaRefId = propertiesElement.ShouldContainPath("links.$ref")
+                    .ShouldBeSchemaReferenceId("linksInResourceCollectionDocument").SchemaReferenceId;
+
+                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.items.$ref").ShouldBeSchemaReferenceId("supermarketDataInResponse")
+                    .SchemaReferenceId;
             });
 
+            schemasElement.ShouldContainPath($"{linksInResourceCollectionDocumentSchemaRefId}.properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainProperty("self");
+                propertiesElement.Should().ContainProperty("describedby");
+                propertiesElement.Should().ContainProperty("first");
+                propertiesElement.Should().ContainProperty("last");
+                propertiesElement.Should().ContainProperty("prev");
+                propertiesElement.Should().ContainProperty("next");
+            });
+
+            string? linksInResourceObject = null;
             string? resourceAttributesInResponseSchemaRefId = null;
             string? resourceRelationshipInResponseSchemaRefId = null;
             string? primaryResourceTypeSchemaRefId = null;
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                primaryResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeReferenceSchemaId("supermarketResourceType")
-                    .ReferenceSchemaId;
+                linksInResourceObject = propertiesElement.ShouldContainPath("links.$ref").ShouldBeSchemaReferenceId("linksInResourceObject").SchemaReferenceId;
+
+                primaryResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeSchemaReferenceId("supermarketResourceType")
+                    .SchemaReferenceId;
 
                 resourceAttributesInResponseSchemaRefId = propertiesElement.ShouldContainPath("attributes.$ref")
-                    .ShouldBeReferenceSchemaId("supermarketAttributesInResponse").ReferenceSchemaId;
+                    .ShouldBeSchemaReferenceId("supermarketAttributesInResponse").SchemaReferenceId;
 
                 resourceRelationshipInResponseSchemaRefId = propertiesElement.ShouldContainPath("relationships.$ref")
-                    .ShouldBeReferenceSchemaId("supermarketRelationshipsInResponse").ReferenceSchemaId;
+                    .ShouldBeSchemaReferenceId("supermarketRelationshipsInResponse").SchemaReferenceId;
+            });
 
-                propertiesElement.ShouldContainPath("links.$ref").ShouldBeReferenceSchemaId("linksInResourceObject");
+            schemasElement.ShouldContainPath($"{linksInResourceObject}.properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainProperty("self");
             });
 
             schemasElement.ShouldContainPath($"{primaryResourceTypeSchemaRefId}.enum[0]").With(enumValueElement =>
@@ -76,7 +96,7 @@ public sealed class PascalCaseTests
             {
                 propertiesElement.Should().ContainProperty("nameOfCity");
                 propertiesElement.Should().ContainProperty("kind");
-                propertiesElement.ShouldContainPath("kind.$ref").ShouldBeReferenceSchemaId("supermarketType");
+                propertiesElement.ShouldContainPath("kind.$ref").ShouldBeSchemaReferenceId("supermarketType");
             });
 
             string? nullableToOneResourceResponseDataSchemaRefId = null;
@@ -85,36 +105,44 @@ public sealed class PascalCaseTests
             {
                 propertiesElement.Should().ContainProperty("storeManager");
 
-                propertiesElement.ShouldContainPath("storeManager.$ref").ShouldBeReferenceSchemaId("toOneStaffMemberInResponse");
+                propertiesElement.ShouldContainPath("storeManager.$ref").ShouldBeSchemaReferenceId("toOneStaffMemberInResponse");
 
                 nullableToOneResourceResponseDataSchemaRefId = propertiesElement.ShouldContainPath("backupStoreManager.$ref")
-                    .ShouldBeReferenceSchemaId("nullableToOneStaffMemberInResponse").ReferenceSchemaId;
+                    .ShouldBeSchemaReferenceId("nullableToOneStaffMemberInResponse").SchemaReferenceId;
 
                 propertiesElement.Should().ContainProperty("cashiers");
-                propertiesElement.ShouldContainPath("cashiers.$ref").ShouldBeReferenceSchemaId("toManyStaffMemberInResponse");
+                propertiesElement.ShouldContainPath("cashiers.$ref").ShouldBeSchemaReferenceId("toManyStaffMemberInResponse");
             });
 
+            string? linksInRelationshipObjectSchemaRefId = null;
             string? relatedResourceIdentifierSchemaRefId = null;
 
             schemasElement.ShouldContainPath($"{nullableToOneResourceResponseDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.ShouldContainPath("links.$ref").ShouldBeReferenceSchemaId("linksInRelationshipObject");
+                linksInRelationshipObjectSchemaRefId = propertiesElement.ShouldContainPath("links.$ref").ShouldBeSchemaReferenceId("linksInRelationshipObject")
+                    .SchemaReferenceId;
 
                 relatedResourceIdentifierSchemaRefId = propertiesElement.ShouldContainPath("data.oneOf[0].$ref")
-                    .ShouldBeReferenceSchemaId("staffMemberIdentifier").ReferenceSchemaId;
+                    .ShouldBeSchemaReferenceId("staffMemberIdentifier").SchemaReferenceId;
 
-                propertiesElement.ShouldContainPath("data.oneOf[1].$ref").ShouldBeReferenceSchemaId("nullValue");
+                propertiesElement.ShouldContainPath("data.oneOf[1].$ref").ShouldBeSchemaReferenceId("nullValue");
+            });
+
+            schemasElement.ShouldContainPath($"{linksInRelationshipObjectSchemaRefId}.properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainProperty("self");
+                propertiesElement.Should().ContainProperty("related");
             });
 
             string? relatedResourceTypeSchemaRefId = null;
 
             schemasElement.ShouldContainPath($"{relatedResourceIdentifierSchemaRefId}.properties").With(propertiesElement =>
             {
-                relatedResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeReferenceSchemaId("staffMemberResourceType")
-                    .ReferenceSchemaId;
+                relatedResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeSchemaReferenceId("staffMemberResourceType")
+                    .SchemaReferenceId;
             });
 
-            schemasElement.ShouldContainPath($"{relatedResourceTypeSchemaRefId}.enum[0]").ShouldBeReferenceSchemaId("staffMembers");
+            schemasElement.ShouldContainPath($"{relatedResourceTypeSchemaRefId}.enum[0]").ShouldBeSchemaReferenceId("staffMembers");
         });
     }
 
@@ -122,7 +150,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_GetSingle_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -135,14 +163,23 @@ public sealed class PascalCaseTests
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("supermarketPrimaryResponseDocument").ReferenceSchemaId;
+                .ShouldBeSchemaReferenceId("supermarketPrimaryResponseDocument").SchemaReferenceId;
         });
 
         document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
+            string? linksInResourceDocumentSchemaRefId = null;
+
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.ShouldContainPath("links.$ref").ShouldBeReferenceSchemaId("linksInResourceDocument");
+                linksInResourceDocumentSchemaRefId = propertiesElement.ShouldContainPath("links.$ref").ShouldBeSchemaReferenceId("linksInResourceDocument")
+                    .SchemaReferenceId;
+            });
+
+            schemasElement.ShouldContainPath($"{linksInResourceDocumentSchemaRefId}.properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainProperty("self");
+                propertiesElement.Should().ContainProperty("describedby");
             });
         });
     }
@@ -151,7 +188,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_single_resource()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -164,7 +201,7 @@ public sealed class PascalCaseTests
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("staffMemberSecondaryResponseDocument").ReferenceSchemaId;
+                .ShouldBeSchemaReferenceId("staffMemberSecondaryResponseDocument").SchemaReferenceId;
         });
 
         document.ShouldContainPath("components.schemas").With(schemasElement =>
@@ -173,13 +210,13 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeReferenceSchemaId("staffMemberDataInResponse")
-                    .ReferenceSchemaId;
+                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeSchemaReferenceId("staffMemberDataInResponse")
+                    .SchemaReferenceId;
             });
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.ShouldContainPath("attributes.$ref").ShouldBeReferenceSchemaId("staffMemberAttributesInResponse");
+                propertiesElement.ShouldContainPath("attributes.$ref").ShouldBeSchemaReferenceId("staffMemberAttributesInResponse");
             });
         });
     }
@@ -188,7 +225,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_nullable_resource()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         document.ShouldContainPath("paths./supermarkets/{id}/backupStoreManager.get").With(getElement =>
@@ -199,7 +236,7 @@ public sealed class PascalCaseTests
             });
 
             getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("nullableStaffMemberSecondaryResponseDocument");
+                .ShouldBeSchemaReferenceId("nullableStaffMemberSecondaryResponseDocument");
         });
     }
 
@@ -207,7 +244,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_GetSecondary_endpoint_with_resources()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         document.ShouldContainPath("paths./supermarkets/{id}/cashiers.get").With(getElement =>
@@ -218,7 +255,7 @@ public sealed class PascalCaseTests
             });
 
             getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("staffMemberCollectionResponseDocument");
+                .ShouldBeSchemaReferenceId("staffMemberCollectionResponseDocument");
         });
     }
 
@@ -226,7 +263,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_ToOne_relationship()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -239,14 +276,24 @@ public sealed class PascalCaseTests
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("staffMemberIdentifierResponseDocument").ReferenceSchemaId;
+                .ShouldBeSchemaReferenceId("staffMemberIdentifierResponseDocument").SchemaReferenceId;
         });
 
         document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
+            string? linksInResourceIdentifierDocumentSchemaRefId = null;
+
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.ShouldContainPath("links.$ref").ShouldBeReferenceSchemaId("linksInResourceIdentifierDocument");
+                linksInResourceIdentifierDocumentSchemaRefId = propertiesElement.ShouldContainPath("links.$ref")
+                    .ShouldBeSchemaReferenceId("linksInResourceIdentifierDocument").SchemaReferenceId;
+            });
+
+            schemasElement.ShouldContainPath($"{linksInResourceIdentifierDocumentSchemaRefId}.properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainProperty("self");
+                propertiesElement.Should().ContainProperty("describedby");
+                propertiesElement.Should().ContainProperty("related");
             });
         });
     }
@@ -255,7 +302,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_nullable_ToOne_relationship()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         document.ShouldContainPath("paths./supermarkets/{id}/relationships/backupStoreManager.get").With(getElement =>
@@ -266,7 +313,7 @@ public sealed class PascalCaseTests
             });
 
             getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("nullableStaffMemberIdentifierResponseDocument");
+                .ShouldBeSchemaReferenceId("nullableStaffMemberIdentifierResponseDocument");
         });
     }
 
@@ -274,7 +321,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_GetRelationship_endpoint_with_ToMany_relationship()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -287,14 +334,28 @@ public sealed class PascalCaseTests
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("responses.200.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("staffMemberIdentifierCollectionResponseDocument").ReferenceSchemaId;
+                .ShouldBeSchemaReferenceId("staffMemberIdentifierCollectionResponseDocument").SchemaReferenceId;
         });
 
         document.ShouldContainPath("components.schemas").With(schemasElement =>
         {
+            string? linksInResourceIdentifierCollectionDocumentSchemaRefId = null;
+
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.ShouldContainPath("links.$ref").ShouldBeReferenceSchemaId("linksInResourceIdentifierCollectionDocument");
+                linksInResourceIdentifierCollectionDocumentSchemaRefId = propertiesElement.ShouldContainPath("links.$ref")
+                    .ShouldBeSchemaReferenceId("linksInResourceIdentifierCollectionDocument").SchemaReferenceId;
+            });
+
+            schemasElement.ShouldContainPath($"{linksInResourceIdentifierCollectionDocumentSchemaRefId}.properties").With(propertiesElement =>
+            {
+                propertiesElement.Should().ContainProperty("self");
+                propertiesElement.Should().ContainProperty("describedby");
+                propertiesElement.Should().ContainProperty("related");
+                propertiesElement.Should().ContainProperty("first");
+                propertiesElement.Should().ContainProperty("last");
+                propertiesElement.Should().ContainProperty("prev");
+                propertiesElement.Should().ContainProperty("next");
             });
         });
     }
@@ -303,7 +364,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_Post_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -316,7 +377,7 @@ public sealed class PascalCaseTests
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("requestBody.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("supermarketPostRequestDocument").ReferenceSchemaId;
+                .ShouldBeSchemaReferenceId("supermarketPostRequestDocument").SchemaReferenceId;
         });
 
         document.ShouldContainPath("components.schemas").With(schemasElement =>
@@ -325,30 +386,30 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeReferenceSchemaId("supermarketDataInPostRequest")
-                    .ReferenceSchemaId;
+                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeSchemaReferenceId("supermarketDataInPostRequest")
+                    .SchemaReferenceId;
             });
 
             string? resourceRelationshipInPostRequestSchemaRefId = null;
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.ShouldContainPath("attributes.$ref").ShouldBeReferenceSchemaId("supermarketAttributesInPostRequest");
+                propertiesElement.ShouldContainPath("attributes.$ref").ShouldBeSchemaReferenceId("supermarketAttributesInPostRequest");
 
                 resourceRelationshipInPostRequestSchemaRefId = propertiesElement.ShouldContainPath("relationships.$ref")
-                    .ShouldBeReferenceSchemaId("supermarketRelationshipsInPostRequest").ReferenceSchemaId;
+                    .ShouldBeSchemaReferenceId("supermarketRelationshipsInPostRequest").SchemaReferenceId;
             });
 
             schemasElement.ShouldContainPath($"{resourceRelationshipInPostRequestSchemaRefId}.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("storeManager");
-                propertiesElement.ShouldContainPath("storeManager.$ref").ShouldBeReferenceSchemaId("toOneStaffMemberInRequest");
+                propertiesElement.ShouldContainPath("storeManager.$ref").ShouldBeSchemaReferenceId("toOneStaffMemberInRequest");
 
                 propertiesElement.Should().ContainProperty("backupStoreManager");
-                propertiesElement.ShouldContainPath("backupStoreManager.$ref").ShouldBeReferenceSchemaId("nullableToOneStaffMemberInRequest");
+                propertiesElement.ShouldContainPath("backupStoreManager.$ref").ShouldBeSchemaReferenceId("nullableToOneStaffMemberInRequest");
 
                 propertiesElement.Should().ContainProperty("cashiers");
-                propertiesElement.ShouldContainPath("cashiers.$ref").ShouldBeReferenceSchemaId("toManyStaffMemberInRequest");
+                propertiesElement.ShouldContainPath("cashiers.$ref").ShouldBeSchemaReferenceId("toManyStaffMemberInRequest");
             });
         });
     }
@@ -357,7 +418,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_PostRelationship_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.post").With(getElement =>
@@ -373,7 +434,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_Patch_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         string? documentSchemaRefId = null;
@@ -386,7 +447,7 @@ public sealed class PascalCaseTests
             });
 
             documentSchemaRefId = getElement.ShouldContainPath("requestBody.content['application/vnd.api+json'].schema.$ref")
-                .ShouldBeReferenceSchemaId("supermarketPatchRequestDocument").ReferenceSchemaId;
+                .ShouldBeSchemaReferenceId("supermarketPatchRequestDocument").SchemaReferenceId;
         });
 
         document.ShouldContainPath("components.schemas").With(schemasElement =>
@@ -395,14 +456,14 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeReferenceSchemaId("supermarketDataInPatchRequest")
-                    .ReferenceSchemaId;
+                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeSchemaReferenceId("supermarketDataInPatchRequest")
+                    .SchemaReferenceId;
             });
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.ShouldContainPath("attributes.$ref").ShouldBeReferenceSchemaId("supermarketAttributesInPatchRequest");
-                propertiesElement.ShouldContainPath("relationships.$ref").ShouldBeReferenceSchemaId("supermarketRelationshipsInPatchRequest");
+                propertiesElement.ShouldContainPath("attributes.$ref").ShouldBeSchemaReferenceId("supermarketAttributesInPatchRequest");
+                propertiesElement.ShouldContainPath("relationships.$ref").ShouldBeSchemaReferenceId("supermarketRelationshipsInPatchRequest");
             });
         });
     }
@@ -411,7 +472,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToOne_relationship()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         document.ShouldContainPath("paths./supermarkets/{id}/relationships/storeManager.patch").With(getElement =>
@@ -427,7 +488,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_nullable_ToOne_relationship()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         document.ShouldContainPath("paths./supermarkets/{id}/relationships/backupStoreManager.patch").With(getElement =>
@@ -443,7 +504,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_PatchRelationship_endpoint_with_ToMany_relationship()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.patch").With(getElement =>
@@ -459,7 +520,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_Delete_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         document.ShouldContainPath("paths./supermarkets/{id}.delete").With(getElement =>
@@ -475,7 +536,7 @@ public sealed class PascalCaseTests
     public async Task Casing_convention_is_applied_to_DeleteRelationship_endpoint()
     {
         // Act
-        JsonElement document = await _testContext.LazyDocument.Value;
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
         document.ShouldContainPath("paths./supermarkets/{id}/relationships/cashiers.delete").With(getElement =>
