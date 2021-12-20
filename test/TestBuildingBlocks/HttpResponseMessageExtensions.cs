@@ -17,8 +17,8 @@ public static class HttpResponseMessageExtensions
     {
         protected override string Identifier => "response";
 
-        public HttpResponseMessageAssertions(HttpResponseMessage instance)
-            : base(instance)
+        public HttpResponseMessageAssertions(HttpResponseMessage subject)
+            : base(subject)
         {
         }
 
