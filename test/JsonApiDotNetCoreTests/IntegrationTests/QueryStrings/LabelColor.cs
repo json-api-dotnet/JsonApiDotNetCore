@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[JsonConverter(typeof(JsonStringEnumMemberConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum LabelColor
 {
     Red,

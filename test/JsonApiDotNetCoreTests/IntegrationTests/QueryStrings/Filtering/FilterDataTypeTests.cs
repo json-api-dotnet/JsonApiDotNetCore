@@ -26,10 +26,9 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.EnableLegacyFilterNotation = false;
 
-        if (!options.SerializerOptions.Converters.Any(converter => converter is JsonStringEnumMemberConverter))
+        if (!options.SerializerOptions.Converters.Any(converter => converter is JsonStringEnumConverter))
         {
-            options.SerializerOptions.Converters.Add(new JsonStringEnumMemberConverter());
-            options.SerializerOptions.Converters.Add(new JsonTimeSpanConverter());
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
         }
     }
 
