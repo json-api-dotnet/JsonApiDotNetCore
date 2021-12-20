@@ -22,9 +22,4 @@ public sealed class ApiException : Exception
         Response = response;
         Headers = headers;
     }
-
-    public override string ToString()
-    {
-        return $"HTTP Response: \n\n{Response}\n\n{base.ToString()}";
-    }
 }

@@ -28,14 +28,14 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
 
     private async Task<JsonElement> CreateSwaggerDocumentAsync()
     {
-        string swaggerDocumentOutputPath = GetSwaggerDocumentAbsoluteOutputPath(SwaggerDocumentOutputPath);
+        string absoluteOutputPath = GetSwaggerDocumentAbsoluteOutputPath(SwaggerDocumentOutputPath);
 
         string content = await GetAsync("swagger/v1/swagger.json");
 
-        JsonElement swaggerDocument = ParseSwaggerDocument(content);
-        await WriteToDiskAsync(swaggerDocumentOutputPath, swaggerDocument);
+        JsonElement rootElement = ParseSwaggerDocument(content);
+        await WriteToDiskAsync(absoluteOutputPath, rootElement);
 
-        return swaggerDocument;
+        return rootElement;
     }
 
     private static string GetSwaggerDocumentAbsoluteOutputPath(string? relativePath)
@@ -43,7 +43,7 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
         AssertHasSwaggerDocumentOutputPath(relativePath);
 
         string solutionRoot = Path.Combine(Assembly.GetExecutingAssembly().Location, "../../../../../../");
-        string outputPath = Path.Join(solutionRoot, relativePath, "swagger.g.json");
+        string outputPath = Path.Combine(solutionRoot, relativePath, "swagger.g.json");
 
         return Path.GetFullPath(outputPath);
     }

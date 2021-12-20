@@ -4,12 +4,12 @@ using Xunit;
 
 namespace OpenApiTests.NamingConventions.KebabCase;
 
-public sealed class PascalCaseTests
+public sealed class KebabCaseTests
     : IClassFixture<OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext>>
 {
     private readonly OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext> _testContext;
 
-    public PascalCaseTests(OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext> testContext)
+    public KebabCaseTests(OpenApiTestContext<KebabCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext> testContext)
     {
         _testContext = testContext;
 
