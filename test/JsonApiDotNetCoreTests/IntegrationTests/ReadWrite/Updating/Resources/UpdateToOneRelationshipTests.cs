@@ -114,6 +114,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Act
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
+        // Assert
         httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
@@ -283,6 +284,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
+        // Assert
         httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
