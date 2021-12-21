@@ -168,6 +168,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Act
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
+        // Assert
         httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
@@ -222,6 +223,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Act
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
+        // Assert
         httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
@@ -760,6 +762,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         // Assert
         httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
+        // Assert
         responseDocument.Should().BeEmpty();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>

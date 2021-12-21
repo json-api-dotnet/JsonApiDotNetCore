@@ -1,9 +1,7 @@
 using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace TestBuildingBlocks;
 
@@ -24,7 +22,7 @@ public class TestableStartup<TDbContext>
         options.SerializerOptions.WriteIndented = true;
     }
 
-    public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment environment, ILoggerFactory loggerFactory)
+    public virtual void Configure(IApplicationBuilder app)
     {
         app.UseRouting();
         app.UseJsonApi();

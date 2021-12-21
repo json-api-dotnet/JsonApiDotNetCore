@@ -22,9 +22,4 @@ public sealed class UnknownResourceControllerTests : IntegrationTestContext<Test
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage($"Controller '{typeof(UnknownResourcesController)}' " +
             $"depends on resource type '{typeof(UnknownResource)}', which does not exist in the resource graph.");
     }
-
-    public override void Dispose()
-    {
-        // Prevents crash when test cleanup tries to access lazily constructed Factory.
-    }
 }

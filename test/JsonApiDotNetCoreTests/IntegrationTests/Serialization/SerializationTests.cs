@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Net;
-using System.Text.Json.Serialization;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -34,11 +33,6 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         options.AllowClientGeneratedIds = true;
         options.IncludeJsonApiVersion = false;
         options.IncludeTotalResourceCount = true;
-
-        if (!options.SerializerOptions.Converters.Any(converter => converter is JsonTimeSpanConverter))
-        {
-            options.SerializerOptions.Converters.Add(new JsonTimeSpanConverter());
-        }
     }
 
     [Fact]
