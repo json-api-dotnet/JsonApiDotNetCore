@@ -2043,7 +2043,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/airplanes-resource-type"
+            "$ref": "#/components/schemas/airplane-resource-type"
           },
           "id": {
             "type": "string"
@@ -2064,7 +2064,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/airplanes-resource-type"
+            "$ref": "#/components/schemas/airplane-resource-type"
           },
           "attributes": {
             "$ref": "#/components/schemas/airplane-attributes-in-post-request"
@@ -2084,7 +2084,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/airplanes-resource-type"
+            "$ref": "#/components/schemas/airplane-resource-type"
           },
           "id": {
             "type": "string"
@@ -2179,7 +2179,7 @@
         },
         "additionalProperties": false
       },
-      "airplanes-resource-type": {
+      "airplane-resource-type": {
         "enum": [
           "airplanes"
         ],
@@ -2291,7 +2291,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-attendants-resource-type"
+            "$ref": "#/components/schemas/flight-attendant-resource-type"
           },
           "id": {
             "type": "string"
@@ -2312,7 +2312,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-attendants-resource-type"
+            "$ref": "#/components/schemas/flight-attendant-resource-type"
           },
           "attributes": {
             "$ref": "#/components/schemas/flight-attendant-attributes-in-post-request"
@@ -2332,7 +2332,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-attendants-resource-type"
+            "$ref": "#/components/schemas/flight-attendant-resource-type"
           },
           "id": {
             "type": "string"
@@ -2361,7 +2361,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-attendants-resource-type"
+            "$ref": "#/components/schemas/flight-attendant-resource-type"
           },
           "id": {
             "type": "string"
@@ -2501,6 +2501,12 @@
         },
         "additionalProperties": false
       },
+      "flight-attendant-resource-type": {
+        "enum": [
+          "flight-attendants"
+        ],
+        "type": "string"
+      },
       "flight-attendant-secondary-response-document": {
         "required": [
           "data",
@@ -2523,12 +2529,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "flight-attendants-resource-type": {
-        "enum": [
-          "flight-attendants"
-        ],
-        "type": "string"
       },
       "flight-attributes-in-patch-request": {
         "type": "object",
@@ -2616,7 +2616,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flights-resource-type"
+            "$ref": "#/components/schemas/flight-resource-type"
           },
           "id": {
             "type": "string"
@@ -2637,7 +2637,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flights-resource-type"
+            "$ref": "#/components/schemas/flight-resource-type"
           },
           "relationships": {
             "$ref": "#/components/schemas/flight-relationships-in-post-request"
@@ -2654,7 +2654,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flights-resource-type"
+            "$ref": "#/components/schemas/flight-resource-type"
           },
           "id": {
             "type": "string"
@@ -2683,7 +2683,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flights-resource-type"
+            "$ref": "#/components/schemas/flight-resource-type"
           },
           "id": {
             "type": "string"
@@ -2821,7 +2821,7 @@
         },
         "additionalProperties": false
       },
-      "flights-resource-type": {
+      "flight-resource-type": {
         "enum": [
           "flights"
         ],
@@ -3150,7 +3150,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/passengers-resource-type"
+            "$ref": "#/components/schemas/passenger-resource-type"
           },
           "id": {
             "type": "string"
@@ -3176,7 +3176,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/passengers-resource-type"
+            "$ref": "#/components/schemas/passenger-resource-type"
           },
           "id": {
             "type": "string"
@@ -3210,7 +3210,7 @@
         },
         "additionalProperties": false
       },
-      "passengers-resource-type": {
+      "passenger-resource-type": {
         "enum": [
           "passengers"
         ],

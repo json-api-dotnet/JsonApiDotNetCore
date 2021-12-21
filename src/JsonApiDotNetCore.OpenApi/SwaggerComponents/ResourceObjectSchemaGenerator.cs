@@ -26,11 +26,12 @@ internal sealed class ResourceObjectSchemaGenerator
         _resourceGraph = resourceGraph;
         _schemaRepositoryAccessor = schemaRepositoryAccessor;
 
-        _resourceTypeSchemaGenerator = new ResourceTypeSchemaGenerator(schemaRepositoryAccessor, resourceGraph);
+        _resourceTypeSchemaGenerator = new ResourceTypeSchemaGenerator(schemaRepositoryAccessor, resourceGraph, options.SerializerOptions.PropertyNamingPolicy);
+
         _allowClientGeneratedIds = options.AllowClientGeneratedIds;
 
         _resourceFieldObjectSchemaBuilderFactory = resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor,
-            defaultSchemaGenerator, _resourceTypeSchemaGenerator);
+            defaultSchemaGenerator, _resourceTypeSchemaGenerator, options.SerializerOptions.PropertyNamingPolicy);
     }
 
     public OpenApiSchema GenerateSchema(Type resourceObjectType)

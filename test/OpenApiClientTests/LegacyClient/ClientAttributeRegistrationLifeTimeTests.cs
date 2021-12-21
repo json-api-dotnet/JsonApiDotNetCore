@@ -22,7 +22,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             Data = new AirplaneDataInPatchRequest
             {
                 Id = airplaneId,
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPatchRequest()
             }
         };
@@ -64,7 +64,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             Data = new AirplaneDataInPatchRequest
             {
                 Id = airplaneId,
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPatchRequest
                 {
                     AirtimeInHours = 100
@@ -111,7 +111,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             Data = new AirplaneDataInPatchRequest
             {
                 Id = airplaneId1,
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPatchRequest()
             }
         };
@@ -123,7 +123,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             Data = new AirplaneDataInPatchRequest
             {
                 Id = airplaneId2,
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPatchRequest()
             }
         };
@@ -166,7 +166,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             Data = new AirplaneDataInPatchRequest
             {
                 Id = airplaneId,
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPatchRequest
                 {
                     IsInMaintenance = true
@@ -209,7 +209,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             Data = new AirplaneDataInPatchRequest
             {
                 Id = airplaneId1,
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPatchRequest()
             }
         };
@@ -218,7 +218,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
         {
             Data = new AirplaneDataInPostRequest
             {
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPostRequest()
             }
         };
@@ -260,7 +260,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             Data = new AirplaneDataInPatchRequest
             {
                 Id = airplaneId1,
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPatchRequest()
             }
         };
@@ -278,7 +278,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             Data = new AirplaneDataInPatchRequest
             {
                 Id = airplaneId2,
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPatchRequest
                 {
                     ManufacturedInCity = "Everett"
@@ -319,7 +319,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
         {
             Data = new AirplaneDataInPostRequest
             {
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPostRequest()
             }
         };
@@ -337,7 +337,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             Data = new AirplaneDataInPatchRequest
             {
                 Id = airplaneId,
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPatchRequest
                 {
                     ManufacturedInCity = "Everett"
@@ -381,7 +381,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             Data = new AirplaneDataInPatchRequest
             {
                 Id = airplaneId1,
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPatchRequest()
             }
         };
@@ -393,7 +393,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             Data = new AirplaneDataInPatchRequest
             {
                 Id = airplaneId2,
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPatchRequest()
             }
         };

@@ -63,7 +63,7 @@ public sealed class RequestTests
         {
             Data = new FlightDataInPostRequest
             {
-                Type = FlightsResourceType.Flights,
+                Type = FlightResourceType.Flights,
                 Relationships = new FlightRelationshipsInPostRequest
                 {
                     Purser = new ToOneFlightAttendantInRequest
@@ -71,7 +71,7 @@ public sealed class RequestTests
                         Data = new FlightAttendantIdentifier
                         {
                             Id = "bBJHu",
-                            Type = FlightAttendantsResourceType.FlightAttendants
+                            Type = FlightAttendantResourceType.FlightAttendants
                         }
                     },
                     BackupPurser = new NullableToOneFlightAttendantInRequest
@@ -79,7 +79,7 @@ public sealed class RequestTests
                         Data = new FlightAttendantIdentifier
                         {
                             Id = "NInmX",
-                            Type = FlightAttendantsResourceType.FlightAttendants
+                            Type = FlightAttendantResourceType.FlightAttendants
                         }
                     }
                 }
@@ -143,7 +143,7 @@ public sealed class RequestTests
         {
             Data = new AirplaneDataInPostRequest
             {
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPostRequest
                 {
                     Name = name,
@@ -195,7 +195,7 @@ public sealed class RequestTests
             Data = new AirplaneDataInPatchRequest
             {
                 Id = airplaneId,
-                Type = AirplanesResourceType.Airplanes,
+                Type = AirplaneResourceType.Airplanes,
                 Attributes = new AirplaneAttributesInPatchRequest
                 {
                     LastServicedAt = lastServicedAt
@@ -326,7 +326,7 @@ public sealed class RequestTests
             Data = new FlightAttendantIdentifier
             {
                 Id = "bBJHu",
-                Type = FlightAttendantsResourceType.FlightAttendants
+                Type = FlightAttendantResourceType.FlightAttendants
             }
         };
 
@@ -384,12 +384,12 @@ public sealed class RequestTests
             {
                 new()
                 {
-                    Type = FlightAttendantsResourceType.FlightAttendants,
+                    Type = FlightAttendantResourceType.FlightAttendants,
                     Id = "bBJHu"
                 },
                 new()
                 {
-                    Type = FlightAttendantsResourceType.FlightAttendants,
+                    Type = FlightAttendantResourceType.FlightAttendants,
                     Id = "NInmX"
                 }
             }
@@ -436,12 +436,12 @@ public sealed class RequestTests
                 new()
                 {
                     Id = "bBJHu",
-                    Type = FlightAttendantsResourceType.FlightAttendants
+                    Type = FlightAttendantResourceType.FlightAttendants
                 },
                 new()
                 {
                     Id = "NInmX",
-                    Type = FlightAttendantsResourceType.FlightAttendants
+                    Type = FlightAttendantResourceType.FlightAttendants
                 }
             }
         };
@@ -487,12 +487,12 @@ public sealed class RequestTests
                 new()
                 {
                     Id = "bBJHu",
-                    Type = FlightAttendantsResourceType.FlightAttendants
+                    Type = FlightAttendantResourceType.FlightAttendants
                 },
                 new()
                 {
                     Id = "NInmX",
-                    Type = FlightAttendantsResourceType.FlightAttendants
+                    Type = FlightAttendantResourceType.FlightAttendants
                 }
             }
         };

@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Net;
 using FluentAssertions;
 using FluentAssertions.Specialized;
+using JsonApiDotNetCore.OpenApi.Client.Exceptions;
 using OpenApiClientTests.LegacyClient.GeneratedCode;
 using Xunit;
 
@@ -108,7 +109,7 @@ public sealed class ResponseTests
 
         FlightDataInResponse flight = document.Data.First();
         flight.Id.Should().Be(flightId);
-        flight.Type.Should().Be(FlightsResourceType.Flights);
+        flight.Type.Should().Be(FlightResourceType.Flights);
         flight.Links.Self.Should().Be(flightResourceLink);
         flight.Meta.Should().HaveCount(1);
         flight.Meta["docs"].Should().Be(flightMetaValue);
@@ -276,7 +277,7 @@ public sealed class ResponseTests
         {
             Data = new FlightDataInPostRequest
             {
-                Type = FlightsResourceType.Flights,
+                Type = FlightResourceType.Flights,
                 Relationships = new FlightRelationshipsInPostRequest
                 {
                     Purser = new ToOneFlightAttendantInRequest
@@ -284,7 +285,7 @@ public sealed class ResponseTests
                         Data = new FlightAttendantIdentifier
                         {
                             Id = flightAttendantId,
-                            Type = FlightAttendantsResourceType.FlightAttendants
+                            Type = FlightAttendantResourceType.FlightAttendants
                         }
                     }
                 }
@@ -297,7 +298,7 @@ public sealed class ResponseTests
         document.Data.Relationships.Purser.Data.Id.Should().Be(flightAttendantId);
         document.Data.Relationships.CabinCrewMembers.Data.Should().HaveCount(1);
         document.Data.Relationships.CabinCrewMembers.Data.First().Id.Should().Be(flightAttendantId);
-        document.Data.Relationships.CabinCrewMembers.Data.First().Type.Should().Be(FlightAttendantsResourceType.FlightAttendants);
+        document.Data.Relationships.CabinCrewMembers.Data.First().Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
         document.Data.Relationships.Passengers.Data.Should().BeEmpty();
     }
 
@@ -329,12 +330,12 @@ public sealed class ResponseTests
             Data = new FlightDataInPatchRequest
             {
                 Id = flightId,
-                Type = FlightsResourceType.Flights
+                Type = FlightResourceType.Flights
             }
         });
 
         // Assert
-        document.Data.Type.Should().Be(FlightsResourceType.Flights);
+        document.Data.Type.Should().Be(FlightResourceType.Flights);
         document.Data.Attributes.Should().BeNull();
         document.Data.Relationships.Should().BeNull();
     }
@@ -354,7 +355,7 @@ public sealed class ResponseTests
                 Data = new FlightDataInPatchRequest
                 {
                     Id = flightId,
-                    Type = FlightsResourceType.Flights
+                    Type = FlightResourceType.Flights
                 }
             }));
 
@@ -537,7 +538,7 @@ public sealed class ResponseTests
         // Assert
         document.Data.Should().NotBeNull();
         document.Data.Id.Should().Be(purserId);
-        document.Data.Type.Should().Be(FlightAttendantsResourceType.FlightAttendants);
+        document.Data.Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
     }
 
     [Fact]
@@ -553,7 +554,7 @@ public sealed class ResponseTests
             Data = new FlightAttendantIdentifier
             {
                 Id = "Adk2a",
-                Type = FlightAttendantsResourceType.FlightAttendants
+                Type = FlightAttendantResourceType.FlightAttendants
             }
         });
     }
@@ -591,9 +592,9 @@ public sealed class ResponseTests
         // Assert
         document.Data.Should().HaveCount(2);
         document.Data.First().Id.Should().Be(flightAttendantId1);
-        document.Data.First().Type.Should().Be(FlightAttendantsResourceType.FlightAttendants);
+        document.Data.First().Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
         document.Data.Last().Id.Should().Be(flightAttendantId2);
-        document.Data.Last().Type.Should().Be(FlightAttendantsResourceType.FlightAttendants);
+        document.Data.Last().Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
     }
 
     [Fact]
@@ -611,12 +612,12 @@ public sealed class ResponseTests
                 new()
                 {
                     Id = "Adk2a",
-                    Type = FlightAttendantsResourceType.FlightAttendants
+                    Type = FlightAttendantResourceType.FlightAttendants
                 },
                 new()
                 {
                     Id = "Un37k",
-                    Type = FlightAttendantsResourceType.FlightAttendants
+                    Type = FlightAttendantResourceType.FlightAttendants
                 }
             }
         });
@@ -640,12 +641,12 @@ public sealed class ResponseTests
                 new()
                 {
                     Id = "Adk2a",
-                    Type = FlightAttendantsResourceType.FlightAttendants
+                    Type = FlightAttendantResourceType.FlightAttendants
                 },
                 new()
                 {
                     Id = "Un37k",
-                    Type = FlightAttendantsResourceType.FlightAttendants
+                    Type = FlightAttendantResourceType.FlightAttendants
                 }
             }
         });
@@ -669,12 +670,12 @@ public sealed class ResponseTests
                 new()
                 {
                     Id = "Adk2a",
-                    Type = FlightAttendantsResourceType.FlightAttendants
+                    Type = FlightAttendantResourceType.FlightAttendants
                 },
                 new()
                 {
                     Id = "Un37k",
-                    Type = FlightAttendantsResourceType.FlightAttendants
+                    Type = FlightAttendantResourceType.FlightAttendants
                 }
             }
         });
