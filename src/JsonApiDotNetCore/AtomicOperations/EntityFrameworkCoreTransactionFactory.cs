@@ -27,10 +27,17 @@ public sealed class EntityFrameworkCoreTransactionFactory : IOperationsTransacti
     {
         DbContext dbContext = _dbContextResolver.GetContext();
 
-        IDbContextTransaction transaction = _options.TransactionIsolationLevel != null
+        IDbContextTransaction? existingTransaction = dbContext.Database.CurrentTransaction;
+
+        if (existingTransaction != null)
+        {
+            return new EntityFrameworkCoreTransaction(existingTransaction, dbContext, false);
+        }
+
+        IDbContextTransaction newTransaction = _options.TransactionIsolationLevel != null
             ? await dbContext.Database.BeginTransactionAsync(_options.TransactionIsolationLevel.Value, cancellationToken)
             : await dbContext.Database.BeginTransactionAsync(cancellationToken);
 
-        return new EntityFrameworkCoreTransaction(transaction, dbContext);
+        return new EntityFrameworkCoreTransaction(newTransaction, dbContext, true);
     }
 }
