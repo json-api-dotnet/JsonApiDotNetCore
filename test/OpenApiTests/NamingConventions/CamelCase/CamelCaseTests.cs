@@ -62,14 +62,15 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                 propertiesElement.Should().ContainProperty("next");
             });
 
-            string? linksInResourceObject = null;
+            string? linksInResourceObjectSchemaRefId = null;
+            string? primaryResourceTypeSchemaRefId = null;
             string? resourceAttributesInResponseSchemaRefId = null;
             string? resourceRelationshipInResponseSchemaRefId = null;
-            string? primaryResourceTypeSchemaRefId = null;
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                linksInResourceObject = propertiesElement.ShouldContainPath("links.$ref").ShouldBeSchemaReferenceId("linksInResourceObject").SchemaReferenceId;
+                linksInResourceObjectSchemaRefId = propertiesElement.ShouldContainPath("links.$ref").ShouldBeSchemaReferenceId("linksInResourceObject")
+                    .SchemaReferenceId;
 
                 primaryResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeSchemaReferenceId("supermarketResourceType")
                     .SchemaReferenceId;
@@ -81,7 +82,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                     .ShouldBeSchemaReferenceId("supermarketRelationshipsInResponse").SchemaReferenceId;
             });
 
-            schemasElement.ShouldContainPath($"{linksInResourceObject}.properties").With(propertiesElement =>
+            schemasElement.ShouldContainPath($"{linksInResourceObjectSchemaRefId}.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("self");
             });
