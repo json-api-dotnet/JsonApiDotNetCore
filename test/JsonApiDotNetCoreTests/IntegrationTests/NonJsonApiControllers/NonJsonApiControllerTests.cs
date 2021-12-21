@@ -23,10 +23,10 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         // Arrange
         using var request = new HttpRequestMessage(HttpMethod.Get, "/NonJsonApi");
 
-        HttpClient client = _testContext.Factory.CreateClient();
+        using HttpClient client = _testContext.Factory.CreateClient();
 
         // Act
-        HttpResponseMessage httpResponse = await client.SendAsync(request);
+        using HttpResponseMessage httpResponse = await client.SendAsync(request);
 
         // Assert
         httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -52,10 +52,10 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
             }
         };
 
-        HttpClient client = _testContext.Factory.CreateClient();
+        using HttpClient client = _testContext.Factory.CreateClient();
 
         // Act
-        HttpResponseMessage httpResponse = await client.SendAsync(request);
+        using HttpResponseMessage httpResponse = await client.SendAsync(request);
 
         // Assert
         httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -72,10 +72,10 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         // Arrange
         using var request = new HttpRequestMessage(HttpMethod.Post, "/NonJsonApi");
 
-        HttpClient client = _testContext.Factory.CreateClient();
+        using HttpClient client = _testContext.Factory.CreateClient();
 
         // Act
-        HttpResponseMessage httpResponse = await client.SendAsync(request);
+        using HttpResponseMessage httpResponse = await client.SendAsync(request);
 
         // Assert
         httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -101,10 +101,10 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
             }
         };
 
-        HttpClient client = _testContext.Factory.CreateClient();
+        using HttpClient client = _testContext.Factory.CreateClient();
 
         // Act
-        HttpResponseMessage httpResponse = await client.SendAsync(request);
+        using HttpResponseMessage httpResponse = await client.SendAsync(request);
 
         // Assert
         httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -121,10 +121,10 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         // Arrange
         using var request = new HttpRequestMessage(HttpMethod.Patch, "/NonJsonApi?name=Janice");
 
-        HttpClient client = _testContext.Factory.CreateClient();
+        using HttpClient client = _testContext.Factory.CreateClient();
 
         // Act
-        HttpResponseMessage httpResponse = await client.SendAsync(request);
+        using HttpResponseMessage httpResponse = await client.SendAsync(request);
 
         // Assert
         httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -141,10 +141,10 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
         // Arrange
         using var request = new HttpRequestMessage(HttpMethod.Delete, "/NonJsonApi");
 
-        HttpClient client = _testContext.Factory.CreateClient();
+        using HttpClient client = _testContext.Factory.CreateClient();
 
         // Act
-        HttpResponseMessage httpResponse = await client.SendAsync(request);
+        using HttpResponseMessage httpResponse = await client.SendAsync(request);
 
         // Assert
         httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
