@@ -68,15 +68,14 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
                     {
                         case "id":
                         {
-                            if (reader.TokenType != JsonTokenType.String)
+                            if (reader.TokenType == JsonTokenType.Number)
                             {
-                                // Newtonsoft.Json used to auto-convert number to strings, while System.Text.Json does not. This is so likely
-                                // to hit users during upgrade that we special-case for this and produce a helpful error message.
-                                var jsonElement = ReadSubTree<JsonElement>(ref reader, options);
-                                throw new JsonException($"Failed to convert ID '{jsonElement}' of type '{jsonElement.ValueKind}' to type 'String'.");
+                                resourceObject.NumericId = reader.GetInt64();
                             }
-
-                            resourceObject.Id = reader.GetString();
+                            else
+                            {
+                                resourceObject.Id = reader.GetString();
+                            }
                             break;
                         }
                         case "lid":
@@ -228,9 +227,9 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
 
         writer.WriteString(TypeText, value.Type);
 
-        if (value.Id != null)
+        if (value.NumericId != default)
         {
-            writer.WriteString(IdText, value.Id);
+            writer.WriteNumber(IdText, value.NumericId);
         }
 
         if (value.Lid != null)

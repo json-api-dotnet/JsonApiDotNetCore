@@ -13,9 +13,15 @@ public sealed class ResourceObject : IResourceIdentity
     [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
     public string? Type { get; set; }
 
+    [JsonIgnore]
+    public string? Id
+    {
+        get => NumericId == default ? null : NumericId.ToString();
+        set => NumericId = value == null ? 0 : int.Parse(value);
+    }
+
     [JsonPropertyName("id")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Id { get; set; }
+    public long NumericId { get; set; }
 
     [JsonPropertyName("lid")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
