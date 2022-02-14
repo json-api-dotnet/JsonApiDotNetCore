@@ -1,6 +1,9 @@
+using System.Text.Json.Serialization;
 using GettingStarted.Data;
+using GettingStarted.JsonConverters;
 using GettingStarted.Models;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Serialization.JsonConverters;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -24,9 +27,35 @@ app.UseRouting();
 app.UseJsonApi();
 app.MapControllers();
 
+RegisterJsonConvertersForNumericIds(app.Services);
+
 await CreateDatabaseAsync(app.Services);
 
 app.Run();
+
+static void RegisterJsonConvertersForNumericIds(IServiceProvider serviceProvider)
+{
+    var jsonApiOptions = serviceProvider.GetRequiredService<IJsonApiOptions>();
+    var resourceGraph = serviceProvider.GetRequiredService<IResourceGraph>();
+
+    ReplaceDefaultResourceObjectConverter(jsonApiOptions, resourceGraph);
+
+    jsonApiOptions.SerializerReadOptions.Converters.Add(new AllowNumericIdsReadOnlyResourceIdentifierObjectConverter());
+    jsonApiOptions.SerializerReadOptions.Converters.Add(new AllowNumericIdsReadOnlyAtomicReferenceConverter());
+}
+
+static void ReplaceDefaultResourceObjectConverter(IJsonApiOptions jsonApiOptions, IResourceGraph resourceGraph)
+{
+    JsonConverter? existingResourceObjectConverter =
+        jsonApiOptions.SerializerOptions.Converters.FirstOrDefault(converter => converter is ResourceObjectConverter);
+
+    if (existingResourceObjectConverter != null)
+    {
+        jsonApiOptions.SerializerOptions.Converters.Remove(existingResourceObjectConverter);
+    }
+
+    jsonApiOptions.SerializerOptions.Converters.Add(new AllowNumericIdsResourceObjectConverter(resourceGraph));
+}
 
 static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
 {
