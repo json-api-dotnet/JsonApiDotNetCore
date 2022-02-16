@@ -2,9 +2,9 @@
   <PropertyGroup>
     <TargetFrameworkName>net6.0</TargetFrameworkName>
     <AspNetVersion>6.0.*</AspNetVersion>
-    <EFCoreVersion>6.0.1</EFCoreVersion>
+    <EFCoreVersion>6.0.*</EFCoreVersion>
     <EFCorePostgresVersion>6.0.*</EFCorePostgresVersion>
-    <MicrosoftCodeAnalysisVersion>4.*</MicrosoftCodeAnalysisVersion>
+    <MicrosoftCodeAnalysisVersion>4.0.*</MicrosoftCodeAnalysisVersion>
     <HumanizerVersion>2.*</HumanizerVersion>
     <JsonApiDotNetCoreVersionPrefix>5.0.0</JsonApiDotNetCoreVersionPrefix>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
@@ -29,8 +29,8 @@
 
   <!-- Test Project Dependencies -->
   <PropertyGroup>
-    <CoverletVersion>3.1.0</CoverletVersion>
+    <CoverletVersion>3.1.2</CoverletVersion>
     <MoqVersion>4.16.1</MoqVersion>
-    <TestSdkVersion>17.0.0</TestSdkVersion>
+    <TestSdkVersion>17.1.0</TestSdkVersion>
   </PropertyGroup>
 </Project>
