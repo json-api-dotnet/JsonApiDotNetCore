@@ -4,7 +4,7 @@
     <AspNetVersion>6.0.*</AspNetVersion>
     <EFCoreVersion>6.0.*</EFCoreVersion>
     <EFCorePostgresVersion>6.0.*</EFCorePostgresVersion>
-    <MicrosoftCodeAnalysisVersion>4.*</MicrosoftCodeAnalysisVersion>
+    <MicrosoftCodeAnalysisVersion>4.0.*</MicrosoftCodeAnalysisVersion>
     <HumanizerVersion>2.*</HumanizerVersion>
     <JsonApiDotNetCoreVersionPrefix>5.0.0</JsonApiDotNetCoreVersionPrefix>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
