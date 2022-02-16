@@ -29,8 +29,8 @@
 
   <!-- Test Project Dependencies -->
   <PropertyGroup>
-    <CoverletVersion>3.1.0</CoverletVersion>
+    <CoverletVersion>3.1.2</CoverletVersion>
     <MoqVersion>4.16.1</MoqVersion>
-    <TestSdkVersion>17.0.0</TestSdkVersion>
+    <TestSdkVersion>17.1.0</TestSdkVersion>
   </PropertyGroup>
 </Project>
