@@ -255,6 +255,14 @@ public class LinkBuilder : ILinkBuilder
     private string? GetLinkForResourceSelf(ResourceType resourceType, IIdentifiable resource)
     {
         string? controllerName = _controllerResourceMapping.GetControllerNameForResourceType(resourceType);
+
+        if (controllerName == null)
+        {
+            // When passing null to RenderLinkForAction, it uses the controller for the current endpoint. This is incorrect for
+            // included resources of a different resource type: it should hide their Self links when there's no controller for them.
+            return null;
+        }
+
         IDictionary<string, object?> routeValues = GetRouteValues(resource.StringId!, null);
 
         return RenderLinkForAction(controllerName, GetPrimaryControllerActionName, routeValues);

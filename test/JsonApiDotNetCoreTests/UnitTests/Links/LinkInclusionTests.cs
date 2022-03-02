@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -386,7 +387,7 @@ public sealed class LinkInclusionTests
 
         public string? GetControllerNameForResourceType(ResourceType? resourceType)
         {
-            return null;
+            return resourceType == null ? null : $"{resourceType.PublicName.Pascalize()}Controller";
         }
     }
 
