@@ -19,7 +19,7 @@ public sealed class LinkInclusionIncludeTests : IClassFixture<IntegrationTestCon
     }
 
     [Fact]
-    public async Task Hides_Self_link_in_included_resources_for_unregistered_controllers()
+    public async Task Hides_links_for_unregistered_controllers()
     {
         // Arrange
         PhotoLocation location = _fakers.PhotoLocation.Generate();
@@ -40,22 +40,26 @@ public sealed class LinkInclusionIncludeTests : IClassFixture<IntegrationTestCon
         // Assert
         httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+
+        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("photo").With(value =>
+        {
+            value.ShouldNotBeNull();
+            value.Links.ShouldNotBeNull();
+        });
+
         responseDocument.Included.ShouldHaveCount(2);
 
         responseDocument.Included.Should().ContainSingle(resource => resource.Type == "photos").Subject.With(resource =>
         {
             resource.Links.Should().BeNull();
-
-            resource.Relationships.ShouldContainKey("location").With(value =>
-            {
-                value.ShouldNotBeNull();
-                value.Links.ShouldNotBeNull();
-            });
+            resource.Relationships.Should().BeNull();
         });
 
         responseDocument.Included.Should().ContainSingle(resource => resource.Type == "photoAlbums").Subject.With(resource =>
         {
             resource.Links.Should().BeNull();
+            resource.Relationships.Should().BeNull();
         });
     }
 }

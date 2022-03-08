@@ -69,7 +69,10 @@ public sealed class LinkInclusionTests
             PrimaryId = "1",
             IsCollection = true,
             Kind = EndpointKind.Relationship,
-            Relationship = new HasOneAttribute()
+            Relationship = new HasOneAttribute
+            {
+                LeftType = exampleResourceType
+            }
         };
 
         var paginationContext = new PaginationContext
