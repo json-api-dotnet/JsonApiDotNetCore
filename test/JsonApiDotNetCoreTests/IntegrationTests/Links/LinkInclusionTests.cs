@@ -17,6 +17,7 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
 
         testContext.UseController<PhotosController>();
         testContext.UseController<PhotoLocationsController>();
+        testContext.UseController<PhotoAlbumsController>();
     }
 
     [Fact]

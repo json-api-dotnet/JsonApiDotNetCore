@@ -19,6 +19,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         _testContext = testContext;
 
         testContext.UseController<WorkItemsController>();
+        testContext.UseController<UserAccountsController>();
 
         testContext.ConfigureServicesAfterStartup(services =>
         {

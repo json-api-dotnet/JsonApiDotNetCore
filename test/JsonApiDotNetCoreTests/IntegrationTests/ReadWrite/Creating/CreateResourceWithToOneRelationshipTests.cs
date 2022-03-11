@@ -22,6 +22,7 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         testContext.UseController<WorkItemGroupsController>();
         testContext.UseController<WorkItemsController>();
         testContext.UseController<RgbColorsController>();
+        testContext.UseController<UserAccountsController>();
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowClientGeneratedIds = true;

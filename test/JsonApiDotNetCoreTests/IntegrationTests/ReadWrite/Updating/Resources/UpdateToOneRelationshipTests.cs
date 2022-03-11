@@ -20,6 +20,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         testContext.UseController<WorkItemsController>();
         testContext.UseController<WorkItemGroupsController>();
         testContext.UseController<RgbColorsController>();
+        testContext.UseController<UserAccountsController>();
 
         testContext.ConfigureServicesAfterStartup(services =>
         {
