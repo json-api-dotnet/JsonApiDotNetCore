@@ -11,6 +11,7 @@ public sealed class ResourceType
 {
     private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPublicName = new();
     private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPropertyName = new();
+    private readonly Lazy<IReadOnlySet<ResourceType>> _lazyAllConcreteDerivedTypes;
 
     /// <summary>
     /// The publicly exposed resource name.
@@ -28,22 +29,35 @@ public sealed class ResourceType
     public Type IdentityClrType { get; }
 
     /// <summary>
-    /// Exposed resource attributes and relationships. See https://jsonapi.org/format/#document-resource-object-fields.
+    /// The base resource type, in case this is a derived type.
+    /// </summary>
+    public ResourceType? BaseType { get; internal set; }
+
+    /// <summary>
+    /// The resource types that directly derive from this one.
+    /// </summary>
+    public IReadOnlySet<ResourceType> DirectlyDerivedTypes { get; internal set; } = new HashSet<ResourceType>();
+
+    /// <summary>
+    /// Exposed resource attributes and relationships. See https://jsonapi.org/format/#document-resource-object-fields. When using resource inheritance, this
+    /// includes the attributes and relationships from base types.
     /// </summary>
     public IReadOnlyCollection<ResourceFieldAttribute> Fields { get; }
 
     /// <summary>
-    /// Exposed resource attributes. See https://jsonapi.org/format/#document-resource-object-attributes.
+    /// Exposed resource attributes. See https://jsonapi.org/format/#document-resource-object-attributes. When using resource inheritance, this includes the
+    /// attributes from base types.
     /// </summary>
     public IReadOnlyCollection<AttrAttribute> Attributes { get; }
 
     /// <summary>
-    /// Exposed resource relationships. See https://jsonapi.org/format/#document-resource-object-relationships.
+    /// Exposed resource relationships. See https://jsonapi.org/format/#document-resource-object-relationships. When using resource inheritance, this
+    /// includes the relationships from base types.
     /// </summary>
     public IReadOnlyCollection<RelationshipAttribute> Relationships { get; }
 
     /// <summary>
-    /// Related entities that are not exposed as resource relationships.
+    /// Related entities that are not exposed as resource relationships. When using resource inheritance, this includes the eager-loads from base types.
     /// </summary>
     public IReadOnlyCollection<EagerLoadAttribute> EagerLoads { get; }
 
@@ -99,6 +113,29 @@ public sealed class ResourceType
         {
             _fieldsByPublicName.Add(field.PublicName, field);
             _fieldsByPropertyName.Add(field.Property.Name, field);
+        }
+
+        _lazyAllConcreteDerivedTypes = new Lazy<IReadOnlySet<ResourceType>>(ResolveAllConcreteDerivedTypes, LazyThreadSafetyMode.PublicationOnly);
+    }
+
+    private IReadOnlySet<ResourceType> ResolveAllConcreteDerivedTypes()
+    {
+        var allConcreteDerivedTypes = new HashSet<ResourceType>();
+        AddConcreteDerivedTypes(this, allConcreteDerivedTypes);
+
+        return allConcreteDerivedTypes;
+    }
+
+    private static void AddConcreteDerivedTypes(ResourceType resourceType, ISet<ResourceType> allConcreteDerivedTypes)
+    {
+        foreach (ResourceType derivedType in resourceType.DirectlyDerivedTypes)
+        {
+            if (!derivedType.ClrType.IsAbstract)
+            {
+                allConcreteDerivedTypes.Add(derivedType);
+            }
+
+            AddConcreteDerivedTypes(derivedType, allConcreteDerivedTypes);
         }
     }
 
@@ -159,6 +196,14 @@ public sealed class ResourceType
         return _fieldsByPropertyName.TryGetValue(propertyName, out ResourceFieldAttribute? field) && field is RelationshipAttribute relationship
             ? relationship
             : null;
+    }
+
+    /// <summary>
+    /// Returns all directly and indirectly non-abstract resource types that derive from this resource type.
+    /// </summary>
+    public IReadOnlySet<ResourceType> GetAllConcreteDerivedTypes()
+    {
+        return _lazyAllConcreteDerivedTypes.Value;
     }
 
     public override string ToString()

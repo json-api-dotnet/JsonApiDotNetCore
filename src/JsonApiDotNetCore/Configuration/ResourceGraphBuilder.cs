@@ -43,7 +43,15 @@ public class ResourceGraphBuilder
 
         var resourceGraph = new ResourceGraph(resourceTypes);
 
-        foreach (RelationshipAttribute relationship in resourceTypes.SelectMany(resourceType => resourceType.Relationships))
+        SetRelationshipTypes(resourceGraph);
+        SetDirectlyDerivedTypes(resourceGraph);
+
+        return resourceGraph;
+    }
+
+    private static void SetRelationshipTypes(ResourceGraph resourceGraph)
+    {
+        foreach (RelationshipAttribute relationship in resourceGraph.GetResourceTypes().SelectMany(resourceType => resourceType.Relationships))
         {
             relationship.LeftType = resourceGraph.GetResourceType(relationship.LeftClrType!);
             ResourceType? rightType = resourceGraph.FindResourceType(relationship.RightClrType!);
@@ -56,8 +64,33 @@ public class ResourceGraphBuilder
 
             relationship.RightType = rightType;
         }
+    }
 
-        return resourceGraph;
+    private static void SetDirectlyDerivedTypes(ResourceGraph resourceGraph)
+    {
+        Dictionary<ResourceType, HashSet<ResourceType>> directlyDerivedTypesPerBaseType = new();
+
+        foreach (ResourceType resourceType in resourceGraph.GetResourceTypes())
+        {
+            ResourceType? baseType = resourceGraph.FindResourceType(resourceType.ClrType.BaseType!);
+
+            if (baseType != null)
+            {
+                resourceType.BaseType = baseType;
+
+                if (!directlyDerivedTypesPerBaseType.ContainsKey(baseType))
+                {
+                    directlyDerivedTypesPerBaseType[baseType] = new HashSet<ResourceType>();
+                }
+
+                directlyDerivedTypesPerBaseType[baseType].Add(resourceType);
+            }
+        }
+
+        foreach ((ResourceType baseType, HashSet<ResourceType> directlyDerivedTypes) in directlyDerivedTypesPerBaseType)
+        {
+            baseType.DirectlyDerivedTypes = directlyDerivedTypes;
+        }
     }
 
     public ResourceGraphBuilder Add(DbContext dbContext)

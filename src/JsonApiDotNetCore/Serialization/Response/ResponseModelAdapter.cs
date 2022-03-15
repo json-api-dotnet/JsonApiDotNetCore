@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal;
@@ -172,13 +173,35 @@ public class ResponseModelAdapter : IResponseModelAdapter
     {
         if (!_resourceToTreeNodeCache.TryGetValue(resource, out ResourceObjectTreeNode? treeNode))
         {
-            ResourceObject resourceObject = ConvertResource(resource, resourceType, kind);
-            treeNode = new ResourceObjectTreeNode(resource, resourceType, resourceObject);
+            // In case of resource inheritance, prefer the derived resource type over the base type.
+            ResourceType effectiveResourceType = GetEffectiveResourceType(resource, resourceType);
+
+            ResourceObject resourceObject = ConvertResource(resource, effectiveResourceType, kind);
+            treeNode = new ResourceObjectTreeNode(resource, effectiveResourceType, resourceObject);
 
             _resourceToTreeNodeCache.Add(resource, treeNode);
         }
 
         return treeNode;
+    }
+
+    private static ResourceType GetEffectiveResourceType(IIdentifiable resource, ResourceType declaredType)
+    {
+        Type runtimeResourceType = resource.GetType();
+
+        if (declaredType.ClrType == runtimeResourceType)
+        {
+            return declaredType;
+        }
+
+        ResourceType? derivedType = declaredType.GetAllConcreteDerivedTypes().FirstOrDefault(type => type.ClrType == runtimeResourceType);
+
+        if (derivedType == null)
+        {
+            throw new InvalidConfigurationException($"Type '{runtimeResourceType}' does not exist in the resource graph.");
+        }
+
+        return derivedType;
     }
 
     protected virtual ResourceObject ConvertResource(IIdentifiable resource, ResourceType resourceType, EndpointKind kind)
