@@ -23,6 +23,9 @@ public sealed class WebAccount : Identifiable<int>
     [Attr]
     public string EmailAddress { get; set; } = null!;
 
+    [HasOne]
+    public Human? Person { get; set; }
+
     [HasMany]
     public IList<BlogPost> Posts { get; set; } = new List<BlogPost>();
 

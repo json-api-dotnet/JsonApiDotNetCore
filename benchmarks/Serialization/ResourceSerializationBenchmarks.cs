@@ -127,11 +127,19 @@ public class ResourceSerializationBenchmarks : SerializationBenchmarkBase
         RelationshipAttribute multi4 = resourceAType.GetRelationshipByPropertyName(nameof(OutgoingResource.Multi4));
         RelationshipAttribute multi5 = resourceAType.GetRelationshipByPropertyName(nameof(OutgoingResource.Multi5));
 
-        ImmutableArray<ResourceFieldAttribute> chain = ImmutableArray.Create<ResourceFieldAttribute>(single2, single3, multi4, multi5);
-        IEnumerable<ResourceFieldChainExpression> chains = new ResourceFieldChainExpression(chain).AsEnumerable();
-
-        var converter = new IncludeChainConverter();
-        IncludeExpression include = converter.FromRelationshipChains(chains);
+        var include = new IncludeExpression(new HashSet<IncludeElementExpression>
+        {
+            new(single2, new HashSet<IncludeElementExpression>
+            {
+                new(single3, new HashSet<IncludeElementExpression>
+                {
+                    new(multi4, new HashSet<IncludeElementExpression>
+                    {
+                        new(multi5)
+                    }.ToImmutableHashSet())
+                }.ToImmutableHashSet())
+            }.ToImmutableHashSet())
+        }.ToImmutableHashSet());
 
         var cache = new EvaluatedIncludeCache();
         cache.Set(include);

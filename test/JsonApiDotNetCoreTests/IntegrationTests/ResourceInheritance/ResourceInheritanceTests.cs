@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -955,5 +956,671 @@ public abstract class ResourceInheritanceTests<TDbContext> : IClassFixture<Integ
             resource.Attributes.ShouldOnlyContainKeys("passengerCount");
             resource.Relationships.ShouldOnlyContainKeys("cargoBox");
         });
+    }
+
+    [Fact]
+    public async Task Can_get_primary_resources_at_abstract_endpoint_with_derived_includes()
+    {
+        // Arrange
+        Bike bike = _fakers.Bike.Generate();
+        bike.Manufacturer = _fakers.VehicleManufacturer.Generate();
+        bike.Wheels = _fakers.CarbonWheel.Generate(1).Cast<Wheel>().ToHashSet();
+        bike.CargoBox = _fakers.Box.Generate();
+        bike.Lights = _fakers.BicycleLight.Generate(1).ToHashSet();
+
+        Tandem tandem = _fakers.Tandem.Generate();
+        tandem.Manufacturer = _fakers.VehicleManufacturer.Generate();
+        tandem.Wheels = _fakers.ChromeWheel.Generate(1).Cast<Wheel>().ToHashSet();
+        tandem.CargoBox = _fakers.Box.Generate();
+        tandem.Lights = _fakers.BicycleLight.Generate(1).ToHashSet();
+        tandem.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
+        tandem.Features.ElementAt(0).Properties = _fakers.StringProperty.Generate(1).Cast<GenericProperty>().ToHashSet();
+        ((StringProperty)tandem.Features.ElementAt(0).Properties.ElementAt(0)).Value = _fakers.StringValue.Generate();
+
+        Car car = _fakers.Car.Generate();
+        car.Manufacturer = _fakers.VehicleManufacturer.Generate();
+        car.Wheels = _fakers.CarbonWheel.Generate(1).Cast<Wheel>().ToHashSet();
+        car.Engine = _fakers.GasolineEngine.Generate();
+        ((GasolineEngine)car.Engine).Cylinders = _fakers.Cylinder.Generate(1).ToHashSet();
+        car.NavigationSystem = _fakers.NavigationSystem.Generate();
+        car.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
+        car.Features.ElementAt(0).Properties = _fakers.NumberProperty.Generate(1).Cast<GenericProperty>().ToHashSet();
+        ((NumberProperty)car.Features.ElementAt(0).Properties.ElementAt(0)).Value = _fakers.NumberValue.Generate();
+
+        Truck truck = _fakers.Truck.Generate();
+        truck.Manufacturer = _fakers.VehicleManufacturer.Generate();
+        truck.Wheels = _fakers.ChromeWheel.Generate(1).Cast<Wheel>().ToHashSet();
+        truck.Engine = _fakers.DieselEngine.Generate();
+        truck.NavigationSystem = _fakers.NavigationSystem.Generate();
+        truck.SleepingArea = _fakers.Box.Generate();
+        truck.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
+        truck.Features.ElementAt(0).Properties = _fakers.StringProperty.Generate(1).Cast<GenericProperty>().ToHashSet();
+        ((StringProperty)truck.Features.ElementAt(0).Properties.ElementAt(0)).Value = _fakers.StringValue.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, tandem, car, truck);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/vehicles?include=manufacturer,wheels,cargoBox,lights,features.properties.value,engine.cylinders,navigationSystem,sleepingArea";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Should().BeJson($@"{{
+  ""links"": {{
+    ""self"": ""{route}"",
+    ""first"": ""{route}""
+  }},
+  ""data"": [
+    {{
+      ""type"": ""bikes"",
+      ""id"": ""{bike.StringId}"",
+      ""attributes"": {{
+        ""requiresDriverLicense"": {bike.RequiresDriverLicense.ToString().ToLowerInvariant()},
+        ""gearCount"": {bike.GearCount},
+        ""weight"": {bike.Weight.ToString(CultureInfo.InvariantCulture)}
+      }},
+      ""relationships"": {{
+        ""cargoBox"": {{
+          ""links"": {{
+            ""self"": ""/bikes/{bike.StringId}/relationships/cargoBox"",
+            ""related"": ""/bikes/{bike.StringId}/cargoBox""
+          }},
+          ""data"": {{
+            ""type"": ""boxes"",
+            ""id"": ""{bike.CargoBox.StringId}""
+          }}
+        }},
+        ""lights"": {{
+          ""links"": {{
+            ""self"": ""/bikes/{bike.StringId}/relationships/lights"",
+            ""related"": ""/bikes/{bike.StringId}/lights""
+          }},
+          ""data"": [
+            {{
+              ""type"": ""bicycleLights"",
+              ""id"": ""{bike.Lights.ElementAt(0).StringId}""
+            }}
+          ]
+        }},
+        ""manufacturer"": {{
+          ""links"": {{
+            ""self"": ""/bikes/{bike.StringId}/relationships/manufacturer"",
+            ""related"": ""/bikes/{bike.StringId}/manufacturer""
+          }},
+          ""data"": {{
+            ""type"": ""vehicleManufacturers"",
+            ""id"": ""{bike.Manufacturer.StringId}""
+          }}
+        }},
+        ""wheels"": {{
+          ""links"": {{
+            ""self"": ""/bikes/{bike.StringId}/relationships/wheels"",
+            ""related"": ""/bikes/{bike.StringId}/wheels""
+          }},
+          ""data"": [
+            {{
+              ""type"": ""carbonWheels"",
+              ""id"": ""{bike.Wheels.OfType<CarbonWheel>().ElementAt(0).StringId}""
+            }}
+          ]
+        }}
+      }},
+      ""links"": {{
+        ""self"": ""/bikes/{bike.StringId}""
+      }}
+    }},
+    {{
+      ""type"": ""cars"",
+      ""id"": ""{car.StringId}"",
+      ""attributes"": {{
+        ""seatCount"": {car.SeatCount},
+        ""requiresDriverLicense"": {car.RequiresDriverLicense.ToString().ToLowerInvariant()},
+        ""licensePlate"": ""{car.LicensePlate}"",
+        ""weight"": {car.Weight.ToString(CultureInfo.InvariantCulture)}
+      }},
+      ""relationships"": {{
+        ""features"": {{
+          ""links"": {{
+            ""self"": ""/cars/{car.StringId}/relationships/features"",
+            ""related"": ""/cars/{car.StringId}/features""
+          }},
+          ""data"": [
+            {{
+              ""type"": ""genericFeatures"",
+              ""id"": ""{car.Features.ElementAt(0).StringId}""
+            }}
+          ]
+        }},
+        ""engine"": {{
+          ""links"": {{
+            ""self"": ""/cars/{car.StringId}/relationships/engine"",
+            ""related"": ""/cars/{car.StringId}/engine""
+          }},
+          ""data"": {{
+            ""type"": ""gasolineEngines"",
+            ""id"": ""{car.Engine.StringId}""
+          }}
+        }},
+        ""navigationSystem"": {{
+          ""links"": {{
+            ""self"": ""/cars/{car.StringId}/relationships/navigationSystem"",
+            ""related"": ""/cars/{car.StringId}/navigationSystem""
+          }},
+          ""data"": {{
+            ""type"": ""navigationSystems"",
+            ""id"": ""{car.NavigationSystem.StringId}""
+          }}
+        }},
+        ""manufacturer"": {{
+          ""links"": {{
+            ""self"": ""/cars/{car.StringId}/relationships/manufacturer"",
+            ""related"": ""/cars/{car.StringId}/manufacturer""
+          }},
+          ""data"": {{
+            ""type"": ""vehicleManufacturers"",
+            ""id"": ""{car.Manufacturer.StringId}""
+          }}
+        }},
+        ""wheels"": {{
+          ""links"": {{
+            ""self"": ""/cars/{car.StringId}/relationships/wheels"",
+            ""related"": ""/cars/{car.StringId}/wheels""
+          }},
+          ""data"": [
+            {{
+              ""type"": ""carbonWheels"",
+              ""id"": ""{car.Wheels.OfType<CarbonWheel>().ElementAt(0).StringId}""
+            }}
+          ]
+        }}
+      }},
+      ""links"": {{
+        ""self"": ""/cars/{car.StringId}""
+      }}
+    }},
+    {{
+      ""type"": ""tandems"",
+      ""id"": ""{tandem.StringId}"",
+      ""attributes"": {{
+        ""passengerCount"": {tandem.PassengerCount},
+        ""requiresDriverLicense"": {tandem.RequiresDriverLicense.ToString().ToLowerInvariant()},
+        ""gearCount"": {tandem.GearCount},
+        ""weight"": {tandem.Weight.ToString(CultureInfo.InvariantCulture)}
+      }},
+      ""relationships"": {{
+        ""features"": {{
+          ""links"": {{
+            ""self"": ""/tandems/{tandem.StringId}/relationships/features"",
+            ""related"": ""/tandems/{tandem.StringId}/features""
+          }},
+          ""data"": [
+            {{
+              ""type"": ""genericFeatures"",
+              ""id"": ""{tandem.Features.ElementAt(0).StringId}""
+            }}
+          ]
+        }},
+        ""cargoBox"": {{
+          ""links"": {{
+            ""self"": ""/tandems/{tandem.StringId}/relationships/cargoBox"",
+            ""related"": ""/tandems/{tandem.StringId}/cargoBox""
+          }},
+          ""data"": {{
+            ""type"": ""boxes"",
+            ""id"": ""{tandem.CargoBox.StringId}""
+          }}
+        }},
+        ""lights"": {{
+          ""links"": {{
+            ""self"": ""/tandems/{tandem.StringId}/relationships/lights"",
+            ""related"": ""/tandems/{tandem.StringId}/lights""
+          }},
+          ""data"": [
+            {{
+              ""type"": ""bicycleLights"",
+              ""id"": ""{tandem.Lights.ElementAt(0).StringId}""
+            }}
+          ]
+        }},
+        ""manufacturer"": {{
+          ""links"": {{
+            ""self"": ""/tandems/{tandem.StringId}/relationships/manufacturer"",
+            ""related"": ""/tandems/{tandem.StringId}/manufacturer""
+          }},
+          ""data"": {{
+            ""type"": ""vehicleManufacturers"",
+            ""id"": ""{tandem.Manufacturer.StringId}""
+          }}
+        }},
+        ""wheels"": {{
+          ""links"": {{
+            ""self"": ""/tandems/{tandem.StringId}/relationships/wheels"",
+            ""related"": ""/tandems/{tandem.StringId}/wheels""
+          }},
+          ""data"": [
+            {{
+              ""type"": ""chromeWheels"",
+              ""id"": ""{tandem.Wheels.ElementAt(0).StringId}""
+            }}
+          ]
+        }}
+      }},
+      ""links"": {{
+        ""self"": ""/tandems/{tandem.StringId}""
+      }}
+    }},
+    {{
+      ""type"": ""trucks"",
+      ""id"": ""{truck.StringId}"",
+      ""attributes"": {{
+        ""loadingCapacity"": {truck.LoadingCapacity.ToString(CultureInfo.InvariantCulture)},
+        ""requiresDriverLicense"": {truck.RequiresDriverLicense.ToString().ToLowerInvariant()},
+        ""licensePlate"": ""{truck.LicensePlate}"",
+        ""weight"": {truck.Weight.ToString(CultureInfo.InvariantCulture)}
+      }},
+      ""relationships"": {{
+        ""sleepingArea"": {{
+          ""links"": {{
+            ""self"": ""/trucks/{truck.StringId}/relationships/sleepingArea"",
+            ""related"": ""/trucks/{truck.StringId}/sleepingArea""
+          }},
+          ""data"": {{
+            ""type"": ""boxes"",
+            ""id"": ""{truck.SleepingArea.StringId}""
+          }}
+        }},
+        ""features"": {{
+          ""links"": {{
+            ""self"": ""/trucks/{truck.StringId}/relationships/features"",
+            ""related"": ""/trucks/{truck.StringId}/features""
+          }},
+          ""data"": [
+            {{
+              ""type"": ""genericFeatures"",
+              ""id"": ""{truck.Features.ElementAt(0).StringId}""
+            }}
+          ]
+        }},
+        ""engine"": {{
+          ""links"": {{
+            ""self"": ""/trucks/{truck.StringId}/relationships/engine"",
+            ""related"": ""/trucks/{truck.StringId}/engine""
+          }},
+          ""data"": {{
+            ""type"": ""dieselEngines"",
+            ""id"": ""{truck.Engine.StringId}""
+          }}
+        }},
+        ""navigationSystem"": {{
+          ""links"": {{
+            ""self"": ""/trucks/{truck.StringId}/relationships/navigationSystem"",
+            ""related"": ""/trucks/{truck.StringId}/navigationSystem""
+          }},
+          ""data"": {{
+            ""type"": ""navigationSystems"",
+            ""id"": ""{truck.NavigationSystem.StringId}""
+          }}
+        }},
+        ""manufacturer"": {{
+          ""links"": {{
+            ""self"": ""/trucks/{truck.StringId}/relationships/manufacturer"",
+            ""related"": ""/trucks/{truck.StringId}/manufacturer""
+          }},
+          ""data"": {{
+            ""type"": ""vehicleManufacturers"",
+            ""id"": ""{truck.Manufacturer.StringId}""
+          }}
+        }},
+        ""wheels"": {{
+          ""links"": {{
+            ""self"": ""/trucks/{truck.StringId}/relationships/wheels"",
+            ""related"": ""/trucks/{truck.StringId}/wheels""
+          }},
+          ""data"": [
+            {{
+              ""type"": ""chromeWheels"",
+              ""id"": ""{truck.Wheels.ElementAt(0).StringId}""
+            }}
+          ]
+        }}
+      }},
+      ""links"": {{
+        ""self"": ""/trucks/{truck.StringId}""
+      }}
+    }}
+  ],
+  ""included"": [
+    {{
+      ""type"": ""boxes"",
+      ""id"": ""{bike.CargoBox.StringId}"",
+      ""attributes"": {{
+        ""width"": {bike.CargoBox.Width.ToString(CultureInfo.InvariantCulture)},
+        ""height"": {bike.CargoBox.Height.ToString(CultureInfo.InvariantCulture)},
+        ""depth"": {bike.CargoBox.Depth.ToString(CultureInfo.InvariantCulture)}
+      }}
+    }},
+    {{
+      ""type"": ""bicycleLights"",
+      ""id"": ""{bike.Lights.ElementAt(0).StringId}"",
+      ""attributes"": {{
+        ""color"": ""{bike.Lights.ElementAt(0).Color}""
+      }}
+    }},
+    {{
+      ""type"": ""vehicleManufacturers"",
+      ""id"": ""{bike.Manufacturer.StringId}"",
+      ""attributes"": {{
+        ""name"": ""{bike.Manufacturer.Name}""
+      }}
+    }},
+    {{
+      ""type"": ""carbonWheels"",
+      ""id"": ""{bike.Wheels.ElementAt(0).StringId}"",
+      ""attributes"": {{
+        ""hasTube"": {bike.Wheels.Cast<CarbonWheel>().ElementAt(0).HasTube.ToString().ToLowerInvariant()},
+        ""radius"": {bike.Wheels.ElementAt(0).Radius.ToString(CultureInfo.InvariantCulture)}
+      }},
+      ""relationships"": {{
+        ""vehicle"": {{
+          ""links"": {{
+            ""self"": ""/carbonWheels/{bike.Wheels.ElementAt(0).StringId}/relationships/vehicle"",
+            ""related"": ""/carbonWheels/{bike.Wheels.ElementAt(0).StringId}/vehicle""
+          }}
+        }}
+      }},
+      ""links"": {{
+        ""self"": ""/carbonWheels/{bike.Wheels.ElementAt(0).StringId}""
+      }}
+    }},
+    {{
+      ""type"": ""genericFeatures"",
+      ""id"": ""{car.Features.ElementAt(0).StringId}"",
+      ""attributes"": {{
+        ""description"": ""{car.Features.ElementAt(0).Description}""
+      }},
+      ""relationships"": {{
+        ""properties"": {{
+          ""data"": [
+            {{
+              ""type"": ""numberProperties"",
+              ""id"": ""{car.Features.ElementAt(0).Properties.ElementAt(0).StringId}""
+            }}
+          ]
+        }}
+      }}
+    }},
+    {{
+      ""type"": ""numberProperties"",
+      ""id"": ""{car.Features.ElementAt(0).Properties.ElementAt(0).StringId}"",
+      ""attributes"": {{
+        ""name"": ""{car.Features.ElementAt(0).Properties.ElementAt(0).Name}""
+      }},
+      ""relationships"": {{
+        ""value"": {{
+          ""data"": {{
+            ""type"": ""numberValues"",
+            ""id"": ""{car.Features.ElementAt(0).Properties.OfType<NumberProperty>().ElementAt(0).Value.StringId}""
+          }}
+        }}
+      }}
+    }},
+    {{
+      ""type"": ""numberValues"",
+      ""id"": ""{car.Features.ElementAt(0).Properties.OfType<NumberProperty>().ElementAt(0).Value.StringId}"",
+      ""attributes"": {{
+        ""content"": {car.Features.ElementAt(0).Properties.OfType<NumberProperty>().ElementAt(0).Value.Content.ToString(CultureInfo.InvariantCulture)}
+      }}
+    }},
+    {{
+      ""type"": ""gasolineEngines"",
+      ""id"": ""{car.Engine.StringId}"",
+      ""attributes"": {{
+        ""isHydrocarbonBased"": {car.Engine.IsHydrocarbonBased.ToString().ToLowerInvariant()},
+        ""serialCode"": ""{((GasolineEngine)car.Engine).SerialCode}"",
+        ""volatility"": {((GasolineEngine)car.Engine).Volatility.ToString(CultureInfo.InvariantCulture)},
+        ""capacity"": {car.Engine.Capacity.ToString(CultureInfo.InvariantCulture)}
+      }},
+      ""relationships"": {{
+        ""cylinders"": {{
+          ""links"": {{
+            ""self"": ""/gasolineEngines/{car.Engine.StringId}/relationships/cylinders"",
+            ""related"": ""/gasolineEngines/{car.Engine.StringId}/cylinders""
+          }},
+          ""data"": [
+            {{
+              ""type"": ""cylinders"",
+              ""id"": ""{((GasolineEngine)car.Engine).Cylinders.ElementAt(0).StringId}""
+            }}
+          ]
+        }}
+      }},
+      ""links"": {{
+        ""self"": ""/gasolineEngines/{car.Engine.StringId}""
+      }}
+    }},
+    {{
+      ""type"": ""cylinders"",
+      ""id"": ""{((GasolineEngine)car.Engine).Cylinders.ElementAt(0).StringId}"",
+      ""attributes"": {{
+        ""sparkPlugCount"": {((GasolineEngine)car.Engine).Cylinders.ElementAt(0).SparkPlugCount}
+      }}
+    }},
+    {{
+      ""type"": ""navigationSystems"",
+      ""id"": ""{car.NavigationSystem.StringId}"",
+      ""attributes"": {{
+        ""modelType"": ""{car.NavigationSystem.ModelType}""
+      }}
+    }},
+    {{
+      ""type"": ""vehicleManufacturers"",
+      ""id"": ""{car.Manufacturer.StringId}"",
+      ""attributes"": {{
+        ""name"": ""{car.Manufacturer.Name}""
+      }}
+    }},
+    {{
+      ""type"": ""carbonWheels"",
+      ""id"": ""{car.Wheels.ElementAt(0).StringId}"",
+      ""attributes"": {{
+        ""hasTube"": {car.Wheels.OfType<CarbonWheel>().ElementAt(0).HasTube.ToString().ToLowerInvariant()},
+        ""radius"": {car.Wheels.ElementAt(0).Radius.ToString(CultureInfo.InvariantCulture)}
+      }},
+      ""relationships"": {{
+        ""vehicle"": {{
+          ""links"": {{
+            ""self"": ""/carbonWheels/{car.Wheels.ElementAt(0).StringId}/relationships/vehicle"",
+            ""related"": ""/carbonWheels/{car.Wheels.ElementAt(0).StringId}/vehicle""
+          }}
+        }}
+      }},
+      ""links"": {{
+        ""self"": ""/carbonWheels/{car.Wheels.ElementAt(0).StringId}""
+      }}
+    }},
+    {{
+      ""type"": ""genericFeatures"",
+      ""id"": ""{tandem.Features.ElementAt(0).StringId}"",
+      ""attributes"": {{
+        ""description"": ""{tandem.Features.ElementAt(0).Description}""
+      }},
+      ""relationships"": {{
+        ""properties"": {{
+          ""data"": [
+            {{
+              ""type"": ""stringProperties"",
+              ""id"": ""{tandem.Features.ElementAt(0).Properties.ElementAt(0).StringId}""
+            }}
+          ]
+        }}
+      }}
+    }},
+    {{
+      ""type"": ""stringProperties"",
+      ""id"": ""{tandem.Features.ElementAt(0).Properties.ElementAt(0).StringId}"",
+      ""attributes"": {{
+        ""name"": ""{tandem.Features.ElementAt(0).Properties.ElementAt(0).Name}""
+      }},
+      ""relationships"": {{
+        ""value"": {{
+          ""data"": {{
+            ""type"": ""stringValues"",
+            ""id"": ""{tandem.Features.ElementAt(0).Properties.OfType<StringProperty>().ElementAt(0).Value.StringId}""
+          }}
+        }}
+      }}
+    }},
+    {{
+      ""type"": ""stringValues"",
+      ""id"": ""{tandem.Features.ElementAt(0).Properties.OfType<StringProperty>().ElementAt(0).Value.StringId}"",
+      ""attributes"": {{
+        ""content"": ""{tandem.Features.ElementAt(0).Properties.OfType<StringProperty>().ElementAt(0).Value.Content}""
+      }}
+    }},
+    {{
+      ""type"": ""boxes"",
+      ""id"": ""{tandem.CargoBox.StringId}"",
+      ""attributes"": {{
+        ""width"": {tandem.CargoBox.Width.ToString(CultureInfo.InvariantCulture)},
+        ""height"": {tandem.CargoBox.Height.ToString(CultureInfo.InvariantCulture)},
+        ""depth"": {tandem.CargoBox.Depth.ToString(CultureInfo.InvariantCulture)}
+      }}
+    }},
+    {{
+      ""type"": ""bicycleLights"",
+      ""id"": ""{tandem.Lights.ElementAt(0).StringId}"",
+      ""attributes"": {{
+        ""color"": ""{tandem.Lights.ElementAt(0).Color}""
+      }}
+    }},
+    {{
+      ""type"": ""vehicleManufacturers"",
+      ""id"": ""{tandem.Manufacturer.StringId}"",
+      ""attributes"": {{
+        ""name"": ""{tandem.Manufacturer.Name}""
+      }}
+    }},
+    {{
+      ""type"": ""chromeWheels"",
+      ""id"": ""{tandem.Wheels.ElementAt(0).StringId}"",
+      ""attributes"": {{
+        ""paintColor"": ""{tandem.Wheels.OfType<ChromeWheel>().ElementAt(0).PaintColor}"",
+        ""radius"": {tandem.Wheels.ElementAt(0).Radius.ToString(CultureInfo.InvariantCulture)}
+      }},
+      ""relationships"": {{
+        ""vehicle"": {{
+          ""links"": {{
+            ""self"": ""/chromeWheels/{tandem.Wheels.ElementAt(0).StringId}/relationships/vehicle"",
+            ""related"": ""/chromeWheels/{tandem.Wheels.ElementAt(0).StringId}/vehicle""
+          }}
+        }}
+      }},
+      ""links"": {{
+        ""self"": ""/chromeWheels/{tandem.Wheels.ElementAt(0).StringId}""
+      }}
+    }},
+    {{
+      ""type"": ""boxes"",
+      ""id"": ""{truck.SleepingArea.StringId}"",
+      ""attributes"": {{
+        ""width"": {truck.SleepingArea.Width.ToString(CultureInfo.InvariantCulture)},
+        ""height"": {truck.SleepingArea.Height.ToString(CultureInfo.InvariantCulture)},
+        ""depth"": {truck.SleepingArea.Depth.ToString(CultureInfo.InvariantCulture)}
+      }}
+    }},
+    {{
+      ""type"": ""genericFeatures"",
+      ""id"": ""{truck.Features.ElementAt(0).StringId}"",
+      ""attributes"": {{
+        ""description"": ""{truck.Features.ElementAt(0).Description}""
+      }},
+      ""relationships"": {{
+        ""properties"": {{
+          ""data"": [
+            {{
+              ""type"": ""stringProperties"",
+              ""id"": ""{truck.Features.ElementAt(0).Properties.ElementAt(0).StringId}""
+            }}
+          ]
+        }}
+      }}
+    }},
+    {{
+      ""type"": ""stringProperties"",
+      ""id"": ""{truck.Features.ElementAt(0).Properties.ElementAt(0).StringId}"",
+      ""attributes"": {{
+        ""name"": ""{truck.Features.ElementAt(0).Properties.ElementAt(0).Name}""
+      }},
+      ""relationships"": {{
+        ""value"": {{
+          ""data"": {{
+            ""type"": ""stringValues"",
+            ""id"": ""{truck.Features.ElementAt(0).Properties.OfType<StringProperty>().ElementAt(0).Value.StringId}""
+          }}
+        }}
+      }}
+    }},
+    {{
+      ""type"": ""stringValues"",
+      ""id"": ""{truck.Features.ElementAt(0).Properties.OfType<StringProperty>().ElementAt(0).Value.StringId}"",
+      ""attributes"": {{
+        ""content"": ""{truck.Features.ElementAt(0).Properties.OfType<StringProperty>().ElementAt(0).Value.Content}""
+      }}
+    }},
+    {{
+      ""type"": ""dieselEngines"",
+      ""id"": ""{truck.Engine.StringId}"",
+      ""attributes"": {{
+        ""isHydrocarbonBased"": {truck.Engine.IsHydrocarbonBased.ToString().ToLowerInvariant()},
+        ""serialCode"": ""{((DieselEngine)truck.Engine).SerialCode}"",
+        ""viscosity"": {((DieselEngine)truck.Engine).Viscosity.ToString(CultureInfo.InvariantCulture)},
+        ""capacity"": {truck.Engine.Capacity.ToString(CultureInfo.InvariantCulture)}
+      }},
+      ""links"": {{
+        ""self"": ""/dieselEngines/{truck.Engine.StringId}""
+      }}
+    }},
+    {{
+      ""type"": ""navigationSystems"",
+      ""id"": ""{truck.NavigationSystem.StringId}"",
+      ""attributes"": {{
+        ""modelType"": ""{truck.NavigationSystem.ModelType}""
+      }}
+    }},
+    {{
+      ""type"": ""vehicleManufacturers"",
+      ""id"": ""{truck.Manufacturer.StringId}"",
+      ""attributes"": {{
+        ""name"": ""{truck.Manufacturer.Name}""
+      }}
+    }},
+    {{
+      ""type"": ""chromeWheels"",
+      ""id"": ""{truck.Wheels.ElementAt(0).StringId}"",
+      ""attributes"": {{
+        ""paintColor"": ""{truck.Wheels.OfType<ChromeWheel>().ElementAt(0).PaintColor}"",
+        ""radius"": {truck.Wheels.ElementAt(0).Radius.ToString(CultureInfo.InvariantCulture)}
+      }},
+      ""relationships"": {{
+        ""vehicle"": {{
+          ""links"": {{
+            ""self"": ""/chromeWheels/{truck.Wheels.ElementAt(0).StringId}/relationships/vehicle"",
+            ""related"": ""/chromeWheels/{truck.Wheels.ElementAt(0).StringId}/vehicle""
+          }}
+        }}
+      }},
+      ""links"": {{
+        ""self"": ""/chromeWheels/{truck.Wheels.ElementAt(0).StringId}""
+      }}
+    }}
+  ]
+}}");
     }
 }

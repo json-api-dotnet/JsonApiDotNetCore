@@ -21,6 +21,9 @@ public sealed class BlogPost : Identifiable<int>
     public WebAccount? Reviewer { get; set; }
 
     [HasMany]
+    public ISet<Human> Contributors { get; set; } = new HashSet<Human>();
+
+    [HasMany]
     public ISet<Label> Labels { get; set; } = new HashSet<Label>();
 
     [HasMany]

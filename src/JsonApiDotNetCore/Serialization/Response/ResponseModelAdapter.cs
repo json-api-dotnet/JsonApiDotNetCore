@@ -274,14 +274,25 @@ public class ResponseModelAdapter : IResponseModelAdapter
     private void TraverseRelationship(RelationshipAttribute relationship, IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode,
         IncludeElementExpression includeElement, EndpointKind kind)
     {
-        object? rightValue = relationship.GetValue(leftResource);
+        if (!relationship.LeftType.ClrType.IsAssignableFrom(leftTreeNode.ResourceType.ClrType))
+        {
+            // Skipping over relationship that is declared on another derived type.
+            return;
+        }
+
+        // In case of resource inheritance, prefer the relationship on derived type over the one on base type.
+        RelationshipAttribute effectiveRelationship = !leftTreeNode.ResourceType.Equals(relationship.LeftType)
+            ? leftTreeNode.ResourceType.GetRelationshipByPropertyName(relationship.Property.Name)
+            : relationship;
+
+        object? rightValue = effectiveRelationship.GetValue(leftResource);
         ICollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
 
-        leftTreeNode.EnsureHasRelationship(relationship);
+        leftTreeNode.EnsureHasRelationship(effectiveRelationship);
 
         foreach (IIdentifiable rightResource in rightResources)
         {
-            TraverseResource(rightResource, relationship.RightType, kind, includeElement.Children, leftTreeNode, relationship);
+            TraverseResource(rightResource, effectiveRelationship.RightType, kind, includeElement.Children, leftTreeNode, effectiveRelationship);
         }
     }
 
