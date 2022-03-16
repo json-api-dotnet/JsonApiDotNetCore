@@ -54,6 +54,7 @@ public sealed class IncludeParseTests : BaseParseTests
     [InlineData("includes", " ", "Unexpected whitespace.")]
     [InlineData("includes", ",", "Relationship name expected.")]
     [InlineData("includes", "posts,", "Relationship name expected.")]
+    [InlineData("includes", "posts.", "Relationship name expected.")]
     [InlineData("includes", "posts[", ", expected.")]
     [InlineData("includes", "title", "Relationship 'title' does not exist on resource type 'blogs'.")]
     [InlineData("includes", "posts.comments.publishTime,",
