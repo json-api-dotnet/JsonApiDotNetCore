@@ -580,4 +580,380 @@ public abstract class ResourceInheritanceTests<TDbContext> : IClassFixture<Integ
             });
         }
     }
+
+    [Fact]
+    public async Task Cannot_get_ToOne_relationship_defined_in_derived_type_at_abstract_endpoint()
+    {
+        // Arrange
+        Car car = _fakers.Car.Generate();
+        car.Engine = _fakers.GasolineEngine.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Vehicles.Add(car);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/vehicles/{car.StringId}/relationships/engine";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested relationship does not exist.");
+        error.Detail.Should().Be("Resource of type 'vehicles' does not contain a relationship named 'engine'.");
+        error.Source.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Can_get_ToOne_relationship_at_concrete_derived_endpoint()
+    {
+        // Arrange
+        Car car = _fakers.Car.Generate();
+        car.Engine = _fakers.GasolineEngine.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Vehicles.Add(car);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/cars/{car.StringId}/relationships/engine";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Self.Should().Be(route);
+        responseDocument.Links.Related.Should().Be($"/cars/{car.StringId}/engine");
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Type.Should().Be("gasolineEngines");
+        responseDocument.Data.SingleValue.Id.Should().Be(car.Engine.StringId);
+        responseDocument.Data.SingleValue.Links.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Cannot_get_ToMany_relationship_defined_in_derived_type_at_abstract_endpoint()
+    {
+        // Arrange
+        Truck truck = _fakers.Truck.Generate();
+        truck.Engine = _fakers.DieselEngine.Generate();
+        truck.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Vehicles.Add(truck);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/vehicles/{truck.StringId}/relationships/features";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested relationship does not exist.");
+        error.Detail.Should().Be("Resource of type 'vehicles' does not contain a relationship named 'features'.");
+        error.Source.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Cannot_get_ToMany_relationship_defined_in_derived_type_at_concrete_base_endpoint()
+    {
+        // Arrange
+        Tandem tandem = _fakers.Tandem.Generate();
+        tandem.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Vehicles.Add(tandem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/bikes/{tandem.StringId}/relationships/features";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        error.Title.Should().Be("The requested relationship does not exist.");
+        error.Detail.Should().Be("Resource of type 'bikes' does not contain a relationship named 'features'.");
+        error.Source.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Can_get_ToMany_relationship_at_concrete_derived_endpoint()
+    {
+        // Arrange
+        Car car = _fakers.Car.Generate();
+        car.Engine = _fakers.GasolineEngine.Generate();
+        car.Wheels = _fakers.ChromeWheel.Generate(2).Cast<Wheel>().Concat(_fakers.CarbonWheel.Generate(2)).ToHashSet();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Vehicles.Add(car);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/cars/{car.StringId}/relationships/wheels";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Links.ShouldNotBeNull();
+        responseDocument.Links.Self.Should().Be(route);
+        responseDocument.Links.Related.Should().Be($"/cars/{car.StringId}/wheels");
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(4);
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "chromeWheels" && resource.Id == car.Wheels.ElementAt(0).StringId);
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "chromeWheels" && resource.Id == car.Wheels.ElementAt(1).StringId);
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "carbonWheels" && resource.Id == car.Wheels.ElementAt(2).StringId);
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "carbonWheels" && resource.Id == car.Wheels.ElementAt(3).StringId);
+
+        foreach (ResourceObject resource in responseDocument.Data.ManyValue)
+        {
+            resource.Links.Should().BeNull();
+        }
+    }
+
+    [Fact]
+    public async Task Can_get_primary_resources_at_abstract_endpoint_with_all_sparse_fieldsets()
+    {
+        // Arrange
+        Bike bike = _fakers.Bike.Generate();
+
+        Tandem tandem = _fakers.Tandem.Generate();
+
+        Car car = _fakers.Car.Generate();
+        car.Engine = _fakers.GasolineEngine.Generate();
+
+        Truck truck = _fakers.Truck.Generate();
+        truck.Engine = _fakers.DieselEngine.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, tandem, car, truck);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string bikeFields = "fields[bikes]=weight,gearCount,lights";
+        const string tandemFields = "fields[tandems]=gearCount,passengerCount,cargoBox";
+        const string carFields = "fields[cars]=weight,requiresDriverLicense,seatCount,engine";
+        const string truckFields = "fields[trucks]=loadingCapacity,sleepingArea";
+
+        const string route = $"/vehicles?{bikeFields}&{tandemFields}&{carFields}&{truckFields}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(4);
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "bikes").Subject.With(resource =>
+        {
+            resource.Id.Should().Be(bike.StringId);
+            resource.Attributes.ShouldOnlyContainKeys("weight", "gearCount");
+            resource.Relationships.ShouldOnlyContainKeys("lights");
+        });
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "tandems").Subject.With(resource =>
+        {
+            resource.Id.Should().Be(tandem.StringId);
+            resource.Attributes.ShouldOnlyContainKeys("gearCount", "passengerCount");
+            resource.Relationships.ShouldOnlyContainKeys("cargoBox");
+        });
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "cars").Subject.With(resource =>
+        {
+            resource.Id.Should().Be(car.StringId);
+            resource.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "seatCount");
+            resource.Relationships.ShouldOnlyContainKeys("engine");
+        });
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "trucks").Subject.With(resource =>
+        {
+            resource.Id.Should().Be(truck.StringId);
+            resource.Attributes.ShouldOnlyContainKeys("loadingCapacity");
+            resource.Relationships.ShouldOnlyContainKeys("sleepingArea");
+        });
+    }
+
+    [Fact]
+    public async Task Can_get_primary_resources_at_abstract_endpoint_with_some_sparse_fieldsets()
+    {
+        // Arrange
+        Bike bike = _fakers.Bike.Generate();
+
+        Tandem tandem = _fakers.Tandem.Generate();
+
+        Car car = _fakers.Car.Generate();
+        car.Engine = _fakers.GasolineEngine.Generate();
+
+        Truck truck = _fakers.Truck.Generate();
+        truck.Engine = _fakers.DieselEngine.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, tandem, car, truck);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string bikeFields = "fields[bikes]=weight,gearCount,lights";
+        const string carFields = "fields[cars]=weight,requiresDriverLicense,seatCount,engine";
+
+        const string route = $"/vehicles?{bikeFields}&{carFields}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(4);
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "bikes").Subject.With(resource =>
+        {
+            resource.Id.Should().Be(bike.StringId);
+            resource.Attributes.ShouldOnlyContainKeys("weight", "gearCount");
+            resource.Relationships.ShouldOnlyContainKeys("lights");
+        });
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "tandems").Subject.With(resource =>
+        {
+            resource.Id.Should().Be(tandem.StringId);
+            resource.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount", "passengerCount");
+            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "lights", "cargoBox", "features");
+        });
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "cars").Subject.With(resource =>
+        {
+            resource.Id.Should().Be(car.StringId);
+            resource.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "seatCount");
+            resource.Relationships.ShouldOnlyContainKeys("engine");
+        });
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "trucks").Subject.With(resource =>
+        {
+            resource.Id.Should().Be(truck.StringId);
+            resource.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "licensePlate", "loadingCapacity");
+            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "engine", "navigationSystem", "sleepingArea", "features");
+        });
+    }
+
+    [Fact]
+    public async Task Can_get_primary_resources_at_concrete_base_endpoint_with_all_sparse_fieldsets()
+    {
+        // Arrange
+        Bike bike = _fakers.Bike.Generate();
+        Tandem tandem = _fakers.Tandem.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, tandem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string bikeFields = "fields[bikes]=weight,gearCount,manufacturer,lights";
+        const string tandemFields = "fields[tandems]=passengerCount,cargoBox";
+
+        const string route = $"/bikes?{bikeFields}&{tandemFields}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "bikes").Subject.With(resource =>
+        {
+            resource.Id.Should().Be(bike.StringId);
+
+            resource.Attributes.ShouldOnlyContainKeys("weight", "gearCount");
+            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "lights");
+        });
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "tandems").Subject.With(resource =>
+        {
+            resource.Id.Should().Be(tandem.StringId);
+
+            resource.Attributes.ShouldOnlyContainKeys("passengerCount");
+            resource.Relationships.ShouldOnlyContainKeys("cargoBox");
+        });
+    }
+
+    [Fact]
+    public async Task Can_get_primary_resources_at_concrete_base_endpoint_with_some_sparse_fieldsets()
+    {
+        // Arrange
+        Bike bike = _fakers.Bike.Generate();
+        Tandem tandem = _fakers.Tandem.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, tandem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string tandemFields = "fields[tandems]=passengerCount,cargoBox";
+
+        const string route = $"/bikes?{tandemFields}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "bikes").Subject.With(resource =>
+        {
+            resource.Id.Should().Be(bike.StringId);
+
+            resource.Attributes.ShouldOnlyContainKeys("weight", "requiresDriverLicense", "gearCount");
+            resource.Relationships.ShouldOnlyContainKeys("manufacturer", "wheels", "cargoBox", "lights");
+        });
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "tandems").Subject.With(resource =>
+        {
+            resource.Id.Should().Be(tandem.StringId);
+
+            resource.Attributes.ShouldOnlyContainKeys("passengerCount");
+            resource.Relationships.ShouldOnlyContainKeys("cargoBox");
+        });
+    }
 }
