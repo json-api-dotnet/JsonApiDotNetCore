@@ -10,6 +10,32 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 internal sealed class ResourceFieldChainResolver
 {
     /// <summary>
+    /// Resolves a chain of to-one relationships.
+    /// <example>author</example>
+    /// <example>
+    /// author.address.country
+    /// </example>
+    /// </summary>
+    public IImmutableList<ResourceFieldAttribute> ResolveToOneChain(ResourceType resourceType, string path,
+        Action<ResourceFieldAttribute, ResourceType, string>? validateCallback = null)
+    {
+        ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
+        ResourceType nextResourceType = resourceType;
+
+        foreach (string publicName in path.Split("."))
+        {
+            RelationshipAttribute toOneRelationship = GetToOneRelationship(publicName, nextResourceType, path);
+
+            validateCallback?.Invoke(toOneRelationship, nextResourceType, path);
+
+            chainBuilder.Add(toOneRelationship);
+            nextResourceType = toOneRelationship.RightType;
+        }
+
+        return chainBuilder.ToImmutable();
+    }
+
+    /// <summary>
     /// Resolves a chain of relationships that ends in a to-many relationship, for example: blogs.owner.articles.comments
     /// </summary>
     public IImmutableList<ResourceFieldAttribute> ResolveToManyChain(ResourceType resourceType, string path,

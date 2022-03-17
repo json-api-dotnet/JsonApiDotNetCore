@@ -28,15 +28,16 @@ public class FilterParser : QueryExpressionParser
     {
         ArgumentGuard.NotNull(resourceTypeInScope, nameof(resourceTypeInScope));
 
-        _resourceTypeInScope = resourceTypeInScope;
+        return InScopeOfResourceType(resourceTypeInScope, () =>
+        {
+            Tokenize(source);
 
-        Tokenize(source);
+            FilterExpression expression = ParseFilter();
 
-        FilterExpression expression = ParseFilter();
+            AssertTokenStackIsEmpty();
 
-        AssertTokenStackIsEmpty();
-
-        return expression;
+            return expression;
+        });
     }
 
     protected FilterExpression ParseFilter()
@@ -75,6 +76,10 @@ public class FilterParser : QueryExpressionParser
                 case Keywords.Has:
                 {
                     return ParseHas();
+                }
+                case Keywords.IsType:
+                {
+                    return ParseIsType();
                 }
             }
         }
@@ -259,13 +264,92 @@ public class FilterParser : QueryExpressionParser
 
     private FilterExpression ParseFilterInHas(HasManyAttribute hasManyRelationship)
     {
-        ResourceType outerScopeBackup = _resourceTypeInScope!;
+        return InScopeOfResourceType(hasManyRelationship.RightType, ParseFilter);
+    }
 
-        _resourceTypeInScope = hasManyRelationship.RightType;
+    private IsTypeExpression ParseIsType()
+    {
+        EatText(Keywords.IsType);
+        EatSingleCharacterToken(TokenKind.OpenParen);
 
-        FilterExpression filter = ParseFilter();
+        ResourceFieldChainExpression? targetToOneRelationship = TryParseToOneRelationshipChain();
 
-        _resourceTypeInScope = outerScopeBackup;
+        EatSingleCharacterToken(TokenKind.Comma);
+
+        ResourceType baseType = targetToOneRelationship != null ? ((RelationshipAttribute)targetToOneRelationship.Fields[^1]).RightType : _resourceTypeInScope!;
+        ResourceType derivedType = ParseDerivedType(baseType);
+
+        FilterExpression? child = TryParseFilterInIsType(derivedType);
+
+        EatSingleCharacterToken(TokenKind.CloseParen);
+
+        return new IsTypeExpression(targetToOneRelationship, derivedType, child);
+    }
+
+    private ResourceFieldChainExpression? TryParseToOneRelationshipChain()
+    {
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Comma)
+        {
+            return null;
+        }
+
+        return ParseFieldChain(FieldChainRequirements.EndsInToOne, "Relationship name or , expected.");
+    }
+
+    private ResourceType ParseDerivedType(ResourceType baseType)
+    {
+        if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text)
+        {
+            string derivedTypeName = token.Value!;
+            return ResolveDerivedType(baseType, derivedTypeName);
+        }
+
+        throw new QueryParseException("Resource type expected.");
+    }
+
+    private ResourceType ResolveDerivedType(ResourceType baseType, string derivedTypeName)
+    {
+        ResourceType? derivedType = GetDerivedType(baseType, derivedTypeName);
+
+        if (derivedType == null)
+        {
+            throw new QueryParseException($"Resource type '{derivedTypeName}' does not exist or does not derive from '{baseType.PublicName}'.");
+        }
+
+        return derivedType;
+    }
+
+    private ResourceType? GetDerivedType(ResourceType baseType, string publicName)
+    {
+        foreach (ResourceType derivedType in baseType.DirectlyDerivedTypes)
+        {
+            if (derivedType.PublicName == publicName)
+            {
+                return derivedType;
+            }
+
+            ResourceType? nextType = GetDerivedType(derivedType, publicName);
+
+            if (nextType != null)
+            {
+                return nextType;
+            }
+        }
+
+        return null;
+    }
+
+    private FilterExpression? TryParseFilterInIsType(ResourceType derivedType)
+    {
+        FilterExpression? filter = null;
+
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Comma)
+        {
+            EatSingleCharacterToken(TokenKind.Comma);
+
+            filter = InScopeOfResourceType(derivedType, ParseFilter);
+        }
+
         return filter;
     }
 
@@ -349,11 +433,31 @@ public class FilterParser : QueryExpressionParser
             return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, _validateSingleFieldCallback);
         }
 
+        if (chainRequirements == FieldChainRequirements.EndsInToOne)
+        {
+            return ChainResolver.ResolveToOneChain(_resourceTypeInScope!, path, _validateSingleFieldCallback);
+        }
+
         if (chainRequirements.HasFlag(FieldChainRequirements.EndsInAttribute) && chainRequirements.HasFlag(FieldChainRequirements.EndsInToOne))
         {
             return ChainResolver.ResolveToOneChainEndingInAttributeOrToOne(_resourceTypeInScope!, path, _validateSingleFieldCallback);
         }
 
         throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");
+    }
+
+    private TResult InScopeOfResourceType<TResult>(ResourceType resourceType, Func<TResult> action)
+    {
+        ResourceType? backupType = _resourceTypeInScope;
+
+        try
+        {
+            _resourceTypeInScope = resourceType;
+            return action();
+        }
+        finally
+        {
+            _resourceTypeInScope = backupType;
+        }
     }
 }

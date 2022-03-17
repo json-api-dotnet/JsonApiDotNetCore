@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
 /// </summary>
 public abstract class QueryClauseBuilder<TArgument> : QueryExpressionVisitor<TArgument, Expression>
 {
-    protected LambdaScope LambdaScope { get; }
+    protected LambdaScope LambdaScope { get; private set; }
 
     protected QueryClauseBuilder(LambdaScope lambdaScope)
     {
@@ -82,5 +82,25 @@ public abstract class QueryClauseBuilder<TArgument> : QueryExpressionVisitor<TAr
         }
 
         return property!;
+    }
+
+    protected TResult WithLambdaScopeAccessor<TResult>(Expression accessorExpression, Func<TResult> action)
+    {
+        ArgumentGuard.NotNull(accessorExpression, nameof(accessorExpression));
+        ArgumentGuard.NotNull(action, nameof(action));
+
+        LambdaScope backupScope = LambdaScope;
+
+        try
+        {
+            using (LambdaScope = LambdaScope.WithAccessor(accessorExpression))
+            {
+                return action();
+            }
+        }
+        finally
+        {
+            LambdaScope = backupScope;
+        }
     }
 }

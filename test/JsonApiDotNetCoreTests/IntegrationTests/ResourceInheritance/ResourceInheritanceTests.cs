@@ -1623,4 +1623,205 @@ public abstract class ResourceInheritanceTests<TDbContext> : IClassFixture<Integ
   ]
 }}");
     }
+
+    [Fact]
+    public async Task Can_filter_on_derived_resource_type_at_abstract_endpoint()
+    {
+        // Arrange
+        Bike bike = _fakers.Bike.Generate();
+
+        Tandem tandem = _fakers.Tandem.Generate();
+
+        Car car = _fakers.Car.Generate();
+        car.Engine = _fakers.GasolineEngine.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, tandem, car);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/vehicles?filter=isType(,bikes)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(2);
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "bikes" && resource.Id == bike.StringId);
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "tandems" && resource.Id == tandem.StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_on_derived_resource_type_with_condition_at_abstract_endpoint()
+    {
+        // Arrange
+        Bike bike = _fakers.Bike.Generate();
+
+        Car car = _fakers.Car.Generate();
+        car.LicensePlate = "XX-99-YY";
+        car.Engine = _fakers.GasolineEngine.Generate();
+
+        Truck truck = _fakers.Truck.Generate();
+        truck.LicensePlate = "AA-11-BB";
+        truck.Engine = _fakers.DieselEngine.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, car, truck);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/vehicles?filter=isType(,motorVehicles,equals(licensePlate,'AA-11-BB'))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "trucks" && resource.Id == truck.StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_on_derived_resource_type_and_derived_ToOne_relationship_type_at_abstract_endpoint()
+    {
+        // Arrange
+        Bike bike = _fakers.Bike.Generate();
+
+        Car car = _fakers.Car.Generate();
+        car.Engine = _fakers.GasolineEngine.Generate();
+
+        Truck truck = _fakers.Truck.Generate();
+        truck.Engine = _fakers.DieselEngine.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, car, truck);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/vehicles?filter=isType(,motorVehicles,isType(engine,dieselEngines))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "trucks" && resource.Id == truck.StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_on_derived_resource_type_and_derived_ToOne_relationship_type_with_condition_at_abstract_endpoint()
+    {
+        // Arrange
+        Car car = _fakers.Car.Generate();
+        car.Engine = _fakers.GasolineEngine.Generate();
+
+        Truck truck1 = _fakers.Truck.Generate();
+        truck1.Engine = _fakers.DieselEngine.Generate();
+        ((DieselEngine)truck1.Engine).Viscosity = 25;
+
+        Truck truck2 = _fakers.Truck.Generate();
+        truck2.Engine = _fakers.DieselEngine.Generate();
+        ((DieselEngine)truck2.Engine).Viscosity = 100;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(car, truck1, truck2);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/vehicles?filter=isType(,motorVehicles,isType(engine,dieselEngines,greaterThan(viscosity,'50')))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "trucks" && resource.Id == truck2.StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_on_derived_resource_type_with_condition_at_concrete_base_endpoint()
+    {
+        // Arrange
+        Bike bike = _fakers.Bike.Generate();
+
+        Tandem tandem1 = _fakers.Tandem.Generate();
+
+        Tandem tandem2 = _fakers.Tandem.Generate();
+        tandem2.Features = _fakers.GenericFeature.Generate(1).ToHashSet();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, tandem1, tandem2);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/bikes?filter=isType(,tandems,has(features))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "tandems" && resource.Id == tandem2.StringId);
+    }
+
+    [Fact]
+    public async Task Can_filter_on_derived_resource_type_with_condition_at_concrete_derived_endpoint()
+    {
+        // Arrange
+        Car car1 = _fakers.Car.Generate();
+        car1.Engine = _fakers.GasolineEngine.Generate();
+        car1.Wheels = _fakers.CarbonWheel.Generate(4).Cast<Wheel>().ToHashSet();
+
+        Car car2 = _fakers.Car.Generate();
+        car2.Engine = _fakers.GasolineEngine.Generate();
+        car2.Wheels = _fakers.ChromeWheel.Generate(4).Cast<Wheel>().ToHashSet();
+
+        Car car3 = _fakers.Car.Generate();
+        car3.Engine = _fakers.GasolineEngine.Generate();
+        car3.Wheels = _fakers.ChromeWheel.Generate(4).Cast<Wheel>().ToHashSet();
+        car3.Wheels.Cast<ChromeWheel>().ElementAt(0).PaintColor = "light-gray";
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(car1, car2, car3);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/cars?filter=has(wheels,isType(,chromeWheels,equals(paintColor,'light-gray')))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+
+        responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "cars" && resource.Id == car3.StringId);
+    }
 }

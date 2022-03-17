@@ -194,7 +194,8 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
 
     private MemberAssignment CreatePropertyAssignment(PropertySelector propertySelector, LambdaScope lambdaScope)
     {
-        bool requiresUpCast = !propertySelector.Property.DeclaringType!.IsAssignableFrom(lambdaScope.Accessor.Type);
+        bool requiresUpCast = lambdaScope.Accessor.Type != propertySelector.Property.DeclaringType &&
+            lambdaScope.Accessor.Type.IsAssignableFrom(propertySelector.Property.DeclaringType);
 
         MemberExpression propertyAccess = requiresUpCast
             ? Expression.MakeMemberAccess(Expression.Convert(lambdaScope.Accessor, propertySelector.Property.DeclaringType!), propertySelector.Property)
