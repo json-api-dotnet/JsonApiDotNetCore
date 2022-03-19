@@ -1,11 +1,14 @@
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq.Expressions;
+using System.Net;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Resources;
 
@@ -54,8 +57,9 @@ public class JsonApiResourceDefinition<TResource, TId> : IResourceDefinition<TRe
     /// <code><![CDATA[
     /// var sort = CreateSortExpressionFromLambda(new PropertySortOrder
     /// {
-    ///     (model => model.CreatedAt, ListSortDirection.Ascending),
-    ///     (model => model.Password, ListSortDirection.Descending)
+    ///     (blog => blog.Author.Name.LastName, ListSortDirection.Ascending),
+    ///     (blog => blog.Posts.Count, ListSortDirection.Descending),
+    ///     (blog => blog.Title, ListSortDirection.Ascending)
     /// });
     /// ]]></code>
     /// </example>
@@ -64,14 +68,26 @@ public class JsonApiResourceDefinition<TResource, TId> : IResourceDefinition<TRe
         ArgumentGuard.NotNullNorEmpty(keySelectors, nameof(keySelectors));
 
         ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>(keySelectors.Count);
+        var lambdaConverter = new SortExpressionLambdaConverter(ResourceGraph);
 
-        foreach ((Expression<Func<TResource, dynamic?>> keySelector, ListSortDirection sortDirection) in keySelectors)
+        foreach ((Expression<Func<TResource, object?>> keySelector, ListSortDirection sortDirection) in keySelectors)
         {
-            bool isAscending = sortDirection == ListSortDirection.Ascending;
-            AttrAttribute attribute = ResourceGraph.GetAttributes(keySelector).Single();
-
-            var sortElement = new SortElementExpression(new ResourceFieldChainExpression(attribute), isAscending);
-            elementsBuilder.Add(sortElement);
+            try
+            {
+                SortElementExpression sortElement = lambdaConverter.FromLambda(keySelector, sortDirection);
+                elementsBuilder.Add(sortElement);
+            }
+            catch (InvalidOperationException exception)
+            {
+                throw new JsonApiException(new ErrorObject(HttpStatusCode.InternalServerError)
+                {
+                    Title = "Invalid lambda expression for sorting from resource definition. " +
+                        "It should select a property that is exposed as an attribute, or a to-many relationship followed by Count(). " +
+                        "The property can be preceded by a path of to-one relationships. " +
+                        "Examples: 'blog => blog.Title', 'blog => blog.Posts.Count', 'blog => blog.Author.Name.LastName'.",
+                    Detail = $"The lambda expression '{keySelector}' is invalid. {exception.Message}"
+                }, exception);
+            }
         }
 
         return new SortExpression(elementsBuilder.ToImmutable());
@@ -161,7 +177,7 @@ public class JsonApiResourceDefinition<TResource, TId> : IResourceDefinition<TRe
     /// This is an alias type intended to simplify the implementation's method signature. See <see cref="CreateSortExpressionFromLambda" /> for usage
     /// details.
     /// </summary>
-    public sealed class PropertySortOrder : List<(Expression<Func<TResource, dynamic?>> KeySelector, ListSortDirection SortDirection)>
+    public sealed class PropertySortOrder : List<(Expression<Func<TResource, object?>> KeySelector, ListSortDirection SortDirection)>
     {
     }
 }

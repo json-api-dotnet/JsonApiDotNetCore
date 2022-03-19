@@ -425,12 +425,14 @@ public class FilterParser : QueryExpressionParser
     {
         if (chainRequirements == FieldChainRequirements.EndsInToMany)
         {
-            return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path, _validateSingleFieldCallback);
+            return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path, FieldChainInheritanceRequirement.Disabled,
+                _validateSingleFieldCallback);
         }
 
         if (chainRequirements == FieldChainRequirements.EndsInAttribute)
         {
-            return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, _validateSingleFieldCallback);
+            return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, FieldChainInheritanceRequirement.Disabled,
+                _validateSingleFieldCallback);
         }
 
         if (chainRequirements == FieldChainRequirements.EndsInToOne)

@@ -10,6 +10,9 @@ public sealed class Man : Human
     [Attr]
     public bool HasBeard { get; set; }
 
+    [Attr]
+    public int Age { get; set; }
+
     [HasOne]
     public Woman? Wife { get; set; }
 
@@ -18,4 +21,7 @@ public sealed class Man : Human
 
     [HasMany]
     public ISet<Man> SameGenderFriends { get; set; } = new HashSet<Man>();
+
+    [HasMany]
+    public ISet<Man> DrinkingBuddies { get; set; } = new HashSet<Man>();
 }

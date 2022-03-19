@@ -206,6 +206,61 @@ public sealed class ResourceType
         return _lazyAllConcreteDerivedTypes.Value;
     }
 
+    internal IReadOnlySet<AttrAttribute> GetAttributesInTypeOrDerived(string publicName)
+    {
+        return GetAttributesInTypeOrDerived(this, publicName);
+    }
+
+    private static IReadOnlySet<AttrAttribute> GetAttributesInTypeOrDerived(ResourceType resourceType, string publicName)
+    {
+        AttrAttribute? attribute = resourceType.FindAttributeByPublicName(publicName);
+
+        if (attribute != null)
+        {
+            return attribute.AsHashSet();
+        }
+
+        // Hiding base members using the 'new' keyword instead of 'override' (effectively breaking inheritance) is currently not supported.
+        // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords
+        HashSet<AttrAttribute> attributesInDerivedTypes = new();
+
+        foreach (AttrAttribute attributeInDerivedType in resourceType.DirectlyDerivedTypes
+            .Select(derivedType => GetAttributesInTypeOrDerived(derivedType, publicName)).SelectMany(attributesInDerivedType => attributesInDerivedType))
+        {
+            attributesInDerivedTypes.Add(attributeInDerivedType);
+        }
+
+        return attributesInDerivedTypes;
+    }
+
+    internal IReadOnlySet<RelationshipAttribute> GetRelationshipsInTypeOrDerived(string publicName)
+    {
+        return GetRelationshipsInTypeOrDerived(this, publicName);
+    }
+
+    private static IReadOnlySet<RelationshipAttribute> GetRelationshipsInTypeOrDerived(ResourceType resourceType, string publicName)
+    {
+        RelationshipAttribute? relationship = resourceType.FindRelationshipByPublicName(publicName);
+
+        if (relationship != null)
+        {
+            return relationship.AsHashSet();
+        }
+
+        // Hiding base members using the 'new' keyword instead of 'override' (effectively breaking inheritance) is currently not supported.
+        // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords
+        HashSet<RelationshipAttribute> relationshipsInDerivedTypes = new();
+
+        foreach (RelationshipAttribute relationshipInDerivedType in resourceType.DirectlyDerivedTypes
+            .Select(derivedType => GetRelationshipsInTypeOrDerived(derivedType, publicName))
+            .SelectMany(relationshipsInDerivedType => relationshipsInDerivedType))
+        {
+            relationshipsInDerivedTypes.Add(relationshipInDerivedType);
+        }
+
+        return relationshipsInDerivedTypes;
+    }
+
     public override string ToString()
     {
         return PublicName;

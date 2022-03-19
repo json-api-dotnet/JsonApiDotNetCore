@@ -10,6 +10,9 @@ public sealed class Woman : Human
     [Attr]
     public string MaidenName { get; set; } = null!;
 
+    [Attr]
+    public int Age { get; set; }
+
     [HasOne]
     public Man? Husband { get; set; }
 

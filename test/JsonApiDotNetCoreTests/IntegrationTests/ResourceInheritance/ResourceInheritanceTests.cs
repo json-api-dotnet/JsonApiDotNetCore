@@ -35,8 +35,14 @@ public abstract class ResourceInheritanceTests<TDbContext> : IClassFixture<Integ
         testContext.UseController<ChromeWheelsController>();
         testContext.UseController<CarbonWheelsController>();
 
+        testContext.ConfigureServicesAfterStartup(services =>
+        {
+            services.AddResourceDefinition<WheelSortDefinition>();
+        });
+
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;
+        options.AllowUnknownQueryStringParameters = true;
     }
 
     [Fact]
@@ -1823,5 +1829,292 @@ public abstract class ResourceInheritanceTests<TDbContext> : IClassFixture<Integ
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
 
         responseDocument.Data.ManyValue.Should().ContainSingle(resource => resource.Type == "cars" && resource.Id == car3.StringId);
+    }
+
+    [Fact]
+    public async Task Can_sort_on_derived_attribute_at_abstract_endpoint()
+    {
+        // Arrange
+        Bike bike1 = _fakers.Bike.Generate();
+        bike1.GearCount = 3;
+
+        Bike bike2 = _fakers.Bike.Generate();
+        bike2.GearCount = 1;
+
+        Tandem tandem = _fakers.Tandem.Generate();
+        tandem.GearCount = 2;
+
+        Car car = _fakers.Car.Generate();
+        car.Engine = _fakers.GasolineEngine.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike1, bike2, tandem, car);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/vehicles?sort=gearCount";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(4);
+
+        responseDocument.Data.ManyValue[0].Type.Should().Be("bikes");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(bike2.StringId);
+
+        responseDocument.Data.ManyValue[1].Type.Should().Be("tandems");
+        responseDocument.Data.ManyValue[1].Id.Should().Be(tandem.StringId);
+
+        responseDocument.Data.ManyValue[2].Type.Should().Be("bikes");
+        responseDocument.Data.ManyValue[2].Id.Should().Be(bike1.StringId);
+
+        responseDocument.Data.ManyValue[3].Type.Should().Be("cars");
+        responseDocument.Data.ManyValue[3].Id.Should().Be(car.StringId);
+    }
+
+    [Fact]
+    public async Task Can_sort_on_derived_attribute_at_concrete_base_endpoint()
+    {
+        // Arrange
+        Bike bike = _fakers.Bike.Generate();
+
+        Tandem tandem1 = _fakers.Tandem.Generate();
+        tandem1.PassengerCount = 2;
+
+        Tandem tandem2 = _fakers.Tandem.Generate();
+        tandem2.PassengerCount = 4;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(bike, tandem1, tandem2);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/bikes?sort=-passengerCount";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+
+        responseDocument.Data.ManyValue[0].Type.Should().Be("bikes");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(bike.StringId);
+
+        responseDocument.Data.ManyValue[1].Type.Should().Be("tandems");
+        responseDocument.Data.ManyValue[1].Id.Should().Be(tandem2.StringId);
+
+        responseDocument.Data.ManyValue[2].Type.Should().Be("tandems");
+        responseDocument.Data.ManyValue[2].Id.Should().Be(tandem1.StringId);
+    }
+
+    [Fact]
+    public async Task Can_sort_on_derived_relationship_at_concrete_derived_endpoint()
+    {
+        // Arrange
+        Car car1 = _fakers.Car.Generate();
+        car1.Engine = _fakers.GasolineEngine.Generate();
+        ((GasolineEngine)car1.Engine).Cylinders = _fakers.Cylinder.Generate(2).ToHashSet();
+
+        Car car2 = _fakers.Car.Generate();
+        car2.Engine = _fakers.DieselEngine.Generate();
+
+        Car car3 = _fakers.Car.Generate();
+        car3.Engine = _fakers.GasolineEngine.Generate();
+        ((GasolineEngine)car3.Engine).Cylinders = _fakers.Cylinder.Generate(4).ToHashSet();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Vehicles.AddRange(car1, car2, car3);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/cars?sort=-count(engine.cylinders)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(3);
+
+        responseDocument.Data.ManyValue[0].Type.Should().Be("cars");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(car3.StringId);
+
+        responseDocument.Data.ManyValue[1].Type.Should().Be("cars");
+        responseDocument.Data.ManyValue[1].Id.Should().Be(car1.StringId);
+
+        responseDocument.Data.ManyValue[2].Type.Should().Be("cars");
+        responseDocument.Data.ManyValue[2].Id.Should().Be(car2.StringId);
+    }
+
+    [Fact]
+    public async Task Cannot_sort_on_ambiguous_derived_attribute()
+    {
+        // Arrange
+        const string route = "/cars?sort=engine.serialCode";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified sort is invalid.");
+        error.Detail.Should().Be("Attribute 'serialCode' in 'engine.serialCode' is defined on multiple derived types.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("sort");
+    }
+
+    [Fact]
+    public async Task Cannot_sort_on_ambiguous_derived_relationship()
+    {
+        // Arrange
+        const string route = "/vehicles?sort=count(features)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified sort is invalid.");
+        error.Detail.Should().Be("Relationship 'features' is defined on multiple derived types.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("sort");
+    }
+
+    [Fact]
+    public async Task Can_sort_on_derived_attribute_from_resource_definition_using_expression_syntax()
+    {
+        // Arrange
+        ChromeWheel chromeWheel1 = _fakers.ChromeWheel.Generate();
+        chromeWheel1.PaintColor = "blue";
+        chromeWheel1.Vehicle = _fakers.Car.Generate();
+        ((Car)chromeWheel1.Vehicle).Engine = _fakers.GasolineEngine.Generate();
+        ((GasolineEngine)((Car)chromeWheel1.Vehicle).Engine).Cylinders = _fakers.Cylinder.Generate(2).ToHashSet();
+
+        ChromeWheel chromeWheel2 = _fakers.ChromeWheel.Generate();
+        chromeWheel2.PaintColor = "blue";
+        chromeWheel2.Vehicle = _fakers.Car.Generate();
+        ((Car)chromeWheel2.Vehicle).Engine = _fakers.GasolineEngine.Generate();
+        ((GasolineEngine)((Car)chromeWheel2.Vehicle).Engine).Cylinders = _fakers.Cylinder.Generate(1).ToHashSet();
+
+        ChromeWheel chromeWheel3 = _fakers.ChromeWheel.Generate();
+        chromeWheel3.PaintColor = "black";
+
+        CarbonWheel carbonWheel1 = _fakers.CarbonWheel.Generate();
+        carbonWheel1.HasTube = false;
+
+        CarbonWheel carbonWheel2 = _fakers.CarbonWheel.Generate();
+        carbonWheel2.HasTube = true;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Wheels.AddRange(chromeWheel1, chromeWheel2, chromeWheel3, carbonWheel1, carbonWheel2);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/wheels?autoSort=expr";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(5);
+
+        responseDocument.Data.ManyValue[0].Type.Should().Be("chromeWheels");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(chromeWheel3.StringId);
+
+        responseDocument.Data.ManyValue[1].Type.Should().Be("chromeWheels");
+        responseDocument.Data.ManyValue[1].Id.Should().Be(chromeWheel2.StringId);
+
+        responseDocument.Data.ManyValue[2].Type.Should().Be("chromeWheels");
+        responseDocument.Data.ManyValue[2].Id.Should().Be(chromeWheel1.StringId);
+
+        responseDocument.Data.ManyValue[3].Type.Should().Be("carbonWheels");
+        responseDocument.Data.ManyValue[3].Id.Should().Be(carbonWheel2.StringId);
+
+        responseDocument.Data.ManyValue[4].Type.Should().Be("carbonWheels");
+        responseDocument.Data.ManyValue[4].Id.Should().Be(carbonWheel1.StringId);
+    }
+
+    [Fact]
+    public async Task Can_sort_on_derived_attribute_from_resource_definition_using_lambda_syntax()
+    {
+        // Arrange
+        ChromeWheel chromeWheel1 = _fakers.ChromeWheel.Generate();
+        chromeWheel1.PaintColor = "blue";
+        chromeWheel1.Vehicle = _fakers.Car.Generate();
+        ((Car)chromeWheel1.Vehicle).Engine = _fakers.GasolineEngine.Generate();
+        ((GasolineEngine)((Car)chromeWheel1.Vehicle).Engine).Cylinders = _fakers.Cylinder.Generate(2).ToHashSet();
+
+        ChromeWheel chromeWheel2 = _fakers.ChromeWheel.Generate();
+        chromeWheel2.PaintColor = "blue";
+        chromeWheel2.Vehicle = _fakers.Car.Generate();
+        ((Car)chromeWheel2.Vehicle).Engine = _fakers.GasolineEngine.Generate();
+        ((GasolineEngine)((Car)chromeWheel2.Vehicle).Engine).Cylinders = _fakers.Cylinder.Generate(1).ToHashSet();
+
+        ChromeWheel chromeWheel3 = _fakers.ChromeWheel.Generate();
+        chromeWheel3.PaintColor = "black";
+
+        CarbonWheel carbonWheel1 = _fakers.CarbonWheel.Generate();
+        carbonWheel1.HasTube = false;
+
+        CarbonWheel carbonWheel2 = _fakers.CarbonWheel.Generate();
+        carbonWheel2.HasTube = true;
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Vehicle>();
+            dbContext.Wheels.AddRange(chromeWheel1, chromeWheel2, chromeWheel3, carbonWheel1, carbonWheel2);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/wheels?autoSort=lambda";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(5);
+
+        responseDocument.Data.ManyValue[0].Type.Should().Be("chromeWheels");
+        responseDocument.Data.ManyValue[0].Id.Should().Be(chromeWheel3.StringId);
+
+        responseDocument.Data.ManyValue[1].Type.Should().Be("chromeWheels");
+        responseDocument.Data.ManyValue[1].Id.Should().Be(chromeWheel2.StringId);
+
+        responseDocument.Data.ManyValue[2].Type.Should().Be("chromeWheels");
+        responseDocument.Data.ManyValue[2].Id.Should().Be(chromeWheel1.StringId);
+
+        responseDocument.Data.ManyValue[3].Type.Should().Be("carbonWheels");
+        responseDocument.Data.ManyValue[3].Id.Should().Be(carbonWheel2.StringId);
+
+        responseDocument.Data.ManyValue[4].Type.Should().Be("carbonWheels");
+        responseDocument.Data.ManyValue[4].Id.Should().Be(carbonWheel1.StringId);
     }
 }

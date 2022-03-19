@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
 
@@ -60,25 +61,25 @@ public abstract class QueryClauseBuilder<TArgument> : QueryExpressionVisitor<TAr
 
     public override Expression VisitResourceFieldChain(ResourceFieldChainExpression expression, TArgument argument)
     {
-        string[] components = expression.Fields.Select(field => field.Property.Name).ToArray();
-
-        return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
-    }
-
-    private static MemberExpression CreatePropertyExpressionFromComponents(Expression source, IEnumerable<string> components)
-    {
         MemberExpression? property = null;
 
-        foreach (string propertyName in components)
+        foreach (ResourceFieldAttribute field in expression.Fields)
         {
-            Type parentType = property == null ? source.Type : property.Type;
+            Expression parentAccessor = property ?? LambdaScope.Accessor;
+            Type propertyType = field.Property.DeclaringType!;
+            string propertyName = field.Property.Name;
+
+            bool requiresUpCast = parentAccessor.Type != propertyType && parentAccessor.Type.IsAssignableFrom(propertyType);
+            Type parentType = requiresUpCast ? propertyType : parentAccessor.Type;
 
             if (parentType.GetProperty(propertyName) == null)
             {
                 throw new InvalidOperationException($"Type '{parentType.Name}' does not contain a property named '{propertyName}'.");
             }
 
-            property = property == null ? Expression.Property(source, propertyName) : Expression.Property(property, propertyName);
+            property = requiresUpCast
+                ? Expression.MakeMemberAccess(Expression.Convert(parentAccessor, propertyType), field.Property)
+                : Expression.Property(parentAccessor, propertyName);
         }
 
         return property!;

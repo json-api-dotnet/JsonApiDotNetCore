@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 public static class SparseFieldSetExpressionExtensions
 {
     public static SparseFieldSetExpression? Including<TResource>(this SparseFieldSetExpression? sparseFieldSet,
-        Expression<Func<TResource, dynamic?>> fieldSelector, IResourceGraph resourceGraph)
+        Expression<Func<TResource, object?>> fieldSelector, IResourceGraph resourceGraph)
         where TResource : class, IIdentifiable
     {
         ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
@@ -39,7 +39,7 @@ public static class SparseFieldSetExpressionExtensions
     }
 
     public static SparseFieldSetExpression? Excluding<TResource>(this SparseFieldSetExpression? sparseFieldSet,
-        Expression<Func<TResource, dynamic?>> fieldSelector, IResourceGraph resourceGraph)
+        Expression<Func<TResource, object?>> fieldSelector, IResourceGraph resourceGraph)
         where TResource : class, IIdentifiable
     {
         ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));

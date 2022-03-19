@@ -11,6 +11,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 [PublicAPI]
 public class IncludeParser : QueryExpressionParser
 {
+    private static readonly ResourceFieldChainErrorFormatter ErrorFormatter = new();
+
     public IncludeExpression Parse(string source, ResourceType resourceTypeInScope, int? maximumDepth)
     {
         ArgumentGuard.NotNull(resourceTypeInScope, nameof(resourceTypeInScope));
@@ -98,7 +100,7 @@ public class IncludeParser : QueryExpressionParser
         {
             // Depending on the left side of the include chain, we may match relationships anywhere in the resource type hierarchy.
             // This is compensated for when rendering the response, which substitutes relationships on base types with the derived ones.
-            ISet<RelationshipAttribute> relationships = GetRelationshipsInTypeOrDerived(parent.Relationship.RightType, relationshipName);
+            IReadOnlySet<RelationshipAttribute> relationships = parent.Relationship.RightType.GetRelationshipsInTypeOrDerived(relationshipName);
 
             if (relationships.Any())
             {
@@ -116,28 +118,6 @@ public class IncludeParser : QueryExpressionParser
         return children;
     }
 
-    private ISet<RelationshipAttribute> GetRelationshipsInTypeOrDerived(ResourceType resourceType, string relationshipName)
-    {
-        RelationshipAttribute? relationship = resourceType.FindRelationshipByPublicName(relationshipName);
-
-        if (relationship != null)
-        {
-            return relationship.AsHashSet();
-        }
-
-        // Hiding base members using the 'new' keyword instead of 'override' (effectively breaking inheritance) is currently not supported.
-        // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords
-        HashSet<RelationshipAttribute> relationshipsInDerivedTypes = new();
-
-        foreach (ResourceType derivedType in resourceType.DirectlyDerivedTypes)
-        {
-            ISet<RelationshipAttribute> relationshipsInDerivedType = GetRelationshipsInTypeOrDerived(derivedType, relationshipName);
-            relationshipsInDerivedTypes.AddRange(relationshipsInDerivedType);
-        }
-
-        return relationshipsInDerivedTypes;
-    }
-
     private static void AssertRelationshipsFound(ISet<RelationshipAttribute> relationshipsFound, string relationshipName, ICollection<IncludeTreeNode> parents)
     {
         if (relationshipsFound.Any())
@@ -145,32 +125,15 @@ public class IncludeParser : QueryExpressionParser
             return;
         }
 
-        var messageBuilder = new StringBuilder();
-        messageBuilder.Append($"Relationship '{relationshipName}'");
-
         string[] parentPaths = parents.Select(parent => parent.Path).Distinct().Where(path => path != string.Empty).ToArray();
-
-        if (parentPaths.Length > 0)
-        {
-            messageBuilder.Append($" in '{parentPaths[0]}.{relationshipName}'");
-        }
+        string path = parentPaths.Length > 0 ? $"{parentPaths[0]}.{relationshipName}" : relationshipName;
 
         ResourceType[] parentResourceTypes = parents.Select(parent => parent.Relationship.RightType).Distinct().ToArray();
 
-        if (parentResourceTypes.Length == 1)
-        {
-            messageBuilder.Append($" does not exist on resource type '{parentResourceTypes[0].PublicName}'");
-        }
-        else
-        {
-            string typeNames = string.Join(", ", parentResourceTypes.Select(type => $"'{type.PublicName}'"));
-            messageBuilder.Append($" does not exist on any of the resource types {typeNames}");
-        }
+        bool hasDerivedTypes = parents.Any(parent => parent.Relationship.RightType.DirectlyDerivedTypes.Count > 0);
 
-        bool hasDerived = parents.Any(parent => parent.Relationship.RightType.DirectlyDerivedTypes.Count > 0);
-        messageBuilder.Append(hasDerived ? " or any of its derived types." : ".");
-
-        throw new QueryParseException(messageBuilder.ToString());
+        string message = ErrorFormatter.GetForNoneFound(ResourceFieldCategory.Relationship, relationshipName, path, parentResourceTypes, hasDerivedTypes);
+        throw new QueryParseException(message);
     }
 
     private static void AssertAtLeastOneCanBeIncluded(ISet<RelationshipAttribute> relationshipsFound, string relationshipName,
