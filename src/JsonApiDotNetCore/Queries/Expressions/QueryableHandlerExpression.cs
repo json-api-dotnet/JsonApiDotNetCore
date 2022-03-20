@@ -38,6 +38,11 @@ public class QueryableHandlerExpression : QueryExpression
         return $"handler('{_parameterValue}')";
     }
 
+    public override string ToFullString()
+    {
+        return ToString();
+    }
+
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))

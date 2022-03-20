@@ -43,23 +43,35 @@ public class ResourceGraphBuilder
 
         var resourceGraph = new ResourceGraph(resourceTypes);
 
+        SetFieldTypes(resourceGraph);
         SetRelationshipTypes(resourceGraph);
         SetDirectlyDerivedTypes(resourceGraph);
 
         return resourceGraph;
     }
 
+    private static void SetFieldTypes(ResourceGraph resourceGraph)
+    {
+        foreach (ResourceFieldAttribute field in resourceGraph.GetResourceTypes().SelectMany(resourceType => resourceType.Fields))
+        {
+            field.Type = resourceGraph.GetResourceType(field.Property.ReflectedType!);
+        }
+    }
+
     private static void SetRelationshipTypes(ResourceGraph resourceGraph)
     {
         foreach (RelationshipAttribute relationship in resourceGraph.GetResourceTypes().SelectMany(resourceType => resourceType.Relationships))
         {
-            relationship.LeftType = resourceGraph.GetResourceType(relationship.LeftClrType!);
-            ResourceType? rightType = resourceGraph.FindResourceType(relationship.RightClrType!);
+            Type rightClrType = relationship is HasOneAttribute
+                ? relationship.Property.PropertyType
+                : relationship.Property.PropertyType.GetGenericArguments()[0];
+
+            ResourceType? rightType = resourceGraph.FindResourceType(rightClrType);
 
             if (rightType == null)
             {
-                throw new InvalidConfigurationException($"Resource type '{relationship.LeftClrType}' depends on " +
-                    $"'{relationship.RightClrType}', which was not added to the resource graph.");
+                throw new InvalidConfigurationException($"Resource type '{relationship.LeftType.ClrType}' depends on " +
+                    $"'{rightClrType}', which was not added to the resource graph.");
             }
 
             relationship.RightType = rightType;
@@ -254,8 +266,6 @@ public class ResourceGraphBuilder
             {
                 relationship.Property = property;
                 SetPublicName(relationship, property);
-                relationship.LeftClrType = resourceClrType;
-                relationship.RightClrType = GetRelationshipType(relationship, property);
 
                 IncludeField(relationshipsByName, relationship);
             }
@@ -268,14 +278,6 @@ public class ResourceGraphBuilder
     {
         // ReSharper disable once ConstantNullCoalescingCondition
         field.PublicName ??= FormatPropertyName(property);
-    }
-
-    private Type GetRelationshipType(RelationshipAttribute relationship, PropertyInfo property)
-    {
-        ArgumentGuard.NotNull(relationship, nameof(relationship));
-        ArgumentGuard.NotNull(property, nameof(property));
-
-        return relationship is HasOneAttribute ? property.PropertyType : property.PropertyType.GetGenericArguments()[0];
     }
 
     private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceClrType, int recursionDepth = 0)

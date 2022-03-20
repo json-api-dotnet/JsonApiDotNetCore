@@ -9,4 +9,6 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 public abstract class QueryExpression
 {
     public abstract TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument);
+
+    public abstract string ToFullString();
 }

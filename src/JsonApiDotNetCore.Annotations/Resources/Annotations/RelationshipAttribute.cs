@@ -14,21 +14,8 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
 {
     private protected static readonly CollectionConverter CollectionConverter = new();
 
-    /// <summary>
-    /// The CLR type in which this relationship is declared.
-    /// </summary>
-    internal Type? LeftClrType { get; set; }
-
-    /// <summary>
-    /// The CLR type this relationship points to. In the case of a <see cref="HasManyAttribute" /> relationship, this value will be the collection element
-    /// type.
-    /// </summary>
-    /// <example>
-    /// <code><![CDATA[
-    /// public ISet<Tag> Tags { get; set; } // RightClrType: typeof(Tag)
-    /// ]]></code>
-    /// </example>
-    internal Type? RightClrType { get; set; }
+    // These are definitely assigned after building the resource graph, which is why their public equivalents are declared as non-nullable.
+    private ResourceType? _rightType;
 
     /// <summary>
     /// The <see cref="PropertyInfo" /> of the Entity Framework Core inverse navigation, which may or may not exist. Even if it exists, it may not be exposed
@@ -52,15 +39,28 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
     public PropertyInfo? InverseNavigationProperty { get; set; }
 
     /// <summary>
-    /// The containing resource type in which this relationship is declared.
+    /// The containing resource type in which this relationship is declared. Identical to <see cref="ResourceFieldAttribute.Type" />.
     /// </summary>
-    public ResourceType LeftType { get; internal set; } = null!;
+    public ResourceType LeftType => Type;
 
     /// <summary>
     /// The resource type this relationship points to. In the case of a <see cref="HasManyAttribute" /> relationship, this value will be the collection
     /// element type.
     /// </summary>
-    public ResourceType RightType { get; internal set; } = null!;
+    /// <example>
+    /// <code><![CDATA[
+    /// public ISet<Tag> Tags { get; set; } // RightType: Tag
+    /// ]]></code>
+    /// </example>
+    public ResourceType RightType
+    {
+        get => _rightType!;
+        internal set
+        {
+            ArgumentGuard.NotNull(value, nameof(value));
+            _rightType = value;
+        }
+    }
 
     /// <summary>
     /// Configures which links to write in the relationship-level links object for this relationship. Defaults to <see cref="LinkTypes.NotConfigured" />,
@@ -91,12 +91,11 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
 
         var other = (RelationshipAttribute)obj;
 
-        return LeftClrType == other.LeftClrType && RightClrType == other.RightClrType && Links == other.Links && CanInclude == other.CanInclude &&
-            base.Equals(other);
+        return _rightType?.ClrType == other._rightType?.ClrType && Links == other.Links && CanInclude == other.CanInclude && base.Equals(other);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(LeftClrType, RightClrType, Links, CanInclude, base.GetHashCode());
+        return HashCode.Combine(_rightType?.ClrType, Links, CanInclude, base.GetHashCode());
     }
 }

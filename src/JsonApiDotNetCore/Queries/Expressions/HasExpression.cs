@@ -28,15 +28,25 @@ public class HasExpression : FilterExpression
 
     public override string ToString()
     {
+        return InnerToString(false);
+    }
+
+    public override string ToFullString()
+    {
+        return InnerToString(true);
+    }
+
+    private string InnerToString(bool toFullString)
+    {
         var builder = new StringBuilder();
         builder.Append(Keywords.Has);
         builder.Append('(');
-        builder.Append(TargetCollection);
+        builder.Append(toFullString ? TargetCollection.ToFullString() : TargetCollection);
 
         if (Filter != null)
         {
             builder.Append(',');
-            builder.Append(Filter);
+            builder.Append(toFullString ? Filter.ToFullString() : Filter);
         }
 
         builder.Append(')');

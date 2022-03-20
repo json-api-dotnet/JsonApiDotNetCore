@@ -1,5 +1,6 @@
 using System.Reflection;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 
 // ReSharper disable NonReadonlyMemberInGetHashCode
 
@@ -15,6 +16,7 @@ public abstract class ResourceFieldAttribute : Attribute
     // These are definitely assigned after building the resource graph, which is why their public equivalents are declared as non-nullable.
     private string? _publicName;
     private PropertyInfo? _property;
+    private ResourceType? _type;
 
     /// <summary>
     /// The publicly exposed name of this JSON:API field. When not explicitly assigned, the configured naming convention is applied on the property name.
@@ -43,6 +45,19 @@ public abstract class ResourceFieldAttribute : Attribute
         {
             ArgumentGuard.NotNull(value, nameof(value));
             _property = value;
+        }
+    }
+
+    /// <summary>
+    /// The containing resource type in which this field is declared.
+    /// </summary>
+    public ResourceType Type
+    {
+        get => _type!;
+        internal set
+        {
+            ArgumentGuard.NotNull(value, nameof(value));
+            _type = value;
         }
     }
 

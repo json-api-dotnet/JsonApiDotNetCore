@@ -36,6 +36,11 @@ public class ResourceFieldChainExpression : IdentifierExpression
         return string.Join(".", Fields.Select(field => field.PublicName));
     }
 
+    public override string ToFullString()
+    {
+        return string.Join(".", Fields.Select(field => $"{field.Type.PublicName}:{field.PublicName}"));
+    }
+
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))

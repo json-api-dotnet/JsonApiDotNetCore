@@ -32,13 +32,23 @@ public class IsTypeExpression : FilterExpression
 
     public override string ToString()
     {
+        return InnerToString(false);
+    }
+
+    public override string ToFullString()
+    {
+        return InnerToString(true);
+    }
+
+    private string InnerToString(bool toFullString)
+    {
         var builder = new StringBuilder();
         builder.Append(Keywords.IsType);
         builder.Append('(');
 
         if (TargetToOneRelationship != null)
         {
-            builder.Append(TargetToOneRelationship);
+            builder.Append(toFullString ? TargetToOneRelationship.ToFullString() : TargetToOneRelationship);
         }
 
         builder.Append(',');
@@ -47,7 +57,7 @@ public class IsTypeExpression : FilterExpression
         if (Child != null)
         {
             builder.Append(',');
-            builder.Append(Child);
+            builder.Append(toFullString ? Child.ToFullString() : Child);
         }
 
         builder.Append(')');

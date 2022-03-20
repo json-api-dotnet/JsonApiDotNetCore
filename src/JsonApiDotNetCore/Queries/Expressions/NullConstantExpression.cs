@@ -25,6 +25,11 @@ public class NullConstantExpression : IdentifierExpression
         return Keywords.Null;
     }
 
+    public override string ToFullString()
+    {
+        return ToString();
+    }
+
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))

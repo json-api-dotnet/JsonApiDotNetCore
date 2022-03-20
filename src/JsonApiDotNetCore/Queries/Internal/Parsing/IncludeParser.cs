@@ -296,47 +296,7 @@ public class IncludeParser : QueryExpressionParser
         public override string ToString()
         {
             IncludeExpression include = ToExpression();
-
-            IncludeChainConverter includeChainConverter = new();
-            IReadOnlyCollection<ResourceFieldChainExpression> chains = includeChainConverter.GetRelationshipChains(include);
-
-            IEnumerable<ResourceFieldChainExpression> chainsInOrder = InDisplayOrder(chains);
-            return string.Join(",", chainsInOrder.Select(RelationshipChainToString));
-        }
-
-        private static IEnumerable<ResourceFieldChainExpression> InDisplayOrder(IEnumerable<ResourceFieldChainExpression> chains)
-        {
-            return chains.OrderBy(chain => string.Join('.',
-                chain.Fields.OfType<RelationshipAttribute>().Select(relationship => relationship.PublicName + "@" + relationship.LeftType.PublicName)));
-        }
-
-        private static string RelationshipChainToString(ResourceFieldChainExpression chain)
-        {
-            var textBuilder = new StringBuilder();
-
-            ResourceType? parentType = null;
-
-            foreach (RelationshipAttribute relationship in chain.Fields.Cast<RelationshipAttribute>())
-            {
-                if (textBuilder.Length > 0)
-                {
-                    textBuilder.Append('.');
-                }
-
-                if (parentType == null || !parentType.Equals(relationship.LeftType))
-                {
-                    // This is not official syntax at this time, just helpful for debugging the parser.
-                    textBuilder.Append('[');
-                    textBuilder.Append(relationship.LeftType.PublicName);
-                    textBuilder.Append(']');
-                }
-
-                textBuilder.Append(relationship.PublicName);
-
-                parentType = relationship.RightType;
-            }
-
-            return textBuilder.ToString();
+            return include.ToFullString();
         }
 
         private sealed class HiddenRootRelationship : RelationshipAttribute
