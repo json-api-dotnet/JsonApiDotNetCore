@@ -223,7 +223,7 @@ Content-Type: application/vnd.api+json
         if (existingIncludes.Any(include =&gt;
             include.Relationship.Property.Name == nameof(Employee.Manager)))
         {
-            throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+            throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
             {
                 Title = &quot;Including the manager of employees is not permitted.&quot;
             });

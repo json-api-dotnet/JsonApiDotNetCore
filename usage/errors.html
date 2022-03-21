@@ -69,17 +69,17 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="errors">Errors</h1>
 
-<p>Errors returned will contain only the properties that are set on the <code>Error</code> class. Custom fields can be added through <code>Error.Meta</code>.
-You can create a custom error by throwing a <code>JsonApiException</code> (which accepts an <code>Error</code> instance), or returning an <code>Error</code> instance from an <code>ActionResult</code> in a controller.
-Please keep in mind that JSON:API requires Title to be a generic message, while Detail should contain information about the specific problem occurence.</p>
+<p>Errors returned will contain only the properties that are set on the <code>ErrorObject</code> class. Custom fields can be added through <code>ErrorObject.Meta</code>.
+You can create a custom error by throwing a <code>JsonApiException</code> (which accepts an <code>ErrorObject</code> instance), or returning an <code>ErrorObject</code> instance from an <code>ActionResult</code> in a controller.
+Please keep in mind that JSON:API requires <code>Title</code> to be a generic message, while <code>Detail</code> should contain information about the specific problem occurence.</p>
 <p>From a controller method:</p>
-<pre><code class="lang-c#">return Conflict(new Error(HttpStatusCode.Conflict)
+<pre><code class="lang-c#">return Conflict(new ErrorObject(HttpStatusCode.Conflict)
 {
     Title = &quot;Target resource was modified by another user.&quot;,
     Detail = $&quot;User {userName} changed the {resourceField} field on {resourceName} resource.&quot;
 });
 </code></pre><p>From other code:</p>
-<pre><code class="lang-c#">throw new JsonApiException(new Error(HttpStatusCode.Conflict)
+<pre><code class="lang-c#">throw new JsonApiException(new ErrorObject(HttpStatusCode.Conflict)
 {
     Title = &quot;Target resource was modified by another user.&quot;,
     Detail = $&quot;User {userName} changed the {resourceField} field on {resourceName} resource.&quot;
@@ -131,7 +131,7 @@ public class CustomExceptionHandler : ExceptionHandler
         {
             return new[]
             {
-                new Error(HttpStatusCode.Conflict)
+                new ErrorObject(HttpStatusCode.Conflict)
                 {
                     Title = &quot;Product is temporarily available.&quot;,
                     Detail = $&quot;Product {productOutOfStock.ProductId} &quot; +
