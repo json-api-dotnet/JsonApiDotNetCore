@@ -200,7 +200,7 @@ public class EmployeeDefinition : JsonApiResourceDefinition<Employee, int>
         if (existingIncludes.Any(include =>
             include.Relationship.Property.Name == nameof(Employee.Manager)))
         {
-            throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+            throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
             {
                 Title = "Including the manager of employees is not permitted."
             });
