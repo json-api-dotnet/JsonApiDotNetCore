@@ -108,7 +108,7 @@ internal sealed class ResourceInheritanceFakers : FakerContainer
     private readonly Lazy<Faker<StringValue>> _lazyStringValueFaker = new(() =>
         new Faker<StringValue>()
             .UseSeed(GetFakerSeed())
-            .RuleFor(stringValue => stringValue.Content, faker => faker.Lorem.Text()));
+            .RuleFor(stringValue => stringValue.Content, faker => faker.Lorem.Lines(1)));
 
     private readonly Lazy<Faker<NumberProperty>> _lazyNumberPropertyFaker = new(() =>
         new Faker<NumberProperty>()

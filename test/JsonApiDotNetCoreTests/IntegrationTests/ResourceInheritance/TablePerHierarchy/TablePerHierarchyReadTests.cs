@@ -4,9 +4,9 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.TablePerHierarchy;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class TablePerHierarchyTests : ResourceInheritanceTests<TablePerHierarchyDbContext>
+public sealed class TablePerHierarchyReadTests : ResourceInheritanceReadTests<TablePerHierarchyDbContext>
 {
-    public TablePerHierarchyTests(IntegrationTestContext<TestableStartup<TablePerHierarchyDbContext>, TablePerHierarchyDbContext> testContext)
+    public TablePerHierarchyReadTests(IntegrationTestContext<TestableStartup<TablePerHierarchyDbContext>, TablePerHierarchyDbContext> testContext)
         : base(testContext)
     {
     }
