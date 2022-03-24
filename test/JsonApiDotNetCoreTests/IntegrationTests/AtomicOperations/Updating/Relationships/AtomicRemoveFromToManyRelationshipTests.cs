@@ -986,7 +986,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
-        error.Detail.Should().Be("Type 'playlists' is incompatible with type 'performers' of relationship 'performers'.");
+        error.Detail.Should().Be("Type 'playlists' is not convertible to type 'performers' of relationship 'performers'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]/data[0]/type");
         error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());

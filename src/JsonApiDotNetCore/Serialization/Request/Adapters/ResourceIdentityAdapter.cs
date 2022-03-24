@@ -72,8 +72,8 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         if (expected != null && !expected.ClrType.IsAssignableFrom(actual.ClrType))
         {
             string message = relationshipName != null
-                ? $"Type '{actual.PublicName}' is incompatible with type '{expected.PublicName}' of relationship '{relationshipName}'."
-                : $"Type '{actual.PublicName}' is incompatible with type '{expected.PublicName}'.";
+                ? $"Type '{actual.PublicName}' is not convertible to type '{expected.PublicName}' of relationship '{relationshipName}'."
+                : $"Type '{actual.PublicName}' is not convertible to type '{expected.PublicName}'.";
 
             throw new ModelConversionException(state.Position, "Incompatible resource type found.", message, HttpStatusCode.Conflict);
         }
