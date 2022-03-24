@@ -42,7 +42,7 @@ public sealed class ResourceGraph : IResourceGraph
 
         if (resourceType == null)
         {
-            throw new InvalidOperationException($"Resource type '{publicName}' does not exist.");
+            throw new InvalidOperationException($"Resource type '{publicName}' does not exist in the resource graph.");
         }
 
         return resourceType;
@@ -63,7 +63,7 @@ public sealed class ResourceGraph : IResourceGraph
 
         if (resourceType == null)
         {
-            throw new InvalidOperationException($"Resource of type '{resourceClrType.Name}' does not exist.");
+            throw new InvalidOperationException($"Type '{resourceClrType}' does not exist in the resource graph.");
         }
 
         return resourceType;

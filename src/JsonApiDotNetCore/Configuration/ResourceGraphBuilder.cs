@@ -46,6 +46,7 @@ public class ResourceGraphBuilder
         SetFieldTypes(resourceGraph);
         SetRelationshipTypes(resourceGraph);
         SetDirectlyDerivedTypes(resourceGraph);
+        ValidateFieldsInDerivedTypes(resourceGraph);
 
         return resourceGraph;
     }
@@ -102,6 +103,42 @@ public class ResourceGraphBuilder
         foreach ((ResourceType baseType, HashSet<ResourceType> directlyDerivedTypes) in directlyDerivedTypesPerBaseType)
         {
             baseType.DirectlyDerivedTypes = directlyDerivedTypes;
+        }
+    }
+
+    private void ValidateFieldsInDerivedTypes(ResourceGraph resourceGraph)
+    {
+        foreach (ResourceType resourceType in resourceGraph.GetResourceTypes())
+        {
+            if (resourceType.BaseType != null)
+            {
+                ValidateAttributesInDerivedType(resourceType);
+                ValidateRelationshipsInDerivedType(resourceType);
+            }
+        }
+    }
+
+    private static void ValidateAttributesInDerivedType(ResourceType resourceType)
+    {
+        foreach (AttrAttribute attribute in resourceType.BaseType!.Attributes)
+        {
+            if (resourceType.FindAttributeByPublicName(attribute.PublicName) == null)
+            {
+                throw new InvalidConfigurationException($"Attribute '{attribute.PublicName}' from base type " +
+                    $"'{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+            }
+        }
+    }
+
+    private static void ValidateRelationshipsInDerivedType(ResourceType resourceType)
+    {
+        foreach (RelationshipAttribute relationship in resourceType.BaseType!.Relationships)
+        {
+            if (resourceType.FindRelationshipByPublicName(relationship.PublicName) == null)
+            {
+                throw new InvalidConfigurationException($"Relationship '{relationship.PublicName}' from base type " +
+                    $"'{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+            }
         }
     }
 

@@ -205,7 +205,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
         exception.Errors[0].Title.Should().StartWith("Invalid lambda expression for sorting from resource definition. It should ");
         exception.Errors[0].Detail.Should().StartWith("The lambda expression 'entry => Convert(entry, FileEntry).Content' is invalid. ");
-        exception.Errors[0].Detail.Should().EndWith("Resource of type 'FileEntry' does not exist.");
+        exception.Errors[0].Detail.Should().EndWith($"Type '{typeof(FileEntry)}' does not exist in the resource graph.");
         exception.Errors[0].Source.Should().BeNull();
     }
 

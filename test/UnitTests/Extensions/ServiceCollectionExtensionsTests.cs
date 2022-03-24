@@ -95,7 +95,8 @@ public sealed class ServiceCollectionExtensionsTests
         Action action = () => services.AddResourceService<int>();
 
         // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>();
+        action.Should().ThrowExactly<InvalidConfigurationException>()
+            .WithMessage("Type 'System.Int32' does not implement any of the expected JsonApiDotNetCore interfaces.");
     }
 
     [Fact]
