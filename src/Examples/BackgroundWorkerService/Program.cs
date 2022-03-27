@@ -1,11 +1,10 @@
+using System.Diagnostics;
 using BackgroundWorkerService;
 using BackgroundWorkerService.Data;
 using BackgroundWorkerService.Interop;
 using BackgroundWorkerService.Models;
 using JsonApiDotNetCore.Configuration;
-#if DEBUG
 using JsonApiDotNetCore.Diagnostics;
-#endif
 using JsonApiDotNetCore.QueryStrings;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -35,11 +34,7 @@ static string GetConnectionString(IConfiguration configuration)
 
 static void AddJsonApi(IServiceCollection serviceCollection)
 {
-#if DEBUG
-    // This is only needed when building against JADNC debug sources directly, instead of the NuGet package.
-    ICodeTimerSession codeTimerSession = new DefaultCodeTimerSession();
-    CodeTimingSessionManager.Capture(codeTimerSession);
-#endif
+    ReplaceCodeTimer();
 
     // Discard any MVC-specific service registrations, we won't need them.
     var fakeMvcBuilder = new FakeMvcBuilder();
@@ -55,6 +50,14 @@ static void AddJsonApi(IServiceCollection serviceCollection)
 
     // This allows us to inject a query string, since ASP.NET is unavailable.
     serviceCollection.AddScoped<IRequestQueryStringAccessor, FakeRequestQueryStringAccessor>();
+}
+
+[Conditional("DEBUG")]
+static void ReplaceCodeTimer()
+{
+    // This is only needed when building against JADNC debug sources directly, instead of the NuGet package.
+    ICodeTimerSession codeTimerSession = new DefaultCodeTimerSession();
+    CodeTimingSessionManager.Capture(codeTimerSession);
 }
 
 static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
