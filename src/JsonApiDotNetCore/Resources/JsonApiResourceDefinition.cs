@@ -138,7 +138,7 @@ public class JsonApiResourceDefinition<TResource, TId> : IResourceDefinition<TRe
     }
 
     /// <inheritdoc />
-    public virtual Task OnAddToRelationshipAsync(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+    public virtual Task OnAddToRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
         return Task.CompletedTask;

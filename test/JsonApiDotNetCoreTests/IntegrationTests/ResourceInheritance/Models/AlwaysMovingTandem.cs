@@ -1,16 +1,18 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance")]
-public sealed class VehicleManufacturer : Identifiable<long>
+public sealed class AlwaysMovingTandem : Bike
 {
+    [NotMapped]
     [Attr]
-    public string? Name { get; set; }
-
-    [HasMany]
-    public ISet<Vehicle> Vehicles { get; set; } = new HashSet<Vehicle>();
+    public Guid LocationToken
+    {
+        get => Guid.NewGuid();
+        set => _ = value;
+    }
 }

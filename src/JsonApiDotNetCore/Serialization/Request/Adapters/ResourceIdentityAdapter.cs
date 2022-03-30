@@ -46,6 +46,12 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         ResourceType? resourceType = _resourceGraph.FindResourceType(identity.Type);
 
         AssertIsKnownResourceType(resourceType, identity.Type, state);
+
+        if (state.Request.WriteOperation is WriteOperationKind.CreateResource or WriteOperationKind.UpdateResource)
+        {
+            AssertIsNotAbstractType(resourceType, identity.Type, state);
+        }
+
         AssertIsCompatibleResourceType(resourceType, requirements.ResourceType, requirements.RelationshipName, state);
 
         return resourceType;
@@ -64,6 +70,14 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         if (resourceType == null)
         {
             throw new ModelConversionException(state.Position, "Unknown resource type found.", $"Resource type '{typeName}' does not exist.");
+        }
+    }
+
+    private static void AssertIsNotAbstractType(ResourceType resourceType, string typeName, RequestAdapterState state)
+    {
+        if (resourceType.ClrType.IsAbstract)
+        {
+            throw new ModelConversionException(state.Position, "Abstract resource type found.", $"Resource type '{typeName}' is abstract.");
         }
     }
 

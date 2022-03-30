@@ -206,6 +206,43 @@ public sealed class ResourceType
         return _lazyAllConcreteDerivedTypes.Value;
     }
 
+    /// <summary>
+    /// Searches the tree of derived types to find a match for the specified <paramref name="clrType" />.
+    /// </summary>
+    public ResourceType GetTypeOrDerived(Type clrType)
+    {
+        ArgumentGuard.NotNull(clrType, nameof(clrType));
+
+        ResourceType? derivedType = FindTypeOrDerived(this, clrType);
+
+        if (derivedType == null)
+        {
+            throw new InvalidOperationException($"Resource type '{PublicName}' is not a base type of '{clrType}'.");
+        }
+
+        return derivedType;
+    }
+
+    private static ResourceType? FindTypeOrDerived(ResourceType type, Type clrType)
+    {
+        if (type.ClrType == clrType)
+        {
+            return type;
+        }
+
+        foreach (ResourceType derivedType in type.DirectlyDerivedTypes)
+        {
+            ResourceType? matchingType = FindTypeOrDerived(derivedType, clrType);
+
+            if (matchingType != null)
+            {
+                return matchingType;
+            }
+        }
+
+        return null;
+    }
+
     internal IReadOnlySet<AttrAttribute> GetAttributesInTypeOrDerived(string publicName)
     {
         return GetAttributesInTypeOrDerived(this, publicName);
@@ -259,6 +296,11 @@ public sealed class ResourceType
         }
 
         return relationshipsInDerivedTypes;
+    }
+
+    internal bool IsPartOfTypeHierarchy()
+    {
+        return BaseType != null || DirectlyDerivedTypes.Any();
     }
 
     public override string ToString()

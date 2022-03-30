@@ -606,6 +606,7 @@ public sealed partial class OutboxTests
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
+            (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnPrepareWriteAsync),
             (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnRemoveFromRelationshipAsync),
             (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWritingAsync),
             (typeof(DomainGroup), ResourceDefinitionExtensibilityPoints.OnWriteSucceededAsync)

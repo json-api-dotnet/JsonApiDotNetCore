@@ -104,8 +104,8 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentGuard.NotNull(resource, nameof(resource));
 
-        dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-        await resourceDefinition.OnPrepareWriteAsync(resource, writeOperation, cancellationToken);
+        dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
+        await resourceDefinition.OnPrepareWriteAsync((dynamic)resource, writeOperation, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -116,8 +116,10 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         ArgumentGuard.NotNull(leftResource, nameof(leftResource));
         ArgumentGuard.NotNull(hasOneRelationship, nameof(hasOneRelationship));
 
-        dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-        return await resourceDefinition.OnSetToOneRelationshipAsync(leftResource, hasOneRelationship, rightResourceId, writeOperation, cancellationToken);
+        dynamic resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
+
+        return await resourceDefinition.OnSetToOneRelationshipAsync((dynamic)leftResource, hasOneRelationship, rightResourceId, writeOperation,
+            cancellationToken);
     }
 
     /// <inheritdoc />
@@ -129,20 +131,20 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         ArgumentGuard.NotNull(hasManyRelationship, nameof(hasManyRelationship));
         ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
 
-        dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-        await resourceDefinition.OnSetToManyRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, writeOperation, cancellationToken);
+        dynamic resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
+        await resourceDefinition.OnSetToManyRelationshipAsync((dynamic)leftResource, hasManyRelationship, rightResourceIds, writeOperation, cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task OnAddToRelationshipAsync<TResource, TId>(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+    public async Task OnAddToRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
-        where TResource : class, IIdentifiable<TId>
+        where TResource : class, IIdentifiable
     {
         ArgumentGuard.NotNull(hasManyRelationship, nameof(hasManyRelationship));
         ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
 
-        dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-        await resourceDefinition.OnAddToRelationshipAsync(leftResourceId, hasManyRelationship, rightResourceIds, cancellationToken);
+        dynamic resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
+        await resourceDefinition.OnAddToRelationshipAsync((dynamic)leftResource, hasManyRelationship, rightResourceIds, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -154,8 +156,8 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
         ArgumentGuard.NotNull(hasManyRelationship, nameof(hasManyRelationship));
         ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
 
-        dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-        await resourceDefinition.OnRemoveFromRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, cancellationToken);
+        dynamic resourceDefinition = ResolveResourceDefinition(leftResource.GetClrType());
+        await resourceDefinition.OnRemoveFromRelationshipAsync((dynamic)leftResource, hasManyRelationship, rightResourceIds, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -164,8 +166,8 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentGuard.NotNull(resource, nameof(resource));
 
-        dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-        await resourceDefinition.OnWritingAsync(resource, writeOperation, cancellationToken);
+        dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
+        await resourceDefinition.OnWritingAsync((dynamic)resource, writeOperation, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -174,8 +176,8 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentGuard.NotNull(resource, nameof(resource));
 
-        dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-        await resourceDefinition.OnWriteSucceededAsync(resource, writeOperation, cancellationToken);
+        dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
+        await resourceDefinition.OnWriteSucceededAsync((dynamic)resource, writeOperation, cancellationToken);
     }
 
     /// <inheritdoc />

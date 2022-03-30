@@ -422,7 +422,7 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         AttrAttribute rightIdAttribute = GetIdAttribute(relationship.RightType);
 
-        object[] typedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
+        HashSet<object> typedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
 
         FilterExpression? baseFilter = GetFilter(Array.Empty<QueryExpression>(), relationship.RightType);
         FilterExpression? filter = CreateFilterByIds(typedIds, rightIdAttribute, baseFilter);
@@ -447,7 +447,7 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         AttrAttribute leftIdAttribute = GetIdAttribute(hasManyRelationship.LeftType);
         AttrAttribute rightIdAttribute = GetIdAttribute(hasManyRelationship.RightType);
-        object[] rightTypedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
+        HashSet<object> rightTypedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
 
         FilterExpression? leftFilter = CreateFilterByIds(leftId.AsArray(), leftIdAttribute, null);
         FilterExpression? rightFilter = CreateFilterByIds(rightTypedIds, rightIdAttribute, null);

@@ -19,7 +19,7 @@ public sealed class PerformerRepository : IResourceRepository<Performer, int>
         throw new NotImplementedException();
     }
 
-    public Task<Performer> GetForCreateAsync(int id, CancellationToken cancellationToken)
+    public Task<Performer> GetForCreateAsync(Type resourceClrType, int id, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
@@ -39,7 +39,7 @@ public sealed class PerformerRepository : IResourceRepository<Performer, int>
         throw new NotImplementedException();
     }
 
-    public Task DeleteAsync(int id, CancellationToken cancellationToken)
+    public Task DeleteAsync(Performer? resourceFromDatabase, int id, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
@@ -49,7 +49,7 @@ public sealed class PerformerRepository : IResourceRepository<Performer, int>
         throw new NotImplementedException();
     }
 
-    public Task AddToToManyRelationshipAsync(int leftId, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
+    public Task AddToToManyRelationshipAsync(Performer? leftResource, int leftId, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

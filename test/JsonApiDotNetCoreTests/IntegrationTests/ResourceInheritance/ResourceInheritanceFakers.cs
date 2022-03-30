@@ -24,6 +24,13 @@ internal sealed class ResourceInheritanceFakers : FakerContainer
             .RuleFor(tandem => tandem.GearCount, faker => faker.Random.Int(1, 10))
             .RuleFor(tandem => tandem.PassengerCount, faker => faker.Random.Int(2, 150)));
 
+    private readonly Lazy<Faker<AlwaysMovingTandem>> _lazyAlwaysMovingTandemFaker = new(() =>
+        new Faker<AlwaysMovingTandem>()
+            .UseSeed(GetFakerSeed())
+            .RuleFor(movingTandem => movingTandem.Weight, faker => faker.Random.Decimal(10, 30))
+            .RuleFor(movingTandem => movingTandem.RequiresDriverLicense, _ => false)
+            .RuleFor(movingTandem => movingTandem.GearCount, faker => faker.Random.Int(1, 10)));
+
     private readonly Lazy<Faker<Car>> _lazyCarFaker = new(() =>
         new Faker<Car>()
             .UseSeed(GetFakerSeed())
@@ -122,6 +129,7 @@ internal sealed class ResourceInheritanceFakers : FakerContainer
 
     public Faker<Bike> Bike => _lazyBikeFaker.Value;
     public Faker<Tandem> Tandem => _lazyTandemFaker.Value;
+    public Faker<AlwaysMovingTandem> AlwaysMovingTandem => _lazyAlwaysMovingTandemFaker.Value;
     public Faker<Car> Car => _lazyCarFaker.Value;
     public Faker<Truck> Truck => _lazyTruckFaker.Value;
     public Faker<CarbonWheel> CarbonWheel => _lazyCarbonWheelFaker.Value;

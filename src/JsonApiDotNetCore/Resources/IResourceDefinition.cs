@@ -133,9 +133,9 @@ public interface IResourceDefinition<TResource, in TId>
     /// </param>
     /// <param name="writeOperation">
     /// Identifies the logical write operation for which this method was called. Possible values: <see cref="WriteOperationKind.CreateResource" />,
-    /// <see cref="WriteOperationKind.UpdateResource" /> and <see cref="WriteOperationKind.SetRelationship" />. Note this intentionally excludes
-    /// <see cref="WriteOperationKind.DeleteResource" />, <see cref="WriteOperationKind.AddToRelationship" /> and
-    /// <see cref="WriteOperationKind.RemoveFromRelationship" />, because for those endpoints no resource is retrieved upfront.
+    /// <see cref="WriteOperationKind.UpdateResource" />, <see cref="WriteOperationKind.SetRelationship" /> and
+    /// <see cref="WriteOperationKind.RemoveFromRelationship" />. Note this intentionally excludes <see cref="WriteOperationKind.DeleteResource" /> and
+    /// <see cref="WriteOperationKind.AddToRelationship" />, because for those endpoints no resource is retrieved upfront.
     /// </param>
     /// <param name="cancellationToken">
     /// Propagates notification that request handling should be canceled.
@@ -203,9 +203,22 @@ public interface IResourceDefinition<TResource, in TId>
     /// Implementing this method enables to perform validations and make changes to <paramref name="rightResourceIds" />, before the relationship is updated.
     /// </para>
     /// </summary>
-    /// <param name="leftResourceId">
+    /// <param name="leftResource">
     /// Identifier of the left resource. The indication "left" specifies that <paramref name="hasManyRelationship" /> is declared on
-    /// <typeparamref name="TResource" />.
+    /// <typeparamref name="TResource" />. In contrast to other relationship methods, this value is not retrieved from the underlying data store, except in
+    /// the following two cases:
+    /// <list type="bullet">
+    /// <item>
+    /// <description>
+    /// <paramref name="hasManyRelationship" /> is a many-to-many relationship. This is required to prevent failure when already assigned.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <description>
+    /// The left resource type is part of a type hierarchy. This ensures your business logic runs against the actually stored type.
+    /// </description>
+    /// </item>
+    /// </list>
     /// </param>
     /// <param name="hasManyRelationship">
     /// The to-many relationship being added to.
@@ -216,7 +229,7 @@ public interface IResourceDefinition<TResource, in TId>
     /// <param name="cancellationToken">
     /// Propagates notification that request handling should be canceled.
     /// </param>
-    Task OnAddToRelationshipAsync(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+    Task OnAddToRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken);
 
     /// <summary>

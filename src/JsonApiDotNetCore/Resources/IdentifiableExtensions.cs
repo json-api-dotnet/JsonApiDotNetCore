@@ -39,6 +39,6 @@ internal static class IdentifiableExtensions
     {
         ArgumentGuard.NotNull(identifiable, nameof(identifiable));
 
-        return identifiable.GetType();
+        return identifiable is IAbstractResourceWrapper abstractResource ? abstractResource.AbstractType : identifiable.GetType();
     }
 }

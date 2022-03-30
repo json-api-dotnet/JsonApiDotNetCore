@@ -26,6 +26,12 @@ public abstract class ResourceInheritanceDbContext : DbContext
     public DbSet<StringProperty> StringProperties => Set<StringProperty>();
     public DbSet<NumberProperty> NumberProperties => Set<NumberProperty>();
 
+    public DbSet<VehicleManufacturer> VehicleManufacturers => Set<VehicleManufacturer>();
+    public DbSet<Box> Boxes => Set<Box>();
+    public DbSet<BicycleLight> BicycleLights => Set<BicycleLight>();
+    public DbSet<NavigationSystem> NavigationSystems => Set<NavigationSystem>();
+    public DbSet<GenericFeature> GenericFeatures => Set<GenericFeature>();
+
     protected ResourceInheritanceDbContext(DbContextOptions options)
         : base(options)
     {

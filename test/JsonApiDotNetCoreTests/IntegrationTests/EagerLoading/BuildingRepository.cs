@@ -17,9 +17,9 @@ public sealed class BuildingRepository : EntityFrameworkCoreRepository<Building,
     {
     }
 
-    public override async Task<Building> GetForCreateAsync(int id, CancellationToken cancellationToken)
+    public override async Task<Building> GetForCreateAsync(Type resourceClrType, int id, CancellationToken cancellationToken)
     {
-        Building building = await base.GetForCreateAsync(id, cancellationToken);
+        Building building = await base.GetForCreateAsync(resourceClrType, id, cancellationToken);
 
         // Must ensure that an instance exists for this required relationship, so that POST Resource succeeds.
         building.PrimaryDoor = new Door
