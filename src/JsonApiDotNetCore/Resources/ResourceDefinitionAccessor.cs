@@ -183,7 +183,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentGuard.NotNull(resource, nameof(resource));
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resource.GetType());
+        dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
         resourceDefinition.OnDeserialize((dynamic)resource);
     }
 
@@ -192,7 +192,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         ArgumentGuard.NotNull(resource, nameof(resource));
 
-        dynamic resourceDefinition = ResolveResourceDefinition(resource.GetType());
+        dynamic resourceDefinition = ResolveResourceDefinition(resource.GetClrType());
         resourceDefinition.OnSerialize((dynamic)resource);
     }
 

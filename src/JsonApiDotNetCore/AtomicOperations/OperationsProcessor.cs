@@ -140,7 +140,7 @@ public class OperationsProcessor : IOperationsProcessor
     {
         if (resource.LocalId != null)
         {
-            ResourceType resourceType = _resourceGraph.GetResourceType(resource.GetType());
+            ResourceType resourceType = _resourceGraph.GetResourceType(resource.GetClrType());
             resource.StringId = _localIdTracker.GetValue(resource.LocalId, resourceType);
         }
     }

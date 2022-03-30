@@ -148,7 +148,8 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
             Dictionary<string, ModelStateEntry?> modelStateDictionary = requestModelState.ToDictionary(tuple => tuple.key, tuple => tuple.entry);
 
             throw new InvalidModelStateException(modelStateDictionary, typeof(IList<OperationContainer>), _options.IncludeExceptionStackTraceInErrors,
-                _resourceGraph, (collectionType, index) => collectionType == typeof(IList<OperationContainer>) ? operations[index].Resource.GetType() : null);
+                _resourceGraph,
+                (collectionType, index) => collectionType == typeof(IList<OperationContainer>) ? operations[index].Resource.GetClrType() : null);
         }
     }
 

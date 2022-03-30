@@ -187,7 +187,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
     private static ResourceType GetEffectiveResourceType(IIdentifiable resource, ResourceType declaredType)
     {
-        Type runtimeResourceType = resource.GetType();
+        Type runtimeResourceType = resource.GetClrType();
 
         if (declaredType.ClrType == runtimeResourceType)
         {
