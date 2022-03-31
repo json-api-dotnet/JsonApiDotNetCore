@@ -24,6 +24,7 @@ Expressions are composed using the following functions:
 | Ends with text                | `endsWith`         | `?filter=endsWith(description,'End')`                 |
 | Equals one value from set     | `any`              | `?filter=any(chapter,'Intro','Summary','Conclusion')` |
 | Collection contains items     | `has`              | `?filter=has(articles)`                               |
+| Type-check derived type (v5)  | `isType`           | `?filter=isType(,men)`                                |
 | Negation                      | `not`              | `?filter=not(equals(lastName,null))`                  |
 | Conditional logical OR        | `or`               | `?filter=or(has(orders),has(invoices))`               |
 | Conditional logical AND       | `and`              | `?filter=and(has(orders),has(invoices))`              |
@@ -85,6 +86,31 @@ GET /customers?filter=has(orders,not(equals(status,'Paid'))) HTTP/1.1
 ```
 
 Which returns only customers that have at least one unpaid order.
+
+_since v5.0_
+
+Use the `isType` filter function to perform a type check on a derived type. You can pass a nested filter, where the derived fields are accessible.
+The first parameter can be used to perform the type check on a to-one relationship path.
+
+Only return men:
+```http
+GET /humans?filter=isType(,men) HTTP/1.1
+```
+
+Only return men with beards:
+```http
+GET /humans?filter=isType(,men,equals(hasBeard,'true')) HTTP/1.1
+```
+
+Only return people whose best friend is a man with children:
+```http
+GET /humans?filter=isType(bestFriend,men,has(children)) HTTP/1.1
+```
+
+Only return people who have at least one female married child:
+```http
+GET /humans?filter=has(children,isType(,woman,not(equals(husband,null)))) HTTP/1.1
+```
 
 # Legacy filters
 
