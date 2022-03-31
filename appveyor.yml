@@ -15,6 +15,7 @@ environment:
 branches:
   only:
   - master
+  - resource-inheritance
   - develop
   - unstable
   - /release\/.+/
