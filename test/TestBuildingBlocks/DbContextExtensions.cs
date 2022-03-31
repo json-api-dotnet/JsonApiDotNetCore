@@ -24,6 +24,14 @@ public static class DbContextExtensions
         await ClearTablesAsync(dbContext, typeof(TEntity1), typeof(TEntity2));
     }
 
+    public static async Task ClearTablesAsync<TEntity1, TEntity2, TEntity3>(this DbContext dbContext)
+        where TEntity1 : class
+        where TEntity2 : class
+        where TEntity3 : class
+    {
+        await ClearTablesAsync(dbContext, typeof(TEntity1), typeof(TEntity2), typeof(TEntity3));
+    }
+
     private static async Task ClearTablesAsync(this DbContext dbContext, params Type[] models)
     {
         foreach (Type model in models)
