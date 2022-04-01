@@ -1,4 +1,4 @@
-#pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
 
 namespace JsonApiDotNetCore;
 
