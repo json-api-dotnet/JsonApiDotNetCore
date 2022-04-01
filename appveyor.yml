@@ -82,14 +82,14 @@ for:
   - provider: NuGet
     skip_symbols: false
     api_key:
-      secure: OBYPCgp3WCuwkDRMuZ9a4QcBdTja/lqlUwZ+Yl5VHqooSJRVTYKP5y15XK0fuHsZ
+      secure: S9fkLwmhi7w+DGouXYqYq/1PGocnYo8UBUKwv+BGpWHnzE6yHZEYth3j/XJ9Ydsa
     on:
       branch: master
       appveyor_repo_tag: true
   - provider: NuGet
     skip_symbols: false
     api_key:
-      secure: OBYPCgp3WCuwkDRMuZ9a4QcBdTja/lqlUwZ+Yl5VHqooSJRVTYKP5y15XK0fuHsZ
+      secure: S9fkLwmhi7w+DGouXYqYq/1PGocnYo8UBUKwv+BGpWHnzE6yHZEYth3j/XJ9Ydsa
     on:
       branch: /release\/.+/
       appveyor_repo_tag: true
