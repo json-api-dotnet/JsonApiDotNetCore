@@ -77,7 +77,7 @@ public sealed partial class OutboxTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 

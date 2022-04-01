@@ -57,7 +57,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -110,7 +110,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -163,7 +163,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -219,7 +219,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -273,7 +273,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -327,7 +327,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -384,7 +384,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -444,7 +444,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -504,7 +504,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -542,7 +542,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -581,7 +581,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -621,7 +621,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -660,7 +660,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -715,7 +715,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -768,7 +768,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -809,7 +809,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -849,7 +849,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -897,7 +897,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -953,7 +953,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -997,7 +997,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1042,7 +1042,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1086,7 +1086,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1132,7 +1132,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1187,7 +1187,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1240,7 +1240,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1293,7 +1293,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
         responseDocument.Errors.ShouldHaveCount(1);
 

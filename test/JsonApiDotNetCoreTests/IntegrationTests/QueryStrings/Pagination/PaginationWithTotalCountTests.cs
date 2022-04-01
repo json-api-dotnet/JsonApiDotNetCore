@@ -51,7 +51,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
@@ -82,7 +82,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -116,7 +116,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[2].StringId);
@@ -148,7 +148,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(account.LoginAttempts[1].StringId);
@@ -179,7 +179,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -212,7 +212,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(2);
         responseDocument.Included.ShouldHaveCount(2);
@@ -248,7 +248,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Included.ShouldHaveCount(1);
@@ -281,7 +281,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[1].StringId);
@@ -313,7 +313,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(account.LoginAttempts[1].StringId);
@@ -349,7 +349,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(2);
         responseDocument.Included.ShouldHaveCount(2);
@@ -385,7 +385,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(post.Labels.ElementAt(1).StringId);
@@ -421,7 +421,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
@@ -457,7 +457,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -479,7 +479,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -513,7 +513,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(2);
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
@@ -549,7 +549,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(25);
 
@@ -595,7 +595,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.ShouldNotBeNull();
         responseDocument.Links.ShouldNotBeNull();

@@ -53,7 +53,7 @@ public sealed class ResourceInheritanceChangeTrackerTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("alwaysMovingTandems");

@@ -33,7 +33,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -55,7 +55,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -77,7 +77,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -108,7 +108,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[0].StringId);

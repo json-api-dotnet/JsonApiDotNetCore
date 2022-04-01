@@ -61,7 +61,7 @@ public sealed class AtomicTransactionConsistencyTests : IClassFixture<Integratio
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -104,7 +104,7 @@ public sealed class AtomicTransactionConsistencyTests : IClassFixture<Integratio
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -147,7 +147,7 @@ public sealed class AtomicTransactionConsistencyTests : IClassFixture<Integratio
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 

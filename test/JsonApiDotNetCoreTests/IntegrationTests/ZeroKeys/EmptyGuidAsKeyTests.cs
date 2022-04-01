@@ -47,7 +47,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be("00000000-0000-0000-0000-000000000000");
@@ -81,7 +81,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be("00000000-0000-0000-0000-000000000000");
@@ -122,7 +122,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         httpResponse.Headers.Location.Should().Be("/maps/00000000-0000-0000-0000-000000000000");
 
@@ -172,7 +172,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -211,7 +211,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -255,7 +255,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -301,7 +301,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -341,7 +341,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -388,7 +388,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -437,7 +437,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -486,7 +486,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -533,7 +533,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -567,7 +567,7 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 

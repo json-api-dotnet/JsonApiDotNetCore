@@ -1,6 +1,5 @@
 using System.Net;
 using FluentAssertions;
-using FluentAssertions.Primitives;
 using JetBrains.Annotations;
 
 namespace TestBuildingBlocks;
@@ -8,31 +7,15 @@ namespace TestBuildingBlocks;
 [PublicAPI]
 public static class HttpResponseMessageExtensions
 {
-    public static HttpResponseMessageAssertions Should(this HttpResponseMessage instance)
+    public static void ShouldHaveStatusCode(this HttpResponseMessage source, HttpStatusCode statusCode)
     {
-        return new HttpResponseMessageAssertions(instance);
-    }
+        // In contrast to the built-in assertion method, this one dumps the response body on mismatch.
+        // See https://github.com/fluentassertions/fluentassertions/issues/1811.
 
-    public sealed class HttpResponseMessageAssertions : ReferenceTypeAssertions<HttpResponseMessage, HttpResponseMessageAssertions>
-    {
-        protected override string Identifier => "response";
-
-        public HttpResponseMessageAssertions(HttpResponseMessage subject)
-            : base(subject)
+        if (source.StatusCode != statusCode)
         {
-        }
-
-        // ReSharper disable once UnusedMethodReturnValue.Global
-        [CustomAssertion]
-        public AndConstraint<HttpResponseMessageAssertions> HaveStatusCode(HttpStatusCode statusCode)
-        {
-            if (Subject.StatusCode != statusCode)
-            {
-                string responseText = Subject.Content.ReadAsStringAsync().Result;
-                Subject.StatusCode.Should().Be(statusCode, string.IsNullOrEmpty(responseText) ? null : $"response body returned was:\n{responseText}");
-            }
-
-            return new AndConstraint<HttpResponseMessageAssertions>(this);
+            string responseText = source.Content.ReadAsStringAsync().Result;
+            source.StatusCode.Should().Be(statusCode, string.IsNullOrEmpty(responseText) ? null : $"response body returned was:\n{responseText}");
         }
     }
 }

@@ -81,7 +81,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Results.ShouldHaveCount(1);
 
@@ -166,7 +166,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Results.ShouldHaveCount(1);
 
@@ -228,7 +228,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -280,7 +280,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -331,7 +331,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -397,7 +397,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(2);
 
@@ -457,7 +457,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -527,7 +527,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Results.ShouldHaveCount(1);
 
@@ -580,7 +580,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -625,7 +625,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -672,7 +672,7 @@ public sealed class AtomicCreateResourceWithToManyRelationshipTests
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 

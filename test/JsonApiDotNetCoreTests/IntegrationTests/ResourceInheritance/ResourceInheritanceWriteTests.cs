@@ -95,7 +95,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -190,7 +190,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("bikes");
@@ -331,7 +331,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("cars");
@@ -481,7 +481,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("tandems");
@@ -559,7 +559,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -608,7 +608,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -659,7 +659,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("carbonWheels");
@@ -721,7 +721,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("carbonWheels");
@@ -786,7 +786,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("vehicleManufacturers");
@@ -846,7 +846,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -898,7 +898,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -940,7 +940,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -985,7 +985,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1029,7 +1029,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1127,7 +1127,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -1255,7 +1255,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -1330,7 +1330,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1384,7 +1384,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1439,7 +1439,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -1503,7 +1503,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -1562,7 +1562,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1618,7 +1618,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1669,7 +1669,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1723,7 +1723,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1754,7 +1754,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -1787,7 +1787,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -1830,7 +1830,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -1884,7 +1884,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -1935,7 +1935,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -1989,7 +1989,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -2037,7 +2037,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -2082,7 +2082,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -2125,7 +2125,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -2159,7 +2159,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -2206,7 +2206,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -2263,7 +2263,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -2321,7 +2321,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -2374,7 +2374,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -2417,7 +2417,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -2451,7 +2451,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -2495,7 +2495,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -2547,7 +2547,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -2600,7 +2600,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -2649,7 +2649,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -2694,7 +2694,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -2728,7 +2728,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 

@@ -52,7 +52,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(certificate.StringId);
@@ -82,7 +82,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(postOffices[1].StringId);
@@ -112,7 +112,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(certificate.Issuer.StringId);
@@ -166,7 +166,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("issueDate").With(value => value.Should().Be(newIssueDate));
@@ -253,7 +253,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -286,7 +286,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 
@@ -310,7 +310,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -353,7 +353,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
 

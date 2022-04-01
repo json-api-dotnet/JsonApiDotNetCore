@@ -39,7 +39,7 @@ public sealed class ResourceTests : IntegrationTest, IClassFixture<WebApplicatio
         (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("nameA").With(value => value.Should().Be("SampleA"));
@@ -55,7 +55,7 @@ public sealed class ResourceTests : IntegrationTest, IClassFixture<WebApplicatio
         (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("nameB").With(value => value.Should().Be("SampleB"));

@@ -44,7 +44,7 @@ public sealed class NoModelStateValidationTests : IClassFixture<IntegrationTestC
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("directoryName").With(value => value.Should().Be("!@#$%^&*().-"));
@@ -81,7 +81,7 @@ public sealed class NoModelStateValidationTests : IClassFixture<IntegrationTestC
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
     }
@@ -121,7 +121,7 @@ public sealed class NoModelStateValidationTests : IClassFixture<IntegrationTestC
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
         responseDocument.Errors.ShouldHaveCount(1);
 

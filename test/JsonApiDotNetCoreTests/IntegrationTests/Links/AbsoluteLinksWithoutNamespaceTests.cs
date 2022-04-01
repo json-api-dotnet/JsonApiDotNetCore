@@ -52,7 +52,7 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
@@ -95,7 +95,7 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
@@ -161,7 +161,7 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
@@ -205,7 +205,7 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
@@ -253,7 +253,7 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
@@ -287,7 +287,7 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
@@ -348,7 +348,7 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
@@ -431,7 +431,7 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
