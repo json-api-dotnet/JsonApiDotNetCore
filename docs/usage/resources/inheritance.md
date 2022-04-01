@@ -185,7 +185,6 @@ public override SortExpression OnApplySort(SortExpression? existingSort)
 ### Filtering
 
 Use the `isType` filter function to perform a type check on a derived type. You can pass a nested filter, where the derived fields are accessible.
-The first parameter can be used to perform the type check on a to-one relationship path.
 
 Only return men:
 ```http
@@ -196,6 +195,8 @@ Only return men with beards:
 ```http
 GET /humans?filter=isType(,men,equals(hasBeard,'true')) HTTP/1.1
 ```
+
+The first parameter of `isType` can be used to perform the type check on a to-one relationship path.
 
 Only return people whose best friend is a man with children:
 ```http
@@ -287,7 +288,7 @@ Resource definitions provide a better solution, see below.
 
 ### Resource definitions
 
-In contract to the request pipeline, JsonApiDotNetCore always executes the resource definition that matches the *stored* type.
+In contrast to the request pipeline, JsonApiDotNetCore always executes the resource definition that matches the *stored* type.
 This enables to implement business logic in a central place, irrespective of which endpoint was used or whether base types were used in relationships.
 
 To delegate logic for base types to their matching resource type, you can build a chain of resource definitions. And because you'll always get the

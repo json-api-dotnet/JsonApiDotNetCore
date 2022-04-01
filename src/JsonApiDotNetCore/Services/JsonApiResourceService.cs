@@ -202,11 +202,11 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         TResource resourceFromRequest = resource;
         _resourceChangeTracker.SetRequestAttributeValues(resourceFromRequest);
 
-        await RefreshResourceTypesInHierarchyToAssignInRelationshipsAsync(resourceFromRequest, cancellationToken);
+        await AccurizeResourceTypesInHierarchyToAssignInRelationshipsAsync(resourceFromRequest, cancellationToken);
 
         Type resourceClrType = resourceFromRequest.GetClrType();
         TResource resourceForDatabase = await _repositoryAccessor.GetForCreateAsync<TResource, TId>(resourceClrType, resourceFromRequest.Id, cancellationToken);
-        PromoteJsonApiRequest(resourceForDatabase);
+        AccurizeJsonApiRequest(resourceForDatabase);
 
         _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceForDatabase);
 
@@ -249,7 +249,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceForDatabase, WriteOperationKind.CreateResource, cancellationToken);
     }
 
-    private async Task RefreshResourceTypesInHierarchyToAssignInRelationshipsAsync(TResource primaryResource, CancellationToken cancellationToken)
+    private async Task AccurizeResourceTypesInHierarchyToAssignInRelationshipsAsync(TResource primaryResource, CancellationToken cancellationToken)
     {
         await ValidateResourcesToAssignInRelationshipsExistWithRefreshAsync(primaryResource, true, cancellationToken);
     }
@@ -360,7 +360,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             // The left resource may be stored as a derived type. We fetch it, so we'll know the stored type, which
             // enables to invoke IResourceDefinition<TResource> with TResource being the stored resource type.
             resourceFromDatabase ??= await GetPrimaryResourceForUpdateAsync(leftId, cancellationToken);
-            PromoteJsonApiRequest(resourceFromDatabase);
+            AccurizeJsonApiRequest(resourceFromDatabase);
         }
 
         ISet<IIdentifiable> effectiveRightResourceIds = rightResourceIds;
@@ -453,10 +453,10 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         TResource resourceFromRequest = resource;
         _resourceChangeTracker.SetRequestAttributeValues(resourceFromRequest);
 
-        await RefreshResourceTypesInHierarchyToAssignInRelationshipsAsync(resourceFromRequest, cancellationToken);
+        await AccurizeResourceTypesInHierarchyToAssignInRelationshipsAsync(resourceFromRequest, cancellationToken);
 
         TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(id, cancellationToken);
-        PromoteJsonApiRequest(resourceFromDatabase);
+        AccurizeJsonApiRequest(resourceFromDatabase);
 
         _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
 
@@ -503,7 +503,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             : rightValue;
 
         TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(leftId, cancellationToken);
-        PromoteJsonApiRequest(resourceFromDatabase);
+        AccurizeJsonApiRequest(resourceFromDatabase);
 
         await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, WriteOperationKind.SetRelationship, cancellationToken);
 
@@ -537,7 +537,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
             // The resource to delete may be stored as a derived type. We fetch it, so we'll know the stored type, which
             // enables to invoke IResourceDefinition<TResource> with TResource being the stored resource type.
             resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(id, cancellationToken);
-            PromoteJsonApiRequest(resourceFromDatabase);
+            AccurizeJsonApiRequest(resourceFromDatabase);
         }
 
         try
@@ -571,7 +571,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         var hasManyRelationship = (HasManyAttribute)_request.Relationship;
 
         TResource resourceFromDatabase = await GetForHasManyUpdateAsync(hasManyRelationship, leftId, rightResourceIds, cancellationToken);
-        PromoteJsonApiRequest(resourceFromDatabase);
+        AccurizeJsonApiRequest(resourceFromDatabase);
 
         object? rightValue = await AssertRightResourcesExistAsync(rightResourceIds, cancellationToken);
         ISet<IIdentifiable> effectiveRightResourceIds = ((IEnumerable<IIdentifiable>)rightValue!).ToHashSet(IdentifiableComparer.Instance);
@@ -610,7 +610,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         return resource;
     }
 
-    private void PromoteJsonApiRequest(TResource resourceFromDatabase)
+    private void AccurizeJsonApiRequest(TResource resourceFromDatabase)
     {
         // When using resource inheritance, the stored left-side resource may be more derived than what this endpoint assumes.
         // In that case, we promote data in IJsonApiRequest to better represent what is going on.

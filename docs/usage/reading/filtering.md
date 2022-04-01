@@ -90,7 +90,6 @@ Which returns only customers that have at least one unpaid order.
 _since v5.0_
 
 Use the `isType` filter function to perform a type check on a derived type. You can pass a nested filter, where the derived fields are accessible.
-The first parameter can be used to perform the type check on a to-one relationship path.
 
 Only return men:
 ```http
@@ -101,6 +100,8 @@ Only return men with beards:
 ```http
 GET /humans?filter=isType(,men,equals(hasBeard,'true')) HTTP/1.1
 ```
+
+The first parameter of `isType` can be used to perform the type check on a to-one relationship path.
 
 Only return people whose best friend is a man with children:
 ```http
