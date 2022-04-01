@@ -11,7 +11,12 @@ internal sealed class DisabledCodeTimer : ICodeTimer
     {
     }
 
-    public IDisposable Measure(string name, bool excludeInRelativeCost = false)
+    public IDisposable Measure(string name)
+    {
+        return this;
+    }
+
+    public IDisposable Measure(string name, bool excludeInRelativeCost)
     {
         return this;
     }

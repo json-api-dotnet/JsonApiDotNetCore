@@ -18,13 +18,24 @@ internal static class ArgumentGuard
     }
 
     [AssertionMethod]
-    public static void NotNullNorEmpty<T>([SysNotNull] IEnumerable<T>? value, [InvokerParameterName] string name, string? collectionName = null)
+    public static void NotNullNorEmpty<T>([SysNotNull] IEnumerable<T>? value, [InvokerParameterName] string name)
     {
         NotNull(value, name);
 
         if (!value.Any())
         {
-            throw new ArgumentException($"Must have one or more {collectionName ?? name}.", name);
+            throw new ArgumentException($"Must have one or more {name}.", name);
+        }
+    }
+
+    [AssertionMethod]
+    public static void NotNullNorEmpty<T>([SysNotNull] IEnumerable<T>? value, [InvokerParameterName] string name, string collectionName)
+    {
+        NotNull(value, name);
+
+        if (!value.Any())
+        {
+            throw new ArgumentException($"Must have one or more {collectionName}.", name);
         }
     }
 

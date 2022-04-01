@@ -89,8 +89,14 @@ public sealed class ResourceType
     /// </remarks>
     public LinkTypes RelationshipLinks { get; }
 
-    public ResourceType(string publicName, Type clrType, Type identityClrType, IReadOnlyCollection<AttrAttribute>? attributes = null,
-        IReadOnlyCollection<RelationshipAttribute>? relationships = null, IReadOnlyCollection<EagerLoadAttribute>? eagerLoads = null,
+    public ResourceType(string publicName, Type clrType, Type identityClrType, LinkTypes topLevelLinks = LinkTypes.NotConfigured,
+        LinkTypes resourceLinks = LinkTypes.NotConfigured, LinkTypes relationshipLinks = LinkTypes.NotConfigured)
+        : this(publicName, clrType, identityClrType, null, null, null, topLevelLinks, resourceLinks, relationshipLinks)
+    {
+    }
+
+    public ResourceType(string publicName, Type clrType, Type identityClrType, IReadOnlyCollection<AttrAttribute>? attributes,
+        IReadOnlyCollection<RelationshipAttribute>? relationships, IReadOnlyCollection<EagerLoadAttribute>? eagerLoads,
         LinkTypes topLevelLinks = LinkTypes.NotConfigured, LinkTypes resourceLinks = LinkTypes.NotConfigured,
         LinkTypes relationshipLinks = LinkTypes.NotConfigured)
     {
