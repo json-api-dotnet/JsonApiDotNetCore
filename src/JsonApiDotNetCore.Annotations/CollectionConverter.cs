@@ -66,9 +66,19 @@ internal sealed class CollectionConverter
     /// <summary>
     /// Returns a collection that contains zero, one or multiple resources, depending on the specified value.
     /// </summary>
-    public ICollection<IIdentifiable> ExtractResources(object? value)
+    public IReadOnlyCollection<IIdentifiable> ExtractResources(object? value)
     {
-        if (value is ICollection<IIdentifiable> resourceCollection)
+        if (value is List<IIdentifiable> resourceList)
+        {
+            return resourceList;
+        }
+
+        if (value is HashSet<IIdentifiable> resourceSet)
+        {
+            return resourceSet;
+        }
+
+        if (value is IReadOnlyCollection<IIdentifiable> resourceCollection)
         {
             return resourceCollection;
         }

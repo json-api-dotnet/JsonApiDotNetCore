@@ -14,7 +14,7 @@ public sealed class FieldSelection : Dictionary<ResourceType, FieldSelectors>
 {
     public bool IsEmpty => Values.All(selectors => selectors.IsEmpty);
 
-    public ISet<ResourceType> GetResourceTypes()
+    public IReadOnlySet<ResourceType> GetResourceTypes()
     {
         return Keys.ToHashSet();
     }

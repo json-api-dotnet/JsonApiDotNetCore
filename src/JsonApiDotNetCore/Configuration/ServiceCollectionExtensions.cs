@@ -6,6 +6,8 @@ using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
+
 namespace JsonApiDotNetCore.Configuration;
 
 [PublicAPI]

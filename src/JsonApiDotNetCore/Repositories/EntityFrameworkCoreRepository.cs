@@ -105,7 +105,9 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         }
     }
 
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     protected virtual IQueryable<TResource> ApplyQueryLayer(QueryLayer queryLayer)
+#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
         _traceWriter.LogMethodStart(new
         {
@@ -149,7 +151,9 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         }
     }
 
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     protected virtual IQueryable<TResource> GetAll()
+#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
         return _dbContext.Set<TResource>();
     }
@@ -221,12 +225,12 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         if (relationship is HasManyAttribute hasManyRelationship)
         {
-            HashSet<IIdentifiable> rightResourceIdSet = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
+            HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
 
-            await _resourceDefinitionAccessor.OnSetToManyRelationshipAsync(leftResource, hasManyRelationship, rightResourceIdSet, writeOperation,
+            await _resourceDefinitionAccessor.OnSetToManyRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, writeOperation,
                 cancellationToken);
 
-            return rightResourceIdSet;
+            return rightResourceIds;
         }
 
         return rightValue;
@@ -572,7 +576,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             return null;
         }
 
-        ICollection<IIdentifiable> rightResources = _collectionConverter.ExtractResources(rightValue);
+        IReadOnlyCollection<IIdentifiable> rightResources = _collectionConverter.ExtractResources(rightValue);
         IIdentifiable[] rightResourcesTracked = rightResources.Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource)).ToArray();
 
         return rightValue is IEnumerable

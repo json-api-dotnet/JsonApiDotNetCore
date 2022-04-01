@@ -402,7 +402,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         foreach (RelationshipAttribute relationship in _targetedFields.Relationships)
         {
             object? rightValue = relationship.GetValue(primaryResource);
-            ICollection<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue);
+            HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
 
             if (rightResourceIds.Any())
             {

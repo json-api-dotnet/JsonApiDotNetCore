@@ -391,7 +391,7 @@ public class JsonApiResourceService<TResource, TId> : IResourceService<TResource
         TResource leftResource = await GetForHasManyUpdateAsync(hasManyRelationship, leftId, rightResourceIds, cancellationToken);
 
         object? rightValue = hasManyRelationship.GetValue(leftResource);
-        ICollection<IIdentifiable> existingRightResourceIds = _collectionConverter.ExtractResources(rightValue);
+        IReadOnlyCollection<IIdentifiable> existingRightResourceIds = _collectionConverter.ExtractResources(rightValue);
 
         rightResourceIds.ExceptWith(existingRightResourceIds);
 

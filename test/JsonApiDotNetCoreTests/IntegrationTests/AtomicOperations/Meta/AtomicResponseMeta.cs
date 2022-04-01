@@ -4,7 +4,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta;
 
 public sealed class AtomicResponseMeta : IResponseMeta
 {
-    public IReadOnlyDictionary<string, object?> GetMeta()
+    public IDictionary<string, object?> GetMeta()
     {
         return new Dictionary<string, object?>
         {

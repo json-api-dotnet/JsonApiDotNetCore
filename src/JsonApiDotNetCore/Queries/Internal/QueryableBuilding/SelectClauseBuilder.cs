@@ -76,7 +76,7 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
     private Expression CreateLambdaBodyInitializerForTypeHierarchy(FieldSelection selection, ResourceType baseResourceType,
         IEnumerable<IEntityType> concreteEntityTypes, LambdaScope lambdaScope)
     {
-        ISet<ResourceType> resourceTypes = selection.GetResourceTypes();
+        IReadOnlySet<ResourceType> resourceTypes = selection.GetResourceTypes();
         Expression rootCondition = lambdaScope.Accessor;
 
         foreach (IEntityType entityType in concreteEntityTypes)

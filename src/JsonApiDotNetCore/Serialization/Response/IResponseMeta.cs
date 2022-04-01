@@ -12,5 +12,7 @@ public interface IResponseMeta
     /// <summary>
     /// Gets the global top-level JSON:API meta information to add to the response.
     /// </summary>
-    IReadOnlyDictionary<string, object?>? GetMeta();
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
+    IDictionary<string, object?>? GetMeta();
+#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
 }

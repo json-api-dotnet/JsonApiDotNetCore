@@ -11,5 +11,5 @@ public interface IDocumentInOperationsRequestAdapter
     /// <summary>
     /// Validates and converts the specified <paramref name="document" />.
     /// </summary>
-    IList<OperationContainer> Convert(Document document, RequestAdapterState state);
+    IReadOnlyList<OperationContainer> Convert(Document document, RequestAdapterState state);
 }

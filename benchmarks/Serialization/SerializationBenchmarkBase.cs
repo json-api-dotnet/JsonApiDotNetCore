@@ -245,7 +245,7 @@ public abstract class SerializationBenchmarkBase
 
     private sealed class FakeMetaBuilder : IMetaBuilder
     {
-        public void Add(IReadOnlyDictionary<string, object?> values)
+        public void Add(IDictionary<string, object?> values)
         {
         }
 
