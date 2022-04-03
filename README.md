@@ -17,12 +17,17 @@ The ultimate goal of this library is to eliminate as much boilerplate as possibl
 
 These are some steps you can take to help you understand what this project is and how you can use it:
 
-- [What is JSON:API and why should I use it?](https://nordicapis.com/the-benefits-of-using-json-api/)
-- [The JSON:API specification](http://jsonapi.org/format/)
-- Demo [Video](https://youtu.be/KAMuo6K7VcE), [Blog](https://dev.to/wunki/getting-started-5dkl)
-- [Our documentation](https://www.jsonapi.net/)
-- [Check out the example projects](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples)
-- [Embercasts: Full Stack Ember with ASP.NET Core](https://www.embercasts.com/course/full-stack-ember-with-dotnet/watch/whats-in-this-course-cs)
+### About
+- [What is JSON:API and why should I use it?](https://nordicapis.com/the-benefits-of-using-json-api/) (blog, 2017)
+- [Pragmatic JSON:API Design](https://www.youtube.com/watch?v=3jBJOga4e2Y) (video, 2017)
+- [JSON:API and JsonApiDotNetCore](https://www.youtube.com/watch?v=79Oq0HOxyeI) (video, 2021)
+- [JsonApiDotNetCore Release 4.0](https://dev.to/wunki/getting-started-5dkl) (blog, 2020)
+- [JSON:API, .Net Core, EmberJS](https://youtu.be/KAMuo6K7VcE) (video, 2017)
+- [Embercasts: Full Stack Ember with ASP.NET Core](https://www.embercasts.com/course/full-stack-ember-with-dotnet/watch/whats-in-this-course-cs) (paid course, 2017)
+
+### Official documentation
+- [The JSON:API specification](https://jsonapi.org/format/1.1/)
+- [JsonApiDotNetCore website](https://www.jsonapi.net/)
 - [Roadmap](ROADMAP.md)
 
 ## Related Projects
