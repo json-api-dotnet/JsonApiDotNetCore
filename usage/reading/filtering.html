@@ -135,6 +135,11 @@ The filtering strategy we have selected, uses the following form.</p>
 <td><code>?filter=has(articles)</code></td>
 </tr>
 <tr>
+<td>Type-check derived type (v5)</td>
+<td><code>isType</code></td>
+<td><code>?filter=isType(,men)</code></td>
+</tr>
+<tr>
 <td>Negation</td>
 <td><code>not</code></td>
 <td><code>?filter=not(equals(lastName,null))</code></td>
@@ -172,7 +177,18 @@ filtering on to-many relationships can be done using bracket notation:</p>
 <p>The <code>has</code> function takes an optional filter condition as second parameter, for example:</p>
 <pre><code class="lang-http">GET /customers?filter=has(orders,not(equals(status,&#39;Paid&#39;))) HTTP/1.1
 </code></pre><p>Which returns only customers that have at least one unpaid order.</p>
-<h1 id="legacy-filters">Legacy filters</h1>
+<p><em>since v5.0</em></p>
+<p>Use the <code>isType</code> filter function to perform a type check on a derived type. You can pass a nested filter, where the derived fields are accessible.</p>
+<p>Only return men:</p>
+<pre><code class="lang-http">GET /humans?filter=isType(,men) HTTP/1.1
+</code></pre><p>Only return men with beards:</p>
+<pre><code class="lang-http">GET /humans?filter=isType(,men,equals(hasBeard,&#39;true&#39;)) HTTP/1.1
+</code></pre><p>The first parameter of <code>isType</code> can be used to perform the type check on a to-one relationship path.</p>
+<p>Only return people whose best friend is a man with children:</p>
+<pre><code class="lang-http">GET /humans?filter=isType(bestFriend,men,has(children)) HTTP/1.1
+</code></pre><p>Only return people who have at least one female married child:</p>
+<pre><code class="lang-http">GET /humans?filter=has(children,isType(,woman,not(equals(husband,null)))) HTTP/1.1
+</code></pre><h1 id="legacy-filters">Legacy filters</h1>
 <p>The next section describes how filtering worked in versions prior to v4.0. They are always applied on the set of resources being requested (no nesting).
 Legacy filters use the following form.</p>
 <pre><code>?filter[attribute]=value

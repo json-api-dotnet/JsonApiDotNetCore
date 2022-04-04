@@ -111,12 +111,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Configuration.ResourceType</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
         <td><span class="parametername">resourceType</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Resources.IIdentifiable</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a></td>
         <td><span class="parametername">resourceInstance</span></td>
         <td></td>
       </tr>
@@ -193,20 +193,20 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnAddToRelationshipAsync__2___1_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_ISet_JsonApiDotNetCore_Resources_IIdentifiable__CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnAddToRelationshipAsync%60%602(%60%601%2CJsonApiDotNetCore.Resources.Annotations.HasManyAttribute%2CISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnAddToRelationshipAsync__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_ISet_JsonApiDotNetCore_Resources_IIdentifiable__CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnAddToRelationshipAsync%60%601(%60%600%2CJsonApiDotNetCore.Resources.Annotations.HasManyAttribute%2CISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L73">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnAddToRelationshipAsync_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnAddToRelationshipAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnAddToRelationshipAsync__2___1_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_ISet_JsonApiDotNetCore_Resources_IIdentifiable__CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnAddToRelationshipAsync``2(``1,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute,ISet{JsonApiDotNetCore.Resources.IIdentifiable},CancellationToken)">OnAddToRelationshipAsync&lt;TResource, TId&gt;(TId, HasManyAttribute, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnAddToRelationshipAsync__1_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_ISet_JsonApiDotNetCore_Resources_IIdentifiable__CancellationToken_">OnAddToRelationshipAsync(TId, HasManyAttribute, ISet&lt;IIdentifiable&gt;, CancellationToken)</a> for the specified resource.</p>
+  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnAddToRelationshipAsync__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_ISet_JsonApiDotNetCore_Resources_IIdentifiable__CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnAddToRelationshipAsync``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute,ISet{JsonApiDotNetCore.Resources.IIdentifiable},CancellationToken)">OnAddToRelationshipAsync&lt;TResource&gt;(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnAddToRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_ISet_JsonApiDotNetCore_Resources_IIdentifiable__CancellationToken_">OnAddToRelationshipAsync(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, CancellationToken)</a> for the specified resource.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task OnAddToRelationshipAsync&lt;TResource, TId&gt;(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet&lt;IIdentifiable&gt; rightResourceIds, CancellationToken cancellationToken)
-    where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">Task OnAddToRelationshipAsync&lt;TResource&gt;(TResource leftResource, HasManyAttribute hasManyRelationship, ISet&lt;IIdentifiable&gt; rightResourceIds, CancellationToken cancellationToken)
+    where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -219,17 +219,17 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">TId</span></td>
-        <td><span class="parametername">leftResourceId</span></td>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">leftResource</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Resources.Annotations.HasManyAttribute</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></td>
         <td><span class="parametername">hasManyRelationship</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">ISet</span>&lt;<span class="xref">JsonApiDotNetCore.Resources.IIdentifiable</span>&gt;</td>
+        <td><span class="xref">ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
         <td><span class="parametername">rightResourceIds</span></td>
         <td></td>
       </tr>
@@ -268,10 +268,6 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
         <td><span class="parametername">TResource</span></td>
         <td></td>
       </tr>
-      <tr>
-        <td><span class="parametername">TId</span></td>
-        <td></td>
-      </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
@@ -301,7 +297,7 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Configuration.ResourceType</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
         <td><span class="parametername">resourceType</span></td>
         <td></td>
       </tr>
@@ -354,7 +350,7 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Configuration.ResourceType</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
         <td><span class="parametername">resourceType</span></td>
         <td></td>
       </tr>
@@ -407,7 +403,7 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Configuration.ResourceType</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
         <td><span class="parametername">resourceType</span></td>
         <td></td>
       </tr>
@@ -460,7 +456,7 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Configuration.ResourceType</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
         <td><span class="parametername">resourceType</span></td>
         <td></td>
       </tr>
@@ -513,7 +509,7 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Configuration.ResourceType</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
         <td><span class="parametername">resourceType</span></td>
         <td></td>
       </tr>
@@ -566,7 +562,7 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Resources.IIdentifiable</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a></td>
         <td><span class="parametername">resource</span></td>
         <td></td>
       </tr>
@@ -679,12 +675,12 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Resources.Annotations.HasManyAttribute</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></td>
         <td><span class="parametername">hasManyRelationship</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">ISet</span>&lt;<span class="xref">JsonApiDotNetCore.Resources.IIdentifiable</span>&gt;</td>
+        <td><span class="xref">ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
         <td><span class="parametername">rightResourceIds</span></td>
         <td></td>
       </tr>
@@ -752,7 +748,7 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Resources.IIdentifiable</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a></td>
         <td><span class="parametername">resource</span></td>
         <td></td>
       </tr>
@@ -791,12 +787,12 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Resources.Annotations.HasManyAttribute</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html">HasManyAttribute</a></td>
         <td><span class="parametername">hasManyRelationship</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">ISet</span>&lt;<span class="xref">JsonApiDotNetCore.Resources.IIdentifiable</span>&gt;</td>
+        <td><span class="xref">ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
         <td><span class="parametername">rightResourceIds</span></td>
         <td></td>
       </tr>
@@ -875,12 +871,12 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Resources.Annotations.HasOneAttribute</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html">HasOneAttribute</a></td>
         <td><span class="parametername">hasOneRelationship</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Resources.IIdentifiable</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a></td>
         <td><span class="parametername">rightResourceId</span></td>
         <td></td>
       </tr>
@@ -906,7 +902,7 @@ returns the <see cref="!:IQueryable&lt;T>"></see> expression for the specified p
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<span class="xref">JsonApiDotNetCore.Resources.IIdentifiable</span>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>

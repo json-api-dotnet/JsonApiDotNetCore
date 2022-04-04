@@ -80,6 +80,14 @@
       <h4><a class="xref" href="JsonApiDotNetCore.Queries.ExpressionInScope.html">ExpressionInScope</a></h4>
       <section><p>Represents an expression coming from query string. The scope determines at which depth in the <a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraph.html">IResourceGraph</a> to apply its expression.</p>
 </section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Queries.FieldSelection.html">FieldSelection</a></h4>
+      <section><p>Provides access to sparse fieldsets, per resource type. There&apos;s usually just a single resource type, but there can be multiple in case an endpoint
+for an abstract resource type returns derived types.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Queries.FieldSelectors.html">FieldSelectors</a></h4>
+      <section><p>A data structure that contains which fields (attributes and relationships) to retrieve, or empty to retrieve all. In the case of a relationship, it
+contains the nested query constraints.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a></h4>
       <section><p>A nested data structure that contains <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a> constraints per resource type.</p>
 </section>

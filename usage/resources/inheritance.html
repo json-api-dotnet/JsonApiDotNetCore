@@ -1,0 +1,452 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Resource inheritance </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Resource inheritance ">
+    <meta name="generator" content="docfx 2.59.1.0">
+    
+    <link rel="shortcut icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../../styles/docfx.css">
+    <link rel="stylesheet" href="../../styles/main.css">
+    <meta property="docfx:navrel" content="../../toc.html">
+    <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../../index.html">
+                <img id="logo" class="svg" src="../../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="resource-inheritance">Resource inheritance</h1>
+
+<p><em>since v5.0</em></p>
+<p>Resource classes can be part of a type hierarchy. For example:</p>
+<pre><code class="lang-c#">#nullable enable
+
+public abstract class Human : Identifiable&lt;long&gt;
+{
+    [Attr]
+    public string Name { get; set; } = null!;
+
+    [HasOne]
+    public Man? Father { get; set; }
+
+    [HasOne]
+    public Woman? Mother { get; set; }
+
+    [HasMany]
+    public ISet&lt;Human&gt; Children { get; set; } = new HashSet&lt;Human&gt;();
+
+    [HasOne]
+    public Human? BestFriend { get; set; }
+}
+
+public sealed class Man : Human
+{
+    [Attr]
+    public bool HasBeard { get; set; }
+
+    [HasOne]
+    public Woman? Wife { get; set; }
+}
+
+public sealed class Woman : Human
+{
+    [Attr]
+    public string? MaidenName { get; set; }
+
+    [HasOne]
+    public Man? Husband { get; set; }
+}
+</code></pre><h2 id="reading-data">Reading data</h2>
+<p>You can access them through base or derived endpoints.</p>
+<pre><code class="lang-http">GET /humans HTTP/1.1
+
+{
+  &quot;data&quot;: [
+    {
+      &quot;type&quot;: &quot;women&quot;,
+      &quot;id&quot;: &quot;1&quot;,
+      &quot;attributes&quot;: {
+        &quot;maidenName&quot;: &quot;Smith&quot;,
+        &quot;name&quot;: &quot;Jane Doe&quot;
+      },
+      &quot;relationships&quot;: {
+        &quot;husband&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/women/1/relationships/husband&quot;,
+            &quot;related&quot;: &quot;/women/1/husband&quot;
+          }
+        },
+        &quot;father&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/women/1/relationships/father&quot;,
+            &quot;related&quot;: &quot;/women/1/father&quot;
+          }
+        },
+        &quot;mother&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/women/1/relationships/mother&quot;,
+            &quot;related&quot;: &quot;/women/1/mother&quot;
+          }
+        },
+        &quot;children&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/women/1/relationships/children&quot;,
+            &quot;related&quot;: &quot;/women/1/children&quot;
+          }
+        },
+        &quot;bestFriend&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/women/1/relationships/bestFriend&quot;,
+            &quot;related&quot;: &quot;/women/1/bestFriend&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/women/1&quot;
+      }
+    },
+    {
+      &quot;type&quot;: &quot;men&quot;,
+      &quot;id&quot;: &quot;2&quot;,
+      &quot;attributes&quot;: {
+        &quot;hasBeard&quot;: true,
+        &quot;name&quot;: &quot;John Doe&quot;
+      },
+      &quot;relationships&quot;: {
+        &quot;wife&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/men/2/relationships/wife&quot;,
+            &quot;related&quot;: &quot;/men/2/wife&quot;
+          }
+        },
+        &quot;father&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/men/2/relationships/father&quot;,
+            &quot;related&quot;: &quot;/men/2/father&quot;
+          }
+        },
+        &quot;mother&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/men/2/relationships/mother&quot;,
+            &quot;related&quot;: &quot;/men/2/mother&quot;
+          }
+        },
+        &quot;children&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/men/2/relationships/children&quot;,
+            &quot;related&quot;: &quot;/men/2/children&quot;
+          }
+        },
+        &quot;bestFriend&quot;: {
+          &quot;links&quot;: {
+            &quot;self&quot;: &quot;/men/2/relationships/bestFriend&quot;,
+            &quot;related&quot;: &quot;/men/2/bestFriend&quot;
+          }
+        }
+      },
+      &quot;links&quot;: {
+        &quot;self&quot;: &quot;/men/2&quot;
+      }
+    }
+  ]
+}
+</code></pre><h3 id="spare-fieldsets">Spare fieldsets</h3>
+<p>If you only want to retrieve the fields from the base type, you can use <a href="../reading/sparse-fieldset-selection.html">sparse fieldsets</a>.</p>
+<pre><code class="lang-http">GET /humans?fields[men]=name,children&amp;fields[women]=name,children HTTP/1.1
+</code></pre><h3 id="includes">Includes</h3>
+<p>Relationships on derived types can be included without special syntax.</p>
+<pre><code class="lang-http">GET /humans?include=husband,wife,children HTTP/1.1
+</code></pre><h3 id="sorting">Sorting</h3>
+<p>Just like includes, you can sort on derived attributes and relationships.</p>
+<pre><code class="lang-http">GET /humans?sort=maidenName,wife.name HTTP/1.1
+</code></pre><p>This returns all women sorted by their maiden names, followed by all men sorted by the name of their wife.</p>
+<p>To accomplish the same from a <a href="../extensibility/resource-definitions.html">Resource Definition</a>, upcast to the derived type:</p>
+<pre><code class="lang-c#">public override SortExpression OnApplySort(SortExpression? existingSort)
+{
+    return CreateSortExpressionFromLambda(new PropertySortOrder
+    {
+        (human =&gt; ((Woman)human).MaidenName, ListSortDirection.Ascending),
+        (human =&gt; ((Man)human).Wife!.Name, ListSortDirection.Ascending)
+    });
+}
+</code></pre><h3 id="filtering">Filtering</h3>
+<p>Use the <code>isType</code> filter function to perform a type check on a derived type. You can pass a nested filter, where the derived fields are accessible.</p>
+<p>Only return men:</p>
+<pre><code class="lang-http">GET /humans?filter=isType(,men) HTTP/1.1
+</code></pre><p>Only return men with beards:</p>
+<pre><code class="lang-http">GET /humans?filter=isType(,men,equals(hasBeard,&#39;true&#39;)) HTTP/1.1
+</code></pre><p>The first parameter of <code>isType</code> can be used to perform the type check on a to-one relationship path.</p>
+<p>Only return people whose best friend is a man with children:</p>
+<pre><code class="lang-http">GET /humans?filter=isType(bestFriend,men,has(children)) HTTP/1.1
+</code></pre><p>Only return people who have at least one female married child:</p>
+<pre><code class="lang-http">GET /humans?filter=has(children,isType(,woman,not(equals(husband,null)))) HTTP/1.1
+</code></pre><h2 id="writing-data">Writing data</h2>
+<p>Just like reading data, you can use base or derived endpoints. When using relationships in request bodies, you can use base or derived types as well.
+The only exception is that you cannot use an abstract base type in the request body when creating or updating a resource.</p>
+<p>For example, updating an attribute and relationship can be done at an abstract endpoint, but its body requires non-abstract types:</p>
+<pre><code class="lang-http">PATCH /humans/2 HTTP/1.1
+
+{
+  &quot;data&quot;: {
+    &quot;type&quot;: &quot;men&quot;,
+    &quot;id&quot;: &quot;2&quot;,
+    &quot;attributes&quot;: {
+      &quot;hasBeard&quot;: false
+    },
+    &quot;relationships&quot;: {
+      &quot;wife&quot;: {
+        &quot;data&quot;: {
+          &quot;type&quot;: &quot;women&quot;,
+          &quot;id&quot;: &quot;1&quot;
+        }
+      }
+    }
+  }
+}
+</code></pre><p>Updating a relationship does allow abstract types. For example:</p>
+<pre><code class="lang-http">PATCH /humans/1/relationships/children HTTP/1.1
+
+{
+  &quot;data&quot;: [
+    {
+      &quot;type&quot;: &quot;humans&quot;,
+      &quot;id&quot;: &quot;2&quot;
+    }
+  ]
+}
+</code></pre><h3 id="request-pipeline">Request pipeline</h3>
+<p>The <code>TResource</code> type parameter used in controllers, resource services and resource repositories always matches the used endpoint.
+But when JsonApiDotNetCore sees usage of a type from a type hierarchy, it fetches the stored types and updates <code>IJsonApiRequest</code> accordingly.
+As a result, <code>TResource</code> can be different from what <code>IJsonApiRequest.PrimaryResourceType</code> returns.</p>
+<p>For example, on the request:</p>
+<pre><code class="lang-http"> GET /humans/1 HTTP/1.1
+</code></pre><p>JsonApiDotNetCore runs <code>IResourceService&lt;Human, long&gt;</code>, but <code>IJsonApiRequest.PrimaryResourceType</code> returns <code>Woman</code>
+if human with ID 1 is stored as a woman in the underlying data store.</p>
+<p>Even with a simple type hierarchy as used here, lots of possible combinations quickly arise. For example, changing someone&#39;s best friend can be done using the following requests:</p>
+<ul>
+<li><code>PATCH /humans/1/ { &quot;data&quot;: { relationships: { bestFriend: { type: &quot;women&quot; ... } } } }</code></li>
+<li><code>PATCH /humans/1/ { &quot;data&quot;: { relationships: { bestFriend: { type: &quot;men&quot; ... } } } }</code></li>
+<li><code>PATCH /women/1/ { &quot;data&quot;: { relationships: { bestFriend: { type: &quot;women&quot; ... } } } }</code></li>
+<li><code>PATCH /women/1/ { &quot;data&quot;: { relationships: { bestFriend: { type: &quot;men&quot; ... } } } }</code></li>
+<li><code>PATCH /men/2/ { &quot;data&quot;: { relationships: { bestFriend: { type: &quot;women&quot; ... } } } }</code></li>
+<li><code>PATCH /men/2/ { &quot;data&quot;: { relationships: { bestFriend: { type: &quot;men&quot; ... } } } }</code></li>
+<li><code>PATCH /humans/1/relationships/bestFriend { &quot;data&quot;: { type: &quot;human&quot; ... } }</code></li>
+<li><code>PATCH /humans/1/relationships/bestFriend { &quot;data&quot;: { type: &quot;women&quot; ... } }</code></li>
+<li><code>PATCH /humans/1/relationships/bestFriend { &quot;data&quot;: { type: &quot;men&quot; ... } }</code></li>
+<li><code>PATCH /women/1/relationships/bestFriend { &quot;data&quot;: { type: &quot;human&quot; ... } }</code></li>
+<li><code>PATCH /women/1/relationships/bestFriend { &quot;data&quot;: { type: &quot;women&quot; ... } }</code></li>
+<li><code>PATCH /women/1/relationships/bestFriend { &quot;data&quot;: { type: &quot;men&quot; ... } }</code></li>
+<li><code>PATCH /men/2/relationships/bestFriend { &quot;data&quot;: { type: &quot;human&quot; ... } }</code></li>
+<li><code>PATCH /men/2/relationships/bestFriend { &quot;data&quot;: { type: &quot;women&quot; ... } }</code></li>
+<li><code>PATCH /men/2/relationships/bestFriend { &quot;data&quot;: { type: &quot;men&quot; ... } }</code></li>
+</ul>
+<p>Because of all the possible combinations, implementing business rules in the pipeline is a no-go.
+Resource definitions provide a better solution, see below.</p>
+<h3 id="resource-definitions">Resource definitions</h3>
+<p>In contrast to the request pipeline, JsonApiDotNetCore always executes the resource definition that matches the <em>stored</em> type.
+This enables to implement business logic in a central place, irrespective of which endpoint was used or whether base types were used in relationships.</p>
+<p>To delegate logic for base types to their matching resource type, you can build a chain of resource definitions. And because you&#39;ll always get the
+actually stored types (for relationships too), you can type-check left-side and right-side types in resources definitions.</p>
+<pre><code class="lang-c#">public sealed class HumanDefinition : JsonApiResourceDefinition&lt;Human, long&gt;
+{
+    public HumanDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
+    {
+    }
+
+    public override Task&lt;IIdentifiable?&gt; OnSetToOneRelationshipAsync(Human leftResource,
+        HasOneAttribute hasOneRelationship, IIdentifiable? rightResourceId,
+        WriteOperationKind writeOperation, CancellationToken cancellationToken)
+    {
+        if (leftResource is Man &amp;&amp;
+            hasOneRelationship.Property.Name == nameof(Human.BestFriend) &amp;&amp;
+            rightResourceId is Woman)
+        {
+            throw new Exception(&quot;Men are not supposed to have a female best friend.&quot;);
+        }
+
+        return Task.FromResult(rightResourceId);
+    }
+
+    public override Task OnWritingAsync(Human resource, WriteOperationKind writeOperation,
+        CancellationToken cancellationToken)
+    {
+        if (writeOperation is WriteOperationKind.CreateResource or
+            WriteOperationKind.UpdateResource)
+        {
+            if (resource is Man { HasBeard: true })
+            {
+                throw new Exception(&quot;Only shaved men, please.&quot;);
+            }
+        }
+
+        return Task.CompletedTask;
+    }
+}
+
+public sealed class WomanDefinition : JsonApiResourceDefinition&lt;Woman, long&gt;
+{
+    private readonly IResourceDefinition&lt;Human, long&gt; _baseDefinition;
+
+    public WomanDefinition(IResourceGraph resourceGraph,
+        IResourceDefinition&lt;Human, long&gt; baseDefinition)
+        : base(resourceGraph)
+    {
+        _baseDefinition = baseDefinition;
+    }
+
+    public override Task&lt;IIdentifiable?&gt; OnSetToOneRelationshipAsync(Woman leftResource,
+        HasOneAttribute hasOneRelationship, IIdentifiable? rightResourceId,
+        WriteOperationKind writeOperation, CancellationToken cancellationToken)
+    {
+        if (ResourceType.BaseType!.FindRelationshipByPublicName(
+            hasOneRelationship.PublicName) != null)
+        {
+            // Delegate to resource definition for base type Human.
+            return _baseDefinition.OnSetToOneRelationshipAsync(leftResource,
+                hasOneRelationship, rightResourceId, writeOperation, cancellationToken);
+        }
+
+        // Handle here.
+        if (hasOneRelationship.Property.Name == nameof(Woman.Husband) &amp;&amp;
+            rightResourceId == null)
+        {
+            throw new Exception(&quot;We don&#39;t accept unmarried women at this time.&quot;);
+        }
+
+        return Task.FromResult(rightResourceId);
+    }
+
+    public override async Task OnPrepareWriteAsync(Woman resource,
+        WriteOperationKind writeOperation, CancellationToken cancellationToken)
+    {
+        // Run rules in resource definition for base type Human.
+        await _baseDefinition.OnPrepareWriteAsync(resource, writeOperation, cancellationToken);
+
+        // Run rules for type Woman.
+        if (resource.MaidenName == null)
+        {
+            throw new Exception(&quot;Women should have a maiden name.&quot;);
+        }
+    }
+}
+
+public sealed class ManDefinition : JsonApiResourceDefinition&lt;Man, long&gt;
+{
+    private readonly IResourceDefinition&lt;Human, long&gt; _baseDefinition;
+
+    public ManDefinition(IResourceGraph resourceGraph,
+        IResourceDefinition&lt;Human, long&gt; baseDefinition)
+        : base(resourceGraph)
+    {
+        _baseDefinition = baseDefinition;
+    }
+
+    public override Task&lt;IIdentifiable?&gt; OnSetToOneRelationshipAsync(Man leftResource,
+        HasOneAttribute hasOneRelationship, IIdentifiable? rightResourceId,
+        WriteOperationKind writeOperation, CancellationToken cancellationToken)
+    {
+        // No man-specific logic, but we&#39;ll still need to delegate.
+        return _baseDefinition.OnSetToOneRelationshipAsync(leftResource, hasOneRelationship,
+            rightResourceId, writeOperation, cancellationToken);
+    }
+
+    public override Task OnWritingAsync(Man resource, WriteOperationKind writeOperation,
+        CancellationToken cancellationToken)
+    {
+        // No man-specific logic, but we&#39;ll still need to delegate.
+        return _baseDefinition.OnWritingAsync(resource, writeOperation, cancellationToken);
+    }
+}
+</code></pre></article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/resources/inheritance.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../../styles/docfx.js"></script>
+    <script type="text/javascript" src="../../styles/main.js"></script>
+  </body>
+</html>

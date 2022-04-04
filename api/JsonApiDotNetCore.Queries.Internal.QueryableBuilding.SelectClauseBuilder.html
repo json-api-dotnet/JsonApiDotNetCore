@@ -96,6 +96,9 @@
       <a class="xref" href="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryClauseBuilder_1_VisitResourceFieldChain_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression__0_">QueryClauseBuilder&lt;Object&gt;.VisitResourceFieldChain(ResourceFieldChainExpression, Object)</a>
     </div>
     <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryClauseBuilder_1_WithLambdaScopeAccessor__1_System_Linq_Expressions_Expression_Func___0__">QueryClauseBuilder&lt;Object&gt;.WithLambdaScopeAccessor&lt;TResult&gt;(Expression, Func&lt;TResult&gt;)</a>
+    </div>
+    <div>
       <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_Visit_JsonApiDotNetCore_Queries_Expressions_QueryExpression__0_">QueryExpressionVisitor&lt;Object, Expression&gt;.Visit(QueryExpression, Object)</a>
     </div>
     <div>
@@ -121,6 +124,9 @@
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitHas_JsonApiDotNetCore_Queries_Expressions_HasExpression__0_">QueryExpressionVisitor&lt;Object, Expression&gt;.VisitHas(HasExpression, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitIsType_JsonApiDotNetCore_Queries_Expressions_IsTypeExpression__0_">QueryExpressionVisitor&lt;Object, Expression&gt;.VisitIsType(IsTypeExpression, Object)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitSortElement_JsonApiDotNetCore_Queries_Expressions_SortElementExpression__0_">QueryExpressionVisitor&lt;Object, Expression&gt;.VisitSortElement(SortElementExpression, Object)</a>
@@ -200,7 +206,7 @@ public class SelectClauseBuilder : QueryClauseBuilder&lt;object&gt;</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SelectClauseBuilder__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_Microsoft_EntityFrameworkCore_Metadata_IModel_Type_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaParameterNameFactory_JsonApiDotNetCore_Resources_IResourceFactory_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.%23ctor(System.Linq.Expressions.Expression%2CJsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope%2CMicrosoft.EntityFrameworkCore.Metadata.IModel%2CType%2CJsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory%2CJsonApiDotNetCore.Resources.IResourceFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/SelectClauseBuilder.cs/#L28">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/SelectClauseBuilder.cs/#L30">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SelectClauseBuilder__ctor_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SelectClauseBuilder__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_Microsoft_EntityFrameworkCore_Metadata_IModel_Type_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaParameterNameFactory_JsonApiDotNetCore_Resources_IResourceFactory_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope,Microsoft.EntityFrameworkCore.Metadata.IModel,Type,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,JsonApiDotNetCore.Resources.IResourceFactory)">SelectClauseBuilder(Expression, LambdaScope, IModel, Type, LambdaParameterNameFactory, IResourceFactory)</h4>
@@ -256,18 +262,18 @@ public class SelectClauseBuilder : QueryClauseBuilder&lt;object&gt;</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SelectClauseBuilder_ApplySelect_IDictionary_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_JsonApiDotNetCore_Queries_QueryLayer__JsonApiDotNetCore_Configuration_ResourceType_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.ApplySelect(IDictionary%7BJsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute%2CJsonApiDotNetCore.Queries.QueryLayer%7D%2CJsonApiDotNetCore.Configuration.ResourceType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SelectClauseBuilder_ApplySelect_JsonApiDotNetCore_Queries_FieldSelection_JsonApiDotNetCore_Configuration_ResourceType_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.ApplySelect(JsonApiDotNetCore.Queries.FieldSelection%2CJsonApiDotNetCore.Configuration.ResourceType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/SelectClauseBuilder.cs/#L45">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/SelectClauseBuilder.cs/#L47">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SelectClauseBuilder_ApplySelect_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.ApplySelect*"></a>
-  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SelectClauseBuilder_ApplySelect_IDictionary_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_JsonApiDotNetCore_Queries_QueryLayer__JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.ApplySelect(IDictionary{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute,JsonApiDotNetCore.Queries.QueryLayer},JsonApiDotNetCore.Configuration.ResourceType)">ApplySelect(IDictionary&lt;ResourceFieldAttribute, QueryLayer&gt;, ResourceType)</h4>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SelectClauseBuilder_ApplySelect_JsonApiDotNetCore_Queries_FieldSelection_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.ApplySelect(JsonApiDotNetCore.Queries.FieldSelection,JsonApiDotNetCore.Configuration.ResourceType)">ApplySelect(FieldSelection, ResourceType)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Expression ApplySelect(IDictionary&lt;ResourceFieldAttribute, QueryLayer&gt; selectors, ResourceType resourceType)</code></pre>
+    <pre><code class="lang-csharp hljs">public Expression ApplySelect(FieldSelection selection, ResourceType resourceType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -280,12 +286,12 @@ public class SelectClauseBuilder : QueryClauseBuilder&lt;object&gt;</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IDictionary</span>&lt;<span class="xref">JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute</span>, <a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a>&gt;</td>
-        <td><span class="parametername">selectors</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.FieldSelection.html">FieldSelection</a></td>
+        <td><span class="parametername">selection</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">JsonApiDotNetCore.Configuration.ResourceType</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
         <td><span class="parametername">resourceType</span></td>
         <td></td>
       </tr>

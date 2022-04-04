@@ -77,9 +77,13 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html">Identifiable&lt;TId&gt;</a></h4>
+      <section><p>A convenient basic implementation of <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable-1.html">IIdentifiable&lt;TId&gt;</a> that provides conversion between typed <a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_Id">Id</a> and
+<a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_StringId">StringId</a>.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.IdentifiableComparer.html">IdentifiableComparer</a></h4>
-      <section><p>Compares <code>IIdentifiable</code> instances with each other based on their type and <span class="xref">JsonApiDotNetCore.Resources.IIdentifiable.StringId</span>, falling back to
-<span class="xref">JsonApiDotNetCore.Resources.IIdentifiable.LocalId</span> when both StringIds are null.</p>
+      <section><p>Compares <code>IIdentifiable</code> instances with each other based on their type and <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_StringId">StringId</a>, falling back to
+<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_LocalId">LocalId</a> when both StringIds are null.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html">JsonApiResourceDefinition&lt;TResource, TId&gt;</a></h4>
       <section><p>Provides an extensibility point to add business logic that is resource-oriented instead of endpoint-oriented.</p>
@@ -106,6 +110,12 @@ details.</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a></h4>
+      <section><p>Defines the basic contract for a JSON:API resource. All resource classes must implement <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable-1.html">IIdentifiable&lt;TId&gt;</a>.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable-1.html">IIdentifiable&lt;TId&gt;</a></h4>
+      <section><p>When implemented by a class, indicates to JsonApiDotNetCore that the class represents a JSON:API resource.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceChangeTracker-1.html">IResourceChangeTracker&lt;TResource&gt;</a></h4>
       <section><p>Used to determine whether additional changes to a resource (side effects), not specified in a POST or PATCH request, have been applied.</p>
 </section>
