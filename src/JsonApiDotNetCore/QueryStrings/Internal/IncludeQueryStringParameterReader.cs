@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
-using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal;
@@ -18,7 +17,6 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
     private readonly IncludeParser _includeParser;
 
     private IncludeExpression? _includeExpression;
-    private string? _lastParameterName;
 
     public bool AllowEmptyValue => false;
 
@@ -28,18 +26,7 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
         ArgumentGuard.NotNull(options, nameof(options));
 
         _options = options;
-        _includeParser = new IncludeParser(ValidateSingleRelationship);
-    }
-
-    protected void ValidateSingleRelationship(RelationshipAttribute relationship, ResourceType resourceType, string path)
-    {
-        if (!relationship.CanInclude)
-        {
-            throw new InvalidQueryStringParameterException(_lastParameterName!, "Including the requested relationship is not allowed.",
-                path == relationship.PublicName
-                    ? $"Including the relationship '{relationship.PublicName}' on '{resourceType.PublicName}' is not allowed."
-                    : $"Including the relationship '{relationship.PublicName}' in '{path}' on '{resourceType.PublicName}' is not allowed.");
-        }
+        _includeParser = new IncludeParser();
     }
 
     /// <inheritdoc />
@@ -59,8 +46,6 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
     /// <inheritdoc />
     public virtual void Read(string parameterName, StringValues parameterValue)
     {
-        _lastParameterName = parameterName;
-
         try
         {
             _includeExpression = GetInclude(parameterValue);

@@ -43,21 +43,103 @@ public class ResourceGraphBuilder
 
         var resourceGraph = new ResourceGraph(resourceTypes);
 
-        foreach (RelationshipAttribute relationship in resourceTypes.SelectMany(resourceType => resourceType.Relationships))
+        SetFieldTypes(resourceGraph);
+        SetRelationshipTypes(resourceGraph);
+        SetDirectlyDerivedTypes(resourceGraph);
+        ValidateFieldsInDerivedTypes(resourceGraph);
+
+        return resourceGraph;
+    }
+
+    private static void SetFieldTypes(ResourceGraph resourceGraph)
+    {
+        foreach (ResourceFieldAttribute field in resourceGraph.GetResourceTypes().SelectMany(resourceType => resourceType.Fields))
         {
-            relationship.LeftType = resourceGraph.GetResourceType(relationship.LeftClrType!);
-            ResourceType? rightType = resourceGraph.FindResourceType(relationship.RightClrType!);
+            field.Type = resourceGraph.GetResourceType(field.Property.ReflectedType!);
+        }
+    }
+
+    private static void SetRelationshipTypes(ResourceGraph resourceGraph)
+    {
+        foreach (RelationshipAttribute relationship in resourceGraph.GetResourceTypes().SelectMany(resourceType => resourceType.Relationships))
+        {
+            Type rightClrType = relationship is HasOneAttribute
+                ? relationship.Property.PropertyType
+                : relationship.Property.PropertyType.GetGenericArguments()[0];
+
+            ResourceType? rightType = resourceGraph.FindResourceType(rightClrType);
 
             if (rightType == null)
             {
-                throw new InvalidConfigurationException($"Resource type '{relationship.LeftClrType}' depends on " +
-                    $"'{relationship.RightClrType}', which was not added to the resource graph.");
+                throw new InvalidConfigurationException($"Resource type '{relationship.LeftType.ClrType}' depends on " +
+                    $"'{rightClrType}', which was not added to the resource graph.");
             }
 
             relationship.RightType = rightType;
         }
+    }
 
-        return resourceGraph;
+    private static void SetDirectlyDerivedTypes(ResourceGraph resourceGraph)
+    {
+        Dictionary<ResourceType, HashSet<ResourceType>> directlyDerivedTypesPerBaseType = new();
+
+        foreach (ResourceType resourceType in resourceGraph.GetResourceTypes())
+        {
+            ResourceType? baseType = resourceGraph.FindResourceType(resourceType.ClrType.BaseType!);
+
+            if (baseType != null)
+            {
+                resourceType.BaseType = baseType;
+
+                if (!directlyDerivedTypesPerBaseType.ContainsKey(baseType))
+                {
+                    directlyDerivedTypesPerBaseType[baseType] = new HashSet<ResourceType>();
+                }
+
+                directlyDerivedTypesPerBaseType[baseType].Add(resourceType);
+            }
+        }
+
+        foreach ((ResourceType baseType, HashSet<ResourceType> directlyDerivedTypes) in directlyDerivedTypesPerBaseType)
+        {
+            baseType.DirectlyDerivedTypes = directlyDerivedTypes;
+        }
+    }
+
+    private void ValidateFieldsInDerivedTypes(ResourceGraph resourceGraph)
+    {
+        foreach (ResourceType resourceType in resourceGraph.GetResourceTypes())
+        {
+            if (resourceType.BaseType != null)
+            {
+                ValidateAttributesInDerivedType(resourceType);
+                ValidateRelationshipsInDerivedType(resourceType);
+            }
+        }
+    }
+
+    private static void ValidateAttributesInDerivedType(ResourceType resourceType)
+    {
+        foreach (AttrAttribute attribute in resourceType.BaseType!.Attributes)
+        {
+            if (resourceType.FindAttributeByPublicName(attribute.PublicName) == null)
+            {
+                throw new InvalidConfigurationException($"Attribute '{attribute.PublicName}' from base type " +
+                    $"'{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+            }
+        }
+    }
+
+    private static void ValidateRelationshipsInDerivedType(ResourceType resourceType)
+    {
+        foreach (RelationshipAttribute relationship in resourceType.BaseType!.Relationships)
+        {
+            if (resourceType.FindRelationshipByPublicName(relationship.PublicName) == null)
+            {
+                throw new InvalidConfigurationException($"Relationship '{relationship.PublicName}' from base type " +
+                    $"'{resourceType.BaseType.ClrType}' does not exist in derived type '{resourceType.ClrType}'.");
+            }
+        }
     }
 
     public ResourceGraphBuilder Add(DbContext dbContext)
@@ -221,8 +303,6 @@ public class ResourceGraphBuilder
             {
                 relationship.Property = property;
                 SetPublicName(relationship, property);
-                relationship.LeftClrType = resourceClrType;
-                relationship.RightClrType = GetRelationshipType(relationship, property);
 
                 IncludeField(relationshipsByName, relationship);
             }
@@ -235,14 +315,6 @@ public class ResourceGraphBuilder
     {
         // ReSharper disable once ConstantNullCoalescingCondition
         field.PublicName ??= FormatPropertyName(property);
-    }
-
-    private Type GetRelationshipType(RelationshipAttribute relationship, PropertyInfo property)
-    {
-        ArgumentGuard.NotNull(relationship, nameof(relationship));
-        ArgumentGuard.NotNull(property, nameof(property));
-
-        return relationship is HasOneAttribute ? property.PropertyType : property.PropertyType.GetGenericArguments()[0];
     }
 
     private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceClrType, int recursionDepth = 0)

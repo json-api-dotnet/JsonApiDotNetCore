@@ -95,6 +95,15 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "and(null", "Filter function expected.")]
     [InlineData("filter", "expr:equals(caption,'some')", "Filter function expected.")]
     [InlineData("filter", "expr:Equals(caption,'some')", "Filter function expected.")]
+    [InlineData("filter", "isType(", "Relationship name or , expected.")]
+    [InlineData("filter", "isType(,", "Resource type expected.")]
+    [InlineData("filter[posts.contributors]", "isType(,some)", "Resource type 'some' does not exist or does not derive from 'humans'.")]
+    [InlineData("filter[posts.contributors]", "isType(,humans)", "Resource type 'humans' does not exist or does not derive from 'humans'.")]
+    [InlineData("filter[posts.contributors]", "isType(some,men)", "Relationship 'some' does not exist on resource type 'humans'.")]
+    [InlineData("filter[posts.contributors]", "isType(father.some,women)", "Relationship 'some' in 'father.some' does not exist on resource type 'men'.")]
+    [InlineData("filter[posts.contributors]", "isType(children,men)", "Relationship 'children' must be a to-one relationship on resource type 'humans'.")]
+    [InlineData("filter[posts.contributors]", "isType(mother.children,men)",
+        "Relationship 'children' in 'mother.children' must be a to-one relationship on resource type 'women'.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Act
@@ -142,6 +151,10 @@ public sealed class FilterParseTests : BaseParseTests
         "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))")]
     [InlineData("filter[posts]", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments,startsWith(text,'A'))))",
         "posts", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments,startsWith(text,'A'))))")]
+    [InlineData("filter", "isType(owner.person,men)", null, "isType(owner.person,men)")]
+    [InlineData("filter", "isType(owner.person,men,equals(hasBeard,'true'))", null, "isType(owner.person,men,equals(hasBeard,'true'))")]
+    [InlineData("filter[posts.contributors]", "isType(,women)", "posts.contributors", "isType(,women)")]
+    [InlineData("filter[posts.contributors]", "isType(,women,equals(maidenName,'Austen'))", "posts.contributors", "isType(,women,equals(maidenName,'Austen'))")]
     public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected, string valueExpected)
     {
         // Act

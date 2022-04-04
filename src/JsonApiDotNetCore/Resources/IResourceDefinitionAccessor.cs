@@ -70,9 +70,9 @@ public interface IResourceDefinitionAccessor
     /// <summary>
     /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnAddToRelationshipAsync" /> for the specified resource.
     /// </summary>
-    public Task OnAddToRelationshipAsync<TResource, TId>(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+    public Task OnAddToRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
-        where TResource : class, IIdentifiable<TId>;
+        where TResource : class, IIdentifiable;
 
     /// <summary>
     /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnRemoveFromRelationshipAsync" /> for the specified resource.

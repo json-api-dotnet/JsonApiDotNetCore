@@ -28,6 +28,11 @@ public class NotExpression : FilterExpression
         return $"{Keywords.Not}({Child})";
     }
 
+    public override string ToFullString()
+    {
+        return $"{Keywords.Not}({Child.ToFullString()})";
+    }
+
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))

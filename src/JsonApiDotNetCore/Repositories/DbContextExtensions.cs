@@ -35,7 +35,7 @@ public static class DbContextExtensions
         ArgumentGuard.NotNull(dbContext, nameof(dbContext));
         ArgumentGuard.NotNull(identifiable, nameof(identifiable));
 
-        Type resourceClrType = identifiable.GetType();
+        Type resourceClrType = identifiable.GetClrType();
         string? stringId = identifiable.StringId;
 
         EntityEntry? entityEntry = dbContext.ChangeTracker.Entries().FirstOrDefault(entry => IsResource(entry, resourceClrType, stringId));

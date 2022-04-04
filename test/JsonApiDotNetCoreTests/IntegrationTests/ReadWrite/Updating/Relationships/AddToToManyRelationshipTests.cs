@@ -634,7 +634,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.Conflict);
         error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
-        error.Detail.Should().Be("Type 'userAccounts' is incompatible with type 'workTags' of relationship 'tags'.");
+        error.Detail.Should().Be("Type 'userAccounts' is not convertible to type 'workTags' of relationship 'tags'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data[0]/type");
         error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());

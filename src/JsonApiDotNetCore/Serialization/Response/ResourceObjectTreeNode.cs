@@ -251,19 +251,19 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
         {
         }
 
-        public bool Equals(ResourceObject? x, ResourceObject? y)
+        public bool Equals(ResourceObject? left, ResourceObject? right)
         {
-            if (ReferenceEquals(x, y))
+            if (ReferenceEquals(left, right))
             {
                 return true;
             }
 
-            if (x is null || y is null || x.GetType() != y.GetType())
+            if (left is null || right is null || left.GetType() != right.GetType())
             {
                 return false;
             }
 
-            return x.Type == y.Type && x.Id == y.Id && x.Lid == y.Lid;
+            return left.Type == right.Type && left.Id == right.Id && left.Lid == right.Lid;
         }
 
         public int GetHashCode(ResourceObject obj)

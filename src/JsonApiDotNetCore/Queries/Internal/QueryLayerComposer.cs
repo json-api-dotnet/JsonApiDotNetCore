@@ -167,7 +167,7 @@ public class QueryLayerComposer : IQueryLayerComposer
             Filter = GetFilter(expressionsInTopScope, resourceType),
             Sort = GetSort(expressionsInTopScope, resourceType),
             Pagination = topPagination,
-            Projection = GetProjectionForSparseAttributeSet(resourceType)
+            Selection = GetSelectionForSparseAttributeSet(resourceType)
         };
     }
 
@@ -203,9 +203,10 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         foreach (IncludeElementExpression includeElement in includeElementsEvaluated)
         {
-            parentLayer.Projection ??= new Dictionary<ResourceFieldAttribute, QueryLayer?>();
+            parentLayer.Selection ??= new FieldSelection();
+            FieldSelectors selectors = parentLayer.Selection.GetOrCreateSelectors(parentLayer.ResourceType);
 
-            if (!parentLayer.Projection.ContainsKey(includeElement.Relationship))
+            if (!selectors.ContainsField(includeElement.Relationship))
             {
                 var relationshipChain = new List<RelationshipAttribute>(parentRelationshipChain)
                 {
@@ -232,10 +233,10 @@ public class QueryLayerComposer : IQueryLayerComposer
                     Filter = isToManyRelationship ? GetFilter(expressionsInCurrentScope, resourceType) : null,
                     Sort = isToManyRelationship ? GetSort(expressionsInCurrentScope, resourceType) : null,
                     Pagination = isToManyRelationship ? GetPagination(expressionsInCurrentScope, resourceType) : null,
-                    Projection = GetProjectionForSparseAttributeSet(resourceType)
+                    Selection = GetSelectionForSparseAttributeSet(resourceType)
                 };
 
-                parentLayer.Projection.Add(includeElement.Relationship, child);
+                selectors.IncludeRelationship(includeElement.Relationship, child);
 
                 IImmutableSet<IncludeElementExpression> updatedChildren = ProcessIncludeSet(includeElement.Children, child, relationshipChain, constraints);
 
@@ -278,18 +279,15 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
         {
-            queryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer?>
-            {
-                [idAttribute] = null
-            };
+            queryLayer.Selection = new FieldSelection();
+            FieldSelectors selectors = queryLayer.Selection.GetOrCreateSelectors(primaryResourceType);
+            selectors.IncludeAttribute(idAttribute);
         }
-        else if (fieldSelection == TopFieldSelection.WithAllAttributes && queryLayer.Projection != null)
+        else if (fieldSelection == TopFieldSelection.WithAllAttributes && queryLayer.Selection != null)
         {
             // Discard any top-level ?fields[]= or attribute exclusions from resource definition, because we need the full database row.
-            while (queryLayer.Projection.Any(pair => pair.Key is AttrAttribute))
-            {
-                queryLayer.Projection.Remove(queryLayer.Projection.First(pair => pair.Key is AttrAttribute));
-            }
+            FieldSelectors selectors = queryLayer.Selection.GetOrCreateSelectors(primaryResourceType);
+            selectors.RemoveAttributes();
         }
 
         return queryLayer;
@@ -301,17 +299,23 @@ public class QueryLayerComposer : IQueryLayerComposer
         ArgumentGuard.NotNull(secondaryResourceType, nameof(secondaryResourceType));
 
         QueryLayer secondaryLayer = ComposeFromConstraints(secondaryResourceType);
-        secondaryLayer.Projection = GetProjectionForRelationship(secondaryResourceType);
+        secondaryLayer.Selection = GetSelectionForRelationship(secondaryResourceType);
         secondaryLayer.Include = null;
 
         return secondaryLayer;
     }
 
-    private IDictionary<ResourceFieldAttribute, QueryLayer?> GetProjectionForRelationship(ResourceType secondaryResourceType)
+#pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type
+    private FieldSelection GetSelectionForRelationship(ResourceType secondaryResourceType)
+#pragma warning restore AV1130 // Return type in method signature should be a collection interface instead of a concrete type
     {
-        IImmutableSet<AttrAttribute> secondaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(secondaryResourceType);
+        var selection = new FieldSelection();
+        FieldSelectors selectors = selection.GetOrCreateSelectors(secondaryResourceType);
 
-        return secondaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, _ => (QueryLayer?)null);
+        IImmutableSet<AttrAttribute> secondaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(secondaryResourceType);
+        selectors.IncludeAttributes(secondaryAttributeSet);
+
+        return selection;
     }
 
     /// <inheritdoc />
@@ -325,12 +329,12 @@ public class QueryLayerComposer : IQueryLayerComposer
         IncludeExpression? innerInclude = secondaryLayer.Include;
         secondaryLayer.Include = null;
 
+        var primarySelection = new FieldSelection();
+        FieldSelectors primarySelectors = primarySelection.GetOrCreateSelectors(primaryResourceType);
+
         IImmutableSet<AttrAttribute> primaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(primaryResourceType);
-
-        Dictionary<ResourceFieldAttribute, QueryLayer?> primaryProjection =
-            primaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, _ => (QueryLayer?)null);
-
-        primaryProjection[relationship] = secondaryLayer;
+        primarySelectors.IncludeAttributes(primaryAttributeSet);
+        primarySelectors.IncludeRelationship(relationship, secondaryLayer);
 
         FilterExpression? primaryFilter = GetFilter(Array.Empty<QueryExpression>(), primaryResourceType);
         AttrAttribute primaryIdAttribute = GetIdAttribute(primaryResourceType);
@@ -339,7 +343,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         {
             Include = RewriteIncludeForSecondaryEndpoint(innerInclude, relationship),
             Filter = CreateFilterByIds(primaryId.AsArray(), primaryIdAttribute, primaryFilter),
-            Projection = primaryProjection
+            Selection = primarySelection
         };
     }
 
@@ -387,7 +391,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         primaryLayer.Sort = null;
         primaryLayer.Pagination = null;
         primaryLayer.Filter = CreateFilterByIds(id.AsArray(), primaryIdAttribute, primaryLayer.Filter);
-        primaryLayer.Projection = null;
+        primaryLayer.Selection = null;
 
         return primaryLayer;
     }
@@ -418,19 +422,20 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         AttrAttribute rightIdAttribute = GetIdAttribute(relationship.RightType);
 
-        object[] typedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
+        HashSet<object> typedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
 
         FilterExpression? baseFilter = GetFilter(Array.Empty<QueryExpression>(), relationship.RightType);
         FilterExpression? filter = CreateFilterByIds(typedIds, rightIdAttribute, baseFilter);
+
+        var selection = new FieldSelection();
+        FieldSelectors selectors = selection.GetOrCreateSelectors(relationship.RightType);
+        selectors.IncludeAttribute(rightIdAttribute);
 
         return new QueryLayer(relationship.RightType)
         {
             Include = IncludeExpression.Empty,
             Filter = filter,
-            Projection = new Dictionary<ResourceFieldAttribute, QueryLayer?>
-            {
-                [rightIdAttribute] = null
-            }
+            Selection = selection
         };
     }
 
@@ -442,27 +447,31 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         AttrAttribute leftIdAttribute = GetIdAttribute(hasManyRelationship.LeftType);
         AttrAttribute rightIdAttribute = GetIdAttribute(hasManyRelationship.RightType);
-        object[] rightTypedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
+        HashSet<object> rightTypedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
 
         FilterExpression? leftFilter = CreateFilterByIds(leftId.AsArray(), leftIdAttribute, null);
         FilterExpression? rightFilter = CreateFilterByIds(rightTypedIds, rightIdAttribute, null);
+
+        var secondarySelection = new FieldSelection();
+        FieldSelectors secondarySelectors = secondarySelection.GetOrCreateSelectors(hasManyRelationship.RightType);
+        secondarySelectors.IncludeAttribute(rightIdAttribute);
+
+        QueryLayer secondaryLayer = new(hasManyRelationship.RightType)
+        {
+            Filter = rightFilter,
+            Selection = secondarySelection
+        };
+
+        var primarySelection = new FieldSelection();
+        FieldSelectors primarySelectors = primarySelection.GetOrCreateSelectors(hasManyRelationship.LeftType);
+        primarySelectors.IncludeRelationship(hasManyRelationship, secondaryLayer);
+        primarySelectors.IncludeAttribute(leftIdAttribute);
 
         return new QueryLayer(hasManyRelationship.LeftType)
         {
             Include = new IncludeExpression(ImmutableHashSet.Create(new IncludeElementExpression(hasManyRelationship))),
             Filter = leftFilter,
-            Projection = new Dictionary<ResourceFieldAttribute, QueryLayer?>
-            {
-                [hasManyRelationship] = new(hasManyRelationship.RightType)
-                {
-                    Filter = rightFilter,
-                    Projection = new Dictionary<ResourceFieldAttribute, QueryLayer?>
-                    {
-                        [rightIdAttribute] = null
-                    }
-                },
-                [leftIdAttribute] = null
-            }
+            Selection = primarySelection
         };
     }
 
@@ -518,22 +527,36 @@ public class QueryLayerComposer : IQueryLayerComposer
         return pagination;
     }
 
-    protected virtual IDictionary<ResourceFieldAttribute, QueryLayer?>? GetProjectionForSparseAttributeSet(ResourceType resourceType)
+#pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type
+    protected virtual FieldSelection? GetSelectionForSparseAttributeSet(ResourceType resourceType)
+#pragma warning restore AV1130 // Return type in method signature should be a collection interface instead of a concrete type
     {
         ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-        IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(resourceType);
+        var selection = new FieldSelection();
 
-        if (!fieldSet.Any())
+        HashSet<ResourceType> resourceTypes = resourceType.GetAllConcreteDerivedTypes().ToHashSet();
+        resourceTypes.Add(resourceType);
+
+        foreach (ResourceType nextType in resourceTypes)
         {
-            return null;
+            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(nextType);
+
+            if (!fieldSet.Any())
+            {
+                continue;
+            }
+
+            HashSet<AttrAttribute> attributeSet = fieldSet.OfType<AttrAttribute>().ToHashSet();
+
+            FieldSelectors selectors = selection.GetOrCreateSelectors(nextType);
+            selectors.IncludeAttributes(attributeSet);
+
+            AttrAttribute idAttribute = GetIdAttribute(nextType);
+            selectors.IncludeAttribute(idAttribute);
         }
 
-        HashSet<AttrAttribute> attributeSet = fieldSet.OfType<AttrAttribute>().ToHashSet();
-        AttrAttribute idAttribute = GetIdAttribute(resourceType);
-        attributeSet.Add(idAttribute);
-
-        return attributeSet.ToDictionary(key => (ResourceFieldAttribute)key, _ => (QueryLayer?)null);
+        return selection.IsEmpty ? null : selection;
     }
 
     private static AttrAttribute GetIdAttribute(ResourceType resourceType)

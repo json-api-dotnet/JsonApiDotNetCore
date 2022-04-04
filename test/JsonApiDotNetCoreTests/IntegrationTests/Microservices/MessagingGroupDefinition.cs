@@ -80,10 +80,10 @@ public abstract class MessagingGroupDefinition : HitCountingResourceDefinition<D
         }
     }
 
-    public override async Task OnAddToRelationshipAsync(Guid groupId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+    public override async Task OnAddToRelationshipAsync(DomainGroup group, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
-        await base.OnAddToRelationshipAsync(groupId, hasManyRelationship, rightResourceIds, cancellationToken);
+        await base.OnAddToRelationshipAsync(group, hasManyRelationship, rightResourceIds, cancellationToken);
 
         if (hasManyRelationship.Property.Name == nameof(DomainGroup.Users))
         {
@@ -98,11 +98,11 @@ public abstract class MessagingGroupDefinition : HitCountingResourceDefinition<D
 
                 if (beforeUser.Group == null)
                 {
-                    content = new UserAddedToGroupContent(beforeUser.Id, groupId);
+                    content = new UserAddedToGroupContent(beforeUser.Id, group.Id);
                 }
-                else if (beforeUser.Group != null && beforeUser.Group.Id != groupId)
+                else if (beforeUser.Group != null && beforeUser.Group.Id != group.Id)
                 {
-                    content = new UserMovedToGroupContent(beforeUser.Id, beforeUser.Group.Id, groupId);
+                    content = new UserMovedToGroupContent(beforeUser.Id, beforeUser.Group.Id, group.Id);
                 }
 
                 if (content != null)

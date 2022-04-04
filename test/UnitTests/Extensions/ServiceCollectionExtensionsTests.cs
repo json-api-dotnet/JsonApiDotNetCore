@@ -95,7 +95,8 @@ public sealed class ServiceCollectionExtensionsTests
         Action action = () => services.AddResourceService<int>();
 
         // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>();
+        action.Should().ThrowExactly<InvalidConfigurationException>()
+            .WithMessage("Type 'System.Int32' does not implement any of the expected JsonApiDotNetCore interfaces.");
     }
 
     [Fact]
@@ -314,7 +315,7 @@ public sealed class ServiceCollectionExtensionsTests
             throw new NotImplementedException();
         }
 
-        public Task<ResourceOfInt32> GetForCreateAsync(int id, CancellationToken cancellationToken)
+        public Task<ResourceOfInt32> GetForCreateAsync(Type resourceClrType, int id, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -334,7 +335,7 @@ public sealed class ServiceCollectionExtensionsTests
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(int id, CancellationToken cancellationToken)
+        public Task DeleteAsync(ResourceOfInt32? resourceFromDatabase, int id, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -344,7 +345,8 @@ public sealed class ServiceCollectionExtensionsTests
             throw new NotImplementedException();
         }
 
-        public Task AddToToManyRelationshipAsync(int leftId, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
+        public Task AddToToManyRelationshipAsync(ResourceOfInt32? leftResource, int leftId, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -368,7 +370,7 @@ public sealed class ServiceCollectionExtensionsTests
             throw new NotImplementedException();
         }
 
-        public Task<ResourceOfGuid> GetForCreateAsync(Guid id, CancellationToken cancellationToken)
+        public Task<ResourceOfGuid> GetForCreateAsync(Type resourceClrType, Guid id, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -388,7 +390,7 @@ public sealed class ServiceCollectionExtensionsTests
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public Task DeleteAsync(ResourceOfGuid? resourceFromDatabase, Guid id, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -398,7 +400,8 @@ public sealed class ServiceCollectionExtensionsTests
             throw new NotImplementedException();
         }
 
-        public Task AddToToManyRelationshipAsync(Guid leftId, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
+        public Task AddToToManyRelationshipAsync(ResourceOfGuid? leftResource, Guid leftId, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -464,7 +467,7 @@ public sealed class ServiceCollectionExtensionsTests
             throw new NotImplementedException();
         }
 
-        public Task OnAddToRelationshipAsync(int leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+        public Task OnAddToRelationshipAsync(ResourceOfInt32 leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
@@ -552,7 +555,7 @@ public sealed class ServiceCollectionExtensionsTests
             throw new NotImplementedException();
         }
 
-        public Task OnAddToRelationshipAsync(Guid leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+        public Task OnAddToRelationshipAsync(ResourceOfGuid leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
             throw new NotImplementedException();

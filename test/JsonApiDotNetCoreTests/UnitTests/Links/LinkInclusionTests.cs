@@ -71,7 +71,7 @@ public sealed class LinkInclusionTests
             Kind = EndpointKind.Relationship,
             Relationship = new HasOneAttribute
             {
-                LeftType = exampleResourceType
+                Type = exampleResourceType
             }
         };
 
@@ -330,7 +330,7 @@ public sealed class LinkInclusionTests
         var relationship = new HasOneAttribute
         {
             Links = linksInRelationshipAttribute,
-            LeftType = exampleResourceType
+            Type = exampleResourceType
         };
 
         // Act

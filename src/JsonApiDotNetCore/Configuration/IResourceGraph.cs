@@ -54,7 +54,7 @@ public interface IResourceGraph
     /// (TResource resource) => new { resource.Attribute1, resource.Relationship2 }
     /// ]]>
     /// </param>
-    IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic?>> selector)
+    IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable;
 
     /// <summary>
@@ -68,7 +68,7 @@ public interface IResourceGraph
     /// (TResource resource) => new { resource.attribute1, resource.Attribute2 }
     /// ]]>
     /// </param>
-    IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic?>> selector)
+    IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable;
 
     /// <summary>
@@ -82,6 +82,6 @@ public interface IResourceGraph
     /// (TResource resource) => new { resource.Relationship1, resource.Relationship2 }
     /// ]]>
     /// </param>
-    IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic?>> selector)
+    IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable;
 }

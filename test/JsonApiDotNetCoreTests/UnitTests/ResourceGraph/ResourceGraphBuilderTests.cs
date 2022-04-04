@@ -198,6 +198,60 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [Fact]
+    public void Cannot_build_graph_with_different_attribute_name_in_derived_type()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        builder.Add<AbstractBaseResource, int>();
+        builder.Add<DerivedAlternateAttributeName, int>();
+
+        // Act
+        Action action = () => builder.Build();
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage("Attribute 'baseValue' from base type " +
+            $"'{typeof(AbstractBaseResource)}' does not exist in derived type '{typeof(DerivedAlternateAttributeName)}'.");
+    }
+
+    [Fact]
+    public void Cannot_build_graph_with_different_ToOne_relationship_name_in_derived_type()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        builder.Add<AbstractBaseResource, int>();
+        builder.Add<DerivedAlternateToOneRelationshipName, int>();
+
+        // Act
+        Action action = () => builder.Build();
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage("Relationship 'baseToOne' from base type " +
+            $"'{typeof(AbstractBaseResource)}' does not exist in derived type '{typeof(DerivedAlternateToOneRelationshipName)}'.");
+    }
+
+    [Fact]
+    public void Cannot_build_graph_with_different_ToMany_relationship_name_in_derived_type()
+    {
+        // Arrange
+        var options = new JsonApiOptions();
+        var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
+        builder.Add<AbstractBaseResource, int>();
+        builder.Add<DerivedAlternateToManyRelationshipName, int>();
+
+        // Act
+        Action action = () => builder.Build();
+
+        // Assert
+        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage("Relationship 'baseToMany' from base type " +
+            $"'{typeof(AbstractBaseResource)}' does not exist in derived type '{typeof(DerivedAlternateToManyRelationshipName)}'.");
+    }
+
+    [Fact]
     public void Logs_warning_when_adding_non_resource_type()
     {
         // Arrange
@@ -404,5 +458,39 @@ public sealed class ResourceGraphBuilderTests
     {
         [Attr(Capabilities = AttrCapabilities.AllowFilter)]
         public override long Id { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public abstract class AbstractBaseResource : Identifiable<int>
+    {
+        [Attr(PublicName = "baseValue")]
+        public virtual int Value { get; set; }
+
+        [HasOne(PublicName = "baseToOne")]
+        public virtual AbstractBaseResource? BaseToOne { get; set; }
+
+        [HasMany(PublicName = "baseToMany")]
+        public virtual ISet<AbstractBaseResource> BaseToMany { get; set; } = new HashSet<AbstractBaseResource>();
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class DerivedAlternateAttributeName : AbstractBaseResource
+    {
+        [Attr(PublicName = "derivedValue")]
+        public override int Value { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class DerivedAlternateToOneRelationshipName : AbstractBaseResource
+    {
+        [HasOne(PublicName = "derivedToOne")]
+        public override AbstractBaseResource? BaseToOne { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class DerivedAlternateToManyRelationshipName : AbstractBaseResource
+    {
+        [HasMany(PublicName = "derivedToMany")]
+        public override ISet<AbstractBaseResource> BaseToMany { get; set; } = new HashSet<AbstractBaseResource>();
     }
 }

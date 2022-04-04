@@ -2,7 +2,6 @@ using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries;
 
@@ -18,7 +17,7 @@ public sealed class QueryLayer
     public FilterExpression? Filter { get; set; }
     public SortExpression? Sort { get; set; }
     public PaginationExpression? Pagination { get; set; }
-    public IDictionary<ResourceFieldAttribute, QueryLayer?>? Projection { get; set; }
+    public FieldSelection? Selection { get; set; }
 
     public QueryLayer(ResourceType resourceType)
     {
@@ -32,92 +31,41 @@ public sealed class QueryLayer
         var builder = new StringBuilder();
 
         var writer = new IndentingStringWriter(builder);
-        WriteLayer(writer, this);
+        WriteLayer(writer, null);
 
         return builder.ToString();
     }
 
-    private static void WriteLayer(IndentingStringWriter writer, QueryLayer layer, string? prefix = null)
+    internal void WriteLayer(IndentingStringWriter writer, string? prefix)
     {
-        writer.WriteLine($"{prefix}{nameof(QueryLayer)}<{layer.ResourceType.ClrType.Name}>");
+        writer.WriteLine($"{prefix}{nameof(QueryLayer)}<{ResourceType.ClrType.Name}>");
 
         using (writer.Indent())
         {
-            if (layer.Include != null)
+            if (Include != null)
             {
-                writer.WriteLine($"{nameof(Include)}: {layer.Include}");
+                writer.WriteLine($"{nameof(Include)}: {Include}");
             }
 
-            if (layer.Filter != null)
+            if (Filter != null)
             {
-                writer.WriteLine($"{nameof(Filter)}: {layer.Filter}");
+                writer.WriteLine($"{nameof(Filter)}: {Filter}");
             }
 
-            if (layer.Sort != null)
+            if (Sort != null)
             {
-                writer.WriteLine($"{nameof(Sort)}: {layer.Sort}");
+                writer.WriteLine($"{nameof(Sort)}: {Sort}");
             }
 
-            if (layer.Pagination != null)
+            if (Pagination != null)
             {
-                writer.WriteLine($"{nameof(Pagination)}: {layer.Pagination}");
+                writer.WriteLine($"{nameof(Pagination)}: {Pagination}");
             }
 
-            if (!layer.Projection.IsNullOrEmpty())
+            if (Selection is { IsEmpty: false })
             {
-                writer.WriteLine(nameof(Projection));
-
-                using (writer.Indent())
-                {
-                    foreach ((ResourceFieldAttribute field, QueryLayer? nextLayer) in layer.Projection)
-                    {
-                        if (nextLayer == null)
-                        {
-                            writer.WriteLine(field.ToString());
-                        }
-                        else
-                        {
-                            WriteLayer(writer, nextLayer, $"{field.PublicName}: ");
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private sealed class IndentingStringWriter : IDisposable
-    {
-        private readonly StringBuilder _builder;
-        private int _indentDepth;
-
-        public IndentingStringWriter(StringBuilder builder)
-        {
-            _builder = builder;
-        }
-
-        public void WriteLine(string? line)
-        {
-            if (_indentDepth > 0)
-            {
-                _builder.Append(new string(' ', _indentDepth * 2));
-            }
-
-            _builder.AppendLine(line);
-        }
-
-        public IndentingStringWriter Indent()
-        {
-            WriteLine("{");
-            _indentDepth++;
-            return this;
-        }
-
-        public void Dispose()
-        {
-            if (_indentDepth > 0)
-            {
-                _indentDepth--;
-                WriteLine("}");
+                writer.WriteLine(nameof(Selection));
+                Selection.WriteSelection(writer);
             }
         }
     }

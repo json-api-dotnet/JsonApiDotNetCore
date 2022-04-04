@@ -180,9 +180,9 @@ public abstract class SerializationBenchmarkBase
             return Task.CompletedTask;
         }
 
-        public Task OnAddToRelationshipAsync<TResource, TId>(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+        public Task OnAddToRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable<TId>
+            where TResource : class, IIdentifiable
         {
             return Task.CompletedTask;
         }

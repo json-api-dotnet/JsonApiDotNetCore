@@ -33,6 +33,11 @@ public class ComparisonExpression : FilterExpression
         return $"{Operator.ToString().Camelize()}({Left},{Right})";
     }
 
+    public override string ToFullString()
+    {
+        return $"{Operator.ToString().Camelize()}({Left.ToFullString()},{Right.ToFullString()})";
+    }
+
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))

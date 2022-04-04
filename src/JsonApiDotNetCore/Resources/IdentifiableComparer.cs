@@ -22,7 +22,7 @@ public sealed class IdentifiableComparer : IEqualityComparer<IIdentifiable>
             return true;
         }
 
-        if (left is null || right is null || left.GetType() != right.GetType())
+        if (left is null || right is null || left.GetClrType() != right.GetClrType())
         {
             return false;
         }
@@ -38,6 +38,6 @@ public sealed class IdentifiableComparer : IEqualityComparer<IIdentifiable>
     public int GetHashCode(IIdentifiable obj)
     {
         // LocalId is intentionally omitted here, it is okay for hashes to collide.
-        return HashCode.Combine(obj.GetType(), obj.StringId);
+        return HashCode.Combine(obj.GetClrType(), obj.StringId);
     }
 }

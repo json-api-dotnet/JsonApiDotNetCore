@@ -894,6 +894,28 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     }
 
     [Fact]
+    public async Task Cannot_include_relationship_with_nested_blocked_capability()
+    {
+        // Arrange
+        const string route = "/blogs?include=posts.parent";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("Including the requested relationship is not allowed.");
+        error.Detail.Should().Be("Including the relationship 'parent' in 'posts.parent' on 'blogPosts' is not allowed.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("include");
+    }
+
+    [Fact]
     public async Task Ignores_null_parent_in_nested_include()
     {
         // Arrange

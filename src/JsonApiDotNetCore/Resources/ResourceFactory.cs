@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using System.Reflection;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +9,8 @@ namespace JsonApiDotNetCore.Resources;
 /// <inheritdoc />
 internal sealed class ResourceFactory : IResourceFactory
 {
+    private static readonly TypeLocator TypeLocator = new();
+
     private readonly IServiceProvider _serviceProvider;
 
     public ResourceFactory(IServiceProvider serviceProvider)
@@ -22,7 +25,33 @@ internal sealed class ResourceFactory : IResourceFactory
     {
         ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
 
+        if (!resourceClrType.IsAssignableTo(typeof(IIdentifiable)))
+        {
+            throw new InvalidOperationException($"Resource type '{resourceClrType}' does not implement IIdentifiable.");
+        }
+
+        if (resourceClrType.IsAbstract)
+        {
+            return CreateWrapperForAbstractType(resourceClrType);
+        }
+
         return InnerCreateInstance(resourceClrType, _serviceProvider);
+    }
+
+    private static IIdentifiable CreateWrapperForAbstractType(Type resourceClrType)
+    {
+        ResourceDescriptor? descriptor = TypeLocator.ResolveResourceDescriptor(resourceClrType);
+
+        if (descriptor == null)
+        {
+            throw new InvalidOperationException($"Resource type '{resourceClrType}' implements 'IIdentifiable', but not 'IIdentifiable<TId>'.");
+        }
+
+        Type wrapperClrType = typeof(AbstractResourceWrapper<>).MakeGenericType(descriptor.IdClrType);
+        ConstructorInfo constructor = wrapperClrType.GetConstructors().Single();
+
+        object resource = constructor.Invoke(ArrayFactory.Create<object>(resourceClrType));
+        return (IIdentifiable)resource;
     }
 
     /// <inheritdoc />

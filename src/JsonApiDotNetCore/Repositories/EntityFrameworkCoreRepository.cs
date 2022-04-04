@@ -155,14 +155,15 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     }
 
     /// <inheritdoc />
-    public virtual Task<TResource> GetForCreateAsync(TId id, CancellationToken cancellationToken)
+    public virtual Task<TResource> GetForCreateAsync(Type resourceClrType, TId id, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
+            resourceClrType,
             id
         });
 
-        var resource = _resourceFactory.CreateInstance<TResource>();
+        var resource = (TResource)_resourceFactory.CreateInstance(resourceClrType);
         resource.Id = id;
 
         return Task.FromResult(resource);
@@ -305,10 +306,11 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     }
 
     /// <inheritdoc />
-    public virtual async Task DeleteAsync(TId id, CancellationToken cancellationToken)
+    public virtual async Task DeleteAsync(TResource? resourceFromDatabase, TId id, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
+            resourceFromDatabase,
             id
         });
 
@@ -316,7 +318,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         // This enables OnWritingAsync() to fetch the resource, which adds it to the change tracker.
         // If so, we'll reuse the tracked resource instead of this placeholder resource.
-        var placeholderResource = _resourceFactory.CreateInstance<TResource>();
+        TResource placeholderResource = resourceFromDatabase ?? _resourceFactory.CreateInstance<TResource>();
         placeholderResource.Id = id;
 
         await _resourceDefinitionAccessor.OnWritingAsync(placeholderResource, WriteOperationKind.DeleteResource, cancellationToken);
@@ -413,10 +415,12 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     }
 
     /// <inheritdoc />
-    public virtual async Task AddToToManyRelationshipAsync(TId leftId, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
+    public virtual async Task AddToToManyRelationshipAsync(TResource? leftResource, TId leftId, ISet<IIdentifiable> rightResourceIds,
+        CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
+            leftResource,
             leftId,
             rightResourceIds
         });
@@ -427,23 +431,51 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
 
-        await _resourceDefinitionAccessor.OnAddToRelationshipAsync<TResource, TId>(leftId, relationship, rightResourceIds, cancellationToken);
+        // This enables OnAddToRelationshipAsync() or OnWritingAsync() to fetch the resource, which adds it to the change tracker.
+        // If so, we'll reuse the tracked resource instead of this placeholder resource.
+        TResource leftPlaceholderResource = leftResource ?? _resourceFactory.CreateInstance<TResource>();
+        leftPlaceholderResource.Id = leftId;
+
+        await _resourceDefinitionAccessor.OnAddToRelationshipAsync(leftPlaceholderResource, relationship, rightResourceIds, cancellationToken);
 
         if (rightResourceIds.Any())
         {
-            var leftPlaceholderResource = _resourceFactory.CreateInstance<TResource>();
-            leftPlaceholderResource.Id = leftId;
-
             var leftResourceTracked = (TResource)_dbContext.GetTrackedOrAttach(leftPlaceholderResource);
+            IEnumerable rightValueToStore = GetRightValueToStoreForAddToToMany(leftResourceTracked, relationship, rightResourceIds);
 
-            await UpdateRelationshipAsync(relationship, leftResourceTracked, rightResourceIds, cancellationToken);
+            await UpdateRelationshipAsync(relationship, leftResourceTracked, rightValueToStore, cancellationToken);
 
             await _resourceDefinitionAccessor.OnWritingAsync(leftResourceTracked, WriteOperationKind.AddToRelationship, cancellationToken);
+            leftResourceTracked = (TResource)_dbContext.GetTrackedOrAttach(leftResourceTracked);
 
             await SaveChangesAsync(cancellationToken);
 
             await _resourceDefinitionAccessor.OnWriteSucceededAsync(leftResourceTracked, WriteOperationKind.AddToRelationship, cancellationToken);
         }
+    }
+
+    private IEnumerable GetRightValueToStoreForAddToToMany(TResource leftResource, HasManyAttribute relationship, ISet<IIdentifiable> rightResourceIdsToAdd)
+    {
+        object? rightValueStored = relationship.GetValue(leftResource);
+
+        // @formatter:wrap_chained_method_calls chop_always
+        // @formatter:keep_existing_linebreaks true
+
+        HashSet<IIdentifiable> rightResourceIdsStored = _collectionConverter
+            .ExtractResources(rightValueStored)
+            .Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource))
+            .ToHashSet(IdentifiableComparer.Instance);
+
+        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_chained_method_calls restore
+
+        if (rightResourceIdsStored.Any())
+        {
+            rightResourceIdsStored.AddRange(rightResourceIdsToAdd);
+            return rightResourceIdsStored;
+        }
+
+        return rightResourceIdsToAdd;
     }
 
     /// <inheritdoc />
@@ -473,7 +505,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             // Make Entity Framework Core believe any additional resources added from ResourceDefinition already exist in database.
             IIdentifiable[] extraResourceIdsToRemove = rightResourceIdsToRemove.Where(rightId => !rightResourceIds.Contains(rightId)).ToArray();
 
-            object? rightValueStored = relationship.GetValue(leftResource);
+            object? rightValueStored = relationship.GetValue(leftResourceTracked);
 
             // @formatter:wrap_chained_method_calls chop_always
             // @formatter:keep_existing_linebreaks true
@@ -488,9 +520,9 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             // @formatter:wrap_chained_method_calls restore
 
             rightValueStored = _collectionConverter.CopyToTypedCollection(rightResourceIdsStored, relationship.Property.PropertyType);
-            relationship.SetValue(leftResource, rightValueStored);
+            relationship.SetValue(leftResourceTracked, rightValueStored);
 
-            MarkRelationshipAsLoaded(leftResource, relationship);
+            MarkRelationshipAsLoaded(leftResourceTracked, relationship);
 
             HashSet<IIdentifiable> rightResourceIdsToStore = rightResourceIdsStored.ToHashSet(IdentifiableComparer.Instance);
             rightResourceIdsToStore.ExceptWith(rightResourceIdsToRemove);

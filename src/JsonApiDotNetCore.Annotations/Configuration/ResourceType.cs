@@ -11,6 +11,7 @@ public sealed class ResourceType
 {
     private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPublicName = new();
     private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPropertyName = new();
+    private readonly Lazy<IReadOnlySet<ResourceType>> _lazyAllConcreteDerivedTypes;
 
     /// <summary>
     /// The publicly exposed resource name.
@@ -28,22 +29,35 @@ public sealed class ResourceType
     public Type IdentityClrType { get; }
 
     /// <summary>
-    /// Exposed resource attributes and relationships. See https://jsonapi.org/format/#document-resource-object-fields.
+    /// The base resource type, in case this is a derived type.
+    /// </summary>
+    public ResourceType? BaseType { get; internal set; }
+
+    /// <summary>
+    /// The resource types that directly derive from this one.
+    /// </summary>
+    public IReadOnlySet<ResourceType> DirectlyDerivedTypes { get; internal set; } = new HashSet<ResourceType>();
+
+    /// <summary>
+    /// Exposed resource attributes and relationships. See https://jsonapi.org/format/#document-resource-object-fields. When using resource inheritance, this
+    /// includes the attributes and relationships from base types.
     /// </summary>
     public IReadOnlyCollection<ResourceFieldAttribute> Fields { get; }
 
     /// <summary>
-    /// Exposed resource attributes. See https://jsonapi.org/format/#document-resource-object-attributes.
+    /// Exposed resource attributes. See https://jsonapi.org/format/#document-resource-object-attributes. When using resource inheritance, this includes the
+    /// attributes from base types.
     /// </summary>
     public IReadOnlyCollection<AttrAttribute> Attributes { get; }
 
     /// <summary>
-    /// Exposed resource relationships. See https://jsonapi.org/format/#document-resource-object-relationships.
+    /// Exposed resource relationships. See https://jsonapi.org/format/#document-resource-object-relationships. When using resource inheritance, this
+    /// includes the relationships from base types.
     /// </summary>
     public IReadOnlyCollection<RelationshipAttribute> Relationships { get; }
 
     /// <summary>
-    /// Related entities that are not exposed as resource relationships.
+    /// Related entities that are not exposed as resource relationships. When using resource inheritance, this includes the eager-loads from base types.
     /// </summary>
     public IReadOnlyCollection<EagerLoadAttribute> EagerLoads { get; }
 
@@ -99,6 +113,29 @@ public sealed class ResourceType
         {
             _fieldsByPublicName.Add(field.PublicName, field);
             _fieldsByPropertyName.Add(field.Property.Name, field);
+        }
+
+        _lazyAllConcreteDerivedTypes = new Lazy<IReadOnlySet<ResourceType>>(ResolveAllConcreteDerivedTypes, LazyThreadSafetyMode.PublicationOnly);
+    }
+
+    private IReadOnlySet<ResourceType> ResolveAllConcreteDerivedTypes()
+    {
+        var allConcreteDerivedTypes = new HashSet<ResourceType>();
+        AddConcreteDerivedTypes(this, allConcreteDerivedTypes);
+
+        return allConcreteDerivedTypes;
+    }
+
+    private static void AddConcreteDerivedTypes(ResourceType resourceType, ISet<ResourceType> allConcreteDerivedTypes)
+    {
+        foreach (ResourceType derivedType in resourceType.DirectlyDerivedTypes)
+        {
+            if (!derivedType.ClrType.IsAbstract)
+            {
+                allConcreteDerivedTypes.Add(derivedType);
+            }
+
+            AddConcreteDerivedTypes(derivedType, allConcreteDerivedTypes);
         }
     }
 
@@ -159,6 +196,111 @@ public sealed class ResourceType
         return _fieldsByPropertyName.TryGetValue(propertyName, out ResourceFieldAttribute? field) && field is RelationshipAttribute relationship
             ? relationship
             : null;
+    }
+
+    /// <summary>
+    /// Returns all directly and indirectly non-abstract resource types that derive from this resource type.
+    /// </summary>
+    public IReadOnlySet<ResourceType> GetAllConcreteDerivedTypes()
+    {
+        return _lazyAllConcreteDerivedTypes.Value;
+    }
+
+    /// <summary>
+    /// Searches the tree of derived types to find a match for the specified <paramref name="clrType" />.
+    /// </summary>
+    public ResourceType GetTypeOrDerived(Type clrType)
+    {
+        ArgumentGuard.NotNull(clrType, nameof(clrType));
+
+        ResourceType? derivedType = FindTypeOrDerived(this, clrType);
+
+        if (derivedType == null)
+        {
+            throw new InvalidOperationException($"Resource type '{PublicName}' is not a base type of '{clrType}'.");
+        }
+
+        return derivedType;
+    }
+
+    private static ResourceType? FindTypeOrDerived(ResourceType type, Type clrType)
+    {
+        if (type.ClrType == clrType)
+        {
+            return type;
+        }
+
+        foreach (ResourceType derivedType in type.DirectlyDerivedTypes)
+        {
+            ResourceType? matchingType = FindTypeOrDerived(derivedType, clrType);
+
+            if (matchingType != null)
+            {
+                return matchingType;
+            }
+        }
+
+        return null;
+    }
+
+    internal IReadOnlySet<AttrAttribute> GetAttributesInTypeOrDerived(string publicName)
+    {
+        return GetAttributesInTypeOrDerived(this, publicName);
+    }
+
+    private static IReadOnlySet<AttrAttribute> GetAttributesInTypeOrDerived(ResourceType resourceType, string publicName)
+    {
+        AttrAttribute? attribute = resourceType.FindAttributeByPublicName(publicName);
+
+        if (attribute != null)
+        {
+            return attribute.AsHashSet();
+        }
+
+        // Hiding base members using the 'new' keyword instead of 'override' (effectively breaking inheritance) is currently not supported.
+        // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords
+        HashSet<AttrAttribute> attributesInDerivedTypes = new();
+
+        foreach (AttrAttribute attributeInDerivedType in resourceType.DirectlyDerivedTypes
+            .Select(derivedType => GetAttributesInTypeOrDerived(derivedType, publicName)).SelectMany(attributesInDerivedType => attributesInDerivedType))
+        {
+            attributesInDerivedTypes.Add(attributeInDerivedType);
+        }
+
+        return attributesInDerivedTypes;
+    }
+
+    internal IReadOnlySet<RelationshipAttribute> GetRelationshipsInTypeOrDerived(string publicName)
+    {
+        return GetRelationshipsInTypeOrDerived(this, publicName);
+    }
+
+    private static IReadOnlySet<RelationshipAttribute> GetRelationshipsInTypeOrDerived(ResourceType resourceType, string publicName)
+    {
+        RelationshipAttribute? relationship = resourceType.FindRelationshipByPublicName(publicName);
+
+        if (relationship != null)
+        {
+            return relationship.AsHashSet();
+        }
+
+        // Hiding base members using the 'new' keyword instead of 'override' (effectively breaking inheritance) is currently not supported.
+        // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords
+        HashSet<RelationshipAttribute> relationshipsInDerivedTypes = new();
+
+        foreach (RelationshipAttribute relationshipInDerivedType in resourceType.DirectlyDerivedTypes
+            .Select(derivedType => GetRelationshipsInTypeOrDerived(derivedType, publicName))
+            .SelectMany(relationshipsInDerivedType => relationshipsInDerivedType))
+        {
+            relationshipsInDerivedTypes.Add(relationshipInDerivedType);
+        }
+
+        return relationshipsInDerivedTypes;
+    }
+
+    internal bool IsPartOfTypeHierarchy()
+    {
+        return BaseType != null || DirectlyDerivedTypes.Any();
     }
 
     public override string ToString()

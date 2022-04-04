@@ -37,44 +37,54 @@ public class IncludeClauseBuilder : QueryClauseBuilder<object?>
 
     public override Expression VisitInclude(IncludeExpression expression, object? argument)
     {
-        Expression source = ApplyEagerLoads(_source, _resourceType.EagerLoads, null);
+        // De-duplicate chains coming from derived relationships.
+        HashSet<string> propertyPaths = new();
+
+        ApplyEagerLoads(_resourceType.EagerLoads, null, propertyPaths);
 
         foreach (ResourceFieldChainExpression chain in IncludeChainConverter.GetRelationshipChains(expression))
         {
-            source = ProcessRelationshipChain(chain, source);
+            ProcessRelationshipChain(chain, propertyPaths);
         }
 
-        return source;
+        return ToExpression(propertyPaths);
     }
 
-    private Expression ProcessRelationshipChain(ResourceFieldChainExpression chain, Expression source)
+    private void ProcessRelationshipChain(ResourceFieldChainExpression chain, ISet<string> outputPropertyPaths)
     {
         string? path = null;
-        Expression result = source;
 
         foreach (RelationshipAttribute relationship in chain.Fields.Cast<RelationshipAttribute>())
         {
             path = path == null ? relationship.Property.Name : $"{path}.{relationship.Property.Name}";
 
-            result = ApplyEagerLoads(result, relationship.RightType.EagerLoads, path);
+            ApplyEagerLoads(relationship.RightType.EagerLoads, path, outputPropertyPaths);
         }
 
-        return IncludeExtensionMethodCall(result, path!);
+        outputPropertyPaths.Add(path!);
     }
 
-    private Expression ApplyEagerLoads(Expression source, IEnumerable<EagerLoadAttribute> eagerLoads, string? pathPrefix)
+    private void ApplyEagerLoads(IEnumerable<EagerLoadAttribute> eagerLoads, string? pathPrefix, ISet<string> outputPropertyPaths)
     {
-        Expression result = source;
-
         foreach (EagerLoadAttribute eagerLoad in eagerLoads)
         {
             string path = pathPrefix != null ? $"{pathPrefix}.{eagerLoad.Property.Name}" : eagerLoad.Property.Name;
-            result = IncludeExtensionMethodCall(result, path);
+            outputPropertyPaths.Add(path);
 
-            result = ApplyEagerLoads(result, eagerLoad.Children, path);
+            ApplyEagerLoads(eagerLoad.Children, path, outputPropertyPaths);
+        }
+    }
+
+    private Expression ToExpression(HashSet<string> propertyPaths)
+    {
+        Expression source = _source;
+
+        foreach (string propertyPath in propertyPaths)
+        {
+            source = IncludeExtensionMethodCall(source, propertyPath);
         }
 
-        return result;
+        return source;
     }
 
     private Expression IncludeExtensionMethodCall(Expression source, string navigationPropertyPath)

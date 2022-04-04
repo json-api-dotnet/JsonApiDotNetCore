@@ -111,7 +111,7 @@ public static class ServiceCollectionExtensions
 
         if (!seenCompatibleInterface)
         {
-            throw new InvalidConfigurationException($"{implementationType} does not implement any of the expected JsonApiDotNetCore interfaces.");
+            throw new InvalidConfigurationException($"Type '{implementationType}' does not implement any of the expected JsonApiDotNetCore interfaces.");
         }
     }
 

@@ -28,6 +28,11 @@ public class LiteralConstantExpression : IdentifierExpression
         return $"'{value}'";
     }
 
+    public override string ToFullString()
+    {
+        return ToString();
+    }
+
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))

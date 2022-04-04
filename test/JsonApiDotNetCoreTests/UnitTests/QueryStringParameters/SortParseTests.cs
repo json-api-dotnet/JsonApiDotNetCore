@@ -72,6 +72,12 @@ public sealed class SortParseTests : BaseParseTests
     [InlineData("sort[posts]", "caption,", "-, count function or field name expected.")]
     [InlineData("sort[posts]", "caption:", ", expected.")]
     [InlineData("sort[posts]", "caption,-", "Count function or field name expected.")]
+    [InlineData("sort[posts.contributors]", "some", "Attribute 'some' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("sort[posts.contributors]", "wife.father.some", "Attribute 'some' in 'wife.father.some' does not exist on resource type 'men'.")]
+    [InlineData("sort[posts.contributors]", "count(some)", "Relationship 'some' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("sort[posts.contributors]", "count(wife.some)", "Relationship 'some' in 'wife.some' does not exist on resource type 'women'.")]
+    [InlineData("sort[posts.contributors]", "age", "Attribute 'age' is defined on multiple derived types.")]
+    [InlineData("sort[posts.contributors]", "count(friends)", "Relationship 'friends' is defined on multiple derived types.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Act
@@ -103,6 +109,11 @@ public sealed class SortParseTests : BaseParseTests
     [InlineData("sort[posts.labels]", "id,name", "posts.labels", "id,name")]
     [InlineData("sort[posts.comments]", "-createdAt,author.displayName,author.preferences.useDarkTheme", "posts.comments",
         "-createdAt,author.displayName,author.preferences.useDarkTheme")]
+    [InlineData("sort[posts.contributors]", "name,-maidenName,hasBeard", "posts.contributors", "name,-maidenName,hasBeard")]
+    [InlineData("sort[posts.contributors]", "husband.hasBeard,wife.maidenName", "posts.contributors", "husband.hasBeard,wife.maidenName")]
+    [InlineData("sort[posts.contributors]", "count(wife.husband.drinkingBuddies)", "posts.contributors", "count(wife.husband.drinkingBuddies)")]
+    [InlineData("sort[posts.contributors]", "wife.age", "posts.contributors", "wife.age")]
+    [InlineData("sort[posts.contributors]", "count(father.friends)", "posts.contributors", "count(father.friends)")]
     public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected, string valueExpected)
     {
         // Act

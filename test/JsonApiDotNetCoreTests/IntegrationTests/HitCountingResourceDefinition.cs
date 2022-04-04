@@ -129,7 +129,7 @@ public abstract class HitCountingResourceDefinition<TResource, TId> : JsonApiRes
         return base.OnSetToManyRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, writeOperation, cancellationToken);
     }
 
-    public override Task OnAddToRelationshipAsync(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+    public override Task OnAddToRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
         if (ExtensibilityPointsToTrack.HasFlag(ResourceDefinitionExtensibilityPoints.OnAddToRelationshipAsync))
@@ -137,7 +137,7 @@ public abstract class HitCountingResourceDefinition<TResource, TId> : JsonApiRes
             _hitCounter.TrackInvocation<TResource>(ResourceDefinitionExtensibilityPoints.OnAddToRelationshipAsync);
         }
 
-        return base.OnAddToRelationshipAsync(leftResourceId, hasManyRelationship, rightResourceIds, cancellationToken);
+        return base.OnAddToRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, cancellationToken);
     }
 
     public override Task OnRemoveFromRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
