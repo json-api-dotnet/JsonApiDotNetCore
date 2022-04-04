@@ -3,7 +3,7 @@
         {
             "src": [
                 {
-                    "files": [ "**/JsonApiDotNetCore.csproj" ],
+                    "files": [ "**/JsonApiDotNetCore.csproj","**/JsonApiDotNetCore.Annotations.csproj" ],
                     "src": "../"
                 }
             ],
