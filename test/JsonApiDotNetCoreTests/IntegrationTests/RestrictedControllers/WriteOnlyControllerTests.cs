@@ -28,7 +28,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -56,7 +56,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -84,7 +84,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -112,7 +112,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -140,7 +140,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -171,7 +171,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
     }
 
     [Fact]
@@ -204,7 +204,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
     }
 
     [Fact]
@@ -225,7 +225,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
     }
 
     [Fact]
@@ -251,7 +251,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
     }
 
     [Fact]
@@ -277,7 +277,7 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
     }
 
     [Fact]
@@ -303,6 +303,6 @@ public sealed class WriteOnlyControllerTests : IClassFixture<IntegrationTestCont
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
     }
 }

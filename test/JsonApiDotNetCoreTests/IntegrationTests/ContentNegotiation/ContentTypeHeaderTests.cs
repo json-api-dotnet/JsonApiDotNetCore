@@ -29,7 +29,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.MediaType);
     }
@@ -63,7 +63,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
         httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
         httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.AtomicOperationsMediaType);
     }
@@ -91,7 +91,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -127,7 +127,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
     }
 
     [Fact]
@@ -160,7 +160,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -186,7 +186,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -221,7 +221,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -256,7 +256,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -291,7 +291,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -326,7 +326,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -369,7 +369,7 @@ public sealed class ContentTypeHeaderTests : IClassFixture<IntegrationTestContex
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
         responseDocument.Errors.ShouldHaveCount(1);
 

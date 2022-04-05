@@ -40,7 +40,7 @@ public class SetRelationshipProcessor<TResource, TId> : ISetRelationshipProcesso
 
         if (relationship is HasManyAttribute)
         {
-            ICollection<IIdentifiable> rightResources = _collectionConverter.ExtractResources(rightValue);
+            IReadOnlyCollection<IIdentifiable> rightResources = _collectionConverter.ExtractResources(rightValue);
             return rightResources.ToHashSet(IdentifiableComparer.Instance);
         }
 

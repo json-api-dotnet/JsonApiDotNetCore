@@ -40,7 +40,7 @@ public sealed class CustomRouteTests : IClassFixture<IntegrationTestContext<Test
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("towns");
@@ -82,7 +82,7 @@ public sealed class CustomRouteTests : IClassFixture<IntegrationTestContext<Test
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldHaveCount(5);
         responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "towns");

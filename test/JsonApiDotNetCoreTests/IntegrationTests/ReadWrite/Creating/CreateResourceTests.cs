@@ -55,7 +55,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         string newWorkItemId = responseDocument.Data.SingleValue.ShouldNotBeNull().Id.ShouldNotBeNull();
         httpResponse.Headers.Location.Should().Be($"/workItems/{newWorkItemId}");
@@ -94,7 +94,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
@@ -142,7 +142,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
@@ -189,7 +189,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
@@ -234,7 +234,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
@@ -278,7 +278,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -319,7 +319,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
@@ -365,7 +365,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -410,7 +410,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Type.Should().Be("workItems");
@@ -450,7 +450,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -475,7 +475,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -499,7 +499,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -529,7 +529,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -556,7 +556,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -590,7 +590,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -623,7 +623,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -657,7 +657,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -691,7 +691,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Should().BeEmpty();
     }
@@ -715,7 +715,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Conflict);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -750,7 +750,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -785,7 +785,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -810,7 +810,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -844,7 +844,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -924,7 +924,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(newDescription));

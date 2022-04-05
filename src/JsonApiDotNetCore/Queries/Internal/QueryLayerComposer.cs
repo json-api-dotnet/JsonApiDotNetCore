@@ -305,9 +305,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         return secondaryLayer;
     }
 
-#pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type
     private FieldSelection GetSelectionForRelationship(ResourceType secondaryResourceType)
-#pragma warning restore AV1130 // Return type in method signature should be a collection interface instead of a concrete type
     {
         var selection = new FieldSelection();
         FieldSelectors selectors = selection.GetOrCreateSelectors(secondaryResourceType);
@@ -404,7 +402,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         foreach (RelationshipAttribute relationship in _targetedFields.Relationships)
         {
             object? rightValue = relationship.GetValue(primaryResource);
-            ICollection<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue);
+            HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
 
             if (rightResourceIds.Any())
             {
@@ -527,9 +525,9 @@ public class QueryLayerComposer : IQueryLayerComposer
         return pagination;
     }
 
-#pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     protected virtual FieldSelection? GetSelectionForSparseAttributeSet(ResourceType resourceType)
-#pragma warning restore AV1130 // Return type in method signature should be a collection interface instead of a concrete type
+#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
         ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 

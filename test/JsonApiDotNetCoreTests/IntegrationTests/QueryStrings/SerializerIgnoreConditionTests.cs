@@ -51,7 +51,7 @@ public sealed class SerializerIgnoreConditionTests : IntegrationTestContext<Test
         (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Included.ShouldHaveCount(1);

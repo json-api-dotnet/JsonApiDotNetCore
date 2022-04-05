@@ -14,14 +14,14 @@ public sealed class FieldSelection : Dictionary<ResourceType, FieldSelectors>
 {
     public bool IsEmpty => Values.All(selectors => selectors.IsEmpty);
 
-    public ISet<ResourceType> GetResourceTypes()
+    public IReadOnlySet<ResourceType> GetResourceTypes()
     {
         return Keys.ToHashSet();
     }
 
-#pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     public FieldSelectors GetOrCreateSelectors(ResourceType resourceType)
-#pragma warning restore AV1130 // Return type in method signature should be a collection interface instead of a concrete type
+#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
         ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 

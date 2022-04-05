@@ -30,7 +30,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -82,7 +82,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -123,7 +123,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -165,7 +165,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType, setRequestHeaders);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -187,7 +187,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotAcceptable);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotAcceptable);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -235,7 +235,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
             await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType, setRequestHeaders);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotAcceptable);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotAcceptable);
 
         responseDocument.Errors.ShouldHaveCount(1);
 

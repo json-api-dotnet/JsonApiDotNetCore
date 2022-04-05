@@ -62,7 +62,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 
@@ -84,7 +84,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 
@@ -108,7 +108,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
         loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 

@@ -58,7 +58,7 @@ public sealed class AtomicResponseMetaTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Meta.ShouldHaveCount(3);
 
@@ -124,7 +124,7 @@ public sealed class AtomicResponseMetaTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Meta.ShouldHaveCount(3);
 

@@ -45,7 +45,9 @@ public interface IResourceDefinitionAccessor
     /// <summary>
     /// Invokes <see cref="IResourceDefinition{TResource,TId}.GetMeta" /> for the specified resource.
     /// </summary>
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     IDictionary<string, object?>? GetMeta(ResourceType resourceType, IIdentifiable resourceInstance);
+#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
 
     /// <summary>
     /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnPrepareWriteAsync" /> for the specified resource.

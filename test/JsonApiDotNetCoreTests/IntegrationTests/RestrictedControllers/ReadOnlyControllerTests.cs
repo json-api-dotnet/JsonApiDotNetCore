@@ -28,7 +28,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -91,7 +91,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -112,7 +112,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -136,7 +136,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -176,7 +176,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -204,7 +204,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -237,7 +237,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -270,7 +270,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -303,7 +303,7 @@ public sealed class ReadOnlyControllerTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Forbidden);
 
         responseDocument.Errors.ShouldHaveCount(1);
 

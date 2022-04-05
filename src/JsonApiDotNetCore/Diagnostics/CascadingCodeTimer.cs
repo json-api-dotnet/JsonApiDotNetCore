@@ -32,7 +32,13 @@ internal sealed class CascadingCodeTimer : ICodeTimer
     }
 
     /// <inheritdoc />
-    public IDisposable Measure(string name, bool excludeInRelativeCost = false)
+    public IDisposable Measure(string name)
+    {
+        return Measure(name, false);
+    }
+
+    /// <inheritdoc />
+    public IDisposable Measure(string name, bool excludeInRelativeCost)
     {
         MeasureScope childScope = CreateChildScope(name, excludeInRelativeCost);
         _activeScopeStack.Push(childScope);

@@ -80,7 +80,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
             PopulateRelationshipsInTree(rootNode, _request.Kind);
 
-            IEnumerable<ResourceObject> resourceObjects = rootNode.GetResponseData();
+            IReadOnlyList<ResourceObject> resourceObjects = rootNode.GetResponseData();
             document.Data = new SingleOrManyData<ResourceObject>(resourceObjects);
         }
         else if (model is IIdentifiable resource)
@@ -231,7 +231,9 @@ public class ResponseModelAdapter : IResponseModelAdapter
         return resourceObject;
     }
 
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType resourceType,
+#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
         IImmutableSet<ResourceFieldAttribute> fieldSet)
     {
         var attrMap = new Dictionary<string, object?>(resourceType.Attributes.Count);
@@ -286,7 +288,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
             : relationship;
 
         object? rightValue = effectiveRelationship.GetValue(leftResource);
-        ICollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
+        IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
 
         leftTreeNode.EnsureHasRelationship(effectiveRelationship);
 
@@ -340,7 +342,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
     private static SingleOrManyData<ResourceIdentifierObject> GetRelationshipData(ResourceObjectTreeNode treeNode, RelationshipAttribute relationship)
     {
-        ISet<ResourceObjectTreeNode>? rightNodes = treeNode.GetRightNodesInRelationship(relationship);
+        IReadOnlySet<ResourceObjectTreeNode>? rightNodes = treeNode.GetRightNodesInRelationship(relationship);
 
         if (rightNodes != null)
         {

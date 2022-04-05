@@ -21,7 +21,7 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
     }
 
     /// <inheritdoc />
-    public IList<OperationContainer> Convert(Document document, RequestAdapterState state)
+    public IReadOnlyList<OperationContainer> Convert(Document document, RequestAdapterState state)
     {
         ArgumentGuard.NotNull(state, nameof(state));
         AssertHasOperations(document.Operations, state);
@@ -50,7 +50,7 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
         }
     }
 
-    private IList<OperationContainer> ConvertOperations(IEnumerable<AtomicOperationObject?> atomicOperationObjects, RequestAdapterState state)
+    private IReadOnlyList<OperationContainer> ConvertOperations(IEnumerable<AtomicOperationObject?> atomicOperationObjects, RequestAdapterState state)
     {
         var operations = new List<OperationContainer>();
         int operationIndex = 0;

@@ -35,7 +35,7 @@ public sealed class ActionResultTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(toothbrush.StringId);
@@ -51,7 +51,7 @@ public sealed class ActionResultTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -71,7 +71,7 @@ public sealed class ActionResultTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -91,7 +91,7 @@ public sealed class ActionResultTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.InternalServerError);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -111,7 +111,7 @@ public sealed class ActionResultTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadGateway);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadGateway);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -131,7 +131,7 @@ public sealed class ActionResultTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
 
         responseDocument.Errors.ShouldHaveCount(3);
 

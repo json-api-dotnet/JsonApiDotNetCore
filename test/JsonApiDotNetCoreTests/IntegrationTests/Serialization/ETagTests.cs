@@ -39,7 +39,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteHeadAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         httpResponse.Headers.ETag.ShouldNotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
@@ -67,7 +67,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         httpResponse.Headers.ETag.ShouldNotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
@@ -86,7 +86,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         httpResponse.Headers.ETag.Should().BeNull();
 
@@ -117,7 +117,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         httpResponse.Headers.ETag.Should().BeNull();
 
@@ -163,7 +163,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
             await _testContext.ExecutePatchAsync<Document>(route, requestBody, setRequestHeaders: setRequestHeaders);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.PreconditionFailed);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.PreconditionFailed);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -203,7 +203,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         (HttpResponseMessage httpResponse2, string responseDocument2) = await _testContext.ExecuteGetAsync<string>(route, setRequestHeaders2);
 
         // Assert
-        httpResponse2.Should().HaveStatusCode(HttpStatusCode.NotModified);
+        httpResponse2.ShouldHaveStatusCode(HttpStatusCode.NotModified);
 
         httpResponse2.Headers.ETag.ShouldNotBeNull();
         httpResponse2.Headers.ETag.IsWeak.Should().BeFalse();
@@ -236,7 +236,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route, setRequestHeaders);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         httpResponse.Headers.ETag.ShouldNotBeNull();
         httpResponse.Headers.ETag.IsWeak.Should().BeFalse();

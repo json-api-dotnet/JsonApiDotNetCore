@@ -51,7 +51,7 @@ public sealed partial class FireForgetTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
@@ -92,7 +92,7 @@ public sealed partial class FireForgetTests : IClassFixture<IntegrationTestConte
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.ServiceUnavailable);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.ServiceUnavailable);
 
         responseDocument.Errors.ShouldHaveCount(1);
 
