@@ -185,7 +185,9 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
         RegisterImplementationForInterfaces(ServiceDiscoveryFacade.ResourceDefinitionUnboundInterfaces, typeof(JsonApiResourceDefinition<,>));
 
         _services.AddScoped<IResourceDefinitionAccessor, ResourceDefinitionAccessor>();
-        _services.AddScoped<IResourceFactory, ResourceFactory>();
+        //_services.AddScoped<IResourceFactory, ResourceFactory>();
+        //_services.AddScoped<IResourceFactory, ExpressionResourceFactory>();
+        _services.AddScoped<IResourceFactory, CachingResourceFactory>();
     }
 
     private void AddRepositoryLayer()
