@@ -2069,6 +2069,12 @@ references:
   commentId: T:JsonApiDotNetCore.Configuration.ResourceType
   fullName: JsonApiDotNetCore.Configuration.ResourceType
   nameWithType: ResourceType
+- uid: JsonApiDotNetCore.Configuration.ResourceType.#ctor(System.String,Type,Type,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes)
+  name: ResourceType(String, Type, Type, LinkTypes, LinkTypes, LinkTypes)
+  href: api/JsonApiDotNetCore.Configuration.ResourceType.html#JsonApiDotNetCore_Configuration_ResourceType__ctor_System_String_Type_Type_JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_
+  commentId: M:JsonApiDotNetCore.Configuration.ResourceType.#ctor(System.String,Type,Type,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes)
+  fullName: JsonApiDotNetCore.Configuration.ResourceType.ResourceType(System.String, Type, Type, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes)
+  nameWithType: ResourceType.ResourceType(String, Type, Type, LinkTypes, LinkTypes, LinkTypes)
 - uid: JsonApiDotNetCore.Configuration.ResourceType.#ctor(System.String,Type,Type,System.Nullable{IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.AttrAttribute}},System.Nullable{IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute}},System.Nullable{IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute}},JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes)
   name: ResourceType(String, Type, Type, Nullable<IReadOnlyCollection<AttrAttribute>>, Nullable<IReadOnlyCollection<RelationshipAttribute>>, Nullable<IReadOnlyCollection<EagerLoadAttribute>>, LinkTypes, LinkTypes, LinkTypes)
   href: api/JsonApiDotNetCore.Configuration.ResourceType.html#JsonApiDotNetCore_Configuration_ResourceType__ctor_System_String_Type_Type_System_Nullable_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_AttrAttribute___System_Nullable_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute___System_Nullable_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_EagerLoadAttribute___JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_
@@ -3445,6 +3451,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Diagnostics.ICodeTimer.GetResults
   nameWithType: ICodeTimer.GetResults
+- uid: JsonApiDotNetCore.Diagnostics.ICodeTimer.Measure(System.String)
+  name: Measure(String)
+  href: api/JsonApiDotNetCore.Diagnostics.ICodeTimer.html#JsonApiDotNetCore_Diagnostics_ICodeTimer_Measure_System_String_
+  commentId: M:JsonApiDotNetCore.Diagnostics.ICodeTimer.Measure(System.String)
+  fullName: JsonApiDotNetCore.Diagnostics.ICodeTimer.Measure(System.String)
+  nameWithType: ICodeTimer.Measure(String)
 - uid: JsonApiDotNetCore.Diagnostics.ICodeTimer.Measure(System.String,System.Boolean)
   name: Measure(String, Boolean)
   href: api/JsonApiDotNetCore.Diagnostics.ICodeTimer.html#JsonApiDotNetCore_Diagnostics_ICodeTimer_Measure_System_String_System_Boolean_
@@ -9517,6 +9529,12 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Internal.Parsing.Token
   fullName: JsonApiDotNetCore.Queries.Internal.Parsing.Token
   nameWithType: Token
+- uid: JsonApiDotNetCore.Queries.Internal.Parsing.Token.#ctor(JsonApiDotNetCore.Queries.Internal.Parsing.TokenKind)
+  name: Token(TokenKind)
+  href: api/JsonApiDotNetCore.Queries.Internal.Parsing.Token.html#JsonApiDotNetCore_Queries_Internal_Parsing_Token__ctor_JsonApiDotNetCore_Queries_Internal_Parsing_TokenKind_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.Parsing.Token.#ctor(JsonApiDotNetCore.Queries.Internal.Parsing.TokenKind)
+  fullName: JsonApiDotNetCore.Queries.Internal.Parsing.Token.Token(JsonApiDotNetCore.Queries.Internal.Parsing.TokenKind)
+  nameWithType: Token.Token(TokenKind)
 - uid: JsonApiDotNetCore.Queries.Internal.Parsing.Token.#ctor(JsonApiDotNetCore.Queries.Internal.Parsing.TokenKind,System.String)
   name: Token(TokenKind, String)
   href: api/JsonApiDotNetCore.Queries.Internal.Parsing.Token.html#JsonApiDotNetCore_Queries_Internal_Parsing_Token__ctor_JsonApiDotNetCore_Queries_Internal_Parsing_TokenKind_System_String_
@@ -17994,15 +18012,15 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Response.IMetaBuilder
   fullName: JsonApiDotNetCore.Serialization.Response.IMetaBuilder
   nameWithType: IMetaBuilder
-- uid: JsonApiDotNetCore.Serialization.Response.IMetaBuilder.Add(IReadOnlyDictionary{System.String,System.Object})
-  name: Add(IReadOnlyDictionary<String, Object>)
-  href: api/JsonApiDotNetCore.Serialization.Response.IMetaBuilder.html#JsonApiDotNetCore_Serialization_Response_IMetaBuilder_Add_IReadOnlyDictionary_System_String_System_Object__
-  commentId: M:JsonApiDotNetCore.Serialization.Response.IMetaBuilder.Add(IReadOnlyDictionary{System.String,System.Object})
-  name.vb: Add(IReadOnlyDictionary(Of String, Object))
-  fullName: JsonApiDotNetCore.Serialization.Response.IMetaBuilder.Add(IReadOnlyDictionary<System.String, System.Object>)
-  fullName.vb: JsonApiDotNetCore.Serialization.Response.IMetaBuilder.Add(IReadOnlyDictionary(Of System.String, System.Object))
-  nameWithType: IMetaBuilder.Add(IReadOnlyDictionary<String, Object>)
-  nameWithType.vb: IMetaBuilder.Add(IReadOnlyDictionary(Of String, Object))
+- uid: JsonApiDotNetCore.Serialization.Response.IMetaBuilder.Add(IDictionary{System.String,System.Object})
+  name: Add(IDictionary<String, Object>)
+  href: api/JsonApiDotNetCore.Serialization.Response.IMetaBuilder.html#JsonApiDotNetCore_Serialization_Response_IMetaBuilder_Add_IDictionary_System_String_System_Object__
+  commentId: M:JsonApiDotNetCore.Serialization.Response.IMetaBuilder.Add(IDictionary{System.String,System.Object})
+  name.vb: Add(IDictionary(Of String, Object))
+  fullName: JsonApiDotNetCore.Serialization.Response.IMetaBuilder.Add(IDictionary<System.String, System.Object>)
+  fullName.vb: JsonApiDotNetCore.Serialization.Response.IMetaBuilder.Add(IDictionary(Of System.String, System.Object))
+  nameWithType: IMetaBuilder.Add(IDictionary<String, Object>)
+  nameWithType.vb: IMetaBuilder.Add(IDictionary(Of String, Object))
 - uid: JsonApiDotNetCore.Serialization.Response.IMetaBuilder.Add*
   name: Add
   href: api/JsonApiDotNetCore.Serialization.Response.IMetaBuilder.html#JsonApiDotNetCore_Serialization_Response_IMetaBuilder_Add_
@@ -18186,15 +18204,15 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Response.MetaBuilder.MetaBuilder
   nameWithType: MetaBuilder.MetaBuilder
-- uid: JsonApiDotNetCore.Serialization.Response.MetaBuilder.Add(IReadOnlyDictionary{System.String,System.Object})
-  name: Add(IReadOnlyDictionary<String, Object>)
-  href: api/JsonApiDotNetCore.Serialization.Response.MetaBuilder.html#JsonApiDotNetCore_Serialization_Response_MetaBuilder_Add_IReadOnlyDictionary_System_String_System_Object__
-  commentId: M:JsonApiDotNetCore.Serialization.Response.MetaBuilder.Add(IReadOnlyDictionary{System.String,System.Object})
-  name.vb: Add(IReadOnlyDictionary(Of String, Object))
-  fullName: JsonApiDotNetCore.Serialization.Response.MetaBuilder.Add(IReadOnlyDictionary<System.String, System.Object>)
-  fullName.vb: JsonApiDotNetCore.Serialization.Response.MetaBuilder.Add(IReadOnlyDictionary(Of System.String, System.Object))
-  nameWithType: MetaBuilder.Add(IReadOnlyDictionary<String, Object>)
-  nameWithType.vb: MetaBuilder.Add(IReadOnlyDictionary(Of String, Object))
+- uid: JsonApiDotNetCore.Serialization.Response.MetaBuilder.Add(IDictionary{System.String,System.Object})
+  name: Add(IDictionary<String, Object>)
+  href: api/JsonApiDotNetCore.Serialization.Response.MetaBuilder.html#JsonApiDotNetCore_Serialization_Response_MetaBuilder_Add_IDictionary_System_String_System_Object__
+  commentId: M:JsonApiDotNetCore.Serialization.Response.MetaBuilder.Add(IDictionary{System.String,System.Object})
+  name.vb: Add(IDictionary(Of String, Object))
+  fullName: JsonApiDotNetCore.Serialization.Response.MetaBuilder.Add(IDictionary<System.String, System.Object>)
+  fullName.vb: JsonApiDotNetCore.Serialization.Response.MetaBuilder.Add(IDictionary(Of System.String, System.Object))
+  nameWithType: MetaBuilder.Add(IDictionary<String, Object>)
+  nameWithType.vb: MetaBuilder.Add(IDictionary(Of String, Object))
 - uid: JsonApiDotNetCore.Serialization.Response.MetaBuilder.Add*
   name: Add
   href: api/JsonApiDotNetCore.Serialization.Response.MetaBuilder.html#JsonApiDotNetCore_Serialization_Response_MetaBuilder_Add_

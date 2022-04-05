@@ -89,7 +89,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Diagnostics_ICodeTimer_GetResults.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Diagnostics.ICodeTimer.GetResults%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Diagnostics/ICodeTimer.cs/#L23">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Diagnostics/ICodeTimer.cs/#L32">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Diagnostics_ICodeTimer_GetResults_" data-uid="JsonApiDotNetCore.Diagnostics.ICodeTimer.GetResults*"></a>
   <h4 id="JsonApiDotNetCore_Diagnostics_ICodeTimer_GetResults" data-uid="JsonApiDotNetCore.Diagnostics.ICodeTimer.GetResults">GetResults()</h4>
@@ -117,10 +117,60 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Diagnostics_ICodeTimer_Measure_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Diagnostics.ICodeTimer.Measure(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Diagnostics/ICodeTimer.cs/#L15">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Diagnostics_ICodeTimer_Measure_" data-uid="JsonApiDotNetCore.Diagnostics.ICodeTimer.Measure*"></a>
+  <h4 id="JsonApiDotNetCore_Diagnostics_ICodeTimer_Measure_System_String_" data-uid="JsonApiDotNetCore.Diagnostics.ICodeTimer.Measure(System.String)">Measure(String)</h4>
+  <div class="markdown level1 summary"><p>Starts recording the duration of a code block, while including this measurement in calculated percentages. Wrap this call in a <code>using</code>
+statement, so the recording stops when the return value goes out of scope.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IDisposable Measure(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>Description of what is being recorded.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IDisposable</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Diagnostics_ICodeTimer_Measure_System_String_System_Boolean_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Diagnostics.ICodeTimer.Measure(System.String%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Diagnostics/ICodeTimer.cs/#L18">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Diagnostics/ICodeTimer.cs/#L27">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Diagnostics_ICodeTimer_Measure_" data-uid="JsonApiDotNetCore.Diagnostics.ICodeTimer.Measure*"></a>
   <h4 id="JsonApiDotNetCore_Diagnostics_ICodeTimer_Measure_System_String_System_Boolean_" data-uid="JsonApiDotNetCore.Diagnostics.ICodeTimer.Measure(System.String,System.Boolean)">Measure(String, Boolean)</h4>
@@ -130,7 +180,7 @@ scope.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IDisposable Measure(string name, bool excludeInRelativeCost = false)</code></pre>
+    <pre><code class="lang-csharp hljs">IDisposable Measure(string name, bool excludeInRelativeCost)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -151,7 +201,7 @@ scope.</p>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">excludeInRelativeCost</span></td>
-        <td><p>When set, indicates to exclude this measurement in calculated percentages. <code>false</code> by default.</p>
+        <td><p>When set, indicates to exclude this measurement in calculated percentages.</p>
 </td>
       </tr>
     </tbody>
