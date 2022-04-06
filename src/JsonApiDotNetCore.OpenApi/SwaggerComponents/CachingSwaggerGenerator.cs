@@ -3,6 +3,8 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
+#pragma warning disable AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
+
 namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 /// <summary>
