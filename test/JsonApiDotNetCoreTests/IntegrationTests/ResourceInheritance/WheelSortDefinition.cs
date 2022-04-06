@@ -43,6 +43,7 @@ public sealed class WheelSortDefinition : JsonApiResourceDefinition<Wheel, long>
     {
         AttrAttribute paintColorAttribute = ResourceGraph.GetResourceType<ChromeWheel>().GetAttributeByPropertyName(nameof(ChromeWheel.PaintColor));
         AttrAttribute hasTubeAttribute = ResourceGraph.GetResourceType<CarbonWheel>().GetAttributeByPropertyName(nameof(CarbonWheel.HasTube));
+        AttrAttribute idAttribute = ResourceGraph.GetResourceType<Wheel>().GetAttributeByPropertyName(nameof(Wheel.Id));
 
         var cylinderCountChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(
             ResourceGraph.GetResourceType<Wheel>().GetRelationshipByPropertyName(nameof(Wheel.Vehicle)),
@@ -53,7 +54,8 @@ public sealed class WheelSortDefinition : JsonApiResourceDefinition<Wheel, long>
         {
             new SortElementExpression(new ResourceFieldChainExpression(paintColorAttribute), true),
             new SortElementExpression(new ResourceFieldChainExpression(hasTubeAttribute), false),
-            new SortElementExpression(new CountExpression(cylinderCountChain), true)
+            new SortElementExpression(new CountExpression(cylinderCountChain), true),
+            new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true)
         }.ToImmutableArray());
     }
 
@@ -63,7 +65,8 @@ public sealed class WheelSortDefinition : JsonApiResourceDefinition<Wheel, long>
         {
             (wheel => (wheel as ChromeWheel)!.PaintColor, ListSortDirection.Ascending),
             (wheel => ((CarbonWheel)wheel).HasTube, ListSortDirection.Descending),
-            (wheel => ((GasolineEngine)((Car)wheel.Vehicle!).Engine).Cylinders.Count, ListSortDirection.Ascending)
+            (wheel => ((GasolineEngine)((Car)wheel.Vehicle!).Engine).Cylinders.Count, ListSortDirection.Ascending),
+            (wheel => wheel.Id, ListSortDirection.Ascending)
         });
     }
 }
