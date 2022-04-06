@@ -7,7 +7,7 @@
     <MicrosoftCodeAnalysisVersion>4.1.*</MicrosoftCodeAnalysisVersion>
     <HumanizerVersion>2.14.1</HumanizerVersion>
     <SwashbuckleVersion>6.2.*</SwashbuckleVersion>
-    <JsonApiDotNetCoreVersionPrefix>5.0.1</JsonApiDotNetCoreVersionPrefix>
+    <JsonApiDotNetCoreVersionPrefix>5.0.2</JsonApiDotNetCoreVersionPrefix>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>9999</WarningLevel>
     <Nullable>enable</Nullable>
