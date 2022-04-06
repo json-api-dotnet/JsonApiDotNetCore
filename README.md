@@ -84,7 +84,7 @@ See also our [versioning policy](./VERSIONING_POLICY.md).
 |                   |             | Core 3.1 | 5                     |
 |                   |             | 5        | 5                     |
 |                   |             | 6        | 5                     |
-| v5.x              | Pre-release | 6        | 6                     |
+| v5.x              | Stable      | 6        | 6                     |
 
 ## Contributing
 
