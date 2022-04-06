@@ -14,6 +14,7 @@
     <Rule Id="AV1555" Action="Warning" />
     <Rule Id="AV1564" Action="Info" />
     <Rule Id="AV1568" Action="Warning" />
+    <Rule Id="AV1580" Action="None" />
     <Rule Id="AV1706" Action="Warning" />
     <Rule Id="AV1710" Action="Info" />
     <Rule Id="AV1711" Action="Info" />
@@ -21,7 +22,7 @@
     <Rule Id="AV1739" Action="Warning" />
     <Rule Id="AV1745" Action="Warning" />
     <Rule Id="AV1755" Action="Warning" />
-    <Rule Id="AV2210" Action="None" />
+    <Rule Id="AV2210" Action="Warning" />
     <Rule Id="AV2220" Action="Warning" />
     <Rule Id="AV2230" Action="Info" />
     <Rule Id="AV2305" Action="None" />

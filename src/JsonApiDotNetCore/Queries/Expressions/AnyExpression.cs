@@ -35,13 +35,23 @@ public class AnyExpression : FilterExpression
 
     public override string ToString()
     {
+        return InnerToString(false);
+    }
+
+    public override string ToFullString()
+    {
+        return InnerToString(true);
+    }
+
+    private string InnerToString(bool toFullString)
+    {
         var builder = new StringBuilder();
 
         builder.Append(Keywords.Any);
         builder.Append('(');
-        builder.Append(TargetAttribute);
+        builder.Append(toFullString ? TargetAttribute.ToFullString() : TargetAttribute);
         builder.Append(',');
-        builder.Append(string.Join(",", Constants.Select(constant => constant.ToString()).OrderBy(value => value)));
+        builder.Append(string.Join(",", Constants.Select(constant => toFullString ? constant.ToFullString() : constant.ToString()).OrderBy(value => value)));
         builder.Append(')');
 
         return builder.ToString();

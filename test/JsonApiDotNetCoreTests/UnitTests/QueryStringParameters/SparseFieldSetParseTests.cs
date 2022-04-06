@@ -58,7 +58,7 @@ public sealed class SparseFieldSetParseTests : BaseParseTests
     [InlineData("fields[]", "", "Resource type expected.")]
     [InlineData("fields[ ]", "", "Unexpected whitespace.")]
     [InlineData("fields[owner]", "", "Resource type 'owner' does not exist.")]
-    [InlineData("fields[owner.posts]", "id", "Resource type 'owner.posts' does not exist.")]
+    [InlineData("fields[owner.posts]", "id", "Resource type 'owner' does not exist.")]
     [InlineData("fields[blogPosts]", " ", "Unexpected whitespace.")]
     [InlineData("fields[blogPosts]", "some", "Field 'some' does not exist on resource type 'blogPosts'.")]
     [InlineData("fields[blogPosts]", "id,owner.name", "Field 'owner.name' does not exist on resource type 'blogPosts'.")]

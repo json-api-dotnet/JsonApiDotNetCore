@@ -74,14 +74,40 @@ public class SortParser : QueryExpressionParser
 
     protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
     {
+        // An attribute or relationship name usually matches a single field, even when overridden in derived types.
+        // But in the following case, two attributes are matched on GET /shoppingBaskets?sort=bonusPoints:
+        //
+        // public abstract class ShoppingBasket : Identifiable<long>
+        // {
+        // }
+        //
+        // public sealed class SilverShoppingBasket : ShoppingBasket
+        // {
+        //     [Attr]
+        //     public short BonusPoints { get; set; }
+        // }
+        //
+        // public sealed class PlatinumShoppingBasket : ShoppingBasket
+        // {
+        //     [Attr]
+        //     public long BonusPoints { get; set; }
+        // }
+        //
+        // In this case there are two distinct BonusPoints fields (with different data types). And the sort order depends
+        // on which attribute is used.
+        //
+        // Because there is no syntax to pick one, we fail with an error. We could add such optional upcast syntax
+        // (which would be required in this case) in the future to make it work, if desired.
+
         if (chainRequirements == FieldChainRequirements.EndsInToMany)
         {
-            return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path);
+            return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path, FieldChainInheritanceRequirement.RequireSingleMatch);
         }
 
         if (chainRequirements == FieldChainRequirements.EndsInAttribute)
         {
-            return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, _validateSingleFieldCallback);
+            return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, FieldChainInheritanceRequirement.RequireSingleMatch,
+                _validateSingleFieldCallback);
         }
 
         throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");

@@ -17,6 +17,7 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
 
         testContext.UseController<PhotosController>();
         testContext.UseController<PhotoLocationsController>();
+        testContext.UseController<PhotoAlbumsController>();
     }
 
     [Fact]
@@ -39,7 +40,7 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Links.Should().BeNull();
 
@@ -110,7 +111,7 @@ public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Links.Should().BeNull();
 

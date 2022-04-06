@@ -28,6 +28,11 @@ public class CountExpression : FunctionExpression
         return $"{Keywords.Count}({TargetCollection})";
     }
 
+    public override string ToFullString()
+    {
+        return $"{Keywords.Count}({TargetCollection.ToFullString()})";
+    }
+
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))

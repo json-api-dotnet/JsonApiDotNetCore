@@ -27,9 +27,19 @@ public class SparseFieldTableExpression : QueryExpression
 
     public override string ToString()
     {
+        return InnerToString(false);
+    }
+
+    public override string ToFullString()
+    {
+        return InnerToString(true);
+    }
+
+    private string InnerToString(bool toFullString)
+    {
         var builder = new StringBuilder();
 
-        foreach ((ResourceType resourceType, SparseFieldSetExpression fields) in Table)
+        foreach ((ResourceType resourceType, SparseFieldSetExpression fieldSet) in Table)
         {
             if (builder.Length > 0)
             {
@@ -38,7 +48,7 @@ public class SparseFieldTableExpression : QueryExpression
 
             builder.Append(resourceType.PublicName);
             builder.Append('(');
-            builder.Append(fields);
+            builder.Append(toFullString ? fieldSet.ToFullString() : fieldSet);
             builder.Append(')');
         }
 

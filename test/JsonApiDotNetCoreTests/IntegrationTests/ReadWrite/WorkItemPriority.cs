@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[JsonConverter(typeof(JsonStringEnumMemberConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum WorkItemPriority
 {
     Low,

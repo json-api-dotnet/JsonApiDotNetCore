@@ -3,7 +3,6 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
@@ -67,9 +66,9 @@ public class QueryableBuilder
             expression = ApplyPagination(expression, layer.Pagination);
         }
 
-        if (!layer.Projection.IsNullOrEmpty())
+        if (layer.Selection is { IsEmpty: false })
         {
-            expression = ApplyProjection(expression, layer.Projection, layer.ResourceType);
+            expression = ApplySelection(expression, layer.Selection, layer.ResourceType);
         }
 
         return expression;
@@ -107,11 +106,11 @@ public class QueryableBuilder
         return builder.ApplySkipTake(pagination);
     }
 
-    protected virtual Expression ApplyProjection(Expression source, IDictionary<ResourceFieldAttribute, QueryLayer?> projection, ResourceType resourceType)
+    protected virtual Expression ApplySelection(Expression source, FieldSelection selection, ResourceType resourceType)
     {
         using LambdaScope lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
         var builder = new SelectClauseBuilder(source, lambdaScope, _entityModel, _extensionType, _nameFactory, _resourceFactory);
-        return builder.ApplySelect(projection, resourceType);
+        return builder.ApplySelect(selection, resourceType);
     }
 }

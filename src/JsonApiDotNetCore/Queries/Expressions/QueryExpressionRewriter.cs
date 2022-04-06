@@ -91,6 +91,18 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
         return null;
     }
 
+    public override QueryExpression VisitIsType(IsTypeExpression expression, TArgument argument)
+    {
+        ResourceFieldChainExpression? newTargetToOneRelationship = expression.TargetToOneRelationship != null
+            ? Visit(expression.TargetToOneRelationship, argument) as ResourceFieldChainExpression
+            : null;
+
+        FilterExpression? newChild = expression.Child != null ? Visit(expression.Child, argument) as FilterExpression : null;
+
+        var newExpression = new IsTypeExpression(newTargetToOneRelationship, expression.DerivedType, newChild);
+        return newExpression.Equals(expression) ? expression : newExpression;
+    }
+
     public override QueryExpression? VisitSortElement(SortElementExpression expression, TArgument argument)
     {
         SortElementExpression? newExpression = null;

@@ -27,6 +27,11 @@ public class PaginationElementQueryStringValueExpression : QueryExpression
         return Scope == null ? Value.ToString() : $"{Scope}: {Value}";
     }
 
+    public override string ToFullString()
+    {
+        return Scope == null ? Value.ToString() : $"{Scope.ToFullString()}: {Value}";
+    }
+
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))

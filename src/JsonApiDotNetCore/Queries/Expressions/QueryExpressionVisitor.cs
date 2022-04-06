@@ -53,6 +53,11 @@ public abstract class QueryExpressionVisitor<TArgument, TResult>
         return DefaultVisit(expression, argument);
     }
 
+    public virtual TResult VisitIsType(IsTypeExpression expression, TArgument argument)
+    {
+        return DefaultVisit(expression, argument);
+    }
+
     public virtual TResult VisitSortElement(SortElementExpression expression, TArgument argument)
     {
         return DefaultVisit(expression, argument);

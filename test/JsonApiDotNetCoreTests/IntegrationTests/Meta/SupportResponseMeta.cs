@@ -4,7 +4,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta;
 
 public sealed class SupportResponseMeta : IResponseMeta
 {
-    public IReadOnlyDictionary<string, object?> GetMeta()
+    public IDictionary<string, object?> GetMeta()
     {
         return new Dictionary<string, object?>
         {

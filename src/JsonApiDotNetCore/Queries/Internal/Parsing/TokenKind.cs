@@ -6,6 +6,7 @@ public enum TokenKind
     CloseParen,
     OpenBracket,
     CloseBracket,
+    Period,
     Comma,
     Colon,
     Minus,

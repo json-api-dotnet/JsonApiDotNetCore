@@ -43,7 +43,7 @@ public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<Tes
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Should().BeJson(@"{
   ""links"": {

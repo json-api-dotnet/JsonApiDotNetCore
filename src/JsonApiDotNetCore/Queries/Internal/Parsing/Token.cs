@@ -8,9 +8,14 @@ public sealed class Token
     public TokenKind Kind { get; }
     public string? Value { get; }
 
-    public Token(TokenKind kind, string? value = null)
+    public Token(TokenKind kind)
     {
         Kind = kind;
+    }
+
+    public Token(TokenKind kind, string value)
+        : this(kind)
+    {
         Value = value;
     }
 

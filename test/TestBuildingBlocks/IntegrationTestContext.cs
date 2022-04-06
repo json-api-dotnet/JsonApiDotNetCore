@@ -103,11 +103,14 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IDi
         return factoryWithConfiguredContentRoot;
     }
 
-    public virtual void Dispose()
+    public void Dispose()
     {
-        RunOnDatabaseAsync(async dbContext => await dbContext.Database.EnsureDeletedAsync()).Wait();
+        if (_lazyFactory.IsValueCreated)
+        {
+            RunOnDatabaseAsync(async dbContext => await dbContext.Database.EnsureDeletedAsync()).Wait();
 
-        Factory.Dispose();
+            _lazyFactory.Value.Dispose();
+        }
     }
 
     public void ConfigureLogging(Action<ILoggingBuilder> loggingConfiguration)

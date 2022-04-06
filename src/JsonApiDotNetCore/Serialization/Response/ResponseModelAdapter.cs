@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal;
@@ -79,7 +80,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
             PopulateRelationshipsInTree(rootNode, _request.Kind);
 
-            IEnumerable<ResourceObject> resourceObjects = rootNode.GetResponseData();
+            IReadOnlyList<ResourceObject> resourceObjects = rootNode.GetResponseData();
             document.Data = new SingleOrManyData<ResourceObject>(resourceObjects);
         }
         else if (model is IIdentifiable resource)
@@ -172,13 +173,35 @@ public class ResponseModelAdapter : IResponseModelAdapter
     {
         if (!_resourceToTreeNodeCache.TryGetValue(resource, out ResourceObjectTreeNode? treeNode))
         {
-            ResourceObject resourceObject = ConvertResource(resource, resourceType, kind);
-            treeNode = new ResourceObjectTreeNode(resource, resourceType, resourceObject);
+            // In case of resource inheritance, prefer the derived resource type over the base type.
+            ResourceType effectiveResourceType = GetEffectiveResourceType(resource, resourceType);
+
+            ResourceObject resourceObject = ConvertResource(resource, effectiveResourceType, kind);
+            treeNode = new ResourceObjectTreeNode(resource, effectiveResourceType, resourceObject);
 
             _resourceToTreeNodeCache.Add(resource, treeNode);
         }
 
         return treeNode;
+    }
+
+    private static ResourceType GetEffectiveResourceType(IIdentifiable resource, ResourceType declaredType)
+    {
+        Type runtimeResourceType = resource.GetClrType();
+
+        if (declaredType.ClrType == runtimeResourceType)
+        {
+            return declaredType;
+        }
+
+        ResourceType? derivedType = declaredType.GetAllConcreteDerivedTypes().FirstOrDefault(type => type.ClrType == runtimeResourceType);
+
+        if (derivedType == null)
+        {
+            throw new InvalidConfigurationException($"Type '{runtimeResourceType}' does not exist in the resource graph.");
+        }
+
+        return derivedType;
     }
 
     protected virtual ResourceObject ConvertResource(IIdentifiable resource, ResourceType resourceType, EndpointKind kind)
@@ -208,7 +231,9 @@ public class ResponseModelAdapter : IResponseModelAdapter
         return resourceObject;
     }
 
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType resourceType,
+#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
         IImmutableSet<ResourceFieldAttribute> fieldSet)
     {
         var attrMap = new Dictionary<string, object?>(resourceType.Attributes.Count);
@@ -251,14 +276,25 @@ public class ResponseModelAdapter : IResponseModelAdapter
     private void TraverseRelationship(RelationshipAttribute relationship, IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode,
         IncludeElementExpression includeElement, EndpointKind kind)
     {
-        object? rightValue = relationship.GetValue(leftResource);
-        ICollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
+        if (!relationship.LeftType.ClrType.IsAssignableFrom(leftTreeNode.ResourceType.ClrType))
+        {
+            // Skipping over relationship that is declared on another derived type.
+            return;
+        }
 
-        leftTreeNode.EnsureHasRelationship(relationship);
+        // In case of resource inheritance, prefer the relationship on derived type over the one on base type.
+        RelationshipAttribute effectiveRelationship = !leftTreeNode.ResourceType.Equals(relationship.LeftType)
+            ? leftTreeNode.ResourceType.GetRelationshipByPropertyName(relationship.Property.Name)
+            : relationship;
+
+        object? rightValue = effectiveRelationship.GetValue(leftResource);
+        IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
+
+        leftTreeNode.EnsureHasRelationship(effectiveRelationship);
 
         foreach (IIdentifiable rightResource in rightResources)
         {
-            TraverseResource(rightResource, relationship.RightType, kind, includeElement.Children, leftTreeNode, relationship);
+            TraverseResource(rightResource, effectiveRelationship.RightType, kind, includeElement.Children, leftTreeNode, effectiveRelationship);
         }
     }
 
@@ -306,7 +342,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
 
     private static SingleOrManyData<ResourceIdentifierObject> GetRelationshipData(ResourceObjectTreeNode treeNode, RelationshipAttribute relationship)
     {
-        ISet<ResourceObjectTreeNode>? rightNodes = treeNode.GetRightNodesInRelationship(relationship);
+        IReadOnlySet<ResourceObjectTreeNode>? rightNodes = treeNode.GetRightNodesInRelationship(relationship);
 
         if (rightNodes != null)
         {

@@ -88,7 +88,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     /// <summary>
     /// Recursively walks the tree and returns the set of unique nodes. Uses relationship declaration order.
     /// </summary>
-    public ISet<ResourceObjectTreeNode> GetUniqueNodes()
+    public IReadOnlySet<ResourceObjectTreeNode> GetUniqueNodes()
     {
         AssertIsTreeRoot();
 
@@ -148,7 +148,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
         }
     }
 
-    public ISet<ResourceObjectTreeNode>? GetRightNodesInRelationship(RelationshipAttribute relationship)
+    public IReadOnlySet<ResourceObjectTreeNode>? GetRightNodesInRelationship(RelationshipAttribute relationship)
     {
         return _childrenByRelationship != null && _childrenByRelationship.TryGetValue(relationship, out HashSet<ResourceObjectTreeNode>? rightNodes)
             ? rightNodes
@@ -158,7 +158,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     /// <summary>
     /// Provides the value for 'data' in the response body. Uses relationship declaration order.
     /// </summary>
-    public IList<ResourceObject> GetResponseData()
+    public IReadOnlyList<ResourceObject> GetResponseData()
     {
         AssertIsTreeRoot();
 
@@ -168,7 +168,9 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     /// <summary>
     /// Provides the value for 'included' in the response body. Uses relationship declaration order.
     /// </summary>
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     public IList<ResourceObject> GetResponseIncluded()
+#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
         AssertIsTreeRoot();
 
@@ -251,19 +253,19 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
         {
         }
 
-        public bool Equals(ResourceObject? x, ResourceObject? y)
+        public bool Equals(ResourceObject? left, ResourceObject? right)
         {
-            if (ReferenceEquals(x, y))
+            if (ReferenceEquals(left, right))
             {
                 return true;
             }
 
-            if (x is null || y is null || x.GetType() != y.GetType())
+            if (left is null || right is null || left.GetType() != right.GetType())
             {
                 return false;
             }
 
-            return x.Type == y.Type && x.Id == y.Id && x.Lid == y.Lid;
+            return left.Type == right.Type && left.Id == right.Id && left.Lid == right.Lid;
         }
 
         public int GetHashCode(ResourceObject obj)

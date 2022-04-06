@@ -29,6 +29,11 @@ public class QueryStringParameterScopeExpression : QueryExpression
         return Scope == null ? ParameterName.ToString() : $"{ParameterName}: {Scope}";
     }
 
+    public override string ToFullString()
+    {
+        return Scope == null ? ParameterName.ToFullString() : $"{ParameterName.ToFullString()}: {Scope.ToFullString()}";
+    }
+
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))

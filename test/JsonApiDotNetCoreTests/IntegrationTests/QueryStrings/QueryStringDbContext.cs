@@ -13,6 +13,9 @@ public sealed class QueryStringDbContext : DbContext
     public DbSet<Label> Labels => Set<Label>();
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<WebAccount> Accounts => Set<WebAccount>();
+    public DbSet<Human> Humans => Set<Human>();
+    public DbSet<Man> Men => Set<Man>();
+    public DbSet<Woman> Women => Set<Woman>();
     public DbSet<AccountPreferences> AccountPreferences => Set<AccountPreferences>();
     public DbSet<LoginAttempt> LoginAttempts => Set<LoginAttempt>();
     public DbSet<Calendar> Calendars => Set<Calendar>();
@@ -28,5 +31,10 @@ public sealed class QueryStringDbContext : DbContext
         builder.Entity<WebAccount>()
             .HasMany(webAccount => webAccount.Posts)
             .WithOne(blogPost => blogPost.Author!);
+
+        builder.Entity<Man>()
+            .HasOne(man => man.Wife)
+            .WithOne(woman => woman.Husband)
+            .HasForeignKey<Man>();
     }
 }

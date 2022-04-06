@@ -51,7 +51,7 @@ public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicatio
         (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.ManyValue.ShouldNotBeEmpty();
     }
@@ -77,7 +77,7 @@ public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicatio
         (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Id.Should().Be(workItem.StringId);
@@ -116,7 +116,7 @@ public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicatio
         (HttpResponseMessage httpResponse, Document responseDocument) = await ExecutePostAsync<Document>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Attributes.ShouldNotBeEmpty();
@@ -147,7 +147,7 @@ public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicatio
         (HttpResponseMessage httpResponse, string responseDocument) = await ExecuteDeleteAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
 
         responseDocument.Should().BeEmpty();
     }

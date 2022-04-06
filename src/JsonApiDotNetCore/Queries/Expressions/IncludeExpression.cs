@@ -34,8 +34,18 @@ public class IncludeExpression : QueryExpression
 
     public override string ToString()
     {
+        return InnerToString(false);
+    }
+
+    public override string ToFullString()
+    {
+        return InnerToString(true);
+    }
+
+    private string InnerToString(bool toFullString)
+    {
         IReadOnlyCollection<ResourceFieldChainExpression> chains = IncludeChainConverter.GetRelationshipChains(this);
-        return string.Join(",", chains.Select(child => child.ToString()).OrderBy(name => name));
+        return string.Join(",", chains.Select(field => toFullString ? field.ToFullString() : field.ToString()).OrderBy(name => name));
     }
 
     public override bool Equals(object? obj)
