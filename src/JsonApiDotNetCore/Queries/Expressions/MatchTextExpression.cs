@@ -31,11 +31,25 @@ public class MatchTextExpression : FilterExpression
 
     public override string ToString()
     {
+        return InnerToString(false);
+    }
+
+    public override string ToFullString()
+    {
+        return InnerToString(true);
+    }
+
+    private string InnerToString(bool toFullString)
+    {
         var builder = new StringBuilder();
 
         builder.Append(MatchKind.ToString().Camelize());
         builder.Append('(');
-        builder.Append(string.Join(",", TargetAttribute, TextValue));
+
+        builder.Append(toFullString
+            ? string.Join(",", TargetAttribute.ToFullString(), TextValue.ToFullString())
+            : string.Join(",", TargetAttribute, TextValue));
+
         builder.Append(')');
 
         return builder.ToString();

@@ -72,7 +72,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
             }
             case PrimaryRequestMetadata primaryMetadata:
             {
-                UpdateBodyParameterDescriptor(endpoint, primaryMetadata.DocumentType);
+                UpdateBodyParameterDescriptor(endpoint, primaryMetadata.DocumentType, null);
                 return Array.Empty<ActionDescriptor>();
             }
             case NonPrimaryEndpointMetadata nonPrimaryEndpointMetadata and (RelationshipResponseMetadata or SecondaryResponseMetadata):
@@ -140,7 +140,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
         return expansion;
     }
 
-    private static void UpdateBodyParameterDescriptor(ActionDescriptor endpoint, Type documentType, string? parameterName = null)
+    private static void UpdateBodyParameterDescriptor(ActionDescriptor endpoint, Type documentType, string? parameterName)
     {
         ControllerParameterDescriptor? requestBodyDescriptor = endpoint.GetBodyParameterDescriptor();
 

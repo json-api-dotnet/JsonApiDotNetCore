@@ -37,14 +37,14 @@ public class SparseFieldTypeParser : QueryExpressionParser
 
         EatSingleCharacterToken(TokenKind.OpenBracket);
 
-        ResourceType resourceType = ParseResourceName();
+        ResourceType resourceType = ParseResourceType();
 
         EatSingleCharacterToken(TokenKind.CloseBracket);
 
         return resourceType;
     }
 
-    private ResourceType ParseResourceName()
+    private ResourceType ParseResourceType()
     {
         if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text)
         {

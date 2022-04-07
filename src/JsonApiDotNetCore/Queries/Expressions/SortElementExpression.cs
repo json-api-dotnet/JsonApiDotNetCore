@@ -36,6 +36,16 @@ public class SortElementExpression : QueryExpression
 
     public override string ToString()
     {
+        return InnerToString(false);
+    }
+
+    public override string ToFullString()
+    {
+        return InnerToString(true);
+    }
+
+    private string InnerToString(bool toFullString)
+    {
         var builder = new StringBuilder();
 
         if (!IsAscending)
@@ -45,11 +55,11 @@ public class SortElementExpression : QueryExpression
 
         if (TargetAttribute != null)
         {
-            builder.Append(TargetAttribute);
+            builder.Append(toFullString ? TargetAttribute.ToFullString() : TargetAttribute);
         }
         else if (Count != null)
         {
-            builder.Append(Count);
+            builder.Append(toFullString ? Count.ToFullString() : Count);
         }
 
         return builder.ToString();

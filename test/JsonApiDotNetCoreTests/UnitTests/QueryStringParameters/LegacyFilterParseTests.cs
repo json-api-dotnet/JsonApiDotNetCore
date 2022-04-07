@@ -31,7 +31,6 @@ public sealed class LegacyFilterParseTests : BaseParseTests
     [InlineData("filter", "some", "Expected field name between brackets in filter parameter name.")]
     [InlineData("filter[", "some", "Expected field name between brackets in filter parameter name.")]
     [InlineData("filter[]", "some", "Expected field name between brackets in filter parameter name.")]
-    [InlineData("filter[.]", "some", "Relationship '' in '.' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter[some]", "other", "Field 'some' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter[author]", "some", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter[author.posts]", "some",

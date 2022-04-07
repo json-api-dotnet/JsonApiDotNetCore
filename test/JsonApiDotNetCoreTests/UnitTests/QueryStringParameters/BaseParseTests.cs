@@ -24,6 +24,9 @@ public abstract class BaseParseTests
             .Add<Label, int>()
             .Add<Comment, int>()
             .Add<WebAccount, int>()
+            .Add<Human, int>()
+            .Add<Man, int>()
+            .Add<Woman, int>()
             .Add<AccountPreferences, int>()
             .Add<LoginAttempt, int>()
             .Build();

@@ -25,7 +25,12 @@ public class PaginationQueryStringValueExpression : QueryExpression
 
     public override string ToString()
     {
-        return string.Join(",", Elements.Select(constant => constant.ToString()));
+        return string.Join(",", Elements.Select(element => element.ToString()));
+    }
+
+    public override string ToFullString()
+    {
+        return string.Join(",", Elements.Select(element => element.ToFullString()));
     }
 
     public override bool Equals(object? obj)

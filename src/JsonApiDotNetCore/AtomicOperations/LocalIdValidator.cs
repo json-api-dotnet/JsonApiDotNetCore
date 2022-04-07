@@ -96,7 +96,7 @@ public sealed class LocalIdValidator
     {
         if (resource.LocalId != null)
         {
-            ResourceType resourceType = _resourceGraph.GetResourceType(resource.GetType());
+            ResourceType resourceType = _resourceGraph.GetResourceType(resource.GetClrType());
             _localIdTracker.GetValue(resource.LocalId, resourceType);
         }
     }

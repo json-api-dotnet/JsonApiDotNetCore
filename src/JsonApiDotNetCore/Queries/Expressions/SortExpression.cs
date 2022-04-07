@@ -28,6 +28,11 @@ public class SortExpression : QueryExpression
         return string.Join(",", Elements.Select(child => child.ToString()));
     }
 
+    public override string ToFullString()
+    {
+        return string.Join(",", Elements.Select(child => child.ToFullString()));
+    }
+
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))

@@ -21,8 +21,10 @@ public class QueryableHandlerExpression : QueryExpression
         _parameterValue = parameterValue;
     }
 
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     public IQueryable<TResource> Apply<TResource>(IQueryable<TResource> query)
         where TResource : class, IIdentifiable
+#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
         var handler = (Func<IQueryable<TResource>, StringValues, IQueryable<TResource>>)_queryableHandler;
         return handler(query, _parameterValue);
@@ -36,6 +38,11 @@ public class QueryableHandlerExpression : QueryExpression
     public override string ToString()
     {
         return $"handler('{_parameterValue}')";
+    }
+
+    public override string ToFullString()
+    {
+        return ToString();
     }
 
     public override bool Equals(object? obj)

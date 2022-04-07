@@ -45,7 +45,9 @@ public interface IResourceDefinitionAccessor
     /// <summary>
     /// Invokes <see cref="IResourceDefinition{TResource,TId}.GetMeta" /> for the specified resource.
     /// </summary>
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     IDictionary<string, object?>? GetMeta(ResourceType resourceType, IIdentifiable resourceInstance);
+#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
 
     /// <summary>
     /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnPrepareWriteAsync" /> for the specified resource.
@@ -70,9 +72,9 @@ public interface IResourceDefinitionAccessor
     /// <summary>
     /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnAddToRelationshipAsync" /> for the specified resource.
     /// </summary>
-    public Task OnAddToRelationshipAsync<TResource, TId>(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+    public Task OnAddToRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
-        where TResource : class, IIdentifiable<TId>;
+        where TResource : class, IIdentifiable;
 
     /// <summary>
     /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnRemoveFromRelationshipAsync" /> for the specified resource.

@@ -87,7 +87,7 @@ public sealed class AtomicSerializationTests : IClassFixture<IntegrationTestCont
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Should().BeJson(@"{
   ""jsonapi"": {
@@ -155,7 +155,7 @@ public sealed class AtomicSerializationTests : IClassFixture<IntegrationTestCont
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
 

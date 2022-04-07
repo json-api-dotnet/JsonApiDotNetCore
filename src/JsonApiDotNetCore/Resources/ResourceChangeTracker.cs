@@ -1,6 +1,6 @@
 using System.Text.Json;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources;
@@ -10,19 +10,19 @@ namespace JsonApiDotNetCore.Resources;
 public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TResource>
     where TResource : class, IIdentifiable
 {
-    private readonly ResourceType _resourceType;
+    private readonly IJsonApiRequest _request;
     private readonly ITargetedFields _targetedFields;
 
     private IDictionary<string, string>? _initiallyStoredAttributeValues;
     private IDictionary<string, string>? _requestAttributeValues;
     private IDictionary<string, string>? _finallyStoredAttributeValues;
 
-    public ResourceChangeTracker(IResourceGraph resourceGraph, ITargetedFields targetedFields)
+    public ResourceChangeTracker(IJsonApiRequest request, ITargetedFields targetedFields)
     {
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+        ArgumentGuard.NotNull(request, nameof(request));
         ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
 
-        _resourceType = resourceGraph.GetResourceType<TResource>();
+        _request = request;
         _targetedFields = targetedFields;
     }
 
@@ -31,7 +31,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     {
         ArgumentGuard.NotNull(resource, nameof(resource));
 
-        _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, _resourceType.Attributes);
+        _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, _request.PrimaryResourceType!.Attributes);
     }
 
     /// <inheritdoc />
@@ -47,7 +47,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     {
         ArgumentGuard.NotNull(resource, nameof(resource));
 
-        _finallyStoredAttributeValues = CreateAttributeDictionary(resource, _resourceType.Attributes);
+        _finallyStoredAttributeValues = CreateAttributeDictionary(resource, _request.PrimaryResourceType!.Attributes);
     }
 
     private IDictionary<string, string> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)

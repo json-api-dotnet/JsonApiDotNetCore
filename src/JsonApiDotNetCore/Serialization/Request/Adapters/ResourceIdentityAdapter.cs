@@ -46,6 +46,12 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         ResourceType? resourceType = _resourceGraph.FindResourceType(identity.Type);
 
         AssertIsKnownResourceType(resourceType, identity.Type, state);
+
+        if (state.Request.WriteOperation is WriteOperationKind.CreateResource or WriteOperationKind.UpdateResource)
+        {
+            AssertIsNotAbstractType(resourceType, identity.Type, state);
+        }
+
         AssertIsCompatibleResourceType(resourceType, requirements.ResourceType, requirements.RelationshipName, state);
 
         return resourceType;
@@ -67,13 +73,21 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         }
     }
 
+    private static void AssertIsNotAbstractType(ResourceType resourceType, string typeName, RequestAdapterState state)
+    {
+        if (resourceType.ClrType.IsAbstract)
+        {
+            throw new ModelConversionException(state.Position, "Abstract resource type found.", $"Resource type '{typeName}' is abstract.");
+        }
+    }
+
     private static void AssertIsCompatibleResourceType(ResourceType actual, ResourceType? expected, string? relationshipName, RequestAdapterState state)
     {
         if (expected != null && !expected.ClrType.IsAssignableFrom(actual.ClrType))
         {
             string message = relationshipName != null
-                ? $"Type '{actual.PublicName}' is incompatible with type '{expected.PublicName}' of relationship '{relationshipName}'."
-                : $"Type '{actual.PublicName}' is incompatible with type '{expected.PublicName}'.";
+                ? $"Type '{actual.PublicName}' is not convertible to type '{expected.PublicName}' of relationship '{relationshipName}'."
+                : $"Type '{actual.PublicName}' is not convertible to type '{expected.PublicName}'.";
 
             throw new ModelConversionException(state.Position, "Incompatible resource type found.", message, HttpStatusCode.Conflict);
         }

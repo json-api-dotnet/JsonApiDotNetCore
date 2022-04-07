@@ -14,15 +14,30 @@ public sealed class LambdaScope : IDisposable
     public ParameterExpression Parameter { get; }
     public Expression Accessor { get; }
 
-    public LambdaScope(LambdaParameterNameFactory nameFactory, Type elementType, Expression? accessorExpression)
+    private LambdaScope(LambdaParameterNameScope parameterNameScope, ParameterExpression parameter, Expression accessor)
+    {
+        _parameterNameScope = parameterNameScope;
+        Parameter = parameter;
+        Accessor = accessor;
+    }
+
+    public static LambdaScope Create(LambdaParameterNameFactory nameFactory, Type elementType, Expression? accessorExpression)
     {
         ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
         ArgumentGuard.NotNull(elementType, nameof(elementType));
 
-        _parameterNameScope = nameFactory.Create(elementType.Name);
-        Parameter = Expression.Parameter(elementType, _parameterNameScope.Name);
+        LambdaParameterNameScope parameterNameScope = nameFactory.Create(elementType.Name);
+        ParameterExpression parameter = Expression.Parameter(elementType, parameterNameScope.Name);
+        Expression accessor = accessorExpression ?? parameter;
 
-        Accessor = accessorExpression ?? Parameter;
+        return new LambdaScope(parameterNameScope, parameter, accessor);
+    }
+
+    public LambdaScope WithAccessor(Expression accessorExpression)
+    {
+        ArgumentGuard.NotNull(accessorExpression, nameof(accessorExpression));
+
+        return new LambdaScope(_parameterNameScope, Parameter, accessorExpression);
     }
 
     public void Dispose()

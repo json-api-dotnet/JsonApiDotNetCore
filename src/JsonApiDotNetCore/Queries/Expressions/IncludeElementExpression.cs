@@ -35,13 +35,23 @@ public class IncludeElementExpression : QueryExpression
 
     public override string ToString()
     {
+        return InnerToString(false);
+    }
+
+    public override string ToFullString()
+    {
+        return InnerToString(true);
+    }
+
+    private string InnerToString(bool toFullString)
+    {
         var builder = new StringBuilder();
-        builder.Append(Relationship);
+        builder.Append(toFullString ? $"{Relationship.LeftType.PublicName}:{Relationship.PublicName}" : Relationship.PublicName);
 
         if (Children.Any())
         {
             builder.Append('{');
-            builder.Append(string.Join(",", Children.Select(child => child.ToString()).OrderBy(name => name)));
+            builder.Append(string.Join(",", Children.Select(child => toFullString ? child.ToFullString() : child.ToString()).OrderBy(name => name)));
             builder.Append('}');
         }
 

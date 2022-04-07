@@ -14,6 +14,7 @@ public sealed class QueryTokenizer
             [')'] = TokenKind.CloseParen,
             ['['] = TokenKind.OpenBracket,
             [']'] = TokenKind.CloseBracket,
+            ['.'] = TokenKind.Period,
             [','] = TokenKind.Comma,
             [':'] = TokenKind.Colon,
             ['-'] = TokenKind.Minus

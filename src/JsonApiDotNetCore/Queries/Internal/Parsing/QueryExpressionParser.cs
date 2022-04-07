@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -31,17 +32,42 @@ public abstract class QueryExpressionParser
 
     protected ResourceFieldChainExpression ParseFieldChain(FieldChainRequirements chainRequirements, string? alternativeErrorMessage)
     {
-        if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text)
-        {
-            IImmutableList<ResourceFieldAttribute> chain = OnResolveFieldChain(token.Value!, chainRequirements);
+        var pathBuilder = new StringBuilder();
+        EatFieldChain(pathBuilder, alternativeErrorMessage);
 
-            if (chain.Any())
-            {
-                return new ResourceFieldChainExpression(chain);
-            }
+        IImmutableList<ResourceFieldAttribute> chain = OnResolveFieldChain(pathBuilder.ToString(), chainRequirements);
+
+        if (chain.Any())
+        {
+            return new ResourceFieldChainExpression(chain);
         }
 
         throw new QueryParseException(alternativeErrorMessage ?? "Field name expected.");
+    }
+
+    private void EatFieldChain(StringBuilder pathBuilder, string? alternativeErrorMessage)
+    {
+        while (true)
+        {
+            if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text)
+            {
+                pathBuilder.Append(token.Value);
+
+                if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Period)
+                {
+                    EatSingleCharacterToken(TokenKind.Period);
+                    pathBuilder.Append('.');
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                throw new QueryParseException(alternativeErrorMessage ?? "Field name expected.");
+            }
+        }
     }
 
     protected CountExpression? TryParseCount()

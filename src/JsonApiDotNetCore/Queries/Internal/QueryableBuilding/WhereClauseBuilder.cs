@@ -85,6 +85,22 @@ public class WhereClauseBuilder : QueryClauseBuilder<Type?>
             : Expression.Call(typeof(Enumerable), "Any", elementType.AsArray(), source);
     }
 
+    public override Expression VisitIsType(IsTypeExpression expression, Type? argument)
+    {
+        Expression property = expression.TargetToOneRelationship != null ? Visit(expression.TargetToOneRelationship, argument) : LambdaScope.Accessor;
+        TypeBinaryExpression typeCheck = Expression.TypeIs(property, expression.DerivedType.ClrType);
+
+        if (expression.Child == null)
+        {
+            return typeCheck;
+        }
+
+        UnaryExpression derivedAccessor = Expression.Convert(property, expression.DerivedType.ClrType);
+        Expression filter = WithLambdaScopeAccessor(derivedAccessor, () => Visit(expression.Child, argument));
+
+        return Expression.AndAlso(typeCheck, filter);
+    }
+
     public override Expression VisitMatchText(MatchTextExpression expression, Type? argument)
     {
         Expression property = Visit(expression.TargetAttribute, argument);

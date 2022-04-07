@@ -3,13 +3,13 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2021.3.0",
+      "version": "2021.3.4",
       "commands": [
         "jb"
       ]
     },
     "regitlint": {
-      "version": "6.0.6",
+      "version": "6.0.8",
       "commands": [
         "regitlint"
       ]
@@ -21,7 +21,7 @@
       ]
     },
     "dotnet-reportgenerator-globaltool": {
-      "version": "5.0.0",
+      "version": "5.1.3",
       "commands": [
         "reportgenerator"
       ]

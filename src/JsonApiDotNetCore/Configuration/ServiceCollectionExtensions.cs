@@ -6,6 +6,8 @@ using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
+
 namespace JsonApiDotNetCore.Configuration;
 
 [PublicAPI]
@@ -16,9 +18,11 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// Configures JsonApiDotNetCore by registering resources manually.
     /// </summary>
+#pragma warning disable AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     public static IServiceCollection AddJsonApi(this IServiceCollection services, Action<JsonApiOptions>? options = null,
         Action<ServiceDiscoveryFacade>? discovery = null, Action<ResourceGraphBuilder>? resources = null, IMvcCoreBuilder? mvcBuilder = null,
         ICollection<Type>? dbContextTypes = null)
+#pragma warning restore AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     {
         ArgumentGuard.NotNull(services, nameof(services));
 
@@ -111,7 +115,7 @@ public static class ServiceCollectionExtensions
 
         if (!seenCompatibleInterface)
         {
-            throw new InvalidConfigurationException($"{implementationType} does not implement any of the expected JsonApiDotNetCore interfaces.");
+            throw new InvalidConfigurationException($"Type '{implementationType}' does not implement any of the expected JsonApiDotNetCore interfaces.");
         }
     }
 

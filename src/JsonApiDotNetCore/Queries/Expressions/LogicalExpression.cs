@@ -48,11 +48,21 @@ public class LogicalExpression : FilterExpression
 
     public override string ToString()
     {
+        return InnerToString(false);
+    }
+
+    public override string ToFullString()
+    {
+        return InnerToString(true);
+    }
+
+    private string InnerToString(bool toFullString)
+    {
         var builder = new StringBuilder();
 
         builder.Append(Operator.ToString().Camelize());
         builder.Append('(');
-        builder.Append(string.Join(",", Terms.Select(term => term.ToString())));
+        builder.Append(string.Join(",", Terms.Select(term => toFullString ? term.ToFullString() : term.ToString())));
         builder.Append(')');
 
         return builder.ToString();

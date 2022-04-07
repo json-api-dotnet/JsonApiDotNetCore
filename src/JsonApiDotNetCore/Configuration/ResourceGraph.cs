@@ -42,7 +42,7 @@ public sealed class ResourceGraph : IResourceGraph
 
         if (resourceType == null)
         {
-            throw new InvalidOperationException($"Resource type '{publicName}' does not exist.");
+            throw new InvalidOperationException($"Resource type '{publicName}' does not exist in the resource graph.");
         }
 
         return resourceType;
@@ -63,7 +63,7 @@ public sealed class ResourceGraph : IResourceGraph
 
         if (resourceType == null)
         {
-            throw new InvalidOperationException($"Resource of type '{resourceClrType.Name}' does not exist.");
+            throw new InvalidOperationException($"Type '{resourceClrType}' does not exist in the resource graph.");
         }
 
         return resourceType;
@@ -91,7 +91,7 @@ public sealed class ResourceGraph : IResourceGraph
     }
 
     /// <inheritdoc />
-    public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic?>> selector)
+    public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable
     {
         ArgumentGuard.NotNull(selector, nameof(selector));
@@ -100,7 +100,7 @@ public sealed class ResourceGraph : IResourceGraph
     }
 
     /// <inheritdoc />
-    public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic?>> selector)
+    public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable
     {
         ArgumentGuard.NotNull(selector, nameof(selector));
@@ -109,7 +109,7 @@ public sealed class ResourceGraph : IResourceGraph
     }
 
     /// <inheritdoc />
-    public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic?>> selector)
+    public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable
     {
         ArgumentGuard.NotNull(selector, nameof(selector));
@@ -117,7 +117,7 @@ public sealed class ResourceGraph : IResourceGraph
         return FilterFields<TResource, RelationshipAttribute>(selector);
     }
 
-    private IReadOnlyCollection<TField> FilterFields<TResource, TField>(Expression<Func<TResource, dynamic?>> selector)
+    private IReadOnlyCollection<TField> FilterFields<TResource, TField>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable
         where TField : ResourceFieldAttribute
     {
@@ -157,7 +157,7 @@ public sealed class ResourceGraph : IResourceGraph
         return (IReadOnlyCollection<TKind>)resourceType.Fields;
     }
 
-    private IEnumerable<string> ToMemberNames<TResource>(Expression<Func<TResource, dynamic?>> selector)
+    private IEnumerable<string> ToMemberNames<TResource>(Expression<Func<TResource, object?>> selector)
     {
         Expression selectorBody = RemoveConvert(selector.Body);
 

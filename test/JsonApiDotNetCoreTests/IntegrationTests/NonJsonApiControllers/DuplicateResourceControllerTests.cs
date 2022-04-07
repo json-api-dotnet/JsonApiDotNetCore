@@ -22,9 +22,4 @@ public sealed class DuplicateResourceControllerTests : IntegrationTestContext<Te
         // Assert
         action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage("Multiple controllers found for resource type 'knownResources'.");
     }
-
-    public override void Dispose()
-    {
-        // Prevents crash when test cleanup tries to access lazily constructed Factory.
-    }
 }

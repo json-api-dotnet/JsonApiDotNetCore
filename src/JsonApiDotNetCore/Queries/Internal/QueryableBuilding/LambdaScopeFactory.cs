@@ -19,6 +19,6 @@ public sealed class LambdaScopeFactory
     {
         ArgumentGuard.NotNull(elementType, nameof(elementType));
 
-        return new LambdaScope(_nameFactory, elementType, accessorExpression);
+        return LambdaScope.Create(_nameFactory, elementType, accessorExpression);
     }
 }

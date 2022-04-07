@@ -41,9 +41,11 @@ public class CarCompositeKeyAwareRepository<TResource, TId> : EntityFrameworkCor
             queryLayer.Sort = (SortExpression?)_writer.Visit(queryLayer.Sort, null);
         }
 
-        if (queryLayer.Projection != null)
+        if (queryLayer.Selection is { IsEmpty: false })
         {
-            foreach (QueryLayer? nextLayer in queryLayer.Projection.Values.Where(layer => layer != null))
+            foreach (QueryLayer? nextLayer in queryLayer.Selection.GetResourceTypes()
+                .Select(resourceType => queryLayer.Selection.GetOrCreateSelectors(resourceType))
+                .SelectMany(selectors => selectors.Select(selector => selector.Value).Where(layer => layer != null)))
             {
                 RecursiveRewriteFilterInLayer(nextLayer!);
             }

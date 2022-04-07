@@ -53,11 +53,11 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     }
 
     /// <inheritdoc />
-    public async Task<TResource> GetForCreateAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
+    public async Task<TResource> GetForCreateAsync<TResource, TId>(Type resourceClrType, TId id, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>
     {
         dynamic repository = GetWriteRepository(typeof(TResource));
-        return await repository.GetForCreateAsync(id, cancellationToken);
+        return await repository.GetForCreateAsync(resourceClrType, id, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -85,11 +85,11 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     }
 
     /// <inheritdoc />
-    public async Task DeleteAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
+    public async Task DeleteAsync<TResource, TId>(TResource? resourceFromDatabase, TId id, CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>
     {
         dynamic repository = GetWriteRepository(typeof(TResource));
-        await repository.DeleteAsync(id, cancellationToken);
+        await repository.DeleteAsync(resourceFromDatabase, id, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -101,11 +101,12 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     }
 
     /// <inheritdoc />
-    public async Task AddToToManyRelationshipAsync<TResource, TId>(TId leftId, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
+    public async Task AddToToManyRelationshipAsync<TResource, TId>(TResource? leftResource, TId leftId, ISet<IIdentifiable> rightResourceIds,
+        CancellationToken cancellationToken)
         where TResource : class, IIdentifiable<TId>
     {
         dynamic repository = GetWriteRepository(typeof(TResource));
-        await repository.AddToToManyRelationshipAsync(leftId, rightResourceIds, cancellationToken);
+        await repository.AddToToManyRelationshipAsync(leftResource, leftId, rightResourceIds, cancellationToken);
     }
 
     /// <inheritdoc />

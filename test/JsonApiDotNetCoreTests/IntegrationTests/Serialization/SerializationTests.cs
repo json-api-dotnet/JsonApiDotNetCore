@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Net;
-using System.Text.Json.Serialization;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -34,11 +33,6 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         options.AllowClientGeneratedIds = true;
         options.IncludeJsonApiVersion = false;
         options.IncludeTotalResourceCount = true;
-
-        if (!options.SerializerOptions.Converters.Any(converter => converter is JsonTimeSpanConverter))
-        {
-            options.SerializerOptions.Converters.Add(new JsonTimeSpanConverter());
-        }
     }
 
     [Fact]
@@ -59,7 +53,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteHeadAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         httpResponse.Content.Headers.ContentLength.Should().BeGreaterThan(0);
 
@@ -76,7 +70,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteHeadAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         httpResponse.Content.Headers.ContentLength.Should().BeGreaterThan(0);
 
@@ -103,7 +97,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Should().BeJson(@"{
   ""links"": {
@@ -187,7 +181,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Should().BeJson(@"{
   ""links"": {
@@ -235,7 +229,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Should().BeJson(@"{
   ""links"": {
@@ -295,7 +289,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Should().BeJson(@"{
   ""links"": {
@@ -340,7 +334,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
 
@@ -378,7 +372,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Should().BeJson(@"{
   ""links"": {
@@ -429,7 +423,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Should().BeJson(@"{
   ""links"": {
@@ -458,7 +452,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Should().BeJson(@"{
   ""links"": {
@@ -510,7 +504,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Should().BeJson(@"{
   ""links"": {
@@ -543,7 +537,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Should().BeJson(@"{
   ""links"": {
@@ -576,7 +570,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         string[] meetingIds = meeting.Attendees.Select(attendee => attendee.StringId!).OrderBy(id => id).ToArray();
 
@@ -636,7 +630,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
         responseDocument.Should().BeJson(@"{
   ""links"": {
@@ -700,7 +694,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Should().BeJson(@"{
   ""links"": {
@@ -770,7 +764,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
     }
 
     [Fact]
@@ -794,7 +788,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Should().BeJson(@"{
   ""jsonapi"": {
@@ -822,7 +816,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
         // Assert
-        httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NotFound);
 
         string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
 
