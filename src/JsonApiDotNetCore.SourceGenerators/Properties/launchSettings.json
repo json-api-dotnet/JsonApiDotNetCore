@@ -2,7 +2,7 @@
   "profiles": {
     "JsonApiDotNetCore.SourceGenerators": {
       "commandName": "DebugRoslynComponent",
-      "targetProject": "..\\..\\test\\SourceGeneratorDebugger\\SourceGeneratorDebugger.csproj"
+      "targetProject": "..\\Examples\\JsonApiDotNetCoreExample\\JsonApiDotNetCoreExample.csproj"
     }
   }
 }

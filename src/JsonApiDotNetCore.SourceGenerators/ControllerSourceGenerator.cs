@@ -13,6 +13,12 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace JsonApiDotNetCore.SourceGenerators
 {
+    // To debug in Visual Studio (requires v17.2 or higher):
+    // - Set JsonApiDotNetCore.SourceGenerators as startup project
+    // - Add a breakpoint at the start of the Initialize or Execute method
+    // - Optional: change targetProject in Properties\launchSettings.json
+    // - Press F5
+
     [Generator(LanguageNames.CSharp)]
     public sealed class ControllerSourceGenerator : ISourceGenerator
     {

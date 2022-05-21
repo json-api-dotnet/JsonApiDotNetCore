@@ -4,7 +4,7 @@
     <AspNetVersion>6.0.*</AspNetVersion>
     <EFCoreVersion>6.0.*</EFCoreVersion>
     <EFCorePostgresVersion>6.0.*</EFCorePostgresVersion>
-    <MicrosoftCodeAnalysisVersion>4.1.*</MicrosoftCodeAnalysisVersion>
+    <MicrosoftCodeAnalysisVersion>4.2.*</MicrosoftCodeAnalysisVersion>
     <HumanizerVersion>2.14.1</HumanizerVersion>
     <JsonApiDotNetCoreVersionPrefix>5.0.2</JsonApiDotNetCoreVersionPrefix>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
@@ -34,7 +34,7 @@
   <!-- Test Project Dependencies -->
   <PropertyGroup>
     <CoverletVersion>3.1.2</CoverletVersion>
-    <MoqVersion>4.17.2</MoqVersion>
-    <TestSdkVersion>17.1.0</TestSdkVersion>
+    <MoqVersion>4.18.1</MoqVersion>
+    <TestSdkVersion>17.2.0</TestSdkVersion>
   </PropertyGroup>
 </Project>
