@@ -1,9 +1,6 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Controllers;
 
-// ReSharper disable CheckNamespace
-#pragma warning disable AV1505 // Namespace should match with assembly name
-
 namespace JsonApiDotNetCore.Resources.Annotations;
 
 /// <summary>
