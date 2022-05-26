@@ -13,8 +13,9 @@ builder.Services.AddJsonApi<SampleDbContext>(options =>
     options.Namespace = "api";
     options.UseRelativeLinks = true;
     options.IncludeTotalResourceCount = true;
+    options.DefaultPageSize = new PageSize(2);
     options.SerializerOptions.WriteIndented = true;
-});
+}, discovery => discovery.AddCurrentAssembly());
 
 WebApplication app = builder.Build();
 
