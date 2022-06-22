@@ -37,7 +37,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         string[] expected =
         {
             "-fileEntries:content",
-            "fileSystemEntries:name",
+            "fileEntries:name",
             "fileEntries:length",
             "fileSystemEntries:parent.fileSystemEntries:name",
             "fileSystemEntries:parent.fileSystemEntries:parent.fileSystemEntries:name"
@@ -103,7 +103,7 @@ public sealed class CreateSortExpressionFromLambdaTests
             "fileSystemEntries:parent.fileEntries:content",
             "count(directoryEntries:subdirectories)",
             "count(fileSystemEntries:parent.directoryEntries:files)",
-            "-fileSystemEntries:name"
+            "-directoryEntries:name"
         };
 
         expression.ToFullString().Should().Be(string.Join(',', expected));
