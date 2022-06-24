@@ -2,18 +2,18 @@
 name: Bug report
 about: Create a report to help us improve
 title: ''
-labels: ''
+labels: 'bug'
 assignees: ''
 
 ---
 
-_Please read our [Contributing Guides](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/.github/CONTRIBUTING.md) before submitting a bug._
+<!-- Please read our [Contributing Guides](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/.github/CONTRIBUTING.md) before submitting a bug. -->
 
 #### DESCRIPTION
-_A clear and concise description of what the bug is._
+<!-- A clear and concise description of what the bug is. -->
 
 #### STEPS TO REPRODUCE
-_Consider to include your code here, such as models, DbContext, controllers, resource services, repositories, resource definitions etc. Please also include the request URL with body (if applicable) and the full exception stack trace (set `options.IncludeExceptionStackTraceInErrors` to `true`) in case of errors._ It may also be helpful to include the produced SQL, which can be made visible in logs by adding this to appsettings.json:
+<!-- Consider to include your code here, such as models, DbContext, controllers, resource services, repositories, resource definitions etc. Please also include the request URL with body (if applicable) and the full exception stack trace (set `options.IncludeExceptionStackTraceInErrors` to `true`) in case of errors._ It may also be helpful to include the produced SQL, which can be made visible in logs by adding this to appsettings.json:
 
 ```json
 {
@@ -24,16 +24,17 @@ _Consider to include your code here, such as models, DbContext, controllers, res
   }
 }
 ```
+-->
 
 1.
 2.
 3.
 
 #### EXPECTED BEHAVIOR
-_A clear and concise description of what you expected to happen._
+<!-- A clear and concise description of what you expected to happen. -->
 
 #### ACTUAL BEHAVIOR
-_A clear and concise description of what happens instead._
+<!-- A clear and concise description of what happens instead. -->
 
 #### VERSIONS USED
 - JsonApiDotNetCore version:

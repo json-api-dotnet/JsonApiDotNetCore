@@ -105,9 +105,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         }
     }
 
-#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     protected virtual IQueryable<TResource> ApplyQueryLayer(QueryLayer queryLayer)
-#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
         _traceWriter.LogMethodStart(new
         {
@@ -151,9 +149,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         }
     }
 
-#pragma warning disable AV1130 // Return type in method signature should be an interface to an unchangeable collection
     protected virtual IQueryable<TResource> GetAll()
-#pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
         return _dbContext.Set<TResource>();
     }
