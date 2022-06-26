@@ -18,7 +18,7 @@ internal sealed class CascadingCodeTimer : ICodeTimer
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            // Be default, measurements using Stopwatch can differ 25%-30% on the same function on the same computer.
+            // By default, measurements using Stopwatch can differ 25%-30% on the same function on the same computer.
             // The steps below ensure to get an accuracy of 0.1%-0.2%. With this accuracy, algorithms can be tested and compared.
             // https://www.codeproject.com/Articles/61964/Performance-Tests-Precise-Run-Time-Measurements-wi
 
