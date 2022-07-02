@@ -1,0 +1,11 @@
+﻿{
+  "profiles": {
+    "QueryWorkerService": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
