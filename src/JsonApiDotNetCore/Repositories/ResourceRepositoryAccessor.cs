@@ -126,8 +126,8 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
 
     protected virtual object ResolveReadRepository(ResourceType resourceType)
     {
-        Type resourceDefinitionType = typeof(IResourceReadRepository<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
-        return _serviceProvider.GetRequiredService(resourceDefinitionType);
+        Type repositoryType = typeof(IResourceReadRepository<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
+        return _serviceProvider.GetRequiredService(repositoryType);
     }
 
     private object GetWriteRepository(Type resourceClrType)
