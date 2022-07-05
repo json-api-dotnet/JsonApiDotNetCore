@@ -31,7 +31,7 @@ internal sealed class ResourceObjectSchemaGenerator
         _allowClientGeneratedIds = options.AllowClientGeneratedIds;
 
         _resourceFieldObjectSchemaBuilderFactory = resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor,
-            defaultSchemaGenerator, _resourceTypeSchemaGenerator, options.SerializerOptions.PropertyNamingPolicy);
+            defaultSchemaGenerator, _resourceTypeSchemaGenerator, options);
     }
 
     public OpenApiSchema GenerateSchema(Type resourceObjectType)

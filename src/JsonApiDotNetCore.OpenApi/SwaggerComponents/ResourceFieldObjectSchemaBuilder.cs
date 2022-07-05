@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Text.Json;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
@@ -23,24 +23,27 @@ internal sealed class ResourceFieldObjectSchemaBuilder
     private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
+    private readonly IJsonApiOptions _options;
     private readonly SchemaRepository _resourceSchemaRepository = new();
     private readonly NullableReferenceSchemaGenerator _nullableReferenceSchemaGenerator;
     private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
 
     public ResourceFieldObjectSchemaBuilder(ResourceTypeInfo resourceTypeInfo, ISchemaRepositoryAccessor schemaRepositoryAccessor,
-        SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, JsonNamingPolicy? namingPolicy)
+        SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, IJsonApiOptions options)
     {
         ArgumentGuard.NotNull(resourceTypeInfo, nameof(resourceTypeInfo));
         ArgumentGuard.NotNull(schemaRepositoryAccessor, nameof(schemaRepositoryAccessor));
         ArgumentGuard.NotNull(defaultSchemaGenerator, nameof(defaultSchemaGenerator));
         ArgumentGuard.NotNull(resourceTypeSchemaGenerator, nameof(resourceTypeSchemaGenerator));
+        ArgumentGuard.NotNull(options, nameof(options));
 
         _resourceTypeInfo = resourceTypeInfo;
         _schemaRepositoryAccessor = schemaRepositoryAccessor;
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
+        _options = options;
 
-        _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(schemaRepositoryAccessor, namingPolicy);
+        _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(schemaRepositoryAccessor, options.SerializerOptions.PropertyNamingPolicy);
         _schemasForResourceFields = GetFieldSchemas();
     }
 
@@ -113,7 +116,7 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
         return fieldTypeCategory switch
         {
-            TypeCategory.NonNullableReferenceType => true,
+            TypeCategory.NonNullableReferenceType => hasRequiredAttribute || _options.ValidateModelState,
             TypeCategory.ValueType => hasRequiredAttribute,
             TypeCategory.NullableReferenceType or TypeCategory.NullableValueType => hasRequiredAttribute,
             _ => throw new UnreachableCodeException()
