@@ -28,7 +28,7 @@ public sealed class SingleOrManyDataConverterFactory : JsonConverterFactory
     private sealed class SingleOrManyDataConverter<T> : JsonObjectConverter<SingleOrManyData<T>>
         where T : class, IResourceIdentity, new()
     {
-        public override SingleOrManyData<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions serializerOptions)
+        public override SingleOrManyData<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var objects = new List<T?>();
             bool isManyData = false;
@@ -54,7 +54,7 @@ public sealed class SingleOrManyDataConverterFactory : JsonConverterFactory
                     }
                     case JsonTokenType.StartObject:
                     {
-                        var resourceObject = ReadSubTree<T>(ref reader, serializerOptions);
+                        var resourceObject = ReadSubTree<T>(ref reader, options);
                         objects.Add(resourceObject);
                         break;
                     }

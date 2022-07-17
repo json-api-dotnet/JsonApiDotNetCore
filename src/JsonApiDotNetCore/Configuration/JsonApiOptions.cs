@@ -11,8 +11,8 @@ namespace JsonApiDotNetCore.Configuration;
 [PublicAPI]
 public sealed class JsonApiOptions : IJsonApiOptions
 {
-    private Lazy<JsonSerializerOptions> _lazySerializerWriteOptions;
-    private Lazy<JsonSerializerOptions> _lazySerializerReadOptions;
+    private readonly Lazy<JsonSerializerOptions> _lazySerializerWriteOptions;
+    private readonly Lazy<JsonSerializerOptions> _lazySerializerReadOptions;
 
     /// <inheritdoc />
     JsonSerializerOptions IJsonApiOptions.SerializerReadOptions => _lazySerializerReadOptions.Value;
@@ -110,7 +110,8 @@ public sealed class JsonApiOptions : IJsonApiOptions
 
     public JsonApiOptions()
     {
-        _lazySerializerReadOptions = new Lazy<JsonSerializerOptions>(() => new JsonSerializerOptions(SerializerOptions), LazyThreadSafetyMode.PublicationOnly);
+        _lazySerializerReadOptions =
+            new Lazy<JsonSerializerOptions>(() => new JsonSerializerOptions(SerializerOptions), LazyThreadSafetyMode.ExecutionAndPublication);
 
         _lazySerializerWriteOptions = new Lazy<JsonSerializerOptions>(() => new JsonSerializerOptions(SerializerOptions)
         {
@@ -119,6 +120,6 @@ public sealed class JsonApiOptions : IJsonApiOptions
                 new WriteOnlyDocumentConverter(),
                 new WriteOnlyRelationshipObjectConverter()
             }
-        }, LazyThreadSafetyMode.PublicationOnly);
+        }, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 }
