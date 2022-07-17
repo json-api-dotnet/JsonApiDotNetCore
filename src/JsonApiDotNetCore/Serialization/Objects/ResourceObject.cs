@@ -7,33 +7,20 @@ namespace JsonApiDotNetCore.Serialization.Objects;
 /// See https://jsonapi.org/format/1.1/#document-resource-objects.
 /// </summary>
 [PublicAPI]
-public sealed class ResourceObject : IResourceIdentity
+public sealed class ResourceObject : ResourceIdentifierObject
 {
-    [JsonPropertyName("type")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-    public string? Type { get; set; }
-
-    [JsonPropertyName("id")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Id { get; set; }
-
-    [JsonPropertyName("lid")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Lid { get; set; }
-
     [JsonPropertyName("attributes")]
+    [JsonPropertyOrder(1)]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IDictionary<string, object?>? Attributes { get; set; }
 
     [JsonPropertyName("relationships")]
+    [JsonPropertyOrder(2)]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IDictionary<string, RelationshipObject?>? Relationships { get; set; }
 
     [JsonPropertyName("links")]
+    [JsonPropertyOrder(3)]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ResourceLinks? Links { get; set; }
-
-    [JsonPropertyName("meta")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public IDictionary<string, object?>? Meta { get; set; }
 }

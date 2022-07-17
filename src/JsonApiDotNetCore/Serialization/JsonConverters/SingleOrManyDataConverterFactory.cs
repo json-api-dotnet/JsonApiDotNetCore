@@ -26,7 +26,7 @@ public sealed class SingleOrManyDataConverterFactory : JsonConverterFactory
     }
 
     private sealed class SingleOrManyDataConverter<T> : JsonObjectConverter<SingleOrManyData<T>>
-        where T : class, IResourceIdentity, new()
+        where T : ResourceIdentifierObject, new()
     {
         public override SingleOrManyData<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
