@@ -3,6 +3,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.JsonConverters;
 
 namespace JsonApiDotNetCore.Configuration;
@@ -11,14 +12,20 @@ namespace JsonApiDotNetCore.Configuration;
 [PublicAPI]
 public sealed class JsonApiOptions : IJsonApiOptions
 {
-    private readonly Lazy<JsonSerializerOptions> _lazySerializerWriteOptions;
-    private readonly Lazy<JsonSerializerOptions> _lazySerializerReadOptions;
+    private readonly Lazy<JsonApiSerializationContext> _lazySerializerReadContext;
+    private readonly Lazy<JsonApiSerializationContext> _lazySerializerWriteContext;
 
     /// <inheritdoc />
-    JsonSerializerOptions IJsonApiOptions.SerializerReadOptions => _lazySerializerReadOptions.Value;
+    JsonApiSerializationContext IJsonApiOptions.SerializationReadContext => _lazySerializerReadContext.Value;
 
     /// <inheritdoc />
-    JsonSerializerOptions IJsonApiOptions.SerializerWriteOptions => _lazySerializerWriteOptions.Value;
+    JsonSerializerOptions IJsonApiOptions.SerializerReadOptions => ((IJsonApiOptions)this).SerializationReadContext.Options;
+
+    /// <inheritdoc />
+    JsonApiSerializationContext IJsonApiOptions.SerializationWriteContext => _lazySerializerWriteContext.Value;
+
+    /// <inheritdoc />
+    JsonSerializerOptions IJsonApiOptions.SerializerWriteOptions => ((IJsonApiOptions)this).SerializationWriteContext.Options;
 
     /// <inheritdoc />
     public string? Namespace { get; set; }
@@ -110,16 +117,16 @@ public sealed class JsonApiOptions : IJsonApiOptions
 
     public JsonApiOptions()
     {
-        _lazySerializerReadOptions =
-            new Lazy<JsonSerializerOptions>(() => new JsonSerializerOptions(SerializerOptions), LazyThreadSafetyMode.ExecutionAndPublication);
+        _lazySerializerReadContext = new Lazy<JsonApiSerializationContext>(() => new JsonApiSerializationContext(new JsonSerializerOptions(SerializerOptions)),
+            LazyThreadSafetyMode.ExecutionAndPublication);
 
-        _lazySerializerWriteOptions = new Lazy<JsonSerializerOptions>(() => new JsonSerializerOptions(SerializerOptions)
+        _lazySerializerWriteContext = new Lazy<JsonApiSerializationContext>(() => new JsonApiSerializationContext(new JsonSerializerOptions(SerializerOptions)
         {
             Converters =
             {
                 new WriteOnlyDocumentConverter(),
                 new WriteOnlyRelationshipObjectConverter()
             }
-        }, LazyThreadSafetyMode.ExecutionAndPublication);
+        }), LazyThreadSafetyMode.ExecutionAndPublication);
     }
 }

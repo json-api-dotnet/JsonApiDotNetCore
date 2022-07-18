@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -44,7 +45,7 @@ public sealed class JsonApiMiddleware
 
         using (CodeTimingSessionManager.Current.Measure("JSON:API middleware"))
         {
-            if (!await ValidateIfMatchHeaderAsync(httpContext, options.SerializerWriteOptions))
+            if (!await ValidateIfMatchHeaderAsync(httpContext, options.SerializationWriteContext))
             {
                 return;
             }
@@ -54,8 +55,8 @@ public sealed class JsonApiMiddleware
 
             if (primaryResourceType != null)
             {
-                if (!await ValidateContentTypeHeaderAsync(HeaderConstants.MediaType, httpContext, options.SerializerWriteOptions) ||
-                    !await ValidateAcceptHeaderAsync(MediaType, httpContext, options.SerializerWriteOptions))
+                if (!await ValidateContentTypeHeaderAsync(HeaderConstants.MediaType, httpContext, options.SerializationWriteContext) ||
+                    !await ValidateAcceptHeaderAsync(MediaType, httpContext, options.SerializationWriteContext))
                 {
                     return;
                 }
@@ -66,8 +67,8 @@ public sealed class JsonApiMiddleware
             }
             else if (IsRouteForOperations(routeValues))
             {
-                if (!await ValidateContentTypeHeaderAsync(HeaderConstants.AtomicOperationsMediaType, httpContext, options.SerializerWriteOptions) ||
-                    !await ValidateAcceptHeaderAsync(AtomicOperationsMediaType, httpContext, options.SerializerWriteOptions))
+                if (!await ValidateContentTypeHeaderAsync(HeaderConstants.AtomicOperationsMediaType, httpContext, options.SerializationWriteContext) ||
+                    !await ValidateAcceptHeaderAsync(AtomicOperationsMediaType, httpContext, options.SerializationWriteContext))
                 {
                     return;
                 }
@@ -91,11 +92,11 @@ public sealed class JsonApiMiddleware
         }
     }
 
-    private async Task<bool> ValidateIfMatchHeaderAsync(HttpContext httpContext, JsonSerializerOptions serializerOptions)
+    private async Task<bool> ValidateIfMatchHeaderAsync(HttpContext httpContext, JsonApiSerializationContext serializationContext)
     {
         if (httpContext.Request.Headers.ContainsKey(HeaderNames.IfMatch))
         {
-            await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.PreconditionFailed)
+            await FlushResponseAsync(httpContext.Response, serializationContext, new ErrorObject(HttpStatusCode.PreconditionFailed)
             {
                 Title = "Detection of mid-air edit collisions using ETags is not supported.",
                 Source = new ErrorSource
@@ -120,13 +121,14 @@ public sealed class JsonApiMiddleware
             : null;
     }
 
-    private static async Task<bool> ValidateContentTypeHeaderAsync(string allowedContentType, HttpContext httpContext, JsonSerializerOptions serializerOptions)
+    private static async Task<bool> ValidateContentTypeHeaderAsync(string allowedContentType, HttpContext httpContext,
+        JsonApiSerializationContext serializationContext)
     {
         string? contentType = httpContext.Request.ContentType;
 
         if (contentType != null && contentType != allowedContentType)
         {
-            await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.UnsupportedMediaType)
+            await FlushResponseAsync(httpContext.Response, serializationContext, new ErrorObject(HttpStatusCode.UnsupportedMediaType)
             {
                 Title = "The specified Content-Type header value is not supported.",
                 Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' for the Content-Type header value.",
@@ -143,7 +145,7 @@ public sealed class JsonApiMiddleware
     }
 
     private static async Task<bool> ValidateAcceptHeaderAsync(MediaTypeHeaderValue allowedMediaTypeValue, HttpContext httpContext,
-        JsonSerializerOptions serializerOptions)
+        JsonApiSerializationContext serializationContext)
     {
         string[] acceptHeaders = httpContext.Request.Headers.GetCommaSeparatedValues("Accept");
 
@@ -176,7 +178,7 @@ public sealed class JsonApiMiddleware
 
         if (!seenCompatibleMediaType)
         {
-            await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.NotAcceptable)
+            await FlushResponseAsync(httpContext.Response, serializationContext, new ErrorObject(HttpStatusCode.NotAcceptable)
             {
                 Title = "The specified Accept header value does not contain any supported media types.",
                 Detail = $"Please include '{allowedMediaTypeValue}' in the Accept header values.",
@@ -192,7 +194,7 @@ public sealed class JsonApiMiddleware
         return true;
     }
 
-    private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerOptions serializerOptions, ErrorObject error)
+    private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonApiSerializationContext serializationContext, ErrorObject error)
     {
         httpResponse.ContentType = HeaderConstants.MediaType;
         httpResponse.StatusCode = (int)error.StatusCode;
@@ -202,7 +204,7 @@ public sealed class JsonApiMiddleware
             Errors = error.AsList()
         };
 
-        await JsonSerializer.SerializeAsync(httpResponse.Body, errorDocument, serializerOptions);
+        await JsonSerializer.SerializeAsync(httpResponse.Body, errorDocument, serializationContext.Document);
         await httpResponse.Body.FlushAsync();
     }
 

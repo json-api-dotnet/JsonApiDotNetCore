@@ -38,7 +38,7 @@ public sealed class ResponseModelAdapterTests
         Document document = responseModelAdapter.Convert(article);
 
         // Assert
-        string text = JsonSerializer.Serialize(document, new JsonSerializerOptions(options.SerializerWriteOptions));
+        string text = JsonSerializer.Serialize(document, options.SerializationWriteContext.Document);
 
         text.Should().BeJson(@"{
   ""data"": {
@@ -175,7 +175,7 @@ public sealed class ResponseModelAdapterTests
         });
 
         // Assert
-        string text = JsonSerializer.Serialize(document, new JsonSerializerOptions(options.SerializerWriteOptions));
+        string text = JsonSerializer.Serialize(document, options.SerializationWriteContext.Document);
 
         text.Should().BeJson(@"{
   ""data"": [
@@ -333,7 +333,7 @@ public sealed class ResponseModelAdapterTests
         Document document = responseModelAdapter.Convert(article);
 
         // Assert
-        string text = JsonSerializer.Serialize(document, new JsonSerializerOptions(options.SerializerWriteOptions));
+        string text = JsonSerializer.Serialize(document, options.SerializationWriteContext.Document);
 
         text.Should().BeJson(@"{
   ""data"": {

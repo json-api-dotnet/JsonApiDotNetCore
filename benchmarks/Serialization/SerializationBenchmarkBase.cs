@@ -1,4 +1,3 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Benchmarks.Tools;
 using JetBrains.Annotations;
@@ -8,6 +7,7 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -15,7 +15,7 @@ namespace Benchmarks.Serialization;
 
 public abstract class SerializationBenchmarkBase
 {
-    protected readonly JsonSerializerOptions SerializerWriteOptions;
+    protected readonly JsonApiSerializationContext SerializationWriteContext;
     protected readonly IResponseModelAdapter ResponseModelAdapter;
     protected readonly IResourceGraph ResourceGraph;
 
@@ -33,7 +33,7 @@ public abstract class SerializationBenchmarkBase
         };
 
         ResourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<OutgoingResource, int>().Build();
-        SerializerWriteOptions = ((IJsonApiOptions)options).SerializerWriteOptions;
+        SerializationWriteContext = ((IJsonApiOptions)options).SerializationWriteContext;
 
         // ReSharper disable VirtualMemberCallInConstructor
         JsonApiRequest request = CreateJsonApiRequest(ResourceGraph);

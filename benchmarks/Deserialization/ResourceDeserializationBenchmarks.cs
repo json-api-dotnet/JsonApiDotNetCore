@@ -133,7 +133,7 @@ public class ResourceDeserializationBenchmarks : DeserializationBenchmarkBase
     [Benchmark]
     public object? DeserializeResourceRequest()
     {
-        var document = JsonSerializer.Deserialize<Document>(RequestBody, SerializerReadOptions)!;
+        Document document = JsonSerializer.Deserialize(RequestBody, SerializationReadContext.Document)!;
         return DocumentAdapter.Convert(document);
     }
 
