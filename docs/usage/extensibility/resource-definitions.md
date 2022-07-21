@@ -29,7 +29,7 @@ For various reasons (see examples below) you may need to change parts of the que
 `JsonApiResourceDefinition<TResource, TId>` (which is an empty implementation of `IResourceDefinition<TResource, TId>`) provides overridable methods that pass you the result of query string parameter parsing.
 The value returned by you determines what will be used to execute the query.
 
-An intermediate format (`QueryExpression` and derived types) is used, which enables us to separate JSON:API implementation 
+An intermediate format (`QueryExpression` and derived types) is used, which enables us to separate JSON:API implementation
 from Entity Framework Core `IQueryable` execution.
 
 ### Excluding fields
@@ -218,7 +218,7 @@ _since v3_
 You can define additional query string parameters with the LINQ expression that should be used.
 If the key is present in a query string, the supplied LINQ expression will be added to the database query.
 
-Note this directly influences the Entity Framework Core `IQueryable`. As opposed to using `OnApplyFilter`, this enables the full range of Entity Framework Core operators. 
+Note this directly influences the Entity Framework Core `IQueryable`. As opposed to using `OnApplyFilter`, this enables the full range of Entity Framework Core operators.
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).
 
 ```c#
@@ -262,8 +262,8 @@ Click on a diagram to open it full-size in a new window.
 
 ### Create resource
 
-<a href="~/diagrams/resource-definition-create-resource.svg" target="_blank">
-<img src="~/diagrams/resource-definition-create-resource.svg" style="border: 1px solid #000">
+<a href="../../../docs/diagrams/resource-definition-create-resource.svg" target="_blank">
+<img src="../../../docs/diagrams/resource-definition-create-resource.svg" style="border: 1px solid #000">
 </a>
 
 1. User sends request to create a resource
@@ -278,8 +278,8 @@ Click on a diagram to open it full-size in a new window.
 
 ### Update Resource
 
-<a href="~/diagrams/resource-definition-update-resource.svg" target="_blank">
-<img src="~/diagrams/resource-definition-update-resource.svg" style="border: 1px solid #000">
+<a href="../../../docs/diagrams/resource-definition-update-resource.svg" target="_blank">
+<img src="../../../docs/diagrams/resource-definition-update-resource.svg" style="border: 1px solid #000">
 </a>
 
 1. User sends request to update resource with ID 1
@@ -294,8 +294,8 @@ Click on a diagram to open it full-size in a new window.
 
 ### Delete Resource
 
-<a href="~/diagrams/resource-definition-delete-resource.svg" target="_blank">
-<img src="~/diagrams/resource-definition-delete-resource.svg" style="border: 1px solid #000">
+<a href="../../diagrams/resource-definition-delete-resource.svg" target="_blank">
+<img src="../../diagrams/resource-definition-delete-resource.svg" style="border: 1px solid #000">
 </a>
 
 1. User sends request to delete resource with ID 1
@@ -306,8 +306,8 @@ Click on a diagram to open it full-size in a new window.
 
 ### Set Relationship
 
-<a href="~/diagrams/resource-definition-set-relationship.svg" target="_blank">
-<img src="~/diagrams/resource-definition-set-relationship.svg" style="border: 1px solid #000">
+<a href="../../diagrams/resource-definition-set-relationship.svg" target="_blank">
+<img src="../../diagrams/resource-definition-set-relationship.svg" style="border: 1px solid #000">
 </a>
 
 1. User sends request to assign two resources (green) to relationship 'name' (black) on resource 1 (yellow)
