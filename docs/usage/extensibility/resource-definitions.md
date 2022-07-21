@@ -262,8 +262,8 @@ Click on a diagram to open it full-size in a new window.
 
 ### Create resource
 
-<a href="../../../docs/diagrams/resource-definition-create-resource.svg" target="_blank">
-<img src="../../../docs/diagrams/resource-definition-create-resource.svg" style="border: 1px solid #000">
+<a href="../../diagrams/resource-definition-create-resource.svg" target="_blank">
+<img src="../../diagrams/resource-definition-create-resource.svg" style="border: 1px solid #000">
 </a>
 
 1. User sends request to create a resource
@@ -278,8 +278,8 @@ Click on a diagram to open it full-size in a new window.
 
 ### Update Resource
 
-<a href="../../../docs/diagrams/resource-definition-update-resource.svg" target="_blank">
-<img src="../../../docs/diagrams/resource-definition-update-resource.svg" style="border: 1px solid #000">
+<a href="../../diagrams/resource-definition-update-resource.svg" target="_blank">
+<img src="../../diagrams/resource-definition-update-resource.svg" style="border: 1px solid #000">
 </a>
 
 1. User sends request to update resource with ID 1
