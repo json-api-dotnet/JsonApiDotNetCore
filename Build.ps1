@@ -9,7 +9,7 @@ function CheckLastExitCode {
 function RunInspectCode {
     $outputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
     # passing --build instead of --no-build as workaround for https://youtrack.jetbrains.com/issue/RSRP-487054
-    jb inspectcode JsonApiDotNetCore.sln --build --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+    jb inspectcode JsonApiDotNetCore.sln --build --output="$outputPath" --profile=WarningSeverities.DotSettings --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
     CheckLastExitCode
 
     [xml]$xml = Get-Content "$outputPath"
@@ -48,7 +48,7 @@ function RunCleanupCode {
         $mergeCommitHash = git rev-parse "HEAD"
         $targetCommitHash = git rev-parse "$env:APPVEYOR_REPO_BRANCH"
 
-        regitlint -s JsonApiDotNetCore.sln --print-command --disable-jb-path-hack --jb --profile='\"JADNC Full Cleanup\"' --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $mergeCommitHash -b $targetCommitHash --fail-on-diff --print-diff --use-global
+        regitlint -s JsonApiDotNetCore.sln --print-command --disable-jb-path-hack --jb --profile='\"JADNC Full Cleanup\"' --jb --verbosity=WARN -f commits -a $mergeCommitHash -b $targetCommitHash --fail-on-diff --print-diff --use-global
         CheckLastExitCode
     }
 }

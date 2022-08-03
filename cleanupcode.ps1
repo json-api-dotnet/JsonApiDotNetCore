@@ -23,4 +23,4 @@ if ($LASTEXITCODE -ne 0) {
     throw "Package restore failed with exit code $LASTEXITCODE"
 }
 
-regitlint -s JsonApiDotNetCore.sln --print-command --disable-jb-path-hack --jb --profile='\"JADNC Full Cleanup\"' --jb --properties:Configuration=Release --jb --verbosity=WARN --use-global
+regitlint -s JsonApiDotNetCore.sln --print-command --disable-jb-path-hack --jb --profile='\"JADNC Full Cleanup\"' --jb --verbosity=WARN --use-global
