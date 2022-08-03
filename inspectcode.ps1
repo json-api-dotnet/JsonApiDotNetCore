@@ -2,15 +2,24 @@
 
 # This script runs code inspection and opens the results in a web browser.
 
-dotnet tool restore
+#dotnet tool restore
 
-if ($LASTEXITCODE -ne 0) {
-    throw "Tool restore failed with exit code $LASTEXITCODE"
-}
+dotnet tool uninstall --global jetbrains.resharper.globaltools
+dotnet tool install --global jetbrains.resharper.globaltools --version 2022.2.0
+
+dotnet tool uninstall --global regitlint
+dotnet tool install --global regitlint --version 6.0.8
+
+dotnet tool uninstall --global codecov.tool
+dotnet tool install --global codecov.tool --version 1.13.0
+
+dotnet tool uninstall --global dotnet-reportgenerator-globaltool
+dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.1.3
+
 
 $outputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
 $resultPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.html')
-dotnet jb inspectcode JsonApiDotNetCore.sln --build --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+jb inspectcode JsonApiDotNetCore.sln --build --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
 
 if ($LASTEXITCODE -ne 0) {
     throw "Code inspection failed with exit code $LASTEXITCODE"
