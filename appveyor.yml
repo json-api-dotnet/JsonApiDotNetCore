@@ -1,6 +1,6 @@
 image:
-  - Ubuntu
   - Visual Studio 2022
+  - Ubuntu
 
 version: '{build}'
 
@@ -9,8 +9,6 @@ stack: postgresql 13.4
 environment:
   PGUSER: postgres
   PGPASSWORD: Password12!
-  GIT_ACCESS_TOKEN:
-    secure: vw2jhp7V38fTOqphzFgnXtLwHoHRW2zM2K5RJgDAnmkoaIKT6jXLDIfkFdyVz9nJ
 
 branches:
   only:
@@ -36,63 +34,6 @@ for:
   services:
   - postgresql13
   # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
-  before_build:
-    - pwsh: |
-        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
-            # https://dotnet.github.io/docfx/tutorial/docfx_getting_started.html
-            git checkout $env:APPVEYOR_REPO_BRANCH -q
-        }
-        choco install docfx -y
-        if ($lastexitcode -ne 0) {
-            throw "docfx install failed with exit code $lastexitcode."
-        }
-  after_build:
-    - pwsh: |
-        CD ./docs
-        & ./generate-examples.ps1
-        & docfx docfx.json
-        if ($lastexitcode -ne 0) {
-            throw "docfx build failed with exit code $lastexitcode."
-        }
-
-        # https://www.appveyor.com/docs/how-to/git-push/
-        git config --global credential.helper store
-        Set-Content -Path "$HOME\.git-credentials" -Value "https://$($env:GIT_ACCESS_TOKEN):x-oauth-basic@github.com`n" -NoNewline
-        git config --global user.email "cibuild@jsonapi.net"
-        git config --global user.name "json-api-cibuild"
-        git config --global core.autocrlf false
-        git config --global core.safecrlf false
-        git clone https://github.com/json-api-dotnet/JsonApiDotNetCore.git -b gh-pages origin_site -q
-        Copy-Item origin_site/.git _site -recurse
-        Copy-Item CNAME _site/CNAME
-        Copy-Item home/*.html _site/
-        Copy-Item home/*.ico _site/
-        Copy-Item -Recurse home/assets/* _site/styles/
-        CD _site
-        git add -A 2>&1
-        git commit -m "Automated commit from cibuild" -q
-        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
-            git push origin gh-pages -q
-            echo "Documentation updated successfully."
-        }
-  artifacts:
-  - path: .\**\artifacts\**\*.nupkg
-    name: NuGet
-  deploy:
-  - provider: NuGet
-    skip_symbols: false
-    api_key:
-      secure: S9fkLwmhi7w+DGouXYqYq/1PGocnYo8UBUKwv+BGpWHnzE6yHZEYth3j/XJ9Ydsa
-    on:
-      branch: master
-      appveyor_repo_tag: true
-  - provider: NuGet
-    skip_symbols: false
-    api_key:
-      secure: S9fkLwmhi7w+DGouXYqYq/1PGocnYo8UBUKwv+BGpWHnzE6yHZEYth3j/XJ9Ydsa
-    on:
-      branch: /release\/.+/
-      appveyor_repo_tag: true
 
 build_script:
 - pwsh: |
