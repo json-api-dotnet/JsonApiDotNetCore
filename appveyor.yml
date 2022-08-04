@@ -1,6 +1,6 @@
 image:
-  - Visual Studio 2022
   - Ubuntu
+  - Visual Studio 2022
 
 version: '{build}'
 
@@ -9,6 +9,8 @@ stack: postgresql 13.4
 environment:
   PGUSER: postgres
   PGPASSWORD: Password12!
+  APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDTKr636a0ynQMX5pyr3kRsTOKR2OXV3bcT2G74dR6BwASsaoQ2DeuTfm5+dpA73B9rW+yPUqJ5q0xW1vL9zXW5rhb27cEUFCchaX62WLiqB0Jx1Z984alvYKtyctz96PyphF+Z0axyYrcmV4pXa4U3blX6v7TDau9B1nZAcYimOx5mjBasZceaEE+ajJ0/DK2FP4Fhqc5cztrR8rvKCquhfWHdNSiB9cW1C7E3+YMHTc71Gk4fD3as3Tbwgv5eIvDJ4CTxzntG9pO7i4ud3m9G/j1SwFBtOxG7edOspCfORYNrtdYva6GTJ0XXKn0NK2NP+N6HG8X3VI71Ks4r9YC5 rsa-key-20220804
+  APPVEYOR_SSH_BLOCK: false
 
 branches:
   only:
@@ -34,6 +36,12 @@ for:
   services:
   - postgresql13
   # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
+
+init:
+  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
+
+on_finish:
+  - sh: sleep 60m
 
 build_script:
 - pwsh: |
