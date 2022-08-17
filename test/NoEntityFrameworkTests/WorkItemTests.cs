@@ -45,7 +45,7 @@ public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicatio
             await dbContext.SaveChangesAsync();
         });
 
-        const string route = "/api/v1/workItems";
+        const string route = "/api/v1/workItems?filter=not(equals(title,'skipMe'))";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);

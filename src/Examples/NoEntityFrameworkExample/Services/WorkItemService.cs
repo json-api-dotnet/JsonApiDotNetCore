@@ -1,6 +1,9 @@
 using System.Data;
+using System.Diagnostics;
 using Dapper;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 using NoEntityFrameworkExample.Models;
@@ -11,16 +14,27 @@ namespace NoEntityFrameworkExample.Services;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class WorkItemService : IResourceService<WorkItem, int>
 {
+    private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
     private readonly string _connectionString;
 
-    public WorkItemService(IConfiguration configuration)
+    public WorkItemService(IConfiguration configuration, IEnumerable<IQueryConstraintProvider> constraintProviders)
     {
+        _constraintProviders = constraintProviders;
+
         string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
         _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
     }
 
     public async Task<IReadOnlyCollection<WorkItem>> GetAsync(CancellationToken cancellationToken)
     {
+        ExpressionInScope[] constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
+        FilterExpression[] filters = constraints.Select(constraint => constraint.Expression).OfType<FilterExpression>().ToArray();
+
+        foreach (FilterExpression filter in filters)
+        {
+            Debug.WriteLine("Incoming filter: " + filter);
+        }
+
         const string commandText = @"select * from ""WorkItems""";
         var commandDefinition = new CommandDefinition(commandText, cancellationToken: cancellationToken);
 
