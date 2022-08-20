@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.SourceGenerators
     // - Optional: change targetProject in Properties\launchSettings.json
     // - Press F5
 
-    [Generator(LanguageNames.CSharp)]
+    //[Generator(LanguageNames.CSharp)]
     public sealed class ControllerSourceGenerator : ISourceGenerator
     {
         private const string Category = "JsonApiDotNetCore";

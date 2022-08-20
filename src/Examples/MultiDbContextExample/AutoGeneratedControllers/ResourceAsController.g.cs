@@ -1,0 +1,16 @@
+﻿using Microsoft.Extensions.Logging;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Services;
+using MultiDbContextExample.Models;
+
+namespace MultiDbContextExample.Controllers;
+
+public sealed partial class ResourceAsController : JsonApiController<ResourceA, int>
+{
+    public ResourceAsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+        IResourceService<ResourceA, int> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
+    {
+    }
+}
