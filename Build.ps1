@@ -9,7 +9,7 @@ function CheckLastExitCode {
 function RunInspectCode {
     $outputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
     # passing --build instead of --no-build as workaround for https://youtrack.jetbrains.com/issue/RSRP-487054
-    jb inspectcode JsonApiDotNetCore.sln --no-build --output="$outputPath" --profile=WarningSeverities.DotSettings --severity=WARNING --verbosity=VERBOSE -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+    dotnet jb inspectcode JsonApiDotNetCore.sln --no-build --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=VERBOSE -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
     CheckLastExitCode
 
     [xml]$xml = Get-Content "$outputPath"
@@ -48,7 +48,7 @@ function RunCleanupCode {
         $mergeCommitHash = git rev-parse "HEAD"
         $targetCommitHash = git rev-parse "$env:APPVEYOR_REPO_BRANCH"
 
-        regitlint -s JsonApiDotNetCore.sln --print-command --disable-jb-path-hack --jb --profile='\"JADNC Full Cleanup\"' --jb --verbosity=WARN -f commits -a $mergeCommitHash -b $targetCommitHash --fail-on-diff --print-diff --use-global
+        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --disable-jb-path-hack --jb --profile='\"JADNC Full Cleanup\"' --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $mergeCommitHash -b $targetCommitHash --fail-on-diff --print-diff
         CheckLastExitCode
     }
 }
@@ -56,11 +56,11 @@ function RunCleanupCode {
 function ReportCodeCoverage {
     if ($env:APPVEYOR) {
         if ($IsWindows) {
-            codecov -f "**\coverage.cobertura.xml"
+            dotnet codecov -f "**\coverage.cobertura.xml"
         }
     }
     else {
-        reportgenerator -reports:**\coverage.cobertura.xml -targetdir:artifacts\coverage
+        dotnet reportgenerator -reports:**\coverage.cobertura.xml -targetdir:artifacts\coverage
     }
 
     CheckLastExitCode
@@ -94,22 +94,14 @@ function CreateNuGetPackage {
     CheckLastExitCode
 }
 
-#dotnet tool restore
-dotnet tool install --global jetbrains.resharper.globaltools --version 2022.2.0
+dotnet tool restore
 CheckLastExitCode
-dotnet tool install --global regitlint --version 6.0.8
-CheckLastExitCode
-dotnet tool install --global codecov.tool --version 1.13.0
-CheckLastExitCode
-dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.1.3
-CheckLastExitCode
-
 
 dotnet build -c Release
 CheckLastExitCode
 
 RunInspectCode
-#RunCleanupCode
+RunCleanupCode
 
 #dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
 #CheckLastExitCode
