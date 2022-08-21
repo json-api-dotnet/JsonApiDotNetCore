@@ -40,8 +40,8 @@ for:
 init:
   - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
 
-on_finish:
-  - sh: sleep 60m
+#on_finish:
+#  - sh: sleep 60m
 
 build_script:
 - pwsh: |
