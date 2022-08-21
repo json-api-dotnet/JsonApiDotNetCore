@@ -1,17 +1,9 @@
 <Project>
   <PropertyGroup>
     <TargetFrameworkName>net6.0</TargetFrameworkName>
-    <AspNetVersion>6.0.*</AspNetVersion>
-    <EFCoreVersion>6.0.*</EFCoreVersion>
-    <EFCorePostgresVersion>6.0.*</EFCorePostgresVersion>
-    <MicrosoftCodeAnalysisVersion>4.2.*</MicrosoftCodeAnalysisVersion>
-    <HumanizerVersion>2.14.1</HumanizerVersion>
     <JsonApiDotNetCoreVersionPrefix>5.0.3</JsonApiDotNetCoreVersionPrefix>
-    <WarningLevel>9999</WarningLevel>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <IsPackable>false</IsPackable>
-    <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
@@ -22,12 +14,5 @@
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <NoWarn>$(NoWarn);AV2210</NoWarn>
-  </PropertyGroup>
-
-  <!-- Test Project Dependencies -->
-  <PropertyGroup>
-    <CoverletVersion>3.1.2</CoverletVersion>
-    <MoqVersion>4.18.1</MoqVersion>
-    <TestSdkVersion>17.2.0</TestSdkVersion>
   </PropertyGroup>
 </Project>
