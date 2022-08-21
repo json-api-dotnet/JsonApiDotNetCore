@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>$(TargetFrameworkName)</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>JsonApiDotNetCore</RootNamespace>
   </PropertyGroup>
 </Project>

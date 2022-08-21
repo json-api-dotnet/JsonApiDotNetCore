@@ -1,6 +1,5 @@
 <Project>
   <PropertyGroup>
-    <TargetFrameworkName>net6.0</TargetFrameworkName>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
