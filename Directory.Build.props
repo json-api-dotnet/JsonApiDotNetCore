@@ -1,7 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <NoWarn>$(NoWarn);1591</NoWarn>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-</Project>
