@@ -4,13 +4,6 @@ VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7A2B7ADD-ECB5-4D00-AA6A-D45BD11C97CF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5B4D998-CECB-454D-9F32-085A897577BE}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		.gitignore = .gitignore
-		Directory.Build.props = Directory.Build.props
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore", "src\JsonApiDotNetCore\JsonApiDotNetCore.csproj", "{21D27239-138D-4604-8E49-DCBE41BCE4C8}"
 EndProject
 Global
