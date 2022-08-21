@@ -9,6 +9,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace Benchmarks.Serialization;
 
 [MarkdownExporter]
+[MemoryDiagnoser]
 // ReSharper disable once ClassCanBeSealed.Global
 public class OperationsSerializationBenchmarks : SerializationBenchmarkBase
 {
