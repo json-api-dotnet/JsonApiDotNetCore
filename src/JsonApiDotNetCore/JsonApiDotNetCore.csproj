@@ -4,10 +4,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JsonApiDotNetCore.Annotations\JsonApiDotNetCore.Annotations.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 </Project>
