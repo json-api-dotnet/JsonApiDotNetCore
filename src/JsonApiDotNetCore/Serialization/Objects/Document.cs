@@ -1,12 +1,10 @@
 using System.Text.Json.Serialization;
-using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Objects;
 
 /// <summary>
 /// See https://jsonapi.org/format/1.1/#document-top-level and https://jsonapi.org/ext/atomic/#document-structure.
 /// </summary>
-[PublicAPI]
 public sealed class Document
 {
     [JsonPropertyName("jsonapi")]

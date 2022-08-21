@@ -80,7 +80,7 @@ public sealed class JsonApiReader : IJsonApiReader
             using IDisposable _ =
                 CodeTimingSessionManager.Current.Measure("JsonSerializer.Deserialize", MeasurementSettings.ExcludeJsonSerializationInPercentages);
 
-            Document? document = JsonSerializer.Deserialize(requestBody, _options.SerializationReadContext.Document);
+            var document = JsonSerializer.Deserialize<Document>(requestBody, _options.SerializerReadOptions);
 
             AssertHasDocument(document, requestBody);
 

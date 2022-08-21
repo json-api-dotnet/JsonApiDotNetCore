@@ -270,7 +270,7 @@ public class OperationsDeserializationBenchmarks : DeserializationBenchmarkBase
     [Benchmark]
     public object? DeserializeOperationsRequest()
     {
-        Document document = JsonSerializer.Deserialize(RequestBody, SerializationReadContext.Document)!;
+        var document = JsonSerializer.Deserialize<Document>(RequestBody, SerializerReadOptions)!;
         return DocumentAdapter.Convert(document);
     }
 

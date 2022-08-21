@@ -1,8 +1,6 @@
 using System.Data;
 using System.Text.Json;
-using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Configuration;
@@ -10,7 +8,6 @@ namespace JsonApiDotNetCore.Configuration;
 /// <summary>
 /// Global options that configure the behavior of JsonApiDotNetCore.
 /// </summary>
-[PublicAPI]
 public interface IJsonApiOptions
 {
     /// <summary>
@@ -160,26 +157,12 @@ public interface IJsonApiOptions
     JsonSerializerOptions SerializerOptions { get; }
 
     /// <summary>
-    /// Gets the source-generated JSON serialization context used for deserializing request bodies. This value is based on <see cref="SerializerOptions" />
-    /// and is intended for internal use.
-    /// </summary>
-    JsonApiSerializationContext SerializationReadContext { get; }
-
-    /// <summary>
     /// Gets the settings used for deserializing request bodies. This value is based on <see cref="SerializerOptions" /> and is intended for internal use.
     /// </summary>
-    [Obsolete("Use SerializationReadContext.Options instead.")]
     JsonSerializerOptions SerializerReadOptions { get; }
-
-    /// <summary>
-    /// Gets the source-generated JSON serialization context used for serializing response bodies. This value is based on <see cref="SerializerOptions" />
-    /// and is intended for internal use.
-    /// </summary>
-    JsonApiSerializationContext SerializationWriteContext { get; }
 
     /// <summary>
     /// Gets the settings used for serializing response bodies. This value is based on <see cref="SerializerOptions" /> and is intended for internal use.
     /// </summary>
-    [Obsolete("Use SerializationWriteContext.Options instead.")]
     JsonSerializerOptions SerializerWriteOptions { get; }
 }

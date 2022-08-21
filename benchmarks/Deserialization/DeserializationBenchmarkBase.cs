@@ -1,10 +1,10 @@
 using System.ComponentModel.Design;
+using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.JsonConverters;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -13,7 +13,7 @@ namespace Benchmarks.Deserialization;
 
 public abstract class DeserializationBenchmarkBase
 {
-    protected readonly JsonApiSerializationContext SerializationReadContext;
+    protected readonly JsonSerializerOptions SerializerReadOptions;
     protected readonly DocumentAdapter DocumentAdapter;
 
     protected DeserializationBenchmarkBase()
@@ -21,7 +21,7 @@ public abstract class DeserializationBenchmarkBase
         var options = new JsonApiOptions();
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<IncomingResource, int>().Build();
         options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
-        SerializationReadContext = ((IJsonApiOptions)options).SerializationReadContext;
+        SerializerReadOptions = ((IJsonApiOptions)options).SerializerReadOptions;
 
         var serviceContainer = new ServiceContainer();
         var resourceFactory = new ResourceFactory(serviceContainer);

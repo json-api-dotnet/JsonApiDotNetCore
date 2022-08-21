@@ -125,7 +125,7 @@ public sealed class JsonApiWriter : IJsonApiWriter
     {
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("JsonSerializer.Serialize", MeasurementSettings.ExcludeJsonSerializationInPercentages);
 
-        return JsonSerializer.Serialize(document, _options.SerializationWriteContext.Document);
+        return JsonSerializer.Serialize(document, _options.SerializerWriteOptions);
     }
 
     private bool SetETagResponseHeader(HttpRequest request, HttpResponse response, string responseContent)

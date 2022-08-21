@@ -107,7 +107,7 @@ public class ResourceSerializationBenchmarks : SerializationBenchmarkBase
     public string SerializeResourceResponse()
     {
         Document responseDocument = ResponseModelAdapter.Convert(ResponseResource);
-        return JsonSerializer.Serialize(responseDocument, SerializationWriteContext.Document);
+        return JsonSerializer.Serialize(responseDocument, SerializerWriteOptions);
     }
 
     protected override JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph)
