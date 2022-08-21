@@ -7,7 +7,6 @@
     <MicrosoftCodeAnalysisVersion>4.2.*</MicrosoftCodeAnalysisVersion>
     <HumanizerVersion>2.14.1</HumanizerVersion>
     <JsonApiDotNetCoreVersionPrefix>5.0.3</JsonApiDotNetCoreVersionPrefix>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>9999</WarningLevel>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -17,8 +16,6 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" PrivateAssets="All" />
-    <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.8.1" PrivateAssets="All" />
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)CSharpGuidelinesAnalyzer.config" Visible="False" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
