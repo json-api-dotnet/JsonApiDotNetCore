@@ -53,47 +53,6 @@ function RunCleanupCode {
     }
 }
 
-function ReportCodeCoverage {
-    if ($env:APPVEYOR) {
-        if ($IsWindows) {
-            dotnet codecov -f "**\coverage.cobertura.xml"
-        }
-    }
-    else {
-        dotnet reportgenerator -reports:**\coverage.cobertura.xml -targetdir:artifacts\coverage
-    }
-
-    CheckLastExitCode
-}
-
-function CreateNuGetPackage {
-    if ($env:APPVEYOR_REPO_TAG -eq $true) {
-        # Get the version suffix from the repo tag. Example: v1.0.0-preview1-final => preview1-final
-        $segments = $env:APPVEYOR_REPO_TAG_NAME -split "-"
-        $suffixSegments = $segments[1..2]
-        $versionSuffix = $suffixSegments -join "-"
-    }
-    else {
-        # Get the version suffix from the auto-incrementing build number. Example: "123" => "master-0123".
-        if ($env:APPVEYOR_BUILD_NUMBER) {
-            $revision = "{0:D4}" -f [convert]::ToInt32($env:APPVEYOR_BUILD_NUMBER, 10)
-            $versionSuffix = "$($env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH ?? $env:APPVEYOR_REPO_BRANCH)-$revision"
-        }
-        else {
-            $versionSuffix = "pre-0001"
-        }
-    }
-
-    if ([string]::IsNullOrWhitespace($versionSuffix)) {
-        dotnet pack --no-restore --no-build --configuration Release --output .\artifacts
-    }
-    else {
-        dotnet pack --no-restore --no-build --configuration Release --output .\artifacts --version-suffix=$versionSuffix
-    }
-
-    CheckLastExitCode
-}
-
 dotnet tool restore
 CheckLastExitCode
 
@@ -102,10 +61,3 @@ CheckLastExitCode
 
 RunInspectCode
 RunCleanupCode
-
-#dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
-#CheckLastExitCode
-
-#ReportCodeCoverage
-
-#CreateNuGetPackage
