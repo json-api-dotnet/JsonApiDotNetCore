@@ -19,6 +19,13 @@ internal static class JsonElementExtensions
         return elementSelector.Should().NotThrow().Subject;
     }
 
+    public static void ShouldNotContainPath(this JsonElement source, string path)
+    {
+        JsonElement? pathToken = source.SelectToken(path);
+
+        pathToken.Should().BeNull();
+    }
+
     public static void ShouldBeString(this JsonElement source, string value)
     {
         source.ValueKind.Should().Be(JsonValueKind.String);
