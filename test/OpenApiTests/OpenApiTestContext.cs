@@ -28,32 +28,25 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
 
     private async Task<JsonElement> CreateSwaggerDocumentAsync()
     {
-        string absoluteOutputPath = GetSwaggerDocumentAbsoluteOutputPath(SwaggerDocumentOutputPath);
-
         string content = await GetAsync("swagger/v1/swagger.json");
 
         JsonElement rootElement = ParseSwaggerDocument(content);
-        await WriteToDiskAsync(absoluteOutputPath, rootElement);
+
+        if (SwaggerDocumentOutputPath != null)
+        {
+            string absoluteOutputPath = GetSwaggerDocumentAbsoluteOutputPath(SwaggerDocumentOutputPath);
+            await WriteToDiskAsync(absoluteOutputPath, rootElement);
+        }
 
         return rootElement;
     }
 
-    private static string GetSwaggerDocumentAbsoluteOutputPath(string? relativePath)
+    private static string GetSwaggerDocumentAbsoluteOutputPath(string relativePath)
     {
-        AssertHasSwaggerDocumentOutputPath(relativePath);
-
         string solutionRoot = Path.Combine(Assembly.GetExecutingAssembly().Location, "../../../../../../");
         string outputPath = Path.Combine(solutionRoot, relativePath, "swagger.g.json");
 
         return Path.GetFullPath(outputPath);
-    }
-
-    private static void AssertHasSwaggerDocumentOutputPath([SysNotNull] string? relativePath)
-    {
-        if (relativePath is null)
-        {
-            throw new Exception($"Property '{nameof(OpenApiTestContext<object, DbContext>)}.{nameof(SwaggerDocumentOutputPath)}' must be set.");
-        }
     }
 
     private async Task<string> GetAsync(string requestUrl)
