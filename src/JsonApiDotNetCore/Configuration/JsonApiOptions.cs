@@ -102,12 +102,6 @@ public sealed class JsonApiOptions : IJsonApiOptions
         }
     };
 
-    static JsonApiOptions()
-    {
-        // Bug workaround for https://github.com/dotnet/efcore/issues/27436
-        AppContext.SetSwitch("Microsoft.EntityFrameworkCore.Issue26779", true);
-    }
-
     public JsonApiOptions()
     {
         _lazySerializerReadOptions =
