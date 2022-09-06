@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using JsonApiDotNetCore.OpenApi.Client;
 
-namespace OpenApiClientTests.LegacyClient;
+namespace OpenApiClientTests;
 
 /// <summary>
 /// Enables to inject an outgoing response body and inspect the incoming request.

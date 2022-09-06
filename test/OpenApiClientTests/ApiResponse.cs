@@ -3,7 +3,7 @@ using JsonApiDotNetCore.OpenApi.Client.Exceptions;
 
 #pragma warning disable AV1008 // Class should not be static
 
-namespace OpenApiClientTests.LegacyClient;
+namespace OpenApiClientTests;
 
 internal static class ApiResponse
 {

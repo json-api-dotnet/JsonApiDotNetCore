@@ -19,10 +19,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.10.9">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="5.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -61,6 +57,20 @@
       <OutputPath>PascalCaseClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+    </OpenApiReference>
+    <OpenApiReference Include="SchemaProperties\NullableReferenceTypesEnabled\swagger.g.json">
+      <Namespace>OpenApiClientTests.SchemaProperties.NullableReferenceTypesEnabled.GeneratedCode</Namespace>
+      <ClassName>NullableReferenceTypesEnabledClient</ClassName>
+      <OutputPath>NullableReferenceTypesEnabledClient.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:true</Options>
+    </OpenApiReference>
+    <OpenApiReference Include="SchemaProperties\NullableReferenceTypesDisabled\swagger.g.json">
+      <Namespace>OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled.GeneratedCode</Namespace>
+      <ClassName>NullableReferenceTypesDisabledClient</ClassName>
+      <OutputPath>NullableReferenceTypesDisabledClient.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:false</Options>
     </OpenApiReference>
   </ItemGroup>
 </Project>
