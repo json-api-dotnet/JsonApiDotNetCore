@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled.GeneratedCode;
 using TestBuildingBlocks;
 using Xunit;
-using NullableReferenceTypesDisabledClient = OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled.GeneratedCode.NullableReferenceTypesDisabledClient;
 
 namespace OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled;
 

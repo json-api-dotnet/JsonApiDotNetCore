@@ -26,6 +26,13 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         typeof(NullableToOneRelationshipInRequest<>)
     };
 
+    private static readonly Type[] JsonApiDocumentWithNullableDataOpenTypes =
+    {
+        typeof(NullableSecondaryResourceResponseDocument<>),
+        typeof(NullableResourceIdentifierResponseDocument<>),
+        typeof(NullableToOneRelationshipInRequest<>)
+    };
+
     private readonly ISchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceObjectSchemaGenerator _resourceObjectSchemaGenerator;
     private readonly NullableReferenceSchemaGenerator _nullableReferenceSchemaGenerator;
@@ -58,7 +65,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         {
             OpenApiSchema schema = GenerateJsonApiDocumentSchema(type);
 
-            if (IsDataPropertyNullable(type))
+            if (IsDataPropertyNullableInDocument(type))
             {
                 SetDataObjectSchemaToNullable(schema);
             }
@@ -98,18 +105,11 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         return documentType.BaseType!.GetGenericTypeDefinition() == typeof(ManyData<>);
     }
 
-    private static bool IsDataPropertyNullable(Type type)
+    private static bool IsDataPropertyNullableInDocument(Type documentType)
     {
-        PropertyInfo? dataProperty = type.GetProperty(nameof(JsonApiObjectPropertyName.Data));
+        Type documentOpenType = documentType.GetGenericTypeDefinition();
 
-        if (dataProperty == null)
-        {
-            throw new UnreachableCodeException();
-        }
-
-        TypeCategory typeCategory = dataProperty.GetTypeCategory();
-
-        return typeCategory == TypeCategory.NullableReferenceType;
+        return JsonApiDocumentWithNullableDataOpenTypes.Contains(documentOpenType);
     }
 
     private void SetDataObjectSchemaToNullable(OpenApiSchema referenceSchemaForDocument)
