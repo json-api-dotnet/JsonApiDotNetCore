@@ -1,0 +1,536 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenApiTests",
+    "version": "1.0"
+  },
+  "paths": {
+    "/cows": {
+      "get": {
+        "tags": [
+          "cows"
+        ],
+        "operationId": "getCowCollection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cows"
+        ],
+        "operationId": "headCowCollection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "cows"
+        ],
+        "operationId": "postCow",
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/cowPostRequestDocument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/cows/{id}": {
+      "get": {
+        "tags": [
+          "cows"
+        ],
+        "operationId": "getCow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowPrimaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cows"
+        ],
+        "operationId": "headCow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowPrimaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "cows"
+        ],
+        "operationId": "patchCow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/cowPatchRequestDocument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "cows"
+        ],
+        "operationId": "deleteCow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "cowAttributesInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "nameOfCurrentFarm": {
+            "type": "string"
+          },
+          "nameOfPreviousFarm": {
+            "type": "string",
+            "nullable": true
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "weight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "timeAtCurrentFarmInDays": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hasProducedMilk": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowAttributesInPostRequest": {
+        "required": [
+          "hasProducedMilk",
+          "name",
+          "nameOfCurrentFarm",
+          "nickname",
+          "weight"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "nameOfCurrentFarm": {
+            "type": "string"
+          },
+          "nameOfPreviousFarm": {
+            "type": "string",
+            "nullable": true
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "weight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "timeAtCurrentFarmInDays": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hasProducedMilk": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowAttributesInResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "nameOfCurrentFarm": {
+            "type": "string"
+          },
+          "nameOfPreviousFarm": {
+            "type": "string",
+            "nullable": true
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "weight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "timeAtCurrentFarmInDays": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hasProducedMilk": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/cowDataInResponse"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowDataInPatchRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/cowResourceType"
+          },
+          "id": {
+            "type": "string"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/cowAttributesInPatchRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowDataInPostRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/cowResourceType"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/cowAttributesInPostRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowDataInResponse": {
+        "required": [
+          "id",
+          "links",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/cowResourceType"
+          },
+          "id": {
+            "type": "string"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/cowAttributesInResponse"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowPatchRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/cowDataInPatchRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowPostRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/cowDataInPostRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowPrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/cowDataInResponse"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowResourceType": {
+        "enum": [
+          "cows"
+        ],
+        "type": "string"
+      },
+      "jsonapiObject": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "ext": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "profile": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceCollectionDocument": {
+        "required": [
+          "first",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceDocument": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceObject": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -1,0 +1,516 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenApiTests",
+    "version": "1.0"
+  },
+  "paths": {
+    "/chickens": {
+      "get": {
+        "tags": [
+          "chickens"
+        ],
+        "operationId": "getChickenCollection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "chickens"
+        ],
+        "operationId": "headChickenCollection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "chickens"
+        ],
+        "operationId": "postChicken",
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/chickenPostRequestDocument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/chickens/{id}": {
+      "get": {
+        "tags": [
+          "chickens"
+        ],
+        "operationId": "getChicken",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenPrimaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "chickens"
+        ],
+        "operationId": "headChicken",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenPrimaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "chickens"
+        ],
+        "operationId": "patchChicken",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/chickenPatchRequestDocument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "chickens"
+        ],
+        "operationId": "deleteChicken",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "chickenAttributesInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "nameOfCurrentFarm": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "weight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "timeAtCurrentFarmInDays": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hasProducedEggs": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "chickenAttributesInPostRequest": {
+        "required": [
+          "hasProducedEggs",
+          "nameOfCurrentFarm",
+          "weight"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "nameOfCurrentFarm": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "weight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "timeAtCurrentFarmInDays": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hasProducedEggs": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "chickenAttributesInResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "nameOfCurrentFarm": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "weight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "timeAtCurrentFarmInDays": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hasProducedEggs": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "chickenCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/chickenDataInResponse"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "chickenDataInPatchRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/chickenResourceType"
+          },
+          "id": {
+            "type": "string"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/chickenAttributesInPatchRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "chickenDataInPostRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/chickenResourceType"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/chickenAttributesInPostRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "chickenDataInResponse": {
+        "required": [
+          "id",
+          "links",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/chickenResourceType"
+          },
+          "id": {
+            "type": "string"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/chickenAttributesInResponse"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "chickenPatchRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/chickenDataInPatchRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "chickenPostRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/chickenDataInPostRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "chickenPrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/chickenDataInResponse"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "chickenResourceType": {
+        "enum": [
+          "chickens"
+        ],
+        "type": "string"
+      },
+      "jsonapiObject": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "ext": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "profile": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceCollectionDocument": {
+        "required": [
+          "first",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceDocument": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceObject": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
