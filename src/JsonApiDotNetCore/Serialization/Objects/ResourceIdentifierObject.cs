@@ -7,21 +7,10 @@ namespace JsonApiDotNetCore.Serialization.Objects;
 /// See https://jsonapi.org/format/1.1/#document-resource-identifier-objects.
 /// </summary>
 [PublicAPI]
-public sealed class ResourceIdentifierObject : IResourceIdentity
+public class ResourceIdentifierObject : ResourceIdentity
 {
-    [JsonPropertyName("type")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-    public string? Type { get; set; }
-
-    [JsonPropertyName("id")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Id { get; set; }
-
-    [JsonPropertyName("lid")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Lid { get; set; }
-
     [JsonPropertyName("meta")]
+    [JsonPropertyOrder(100)]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IDictionary<string, object?>? Meta { get; set; }
 }

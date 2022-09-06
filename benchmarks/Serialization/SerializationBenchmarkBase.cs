@@ -1,18 +1,14 @@
-using System.Collections.Immutable;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Benchmarks.Tools;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal;
-using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Response;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Benchmarks.Serialization;
@@ -45,9 +41,9 @@ public abstract class SerializationBenchmarkBase
         // ReSharper restore VirtualMemberCallInConstructor
 
         var linkBuilder = new FakeLinkBuilder();
-        var metaBuilder = new FakeMetaBuilder();
+        var metaBuilder = new NoMetaBuilder();
         IQueryConstraintProvider[] constraintProviders = Array.Empty<IQueryConstraintProvider>();
-        var resourceDefinitionAccessor = new FakeResourceDefinitionAccessor();
+        var resourceDefinitionAccessor = new NeverResourceDefinitionAccessor();
         var sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
         var requestQueryStringAccessor = new FakeRequestQueryStringAccessor();
 
@@ -121,142 +117,5 @@ public abstract class SerializationBenchmarkBase
 
         [HasMany]
         public ISet<OutgoingResource> Multi5 { get; set; } = null!;
-    }
-
-    private sealed class FakeResourceDefinitionAccessor : IResourceDefinitionAccessor
-    {
-        public IImmutableSet<IncludeElementExpression> OnApplyIncludes(ResourceType resourceType, IImmutableSet<IncludeElementExpression> existingIncludes)
-        {
-            return existingIncludes;
-        }
-
-        public FilterExpression? OnApplyFilter(ResourceType resourceType, FilterExpression? existingFilter)
-        {
-            return existingFilter;
-        }
-
-        public SortExpression? OnApplySort(ResourceType resourceType, SortExpression? existingSort)
-        {
-            return existingSort;
-        }
-
-        public PaginationExpression? OnApplyPagination(ResourceType resourceType, PaginationExpression? existingPagination)
-        {
-            return existingPagination;
-        }
-
-        public SparseFieldSetExpression? OnApplySparseFieldSet(ResourceType resourceType, SparseFieldSetExpression? existingSparseFieldSet)
-        {
-            return existingSparseFieldSet;
-        }
-
-        public object? GetQueryableHandlerForQueryStringParameter(Type resourceClrType, string parameterName)
-        {
-            return null;
-        }
-
-        public IDictionary<string, object?>? GetMeta(ResourceType resourceType, IIdentifiable resourceInstance)
-        {
-            return null;
-        }
-
-        public Task OnPrepareWriteAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task<IIdentifiable?> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
-            IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable
-        {
-            return Task.FromResult(rightResourceId);
-        }
-
-        public Task OnSetToManyRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
-            WriteOperationKind writeOperation, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task OnAddToRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
-            CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task OnRemoveFromRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
-            CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task OnWritingAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task OnWriteSucceededAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable
-        {
-            return Task.CompletedTask;
-        }
-
-        public void OnDeserialize(IIdentifiable resource)
-        {
-        }
-
-        public void OnSerialize(IIdentifiable resource)
-        {
-        }
-    }
-
-    private sealed class FakeLinkBuilder : ILinkBuilder
-    {
-        public TopLevelLinks GetTopLevelLinks()
-        {
-            return new TopLevelLinks
-            {
-                Self = "TopLevel:Self"
-            };
-        }
-
-        public ResourceLinks GetResourceLinks(ResourceType resourceType, IIdentifiable resource)
-        {
-            return new ResourceLinks
-            {
-                Self = "Resource:Self"
-            };
-        }
-
-        public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable leftResource)
-        {
-            return new RelationshipLinks
-            {
-                Self = "Relationship:Self",
-                Related = "Relationship:Related"
-            };
-        }
-    }
-
-    private sealed class FakeMetaBuilder : IMetaBuilder
-    {
-        public void Add(IDictionary<string, object?> values)
-        {
-        }
-
-        public IDictionary<string, object?>? Build()
-        {
-            return null;
-        }
-    }
-
-    private sealed class FakeRequestQueryStringAccessor : IRequestQueryStringAccessor
-    {
-        public IQueryCollection Query { get; } = new QueryCollection(0);
     }
 }
