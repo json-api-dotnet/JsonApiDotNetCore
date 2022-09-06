@@ -12,10 +12,18 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class ResourceFieldObjectSchemaBuilder
 {
-    private static readonly Type[] RelationshipInResponseOpenTypes =
+    private static readonly NullabilityInfoContext NullabilityInfoContext = new();
+
+    private static readonly Type[] RelationshipSchemaInResponseOpenTypes =
     {
         typeof(ToOneRelationshipInResponse<>),
         typeof(ToManyRelationshipInResponse<>),
+        typeof(NullableToOneRelationshipInResponse<>)
+    };
+
+    private static readonly Type[] NullableRelationshipSchemaOpenTypes =
+    {
+        typeof(NullableToOneRelationshipInRequest<>),
         typeof(NullableToOneRelationshipInResponse<>)
     };
 
@@ -111,15 +119,14 @@ internal sealed class ResourceFieldObjectSchemaBuilder
             return false;
         }
 
-        TypeCategory fieldTypeCategory = field.Property.GetTypeCategory();
         bool hasRequiredAttribute = field.Property.HasAttribute<RequiredAttribute>();
 
-        return fieldTypeCategory switch
+        NullabilityInfo nullabilityInfo = NullabilityInfoContext.Create(field.Property);
+
+        return field.Property.PropertyType.IsValueType switch
         {
-            TypeCategory.NonNullableReferenceType => hasRequiredAttribute || _options.ValidateModelState,
-            TypeCategory.ValueType => hasRequiredAttribute,
-            TypeCategory.NullableReferenceType or TypeCategory.NullableValueType => hasRequiredAttribute,
-            _ => throw new UnreachableCodeException()
+            true => hasRequiredAttribute,
+            false => _options.ValidateModelState ? nullabilityInfo.ReadState == NullabilityState.NotNull || hasRequiredAttribute : hasRequiredAttribute
         };
     }
 
@@ -197,7 +204,9 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
         OpenApiSchema fullSchema = _schemaRepositoryAccessor.Current.Schemas[referenceSchema.Reference.Id];
 
-        if (IsDataPropertyNullable(relationshipSchemaType))
+        Console.WriteLine(relationshipSchemaType.FullName);
+
+        if (IsDataPropertyNullableInRelationshipSchemaType(relationshipSchemaType))
         {
             fullSchema.Properties[JsonApiObjectPropertyName.Data] =
                 _nullableReferenceSchemaGenerator.GenerateSchema(fullSchema.Properties[JsonApiObjectPropertyName.Data]);
@@ -215,18 +224,12 @@ internal sealed class ResourceFieldObjectSchemaBuilder
     {
         Type relationshipSchemaOpenType = relationshipSchemaType.GetGenericTypeDefinition();
 
-        return RelationshipInResponseOpenTypes.Contains(relationshipSchemaOpenType);
+        return RelationshipSchemaInResponseOpenTypes.Contains(relationshipSchemaOpenType);
     }
 
-    private static bool IsDataPropertyNullable(Type type)
+    private static bool IsDataPropertyNullableInRelationshipSchemaType(Type relationshipSchemaType)
     {
-        PropertyInfo? dataProperty = type.GetProperty(nameof(JsonApiObjectPropertyName.Data));
-
-        if (dataProperty == null)
-        {
-            throw new UnreachableCodeException();
-        }
-
-        return dataProperty.GetTypeCategory() == TypeCategory.NullableReferenceType;
+        Type relationshipSchemaOpenType = relationshipSchemaType.GetGenericTypeDefinition();
+        return NullableRelationshipSchemaOpenTypes.Contains(relationshipSchemaOpenType);
     }
 }
