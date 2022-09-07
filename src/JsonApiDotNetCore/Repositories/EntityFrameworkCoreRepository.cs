@@ -547,6 +547,34 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         EntityEntry<TResource> leftEntry = _dbContext.Entry(leftResource);
         CollectionEntry rightCollectionEntry = leftEntry.Collection(relationship.Property.Name);
         rightCollectionEntry.IsLoaded = true;
+
+        if (rightCollectionEntry.Metadata is ISkipNavigation skipNavigation)
+        {
+            MarkManyToManyRelationshipAsLoaded(leftEntry, skipNavigation);
+        }
+    }
+
+    private void MarkManyToManyRelationshipAsLoaded(EntityEntry<TResource> leftEntry, ISkipNavigation skipNavigation)
+    {
+        string[] primaryKeyNames = skipNavigation.ForeignKey.PrincipalKey.Properties.Select(property => property.Name).ToArray();
+        object?[] primaryKeyValues = GetCurrentKeyValues(leftEntry, primaryKeyNames);
+
+        string[] foreignKeyNames = skipNavigation.ForeignKey.Properties.Select(property => property.Name).ToArray();
+
+        foreach (EntityEntry joinEntry in _dbContext.ChangeTracker.Entries().Where(entry => entry.Metadata == skipNavigation.JoinEntityType).ToList())
+        {
+            object?[] foreignKeyValues = GetCurrentKeyValues(joinEntry, foreignKeyNames);
+
+            if (primaryKeyValues.SequenceEqual(foreignKeyValues))
+            {
+                joinEntry.State = EntityState.Unchanged;
+            }
+        }
+    }
+
+    private static object?[] GetCurrentKeyValues(EntityEntry entry, IEnumerable<string> keyNames)
+    {
+        return keyNames.Select(keyName => entry.Property(keyName).CurrentValue).ToArray();
     }
 
     protected async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource, object? valueToAssign,

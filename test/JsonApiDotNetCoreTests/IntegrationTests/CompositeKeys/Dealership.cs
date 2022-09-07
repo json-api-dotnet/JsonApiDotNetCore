@@ -13,4 +13,7 @@ public sealed class Dealership : Identifiable<int>
 
     [HasMany]
     public ISet<Car> Inventory { get; set; } = new HashSet<Car>();
+
+    [HasMany]
+    public ISet<Car> SoldCars { get; set; } = new HashSet<Car>();
 }

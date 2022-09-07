@@ -508,4 +508,52 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
             carInDatabase.Should().BeNull();
         });
     }
+
+    [Fact]
+    public async Task Can_remove_from_ManyToMany_relationship()
+    {
+        // Arrange
+        Dealership existingDealership = _fakers.Dealership.Generate();
+        existingDealership.SoldCars = _fakers.Car.Generate(2).ToHashSet();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Car>();
+            dbContext.Dealerships.Add(existingDealership);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
+                {
+                    type = "cars",
+                    id = existingDealership.SoldCars.ElementAt(1).StringId
+                }
+            }
+        };
+
+        string route = $"/dealerships/{existingDealership.StringId}/relationships/soldCars";
+
+        // Act
+        (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.NoContent);
+
+        responseDocument.Should().BeEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Dealership dealershipInDatabase = await dbContext.Dealerships.Include(dealership => dealership.SoldCars).FirstWithIdAsync(existingDealership.Id);
+
+            dealershipInDatabase.SoldCars.ShouldHaveCount(1);
+            dealershipInDatabase.SoldCars.Single().Id.Should().Be(existingDealership.SoldCars.ElementAt(0).Id);
+
+            List<Car> carsInDatabase = await dbContext.Cars.ToListAsync();
+            carsInDatabase.ShouldHaveCount(2);
+        });
+    }
 }

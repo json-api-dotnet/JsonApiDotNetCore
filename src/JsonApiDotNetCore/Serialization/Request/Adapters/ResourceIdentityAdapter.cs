@@ -25,7 +25,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         _resourceFactory = resourceFactory;
     }
 
-    protected (IIdentifiable resource, ResourceType resourceType) ConvertResourceIdentity(IResourceIdentity identity, ResourceIdentityRequirements requirements,
+    protected (IIdentifiable resource, ResourceType resourceType) ConvertResourceIdentity(ResourceIdentity identity, ResourceIdentityRequirements requirements,
         RequestAdapterState state)
     {
         ArgumentGuard.NotNull(identity, nameof(identity));
@@ -38,7 +38,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         return (resource, resourceType);
     }
 
-    private ResourceType ResolveType(IResourceIdentity identity, ResourceIdentityRequirements requirements, RequestAdapterState state)
+    private ResourceType ResolveType(ResourceIdentity identity, ResourceIdentityRequirements requirements, RequestAdapterState state)
     {
         AssertHasType(identity.Type, state);
 
@@ -93,7 +93,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         }
     }
 
-    private IIdentifiable CreateResource(IResourceIdentity identity, ResourceIdentityRequirements requirements, Type resourceClrType, RequestAdapterState state)
+    private IIdentifiable CreateResource(ResourceIdentity identity, ResourceIdentityRequirements requirements, Type resourceClrType, RequestAdapterState state)
     {
         if (state.Request.Kind != EndpointKind.AtomicOperations)
         {
@@ -120,7 +120,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         return resource;
     }
 
-    private static void AssertHasNoLid(IResourceIdentity identity, RequestAdapterState state)
+    private static void AssertHasNoLid(ResourceIdentity identity, RequestAdapterState state)
     {
         if (identity.Lid != null)
         {
@@ -129,7 +129,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         }
     }
 
-    private static void AssertNoIdWithLid(IResourceIdentity identity, RequestAdapterState state)
+    private static void AssertNoIdWithLid(ResourceIdentity identity, RequestAdapterState state)
     {
         if (identity.Id != null && identity.Lid != null)
         {
@@ -137,7 +137,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         }
     }
 
-    private static void AssertHasIdOrLid(IResourceIdentity identity, ResourceIdentityRequirements requirements, RequestAdapterState state)
+    private static void AssertHasIdOrLid(ResourceIdentity identity, ResourceIdentityRequirements requirements, RequestAdapterState state)
     {
         string? message = null;
 
@@ -160,7 +160,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         }
     }
 
-    private static void AssertHasNoId(IResourceIdentity identity, RequestAdapterState state)
+    private static void AssertHasNoId(ResourceIdentity identity, RequestAdapterState state)
     {
         if (identity.Id != null)
         {
@@ -169,7 +169,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         }
     }
 
-    private static void AssertSameIdValue(IResourceIdentity identity, string? expected, RequestAdapterState state)
+    private static void AssertSameIdValue(ResourceIdentity identity, string? expected, RequestAdapterState state)
     {
         if (expected != null && identity.Id != expected)
         {
@@ -180,7 +180,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         }
     }
 
-    private static void AssertSameLidValue(IResourceIdentity identity, string? expected, RequestAdapterState state)
+    private static void AssertSameLidValue(ResourceIdentity identity, string? expected, RequestAdapterState state)
     {
         if (expected != null && identity.Lid != expected)
         {
@@ -191,7 +191,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         }
     }
 
-    private void AssignStringId(IResourceIdentity identity, IIdentifiable resource, RequestAdapterState state)
+    private void AssignStringId(ResourceIdentity identity, IIdentifiable resource, RequestAdapterState state)
     {
         if (identity.Id != null)
         {

@@ -1,13 +1,12 @@
 using System.ComponentModel.Design;
 using BenchmarkDotNet.Attributes;
+using Benchmarks.Tools;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Benchmarks.QueryString;
@@ -71,31 +70,9 @@ public class QueryStringParserBenchmarks
     [Benchmark]
     public void ComplexQuery()
     {
-        Run(100, () =>
-        {
-            const string queryString =
-                "?filter[alt-attr-name]=abc,eq:abc&sort=-alt-attr-name&include=child&page[size]=1&fields[alt-resource-name]=alt-attr-name";
+        const string queryString = "?filter[alt-attr-name]=abc,eq:abc&sort=-alt-attr-name&include=child&page[size]=1&fields[alt-resource-name]=alt-attr-name";
 
-            _queryStringAccessor.SetQueryString(queryString);
-            _queryStringReader.ReadAll(null);
-        });
-    }
-
-    private void Run(int iterations, Action action)
-    {
-        for (int index = 0; index < iterations; index++)
-        {
-            action();
-        }
-    }
-
-    private sealed class FakeRequestQueryStringAccessor : IRequestQueryStringAccessor
-    {
-        public IQueryCollection Query { get; private set; } = new QueryCollection();
-
-        public void SetQueryString(string queryString)
-        {
-            Query = new QueryCollection(QueryHelpers.ParseQuery(queryString));
-        }
+        _queryStringAccessor.SetQueryString(queryString);
+        _queryStringReader.ReadAll(null);
     }
 }
