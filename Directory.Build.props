@@ -6,7 +6,10 @@
     <EFCorePostgresVersion>6.0.*</EFCorePostgresVersion>
     <MicrosoftCodeAnalysisVersion>4.3.*</MicrosoftCodeAnalysisVersion>
     <HumanizerVersion>2.14.1</HumanizerVersion>
-    <SwashbuckleVersion>6.2.*</SwashbuckleVersion>
+    <SwashbuckleVersion>6.4.*</SwashbuckleVersion>
+    <NSwagApiClientVersion>13.16.*</NSwagApiClientVersion>
+    <MicrosoftApiClientVersion>6.0.*</MicrosoftApiClientVersion>
+    <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
     <JsonApiDotNetCoreVersionPrefix>5.0.4</JsonApiDotNetCoreVersionPrefix>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>9999</WarningLevel>
