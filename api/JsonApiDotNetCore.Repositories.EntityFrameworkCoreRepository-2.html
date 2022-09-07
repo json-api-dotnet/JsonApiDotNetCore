@@ -1,0 +1,1096 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class EntityFrameworkCoreRepository&lt;TResource, TId&gt;
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class EntityFrameworkCoreRepository&lt;TResource, TId&gt;
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2">
+  
+  
+  <h1 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2" class="text-break">Class EntityFrameworkCoreRepository&lt;TResource, TId&gt;
+  </h1>
+  <div class="markdown level0 summary"><p>Implements the foundational Repository layer in the JsonApiDotNetCore architecture that uses Entity Framework Core.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">EntityFrameworkCoreRepository&lt;TResource, TId&gt;</span></div>
+  </div>
+  <div class="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="JsonApiDotNetCore.Repositories.IResourceRepository-2.html">IResourceRepository</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Repositories.IResourceReadRepository-2.html">IResourceReadRepository</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html">IResourceWriteRepository</a>&lt;TResource, TId&gt;</div>
+    <div><a class="xref" href="JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.html">IRepositorySupportsTransaction</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Repositories.html">JsonApiDotNetCore.Repositories</a></h6>
+  <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
+  <h5 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public class EntityFrameworkCoreRepository&lt;TResource, TId&gt; : IResourceRepository&lt;TResource, TId&gt;, IResourceReadRepository&lt;TResource, TId&gt;, IResourceWriteRepository&lt;TResource, TId&gt;, IRepositorySupportsTransaction where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">TResource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2__ctor_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Repositories_IDbContextResolver_JsonApiDotNetCore_Configuration_IResourceGraph_JsonApiDotNetCore_Resources_IResourceFactory_System_Collections_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.%23ctor(JsonApiDotNetCore.Resources.ITargetedFields%2CJsonApiDotNetCore.Repositories.IDbContextResolver%2CJsonApiDotNetCore.Configuration.IResourceGraph%2CJsonApiDotNetCore.Resources.IResourceFactory%2CSystem.Collections.IEnumerable%7BJsonApiDotNetCore.Queries.IQueryConstraintProvider%7D%2CMicrosoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.Resources.IResourceDefinitionAccessor)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L40">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2__ctor_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.#ctor*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2__ctor_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Repositories_IDbContextResolver_JsonApiDotNetCore_Configuration_IResourceGraph_JsonApiDotNetCore_Resources_IResourceFactory_System_Collections_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.#ctor(JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Repositories.IDbContextResolver,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Resources.IResourceFactory,System.Collections.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)">EntityFrameworkCoreRepository(ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable&lt;IQueryConstraintProvider&gt;, ILoggerFactory, IResourceDefinitionAccessor)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public EntityFrameworkCoreRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory, IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.ITargetedFields.html">ITargetedFields</a></td>
+        <td><span class="parametername">targetedFields</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Repositories.IDbContextResolver.html">IDbContextResolver</a></td>
+        <td><span class="parametername">dbContextResolver</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraph.html">IResourceGraph</a></td>
+        <td><span class="parametername">resourceGraph</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.IResourceFactory.html">IResourceFactory</a></td>
+        <td><span class="parametername">resourceFactory</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Queries.IQueryConstraintProvider.html">IQueryConstraintProvider</a>&gt;</td>
+        <td><span class="parametername">constraintProviders</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.Extensions.Logging.ILoggerFactory</span></td>
+        <td><span class="parametername">loggerFactory</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html">IResourceDefinitionAccessor</a></td>
+        <td><span class="parametername">resourceDefinitionAccessor</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_TransactionId.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.TransactionId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L38">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_TransactionId_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.TransactionId*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_TransactionId" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.TransactionId">TransactionId</h4>
+  <div class="markdown level1 summary"><p>Identifies the currently active transaction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual string TransactionId { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_AddToToManyRelationshipAsync__0__1_ISet_JsonApiDotNetCore_Resources_IIdentifiable__CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.AddToToManyRelationshipAsync(%600%2C%601%2CISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L418">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_AddToToManyRelationshipAsync_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.AddToToManyRelationshipAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_AddToToManyRelationshipAsync__0__1_ISet_JsonApiDotNetCore_Resources_IIdentifiable__CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.AddToToManyRelationshipAsync(`0,`1,ISet{JsonApiDotNetCore.Resources.IIdentifiable},CancellationToken)">AddToToManyRelationshipAsync(TResource, TId, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Adds resources to a to-many relationship in the underlying data store.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual async Task AddToToManyRelationshipAsync(TResource leftResource, TId leftId, ISet&lt;IIdentifiable&gt; rightResourceIds, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">leftResource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">leftId</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
+        <td><span class="parametername">rightResourceIds</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_ApplyQueryLayer_JsonApiDotNetCore_Queries_QueryLayer_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.ApplyQueryLayer(JsonApiDotNetCore.Queries.QueryLayer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L108">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_ApplyQueryLayer_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.ApplyQueryLayer*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_ApplyQueryLayer_JsonApiDotNetCore_Queries_QueryLayer_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.ApplyQueryLayer(JsonApiDotNetCore.Queries.QueryLayer)">ApplyQueryLayer(QueryLayer)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual IQueryable&lt;TResource&gt; ApplyQueryLayer(QueryLayer queryLayer)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a></td>
+        <td><span class="parametername">queryLayer</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_AssertIsNotClearingRequiredToOneRelationship_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute__0_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.AssertIsNotClearingRequiredToOneRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute%2C%600%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L291">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_AssertIsNotClearingRequiredToOneRelationship_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.AssertIsNotClearingRequiredToOneRelationship*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_AssertIsNotClearingRequiredToOneRelationship_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute__0_System_Object_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.AssertIsNotClearingRequiredToOneRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,`0,System.Object)">AssertIsNotClearingRequiredToOneRelationship(RelationshipAttribute, TResource, Object)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void AssertIsNotClearingRequiredToOneRelationship(RelationshipAttribute relationship, TResource leftResource, object rightValue)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a></td>
+        <td><span class="parametername">relationship</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">leftResource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">rightValue</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_CountAsync_JsonApiDotNetCore_Queries_Expressions_FilterExpression_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.CountAsync(JsonApiDotNetCore.Queries.Expressions.FilterExpression%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L83">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_CountAsync_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.CountAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_CountAsync_JsonApiDotNetCore_Queries_Expressions_FilterExpression_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.CountAsync(JsonApiDotNetCore.Queries.Expressions.FilterExpression,CancellationToken)">CountAsync(FilterExpression, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Executes a read query using the specified filter and returns the count of matching resources.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual async Task&lt;int&gt; CountAsync(FilterExpression filter, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></td>
+        <td><span class="parametername">filter</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_CreateAsync__0__0_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.CreateAsync(%600%2C%600%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L173">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_CreateAsync_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.CreateAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_CreateAsync__0__0_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.CreateAsync(`0,`0,CancellationToken)">CreateAsync(TResource, TResource, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Creates a new resource in the underlying data store.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual async Task CreateAsync(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">resourceFromRequest</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">resourceForDatabase</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_DeleteAsync__0__1_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.DeleteAsync(%600%2C%601%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L309">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_DeleteAsync_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.DeleteAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_DeleteAsync__0__1_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.DeleteAsync(`0,`1,CancellationToken)">DeleteAsync(TResource, TId, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Deletes an existing resource from the underlying data store.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual async Task DeleteAsync(TResource resourceFromDatabase, TId id, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">resourceFromDatabase</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetAll.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.GetAll%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L152">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetAll_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetAll*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetAll" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetAll">GetAll()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual IQueryable&lt;TResource&gt; GetAll()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">IQueryable</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetAsync_JsonApiDotNetCore_Queries_QueryLayer_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.GetAsync(JsonApiDotNetCore.Queries.QueryLayer%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L62">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetAsync_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetAsync_JsonApiDotNetCore_Queries_QueryLayer_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetAsync(JsonApiDotNetCore.Queries.QueryLayer,CancellationToken)">GetAsync(QueryLayer, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Executes a read query using the specified constraints and returns the collection of matching resources.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual async Task&lt;IReadOnlyCollection&lt;TResource&gt;&gt; GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a></td>
+        <td><span class="parametername">queryLayer</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;<span class="xref">IReadOnlyCollection</span>&lt;TResource&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetForCreateAsync_Type__1_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.GetForCreateAsync(Type%2C%601%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L158">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetForCreateAsync_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetForCreateAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetForCreateAsync_Type__1_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetForCreateAsync(Type,`1,CancellationToken)">GetForCreateAsync(Type, TId, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Creates a new resource instance, in preparation for <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_CreateAsync__0__0_CancellationToken_">CreateAsync(TResource, TResource, CancellationToken)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Task&lt;TResource&gt; GetForCreateAsync(Type resourceClrType, TId id, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Type</span></td>
+        <td><span class="parametername">resourceClrType</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetForCreateAsync_Type__1_CancellationToken__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method can be overridden to assign resource-specific required relationships.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetForUpdateAsync_JsonApiDotNetCore_Queries_QueryLayer_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.GetForUpdateAsync(JsonApiDotNetCore.Queries.QueryLayer%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L236">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetForUpdateAsync_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetForUpdateAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetForUpdateAsync_JsonApiDotNetCore_Queries_QueryLayer_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetForUpdateAsync(JsonApiDotNetCore.Queries.QueryLayer,CancellationToken)">GetForUpdateAsync(QueryLayer, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Retrieves a resource with all of its attributes, including the set of targeted relationships, in preparation for <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_UpdateAsync__0__0_CancellationToken_">UpdateAsync(TResource, TResource, CancellationToken)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual async Task&lt;TResource&gt; GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a></td>
+        <td><span class="parametername">queryLayer</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_RemoveFromToManyRelationshipAsync__0_ISet_JsonApiDotNetCore_Resources_IIdentifiable__CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.RemoveFromToManyRelationshipAsync(%600%2CISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L482">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_RemoveFromToManyRelationshipAsync_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.RemoveFromToManyRelationshipAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_RemoveFromToManyRelationshipAsync__0_ISet_JsonApiDotNetCore_Resources_IIdentifiable__CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.RemoveFromToManyRelationshipAsync(`0,ISet{JsonApiDotNetCore.Resources.IIdentifiable},CancellationToken)">RemoveFromToManyRelationshipAsync(TResource, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Removes resources from a to-many relationship in the underlying data store.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual async Task RemoveFromToManyRelationshipAsync(TResource leftResource, ISet&lt;IIdentifiable&gt; rightResourceIds, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">leftResource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
+        <td><span class="parametername">rightResourceIds</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_SaveChangesAsync_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.SaveChangesAsync(CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L617">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_SaveChangesAsync_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.SaveChangesAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_SaveChangesAsync_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.SaveChangesAsync(CancellationToken)">SaveChangesAsync(CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual async Task SaveChangesAsync(CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_SetRelationshipAsync__0_System_Object_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.SetRelationshipAsync(%600%2CSystem.Object%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L389">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_SetRelationshipAsync_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.SetRelationshipAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_SetRelationshipAsync__0_System_Object_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.SetRelationshipAsync(`0,System.Object,CancellationToken)">SetRelationshipAsync(TResource, Object, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Performs a complete replacement of the relationship in the underlying data store.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual async Task SetRelationshipAsync(TResource leftResource, object rightValue, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">leftResource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">rightValue</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_UpdateAsync__0__0_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.UpdateAsync(%600%2C%600%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L252">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_UpdateAsync_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.UpdateAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_UpdateAsync__0__0_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.UpdateAsync(`0,`0,CancellationToken)">UpdateAsync(TResource, TResource, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Updates the attributes and relationships of an existing resource in the underlying data store.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual async Task UpdateAsync(TResource resourceFromRequest, TResource resourceFromDatabase, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">resourceFromRequest</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">resourceFromDatabase</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_UpdateRelationshipAsync_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute__0_System_Object_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602.UpdateRelationshipAsync(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute%2C%600%2CSystem.Object%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L580">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_UpdateRelationshipAsync_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.UpdateRelationshipAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_UpdateRelationshipAsync_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute__0_System_Object_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.UpdateRelationshipAsync(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,`0,System.Object,CancellationToken)">UpdateRelationshipAsync(RelationshipAttribute, TResource, Object, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource, object valueToAssign, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a></td>
+        <td><span class="parametername">relationship</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">leftResource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">valueToAssign</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceRepository-2.html">IResourceRepository&lt;TResource, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceReadRepository-2.html">IResourceReadRepository&lt;TResource, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html">IResourceWriteRepository&lt;TResource, TId&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.html">IRepositorySupportsTransaction</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%602%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L24" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

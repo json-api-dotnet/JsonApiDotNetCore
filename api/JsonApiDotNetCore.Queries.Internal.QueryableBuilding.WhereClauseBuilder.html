@@ -1,0 +1,828 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class WhereClauseBuilder
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class WhereClauseBuilder
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder">
+  
+  
+  <h1 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder" class="text-break">Class WhereClauseBuilder
+  </h1>
+  <div class="markdown level0 summary"><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a> into
+<see cref="!:Queryable.Where&lt;TSource>(IQueryable&lt;TSource>, System.Linq.Expressions.Expression&lt;System.Func&lt;TSource,bool>>)"></see> calls.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html">QueryExpressionVisitor</a>&lt;<span class="xref">System.Nullable</span>&lt;<span class="xref">Type</span>&gt;, <span class="xref">System.Linq.Expressions.Expression</span>&gt;</div>
+    <div class="level2"><a class="xref" href="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html">QueryClauseBuilder</a>&lt;<span class="xref">System.Nullable</span>&lt;<span class="xref">Type</span>&gt;&gt;</div>
+    <div class="level3"><span class="xref">WhereClauseBuilder</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryClauseBuilder_1_LambdaScope">QueryClauseBuilder&lt;Nullable&lt;Type&gt;&gt;.LambdaScope</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryClauseBuilder_1_VisitCount_JsonApiDotNetCore_Queries_Expressions_CountExpression__0_">QueryClauseBuilder&lt;Nullable&lt;Type&gt;&gt;.VisitCount(CountExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryClauseBuilder_1_VisitResourceFieldChain_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression__0_">QueryClauseBuilder&lt;Nullable&lt;Type&gt;&gt;.VisitResourceFieldChain(ResourceFieldChainExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryClauseBuilder_1_WithLambdaScopeAccessor__1_System_Linq_Expressions_Expression_Func___0__">QueryClauseBuilder&lt;Nullable&lt;Type&gt;&gt;.WithLambdaScopeAccessor&lt;TResult&gt;(Expression, Func&lt;TResult&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_Visit_JsonApiDotNetCore_Queries_Expressions_QueryExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.Visit(QueryExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_DefaultVisit_JsonApiDotNetCore_Queries_Expressions_QueryExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.DefaultVisit(QueryExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitComparison_JsonApiDotNetCore_Queries_Expressions_ComparisonExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitComparison(ComparisonExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitResourceFieldChain_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitResourceFieldChain(ResourceFieldChainExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitLiteralConstant_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitLiteralConstant(LiteralConstantExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitNullConstant_JsonApiDotNetCore_Queries_Expressions_NullConstantExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitNullConstant(NullConstantExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitLogical_JsonApiDotNetCore_Queries_Expressions_LogicalExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitLogical(LogicalExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitNot_JsonApiDotNetCore_Queries_Expressions_NotExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitNot(NotExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitHas_JsonApiDotNetCore_Queries_Expressions_HasExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitHas(HasExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitIsType_JsonApiDotNetCore_Queries_Expressions_IsTypeExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitIsType(IsTypeExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitSortElement_JsonApiDotNetCore_Queries_Expressions_SortElementExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitSortElement(SortElementExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitSort_JsonApiDotNetCore_Queries_Expressions_SortExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitSort(SortExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitPagination_JsonApiDotNetCore_Queries_Expressions_PaginationExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitPagination(PaginationExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitCount_JsonApiDotNetCore_Queries_Expressions_CountExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitCount(CountExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitMatchText_JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitMatchText(MatchTextExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitAny_JsonApiDotNetCore_Queries_Expressions_AnyExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitAny(AnyExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitSparseFieldTable_JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitSparseFieldTable(SparseFieldTableExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitSparseFieldSet_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitSparseFieldSet(SparseFieldSetExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitQueryStringParameterScope_JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitQueryStringParameterScope(QueryStringParameterScopeExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_PaginationQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationQueryStringValueExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.PaginationQueryStringValue(PaginationQueryStringValueExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_PaginationElementQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitInclude_JsonApiDotNetCore_Queries_Expressions_IncludeExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitInclude(IncludeExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitIncludeElement_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitIncludeElement(IncludeElementExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitQueryableHandler_JsonApiDotNetCore_Queries_Expressions_QueryableHandlerExpression__0_">QueryExpressionVisitor&lt;Nullable&lt;Type&gt;, Expression&gt;.VisitQueryableHandler(QueryableHandlerExpression, Nullable&lt;Type&gt;)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.html">JsonApiDotNetCore.Queries.Internal.QueryableBuilding</a></h6>
+  <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
+  <h5 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public class WhereClauseBuilder : QueryClauseBuilder&lt;Type?&gt;</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_Type_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaParameterNameFactory_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.%23ctor(System.Linq.Expressions.Expression%2CJsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope%2CType%2CJsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/WhereClauseBuilder.cs/#L24">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder__ctor_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.#ctor*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_Type_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaParameterNameFactory_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope,Type,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory)">WhereClauseBuilder(Expression, LambdaScope, Type, LambdaParameterNameFactory)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WhereClauseBuilder(Expression source, LambdaScope lambdaScope, Type extensionType, LambdaParameterNameFactory nameFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td><span class="parametername">source</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.html">LambdaScope</a></td>
+        <td><span class="parametername">lambdaScope</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">Type</span></td>
+        <td><span class="parametername">extensionType</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory.html">LambdaParameterNameFactory</a></td>
+        <td><span class="parametername">nameFactory</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_ApplyWhere_JsonApiDotNetCore_Queries_Expressions_FilterExpression_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.ApplyWhere(JsonApiDotNetCore.Queries.Expressions.FilterExpression)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/WhereClauseBuilder.cs/#L36">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_ApplyWhere_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.ApplyWhere*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_ApplyWhere_JsonApiDotNetCore_Queries_Expressions_FilterExpression_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.ApplyWhere(JsonApiDotNetCore.Queries.Expressions.FilterExpression)">ApplyWhere(FilterExpression)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Expression ApplyWhere(FilterExpression filter)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></td>
+        <td><span class="parametername">filter</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitAny_JsonApiDotNetCore_Queries_Expressions_AnyExpression_System_Nullable_Type__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitAny(JsonApiDotNetCore.Queries.Expressions.AnyExpression%2CSystem.Nullable%7BType%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/WhereClauseBuilder.cs/#L128">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitAny_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitAny*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitAny_JsonApiDotNetCore_Queries_Expressions_AnyExpression_System_Nullable_Type__" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitAny(JsonApiDotNetCore.Queries.Expressions.AnyExpression,System.Nullable{Type})">VisitAny(AnyExpression, Nullable&lt;Type&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Expression VisitAny(AnyExpression expression, Type? argument)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.AnyExpression.html">AnyExpression</a></td>
+        <td><span class="parametername">expression</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">Type</span>&gt;</td>
+        <td><span class="parametername">argument</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor&lt;System.Nullable&lt;Type&gt;, System.Linq.Expressions.Expression&gt;.VisitAny(JsonApiDotNetCore.Queries.Expressions.AnyExpression, System.Nullable&lt;Type&gt;)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitComparison_JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_System_Nullable_Type__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitComparison(JsonApiDotNetCore.Queries.Expressions.ComparisonExpression%2CSystem.Nullable%7BType%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/WhereClauseBuilder.cs/#L188">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitComparison_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitComparison*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitComparison_JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_System_Nullable_Type__" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitComparison(JsonApiDotNetCore.Queries.Expressions.ComparisonExpression,System.Nullable{Type})">VisitComparison(ComparisonExpression, Nullable&lt;Type&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Expression VisitComparison(ComparisonExpression expression, Type? argument)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.html">ComparisonExpression</a></td>
+        <td><span class="parametername">expression</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">Type</span>&gt;</td>
+        <td><span class="parametername">argument</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor&lt;System.Nullable&lt;Type&gt;, System.Linq.Expressions.Expression&gt;.VisitComparison(JsonApiDotNetCore.Queries.Expressions.ComparisonExpression, System.Nullable&lt;Type&gt;)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitHas_JsonApiDotNetCore_Queries_Expressions_HasExpression_System_Nullable_Type__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitHas(JsonApiDotNetCore.Queries.Expressions.HasExpression%2CSystem.Nullable%7BType%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/WhereClauseBuilder.cs/#L56">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitHas_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitHas*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitHas_JsonApiDotNetCore_Queries_Expressions_HasExpression_System_Nullable_Type__" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitHas(JsonApiDotNetCore.Queries.Expressions.HasExpression,System.Nullable{Type})">VisitHas(HasExpression, Nullable&lt;Type&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Expression VisitHas(HasExpression expression, Type? argument)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.HasExpression.html">HasExpression</a></td>
+        <td><span class="parametername">expression</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">Type</span>&gt;</td>
+        <td><span class="parametername">argument</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor&lt;System.Nullable&lt;Type&gt;, System.Linq.Expressions.Expression&gt;.VisitHas(JsonApiDotNetCore.Queries.Expressions.HasExpression, System.Nullable&lt;Type&gt;)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitIsType_JsonApiDotNetCore_Queries_Expressions_IsTypeExpression_System_Nullable_Type__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitIsType(JsonApiDotNetCore.Queries.Expressions.IsTypeExpression%2CSystem.Nullable%7BType%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/WhereClauseBuilder.cs/#L88">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitIsType_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitIsType*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitIsType_JsonApiDotNetCore_Queries_Expressions_IsTypeExpression_System_Nullable_Type__" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitIsType(JsonApiDotNetCore.Queries.Expressions.IsTypeExpression,System.Nullable{Type})">VisitIsType(IsTypeExpression, Nullable&lt;Type&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Expression VisitIsType(IsTypeExpression expression, Type? argument)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IsTypeExpression.html">IsTypeExpression</a></td>
+        <td><span class="parametername">expression</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">Type</span>&gt;</td>
+        <td><span class="parametername">argument</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor&lt;System.Nullable&lt;Type&gt;, System.Linq.Expressions.Expression&gt;.VisitIsType(JsonApiDotNetCore.Queries.Expressions.IsTypeExpression, System.Nullable&lt;Type&gt;)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitLiteralConstant_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_System_Nullable_Type__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitLiteralConstant(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression%2CSystem.Nullable%7BType%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/WhereClauseBuilder.cs/#L285">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitLiteralConstant_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitLiteralConstant*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitLiteralConstant_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_System_Nullable_Type__" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitLiteralConstant(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,System.Nullable{Type})">VisitLiteralConstant(LiteralConstantExpression, Nullable&lt;Type&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Expression VisitLiteralConstant(LiteralConstantExpression expression, Type? expressionType)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.html">LiteralConstantExpression</a></td>
+        <td><span class="parametername">expression</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">Type</span>&gt;</td>
+        <td><span class="parametername">expressionType</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor&lt;System.Nullable&lt;Type&gt;, System.Linq.Expressions.Expression&gt;.VisitLiteralConstant(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression, System.Nullable&lt;Type&gt;)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitLogical_JsonApiDotNetCore_Queries_Expressions_LogicalExpression_System_Nullable_Type__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitLogical(JsonApiDotNetCore.Queries.Expressions.LogicalExpression%2CSystem.Nullable%7BType%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/WhereClauseBuilder.cs/#L149">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitLogical_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitLogical*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitLogical_JsonApiDotNetCore_Queries_Expressions_LogicalExpression_System_Nullable_Type__" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitLogical(JsonApiDotNetCore.Queries.Expressions.LogicalExpression,System.Nullable{Type})">VisitLogical(LogicalExpression, Nullable&lt;Type&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Expression VisitLogical(LogicalExpression expression, Type? argument)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html">LogicalExpression</a></td>
+        <td><span class="parametername">expression</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">Type</span>&gt;</td>
+        <td><span class="parametername">argument</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor&lt;System.Nullable&lt;Type&gt;, System.Linq.Expressions.Expression&gt;.VisitLogical(JsonApiDotNetCore.Queries.Expressions.LogicalExpression, System.Nullable&lt;Type&gt;)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitMatchText_JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_System_Nullable_Type__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitMatchText(JsonApiDotNetCore.Queries.Expressions.MatchTextExpression%2CSystem.Nullable%7BType%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/WhereClauseBuilder.cs/#L104">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitMatchText_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitMatchText*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitMatchText_JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_System_Nullable_Type__" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitMatchText(JsonApiDotNetCore.Queries.Expressions.MatchTextExpression,System.Nullable{Type})">VisitMatchText(MatchTextExpression, Nullable&lt;Type&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Expression VisitMatchText(MatchTextExpression expression, Type? argument)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html">MatchTextExpression</a></td>
+        <td><span class="parametername">expression</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">Type</span>&gt;</td>
+        <td><span class="parametername">argument</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor&lt;System.Nullable&lt;Type&gt;, System.Linq.Expressions.Expression&gt;.VisitMatchText(JsonApiDotNetCore.Queries.Expressions.MatchTextExpression, System.Nullable&lt;Type&gt;)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitNot_JsonApiDotNetCore_Queries_Expressions_NotExpression_System_Nullable_Type__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitNot(JsonApiDotNetCore.Queries.Expressions.NotExpression%2CSystem.Nullable%7BType%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/WhereClauseBuilder.cs/#L182">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitNot_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitNot*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitNot_JsonApiDotNetCore_Queries_Expressions_NotExpression_System_Nullable_Type__" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitNot(JsonApiDotNetCore.Queries.Expressions.NotExpression,System.Nullable{Type})">VisitNot(NotExpression, Nullable&lt;Type&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Expression VisitNot(NotExpression expression, Type? argument)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.NotExpression.html">NotExpression</a></td>
+        <td><span class="parametername">expression</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">Type</span>&gt;</td>
+        <td><span class="parametername">argument</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor&lt;System.Nullable&lt;Type&gt;, System.Linq.Expressions.Expression&gt;.VisitNot(JsonApiDotNetCore.Queries.Expressions.NotExpression, System.Nullable&lt;Type&gt;)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitNullConstant_JsonApiDotNetCore_Queries_Expressions_NullConstantExpression_System_Nullable_Type__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitNullConstant(JsonApiDotNetCore.Queries.Expressions.NullConstantExpression%2CSystem.Nullable%7BType%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/WhereClauseBuilder.cs/#L280">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitNullConstant_" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitNullConstant*"></a>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitNullConstant_JsonApiDotNetCore_Queries_Expressions_NullConstantExpression_System_Nullable_Type__" data-uid="JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitNullConstant(JsonApiDotNetCore.Queries.Expressions.NullConstantExpression,System.Nullable{Type})">VisitNullConstant(NullConstantExpression, Nullable&lt;Type&gt;)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Expression VisitNullConstant(NullConstantExpression expression, Type? expressionType)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.html">NullConstantExpression</a></td>
+        <td><span class="parametername">expression</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">Type</span>&gt;</td>
+        <td><span class="parametername">expressionType</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Linq.Expressions.Expression</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor&lt;System.Nullable&lt;Type&gt;, System.Linq.Expressions.Expression&gt;.VisitNullConstant(JsonApiDotNetCore.Queries.Expressions.NullConstantExpression, System.Nullable&lt;Type&gt;)</span></div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/WhereClauseBuilder.cs/#L14" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

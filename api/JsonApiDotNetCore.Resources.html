@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Namespace JsonApiDotNetCore.Resources
+   </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Namespace JsonApiDotNetCore.Resources
+   ">
+    <meta name="generator" content="docfx 2.59.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Resources">
+  
+  <h1 id="JsonApiDotNetCore_Resources" data-uid="JsonApiDotNetCore.Resources" class="text-break">Namespace JsonApiDotNetCore.Resources
+  </h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+    <h3 id="classes">Classes
+  </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html">Identifiable&lt;TId&gt;</a></h4>
+      <section><p>A convenient basic implementation of <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable-1.html">IIdentifiable&lt;TId&gt;</a> that provides conversion between typed <a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_Id">Id</a> and
+<a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_StringId">StringId</a>.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IdentifiableComparer.html">IdentifiableComparer</a></h4>
+      <section><p>Compares <code>IIdentifiable</code> instances with each other based on their type and <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_StringId">StringId</a>, falling back to
+<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_LocalId">LocalId</a> when both StringIds are null.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html">JsonApiResourceDefinition&lt;TResource, TId&gt;</a></h4>
+      <section><p>Provides an extensibility point to add business logic that is resource-oriented instead of endpoint-oriented.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.PropertySortOrder.html">JsonApiResourceDefinition&lt;TResource, TId&gt;.PropertySortOrder</a></h4>
+      <section><p>This is an alias type intended to simplify the implementation&apos;s method signature. See <a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_CreateSortExpressionFromLambda_JsonApiDotNetCore_Resources_JsonApiResourceDefinition__0__1__PropertySortOrder_">CreateSortExpressionFromLambda(JsonApiResourceDefinition&lt;TResource, TId&gt;.PropertySortOrder)</a> for usage
+details.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.OperationContainer.html">OperationContainer</a></h4>
+      <section><p>Represents a write operation on a JSON:API resource.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.QueryStringParameterHandlers-1.html">QueryStringParameterHandlers&lt;TResource&gt;</a></h4>
+      <section><p>This is an alias type intended to simplify the implementation&apos;s method signature. See
+<a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnRegisterQueryableHandlersForQueryStringParameters">OnRegisterQueryableHandlersForQueryStringParameters()</a> for usage details.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.ResourceChangeTracker-1.html">ResourceChangeTracker&lt;TResource&gt;</a></h4>
+      <section><p>Used to determine whether additional changes to a resource (side effects), not specified in a POST or PATCH request, have been applied.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html">ResourceDefinitionAccessor</a></h4>
+      <section><p>Retrieves an <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html">IResourceDefinition&lt;TResource, TId&gt;</a> instance from the D/I container and invokes a callback on it.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.TargetedFields.html">TargetedFields</a></h4>
+      <section><p>Container to register which resource fields (attributes and relationships) are targeted by a request.</p>
+</section>
+    <h3 id="interfaces">Interfaces
+  </h3>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a></h4>
+      <section><p>Defines the basic contract for a JSON:API resource. All resource classes must implement <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable-1.html">IIdentifiable&lt;TId&gt;</a>.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable-1.html">IIdentifiable&lt;TId&gt;</a></h4>
+      <section><p>When implemented by a class, indicates to JsonApiDotNetCore that the class represents a JSON:API resource.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceChangeTracker-1.html">IResourceChangeTracker&lt;TResource&gt;</a></h4>
+      <section><p>Used to determine whether additional changes to a resource (side effects), not specified in a POST or PATCH request, have been applied.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html">IResourceDefinition&lt;TResource, TId&gt;</a></h4>
+      <section><p>Provides an extensibility point to add business logic that is resource-oriented instead of endpoint-oriented.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html">IResourceDefinitionAccessor</a></h4>
+      <section><p>Retrieves an <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html">IResourceDefinition&lt;TResource, TId&gt;</a> instance from the D/I container and invokes a callback on it.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.IResourceFactory.html">IResourceFactory</a></h4>
+      <section><p>Creates object instances for resource classes, which may have injectable dependencies.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Resources.ITargetedFields.html">ITargetedFields</a></h4>
+      <section><p>Container to register which resource fields (attributes and relationships) are targeted by a request.</p>
+</section>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
