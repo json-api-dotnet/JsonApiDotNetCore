@@ -202,7 +202,7 @@ public class IncludeParser : QueryExpressionParser
                 var pathBuilder = new StringBuilder();
                 IncludeTreeNode? parent = this;
 
-                while (parent is { Relationship: not HiddenRootRelationship })
+                while (parent is { Relationship: not HiddenRootRelationshipAttribute })
                 {
                     pathBuilder.Insert(0, pathBuilder.Length > 0 ? $"{parent.Relationship.PublicName}." : parent.Relationship.PublicName);
                     parent = parent._parent;
@@ -220,7 +220,7 @@ public class IncludeParser : QueryExpressionParser
 
         public static IncludeTreeNode CreateRoot(ResourceType resourceType)
         {
-            var relationship = new HiddenRootRelationship(resourceType);
+            var relationship = new HiddenRootRelationshipAttribute(resourceType);
             return new IncludeTreeNode(relationship, null);
         }
 
@@ -242,7 +242,7 @@ public class IncludeParser : QueryExpressionParser
         {
             IncludeElementExpression element = ToElementExpression();
 
-            if (element.Relationship is HiddenRootRelationship)
+            if (element.Relationship is HiddenRootRelationshipAttribute)
             {
                 return new IncludeExpression(element.Children);
             }
@@ -262,9 +262,9 @@ public class IncludeParser : QueryExpressionParser
             return include.ToFullString();
         }
 
-        private sealed class HiddenRootRelationship : RelationshipAttribute
+        private sealed class HiddenRootRelationshipAttribute : RelationshipAttribute
         {
-            public HiddenRootRelationship(ResourceType rightType)
+            public HiddenRootRelationshipAttribute(ResourceType rightType)
             {
                 ArgumentGuard.NotNull(rightType, nameof(rightType));
 

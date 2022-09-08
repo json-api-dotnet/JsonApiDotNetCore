@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Serialization.Objects;
 public readonly struct SingleOrManyData<T>
     // The "new()" constraint exists for parity with SingleOrManyDataConverterFactory, which creates empty instances
     // to ensure ManyValue never contains null items.
-    where T : class, IResourceIdentity, new()
+    where T : ResourceIdentifierObject, new()
 {
     public object? Value => ManyValue != null ? ManyValue : SingleValue;
 

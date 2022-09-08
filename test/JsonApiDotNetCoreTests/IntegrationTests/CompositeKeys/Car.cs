@@ -47,4 +47,7 @@ public sealed class Car : Identifiable<string?>
 
     [HasOne]
     public Dealership? Dealership { get; set; }
+
+    [HasMany]
+    public ISet<Dealership> PreviousDealerships { get; set; } = new HashSet<Dealership>();
 }

@@ -11,7 +11,7 @@ public abstract class BaseAdapter
 {
     [AssertionMethod]
     protected static void AssertHasData<T>(SingleOrManyData<T> data, RequestAdapterState state)
-        where T : class, IResourceIdentity, new()
+        where T : ResourceIdentifierObject, new()
     {
         if (!data.IsAssigned)
         {
@@ -21,7 +21,7 @@ public abstract class BaseAdapter
 
     [AssertionMethod]
     protected static void AssertDataHasSingleValue<T>(SingleOrManyData<T> data, bool allowNull, RequestAdapterState state)
-        where T : class, IResourceIdentity, new()
+        where T : ResourceIdentifierObject, new()
     {
         if (data.SingleValue == null)
         {
@@ -44,7 +44,7 @@ public abstract class BaseAdapter
 
     [AssertionMethod]
     protected static void AssertDataHasManyValue<T>(SingleOrManyData<T> data, RequestAdapterState state)
-        where T : class, IResourceIdentity, new()
+        where T : ResourceIdentifierObject, new()
     {
         if (data.ManyValue == null)
         {
