@@ -317,7 +317,7 @@ public class ResourceGraphBuilder
 
     private void SetPublicName(ResourceFieldAttribute field, PropertyInfo property)
     {
-        // ReSharper disable once ConstantNullCoalescingCondition
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         field.PublicName ??= FormatPropertyName(property);
     }
 

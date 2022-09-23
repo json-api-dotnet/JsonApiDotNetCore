@@ -105,8 +105,11 @@ CheckLastExitCode
 dotnet build -c Release
 CheckLastExitCode
 
-RunInspectCode
-RunCleanupCode
+# https://youtrack.jetbrains.com/issue/RSRP-488628/Breaking-InspectCode-fails-with-Roslyn-Worker-process-exited-unexpectedly-after-update
+if ($env:APPVEYOR_BUILD_WORKER_IMAGE -ne 'Ubuntu') {
+    RunInspectCode
+    RunCleanupCode
+}
 
 dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
 CheckLastExitCode
