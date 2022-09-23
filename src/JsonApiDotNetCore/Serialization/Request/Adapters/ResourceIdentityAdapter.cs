@@ -18,8 +18,8 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
 
     protected ResourceIdentityAdapter(IResourceGraph resourceGraph, IResourceFactory resourceFactory)
     {
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-        ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(resourceFactory);
 
         _resourceGraph = resourceGraph;
         _resourceFactory = resourceFactory;
@@ -28,9 +28,9 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
     protected (IIdentifiable resource, ResourceType resourceType) ConvertResourceIdentity(ResourceIdentity identity, ResourceIdentityRequirements requirements,
         RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(identity, nameof(identity));
-        ArgumentGuard.NotNull(requirements, nameof(requirements));
-        ArgumentGuard.NotNull(state, nameof(state));
+        ArgumentGuard.NotNull(identity);
+        ArgumentGuard.NotNull(requirements);
+        ArgumentGuard.NotNull(state);
 
         ResourceType resourceType = ResolveType(identity, requirements, state);
         IIdentifiable resource = CreateResource(identity, requirements, resourceType.ClrType, state);

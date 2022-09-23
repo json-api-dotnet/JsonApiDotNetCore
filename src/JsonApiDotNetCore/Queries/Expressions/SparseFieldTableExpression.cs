@@ -15,7 +15,7 @@ public class SparseFieldTableExpression : QueryExpression
 
     public SparseFieldTableExpression(IImmutableDictionary<ResourceType, SparseFieldSetExpression> table)
     {
-        ArgumentGuard.NotNullNorEmpty(table, nameof(table), "entries");
+        ArgumentGuard.NotNullNorEmpty(table);
 
         Table = table;
     }

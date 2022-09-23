@@ -27,7 +27,7 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
 
     public ResourceObjectConverter(IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+        ArgumentGuard.NotNull(resourceGraph);
 
         _resourceGraph = resourceGraph;
     }

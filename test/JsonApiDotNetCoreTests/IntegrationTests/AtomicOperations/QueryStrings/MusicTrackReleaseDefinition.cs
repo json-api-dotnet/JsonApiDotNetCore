@@ -15,7 +15,7 @@ public sealed class MusicTrackReleaseDefinition : JsonApiResourceDefinition<Musi
     public MusicTrackReleaseDefinition(IResourceGraph resourceGraph, ISystemClock systemClock)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(systemClock, nameof(systemClock));
+        ArgumentGuard.NotNull(systemClock);
 
         _systemClock = systemClock;
     }

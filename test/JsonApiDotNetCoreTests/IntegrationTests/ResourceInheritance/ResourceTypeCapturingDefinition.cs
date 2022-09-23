@@ -20,8 +20,8 @@ public sealed class ResourceTypeCapturingDefinition<TResource, TId> : JsonApiRes
     public ResourceTypeCapturingDefinition(IResourceGraph resourceGraph, IJsonApiRequest request, ResourceTypeCaptureStore<TResource, TId> captureStore)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(request, nameof(request));
-        ArgumentGuard.NotNull(captureStore, nameof(captureStore));
+        ArgumentGuard.NotNull(request);
+        ArgumentGuard.NotNull(captureStore);
 
         _request = request;
         _captureStore = captureStore;

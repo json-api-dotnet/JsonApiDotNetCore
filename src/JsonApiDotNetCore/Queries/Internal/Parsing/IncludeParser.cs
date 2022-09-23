@@ -15,7 +15,7 @@ public class IncludeParser : QueryExpressionParser
 
     public IncludeExpression Parse(string source, ResourceType resourceTypeInScope, int? maximumDepth)
     {
-        ArgumentGuard.NotNull(resourceTypeInScope, nameof(resourceTypeInScope));
+        ArgumentGuard.NotNull(resourceTypeInScope);
 
         Tokenize(source);
 
@@ -266,7 +266,7 @@ public class IncludeParser : QueryExpressionParser
         {
             public HiddenRootRelationshipAttribute(ResourceType rightType)
             {
-                ArgumentGuard.NotNull(rightType, nameof(rightType));
+                ArgumentGuard.NotNull(rightType);
 
                 RightType = rightType;
                 PublicName = "<<root>>";

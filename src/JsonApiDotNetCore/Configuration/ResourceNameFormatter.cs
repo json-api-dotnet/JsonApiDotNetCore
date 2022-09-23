@@ -19,7 +19,7 @@ internal sealed class ResourceNameFormatter
     /// </summary>
     public string FormatResourceName(Type resourceClrType)
     {
-        ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
+        ArgumentGuard.NotNull(resourceClrType);
 
         var resourceAttribute = resourceClrType.GetCustomAttribute<ResourceAttribute>(true);
 

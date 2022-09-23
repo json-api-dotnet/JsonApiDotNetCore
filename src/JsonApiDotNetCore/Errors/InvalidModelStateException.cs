@@ -26,9 +26,9 @@ public sealed class InvalidModelStateException : JsonApiException
     private static IEnumerable<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType,
         IResourceGraph resourceGraph, bool includeExceptionStackTraceInErrors, Func<Type, int, Type?>? getCollectionElementTypeCallback)
     {
-        ArgumentGuard.NotNull(modelState, nameof(modelState));
-        ArgumentGuard.NotNull(modelType, nameof(modelType));
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+        ArgumentGuard.NotNull(modelState);
+        ArgumentGuard.NotNull(modelType);
+        ArgumentGuard.NotNull(resourceGraph);
 
         List<ErrorObject> errorObjects = new();
 
@@ -229,8 +229,8 @@ public sealed class InvalidModelStateException : JsonApiException
         protected ModelStateKeySegment(Type modelType, bool isInComplexType, string nextKey, string? sourcePointer, ModelStateKeySegment? parent,
             Func<Type, int, Type?>? getCollectionElementTypeCallback)
         {
-            ArgumentGuard.NotNull(modelType, nameof(modelType));
-            ArgumentGuard.NotNull(nextKey, nameof(nextKey));
+            ArgumentGuard.NotNull(modelType);
+            ArgumentGuard.NotNull(nextKey);
 
             ModelType = modelType;
             IsInComplexType = isInComplexType;
@@ -242,15 +242,15 @@ public sealed class InvalidModelStateException : JsonApiException
 
         public ModelStateKeySegment? GetNextSegment(Type modelType, bool isInComplexType, string? sourcePointer)
         {
-            ArgumentGuard.NotNull(modelType, nameof(modelType));
+            ArgumentGuard.NotNull(modelType);
 
             return _nextKey == string.Empty ? null : CreateSegment(modelType, _nextKey, isInComplexType, this, sourcePointer, GetCollectionElementTypeCallback);
         }
 
         public static ModelStateKeySegment Create(Type modelType, string key, Func<Type, int, Type?>? getCollectionElementTypeCallback)
         {
-            ArgumentGuard.NotNull(modelType, nameof(modelType));
-            ArgumentGuard.NotNull(key, nameof(key));
+            ArgumentGuard.NotNull(modelType);
+            ArgumentGuard.NotNull(key);
 
             return CreateSegment(modelType, key, false, null, null, getCollectionElementTypeCallback);
         }
@@ -359,14 +359,14 @@ public sealed class InvalidModelStateException : JsonApiException
             Func<Type, int, Type?>? getCollectionElementTypeCallback)
             : base(modelType, isInComplexType, nextKey, sourcePointer, parent, getCollectionElementTypeCallback)
         {
-            ArgumentGuard.NotNull(propertyName, nameof(propertyName));
+            ArgumentGuard.NotNull(propertyName);
 
             PropertyName = propertyName;
         }
 
         public static string GetPublicNameForProperty(PropertyInfo property)
         {
-            ArgumentGuard.NotNull(property, nameof(property));
+            ArgumentGuard.NotNull(property);
 
             var jsonNameAttribute = property.GetCustomAttribute<JsonPropertyNameAttribute>(true);
             return jsonNameAttribute?.Name ?? property.Name;

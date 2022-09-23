@@ -36,8 +36,8 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
 
     public JsonApiRoutingConvention(IJsonApiOptions options, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(options, nameof(options));
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(resourceGraph);
 
         _options = options;
         _resourceGraph = resourceGraph;
@@ -60,7 +60,7 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
     /// <inheritdoc />
     public void Apply(ApplicationModel application)
     {
-        ArgumentGuard.NotNull(application, nameof(application));
+        ArgumentGuard.NotNull(application);
 
         foreach (ControllerModel controller in application.Controllers)
         {

@@ -94,7 +94,7 @@ public sealed class DependencyContainerRegistrationTests
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         public SomeSingletonService(SomeScopedService scopedService)
         {
-            ArgumentGuard.NotNull(scopedService, nameof(scopedService));
+            ArgumentGuard.NotNull(scopedService);
         }
     }
 
@@ -109,7 +109,7 @@ public sealed class DependencyContainerRegistrationTests
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         public CircularServiceA(CircularServiceB serviceB)
         {
-            ArgumentGuard.NotNull(serviceB, nameof(serviceB));
+            ArgumentGuard.NotNull(serviceB);
         }
     }
 
@@ -119,7 +119,7 @@ public sealed class DependencyContainerRegistrationTests
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         public CircularServiceB(CircularServiceA serviceA)
         {
-            ArgumentGuard.NotNull(serviceA, nameof(serviceA));
+            ArgumentGuard.NotNull(serviceA);
         }
     }
 

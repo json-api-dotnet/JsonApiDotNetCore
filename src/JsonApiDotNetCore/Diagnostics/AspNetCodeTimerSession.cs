@@ -37,14 +37,14 @@ public sealed class AspNetCodeTimerSession : ICodeTimerSession
 
     public AspNetCodeTimerSession(IHttpContextAccessor httpContextAccessor)
     {
-        ArgumentGuard.NotNull(httpContextAccessor, nameof(httpContextAccessor));
+        ArgumentGuard.NotNull(httpContextAccessor);
 
         _httpContextAccessor = httpContextAccessor;
     }
 
     public AspNetCodeTimerSession(HttpContext httpContext)
     {
-        ArgumentGuard.NotNull(httpContext, nameof(httpContext));
+        ArgumentGuard.NotNull(httpContext);
 
         _httpContext = httpContext;
     }

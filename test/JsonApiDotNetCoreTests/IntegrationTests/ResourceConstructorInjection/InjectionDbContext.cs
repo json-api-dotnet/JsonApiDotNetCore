@@ -16,7 +16,7 @@ public sealed class InjectionDbContext : DbContext
     public InjectionDbContext(DbContextOptions<InjectionDbContext> options, ISystemClock systemClock)
         : base(options)
     {
-        ArgumentGuard.NotNull(systemClock, nameof(systemClock));
+        ArgumentGuard.NotNull(systemClock);
 
         SystemClock = systemClock;
     }

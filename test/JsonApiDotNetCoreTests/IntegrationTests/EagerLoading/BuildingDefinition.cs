@@ -14,7 +14,7 @@ public sealed class BuildingDefinition : JsonApiResourceDefinition<Building, int
     public BuildingDefinition(IResourceGraph resourceGraph, IJsonApiRequest request)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(request, nameof(request));
+        ArgumentGuard.NotNull(request);
 
         _request = request;
     }

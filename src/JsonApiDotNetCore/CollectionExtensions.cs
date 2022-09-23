@@ -18,8 +18,8 @@ internal static class CollectionExtensions
 
     public static int FindIndex<T>(this IReadOnlyList<T> source, Predicate<T> match)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
-        ArgumentGuard.NotNull(match, nameof(match));
+        ArgumentGuard.NotNull(source);
+        ArgumentGuard.NotNull(match);
 
         for (int index = 0; index < source.Count; index++)
         {
@@ -82,8 +82,8 @@ internal static class CollectionExtensions
 
     public static void AddRange<T>(this ICollection<T> source, IEnumerable<T> itemsToAdd)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
-        ArgumentGuard.NotNull(itemsToAdd, nameof(itemsToAdd));
+        ArgumentGuard.NotNull(source);
+        ArgumentGuard.NotNull(itemsToAdd);
 
         foreach (T item in itemsToAdd)
         {

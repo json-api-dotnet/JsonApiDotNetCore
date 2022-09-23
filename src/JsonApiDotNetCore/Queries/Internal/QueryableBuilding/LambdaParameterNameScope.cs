@@ -11,8 +11,8 @@ public sealed class LambdaParameterNameScope : IDisposable
 
     public LambdaParameterNameScope(string name, LambdaParameterNameFactory owner)
     {
-        ArgumentGuard.NotNullNorEmpty(name, nameof(name));
-        ArgumentGuard.NotNull(owner, nameof(owner));
+        ArgumentGuard.NotNullNorEmpty(name);
+        ArgumentGuard.NotNull(owner);
 
         Name = name;
         _owner = owner;

@@ -31,11 +31,11 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
         IResourceFactory resourceFactory)
         : base(lambdaScope)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
-        ArgumentGuard.NotNull(entityModel, nameof(entityModel));
-        ArgumentGuard.NotNull(extensionType, nameof(extensionType));
-        ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
-        ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+        ArgumentGuard.NotNull(source);
+        ArgumentGuard.NotNull(entityModel);
+        ArgumentGuard.NotNull(extensionType);
+        ArgumentGuard.NotNull(nameFactory);
+        ArgumentGuard.NotNull(resourceFactory);
 
         _source = source;
         _entityModel = entityModel;
@@ -46,7 +46,7 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
 
     public Expression ApplySelect(FieldSelection selection, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(selection, nameof(selection));
+        ArgumentGuard.NotNull(selection);
 
         Expression bodyInitializer = CreateLambdaBodyInitializer(selection, resourceType, LambdaScope, false);
 
@@ -272,7 +272,7 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
 
         public PropertySelector(PropertyInfo property, QueryLayer? nextLayer = null)
         {
-            ArgumentGuard.NotNull(property, nameof(property));
+            ArgumentGuard.NotNull(property);
 
             Property = property;
             NextLayer = nextLayer;

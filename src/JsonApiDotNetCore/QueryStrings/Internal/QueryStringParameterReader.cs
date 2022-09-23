@@ -16,8 +16,8 @@ public abstract class QueryStringParameterReader
 
     protected QueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(request, nameof(request));
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+        ArgumentGuard.NotNull(request);
+        ArgumentGuard.NotNull(resourceGraph);
 
         _resourceGraph = resourceGraph;
         _isCollectionRequest = request.IsCollection;

@@ -40,7 +40,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
     /// <inheritdoc />
     public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
     {
-        ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
+        ArgumentGuard.NotNull(disableQueryStringAttribute);
 
         return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Sort);
     }
@@ -48,7 +48,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
-        ArgumentGuard.NotNullNorEmpty(parameterName, nameof(parameterName));
+        ArgumentGuard.NotNullNorEmpty(parameterName);
 
         bool isNested = parameterName.StartsWith("sort[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
         return parameterName == "sort" || isNested;

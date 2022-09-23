@@ -57,7 +57,7 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
         get => _rightType!;
         internal set
         {
-            ArgumentGuard.NotNull(value, nameof(value));
+            ArgumentGuard.NotNull(value);
             _rightType = value;
         }
     }

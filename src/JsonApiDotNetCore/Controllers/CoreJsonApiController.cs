@@ -10,7 +10,7 @@ public abstract class CoreJsonApiController : ControllerBase
 {
     protected IActionResult Error(ErrorObject error)
     {
-        ArgumentGuard.NotNull(error, nameof(error));
+        ArgumentGuard.NotNull(error);
 
         return new ObjectResult(error)
         {
@@ -21,7 +21,7 @@ public abstract class CoreJsonApiController : ControllerBase
     protected IActionResult Error(IEnumerable<ErrorObject> errors)
     {
         IReadOnlyList<ErrorObject>? errorList = ToErrorList(errors);
-        ArgumentGuard.NotNullNorEmpty(errorList, nameof(errors));
+        ArgumentGuard.NotNullNorEmpty(errorList);
 
         return new ObjectResult(errorList)
         {

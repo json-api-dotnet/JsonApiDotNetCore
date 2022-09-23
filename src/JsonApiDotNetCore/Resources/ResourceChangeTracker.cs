@@ -19,8 +19,8 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
 
     public ResourceChangeTracker(IJsonApiRequest request, ITargetedFields targetedFields)
     {
-        ArgumentGuard.NotNull(request, nameof(request));
-        ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+        ArgumentGuard.NotNull(request);
+        ArgumentGuard.NotNull(targetedFields);
 
         _request = request;
         _targetedFields = targetedFields;
@@ -29,7 +29,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     /// <inheritdoc />
     public void SetInitiallyStoredAttributeValues(TResource resource)
     {
-        ArgumentGuard.NotNull(resource, nameof(resource));
+        ArgumentGuard.NotNull(resource);
 
         _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, _request.PrimaryResourceType!.Attributes);
     }
@@ -37,7 +37,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     /// <inheritdoc />
     public void SetRequestAttributeValues(TResource resource)
     {
-        ArgumentGuard.NotNull(resource, nameof(resource));
+        ArgumentGuard.NotNull(resource);
 
         _requestAttributeValues = CreateAttributeDictionary(resource, _targetedFields.Attributes);
     }
@@ -45,7 +45,7 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     /// <inheritdoc />
     public void SetFinallyStoredAttributeValues(TResource resource)
     {
-        ArgumentGuard.NotNull(resource, nameof(resource));
+        ArgumentGuard.NotNull(resource);
 
         _finallyStoredAttributeValues = CreateAttributeDictionary(resource, _request.PrimaryResourceType!.Attributes);
     }

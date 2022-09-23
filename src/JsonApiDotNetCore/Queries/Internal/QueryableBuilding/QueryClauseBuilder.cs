@@ -14,7 +14,7 @@ public abstract class QueryClauseBuilder<TArgument> : QueryExpressionVisitor<TAr
 
     protected QueryClauseBuilder(LambdaScope lambdaScope)
     {
-        ArgumentGuard.NotNull(lambdaScope, nameof(lambdaScope));
+        ArgumentGuard.NotNull(lambdaScope);
 
         LambdaScope = lambdaScope;
     }
@@ -87,8 +87,8 @@ public abstract class QueryClauseBuilder<TArgument> : QueryExpressionVisitor<TAr
 
     protected TResult WithLambdaScopeAccessor<TResult>(Expression accessorExpression, Func<TResult> action)
     {
-        ArgumentGuard.NotNull(accessorExpression, nameof(accessorExpression));
-        ArgumentGuard.NotNull(action, nameof(action));
+        ArgumentGuard.NotNull(accessorExpression);
+        ArgumentGuard.NotNull(action);
 
         LambdaScope backupScope = LambdaScope;
 

@@ -41,13 +41,13 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
         IResourceDefinitionAccessor resourceDefinitionAccessor)
     {
-        ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
-        ArgumentGuard.NotNull(dbContextResolver, nameof(dbContextResolver));
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-        ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
-        ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
-        ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
-        ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
+        ArgumentGuard.NotNull(targetedFields);
+        ArgumentGuard.NotNull(dbContextResolver);
+        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(resourceFactory);
+        ArgumentGuard.NotNull(constraintProviders);
+        ArgumentGuard.NotNull(loggerFactory);
+        ArgumentGuard.NotNull(resourceDefinitionAccessor);
 
         _targetedFields = targetedFields;
         _dbContext = dbContextResolver.GetContext();
@@ -66,7 +66,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             queryLayer
         });
 
-        ArgumentGuard.NotNull(queryLayer, nameof(queryLayer));
+        ArgumentGuard.NotNull(queryLayer);
 
         using (CodeTimingSessionManager.Current.Measure("Repository - Get resource(s)"))
         {
@@ -112,7 +112,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             queryLayer
         });
 
-        ArgumentGuard.NotNull(queryLayer, nameof(queryLayer));
+        ArgumentGuard.NotNull(queryLayer);
 
         using (CodeTimingSessionManager.Current.Measure("Convert QueryLayer to System.Expression"))
         {
@@ -178,8 +178,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             resourceForDatabase
         });
 
-        ArgumentGuard.NotNull(resourceFromRequest, nameof(resourceFromRequest));
-        ArgumentGuard.NotNull(resourceForDatabase, nameof(resourceForDatabase));
+        ArgumentGuard.NotNull(resourceFromRequest);
+        ArgumentGuard.NotNull(resourceForDatabase);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Create resource");
 
@@ -240,7 +240,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             queryLayer
         });
 
-        ArgumentGuard.NotNull(queryLayer, nameof(queryLayer));
+        ArgumentGuard.NotNull(queryLayer);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Get resource for update");
 
@@ -257,8 +257,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             resourceFromDatabase
         });
 
-        ArgumentGuard.NotNull(resourceFromRequest, nameof(resourceFromRequest));
-        ArgumentGuard.NotNull(resourceFromDatabase, nameof(resourceFromDatabase));
+        ArgumentGuard.NotNull(resourceFromRequest);
+        ArgumentGuard.NotNull(resourceFromDatabase);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Update resource");
 
@@ -394,7 +394,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             rightValue
         });
 
-        ArgumentGuard.NotNull(leftResource, nameof(leftResource));
+        ArgumentGuard.NotNull(leftResource);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Set relationship");
 
@@ -425,7 +425,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             rightResourceIds
         });
 
-        ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
+        ArgumentGuard.NotNull(rightResourceIds);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Add to to-many relationship");
 
@@ -488,8 +488,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             rightResourceIds
         });
 
-        ArgumentGuard.NotNull(leftResource, nameof(leftResource));
-        ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
+        ArgumentGuard.NotNull(leftResource);
+        ArgumentGuard.NotNull(rightResourceIds);
 
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Remove from to-many relationship");
 

@@ -22,8 +22,8 @@ public class ResourceGraphBuilder
 
     public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
     {
-        ArgumentGuard.NotNull(options, nameof(options));
-        ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(loggerFactory);
 
         _options = options;
         _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
@@ -144,7 +144,7 @@ public class ResourceGraphBuilder
 
     public ResourceGraphBuilder Add(DbContext dbContext)
     {
-        ArgumentGuard.NotNull(dbContext, nameof(dbContext));
+        ArgumentGuard.NotNull(dbContext);
 
         foreach (IEntityType entityType in dbContext.Model.GetEntityTypes())
         {
@@ -200,7 +200,7 @@ public class ResourceGraphBuilder
     public ResourceGraphBuilder Add(Type resourceClrType, Type? idClrType = null, string? publicName = null)
 #pragma warning restore AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     {
-        ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
+        ArgumentGuard.NotNull(resourceClrType);
 
         if (_resourceTypesByClrType.ContainsKey(resourceClrType))
         {
