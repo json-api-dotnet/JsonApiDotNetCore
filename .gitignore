@@ -407,5 +407,19 @@ FodyWeavers.xsd
 # Sqlite example databases
 *.db
 
-# JetBrains Rider
-.idea/
+# JetBrains IDEs Rider/IntelliJ (based on https://intellij-support.jetbrains.com/hc/en-us/articles/206544839)
+**/.idea/**/*.xml
+**/.idea/**/*.iml
+**/.idea/**/*.ids
+**/.idea/**/*.ipr
+**/.idea/**/*.iws
+**/.idea/**/*.name
+**/.idea/**/*.properties
+**/.idea/**/*.ser
+**/.idea/**/shelf/
+**/.idea/**/dictionaries/
+**/.idea/**/libraries/
+**/.idea/**/artifacts/
+**/.idea/**/httpRequests/
+**/.idea/**/dataSources/
+!**/.idea/**/codeStyles/*
