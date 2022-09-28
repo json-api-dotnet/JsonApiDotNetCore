@@ -78,7 +78,8 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
                     {
                         if (_controllerPerResourceTypeMap.ContainsKey(resourceType))
                         {
-                            throw new InvalidConfigurationException($"Multiple controllers found for resource type '{resourceType}'.");
+                            throw new InvalidConfigurationException(
+                                $"Multiple controllers found for resource type '{resourceType}': '{_controllerPerResourceTypeMap[resourceType].ControllerType}' and '{controller.ControllerType}'.");
                         }
 
                         _resourceTypePerControllerTypeMap.Add(controller.ControllerType, resourceType);
