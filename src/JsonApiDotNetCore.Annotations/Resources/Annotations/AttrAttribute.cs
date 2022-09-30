@@ -18,13 +18,13 @@ public sealed class AttrAttribute : ResourceFieldAttribute
     /// is used.
     /// </summary>
     /// <example>
-    /// <code>
+    /// <code><![CDATA[
     /// public class Author : Identifiable
     /// {
     ///     [Attr(Capabilities = AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)]
     ///     public string Name { get; set; }
     /// }
-    /// </code>
+    /// ]]></code>
     /// </example>
     public AttrCapabilities Capabilities
     {

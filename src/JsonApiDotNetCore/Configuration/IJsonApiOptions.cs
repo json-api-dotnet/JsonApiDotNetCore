@@ -14,7 +14,9 @@ public interface IJsonApiOptions
     /// The URL prefix to use for exposed endpoints.
     /// </summary>
     /// <example>
-    /// <code>options.Namespace = "api/v1";</code>
+    /// <code><![CDATA[
+    /// options.Namespace = "api/v1";
+    /// ]]></code>
     /// </example>
     string? Namespace { get; }
 
@@ -42,10 +44,10 @@ public interface IJsonApiOptions
     /// Use relative links for all resources. False by default.
     /// </summary>
     /// <example>
-    /// <code>
+    /// <code><![CDATA[
     /// options.UseRelativeLinks = true;
-    /// </code>
-    /// <code>
+    /// ]]></code>
+    /// <code><![CDATA[
     /// {
     ///   "type": "articles",
     ///   "id": "4309",
@@ -58,7 +60,7 @@ public interface IJsonApiOptions
     ///      }
     ///   }
     /// }
-    /// </code>
+    /// ]]></code>
     /// </example>
     bool UseRelativeLinks { get; }
 
