@@ -829,6 +829,31 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     }
 
     [Fact]
+    public async Task Can_select_empty_includes()
+    {
+        // Arrange
+        WebAccount account = _fakers.WebAccount.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Accounts.Add(account);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/webAccounts/{account.StringId}?include=";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+
+        responseDocument.Included.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task Cannot_include_unknown_relationship()
     {
         // Arrange

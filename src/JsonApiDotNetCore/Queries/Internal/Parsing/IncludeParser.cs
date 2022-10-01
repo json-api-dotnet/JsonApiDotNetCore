@@ -30,12 +30,18 @@ public class IncludeParser : QueryExpressionParser
     protected IncludeExpression ParseInclude(ResourceType resourceTypeInScope, int? maximumDepth)
     {
         var treeRoot = IncludeTreeNode.CreateRoot(resourceTypeInScope);
-
-        ParseRelationshipChain(treeRoot);
+        bool isAtStart = true;
 
         while (TokenStack.Any())
         {
-            EatSingleCharacterToken(TokenKind.Comma);
+            if (!isAtStart)
+            {
+                EatSingleCharacterToken(TokenKind.Comma);
+            }
+            else
+            {
+                isAtStart = false;
+            }
 
             ParseRelationshipChain(treeRoot);
         }
@@ -244,7 +250,7 @@ public class IncludeParser : QueryExpressionParser
 
             if (element.Relationship is HiddenRootRelationshipAttribute)
             {
-                return new IncludeExpression(element.Children);
+                return element.Children.Any() ? new IncludeExpression(element.Children) : IncludeExpression.Empty;
             }
 
             return new IncludeExpression(ImmutableHashSet.Create(element));
