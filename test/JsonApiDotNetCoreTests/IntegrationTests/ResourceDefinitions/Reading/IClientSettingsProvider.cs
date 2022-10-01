@@ -4,5 +4,5 @@ public interface IClientSettingsProvider
 {
     bool IsIncludePlanetMoonsBlocked { get; }
     bool ArePlanetsWithPrivateNameHidden { get; }
-    bool IsMoonOrbitingPlanetAutoIncluded { get; }
+    bool IsStarGivingLightToMoonAutoIncluded { get; }
 }

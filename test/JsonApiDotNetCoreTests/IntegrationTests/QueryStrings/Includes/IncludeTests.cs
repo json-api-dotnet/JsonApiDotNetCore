@@ -398,29 +398,25 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
 
-        responseDocument.Included.ShouldHaveCount(5);
+        responseDocument.Included.ShouldHaveCount(4);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(comment.Parent.StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(comment.Parent.Caption));
 
         responseDocument.Included[1].Type.Should().Be("comments");
-        responseDocument.Included[1].Id.Should().Be(comment.StringId);
-        responseDocument.Included[1].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
-
-        responseDocument.Included[2].Type.Should().Be("comments");
-        responseDocument.Included[2].Id.Should().Be(comment.Parent.Comments.ElementAt(0).StringId);
-        responseDocument.Included[2].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Parent.Comments.ElementAt(0).Text));
+        responseDocument.Included[1].Id.Should().Be(comment.Parent.Comments.ElementAt(0).StringId);
+        responseDocument.Included[1].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Parent.Comments.ElementAt(0).Text));
 
         string userName = comment.Parent.Comments.ElementAt(0).Author!.UserName;
 
-        responseDocument.Included[3].Type.Should().Be("webAccounts");
-        responseDocument.Included[3].Id.Should().Be(comment.Parent.Comments.ElementAt(0).Author!.StringId);
-        responseDocument.Included[3].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(userName));
+        responseDocument.Included[2].Type.Should().Be("webAccounts");
+        responseDocument.Included[2].Id.Should().Be(comment.Parent.Comments.ElementAt(0).Author!.StringId);
+        responseDocument.Included[2].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(userName));
 
-        responseDocument.Included[4].Type.Should().Be("comments");
-        responseDocument.Included[4].Id.Should().Be(comment.Parent.Comments.ElementAt(1).StringId);
-        responseDocument.Included[4].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Parent.Comments.ElementAt(1).Text));
+        responseDocument.Included[3].Type.Should().Be("comments");
+        responseDocument.Included[3].Id.Should().Be(comment.Parent.Comments.ElementAt(1).StringId);
+        responseDocument.Included[3].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Parent.Comments.ElementAt(1).Text));
     }
 
     [Fact]
