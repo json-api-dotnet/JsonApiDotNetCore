@@ -26,7 +26,7 @@ These are some steps you can take to help you understand what this project is an
 - [Embercasts: Full Stack Ember with ASP.NET Core](https://www.embercasts.com/course/full-stack-ember-with-dotnet/watch/whats-in-this-course-cs) (paid course, 2017)
 
 ### Official documentation
-- [The JSON:API specification](https://jsonapi.org/format/1.1/)
+- [The JSON:API specification](https://jsonapi.org/format/)
 - [JsonApiDotNetCore website](https://www.jsonapi.net/)
 - [Roadmap](ROADMAP.md)
 
