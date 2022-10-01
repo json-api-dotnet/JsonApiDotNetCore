@@ -106,7 +106,7 @@ public class IncludeParser : QueryExpressionParser
             {
                 relationshipsFound.AddRange(relationships);
 
-                RelationshipAttribute[] relationshipsToInclude = relationships.Where(relationship => relationship.CanInclude).ToArray();
+                RelationshipAttribute[] relationshipsToInclude = relationships.Where(relationship => !relationship.IsIncludeBlocked()).ToArray();
                 ICollection<IncludeTreeNode> affectedChildren = parent.EnsureChildren(relationshipsToInclude);
                 children.AddRange(affectedChildren);
             }
@@ -139,7 +139,7 @@ public class IncludeParser : QueryExpressionParser
     private static void AssertAtLeastOneCanBeIncluded(ISet<RelationshipAttribute> relationshipsFound, string relationshipName,
         ICollection<IncludeTreeNode> parents)
     {
-        if (relationshipsFound.All(relationship => !relationship.CanInclude))
+        if (relationshipsFound.All(relationship => relationship.IsIncludeBlocked()))
         {
             string parentPath = parents.First().Path;
             ResourceType resourceType = relationshipsFound.First().LeftType;

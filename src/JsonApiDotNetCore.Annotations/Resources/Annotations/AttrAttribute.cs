@@ -14,15 +14,14 @@ public sealed class AttrAttribute : ResourceFieldAttribute
     internal bool HasExplicitCapabilities => _capabilities != null;
 
     /// <summary>
-    /// The set of capabilities that are allowed to be performed on this attribute. When not explicitly assigned, the configured default set of capabilities
-    /// is used.
+    /// The set of allowed capabilities on this attribute. When not explicitly set, the configured default set of capabilities is used.
     /// </summary>
     /// <example>
     /// <code><![CDATA[
-    /// public class Author : Identifiable
+    /// public class Author : Identifiable<long>
     /// {
     ///     [Attr(Capabilities = AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)]
-    ///     public string Name { get; set; }
+    ///     public string Name { get; set; } = null!;
     /// }
     /// ]]></code>
     /// </example>

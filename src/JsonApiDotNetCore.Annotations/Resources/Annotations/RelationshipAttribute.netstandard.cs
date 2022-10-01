@@ -12,5 +12,6 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
     public LinkTypes Links { get; set; } = LinkTypes.NotConfigured;
 
     /// <summary />
+    [Obsolete("Use AllowInclude in Capabilities instead.")]
     public bool CanInclude { get; set; } = true;
 }

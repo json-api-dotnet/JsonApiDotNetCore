@@ -21,9 +21,19 @@ public interface IJsonApiOptions
     string? Namespace { get; }
 
     /// <summary>
-    /// Specifies the default query string capabilities that can be used on exposed JSON:API attributes. Defaults to <see cref="AttrCapabilities.All" />.
+    /// Specifies the default set of allowed capabilities on JSON:API attributes. Defaults to <see cref="AttrCapabilities.All" />.
     /// </summary>
     AttrCapabilities DefaultAttrCapabilities { get; }
+
+    /// <summary>
+    /// Specifies the default set of allowed capabilities on JSON:API to-one relationships. Defaults to <see cref="HasOneCapabilities.All" />.
+    /// </summary>
+    HasOneCapabilities DefaultHasOneCapabilities { get; }
+
+    /// <summary>
+    /// Specifies the default set of allowed capabilities on JSON:API to-many relationships. Defaults to <see cref="HasManyCapabilities.All" />.
+    /// </summary>
+    HasManyCapabilities DefaultHasManyCapabilities { get; }
 
     /// <summary>
     /// Indicates whether responses should contain a jsonapi object that contains the highest JSON:API version supported. False by default.

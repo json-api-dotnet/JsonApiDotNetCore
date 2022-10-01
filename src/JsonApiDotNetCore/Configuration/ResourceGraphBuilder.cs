@@ -307,6 +307,7 @@ public class ResourceGraphBuilder
             {
                 relationship.Property = property;
                 SetPublicName(relationship, property);
+                SetRelationshipCapabilities(relationship);
 
                 IncludeField(relationshipsByName, relationship);
             }
@@ -319,6 +320,52 @@ public class ResourceGraphBuilder
     {
         // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         field.PublicName ??= FormatPropertyName(property);
+    }
+
+    private void SetRelationshipCapabilities(RelationshipAttribute relationship)
+    {
+#pragma warning disable CS0618 // Type or member is obsolete
+        bool canInclude = relationship.CanInclude;
+#pragma warning restore CS0618 // Type or member is obsolete
+
+        if (relationship is HasOneAttribute hasOneRelationship)
+        {
+            SetHasOneRelationshipCapabilities(hasOneRelationship, canInclude);
+        }
+        else if (relationship is HasManyAttribute hasManyRelationship)
+        {
+            SetHasManyRelationshipCapabilities(hasManyRelationship, canInclude);
+        }
+    }
+
+    private void SetHasOneRelationshipCapabilities(HasOneAttribute hasOneRelationship, bool canInclude)
+    {
+        if (!hasOneRelationship.HasExplicitCapabilities)
+        {
+            hasOneRelationship.Capabilities = _options.DefaultHasOneCapabilities;
+        }
+
+        if (hasOneRelationship.HasExplicitCanInclude)
+        {
+            hasOneRelationship.Capabilities = canInclude
+                ? hasOneRelationship.Capabilities | HasOneCapabilities.AllowInclude
+                : hasOneRelationship.Capabilities & ~HasOneCapabilities.AllowInclude;
+        }
+    }
+
+    private void SetHasManyRelationshipCapabilities(HasManyAttribute hasManyRelationship, bool canInclude)
+    {
+        if (!hasManyRelationship.HasExplicitCapabilities)
+        {
+            hasManyRelationship.Capabilities = _options.DefaultHasManyCapabilities;
+        }
+
+        if (hasManyRelationship.HasExplicitCanInclude)
+        {
+            hasManyRelationship.Capabilities = canInclude
+                ? hasManyRelationship.Capabilities | HasManyCapabilities.AllowInclude
+                : hasManyRelationship.Capabilities & ~HasManyCapabilities.AllowInclude;
+        }
     }
 
     private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceClrType, int recursionDepth = 0)

@@ -17,6 +17,7 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
         _testContext = testContext;
 
         testContext.UseController<WorkItemsController>();
+        testContext.UseController<WorkItemGroupsController>();
     }
 
     [Fact]
@@ -932,5 +933,47 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<IntegrationTest
             workItemInDatabase.RelatedTo.Should().ContainSingle(workItem => workItem.Id == existingWorkItem.Id);
             workItemInDatabase.RelatedTo.Should().ContainSingle(workItem => workItem.Id == existingWorkItem.RelatedTo[0].Id);
         });
+    }
+
+    [Fact]
+    public async Task Cannot_add_with_blocked_capability()
+    {
+        // Arrange
+        WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Groups.Add(existingWorkItemGroup);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
+                {
+                    type = "workItems",
+                    id = Unknown.StringId.For<WorkItem, int>()
+                }
+            }
+        };
+
+        string route = $"/workItemGroups/{existingWorkItemGroup.StringId}/relationships/items";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be added to.");
+        error.Detail.Should().Be("The relationship 'items' on resource type 'workItemGroups' cannot be added to.");
+        error.Source.Should().BeNull();
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
     }
 }

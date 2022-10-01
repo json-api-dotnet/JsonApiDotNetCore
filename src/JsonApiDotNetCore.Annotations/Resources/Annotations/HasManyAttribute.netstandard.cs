@@ -9,4 +9,6 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 [AttributeUsage(AttributeTargets.Property)]
 public sealed class HasManyAttribute : RelationshipAttribute
 {
+    /// <summary />
+    public HasManyCapabilities Capabilities { get; set; }
 }

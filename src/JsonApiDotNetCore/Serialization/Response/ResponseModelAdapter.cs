@@ -287,6 +287,13 @@ public class ResponseModelAdapter : IResponseModelAdapter
             ? leftTreeNode.ResourceType.GetRelationshipByPropertyName(relationship.Property.Name)
             : relationship;
 
+        if (effectiveRelationship.IsViewBlocked())
+        {
+            // Hide related resources when blocked. According to JSON:API, breaking full linkage is only allowed
+            // when the client explicitly requested it by sending a sparse fieldset.
+            return;
+        }
+
         object? rightValue = effectiveRelationship.GetValue(leftResource);
         IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
 

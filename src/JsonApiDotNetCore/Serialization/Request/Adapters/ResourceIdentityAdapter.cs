@@ -231,4 +231,53 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
                 HttpStatusCode.Forbidden);
         }
     }
+
+    internal static void AssertRelationshipChangeNotBlocked(RelationshipAttribute relationship, RequestAdapterState state)
+    {
+        switch (state.Request.WriteOperation)
+        {
+            case WriteOperationKind.AddToRelationship:
+            {
+                AssertAddToRelationshipNotBlocked((HasManyAttribute)relationship, state);
+                break;
+            }
+            case WriteOperationKind.RemoveFromRelationship:
+            {
+                AssertRemoveFromRelationshipNotBlocked((HasManyAttribute)relationship, state);
+                break;
+            }
+            default:
+            {
+                AssertSetRelationshipNotBlocked(relationship, state);
+                break;
+            }
+        }
+    }
+
+    private static void AssertSetRelationshipNotBlocked(RelationshipAttribute relationship, RequestAdapterState state)
+    {
+        if (relationship.IsSetBlocked())
+        {
+            throw new ModelConversionException(state.Position, "Relationship cannot be assigned.",
+                $"The relationship '{relationship.PublicName}' on resource type '{relationship.LeftType.PublicName}' cannot be assigned to.");
+        }
+    }
+
+    private static void AssertAddToRelationshipNotBlocked(HasManyAttribute relationship, RequestAdapterState state)
+    {
+        if (!relationship.Capabilities.HasFlag(HasManyCapabilities.AllowAdd))
+        {
+            throw new ModelConversionException(state.Position, "Relationship cannot be added to.",
+                $"The relationship '{relationship.PublicName}' on resource type '{relationship.LeftType.PublicName}' cannot be added to.");
+        }
+    }
+
+    private static void AssertRemoveFromRelationshipNotBlocked(HasManyAttribute relationship, RequestAdapterState state)
+    {
+        if (!relationship.Capabilities.HasFlag(HasManyCapabilities.AllowRemove))
+        {
+            throw new ModelConversionException(state.Position, "Relationship cannot be removed from.",
+                $"The relationship '{relationship.PublicName}' on resource type '{relationship.LeftType.PublicName}' cannot be removed from.");
+        }
+    }
 }

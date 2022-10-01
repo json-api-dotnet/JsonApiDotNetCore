@@ -729,41 +729,6 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task Cannot_create_resource_attribute_with_blocked_capability()
-    {
-        // Arrange
-        var requestBody = new
-        {
-            data = new
-            {
-                type = "workItems",
-                attributes = new
-                {
-                    isImportant = true
-                }
-            }
-        };
-
-        const string route = "/workItems";
-
-        // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
-
-        responseDocument.Errors.ShouldHaveCount(1);
-
-        ErrorObject error = responseDocument.Errors[0];
-        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-        error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when creating resource.");
-        error.Detail.Should().Be("The attribute 'isImportant' on resource type 'workItems' cannot be assigned to.");
-        error.Source.ShouldNotBeNull();
-        error.Source.Pointer.Should().Be("/data/attributes/isImportant");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
-    }
-
-    [Fact]
     public async Task Cannot_create_resource_with_readonly_attribute()
     {
         // Arrange
@@ -957,5 +922,40 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
             workItemInDatabase.Tags.ShouldHaveCount(1);
             workItemInDatabase.Tags.Single().Id.Should().Be(existingTag.Id);
         });
+    }
+
+    [Fact]
+    public async Task Cannot_assign_attribute_with_blocked_capability()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItems",
+                attributes = new
+                {
+                    isImportant = true
+                }
+            }
+        };
+
+        const string route = "/workItems";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when creating resource.");
+        error.Detail.Should().Be("The attribute 'isImportant' on resource type 'workItems' cannot be assigned to.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/data/attributes/isImportant");
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
     }
 }

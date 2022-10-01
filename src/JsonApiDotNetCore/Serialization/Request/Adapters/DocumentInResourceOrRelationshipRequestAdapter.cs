@@ -48,6 +48,7 @@ public sealed class DocumentInResourceOrRelationshipRequestAdapter : IDocumentIn
                 }
 
                 ResourceIdentityAdapter.AssertToManyInAddOrRemoveRelationship(state.Request.Relationship, state);
+                ResourceIdentityAdapter.AssertRelationshipChangeNotBlocked(state.Request.Relationship, state);
 
                 state.WritableTargetedFields.Relationships.Add(state.Request.Relationship);
                 return _relationshipDataAdapter.Convert(document.Data, state.Request.Relationship, false, state);

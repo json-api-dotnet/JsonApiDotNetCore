@@ -40,10 +40,12 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
 
     protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
     {
-        if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowFilter))
+        if (field.IsFilterBlocked())
         {
-            throw new InvalidQueryStringParameterException(_lastParameterName!, "Filtering on the requested attribute is not allowed.",
-                $"Filtering on attribute '{attribute.PublicName}' is not allowed.");
+            string kind = field is AttrAttribute ? "attribute" : "relationship";
+
+            throw new InvalidQueryStringParameterException(_lastParameterName!, $"Filtering on the requested {kind} is not allowed.",
+                $"Filtering on {kind} '{field.PublicName}' is not allowed.");
         }
     }
 

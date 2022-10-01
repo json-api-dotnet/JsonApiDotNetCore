@@ -34,6 +34,6 @@ public sealed class MusicTrack : Identifiable<Guid>
     [HasMany]
     public IList<Performer> Performers { get; set; } = new List<Performer>();
 
-    [HasMany]
+    [HasMany(Capabilities = HasManyCapabilities.All & ~(HasManyCapabilities.AllowSet | HasManyCapabilities.AllowAdd | HasManyCapabilities.AllowRemove))]
     public IList<Playlist> OccursIn { get; set; } = new List<Playlist>();
 }

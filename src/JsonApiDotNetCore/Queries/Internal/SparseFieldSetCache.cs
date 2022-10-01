@@ -148,12 +148,10 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
     {
         ImmutableHashSet<ResourceFieldAttribute>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
 
-        foreach (AttrAttribute attribute in resourceType.Attributes.Where(attr => attr.Capabilities.HasFlag(AttrCapabilities.AllowView)))
+        foreach (ResourceFieldAttribute field in resourceType.Fields.Where(nextField => !nextField.IsViewBlocked()))
         {
-            fieldSetBuilder.Add(attribute);
+            fieldSetBuilder.Add(field);
         }
-
-        fieldSetBuilder.AddRange(resourceType.Relationships);
 
         return fieldSetBuilder.ToImmutable();
     }

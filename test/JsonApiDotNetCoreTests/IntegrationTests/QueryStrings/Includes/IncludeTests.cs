@@ -21,6 +21,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         testContext.UseController<BlogsController>();
         testContext.UseController<CommentsController>();
         testContext.UseController<WebAccountsController>();
+        testContext.UseController<CalendarsController>();
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.MaximumIncludeDepth = null;
@@ -872,7 +873,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     }
 
     [Fact]
-    public async Task Cannot_include_relationship_with_blocked_capability()
+    public async Task Cannot_include_relationship_when_inclusion_blocked()
     {
         // Arrange
         const string route = "/blogPosts?include=parent";
@@ -894,7 +895,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     }
 
     [Fact]
-    public async Task Cannot_include_relationship_with_nested_blocked_capability()
+    public async Task Cannot_include_relationship_when_nested_inclusion_blocked()
     {
         // Arrange
         const string route = "/blogs?include=posts.parent";
@@ -913,6 +914,85 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         error.Detail.Should().Be("Including the relationship 'parent' in 'posts.parent' on 'blogPosts' is not allowed.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("include");
+    }
+
+    [Fact]
+    public async Task Hides_relationship_and_related_resources_when_viewing_blocked()
+    {
+        // Arrange
+        Calendar calendar = _fakers.Calendar.Generate();
+        calendar.Appointments = _fakers.Appointment.Generate(2).ToHashSet();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Calendars.Add(calendar);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/calendars/{calendar.StringId}?include=appointments";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Type.Should().Be("calendars");
+        responseDocument.Data.SingleValue.Id.Should().Be(calendar.StringId);
+
+        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.SingleValue.Relationships.Should().NotContainKey("appointments");
+
+        responseDocument.Included.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Hides_relationship_but_includes_related_resource_when_viewing_blocked_but_accessible_via_other_path()
+    {
+        // Arrange
+        Calendar calendar = _fakers.Calendar.Generate();
+        calendar.MostRecentAppointment = _fakers.Appointment.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Calendars.Add(calendar);
+            await dbContext.SaveChangesAsync();
+
+            calendar.Appointments = new[]
+            {
+                _fakers.Appointment.Generate(),
+                calendar.MostRecentAppointment
+            }.ToHashSet();
+
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/calendars/{calendar.StringId}?include=appointments,mostRecentAppointment";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Type.Should().Be("calendars");
+        responseDocument.Data.SingleValue.Id.Should().Be(calendar.StringId);
+
+        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("mostRecentAppointment").With(value =>
+        {
+            value.ShouldNotBeNull();
+            value.Data.SingleValue.ShouldNotBeNull();
+            value.Data.SingleValue.Type.Should().Be("appointments");
+            value.Data.SingleValue.Id.Should().Be(calendar.MostRecentAppointment.StringId);
+        });
+
+        responseDocument.Data.SingleValue.Relationships.Should().NotContainKey("appointments");
+
+        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included[0].Type.Should().Be("appointments");
+        responseDocument.Included[0].Id.Should().Be(calendar.MostRecentAppointment.StringId);
     }
 
     [Fact]
