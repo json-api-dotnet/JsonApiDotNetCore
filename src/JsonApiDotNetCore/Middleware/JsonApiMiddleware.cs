@@ -36,11 +36,11 @@ public sealed class JsonApiMiddleware
     public async Task InvokeAsync(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping, IJsonApiOptions options,
         IJsonApiRequest request, ILogger<JsonApiMiddleware> logger)
     {
-        ArgumentGuard.NotNull(httpContext, nameof(httpContext));
-        ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
-        ArgumentGuard.NotNull(options, nameof(options));
-        ArgumentGuard.NotNull(request, nameof(request));
-        ArgumentGuard.NotNull(logger, nameof(logger));
+        ArgumentGuard.NotNull(httpContext);
+        ArgumentGuard.NotNull(controllerResourceMapping);
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(request);
+        ArgumentGuard.NotNull(logger);
 
         using (CodeTimingSessionManager.Current.Measure("JSON:API middleware"))
         {

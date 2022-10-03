@@ -79,8 +79,7 @@ public abstract class IntegrationTest
 
     private string? SerializeRequest(object? requestBody)
     {
-        return requestBody == null ? null :
-            requestBody is string stringRequestBody ? stringRequestBody : JsonSerializer.Serialize(requestBody, SerializerOptions);
+        return requestBody == null ? null : requestBody as string ?? JsonSerializer.Serialize(requestBody, SerializerOptions);
     }
 
     protected abstract HttpClient CreateClient();

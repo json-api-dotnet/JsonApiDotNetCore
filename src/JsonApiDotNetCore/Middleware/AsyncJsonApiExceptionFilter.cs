@@ -13,7 +13,7 @@ public sealed class AsyncJsonApiExceptionFilter : IAsyncJsonApiExceptionFilter
 
     public AsyncJsonApiExceptionFilter(IExceptionHandler exceptionHandler)
     {
-        ArgumentGuard.NotNull(exceptionHandler, nameof(exceptionHandler));
+        ArgumentGuard.NotNull(exceptionHandler);
 
         _exceptionHandler = exceptionHandler;
     }
@@ -21,7 +21,7 @@ public sealed class AsyncJsonApiExceptionFilter : IAsyncJsonApiExceptionFilter
     /// <inheritdoc />
     public Task OnExceptionAsync(ExceptionContext context)
     {
-        ArgumentGuard.NotNull(context, nameof(context));
+        ArgumentGuard.NotNull(context);
 
         if (context.HttpContext.IsJsonApiRequest())
         {

@@ -13,7 +13,7 @@ public class PaginationQueryStringValueExpression : QueryExpression
 
     public PaginationQueryStringValueExpression(IImmutableList<PaginationElementQueryStringValueExpression> elements)
     {
-        ArgumentGuard.NotNullNorEmpty(elements, nameof(elements));
+        ArgumentGuard.NotNullNorEmpty(elements);
 
         Elements = elements;
     }

@@ -14,14 +14,14 @@ public class ResourceFieldChainExpression : IdentifierExpression
 
     public ResourceFieldChainExpression(ResourceFieldAttribute field)
     {
-        ArgumentGuard.NotNull(field, nameof(field));
+        ArgumentGuard.NotNull(field);
 
         Fields = ImmutableArray.Create(field);
     }
 
     public ResourceFieldChainExpression(IImmutableList<ResourceFieldAttribute> fields)
     {
-        ArgumentGuard.NotNullNorEmpty(fields, nameof(fields));
+        ArgumentGuard.NotNullNorEmpty(fields);
 
         Fields = fields;
     }

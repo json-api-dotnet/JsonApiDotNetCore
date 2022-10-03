@@ -50,11 +50,11 @@ public class LinkBuilder : ILinkBuilder
     public LinkBuilder(IJsonApiOptions options, IJsonApiRequest request, IPaginationContext paginationContext, IHttpContextAccessor httpContextAccessor,
         LinkGenerator linkGenerator, IControllerResourceMapping controllerResourceMapping)
     {
-        ArgumentGuard.NotNull(options, nameof(options));
-        ArgumentGuard.NotNull(request, nameof(request));
-        ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
-        ArgumentGuard.NotNull(linkGenerator, nameof(linkGenerator));
-        ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(request);
+        ArgumentGuard.NotNull(paginationContext);
+        ArgumentGuard.NotNull(linkGenerator);
+        ArgumentGuard.NotNull(controllerResourceMapping);
 
         _options = options;
         _request = request;
@@ -225,8 +225,8 @@ public class LinkBuilder : ILinkBuilder
     /// <inheritdoc />
     public ResourceLinks? GetResourceLinks(ResourceType resourceType, IIdentifiable resource)
     {
-        ArgumentGuard.NotNull(resourceType, nameof(resourceType));
-        ArgumentGuard.NotNull(resource, nameof(resource));
+        ArgumentGuard.NotNull(resourceType);
+        ArgumentGuard.NotNull(resource);
 
         var links = new ResourceLinks();
 
@@ -263,8 +263,8 @@ public class LinkBuilder : ILinkBuilder
     /// <inheritdoc />
     public RelationshipLinks? GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable leftResource)
     {
-        ArgumentGuard.NotNull(relationship, nameof(relationship));
-        ArgumentGuard.NotNull(leftResource, nameof(leftResource));
+        ArgumentGuard.NotNull(relationship);
+        ArgumentGuard.NotNull(leftResource);
 
         var links = new RelationshipLinks();
 

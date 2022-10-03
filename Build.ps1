@@ -8,8 +8,7 @@ function CheckLastExitCode {
 
 function RunInspectCode {
     $outputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
-    # passing --build instead of --no-build as workaround for https://youtrack.jetbrains.com/issue/RSRP-487054
-    dotnet jb inspectcode JsonApiDotNetCore.sln --build --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+    dotnet jb inspectcode JsonApiDotNetCore.sln --no-build --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
     CheckLastExitCode
 
     [xml]$xml = Get-Content "$outputPath"
@@ -105,8 +104,11 @@ CheckLastExitCode
 dotnet build -c Release
 CheckLastExitCode
 
-RunInspectCode
-RunCleanupCode
+# https://youtrack.jetbrains.com/issue/RSRP-488628/Breaking-InspectCode-fails-with-Roslyn-Worker-process-exited-unexpectedly-after-update
+if ($env:APPVEYOR_BUILD_WORKER_IMAGE -ne 'Ubuntu') {
+    RunInspectCode
+    RunCleanupCode
+}
 
 dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
 CheckLastExitCode

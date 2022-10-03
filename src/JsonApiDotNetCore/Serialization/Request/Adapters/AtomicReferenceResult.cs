@@ -17,8 +17,8 @@ public sealed class AtomicReferenceResult
 
     public AtomicReferenceResult(IIdentifiable resource, ResourceType resourceType, RelationshipAttribute? relationship)
     {
-        ArgumentGuard.NotNull(resource, nameof(resource));
-        ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+        ArgumentGuard.NotNull(resource);
+        ArgumentGuard.NotNull(resourceType);
 
         Resource = resource;
         ResourceType = resourceType;

@@ -15,7 +15,7 @@ internal static class TypeExtensions
     /// </summary>
     private static bool IsOrImplementsInterface(this Type? source, Type interfaceType)
     {
-        ArgumentGuard.NotNull(interfaceType, nameof(interfaceType));
+        ArgumentGuard.NotNull(interfaceType);
 
         if (source == null)
         {
@@ -41,7 +41,7 @@ internal static class TypeExtensions
     /// </summary>
     public static string GetFriendlyTypeName(this Type type)
     {
-        ArgumentGuard.NotNull(type, nameof(type));
+        ArgumentGuard.NotNull(type);
 
         // Based on https://stackoverflow.com/questions/2581642/how-do-i-get-the-type-name-of-a-generic-type-argument.
 

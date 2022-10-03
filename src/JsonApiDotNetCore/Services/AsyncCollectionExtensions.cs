@@ -7,8 +7,8 @@ public static class AsyncCollectionExtensions
 {
     public static async Task AddRangeAsync<T>(this ICollection<T> source, IAsyncEnumerable<T> elementsToAdd, CancellationToken cancellationToken = default)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
-        ArgumentGuard.NotNull(elementsToAdd, nameof(elementsToAdd));
+        ArgumentGuard.NotNull(source);
+        ArgumentGuard.NotNull(elementsToAdd);
 
         await foreach (T missingResource in elementsToAdd.WithCancellation(cancellationToken))
         {
@@ -18,7 +18,7 @@ public static class AsyncCollectionExtensions
 
     public static async Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> source, CancellationToken cancellationToken = default)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
+        ArgumentGuard.NotNull(source);
 
         var list = new List<T>();
 

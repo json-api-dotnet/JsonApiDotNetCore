@@ -37,9 +37,9 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public ResourceObjectTreeNode(IIdentifiable resource, ResourceType resourceType, ResourceObject resourceObject)
     {
-        ArgumentGuard.NotNull(resource, nameof(resource));
-        ArgumentGuard.NotNull(resourceType, nameof(resourceType));
-        ArgumentGuard.NotNull(resourceObject, nameof(resourceObject));
+        ArgumentGuard.NotNull(resource);
+        ArgumentGuard.NotNull(resourceType);
+        ArgumentGuard.NotNull(resourceObject);
 
         Resource = resource;
         ResourceType = resourceType;
@@ -53,7 +53,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public void AttachDirectChild(ResourceObjectTreeNode treeNode)
     {
-        ArgumentGuard.NotNull(treeNode, nameof(treeNode));
+        ArgumentGuard.NotNull(treeNode);
 
         _directChildren ??= new List<ResourceObjectTreeNode>();
         _directChildren.Add(treeNode);
@@ -61,7 +61,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public void EnsureHasRelationship(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship, nameof(relationship));
+        ArgumentGuard.NotNull(relationship);
 
         _childrenByRelationship ??= new Dictionary<RelationshipAttribute, HashSet<ResourceObjectTreeNode>>();
 
@@ -73,8 +73,8 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
 
     public void AttachRelationshipChild(RelationshipAttribute relationship, ResourceObjectTreeNode rightNode)
     {
-        ArgumentGuard.NotNull(relationship, nameof(relationship));
-        ArgumentGuard.NotNull(rightNode, nameof(rightNode));
+        ArgumentGuard.NotNull(relationship);
+        ArgumentGuard.NotNull(rightNode);
 
         if (_childrenByRelationship == null)
         {

@@ -29,7 +29,7 @@ internal sealed class IncludeChainConverter
     /// </example>
     public IReadOnlyCollection<ResourceFieldChainExpression> GetRelationshipChains(IncludeExpression include)
     {
-        ArgumentGuard.NotNull(include, nameof(include));
+        ArgumentGuard.NotNull(include);
 
         if (!include.Elements.Any())
         {

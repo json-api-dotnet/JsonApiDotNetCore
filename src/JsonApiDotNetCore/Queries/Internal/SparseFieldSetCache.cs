@@ -18,8 +18,8 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
 
     public SparseFieldSetCache(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor)
     {
-        ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
-        ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
+        ArgumentGuard.NotNull(constraintProviders);
+        ArgumentGuard.NotNull(resourceDefinitionAccessor);
 
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
         _lazySourceTable = new Lazy<IDictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>>>(() => BuildSourceTable(constraintProviders));
@@ -70,7 +70,7 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
     /// <inheritdoc />
     public IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForQuery(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+        ArgumentGuard.NotNull(resourceType);
 
         if (!_visitedTable.ContainsKey(resourceType))
         {
@@ -93,7 +93,7 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
     /// <inheritdoc />
     public IImmutableSet<AttrAttribute> GetIdAttributeSetForRelationshipQuery(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+        ArgumentGuard.NotNull(resourceType);
 
         AttrAttribute idAttribute = resourceType.GetAttributeByPropertyName(nameof(Identifiable<object>.Id));
         var inputExpression = new SparseFieldSetExpression(ImmutableHashSet.Create<ResourceFieldAttribute>(idAttribute));
@@ -112,7 +112,7 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
     /// <inheritdoc />
     public IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForSerializer(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+        ArgumentGuard.NotNull(resourceType);
 
         if (!_visitedTable.ContainsKey(resourceType))
         {

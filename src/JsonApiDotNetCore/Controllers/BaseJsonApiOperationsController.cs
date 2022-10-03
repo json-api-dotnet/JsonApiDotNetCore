@@ -27,12 +27,12 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     protected BaseJsonApiOperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
         IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
     {
-        ArgumentGuard.NotNull(options, nameof(options));
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-        ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
-        ArgumentGuard.NotNull(processor, nameof(processor));
-        ArgumentGuard.NotNull(request, nameof(request));
-        ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(loggerFactory);
+        ArgumentGuard.NotNull(processor);
+        ArgumentGuard.NotNull(request);
+        ArgumentGuard.NotNull(targetedFields);
 
         _options = options;
         _resourceGraph = resourceGraph;
@@ -109,7 +109,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
             operations
         });
 
-        ArgumentGuard.NotNull(operations, nameof(operations));
+        ArgumentGuard.NotNull(operations);
 
         if (_options.ValidateModelState)
         {

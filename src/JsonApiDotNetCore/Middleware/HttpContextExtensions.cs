@@ -13,7 +13,7 @@ public static class HttpContextExtensions
     /// </summary>
     public static bool IsJsonApiRequest(this HttpContext httpContext)
     {
-        ArgumentGuard.NotNull(httpContext, nameof(httpContext));
+        ArgumentGuard.NotNull(httpContext);
 
         string? value = httpContext.Items[IsJsonApiRequestKey] as string;
         return value == bool.TrueString;
@@ -21,7 +21,7 @@ public static class HttpContextExtensions
 
     internal static void RegisterJsonApiRequest(this HttpContext httpContext)
     {
-        ArgumentGuard.NotNull(httpContext, nameof(httpContext));
+        ArgumentGuard.NotNull(httpContext);
 
         httpContext.Items[IsJsonApiRequestKey] = bool.TrueString;
     }

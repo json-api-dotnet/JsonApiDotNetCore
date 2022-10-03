@@ -26,7 +26,7 @@ public sealed class UnsuccessfulActionResultException : JsonApiException
 
     private static ErrorObject ToError(ProblemDetails problemDetails)
     {
-        ArgumentGuard.NotNull(problemDetails, nameof(problemDetails));
+        ArgumentGuard.NotNull(problemDetails);
 
         HttpStatusCode status = problemDetails.Status != null ? (HttpStatusCode)problemDetails.Status.Value : HttpStatusCode.InternalServerError;
 

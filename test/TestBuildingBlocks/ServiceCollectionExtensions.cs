@@ -10,7 +10,7 @@ internal static class ServiceCollectionExtensions
 {
     public static void ReplaceControllers(this IServiceCollection services, TestControllerProvider provider)
     {
-        ArgumentGuard.NotNull(services, nameof(services));
+        ArgumentGuard.NotNull(services);
 
         services.AddMvcCore().ConfigureApplicationPartManager(manager =>
         {

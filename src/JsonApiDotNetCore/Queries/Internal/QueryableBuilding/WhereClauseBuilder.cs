@@ -24,9 +24,9 @@ public class WhereClauseBuilder : QueryClauseBuilder<Type?>
     public WhereClauseBuilder(Expression source, LambdaScope lambdaScope, Type extensionType, LambdaParameterNameFactory nameFactory)
         : base(lambdaScope)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
-        ArgumentGuard.NotNull(extensionType, nameof(extensionType));
-        ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
+        ArgumentGuard.NotNull(source);
+        ArgumentGuard.NotNull(extensionType);
+        ArgumentGuard.NotNull(nameFactory);
 
         _source = source;
         _extensionType = extensionType;
@@ -35,7 +35,7 @@ public class WhereClauseBuilder : QueryClauseBuilder<Type?>
 
     public Expression ApplyWhere(FilterExpression filter)
     {
-        ArgumentGuard.NotNull(filter, nameof(filter));
+        ArgumentGuard.NotNull(filter);
 
         LambdaExpression lambda = GetPredicateLambda(filter);
 

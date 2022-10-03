@@ -14,7 +14,7 @@ public class SparseFieldSetExpression : QueryExpression
 
     public SparseFieldSetExpression(IImmutableSet<ResourceFieldAttribute> fields)
     {
-        ArgumentGuard.NotNullNorEmpty(fields, nameof(fields));
+        ArgumentGuard.NotNullNorEmpty(fields);
 
         Fields = fields;
     }

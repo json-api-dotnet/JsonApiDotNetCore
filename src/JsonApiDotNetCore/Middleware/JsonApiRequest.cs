@@ -38,7 +38,7 @@ public sealed class JsonApiRequest : IJsonApiRequest
     /// <inheritdoc />
     public void CopyFrom(IJsonApiRequest other)
     {
-        ArgumentGuard.NotNull(other, nameof(other));
+        ArgumentGuard.NotNull(other);
 
         Kind = other.Kind;
         PrimaryId = other.PrimaryId;

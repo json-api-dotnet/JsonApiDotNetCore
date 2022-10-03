@@ -14,8 +14,8 @@ public class CreateProcessor<TResource, TId> : ICreateProcessor<TResource, TId>
 
     public CreateProcessor(ICreateService<TResource, TId> service, ILocalIdTracker localIdTracker)
     {
-        ArgumentGuard.NotNull(service, nameof(service));
-        ArgumentGuard.NotNull(localIdTracker, nameof(localIdTracker));
+        ArgumentGuard.NotNull(service);
+        ArgumentGuard.NotNull(localIdTracker);
 
         _service = service;
         _localIdTracker = localIdTracker;
@@ -24,7 +24,7 @@ public class CreateProcessor<TResource, TId> : ICreateProcessor<TResource, TId>
     /// <inheritdoc />
     public virtual async Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(operation, nameof(operation));
+        ArgumentGuard.NotNull(operation);
 
         TResource? newResource = await _service.CreateAsync((TResource)operation.Resource, cancellationToken);
 
