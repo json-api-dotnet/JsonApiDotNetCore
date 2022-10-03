@@ -1,8 +1,11 @@
+using JetBrains.Annotations;
+
 namespace JsonApiDotNetCore.Resources.Annotations;
 
 /// <summary>
 /// Indicates capabilities that can be performed on an <see cref="AttrAttribute" />.
 /// </summary>
+[PublicAPI]
 [Flags]
 public enum AttrCapabilities
 {
