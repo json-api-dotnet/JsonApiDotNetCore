@@ -325,6 +325,9 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         var resourceTracked = (TResource)_dbContext.GetTrackedOrAttach(placeholderResource);
 
+        EnsureIncomingNavigationsAreTracked(resourceTracked);
+
+        /*
         foreach (RelationshipAttribute relationship in _resourceGraph.GetResourceType<TResource>().Relationships)
         {
             // Loads the data of the relationship, if in Entity Framework Core it is configured in such a way that loading
@@ -335,12 +338,124 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
                 await navigation.LoadAsync(cancellationToken);
             }
         }
+        */
 
         _dbContext.Remove(resourceTracked);
 
         await SaveChangesAsync(cancellationToken);
 
         await _resourceDefinitionAccessor.OnWriteSucceededAsync(resourceTracked, WriteOperationKind.DeleteResource, cancellationToken);
+    }
+
+    private void EnsureIncomingNavigationsAreTracked(TResource resourceTracked)
+    {
+        IEntityType[] entityTypes = _dbContext.Model.GetEntityTypes().ToArray();
+        IEntityType thisEntityType = entityTypes.Single(entityType => entityType.ClrType == typeof(TResource));
+
+        HashSet<INavigation> navigationsToLoad = new();
+
+        foreach (INavigation navigation in entityTypes.SelectMany(entityType => entityType.GetNavigations()))
+        {
+            bool isIncomingNavigation =
+                navigation.IsOnDependent ? navigation.TargetEntityType == thisEntityType : navigation.DeclaringEntityType == thisEntityType;
+
+            if (isIncomingNavigation && navigation.ForeignKey.DeleteBehavior == DeleteBehavior.ClientSetNull)
+            {
+                navigationsToLoad.Add(navigation);
+            }
+        }
+
+        // {Navigation: Customer.FirstOrder (Order) ToPrincipal Order}
+        // var query = from _dbContext.Set<Customer>().Where(customer => customer.FirstOrder == resourceTracked) // .Select(customer => customer.Id)
+
+        // {Navigation: Customer.LastOrder (Order) ToPrincipal Order}
+        // var query = from _dbContext.Set<Customer>().Where(customer => customer.LastOrder == resourceTracked) // .Select(customer => customer.Id)
+
+        // {Navigation: Order.Parent (Order) ToPrincipal Order}
+        // var query = from _dbContext.Set<Order>().Where(order => order.Parent == resourceTracked) // .Select(order => order.Id)
+
+        // {Navigation: ShoppingBasket.CurrentOrder (Order) ToPrincipal Order}
+        // var query = from _dbContext.Set<ShoppingBasket>().Where(shoppingBasket => shoppingBasket.CurrentOrder == resourceTracked) // .Select(shoppingBasket => shoppingBasket.Id)
+
+        var nameFactory = new LambdaParameterNameFactory();
+        var scopeFactory = new LambdaScopeFactory(nameFactory);
+
+        foreach (INavigation navigation in navigationsToLoad)
+        {
+            if (!navigation.IsOnDependent && navigation.Inverse != null)
+            {
+                // TODO: Handle the case where there is no inverse.
+                continue;
+            }
+
+            IQueryable source = _dbContext.Set(navigation.DeclaringEntityType.ClrType);
+
+            using LambdaScope scope = scopeFactory.CreateScope(source.ElementType);
+
+            Expression expression;
+
+            if (navigation.IsCollection)
+            {
+                /*
+                    {Navigation: WorkItem.Subscribers (ISet<UserAccount>) Collection ToDependent UserAccount}
+
+                    var subscribers = dbContext.WorkItems
+                        .Where(workItem => workItem == existingWorkItem)
+                        .Include(workItem => workItem.Subscribers)
+                        .Select(workItem => workItem.Subscribers);
+                 */
+
+                Expression left = scope.Accessor;
+                Expression right = Expression.Constant(resourceTracked, resourceTracked.GetType());
+
+                Expression whereBody = Expression.Equal(left, right);
+                LambdaExpression wherePredicate = Expression.Lambda(whereBody, scope.Parameter);
+                Expression whereExpression = WhereExtensionMethodCall(source.Expression, scope, wherePredicate);
+
+                // TODO: Use typed overload
+                Expression includeExpression = IncludeExtensionMethodCall(whereExpression, scope, navigation.Name);
+
+                MemberExpression selectorBody = Expression.MakeMemberAccess(scope.Accessor, navigation.PropertyInfo);
+                LambdaExpression selectorLambda = Expression.Lambda(selectorBody, scope.Parameter);
+
+                expression = SelectExtensionMethodCall(includeExpression, source.ElementType, navigation.PropertyInfo.PropertyType, selectorLambda);
+            }
+            else
+            {
+                MemberExpression left = Expression.MakeMemberAccess(scope.Parameter, navigation.PropertyInfo);
+                ConstantExpression right = Expression.Constant(resourceTracked, resourceTracked.GetType());
+
+                Expression body = Expression.Equal(left, right);
+                LambdaExpression selectorLambda = Expression.Lambda(body, scope.Parameter);
+                expression = WhereExtensionMethodCall(source.Expression, scope, selectorLambda);
+            }
+
+            IQueryable queryable = source.Provider.CreateQuery(expression);
+
+            // Executes the query and loads the returned entities in the change tracker.
+            // We can likely optimize this by only fetching ~IDs~ (primary/foreign keys) and creating placeholder resources for them.
+            // The reason we can't fetch by ID is because there's no interception possible (see CompositeKeyTests); there's no access
+            // to QueryExpressionRewriter, and even if there was, we need to handle unexpected relationships so can't rely on our query abstractions.
+            object[] results = queryable.Cast<object>().ToArray();
+        }
+    }
+
+    private Expression WhereExtensionMethodCall(Expression source, LambdaScope lambdaScope, LambdaExpression predicate)
+    {
+        return Expression.Call(typeof(Queryable), "Where", lambdaScope.Parameter.Type.AsArray(), source, predicate);
+    }
+
+    private Expression IncludeExtensionMethodCall(Expression source, LambdaScope lambdaScope, string navigationPropertyPath)
+    {
+        Expression navigationExpression = Expression.Constant(navigationPropertyPath);
+
+        return Expression.Call(typeof(EntityFrameworkQueryableExtensions), "Include", lambdaScope.Parameter.Type.AsArray(), source, navigationExpression);
+    }
+
+    private Expression SelectExtensionMethodCall(Expression source, Type elementType, Type bodyType, Expression selectorBody)
+    {
+        Type[] typeArguments = ArrayFactory.Create(elementType, bodyType);
+        return Expression.Call(typeof(Queryable), "Select", typeArguments, source, selectorBody);
     }
 
     private NavigationEntry GetNavigationEntry(TResource resource, RelationshipAttribute relationship)

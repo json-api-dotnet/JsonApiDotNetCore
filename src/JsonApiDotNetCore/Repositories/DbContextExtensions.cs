@@ -1,3 +1,4 @@
+using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,8 @@ namespace JsonApiDotNetCore.Repositories;
 [PublicAPI]
 public static class DbContextExtensions
 {
+    private static readonly MethodInfo DbContextSetMethod = typeof(DbContext).GetMethod(nameof(DbContext.Set), Type.EmptyTypes)!;
+
     /// <summary>
     /// If not already tracked, attaches the specified resource to the change tracker in <see cref="EntityState.Unchanged" /> state.
     /// </summary>
@@ -56,5 +59,11 @@ public static class DbContextExtensions
         ArgumentGuard.NotNull(dbContext);
 
         dbContext.ChangeTracker.Clear();
+    }
+
+    internal static IQueryable Set(this DbContext context, Type entityType)
+    {
+        MethodInfo setMethod = DbContextSetMethod.MakeGenericMethod(entityType);
+        return (IQueryable)setMethod.Invoke(context, null)!;
     }
 }
