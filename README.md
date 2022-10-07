@@ -84,8 +84,8 @@ See also our [versioning policy](./VERSIONING_POLICY.md).
 |                   |             | Core 3.1 | 5                     |
 |                   |             | 5        | 5                     |
 |                   |             | 6        | 5                     |
-| v5.0.0-5.0.2      | Stable      | 6        | 6                     |
-| v5.0.3+           | Stable      | 6        | 6                     |
+| 5.0.0-5.0.2       | Stable      | 6        | 6                     |
+| 5.0.3+            | Stable      | 6        | 6                     |
 |                   |             | 6        | 7                     |
 |                   |             | 7        | 7                     |
 
