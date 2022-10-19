@@ -180,7 +180,7 @@ This can be overridden per relationship.
 Indicates whether the relationship can be returned in responses. When not allowed and requested using `?fields[]=`, it results in an HTTP 400 response.
 Otherwise, the relationship (and its related resources, when included) are silently omitted.
 
-Note this setting does not affect retrieving the related resources directly.
+Note that this setting does not affect retrieving the related resources directly.
 
 ```c#
 #nullable enable
