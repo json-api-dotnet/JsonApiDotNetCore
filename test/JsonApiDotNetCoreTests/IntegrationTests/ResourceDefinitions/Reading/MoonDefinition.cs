@@ -28,15 +28,15 @@ public sealed class MoonDefinition : HitCountingResourceDefinition<Moon, int>
     {
         base.OnApplyIncludes(existingIncludes);
 
-        if (!_clientSettingsProvider.IsMoonOrbitingPlanetAutoIncluded ||
-            existingIncludes.Any(include => include.Relationship.Property.Name == nameof(Moon.OrbitsAround)))
+        if (!_clientSettingsProvider.IsStarGivingLightToMoonAutoIncluded ||
+            existingIncludes.Any(include => include.Relationship.Property.Name == nameof(Moon.IsGivenLightBy)))
         {
             return existingIncludes;
         }
 
-        RelationshipAttribute orbitsAroundRelationship = ResourceType.GetRelationshipByPropertyName(nameof(Moon.OrbitsAround));
+        RelationshipAttribute isGivenLightByRelationship = ResourceType.GetRelationshipByPropertyName(nameof(Moon.IsGivenLightBy));
 
-        return existingIncludes.Add(new IncludeElementExpression(orbitsAroundRelationship));
+        return existingIncludes.Add(new IncludeElementExpression(isGivenLightByRelationship));
     }
 
     public override QueryStringParameterHandlers<Moon> OnRegisterQueryableHandlersForQueryStringParameters()

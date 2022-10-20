@@ -1081,4 +1081,57 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
             trackInDatabase.Performers[0].Id.Should().Be(existingTrack.Performers[0].Id);
         });
     }
+
+    [Fact]
+    public async Task Cannot_add_with_blocked_capability()
+    {
+        // Arrange
+        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.MusicTracks.Add(existingTrack);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "add",
+                    @ref = new
+                    {
+                        type = "musicTracks",
+                        id = existingTrack.StringId,
+                        relationship = "occursIn"
+                    },
+                    data = new
+                    {
+                        type = "playlists",
+                        id = Unknown.StringId.For<Playlist, long>()
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be added to.");
+        error.Detail.Should().Be("The relationship 'occursIn' on resource type 'musicTracks' cannot be added to.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/relationship");
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+    }
 }

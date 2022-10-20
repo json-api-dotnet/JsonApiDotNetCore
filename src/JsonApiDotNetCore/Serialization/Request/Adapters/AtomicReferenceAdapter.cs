@@ -39,6 +39,7 @@ public sealed class AtomicReferenceAdapter : ResourceIdentityAdapter, IAtomicRef
 
         AssertIsKnownRelationship(relationship, relationshipName, resourceType, state);
         AssertToManyInAddOrRemoveRelationship(relationship, state);
+        AssertRelationshipChangeNotBlocked(relationship, state);
 
         return relationship;
     }

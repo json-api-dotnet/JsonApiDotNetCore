@@ -22,8 +22,7 @@ namespace JsonApiDotNetCore.SourceGenerators;
 /// 
 /// [AlternateTypeName]
 /// public class ExampleResource4 : Identifiable<int> { }
-/// ]]>
-/// </code>
+/// ]]></code>
 /// </summary>
 internal sealed class TypeWithAttributeSyntaxReceiver : ISyntaxReceiver
 {

@@ -147,9 +147,9 @@ internal sealed class TypeLocator
     /// The inherited type.
     /// </param>
     /// <example>
-    /// <code>
+    /// <code><![CDATA[
     /// GetDerivedTypes(assembly, typeof(DbContext))
-    /// </code>
+    /// ]]></code>
     /// </example>
     public IEnumerable<Type> GetDerivedTypes(Assembly assembly, Type baseType)
     {

@@ -63,8 +63,8 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
 
         AssertIsKnownAttribute(attr, attributeName, resourceType, state);
         AssertNoInvalidAttribute(attributeValue, state);
-        AssertNoBlockedCreate(attr, resourceType, state);
-        AssertNoBlockedChange(attr, resourceType, state);
+        AssertSetAttributeInCreateResourceNotBlocked(attr, resourceType, state);
+        AssertSetAttributeInUpdateResourceNotBlocked(attr, resourceType, state);
         AssertNotReadOnly(attr, resourceType, state);
 
         attr.SetValue(resource, attributeValue);
@@ -96,7 +96,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         }
     }
 
-    private static void AssertNoBlockedCreate(AttrAttribute attr, ResourceType resourceType, RequestAdapterState state)
+    private static void AssertSetAttributeInCreateResourceNotBlocked(AttrAttribute attr, ResourceType resourceType, RequestAdapterState state)
     {
         if (state.Request.WriteOperation == WriteOperationKind.CreateResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowCreate))
         {
@@ -105,7 +105,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         }
     }
 
-    private static void AssertNoBlockedChange(AttrAttribute attr, ResourceType resourceType, RequestAdapterState state)
+    private static void AssertSetAttributeInUpdateResourceNotBlocked(AttrAttribute attr, ResourceType resourceType, RequestAdapterState state)
     {
         if (state.Request.WriteOperation == WriteOperationKind.UpdateResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowChange))
         {
@@ -148,6 +148,7 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
         }
 
         AssertIsKnownRelationship(relationship, relationshipName, resourceType, state);
+        AssertRelationshipChangeNotBlocked(relationship, state);
 
         object? rightValue = _relationshipDataAdapter.Convert(relationshipObject.Data, relationship, true, state);
 

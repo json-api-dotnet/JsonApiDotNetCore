@@ -19,7 +19,7 @@ public abstract class ResourceFieldAttribute : Attribute
     private ResourceType? _type;
 
     /// <summary>
-    /// The publicly exposed name of this JSON:API field. When not explicitly assigned, the configured naming convention is applied on the property name.
+    /// The publicly exposed name of this JSON:API field. When not explicitly set, the configured naming convention is applied on the property name.
     /// </summary>
     public string PublicName
     {

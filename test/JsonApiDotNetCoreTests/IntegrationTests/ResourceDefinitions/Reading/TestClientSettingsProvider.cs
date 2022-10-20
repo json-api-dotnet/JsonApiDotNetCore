@@ -4,13 +4,13 @@ internal sealed class TestClientSettingsProvider : IClientSettingsProvider
 {
     public bool IsIncludePlanetMoonsBlocked { get; private set; }
     public bool ArePlanetsWithPrivateNameHidden { get; private set; }
-    public bool IsMoonOrbitingPlanetAutoIncluded { get; private set; }
+    public bool IsStarGivingLightToMoonAutoIncluded { get; private set; }
 
     public void ResetToDefaults()
     {
         IsIncludePlanetMoonsBlocked = false;
         ArePlanetsWithPrivateNameHidden = false;
-        IsMoonOrbitingPlanetAutoIncluded = false;
+        IsStarGivingLightToMoonAutoIncluded = false;
     }
 
     public void BlockIncludePlanetMoons()
@@ -23,8 +23,8 @@ internal sealed class TestClientSettingsProvider : IClientSettingsProvider
         ArePlanetsWithPrivateNameHidden = true;
     }
 
-    public void AutoIncludeOrbitingPlanetForMoons()
+    public void AutoIncludeStarGivingLightToMoon()
     {
-        IsMoonOrbitingPlanetAutoIncluded = true;
+        IsStarGivingLightToMoonAutoIncluded = true;
     }
 }

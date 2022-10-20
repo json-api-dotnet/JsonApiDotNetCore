@@ -734,4 +734,53 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
             trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
         });
     }
+
+    [Fact]
+    public async Task Cannot_assign_relationship_with_blocked_capability()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "lyrics",
+                        relationships = new
+                        {
+                            language = new
+                            {
+                                data = new
+                                {
+                                    type = "textLanguages",
+                                    id = Unknown.StringId.For<TextLanguage, Guid>()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be assigned.");
+        error.Detail.Should().Be("The relationship 'language' on resource type 'lyrics' cannot be assigned to.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/language");
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+    }
 }

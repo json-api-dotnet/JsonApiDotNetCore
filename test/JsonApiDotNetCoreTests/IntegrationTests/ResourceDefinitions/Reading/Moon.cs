@@ -16,4 +16,7 @@ public sealed class Moon : Identifiable<int>
 
     [HasOne]
     public Planet OrbitsAround { get; set; } = null!;
+
+    [HasOne]
+    public Star? IsGivenLightBy { get; set; }
 }

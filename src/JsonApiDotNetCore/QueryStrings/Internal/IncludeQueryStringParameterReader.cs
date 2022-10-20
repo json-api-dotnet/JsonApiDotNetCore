@@ -18,7 +18,7 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
 
     private IncludeExpression? _includeExpression;
 
-    public bool AllowEmptyValue => false;
+    public bool AllowEmptyValue => true;
 
     public IncludeQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
         : base(request, resourceGraph)

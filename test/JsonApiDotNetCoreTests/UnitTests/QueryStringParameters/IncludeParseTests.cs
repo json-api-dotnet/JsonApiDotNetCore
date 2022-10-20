@@ -50,7 +50,6 @@ public sealed class IncludeParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("includes", "", "Relationship name expected.")]
     [InlineData("includes", " ", "Unexpected whitespace.")]
     [InlineData("includes", ",", "Relationship name expected.")]
     [InlineData("includes", "posts,", "Relationship name expected.")]
@@ -85,6 +84,7 @@ public sealed class IncludeParseTests : BaseParseTests
     }
 
     [Theory]
+    [InlineData("includes", "", "")]
     [InlineData("includes", "owner", "owner")]
     [InlineData("includes", "posts", "posts")]
     [InlineData("includes", "owner.posts", "owner.posts")]

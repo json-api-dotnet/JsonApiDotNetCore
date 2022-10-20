@@ -36,10 +36,12 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
 
     protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
     {
-        if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowView))
+        if (field.IsViewBlocked())
         {
-            throw new InvalidQueryStringParameterException(_lastParameterName!, "Retrieving the requested attribute is not allowed.",
-                $"Retrieving the attribute '{attribute.PublicName}' is not allowed.");
+            string kind = field is AttrAttribute ? "attribute" : "relationship";
+
+            throw new InvalidQueryStringParameterException(_lastParameterName!, $"Retrieving the requested {kind} is not allowed.",
+                $"Retrieving the {kind} '{field.PublicName}' is not allowed.");
         }
     }
 

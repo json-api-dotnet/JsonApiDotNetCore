@@ -17,6 +17,9 @@ public sealed class Calendar : Identifiable<int>
     [Attr]
     public int DefaultAppointmentDurationInMinutes { get; set; }
 
-    [HasMany]
+    [HasOne]
+    public Appointment? MostRecentAppointment { get; set; }
+
+    [HasMany(Capabilities = HasManyCapabilities.All & ~(HasManyCapabilities.AllowView | HasManyCapabilities.AllowFilter))]
     public ISet<Appointment> Appointments { get; set; } = new HashSet<Appointment>();
 }
