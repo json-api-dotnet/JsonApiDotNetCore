@@ -99,8 +99,9 @@ public class Person : Identifiable&lt;int&gt;
 <p>Default JSON:API attribute capabilities are specified in <a class="xref" href="../../api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities">JsonApiOptions</a>:</p>
 <pre><code class="lang-c#">options.DefaultAttrCapabilities = AttrCapabilities.None; // default: All
 </code></pre><p>This can be overridden per attribute.</p>
-<h3 id="viewability">Viewability</h3>
-<p>Attributes can be marked to allow returning their value in responses. When not allowed and requested using <code>?fields[]=</code>, it results in an HTTP 400 response.</p>
+<h3 id="allowview">AllowView</h3>
+<p>Indicates whether the attribute value can be returned in responses. When not allowed and requested using <code>?fields[]=</code>, it results in an HTTP 400 response.
+Otherwise, the attribute is silently omitted.</p>
 <pre><code class="lang-c#">#nullable enable
 
 public class User : Identifiable&lt;int&gt;
@@ -108,8 +109,26 @@ public class User : Identifiable&lt;int&gt;
     [Attr(Capabilities = ~AttrCapabilities.AllowView)]
     public string Password { get; set; } = null!;
 }
-</code></pre><h3 id="creatability">Creatability</h3>
-<p>Attributes can be marked as creatable, which will allow <code>POST</code> requests to assign a value to them. When sent but not allowed, an HTTP 422 response is returned.</p>
+</code></pre><h3 id="allowfilter">AllowFilter</h3>
+<p>Indicates whether the attribute can be filtered on. When not allowed and used in <code>?filter=</code>, an HTTP 400 is returned.</p>
+<pre><code class="lang-c#">#nullable enable
+
+public class Person : Identifiable&lt;int&gt;
+{
+    [Attr(Capabilities = AttrCapabilities.AllowFilter)]
+    public string? FirstName { get; set; }
+}
+</code></pre><h3 id="allowsort">AllowSort</h3>
+<p>Indicates whether the attribute can be sorted on. When not allowed and used in <code>?sort=</code>, an HTTP 400 is returned.</p>
+<pre><code class="lang-c#">#nullable enable
+
+public class Person : Identifiable&lt;int&gt;
+{
+    [Attr(Capabilities = ~AttrCapabilities.AllowSort)]
+    public string? FirstName { get; set; }
+}
+</code></pre><h3 id="allowcreate">AllowCreate</h3>
+<p>Indicates whether POST requests can assign the attribute value. When sent but not allowed, an HTTP 422 response is returned.</p>
 <pre><code class="lang-c#">#nullable enable
 
 public class Person : Identifiable&lt;int&gt;
@@ -117,23 +136,14 @@ public class Person : Identifiable&lt;int&gt;
     [Attr(Capabilities = AttrCapabilities.AllowCreate)]
     public string? CreatorName { get; set; }
 }
-</code></pre><h3 id="changeability">Changeability</h3>
-<p>Attributes can be marked as changeable, which will allow <code>PATCH</code> requests to update them. When sent but not allowed, an HTTP 422 response is returned.</p>
+</code></pre><h3 id="allowchange">AllowChange</h3>
+<p>Indicates whether PATCH requests can update the attribute value. When sent but not allowed, an HTTP 422 response is returned.</p>
 <pre><code class="lang-c#">#nullable enable
 
 public class Person : Identifiable&lt;int&gt;
 {
     [Attr(Capabilities = AttrCapabilities.AllowChange)]
     public string? FirstName { get; set; };
-}
-</code></pre><h3 id="filtersort-ability">Filter/Sort-ability</h3>
-<p>Attributes can be marked to allow filtering and/or sorting. When not allowed, it results in an HTTP 400 response.</p>
-<pre><code class="lang-c#">#nullable enable
-
-public class Person : Identifiable&lt;int&gt;
-{
-    [Attr(Capabilities = AttrCapabilities.AllowSort | AttrCapabilities.AllowFilter)]
-    public string? FirstName { get; set; }
 }
 </code></pre><h2 id="complex-attributes">Complex Attributes</h2>
 <p>Models may contain complex attributes.

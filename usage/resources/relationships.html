@@ -190,7 +190,72 @@ public class TodoItem : Identifiable&lt;int&gt;
 }
 </code></pre></li>
 </ol>
-<h2 id="includibility">Includibility</h2>
+<h2 id="capabilities">Capabilities</h2>
+<p><em>since v5.1</em></p>
+<p>Default JSON:API relationship capabilities are specified in 
+<a class="xref" href="../../api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultHasOneCapabilities">JsonApiOptions</a> and 
+<a class="xref" href="../../api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultHasManyCapabilities">JsonApiOptions</a>:</p>
+<pre><code class="lang-c#">options.DefaultHasOneCapabilities = HasOneCapabilities.None; // default: All
+options.DefaultHasManyCapabilities = HasManyCapabilities.None; // default: All
+</code></pre><p>This can be overridden per relationship.</p>
+<h3 id="allowview">AllowView</h3>
+<p>Indicates whether the relationship can be returned in responses. When not allowed and requested using <code>?fields[]=</code>, it results in an HTTP 400 response.
+Otherwise, the relationship (and its related resources, when included) are silently omitted.</p>
+<p>Note that this setting does not affect retrieving the related resources directly.</p>
+<pre><code class="lang-c#">#nullable enable
+
+public class User : Identifiable&lt;int&gt;
+{
+    [HasOne(Capabilities = ~HasOneCapabilities.AllowView)]
+    public LoginAccount Account { get; set; } = null!;
+}
+</code></pre><h3 id="allowinclude">AllowInclude</h3>
+<p>Indicates whether the relationship can be included. When not allowed and used in <code>?include=</code>, an HTTP 400 is returned.</p>
+<pre><code class="lang-c#">#nullable enable
+
+public class User : Identifiable&lt;int&gt;
+{
+    [HasMany(Capabilities = ~HasManyCapabilities.AllowInclude)]
+    public ISet&lt;Group&gt; Groups { get; set; } = new HashSet&lt;Group&gt;();
+}
+</code></pre><h3 id="allowfilter">AllowFilter</h3>
+<p>For to-many relationships only. Indicates whether it can be used in the <code>count()</code> and <code>has()</code> filter functions. When not allowed and used in <code>?filter=</code>, an HTTP 400 is returned.</p>
+<pre><code class="lang-c#">#nullable enable
+
+public class User : Identifiable&lt;int&gt;
+{
+    [HasMany(Capabilities = HasManyCapabilities.AllowFilter)]
+    public ISet&lt;Group&gt; Groups { get; set; } = new HashSet&lt;Group&gt;();
+}
+</code></pre><h3 id="allowset">AllowSet</h3>
+<p>Indicates whether POST and PATCH requests can replace the relationship. When sent but not allowed, an HTTP 422 response is returned.</p>
+<pre><code class="lang-c#">#nullable enable
+
+public class User : Identifiable&lt;int&gt;
+{
+    [HasOne(Capabilities = ~HasOneCapabilities.AllowSet)]
+    public LoginAccount Account { get; set; } = null!;
+}
+</code></pre><h3 id="allowadd">AllowAdd</h3>
+<p>For to-many relationships only. Indicates whether POST requests can add resources to the relationship. When sent but not allowed, an HTTP 422 response is returned.</p>
+<pre><code class="lang-c#">#nullable enable
+
+public class User : Identifiable&lt;int&gt;
+{
+    [HasMany(Capabilities = ~HasManyCapabilities.AllowAdd)]
+    public ISet&lt;Group&gt; Groups { get; set; } = new HashSet&lt;Group&gt;();
+}
+</code></pre><h3 id="allowremove">AllowRemove</h3>
+<p>For to-many relationships only. Indicates whether DELETE requests can remove resources from the relationship. When sent but not allowed, an HTTP 422 response is returned.</p>
+<pre><code class="lang-c#">#nullable enable
+
+public class User : Identifiable&lt;int&gt;
+{
+    [HasMany(Capabilities = ~HasManyCapabilities.AllowRemove)]
+    public ISet&lt;Group&gt; Groups { get; set; } = new HashSet&lt;Group&gt;();
+}
+</code></pre><h2 id="caninclude">CanInclude</h2>
+<p><em>obsolete since v5.1</em></p>
 <p>Relationships can be marked to disallow including them using the <code>?include=</code> query string parameter. When not allowed, it results in an HTTP 400 response.</p>
 <pre><code class="lang-c#">#nullable enable
 

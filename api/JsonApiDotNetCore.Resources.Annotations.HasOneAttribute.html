@@ -101,12 +101,6 @@
       <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_CanInclude">RelationshipAttribute.CanInclude</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Equals_System_Object_">RelationshipAttribute.Equals(Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_GetHashCode">RelationshipAttribute.GetHashCode()</a>
-    </div>
-    <div>
       <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_PublicName">ResourceFieldAttribute.PublicName</a>
     </div>
     <div>
@@ -146,7 +140,7 @@ public sealed class HasOneAttribute : RelationshipAttribute</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasOneAttribute__ctor.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasOneAttribute.cs/#L28">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasOneAttribute.cs/#L51">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasOneAttribute__ctor_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasOneAttribute__ctor" data-uid="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor">HasOneAttribute()</h4>
@@ -156,6 +150,129 @@ public sealed class HasOneAttribute : RelationshipAttribute</code></pre>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public HasOneAttribute()</code></pre>
   </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_Capabilities.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Capabilities%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasOneAttribute.cs/#L45">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_Capabilities_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Capabilities*"></a>
+  <h4 id="JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_Capabilities" data-uid="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Capabilities">Capabilities</h4>
+  <div class="markdown level1 summary"><p>The set of allowed capabilities on this to-one relationship. When not explicitly set, the configured default set of capabilities is used.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HasOneCapabilities Capabilities { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.html">HasOneCapabilities</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_Capabilities_examples">Examples</h5>
+  <pre><code>public class Book : Identifiable&lt;long>
+{
+    [HasOne(Capabilities = HasOneCapabilities.AllowView | HasOneCapabilities.AllowInclude)]
+    public Person? Author { get; set; }
+}</code></pre>
+
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_Equals_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasOneAttribute.cs/#L67">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_Equals_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Equals*"></a>
+  <h4 id="JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_Equals_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Equals(System.Object)">Equals(Object)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Equals_System_Object_">RelationshipAttribute.Equals(Object)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_GetHashCode.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasOneAttribute.cs/#L84">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_GetHashCode_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.GetHashCode*"></a>
+  <h4 id="JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_GetHashCode" data-uid="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_GetHashCode">RelationshipAttribute.GetHashCode()</a></div>
 </article>
           </div>
           
@@ -167,7 +284,7 @@ public sealed class HasOneAttribute : RelationshipAttribute</code></pre>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasOneAttribute.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasOneAttribute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasOneAttribute.cs/#L17" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasOneAttribute.cs/#L19" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

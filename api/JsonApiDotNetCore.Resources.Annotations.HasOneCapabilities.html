@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Enum AttrCapabilities
+    <title>Enum HasOneCapabilities
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Enum AttrCapabilities
+    <meta name="title" content="Enum HasOneCapabilities
    ">
     <meta name="generator" content="docfx 2.59.4.0">
     
@@ -68,20 +68,20 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Resources.Annotations.AttrCapabilities">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities">
   
   
-  <h1 id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities" data-uid="JsonApiDotNetCore.Resources.Annotations.AttrCapabilities" class="text-break">Enum AttrCapabilities
+  <h1 id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities" data-uid="JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities" class="text-break">Enum HasOneCapabilities
   </h1>
-  <div class="markdown level0 summary"><p>Indicates what can be performed on an <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.AttrAttribute.html">AttrAttribute</a>.</p>
+  <div class="markdown level0 summary"><p>Indicates what can be performed on a <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html">HasOneAttribute</a>.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.html">JsonApiDotNetCore.Resources.Annotations</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.Annotations.dll</h6>
-  <h5 id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_syntax">Syntax</h5>
+  <h5 id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[PublicAPI]
-public enum AttrCapabilities</code></pre>
+public enum HasOneCapabilities</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -94,39 +94,28 @@ public enum AttrCapabilities</code></pre>
     <thead>
     <tbody>
       <tr>
-        <td id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_All">All</td>
+        <td id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_All">All</td>
         <td></td>
       </tr>
       <tr>
-        <td id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowChange">AllowChange</td>
-        <td><p>Whether or not PATCH requests can update the attribute value. Attempts to update when disabled will return an HTTP 422 response.</p>
+        <td id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_AllowInclude">AllowInclude</td>
+        <td><p>Whether or not the relationship can be included. Attempts to use it in the <code>include</code> query string parameter when disabled will return an HTTP
+400 response.</p>
 </td>
       </tr>
       <tr>
-        <td id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowCreate">AllowCreate</td>
-        <td><p>Whether or not POST requests can assign the attribute value. Attempts to assign when disabled will return an HTTP 422 response.</p>
+        <td id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_AllowSet">AllowSet</td>
+        <td><p>Whether or not POST and PATCH requests can replace the relationship. Attempts to replace when disabled will return an HTTP 422 response.</p>
 </td>
       </tr>
       <tr>
-        <td id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowFilter">AllowFilter</td>
-        <td><p>Whether or not the attribute can be filtered on. Attempts to use it in the <code>filter</code> query string parameter when disabled will return an HTTP 400
-response.</p>
+        <td id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_AllowView">AllowView</td>
+        <td><p>Whether or not the relationship can be returned in responses. Attempts to explicitly request it via the <code>fields</code> query string parameter when
+disabled will return an HTTP 400 response. Otherwise, the relationship (and its related resources, when included) are silently omitted.</p>
 </td>
       </tr>
       <tr>
-        <td id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowSort">AllowSort</td>
-        <td><p>Whether or not the attribute can be sorted on. Attempts to use it in the <code>sort</code> query string parameter when disabled will return an HTTP 400
-response.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_AllowView">AllowView</td>
-        <td><p>Whether or not the attribute value can be returned in responses. Attempts to explicitly request it via the <code>fields</code> query string parameter when
-disabled will return an HTTP 400 response. Otherwise, the attribute is silently omitted.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_None">None</td>
+        <td id="JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_None">None</td>
         <td></td>
       </tr>
     </tbody>
@@ -139,10 +128,10 @@ disabled will return an HTTP 400 response. Otherwise, the attribute is silently 
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_AttrCapabilities.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.AttrCapabilities%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/AttrCapabilities.shared.cs/#L8" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasOneCapabilities.shared.cs/#L8" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -962,6 +962,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultAttrCapabilities
   nameWithType: IJsonApiOptions.DefaultAttrCapabilities
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultHasManyCapabilities
+  name: DefaultHasManyCapabilities
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_DefaultHasManyCapabilities
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultHasManyCapabilities
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultHasManyCapabilities
+  nameWithType: IJsonApiOptions.DefaultHasManyCapabilities
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultHasManyCapabilities*
+  name: DefaultHasManyCapabilities
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_DefaultHasManyCapabilities_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultHasManyCapabilities
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultHasManyCapabilities
+  nameWithType: IJsonApiOptions.DefaultHasManyCapabilities
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultHasOneCapabilities
+  name: DefaultHasOneCapabilities
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_DefaultHasOneCapabilities
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultHasOneCapabilities
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultHasOneCapabilities
+  nameWithType: IJsonApiOptions.DefaultHasOneCapabilities
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultHasOneCapabilities*
+  name: DefaultHasOneCapabilities
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_DefaultHasOneCapabilities_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultHasOneCapabilities
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultHasOneCapabilities
+  nameWithType: IJsonApiOptions.DefaultHasOneCapabilities
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultPageSize
   name: DefaultPageSize
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_DefaultPageSize
@@ -1442,6 +1468,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttrCapabilities
   nameWithType: JsonApiOptions.DefaultAttrCapabilities
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultHasManyCapabilities
+  name: DefaultHasManyCapabilities
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultHasManyCapabilities
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultHasManyCapabilities
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultHasManyCapabilities
+  nameWithType: JsonApiOptions.DefaultHasManyCapabilities
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultHasManyCapabilities*
+  name: DefaultHasManyCapabilities
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultHasManyCapabilities_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultHasManyCapabilities
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultHasManyCapabilities
+  nameWithType: JsonApiOptions.DefaultHasManyCapabilities
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultHasOneCapabilities
+  name: DefaultHasOneCapabilities
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultHasOneCapabilities
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultHasOneCapabilities
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultHasOneCapabilities
+  nameWithType: JsonApiOptions.DefaultHasOneCapabilities
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultHasOneCapabilities*
+  name: DefaultHasOneCapabilities
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultHasOneCapabilities_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultHasOneCapabilities
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultHasOneCapabilities
+  nameWithType: JsonApiOptions.DefaultHasOneCapabilities
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultPageSize
   name: DefaultPageSize
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultPageSize
@@ -13199,6 +13251,99 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.HasManyAttribute
   nameWithType: HasManyAttribute.HasManyAttribute
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Capabilities
+  name: Capabilities
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Capabilities
+  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Capabilities
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Capabilities
+  nameWithType: HasManyAttribute.Capabilities
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Capabilities*
+  name: Capabilities
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Capabilities_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Capabilities
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Capabilities
+  nameWithType: HasManyAttribute.Capabilities
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Equals(System.Object)
+  nameWithType: HasManyAttribute.Equals(Object)
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Equals_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Equals
+  nameWithType: HasManyAttribute.Equals
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_GetHashCode
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.GetHashCode
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.GetHashCode()
+  nameWithType: HasManyAttribute.GetHashCode()
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.GetHashCode
+  nameWithType: HasManyAttribute.GetHashCode
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities
+  name: HasManyCapabilities
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.html
+  commentId: T:JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities
+  nameWithType: HasManyCapabilities
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.All
+  name: All
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_All
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.All
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.All
+  nameWithType: HasManyCapabilities.All
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowAdd
+  name: AllowAdd
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_AllowAdd
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowAdd
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowAdd
+  nameWithType: HasManyCapabilities.AllowAdd
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowFilter
+  name: AllowFilter
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_AllowFilter
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowFilter
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowFilter
+  nameWithType: HasManyCapabilities.AllowFilter
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowInclude
+  name: AllowInclude
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_AllowInclude
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowInclude
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowInclude
+  nameWithType: HasManyCapabilities.AllowInclude
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowRemove
+  name: AllowRemove
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_AllowRemove
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowRemove
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowRemove
+  nameWithType: HasManyCapabilities.AllowRemove
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowSet
+  name: AllowSet
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_AllowSet
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowSet
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowSet
+  nameWithType: HasManyCapabilities.AllowSet
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowView
+  name: AllowView
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_AllowView
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowView
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.AllowView
+  nameWithType: HasManyCapabilities.AllowView
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.None
+  name: None
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_None
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.None
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.None
+  nameWithType: HasManyCapabilities.None
 - uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute
   name: HasOneAttribute
   href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html
@@ -13218,6 +13363,81 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.HasOneAttribute
   nameWithType: HasOneAttribute.HasOneAttribute
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Capabilities
+  name: Capabilities
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_Capabilities
+  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Capabilities
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Capabilities
+  nameWithType: HasOneAttribute.Capabilities
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Capabilities*
+  name: Capabilities
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_Capabilities_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Capabilities
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Capabilities
+  nameWithType: HasOneAttribute.Capabilities
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Equals(System.Object)
+  name: Equals(Object)
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_Equals_System_Object_
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Equals(System.Object)
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Equals(System.Object)
+  nameWithType: HasOneAttribute.Equals(Object)
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Equals*
+  name: Equals
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_Equals_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Equals
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.Equals
+  nameWithType: HasOneAttribute.Equals
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.GetHashCode
+  name: GetHashCode()
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_GetHashCode
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.GetHashCode
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.GetHashCode()
+  nameWithType: HasOneAttribute.GetHashCode()
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.GetHashCode*
+  name: GetHashCode
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_GetHashCode_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.GetHashCode
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.GetHashCode
+  nameWithType: HasOneAttribute.GetHashCode
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities
+  name: HasOneCapabilities
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.html
+  commentId: T:JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities
+  nameWithType: HasOneCapabilities
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.All
+  name: All
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_All
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.All
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.All
+  nameWithType: HasOneCapabilities.All
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.AllowInclude
+  name: AllowInclude
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_AllowInclude
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.AllowInclude
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.AllowInclude
+  nameWithType: HasOneCapabilities.AllowInclude
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.AllowSet
+  name: AllowSet
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_AllowSet
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.AllowSet
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.AllowSet
+  nameWithType: HasOneCapabilities.AllowSet
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.AllowView
+  name: AllowView
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_AllowView
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.AllowView
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.AllowView
+  nameWithType: HasOneCapabilities.AllowView
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.None
+  name: None
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_None
+  commentId: F:JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.None
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.None
+  nameWithType: HasOneCapabilities.None
 - uid: JsonApiDotNetCore.Resources.Annotations.LinkTypes
   name: LinkTypes
   href: api/JsonApiDotNetCore.Resources.Annotations.LinkTypes.html
