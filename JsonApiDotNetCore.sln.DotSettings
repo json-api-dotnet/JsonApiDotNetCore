@@ -3,7 +3,7 @@
 // $EXPR$    -- source expression&#xD;
 // $NAME$    -- source name (string literal or 'nameof' expression)&#xD;
 // $MESSAGE$ -- string literal in the form of "$NAME$ != null"&#xD;
-JsonApiDotNetCore.ArgumentGuard.NotNull($EXPR$, $NAME$);</s:String>
+JsonApiDotNetCore.ArgumentGuard.NotNull($EXPR$);</s:String>
 	<s:Int64 x:Key="/Default/CodeEditing/NullCheckPatterns/PatternTypeNamesToPriority/=JetBrains_002EReSharper_002EFeature_002EServices_002ECSharp_002ENullChecking_002EContractRequiresPattern/@EntryIndexedValue">199</s:Int64>
 	<s:Int64 x:Key="/Default/CodeEditing/NullCheckPatterns/PatternTypeNamesToPriority/=JetBrains_002EReSharper_002EFeature_002EServices_002ECSharp_002ENullChecking_002ECustomStatementBasedPattern/@EntryIndexedValue">5000</s:Int64>
 	<s:Int64 x:Key="/Default/CodeEditing/NullCheckPatterns/PatternTypeNamesToPriority/=JetBrains_002EReSharper_002EFeature_002EServices_002ECSharp_002ENullChecking_002EDebugAssertPattern/@EntryIndexedValue">99</s:Int64>
