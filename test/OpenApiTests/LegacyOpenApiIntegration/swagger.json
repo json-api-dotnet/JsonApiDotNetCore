@@ -58,7 +58,7 @@
         },
         "responses": {
           "201": {
-            "description": "Success",
+            "description": "Created",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -68,7 +68,7 @@
             }
           },
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -166,7 +166,7 @@
             }
           },
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -187,7 +187,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -333,7 +333,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -363,7 +363,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -393,7 +393,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -451,7 +451,7 @@
         },
         "responses": {
           "201": {
-            "description": "Success",
+            "description": "Created",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -461,7 +461,7 @@
             }
           },
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -559,7 +559,7 @@
             }
           },
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -580,7 +580,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -726,7 +726,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -756,7 +756,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -786,7 +786,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -932,7 +932,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -962,7 +962,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -992,7 +992,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -1050,7 +1050,7 @@
         },
         "responses": {
           "201": {
-            "description": "Success",
+            "description": "Created",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1060,7 +1060,7 @@
             }
           },
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -1158,7 +1158,7 @@
             }
           },
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -1179,7 +1179,7 @@
         ],
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -1325,7 +1325,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -1471,7 +1471,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -1501,7 +1501,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -1531,7 +1531,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -1677,7 +1677,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -1707,7 +1707,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -1737,7 +1737,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -1883,7 +1883,7 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -2046,6 +2046,7 @@
             "$ref": "#/components/schemas/airplane-resource-type"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "attributes": {
@@ -2087,6 +2088,7 @@
             "$ref": "#/components/schemas/airplane-resource-type"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "attributes": {
@@ -2197,6 +2199,7 @@
         "type": "object",
         "properties": {
           "email-address": {
+            "minLength": 1,
             "type": "string",
             "format": "email"
           },
@@ -2217,6 +2220,7 @@
         "type": "object",
         "properties": {
           "email-address": {
+            "minLength": 1,
             "type": "string",
             "format": "email"
           },
@@ -2237,6 +2241,7 @@
         "type": "object",
         "properties": {
           "email-address": {
+            "minLength": 1,
             "type": "string",
             "format": "email"
           },
@@ -2294,6 +2299,7 @@
             "$ref": "#/components/schemas/flight-attendant-resource-type"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "attributes": {
@@ -2335,6 +2341,7 @@
             "$ref": "#/components/schemas/flight-attendant-resource-type"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "attributes": {
@@ -2364,6 +2371,7 @@
             "$ref": "#/components/schemas/flight-attendant-resource-type"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -2619,6 +2627,7 @@
             "$ref": "#/components/schemas/flight-resource-type"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "attributes": {
@@ -2657,6 +2666,7 @@
             "$ref": "#/components/schemas/flight-resource-type"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "attributes": {
@@ -2686,6 +2696,7 @@
             "$ref": "#/components/schemas/flight-resource-type"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -2860,9 +2871,11 @@
         "type": "object",
         "properties": {
           "self": {
+            "minLength": 1,
             "type": "string"
           },
           "related": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -2876,12 +2889,14 @@
         "type": "object",
         "properties": {
           "self": {
+            "minLength": 1,
             "type": "string"
           },
           "describedby": {
             "type": "string"
           },
           "first": {
+            "minLength": 1,
             "type": "string"
           },
           "last": {
@@ -2903,6 +2918,7 @@
         "type": "object",
         "properties": {
           "self": {
+            "minLength": 1,
             "type": "string"
           },
           "describedby": {
@@ -2920,15 +2936,18 @@
         "type": "object",
         "properties": {
           "self": {
+            "minLength": 1,
             "type": "string"
           },
           "describedby": {
             "type": "string"
           },
           "related": {
+            "minLength": 1,
             "type": "string"
           },
           "first": {
+            "minLength": 1,
             "type": "string"
           },
           "last": {
@@ -2951,12 +2970,14 @@
         "type": "object",
         "properties": {
           "self": {
+            "minLength": 1,
             "type": "string"
           },
           "describedby": {
             "type": "string"
           },
           "related": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -2969,6 +2990,7 @@
         "type": "object",
         "properties": {
           "self": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -3153,6 +3175,7 @@
             "$ref": "#/components/schemas/passenger-resource-type"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "attributes": {
@@ -3179,6 +3202,7 @@
             "$ref": "#/components/schemas/passenger-resource-type"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           }
         },

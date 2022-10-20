@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -42,29 +43,30 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         _resourceObjectSchemaGenerator = new ResourceObjectSchemaGenerator(defaultSchemaGenerator, resourceGraph, options, _schemaRepositoryAccessor);
     }
 
-    public OpenApiSchema GenerateSchema(Type type, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null)
+    public OpenApiSchema GenerateSchema(Type modelType, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null,
+        ApiParameterRouteInfo? routeInfo = null)
     {
-        ArgumentGuard.NotNull(type, nameof(type));
+        ArgumentGuard.NotNull(modelType, nameof(modelType));
         ArgumentGuard.NotNull(schemaRepository, nameof(schemaRepository));
 
         _schemaRepositoryAccessor.Current = schemaRepository;
 
-        if (schemaRepository.TryLookupByType(type, out OpenApiSchema jsonApiDocumentSchema))
+        if (schemaRepository.TryLookupByType(modelType, out OpenApiSchema jsonApiDocumentSchema))
         {
             return jsonApiDocumentSchema;
         }
 
-        if (IsJsonApiDocument(type))
+        if (IsJsonApiDocument(modelType))
         {
-            OpenApiSchema schema = GenerateJsonApiDocumentSchema(type);
+            OpenApiSchema schema = GenerateJsonApiDocumentSchema(modelType);
 
-            if (IsDataPropertyNullable(type))
+            if (IsDataPropertyNullable(modelType))
             {
                 SetDataObjectSchemaToNullable(schema);
             }
         }
 
-        return _defaultSchemaGenerator.GenerateSchema(type, schemaRepository, memberInfo, parameterInfo);
+        return _defaultSchemaGenerator.GenerateSchema(modelType, schemaRepository, memberInfo, parameterInfo);
     }
 
     private static bool IsJsonApiDocument(Type type)

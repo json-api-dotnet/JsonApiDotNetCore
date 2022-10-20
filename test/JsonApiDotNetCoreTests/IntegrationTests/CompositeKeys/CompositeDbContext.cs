@@ -34,5 +34,9 @@ public sealed class CompositeDbContext : DbContext
         builder.Entity<Dealership>()
             .HasMany(dealership => dealership.Inventory)
             .WithOne(car => car.Dealership!);
+
+        builder.Entity<Car>()
+            .HasMany(car => car.PreviousDealerships)
+            .WithMany(dealership => dealership.SoldCars);
     }
 }

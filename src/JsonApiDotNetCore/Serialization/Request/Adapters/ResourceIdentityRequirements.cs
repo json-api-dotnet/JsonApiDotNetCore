@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.Serialization.Request.Adapters;
 
 /// <summary>
-/// Defines requirements to validate an <see cref="IResourceIdentity" /> instance against.
+/// Defines requirements to validate a <see cref="ResourceIdentity" /> instance against.
 /// </summary>
 [PublicAPI]
 public sealed class ResourceIdentityRequirements

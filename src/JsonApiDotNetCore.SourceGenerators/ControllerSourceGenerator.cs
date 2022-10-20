@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Text;
 using Humanizer;
 using Microsoft.CodeAnalysis;
@@ -11,166 +8,163 @@ using Microsoft.CodeAnalysis.Text;
 
 #pragma warning disable RS2008 // Enable analyzer release tracking
 
-namespace JsonApiDotNetCore.SourceGenerators
+namespace JsonApiDotNetCore.SourceGenerators;
+// To debug in Visual Studio (requires v17.2 or higher):
+// - Set JsonApiDotNetCore.SourceGenerators as startup project
+// - Add a breakpoint at the start of the Initialize or Execute method
+// - Optional: change targetProject in Properties\launchSettings.json
+// - Press F5
+
+[Generator(LanguageNames.CSharp)]
+public sealed class ControllerSourceGenerator : ISourceGenerator
 {
-    // To debug in Visual Studio (requires v17.2 or higher):
-    // - Set JsonApiDotNetCore.SourceGenerators as startup project
-    // - Add a breakpoint at the start of the Initialize or Execute method
-    // - Optional: change targetProject in Properties\launchSettings.json
-    // - Press F5
+    private const string Category = "JsonApiDotNetCore";
 
-    [Generator(LanguageNames.CSharp)]
-    public sealed class ControllerSourceGenerator : ISourceGenerator
+    private static readonly DiagnosticDescriptor MissingInterfaceWarning = new("JADNC001", "Resource type does not implement IIdentifiable<TId>",
+        "Type '{0}' must implement IIdentifiable<TId> when using ResourceAttribute to auto-generate ASP.NET controllers", Category, DiagnosticSeverity.Warning,
+        true);
+
+    private static readonly DiagnosticDescriptor MissingIndentInTableError = new("JADNC900", "Internal error: Insufficient entries in IndentTable",
+        "Internal error: Missing entry in IndentTable for depth {0}", Category, DiagnosticSeverity.Warning, true);
+
+    // PERF: Heap-allocate the delegate only once, instead of per compilation.
+    private static readonly SyntaxReceiverCreator CreateSyntaxReceiver = static () => new TypeWithAttributeSyntaxReceiver();
+
+    public void Initialize(GeneratorInitializationContext context)
     {
-        private const string Category = "JsonApiDotNetCore";
+        context.RegisterForSyntaxNotifications(CreateSyntaxReceiver);
+    }
 
-        private static readonly DiagnosticDescriptor MissingInterfaceWarning = new DiagnosticDescriptor("JADNC001",
-            "Resource type does not implement IIdentifiable<TId>",
-            "Type '{0}' must implement IIdentifiable<TId> when using ResourceAttribute to auto-generate ASP.NET controllers", Category,
-            DiagnosticSeverity.Warning, true);
+    public void Execute(GeneratorExecutionContext context)
+    {
+        var receiver = (TypeWithAttributeSyntaxReceiver?)context.SyntaxReceiver;
 
-        private static readonly DiagnosticDescriptor MissingIndentInTableError = new DiagnosticDescriptor("JADNC900",
-            "Internal error: Insufficient entries in IndentTable", "Internal error: Missing entry in IndentTable for depth {0}", Category,
-            DiagnosticSeverity.Warning, true);
-
-        // PERF: Heap-allocate the delegate only once, instead of per compilation.
-        private static readonly SyntaxReceiverCreator CreateSyntaxReceiver = () => new TypeWithAttributeSyntaxReceiver();
-
-        public void Initialize(GeneratorInitializationContext context)
+        if (receiver == null)
         {
-            context.RegisterForSyntaxNotifications(CreateSyntaxReceiver);
+            return;
         }
 
-        public void Execute(GeneratorExecutionContext context)
+        INamedTypeSymbol? resourceAttributeType = context.Compilation.GetTypeByMetadataName("JsonApiDotNetCore.Resources.Annotations.ResourceAttribute");
+        INamedTypeSymbol? identifiableOpenInterface = context.Compilation.GetTypeByMetadataName("JsonApiDotNetCore.Resources.IIdentifiable`1");
+        INamedTypeSymbol? loggerFactoryInterface = context.Compilation.GetTypeByMetadataName("Microsoft.Extensions.Logging.ILoggerFactory");
+
+        if (resourceAttributeType == null || identifiableOpenInterface == null || loggerFactoryInterface == null)
         {
-            var receiver = (TypeWithAttributeSyntaxReceiver)context.SyntaxReceiver;
+            return;
+        }
 
-            if (receiver == null)
+        var controllerNamesInUse = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        var writer = new SourceCodeWriter(context, MissingIndentInTableError);
+
+        foreach (TypeDeclarationSyntax? typeDeclarationSyntax in receiver.TypeDeclarations)
+        {
+            // PERF: Note that our code runs on every keystroke in the IDE, which makes it critical to provide near-realtime performance.
+            // This means keeping an eye on memory allocations and bailing out early when compilations are cancelled while the user is still typing.
+            context.CancellationToken.ThrowIfCancellationRequested();
+
+            SemanticModel semanticModel = context.Compilation.GetSemanticModel(typeDeclarationSyntax.SyntaxTree);
+            INamedTypeSymbol? resourceType = semanticModel.GetDeclaredSymbol(typeDeclarationSyntax, context.CancellationToken);
+
+            if (resourceType == null)
             {
-                return;
+                continue;
             }
 
-            INamedTypeSymbol resourceAttributeType = context.Compilation.GetTypeByMetadataName("JsonApiDotNetCore.Resources.Annotations.ResourceAttribute");
-            INamedTypeSymbol identifiableOpenInterface = context.Compilation.GetTypeByMetadataName("JsonApiDotNetCore.Resources.IIdentifiable`1");
-            INamedTypeSymbol loggerFactoryInterface = context.Compilation.GetTypeByMetadataName("Microsoft.Extensions.Logging.ILoggerFactory");
+            AttributeData? resourceAttributeData = FirstOrDefault(resourceType.GetAttributes(), resourceAttributeType,
+                static (data, type) => SymbolEqualityComparer.Default.Equals(data.AttributeClass, type));
 
-            if (resourceAttributeType == null || identifiableOpenInterface == null || loggerFactoryInterface == null)
+            if (resourceAttributeData == null)
             {
-                return;
+                continue;
             }
 
-            var controllerNamesInUse = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-            var writer = new SourceCodeWriter(context, MissingIndentInTableError);
+            TypedConstant endpointsArgument =
+                resourceAttributeData.NamedArguments.FirstOrDefault(static pair => pair.Key == "GenerateControllerEndpoints").Value;
 
-            foreach (TypeDeclarationSyntax typeDeclarationSyntax in receiver.TypeDeclarations)
+            if (endpointsArgument.Value != null && (JsonApiEndpointsCopy)endpointsArgument.Value == JsonApiEndpointsCopy.None)
             {
-                // PERF: Note that our code runs on every keystroke in the IDE, which makes it critical to provide near-realtime performance.
-                // This means keeping an eye on memory allocations and bailing out early when compilations are cancelled while the user is still typing.
-                context.CancellationToken.ThrowIfCancellationRequested();
+                continue;
+            }
 
-                SemanticModel semanticModel = context.Compilation.GetSemanticModel(typeDeclarationSyntax.SyntaxTree);
-                INamedTypeSymbol resourceType = semanticModel.GetDeclaredSymbol(typeDeclarationSyntax, context.CancellationToken);
+            TypedConstant controllerNamespaceArgument =
+                resourceAttributeData.NamedArguments.FirstOrDefault(static pair => pair.Key == "ControllerNamespace").Value;
 
-                if (resourceType == null)
-                {
-                    continue;
-                }
+            string? controllerNamespace = GetControllerNamespace(controllerNamespaceArgument, resourceType);
 
-                AttributeData resourceAttributeData = FirstOrDefault(resourceType.GetAttributes(), resourceAttributeType,
-                    (data, type) => SymbolEqualityComparer.Default.Equals(data.AttributeClass, type));
+            INamedTypeSymbol? identifiableClosedInterface = FirstOrDefault(resourceType.AllInterfaces, identifiableOpenInterface,
+                static (@interface, openInterface) =>
+                    @interface.IsGenericType && SymbolEqualityComparer.Default.Equals(@interface.ConstructedFrom, openInterface));
 
-                if (resourceAttributeData == null)
-                {
-                    continue;
-                }
+            if (identifiableClosedInterface == null)
+            {
+                var diagnostic = Diagnostic.Create(MissingInterfaceWarning, typeDeclarationSyntax.GetLocation(), resourceType.Name);
+                context.ReportDiagnostic(diagnostic);
+                continue;
+            }
 
-                TypedConstant endpointsArgument = resourceAttributeData.NamedArguments.FirstOrDefault(pair => pair.Key == "GenerateControllerEndpoints").Value;
+            ITypeSymbol idType = identifiableClosedInterface.TypeArguments[0];
+            string controllerName = $"{resourceType.Name.Pluralize()}Controller";
+            JsonApiEndpointsCopy endpointsToGenerate = (JsonApiEndpointsCopy?)(int?)endpointsArgument.Value ?? JsonApiEndpointsCopy.All;
 
-                if (endpointsArgument.Value != null && (JsonApiEndpointsCopy)endpointsArgument.Value == JsonApiEndpointsCopy.None)
-                {
-                    continue;
-                }
+            string sourceCode = writer.Write(resourceType, idType, endpointsToGenerate, controllerNamespace, controllerName, loggerFactoryInterface);
+            SourceText sourceText = SourceText.From(sourceCode, Encoding.UTF8);
 
-                TypedConstant controllerNamespaceArgument =
-                    resourceAttributeData.NamedArguments.FirstOrDefault(pair => pair.Key == "ControllerNamespace").Value;
+            string fileName = GetUniqueFileName(controllerName, controllerNamesInUse);
+            context.AddSource(fileName, sourceText);
+        }
+    }
 
-                string controllerNamespace = GetControllerNamespace(controllerNamespaceArgument, resourceType);
+    private static TElement? FirstOrDefault<TElement, TContext>(ImmutableArray<TElement> source, TContext context, Func<TElement, TContext, bool> predicate)
+    {
+        // PERF: Using this method enables to avoid allocating a closure in the passed lambda expression.
+        // See https://www.jetbrains.com/help/resharper/2021.2/Fixing_Issues_Found_by_DPA.html#closures-in-lambda-expressions.
 
-                INamedTypeSymbol identifiableClosedInterface = FirstOrDefault(resourceType.AllInterfaces, identifiableOpenInterface,
-                    (@interface, openInterface) => @interface.IsGenericType &&
-                        SymbolEqualityComparer.Default.Equals(@interface.ConstructedFrom, openInterface));
-
-                if (identifiableClosedInterface == null)
-                {
-                    var diagnostic = Diagnostic.Create(MissingInterfaceWarning, typeDeclarationSyntax.GetLocation(), resourceType.Name);
-                    context.ReportDiagnostic(diagnostic);
-                    continue;
-                }
-
-                ITypeSymbol idType = identifiableClosedInterface.TypeArguments[0];
-                string controllerName = $"{resourceType.Name.Pluralize()}Controller";
-                JsonApiEndpointsCopy endpointsToGenerate = (JsonApiEndpointsCopy?)(int?)endpointsArgument.Value ?? JsonApiEndpointsCopy.All;
-
-                string sourceCode = writer.Write(resourceType, idType, endpointsToGenerate, controllerNamespace, controllerName, loggerFactoryInterface);
-                SourceText sourceText = SourceText.From(sourceCode, Encoding.UTF8);
-
-                string fileName = GetUniqueFileName(controllerName, controllerNamesInUse);
-                context.AddSource(fileName, sourceText);
+        foreach (TElement element in source)
+        {
+            if (predicate(element, context))
+            {
+                return element;
             }
         }
 
-        private static TElement FirstOrDefault<TElement, TContext>(ImmutableArray<TElement> source, TContext context, Func<TElement, TContext, bool> predicate)
+        return default;
+    }
+
+    private static string? GetControllerNamespace(TypedConstant controllerNamespaceArgument, INamedTypeSymbol resourceType)
+    {
+        if (!controllerNamespaceArgument.IsNull)
         {
-            // PERF: Using this method enables to avoid allocating a closure in the passed lambda expression.
-            // See https://www.jetbrains.com/help/resharper/2021.2/Fixing_Issues_Found_by_DPA.html#closures-in-lambda-expressions.
-
-            foreach (TElement element in source)
-            {
-                if (predicate(element, context))
-                {
-                    return element;
-                }
-            }
-
-            return default;
+            return (string?)controllerNamespaceArgument.Value;
         }
 
-        private static string GetControllerNamespace(TypedConstant controllerNamespaceArgument, INamedTypeSymbol resourceType)
+        if (resourceType.ContainingNamespace.IsGlobalNamespace)
         {
-            if (!controllerNamespaceArgument.IsNull)
-            {
-                return (string)controllerNamespaceArgument.Value;
-            }
-
-            if (resourceType.ContainingNamespace.IsGlobalNamespace)
-            {
-                return null;
-            }
-
-            if (resourceType.ContainingNamespace.ContainingNamespace.IsGlobalNamespace)
-            {
-                return "Controllers";
-            }
-
-            return $"{resourceType.ContainingNamespace.ContainingNamespace}.Controllers";
+            return null;
         }
 
-        private static string GetUniqueFileName(string controllerName, IDictionary<string, int> controllerNamesInUse)
+        if (resourceType.ContainingNamespace.ContainingNamespace.IsGlobalNamespace)
         {
-            // We emit unique file names to prevent a failure in the source generator, but also because our test suite
-            // may contain two resources with the same class name in different namespaces. That works, as long as only
-            // one of its controllers gets registered.
-
-            if (controllerNamesInUse.TryGetValue(controllerName, out int lastIndex))
-            {
-                lastIndex++;
-                controllerNamesInUse[controllerName] = lastIndex;
-
-                return $"{controllerName}{lastIndex}.g.cs";
-            }
-
-            controllerNamesInUse[controllerName] = 1;
-            return $"{controllerName}.g.cs";
+            return "Controllers";
         }
+
+        return $"{resourceType.ContainingNamespace.ContainingNamespace}.Controllers";
+    }
+
+    private static string GetUniqueFileName(string controllerName, IDictionary<string, int> controllerNamesInUse)
+    {
+        // We emit unique file names to prevent a failure in the source generator, but also because our test suite
+        // may contain two resources with the same class name in different namespaces. That works, as long as only
+        // one of its controllers gets registered.
+
+        if (controllerNamesInUse.TryGetValue(controllerName, out int lastIndex))
+        {
+            lastIndex++;
+            controllerNamesInUse[controllerName] = lastIndex;
+
+            return $"{controllerName}{lastIndex}.g.cs";
+        }
+
+        controllerNamesInUse[controllerName] = 1;
+        return $"{controllerName}.g.cs";
     }
 }

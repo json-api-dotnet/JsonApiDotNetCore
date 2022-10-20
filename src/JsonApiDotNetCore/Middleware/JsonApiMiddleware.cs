@@ -72,7 +72,7 @@ public sealed class JsonApiMiddleware
                     return;
                 }
 
-                SetupOperationsRequest((JsonApiRequest)request, options, httpContext.Request);
+                SetupOperationsRequest((JsonApiRequest)request);
 
                 httpContext.RegisterJsonApiRequest();
             }
@@ -280,7 +280,7 @@ public sealed class JsonApiMiddleware
         return actionName == "PostOperations";
     }
 
-    private static void SetupOperationsRequest(JsonApiRequest request, IJsonApiOptions options, HttpRequest httpRequest)
+    private static void SetupOperationsRequest(JsonApiRequest request)
     {
         request.IsReadOnly = false;
         request.Kind = EndpointKind.AtomicOperations;
