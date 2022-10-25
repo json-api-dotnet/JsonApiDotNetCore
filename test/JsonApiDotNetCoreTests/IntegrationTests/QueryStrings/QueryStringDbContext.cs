@@ -1,12 +1,13 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class QueryStringDbContext : DbContext
+public sealed class QueryStringDbContext : TestableDbContext
 {
     public DbSet<Blog> Blogs => Set<Blog>();
     public DbSet<BlogPost> Posts => Set<BlogPost>();
