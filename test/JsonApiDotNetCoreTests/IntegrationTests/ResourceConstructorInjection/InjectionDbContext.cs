@@ -10,7 +10,7 @@ public sealed class InjectionDbContext : DbContext
 {
     public ISystemClock SystemClock { get; }
 
-    public DbSet<PostOffice> PostOffice => Set<PostOffice>();
+    public DbSet<PostOffice> PostOffices => Set<PostOffice>();
     public DbSet<GiftCertificate> GiftCertificates => Set<GiftCertificate>();
 
     public InjectionDbContext(DbContextOptions<InjectionDbContext> options, ISystemClock systemClock)
