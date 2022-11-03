@@ -91,96 +91,152 @@
 </li>
 <li><code>EntityFrameworkCoreRepository</code> delegates to <code>QueryableBuilder</code> to transform the <code>QueryLayer</code> tree into <code>IQueryable</code> expression trees.
   <code>QueryBuilder</code> depends on <code>QueryClauseBuilder</code> implementations that visit the tree nodes, transforming them to <code>System.Linq.Expression</code> equivalents.
-  The <code>IQueryable</code> expression trees are executed by Entity Framework Core, which produces SQL statements out of them.</li>
+  The <code>IQueryable</code> expression trees are passed to Entity Framework Core, which produces SQL statements out of them.</li>
 <li><code>JsonApiWriter</code> transforms resource objects into json response.</li>
 </ul>
 <h1 id="example">Example</h1>
 <p>To get a sense of what this all looks like, let&#39;s look at an example query string:</p>
 <pre><code>/api/v1/blogs?
-  include=owner,articles.revisions.author&amp;
-  filter=has(articles)&amp;
-  sort=count(articles)&amp;
+  include=owner,posts.comments.author&amp;
+  filter=has(posts)&amp;
+  sort=count(posts)&amp;
   page[number]=3&amp;
   fields[blogs]=title&amp;
-    filter[articles]=and(not(equals(author.firstName,null)),has(revisions))&amp;
-    sort[articles]=author.lastName&amp;
-    fields[articles]=url&amp;
-      filter[articles.revisions]=and(greaterThan(publishTime,&#39;2001-01-01&#39;),startsWith(author.firstName,&#39;J&#39;))&amp;
-      sort[articles.revisions]=-publishTime,author.lastName&amp;
-      fields[revisions]=publishTime
+    filter[posts]=and(not(equals(author.userName,null)),has(comments))&amp;
+    sort[posts]=author.displayName&amp;
+    fields[blogPosts]=url&amp;
+      filter[posts.comments]=and(greaterThan(createdAt,&#39;2001-01-01Z&#39;),startsWith(author.userName,&#39;J&#39;))&amp;
+      sort[posts.comments]=-createdAt,author.displayName&amp;
+      fields[comments]=createdAt
 </code></pre><p>After parsing, the set of scoped expressions is transformed into the following tree by <code>QueryLayerComposer</code>:</p>
 <pre><code>QueryLayer&lt;Blog&gt;
 {
-  Include: owner,articles.revisions
-  Filter: has(articles)
-  Sort: count(articles)
+  Include: owner,posts.comments.author
+  Filter: has(posts)
+  Sort: count(posts)
   Pagination: Page number: 3, size: 5
-  Projection
+  Selection
   {
-    title
-    id
-    owner: QueryLayer&lt;Author&gt;
+    FieldSelectors&lt;Blog&gt;
     {
-      Sort: id
-      Pagination: Page number: 1, size: 5
-    }
-    articles: QueryLayer&lt;Article&gt;
-    {
-      Filter: and(not(equals(author.firstName,null)),has(revisions))
-      Sort: author.lastName
-      Pagination: Page number: 1, size: 5
-      Projection
+      title
+      id
+      posts: QueryLayer&lt;BlogPost&gt;
       {
-        url
-        id
-        revisions: QueryLayer&lt;Revision&gt;
+        Filter: and(not(equals(author.userName,null)),has(comments))
+        Sort: author.displayName
+        Pagination: Page number: 1, size: 5
+        Selection
         {
-          Filter: and(greaterThan(publishTime,&#39;2001-01-01&#39;),startsWith(author.firstName,&#39;J&#39;))
-          Sort: -publishTime,author.lastName
-          Pagination: Page number: 1, size: 5
-          Projection
+          FieldSelectors&lt;BlogPost&gt;
           {
-            publishTime
+            url
             id
+            comments: QueryLayer&lt;Comment&gt;
+            {
+              Filter: and(greaterThan(createdAt,&#39;2001-01-01&#39;),startsWith(author.userName,&#39;J&#39;))
+              Sort: -createdAt,author.displayName
+              Pagination: Page number: 1, size: 5
+              Selection
+              {
+                FieldSelectors&lt;Comment&gt;
+                {
+                  createdAt
+                  id
+                  author: QueryLayer&lt;WebAccount&gt;
+                  {
+                  }
+                }
+              }
+            }
           }
         }
+      }
+      owner: QueryLayer&lt;WebAccount&gt;
+      {
       }
     }
   }
 }
 </code></pre><p>Next, the repository translates this into a LINQ query that the following C# code would represent:</p>
-<pre><code class="lang-c#">var query = dbContext.Blogs
+<pre><code class="lang-c#">IQueryable&lt;Blog&gt; query = dbContext.Blogs
+    .Include(&quot;Posts.Comments.Author&quot;)
     .Include(&quot;Owner&quot;)
-    .Include(&quot;Articles.Revisions&quot;)
-    .Where(blog =&gt; blog.Articles.Any())
-    .OrderBy(blog =&gt; blog.Articles.Count)
+    .Where(blog =&gt; blog.Posts.Any())
+    .OrderBy(blog =&gt; blog.Posts.Count)
     .Skip(10)
     .Take(5)
     .Select(blog =&gt; new Blog
     {
         Title = blog.Title,
         Id = blog.Id,
-        Owner = blog.Owner,
-        Articles = new List&lt;Article&gt;(blog.Articles
-            .Where(article =&gt; article.Author.FirstName != null &amp;&amp; article.Revisions.Any())
-            .OrderBy(article =&gt; article.Author.LastName)
+        Posts = blog.Posts
+            .Where(blogPost =&gt; blogPost.Author.UserName != null &amp;&amp; blogPost.Comments.Any())
+            .OrderBy(blogPost =&gt; blogPost.Author.DisplayName)
             .Take(5)
-            .Select(article =&gt; new Article
+            .Select(blogPost =&gt; new BlogPost
             {
-                Url = article.Url,
-                Id = article.Id,
-                Revisions = new HashSet&lt;Revision&gt;(article.Revisions
-                    .Where(revision =&gt; revision.PublishTime &gt; DateTime.Parse(&quot;2001-01-01&quot;) &amp;&amp; revision.Author.FirstName.StartsWith(&quot;J&quot;))
-                    .OrderByDescending(revision =&gt; revision.PublishTime)
-                    .ThenBy(revision =&gt; revision.Author.LastName)
+                Url = blogPost.Url,
+                Id = blogPost.Id,
+                Comments = blogPost.Comments
+                    .Where(comment =&gt; comment.CreatedAt &gt; DateTime.Parse(&quot;2001-01-01Z&quot;) &amp;&amp;
+                        comment.Author.UserName.StartsWith(&quot;J&quot;))
+                    .OrderByDescending(comment =&gt; comment.CreatedAt)
+                    .ThenBy(comment =&gt; comment.Author.DisplayName)
                     .Take(5)
-                    .Select(revision =&gt; new Revision
+                    .Select(comment =&gt; new Comment
                     {
-                        PublishTime = revision.PublishTime,
-                        Id = revision.Id
-                    }))
-            }))
+                        CreatedAt = comment.CreatedAt,
+                        Id = comment.Id,
+                        Author = comment.Author
+                    }).ToHashSet()
+            }).ToList(),
+        Owner = blog.Owner
     });
+</code></pre><p>The LINQ query gets translated by Entity Framework Core into the following SQL:</p>
+<pre><code class="lang-sql">SELECT t.&quot;Title&quot;, t.&quot;Id&quot;, a.&quot;Id&quot;, t2.&quot;Url&quot;, t2.&quot;Id&quot;, t2.&quot;Id0&quot;, t2.&quot;CreatedAt&quot;, t2.&quot;Id1&quot;, t2.&quot;Id00&quot;, t2.&quot;DateOfBirth&quot;, t2.&quot;DisplayName&quot;, t2.&quot;EmailAddress&quot;, t2.&quot;Password&quot;, t2.&quot;PersonId&quot;, t2.&quot;PreferencesId&quot;, t2.&quot;UserName&quot;, a.&quot;DateOfBirth&quot;, a.&quot;DisplayName&quot;, a.&quot;EmailAddress&quot;, a.&quot;Password&quot;, a.&quot;PersonId&quot;, a.&quot;PreferencesId&quot;, a.&quot;UserName&quot;
+FROM (
+    SELECT b.&quot;Id&quot;, b.&quot;OwnerId&quot;, b.&quot;Title&quot;, (
+        SELECT COUNT(*)::INT
+        FROM &quot;Posts&quot; AS p0
+        WHERE b.&quot;Id&quot; = p0.&quot;ParentId&quot;) AS c
+    FROM &quot;Blogs&quot; AS b
+    WHERE EXISTS (
+        SELECT 1
+        FROM &quot;Posts&quot; AS p
+        WHERE b.&quot;Id&quot; = p.&quot;ParentId&quot;)
+    ORDER BY (
+        SELECT COUNT(*)::INT
+        FROM &quot;Posts&quot; AS p0
+        WHERE b.&quot;Id&quot; = p0.&quot;ParentId&quot;)
+    LIMIT @__Create_Item1_1 OFFSET @__Create_Item1_0
+) AS t
+LEFT JOIN &quot;Accounts&quot; AS a ON t.&quot;OwnerId&quot; = a.&quot;Id&quot;
+LEFT JOIN LATERAL (
+    SELECT t0.&quot;Url&quot;, t0.&quot;Id&quot;, t0.&quot;Id0&quot;, t1.&quot;CreatedAt&quot;, t1.&quot;Id&quot; AS &quot;Id1&quot;, t1.&quot;Id0&quot; AS &quot;Id00&quot;, t1.&quot;DateOfBirth&quot;, t1.&quot;DisplayName&quot;, t1.&quot;EmailAddress&quot;, t1.&quot;Password&quot;, t1.&quot;PersonId&quot;, t1.&quot;PreferencesId&quot;, t1.&quot;UserName&quot;, t0.&quot;DisplayName&quot; AS &quot;DisplayName0&quot;, t1.&quot;ParentId&quot;
+    FROM (
+        SELECT p1.&quot;Url&quot;, p1.&quot;Id&quot;, a0.&quot;Id&quot; AS &quot;Id0&quot;, a0.&quot;DisplayName&quot;
+        FROM &quot;Posts&quot; AS p1
+        LEFT JOIN &quot;Accounts&quot; AS a0 ON p1.&quot;AuthorId&quot; = a0.&quot;Id&quot;
+        WHERE (t.&quot;Id&quot; = p1.&quot;ParentId&quot;) AND (((a0.&quot;UserName&quot; IS NOT NULL)) AND EXISTS (
+            SELECT 1
+            FROM &quot;Comments&quot; AS c
+            WHERE p1.&quot;Id&quot; = c.&quot;ParentId&quot;))
+        ORDER BY a0.&quot;DisplayName&quot;
+        LIMIT @__Create_Item1_1
+    ) AS t0
+    LEFT JOIN (
+        SELECT t3.&quot;CreatedAt&quot;, t3.&quot;Id&quot;, t3.&quot;Id0&quot;, t3.&quot;DateOfBirth&quot;, t3.&quot;DisplayName&quot;, t3.&quot;EmailAddress&quot;, t3.&quot;Password&quot;, t3.&quot;PersonId&quot;, t3.&quot;PreferencesId&quot;, t3.&quot;UserName&quot;, t3.&quot;ParentId&quot;
+        FROM (
+            SELECT c0.&quot;CreatedAt&quot;, c0.&quot;Id&quot;, a1.&quot;Id&quot; AS &quot;Id0&quot;, a1.&quot;DateOfBirth&quot;, a1.&quot;DisplayName&quot;, a1.&quot;EmailAddress&quot;, a1.&quot;Password&quot;, a1.&quot;PersonId&quot;, a1.&quot;PreferencesId&quot;, a1.&quot;UserName&quot;, c0.&quot;ParentId&quot;, ROW_NUMBER() OVER(PARTITION BY c0.&quot;ParentId&quot; ORDER BY c0.&quot;CreatedAt&quot; DESC, a1.&quot;DisplayName&quot;) AS row
+            FROM &quot;Comments&quot; AS c0
+            LEFT JOIN &quot;Accounts&quot; AS a1 ON c0.&quot;AuthorId&quot; = a1.&quot;Id&quot;
+            WHERE (c0.&quot;CreatedAt&quot; &gt; @__Create_Item1_2) AND ((@__Create_Item1_3 = &#39;&#39;) OR (((a1.&quot;UserName&quot; IS NOT NULL)) AND ((a1.&quot;UserName&quot; LIKE @__Create_Item1_3 || &#39;%&#39; ESCAPE &#39;&#39;) AND (left(a1.&quot;UserName&quot;, length(@__Create_Item1_3))::text = @__Create_Item1_3::text))))
+        ) AS t3
+        WHERE t3.row &lt;= @__Create_Item1_1
+    ) AS t1 ON t0.&quot;Id&quot; = t1.&quot;ParentId&quot;
+) AS t2 ON TRUE
+ORDER BY t.c, t.&quot;Id&quot;, a.&quot;Id&quot;, t2.&quot;DisplayName0&quot;, t2.&quot;Id&quot;, t2.&quot;Id0&quot;, t2.&quot;ParentId&quot;, t2.&quot;CreatedAt&quot; DESC, t2.&quot;DisplayName&quot;, t2.&quot;Id1&quot;
 </code></pre></article>
           </div>
           
