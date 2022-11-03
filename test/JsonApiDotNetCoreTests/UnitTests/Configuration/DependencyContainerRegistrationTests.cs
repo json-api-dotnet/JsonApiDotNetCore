@@ -124,7 +124,7 @@ public sealed class DependencyContainerRegistrationTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class DependencyContainerRegistrationDbContext : DbContext
+    private sealed class DependencyContainerRegistrationDbContext : TestableDbContext
     {
         public DbSet<Resource> Resources => Set<Resource>();
 

@@ -1,12 +1,13 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class MultiTenancyDbContext : DbContext
+public sealed class MultiTenancyDbContext : TestableDbContext
 {
     private readonly ITenantProvider _tenantProvider;
 

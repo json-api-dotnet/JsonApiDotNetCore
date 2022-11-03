@@ -1,10 +1,11 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class PolicyDbContext : DbContext
+public sealed class PolicyDbContext : TestableDbContext
 {
     public DbSet<Policy> Policies => Set<Policy>();
 

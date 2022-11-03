@@ -1,14 +1,13 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class HostingStartup<TDbContext> : TestableStartup<TDbContext>
-    where TDbContext : DbContext
+    where TDbContext : TestableDbContext
 {
     protected override void SetJsonApiOptions(JsonApiOptions options)
     {
