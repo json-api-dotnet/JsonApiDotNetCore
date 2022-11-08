@@ -16,8 +16,8 @@ internal sealed class ResourceTypeSchemaGenerator
 
     public ResourceTypeSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor, IResourceGraph resourceGraph, JsonNamingPolicy? namingPolicy)
     {
-        ArgumentGuard.NotNull(schemaRepositoryAccessor, nameof(schemaRepositoryAccessor));
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+        ArgumentGuard.NotNull(schemaRepositoryAccessor);
+        ArgumentGuard.NotNull(resourceGraph);
 
         _schemaRepositoryAccessor = schemaRepositoryAccessor;
         _resourceGraph = resourceGraph;
@@ -26,7 +26,7 @@ internal sealed class ResourceTypeSchemaGenerator
 
     public OpenApiSchema Get(Type resourceClrType)
     {
-        ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
+        ArgumentGuard.NotNull(resourceClrType);
 
         if (_resourceClrTypeSchemaCache.TryGetValue(resourceClrType, out OpenApiSchema? referenceSchema))
         {

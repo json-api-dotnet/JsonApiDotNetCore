@@ -7,7 +7,7 @@ internal static class MemberInfoExtensions
 {
     public static TypeCategory GetTypeCategory(this MemberInfo source)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
+        ArgumentGuard.NotNull(source);
 
         Type memberType;
 

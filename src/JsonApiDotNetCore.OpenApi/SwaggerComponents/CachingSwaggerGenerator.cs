@@ -18,13 +18,13 @@ internal sealed class CachingSwaggerGenerator : ISwaggerProvider
 
     public CachingSwaggerGenerator(SwaggerGenerator defaultSwaggerGenerator)
     {
-        ArgumentGuard.NotNull(defaultSwaggerGenerator, nameof(defaultSwaggerGenerator));
+        ArgumentGuard.NotNull(defaultSwaggerGenerator);
         _defaultSwaggerGenerator = defaultSwaggerGenerator;
     }
 
     public OpenApiDocument GetSwagger(string documentName, string? host = null, string? basePath = null)
     {
-        ArgumentGuard.NotNullNorEmpty(documentName, nameof(documentName));
+        ArgumentGuard.NotNullNorEmpty(documentName);
 
         string cacheKey = $"{documentName}#{host}#{basePath}";
 

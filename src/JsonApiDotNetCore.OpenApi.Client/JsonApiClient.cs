@@ -17,7 +17,7 @@ public abstract class JsonApiClient : IJsonApiClient
 
     protected void SetSerializerSettingsForJsonApi(JsonSerializerSettings settings)
     {
-        ArgumentGuard.NotNull(settings, nameof(settings));
+        ArgumentGuard.NotNull(settings);
 
         settings.Converters.Add(_jsonApiJsonConverter);
     }
@@ -27,7 +27,7 @@ public abstract class JsonApiClient : IJsonApiClient
         params Expression<Func<TAttributesObject, object?>>[] alwaysIncludedAttributeSelectors)
         where TRequestDocument : class
     {
-        ArgumentGuard.NotNull(requestDocument, nameof(requestDocument));
+        ArgumentGuard.NotNull(requestDocument);
 
         var attributeNames = new HashSet<string>();
 
@@ -105,7 +105,7 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public override bool CanConvert(Type objectType)
         {
-            ArgumentGuard.NotNull(objectType, nameof(objectType));
+            ArgumentGuard.NotNull(objectType);
 
             return !_isSerializing && _requestDocumentInstancesPerRequestDocumentType.ContainsKey(objectType);
         }
@@ -117,8 +117,8 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
-            ArgumentGuard.NotNull(writer, nameof(writer));
-            ArgumentGuard.NotNull(serializer, nameof(serializer));
+            ArgumentGuard.NotNull(writer);
+            ArgumentGuard.NotNull(serializer);
 
             if (value != null)
             {
@@ -148,8 +148,8 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public AttributeNamesContainer(ISet<string> attributeNames, Type containerType)
         {
-            ArgumentGuard.NotNull(attributeNames, nameof(attributeNames));
-            ArgumentGuard.NotNull(containerType, nameof(containerType));
+            ArgumentGuard.NotNull(attributeNames);
+            ArgumentGuard.NotNull(containerType);
 
             _attributeNames = attributeNames;
             _containerType = containerType;
@@ -173,8 +173,8 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public AttributesRegistrationScope(JsonApiJsonConverter jsonApiJsonConverter, object requestDocument)
         {
-            ArgumentGuard.NotNull(jsonApiJsonConverter, nameof(jsonApiJsonConverter));
-            ArgumentGuard.NotNull(requestDocument, nameof(requestDocument));
+            ArgumentGuard.NotNull(jsonApiJsonConverter);
+            ArgumentGuard.NotNull(requestDocument);
 
             _jsonApiJsonConverter = jsonApiJsonConverter;
             _requestDocument = requestDocument;
@@ -192,7 +192,7 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public JsonApiDocumentContractResolver(AttributeNamesContainer attributeNamesContainer)
         {
-            ArgumentGuard.NotNull(attributeNamesContainer, nameof(attributeNamesContainer));
+            ArgumentGuard.NotNull(attributeNamesContainer);
 
             _attributeNamesContainer = attributeNamesContainer;
         }

@@ -75,7 +75,7 @@ internal sealed class FakeHttpClientWrapper : IDisposable
 
         public void SetResponse(HttpResponseMessage response)
         {
-            ArgumentGuard.NotNull(response, nameof(response));
+            ArgumentGuard.NotNull(response);
 
             _response = response;
         }

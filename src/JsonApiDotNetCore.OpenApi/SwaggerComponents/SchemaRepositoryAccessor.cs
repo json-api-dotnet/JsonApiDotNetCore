@@ -19,7 +19,7 @@ internal sealed class SchemaRepositoryAccessor : ISchemaRepositoryAccessor
         }
         set
         {
-            ArgumentGuard.NotNull(value, nameof(Current));
+            ArgumentGuard.NotNull(value);
 
             _schemaRepository = value;
         }

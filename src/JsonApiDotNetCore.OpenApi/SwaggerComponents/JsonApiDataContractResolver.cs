@@ -16,8 +16,8 @@ internal sealed class JsonApiDataContractResolver : ISerializerDataContractResol
 
     public JsonApiDataContractResolver(IResourceGraph resourceGraph, IJsonApiOptions options)
     {
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-        ArgumentGuard.NotNull(options, nameof(options));
+        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(options);
 
         _resourceGraph = resourceGraph;
         _dataContractResolver = new JsonSerializerDataContractResolver(options.SerializerOptions);
@@ -25,7 +25,7 @@ internal sealed class JsonApiDataContractResolver : ISerializerDataContractResol
 
     public DataContract GetDataContractForType(Type type)
     {
-        ArgumentGuard.NotNull(type, nameof(type));
+        ArgumentGuard.NotNull(type);
 
         if (type == typeof(IIdentifiable))
         {

@@ -1,14 +1,14 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using Microsoft.EntityFrameworkCore;
 using OpenApiTests.LegacyOpenApiIntegration;
+using TestBuildingBlocks;
 
 namespace OpenApiTests.NamingConventions.KebabCase;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class KebabCaseNamingConventionStartup<TDbContext> : OpenApiStartup<TDbContext>
-    where TDbContext : DbContext
+    where TDbContext : TestableDbContext
 {
     protected override void SetJsonApiOptions(JsonApiOptions options)
     {

@@ -15,8 +15,8 @@ internal sealed class ResourceTypeInfo
 
     public static ResourceTypeInfo Create(Type resourceObjectType, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceObjectType, nameof(resourceObjectType));
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+        ArgumentGuard.NotNull(resourceObjectType);
+        ArgumentGuard.NotNull(resourceGraph);
 
         Type resourceObjectOpenType = resourceObjectType.GetGenericTypeDefinition();
         Type resourceClrType = resourceObjectType.GenericTypeArguments[0];
