@@ -28,7 +28,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
     public PaginationQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
         : base(request, resourceGraph)
     {
-        ArgumentGuard.NotNull(options, nameof(options));
+        ArgumentGuard.NotNull(options);
 
         _options = options;
         _paginationParser = new PaginationParser();
@@ -37,7 +37,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
     /// <inheritdoc />
     public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
     {
-        ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
+        ArgumentGuard.NotNull(disableQueryStringAttribute);
 
         return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Page);
     }

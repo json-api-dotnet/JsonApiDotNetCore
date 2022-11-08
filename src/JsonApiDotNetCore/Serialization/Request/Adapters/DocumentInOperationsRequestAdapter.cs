@@ -13,8 +13,8 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
 
     public DocumentInOperationsRequestAdapter(IJsonApiOptions options, IAtomicOperationObjectAdapter atomicOperationObjectAdapter)
     {
-        ArgumentGuard.NotNull(options, nameof(options));
-        ArgumentGuard.NotNull(atomicOperationObjectAdapter, nameof(atomicOperationObjectAdapter));
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(atomicOperationObjectAdapter);
 
         _options = options;
         _atomicOperationObjectAdapter = atomicOperationObjectAdapter;
@@ -23,7 +23,7 @@ public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentI
     /// <inheritdoc />
     public IReadOnlyList<OperationContainer> Convert(Document document, RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(state, nameof(state));
+        ArgumentGuard.NotNull(state);
         AssertHasOperations(document.Operations, state);
 
         using IDisposable _ = state.Position.PushElement("atomic:operations");

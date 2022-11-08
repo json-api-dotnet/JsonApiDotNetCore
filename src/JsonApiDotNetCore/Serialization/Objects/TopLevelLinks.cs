@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Serialization.Objects;
 
 /// <summary>
-/// See "links" in https://jsonapi.org/format/1.1/#document-top-level.
+/// See "links" in https://jsonapi.org/format/#document-top-level.
 /// </summary>
 [PublicAPI]
 public sealed class TopLevelLinks

@@ -11,7 +11,7 @@ public sealed class WebAccount : Identifiable<int>
     [Attr]
     public string UserName { get; set; } = null!;
 
-    [Attr(Capabilities = ~AttrCapabilities.AllowView)]
+    [Attr(Capabilities = AttrCapabilities.All & ~AttrCapabilities.AllowView)]
     public string Password { get; set; } = null!;
 
     [Attr]
@@ -23,7 +23,7 @@ public sealed class WebAccount : Identifiable<int>
     [Attr]
     public string EmailAddress { get; set; } = null!;
 
-    [HasOne]
+    [HasOne(Capabilities = HasOneCapabilities.All & ~HasOneCapabilities.AllowView)]
     public Human? Person { get; set; }
 
     [HasMany]

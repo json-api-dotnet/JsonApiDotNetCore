@@ -21,6 +21,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         testContext.UseController<BlogsController>();
         testContext.UseController<CommentsController>();
         testContext.UseController<WebAccountsController>();
+        testContext.UseController<CalendarsController>();
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.MaximumIncludeDepth = null;
@@ -397,29 +398,25 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
         responseDocument.Data.SingleValue.Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
 
-        responseDocument.Included.ShouldHaveCount(5);
+        responseDocument.Included.ShouldHaveCount(4);
 
         responseDocument.Included[0].Type.Should().Be("blogPosts");
         responseDocument.Included[0].Id.Should().Be(comment.Parent.StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(comment.Parent.Caption));
 
         responseDocument.Included[1].Type.Should().Be("comments");
-        responseDocument.Included[1].Id.Should().Be(comment.StringId);
-        responseDocument.Included[1].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
-
-        responseDocument.Included[2].Type.Should().Be("comments");
-        responseDocument.Included[2].Id.Should().Be(comment.Parent.Comments.ElementAt(0).StringId);
-        responseDocument.Included[2].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Parent.Comments.ElementAt(0).Text));
+        responseDocument.Included[1].Id.Should().Be(comment.Parent.Comments.ElementAt(0).StringId);
+        responseDocument.Included[1].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Parent.Comments.ElementAt(0).Text));
 
         string userName = comment.Parent.Comments.ElementAt(0).Author!.UserName;
 
-        responseDocument.Included[3].Type.Should().Be("webAccounts");
-        responseDocument.Included[3].Id.Should().Be(comment.Parent.Comments.ElementAt(0).Author!.StringId);
-        responseDocument.Included[3].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(userName));
+        responseDocument.Included[2].Type.Should().Be("webAccounts");
+        responseDocument.Included[2].Id.Should().Be(comment.Parent.Comments.ElementAt(0).Author!.StringId);
+        responseDocument.Included[2].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(userName));
 
-        responseDocument.Included[4].Type.Should().Be("comments");
-        responseDocument.Included[4].Id.Should().Be(comment.Parent.Comments.ElementAt(1).StringId);
-        responseDocument.Included[4].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Parent.Comments.ElementAt(1).Text));
+        responseDocument.Included[3].Type.Should().Be("comments");
+        responseDocument.Included[3].Id.Should().Be(comment.Parent.Comments.ElementAt(1).StringId);
+        responseDocument.Included[3].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Parent.Comments.ElementAt(1).Text));
     }
 
     [Fact]
@@ -828,6 +825,31 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     }
 
     [Fact]
+    public async Task Can_select_empty_includes()
+    {
+        // Arrange
+        WebAccount account = _fakers.WebAccount.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Accounts.Add(account);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/webAccounts/{account.StringId}?include=";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+
+        responseDocument.Included.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task Cannot_include_unknown_relationship()
     {
         // Arrange
@@ -872,7 +894,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     }
 
     [Fact]
-    public async Task Cannot_include_relationship_with_blocked_capability()
+    public async Task Cannot_include_relationship_when_inclusion_blocked()
     {
         // Arrange
         const string route = "/blogPosts?include=parent";
@@ -894,7 +916,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     }
 
     [Fact]
-    public async Task Cannot_include_relationship_with_nested_blocked_capability()
+    public async Task Cannot_include_relationship_when_nested_inclusion_blocked()
     {
         // Arrange
         const string route = "/blogs?include=posts.parent";
@@ -913,6 +935,85 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         error.Detail.Should().Be("Including the relationship 'parent' in 'posts.parent' on 'blogPosts' is not allowed.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("include");
+    }
+
+    [Fact]
+    public async Task Hides_relationship_and_related_resources_when_viewing_blocked()
+    {
+        // Arrange
+        Calendar calendar = _fakers.Calendar.Generate();
+        calendar.Appointments = _fakers.Appointment.Generate(2).ToHashSet();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Calendars.Add(calendar);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/calendars/{calendar.StringId}?include=appointments";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Type.Should().Be("calendars");
+        responseDocument.Data.SingleValue.Id.Should().Be(calendar.StringId);
+
+        responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
+        responseDocument.Data.SingleValue.Relationships.Should().NotContainKey("appointments");
+
+        responseDocument.Included.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Hides_relationship_but_includes_related_resource_when_viewing_blocked_but_accessible_via_other_path()
+    {
+        // Arrange
+        Calendar calendar = _fakers.Calendar.Generate();
+        calendar.MostRecentAppointment = _fakers.Appointment.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Calendars.Add(calendar);
+            await dbContext.SaveChangesAsync();
+
+            calendar.Appointments = new[]
+            {
+                _fakers.Appointment.Generate(),
+                calendar.MostRecentAppointment
+            }.ToHashSet();
+
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/calendars/{calendar.StringId}?include=appointments,mostRecentAppointment";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.SingleValue.ShouldNotBeNull();
+        responseDocument.Data.SingleValue.Type.Should().Be("calendars");
+        responseDocument.Data.SingleValue.Id.Should().Be(calendar.StringId);
+
+        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("mostRecentAppointment").With(value =>
+        {
+            value.ShouldNotBeNull();
+            value.Data.SingleValue.ShouldNotBeNull();
+            value.Data.SingleValue.Type.Should().Be("appointments");
+            value.Data.SingleValue.Id.Should().Be(calendar.MostRecentAppointment.StringId);
+        });
+
+        responseDocument.Data.SingleValue.Relationships.Should().NotContainKey("appointments");
+
+        responseDocument.Included.ShouldHaveCount(1);
+        responseDocument.Included[0].Type.Should().Be("appointments");
+        responseDocument.Included[0].Id.Should().Be(calendar.MostRecentAppointment.StringId);
     }
 
     [Fact]

@@ -21,7 +21,7 @@ public class LogicalExpression : FilterExpression
 
     public LogicalExpression(LogicalOperator @operator, IImmutableList<FilterExpression> terms)
     {
-        ArgumentGuard.NotNull(terms, nameof(terms));
+        ArgumentGuard.NotNull(terms);
 
         if (terms.Count < 2)
         {
@@ -34,7 +34,7 @@ public class LogicalExpression : FilterExpression
 
     public static FilterExpression? Compose(LogicalOperator @operator, params FilterExpression?[] filters)
     {
-        ArgumentGuard.NotNull(filters, nameof(filters));
+        ArgumentGuard.NotNull(filters);
 
         ImmutableArray<FilterExpression> terms = filters.WhereNotNull().ToImmutableArray();
 

@@ -26,7 +26,7 @@ namespace TestBuildingBlocks;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IDisposable
     where TStartup : class
-    where TDbContext : DbContext
+    where TDbContext : TestableDbContext
 {
     private readonly Lazy<WebApplicationFactory<TStartup>> _lazyFactory;
     private readonly TestControllerProvider _testControllerProvider = new();

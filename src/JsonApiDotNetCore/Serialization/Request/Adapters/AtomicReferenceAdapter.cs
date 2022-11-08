@@ -18,9 +18,9 @@ public sealed class AtomicReferenceAdapter : ResourceIdentityAdapter, IAtomicRef
     /// <inheritdoc />
     public AtomicReferenceResult Convert(AtomicReference atomicReference, ResourceIdentityRequirements requirements, RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(atomicReference, nameof(atomicReference));
-        ArgumentGuard.NotNull(requirements, nameof(requirements));
-        ArgumentGuard.NotNull(state, nameof(state));
+        ArgumentGuard.NotNull(atomicReference);
+        ArgumentGuard.NotNull(requirements);
+        ArgumentGuard.NotNull(state);
 
         using IDisposable _ = state.Position.PushElement("ref");
         (IIdentifiable resource, ResourceType resourceType) = ConvertResourceIdentity(atomicReference, requirements, state);
@@ -39,6 +39,7 @@ public sealed class AtomicReferenceAdapter : ResourceIdentityAdapter, IAtomicRef
 
         AssertIsKnownRelationship(relationship, relationshipName, resourceType, state);
         AssertToManyInAddOrRemoveRelationship(relationship, state);
+        AssertRelationshipChangeNotBlocked(relationship, state);
 
         return relationship;
     }

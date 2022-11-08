@@ -9,7 +9,7 @@ internal static class IdentifiableExtensions
 
     public static object GetTypedId(this IIdentifiable identifiable)
     {
-        ArgumentGuard.NotNull(identifiable, nameof(identifiable));
+        ArgumentGuard.NotNull(identifiable);
 
         PropertyInfo? property = identifiable.GetClrType().GetProperty(IdPropertyName);
 
@@ -37,7 +37,7 @@ internal static class IdentifiableExtensions
 
     public static Type GetClrType(this IIdentifiable identifiable)
     {
-        ArgumentGuard.NotNull(identifiable, nameof(identifiable));
+        ArgumentGuard.NotNull(identifiable);
 
         return identifiable is IAbstractResourceWrapper abstractResource ? abstractResource.AbstractType : identifiable.GetType();
     }

@@ -7,8 +7,8 @@ internal sealed class ResourceDescriptor
 
     public ResourceDescriptor(Type resourceClrType, Type idClrType)
     {
-        ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
-        ArgumentGuard.NotNull(idClrType, nameof(idClrType));
+        ArgumentGuard.NotNull(resourceClrType);
+        ArgumentGuard.NotNull(idClrType);
 
         ResourceClrType = resourceClrType;
         IdClrType = idClrType;

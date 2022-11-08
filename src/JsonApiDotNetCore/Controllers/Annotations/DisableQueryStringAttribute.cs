@@ -46,7 +46,7 @@ public sealed class DisableQueryStringAttribute : Attribute
     /// </summary>
     public DisableQueryStringAttribute(string parameterNames)
     {
-        ArgumentGuard.NotNullNorEmpty(parameterNames, nameof(parameterNames));
+        ArgumentGuard.NotNullNorEmpty(parameterNames);
 
         ParameterNames = parameterNames.Split(",").ToHashSet();
     }

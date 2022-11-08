@@ -52,7 +52,7 @@ public sealed class ResourceConstructionExpressionTests
 
         public ResourceWithStringConstructor(string text)
         {
-            ArgumentGuard.NotNullNorEmpty(text, nameof(text));
+            ArgumentGuard.NotNullNorEmpty(text);
 
             Text = text;
         }

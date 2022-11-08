@@ -66,9 +66,9 @@ internal sealed class TypeLocator
     public (Type implementationType, Type serviceInterface)? GetContainerRegistrationFromAssembly(Assembly assembly, Type unboundInterface,
         params Type[] interfaceTypeArguments)
     {
-        ArgumentGuard.NotNull(assembly, nameof(assembly));
-        ArgumentGuard.NotNull(unboundInterface, nameof(unboundInterface));
-        ArgumentGuard.NotNull(interfaceTypeArguments, nameof(interfaceTypeArguments));
+        ArgumentGuard.NotNull(assembly);
+        ArgumentGuard.NotNull(unboundInterface);
+        ArgumentGuard.NotNull(interfaceTypeArguments);
 
         if (!unboundInterface.IsInterface || !unboundInterface.IsGenericType || unboundInterface != unboundInterface.GetGenericTypeDefinition())
         {
@@ -129,9 +129,9 @@ internal sealed class TypeLocator
     /// </example>
     public IReadOnlyCollection<Type> GetDerivedTypesForUnboundType(Assembly assembly, Type unboundType, params Type[] typeArguments)
     {
-        ArgumentGuard.NotNull(assembly, nameof(assembly));
-        ArgumentGuard.NotNull(unboundType, nameof(unboundType));
-        ArgumentGuard.NotNull(typeArguments, nameof(typeArguments));
+        ArgumentGuard.NotNull(assembly);
+        ArgumentGuard.NotNull(unboundType);
+        ArgumentGuard.NotNull(typeArguments);
 
         Type closedType = unboundType.MakeGenericType(typeArguments);
         return GetDerivedTypes(assembly, closedType).ToArray();
@@ -147,14 +147,14 @@ internal sealed class TypeLocator
     /// The inherited type.
     /// </param>
     /// <example>
-    /// <code>
+    /// <code><![CDATA[
     /// GetDerivedTypes(assembly, typeof(DbContext))
-    /// </code>
+    /// ]]></code>
     /// </example>
     public IEnumerable<Type> GetDerivedTypes(Assembly assembly, Type baseType)
     {
-        ArgumentGuard.NotNull(assembly, nameof(assembly));
-        ArgumentGuard.NotNull(baseType, nameof(baseType));
+        ArgumentGuard.NotNull(assembly);
+        ArgumentGuard.NotNull(baseType);
 
         foreach (Type type in assembly.GetTypes())
         {

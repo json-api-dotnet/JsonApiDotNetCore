@@ -24,7 +24,7 @@ public class JsonApiException : Exception
     public JsonApiException(ErrorObject error, Exception? innerException = null)
         : base(null, innerException)
     {
-        ArgumentGuard.NotNull(error, nameof(error));
+        ArgumentGuard.NotNull(error);
 
         Errors = error.AsArray();
     }
@@ -33,7 +33,7 @@ public class JsonApiException : Exception
         : base(null, innerException)
     {
         IReadOnlyList<ErrorObject>? errorList = ToErrorList(errors);
-        ArgumentGuard.NotNullNorEmpty(errorList, nameof(errors));
+        ArgumentGuard.NotNullNorEmpty(errorList);
 
         Errors = errorList;
     }

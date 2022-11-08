@@ -1,12 +1,13 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class DefaultBehaviorDbContext : DbContext
+public sealed class DefaultBehaviorDbContext : TestableDbContext
 {
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Order> Orders => Set<Order>();

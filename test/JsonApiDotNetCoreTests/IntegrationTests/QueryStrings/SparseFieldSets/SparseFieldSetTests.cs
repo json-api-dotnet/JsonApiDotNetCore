@@ -20,6 +20,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         testContext.UseController<BlogPostsController>();
         testContext.UseController<WebAccountsController>();
         testContext.UseController<BlogsController>();
+        testContext.UseController<CalendarsController>();
 
         testContext.ConfigureServicesAfterStartup(services =>
         {
@@ -739,6 +740,54 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         error.Detail.Should().Be("Retrieving the attribute 'password' is not allowed.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("fields[webAccounts]");
+    }
+
+    [Fact]
+    public async Task Cannot_select_ToOne_relationship_with_blocked_capability()
+    {
+        // Arrange
+        WebAccount account = _fakers.WebAccount.Generate();
+
+        string route = $"/webAccounts/{account.Id}?fields[webAccounts]=person";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("Retrieving the requested relationship is not allowed.");
+        error.Detail.Should().Be("Retrieving the relationship 'person' is not allowed.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("fields[webAccounts]");
+    }
+
+    [Fact]
+    public async Task Cannot_select_ToMany_relationship_with_blocked_capability()
+    {
+        // Arrange
+        Calendar calendar = _fakers.Calendar.Generate();
+
+        string route = $"/calendars/{calendar.Id}?fields[calendars]=appointments";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("Retrieving the requested relationship is not allowed.");
+        error.Detail.Should().Be("Retrieving the relationship 'appointments' is not allowed.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("fields[calendars]");
     }
 
     [Fact]

@@ -10,7 +10,7 @@
     <NSwagApiClientVersion>13.16.*</NSwagApiClientVersion>
     <MicrosoftApiClientVersion>6.0.*</MicrosoftApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
-    <JsonApiDotNetCoreVersionPrefix>5.0.4</JsonApiDotNetCoreVersionPrefix>
+    <JsonApiDotNetCoreVersionPrefix>5.1.1</JsonApiDotNetCoreVersionPrefix>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>9999</WarningLevel>
     <Nullable>enable</Nullable>

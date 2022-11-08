@@ -12,8 +12,8 @@ public class ResourceDataAdapter : BaseAdapter, IResourceDataAdapter
 
     public ResourceDataAdapter(IResourceDefinitionAccessor resourceDefinitionAccessor, IResourceObjectAdapter resourceObjectAdapter)
     {
-        ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
-        ArgumentGuard.NotNull(resourceObjectAdapter, nameof(resourceObjectAdapter));
+        ArgumentGuard.NotNull(resourceDefinitionAccessor);
+        ArgumentGuard.NotNull(resourceObjectAdapter);
 
         _resourceDefinitionAccessor = resourceDefinitionAccessor;
         _resourceObjectAdapter = resourceObjectAdapter;
@@ -22,8 +22,8 @@ public class ResourceDataAdapter : BaseAdapter, IResourceDataAdapter
     /// <inheritdoc />
     public IIdentifiable Convert(SingleOrManyData<ResourceObject> data, ResourceIdentityRequirements requirements, RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(requirements, nameof(requirements));
-        ArgumentGuard.NotNull(state, nameof(state));
+        ArgumentGuard.NotNull(requirements);
+        ArgumentGuard.NotNull(state);
 
         AssertHasData(data, state);
 

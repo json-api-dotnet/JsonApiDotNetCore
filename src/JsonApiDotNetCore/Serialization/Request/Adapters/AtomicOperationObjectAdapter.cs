@@ -17,10 +17,10 @@ public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
     public AtomicOperationObjectAdapter(IJsonApiOptions options, IAtomicReferenceAdapter atomicReferenceAdapter,
         IResourceDataInOperationsRequestAdapter resourceDataInOperationsRequestAdapter, IRelationshipDataAdapter relationshipDataAdapter)
     {
-        ArgumentGuard.NotNull(options, nameof(options));
-        ArgumentGuard.NotNull(atomicReferenceAdapter, nameof(atomicReferenceAdapter));
-        ArgumentGuard.NotNull(resourceDataInOperationsRequestAdapter, nameof(resourceDataInOperationsRequestAdapter));
-        ArgumentGuard.NotNull(relationshipDataAdapter, nameof(relationshipDataAdapter));
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(atomicReferenceAdapter);
+        ArgumentGuard.NotNull(resourceDataInOperationsRequestAdapter);
+        ArgumentGuard.NotNull(relationshipDataAdapter);
 
         _options = options;
         _atomicReferenceAdapter = atomicReferenceAdapter;

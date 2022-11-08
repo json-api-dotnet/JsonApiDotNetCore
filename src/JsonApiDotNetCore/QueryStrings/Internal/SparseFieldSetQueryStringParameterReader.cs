@@ -36,17 +36,19 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
 
     protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
     {
-        if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowView))
+        if (field.IsViewBlocked())
         {
-            throw new InvalidQueryStringParameterException(_lastParameterName!, "Retrieving the requested attribute is not allowed.",
-                $"Retrieving the attribute '{attribute.PublicName}' is not allowed.");
+            string kind = field is AttrAttribute ? "attribute" : "relationship";
+
+            throw new InvalidQueryStringParameterException(_lastParameterName!, $"Retrieving the requested {kind} is not allowed.",
+                $"Retrieving the {kind} '{field.PublicName}' is not allowed.");
         }
     }
 
     /// <inheritdoc />
     public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
     {
-        ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
+        ArgumentGuard.NotNull(disableQueryStringAttribute);
 
         return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Fields);
     }
@@ -54,7 +56,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
-        ArgumentGuard.NotNullNorEmpty(parameterName, nameof(parameterName));
+        ArgumentGuard.NotNullNorEmpty(parameterName);
 
         return parameterName.StartsWith("fields[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
     }

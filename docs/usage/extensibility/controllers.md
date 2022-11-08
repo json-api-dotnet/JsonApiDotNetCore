@@ -39,7 +39,7 @@ DELETE http://localhost:14140/articles/1 HTTP/1.1
 ```json
 {
   "links": {
-    "self": "/articles"
+    "self": "/articles/1"
   },
   "errors": [
     {

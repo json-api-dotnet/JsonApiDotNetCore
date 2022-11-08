@@ -23,7 +23,7 @@ public sealed class FieldSelection : Dictionary<ResourceType, FieldSelectors>
     public FieldSelectors GetOrCreateSelectors(ResourceType resourceType)
 #pragma warning restore AV1130 // Return type in method signature should be an interface to an unchangeable collection
     {
-        ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+        ArgumentGuard.NotNull(resourceType);
 
         if (!ContainsKey(resourceType))
         {

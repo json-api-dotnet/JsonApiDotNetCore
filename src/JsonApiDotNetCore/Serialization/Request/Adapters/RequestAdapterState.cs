@@ -24,8 +24,8 @@ public sealed class RequestAdapterState : IDisposable
 
     public RequestAdapterState(IJsonApiRequest request, ITargetedFields targetedFields)
     {
-        ArgumentGuard.NotNull(request, nameof(request));
-        ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+        ArgumentGuard.NotNull(request);
+        ArgumentGuard.NotNull(targetedFields);
 
         InjectableRequest = request;
         InjectableTargetedFields = targetedFields;

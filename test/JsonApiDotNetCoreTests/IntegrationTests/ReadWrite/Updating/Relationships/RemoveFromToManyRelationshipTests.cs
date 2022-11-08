@@ -23,6 +23,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         _testContext = testContext;
 
         testContext.UseController<WorkItemsController>();
+        testContext.UseController<WorkItemGroupsController>();
 
         testContext.ConfigureServicesAfterStartup(services =>
         {
@@ -1053,6 +1054,48 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
 
             workItemInDatabase.RelatedTo.Should().BeEmpty();
         });
+    }
+
+    [Fact]
+    public async Task Cannot_remove_with_blocked_capability()
+    {
+        // Arrange
+        WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Groups.Add(existingWorkItemGroup);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
+                {
+                    type = "workItems",
+                    id = Unknown.StringId.For<WorkItem, int>()
+                }
+            }
+        };
+
+        string route = $"/workItemGroups/{existingWorkItemGroup.StringId}/relationships/items";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be removed from.");
+        error.Detail.Should().Be("The relationship 'items' on resource type 'workItemGroups' cannot be removed from.");
+        error.Source.Should().BeNull();
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
     }
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]

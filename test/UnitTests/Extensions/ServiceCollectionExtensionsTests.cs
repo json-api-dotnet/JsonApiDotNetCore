@@ -12,6 +12,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Extensions;
@@ -589,7 +590,7 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class TestDbContext : DbContext
+    private sealed class TestDbContext : TestableDbContext
     {
         public DbSet<ResourceOfInt32> ResourcesOfInt32 => Set<ResourceOfInt32>();
         public DbSet<ResourceOfGuid> ResourcesOfGuid => Set<ResourceOfGuid>();

@@ -26,7 +26,7 @@ These are some steps you can take to help you understand what this project is an
 - [Embercasts: Full Stack Ember with ASP.NET Core](https://www.embercasts.com/course/full-stack-ember-with-dotnet/watch/whats-in-this-course-cs) (paid course, 2017)
 
 ### Official documentation
-- [The JSON:API specification](https://jsonapi.org/format/1.1/)
+- [The JSON:API specification](https://jsonapi.org/format/)
 - [JsonApiDotNetCore website](https://www.jsonapi.net/)
 - [Roadmap](ROADMAP.md)
 
@@ -84,7 +84,10 @@ See also our [versioning policy](./VERSIONING_POLICY.md).
 |                   |             | Core 3.1 | 5                     |
 |                   |             | 5        | 5                     |
 |                   |             | 6        | 5                     |
-| v5.x              | Stable      | 6        | 6                     |
+| 5.0.0-5.0.2       | Stable      | 6        | 6                     |
+| 5.0.3+            | Stable      | 6        | 6                     |
+|                   |             | 6        | 7                     |
+|                   |             | 7        | 7                     |
 
 ## Contributing
 

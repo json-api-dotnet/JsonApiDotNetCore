@@ -1,12 +1,13 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Links;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class LinksDbContext : DbContext
+public sealed class LinksDbContext : TestableDbContext
 {
     public DbSet<PhotoAlbum> PhotoAlbums => Set<PhotoAlbum>();
     public DbSet<Photo> Photos => Set<Photo>();

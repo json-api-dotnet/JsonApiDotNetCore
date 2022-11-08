@@ -18,8 +18,8 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
 
     protected ResourceIdentityAdapter(IResourceGraph resourceGraph, IResourceFactory resourceFactory)
     {
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-        ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(resourceFactory);
 
         _resourceGraph = resourceGraph;
         _resourceFactory = resourceFactory;
@@ -28,9 +28,9 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
     protected (IIdentifiable resource, ResourceType resourceType) ConvertResourceIdentity(ResourceIdentity identity, ResourceIdentityRequirements requirements,
         RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(identity, nameof(identity));
-        ArgumentGuard.NotNull(requirements, nameof(requirements));
-        ArgumentGuard.NotNull(state, nameof(state));
+        ArgumentGuard.NotNull(identity);
+        ArgumentGuard.NotNull(requirements);
+        ArgumentGuard.NotNull(state);
 
         ResourceType resourceType = ResolveType(identity, requirements, state);
         IIdentifiable resource = CreateResource(identity, requirements, resourceType.ClrType, state);
@@ -229,6 +229,55 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
 
             throw new ModelConversionException(state.Position, message, $"Relationship '{relationship.PublicName}' is not a to-many relationship.",
                 HttpStatusCode.Forbidden);
+        }
+    }
+
+    internal static void AssertRelationshipChangeNotBlocked(RelationshipAttribute relationship, RequestAdapterState state)
+    {
+        switch (state.Request.WriteOperation)
+        {
+            case WriteOperationKind.AddToRelationship:
+            {
+                AssertAddToRelationshipNotBlocked((HasManyAttribute)relationship, state);
+                break;
+            }
+            case WriteOperationKind.RemoveFromRelationship:
+            {
+                AssertRemoveFromRelationshipNotBlocked((HasManyAttribute)relationship, state);
+                break;
+            }
+            default:
+            {
+                AssertSetRelationshipNotBlocked(relationship, state);
+                break;
+            }
+        }
+    }
+
+    private static void AssertSetRelationshipNotBlocked(RelationshipAttribute relationship, RequestAdapterState state)
+    {
+        if (relationship.IsSetBlocked())
+        {
+            throw new ModelConversionException(state.Position, "Relationship cannot be assigned.",
+                $"The relationship '{relationship.PublicName}' on resource type '{relationship.LeftType.PublicName}' cannot be assigned to.");
+        }
+    }
+
+    private static void AssertAddToRelationshipNotBlocked(HasManyAttribute relationship, RequestAdapterState state)
+    {
+        if (!relationship.Capabilities.HasFlag(HasManyCapabilities.AllowAdd))
+        {
+            throw new ModelConversionException(state.Position, "Relationship cannot be added to.",
+                $"The relationship '{relationship.PublicName}' on resource type '{relationship.LeftType.PublicName}' cannot be added to.");
+        }
+    }
+
+    private static void AssertRemoveFromRelationshipNotBlocked(HasManyAttribute relationship, RequestAdapterState state)
+    {
+        if (!relationship.Capabilities.HasFlag(HasManyCapabilities.AllowRemove))
+        {
+            throw new ModelConversionException(state.Position, "Relationship cannot be removed from.",
+                $"The relationship '{relationship.PublicName}' on resource type '{relationship.LeftType.PublicName}' cannot be removed from.");
         }
     }
 }

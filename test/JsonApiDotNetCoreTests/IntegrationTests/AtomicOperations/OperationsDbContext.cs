@@ -1,12 +1,13 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class OperationsDbContext : DbContext
+public sealed class OperationsDbContext : TestableDbContext
 {
     public DbSet<Playlist> Playlists => Set<Playlist>();
     public DbSet<MusicTrack> MusicTracks => Set<MusicTrack>();

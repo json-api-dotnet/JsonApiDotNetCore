@@ -34,10 +34,10 @@ public sealed class SerializerIgnoreConditionTests : IntegrationTestContext<Test
         calendar.TimeZone = null;
         calendar.DefaultAppointmentDurationInMinutes = default;
         calendar.ShowWeekNumbers = true;
-        calendar.Appointments = _fakers.Appointment.Generate(1).ToHashSet();
-        calendar.Appointments.Single().Description = null;
-        calendar.Appointments.Single().StartTime = default;
-        calendar.Appointments.Single().EndTime = 1.January(2001).AsUtc();
+        calendar.MostRecentAppointment = _fakers.Appointment.Generate();
+        calendar.MostRecentAppointment.Description = null;
+        calendar.MostRecentAppointment.StartTime = default;
+        calendar.MostRecentAppointment.EndTime = 1.January(2001).AsUtc();
 
         await RunOnDatabaseAsync(async dbContext =>
         {
@@ -45,7 +45,7 @@ public sealed class SerializerIgnoreConditionTests : IntegrationTestContext<Test
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/calendars/{calendar.StringId}?include=appointments";
+        string route = $"/calendars/{calendar.StringId}?include=mostRecentAppointment";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);

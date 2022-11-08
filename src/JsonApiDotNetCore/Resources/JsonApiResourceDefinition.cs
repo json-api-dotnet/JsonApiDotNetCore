@@ -26,7 +26,7 @@ public class JsonApiResourceDefinition<TResource, TId> : IResourceDefinition<TRe
 
     public JsonApiResourceDefinition(IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+        ArgumentGuard.NotNull(resourceGraph);
 
         ResourceGraph = resourceGraph;
         ResourceType = resourceGraph.GetResourceType<TResource>();
@@ -65,7 +65,7 @@ public class JsonApiResourceDefinition<TResource, TId> : IResourceDefinition<TRe
     /// </example>
     protected SortExpression CreateSortExpressionFromLambda(PropertySortOrder keySelectors)
     {
-        ArgumentGuard.NotNullNorEmpty(keySelectors, nameof(keySelectors));
+        ArgumentGuard.NotNullNorEmpty(keySelectors);
 
         ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>(keySelectors.Count);
         var lambdaConverter = new SortExpressionLambdaConverter(ResourceGraph);

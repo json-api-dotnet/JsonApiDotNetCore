@@ -43,9 +43,10 @@ options.DefaultAttrCapabilities = AttrCapabilities.None; // default: All
 
 This can be overridden per attribute.
 
-### Viewability
+### AllowView
 
-Attributes can be marked to allow returning their value in responses. When not allowed and requested using `?fields[]=`, it results in an HTTP 400 response.
+Indicates whether the attribute value can be returned in responses. When not allowed and requested using `?fields[]=`, it results in an HTTP 400 response.
+Otherwise, the attribute is silently omitted.
 
 ```c#
 #nullable enable
@@ -57,9 +58,37 @@ public class User : Identifiable<int>
 }
 ```
 
-### Creatability
+### AllowFilter
 
-Attributes can be marked as creatable, which will allow `POST` requests to assign a value to them. When sent but not allowed, an HTTP 422 response is returned.
+Indicates whether the attribute can be filtered on. When not allowed and used in `?filter=`, an HTTP 400 is returned.
+
+```c#
+#nullable enable
+
+public class Person : Identifiable<int>
+{
+    [Attr(Capabilities = AttrCapabilities.AllowFilter)]
+    public string? FirstName { get; set; }
+}
+```
+
+### AllowSort
+
+Indicates whether the attribute can be sorted on. When not allowed and used in `?sort=`, an HTTP 400 is returned.
+
+```c#
+#nullable enable
+
+public class Person : Identifiable<int>
+{
+    [Attr(Capabilities = ~AttrCapabilities.AllowSort)]
+    public string? FirstName { get; set; }
+}
+```
+
+### AllowCreate
+
+Indicates whether POST requests can assign the attribute value. When sent but not allowed, an HTTP 422 response is returned.
 
 ```c#
 #nullable enable
@@ -71,9 +100,9 @@ public class Person : Identifiable<int>
 }
 ```
 
-### Changeability
+### AllowChange
 
-Attributes can be marked as changeable, which will allow `PATCH` requests to update them. When sent but not allowed, an HTTP 422 response is returned.
+Indicates whether PATCH requests can update the attribute value. When sent but not allowed, an HTTP 422 response is returned.
 
 ```c#
 #nullable enable
@@ -82,20 +111,6 @@ public class Person : Identifiable<int>
 {
     [Attr(Capabilities = AttrCapabilities.AllowChange)]
     public string? FirstName { get; set; };
-}
-```
-
-### Filter/Sort-ability
-
-Attributes can be marked to allow filtering and/or sorting. When not allowed, it results in an HTTP 400 response.
-
-```c#
-#nullable enable
-
-public class Person : Identifiable<int>
-{
-    [Attr(Capabilities = AttrCapabilities.AllowSort | AttrCapabilities.AllowFilter)]
-    public string? FirstName { get; set; }
 }
 ```
 
