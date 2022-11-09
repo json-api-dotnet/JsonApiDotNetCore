@@ -1,5 +1,5 @@
 image:
-  - Ubuntu
+  - Ubuntu2004
   - Visual Studio 2022
 
 version: '{build}'
