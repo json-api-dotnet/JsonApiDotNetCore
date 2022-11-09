@@ -114,7 +114,7 @@ dotnet build -c Release
 CheckLastExitCode
 
 # https://youtrack.jetbrains.com/issue/RSRP-488628/Breaking-InspectCode-fails-with-Roslyn-Worker-process-exited-unexpectedly-after-update
-if ($env:APPVEYOR_BUILD_WORKER_IMAGE -ne 'Ubuntu') {
+if ($IsWindows) {
     RunInspectCode
     RunCleanupCode
 }
