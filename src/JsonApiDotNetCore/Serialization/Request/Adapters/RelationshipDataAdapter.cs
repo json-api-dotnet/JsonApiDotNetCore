@@ -111,7 +111,7 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
         }
 
         var resourceSet = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
-        resourceSet.AddRange(rightResources);
+        resourceSet.UnionWith(rightResources);
         return resourceSet;
     }
 }

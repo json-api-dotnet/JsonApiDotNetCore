@@ -66,7 +66,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.Groups.AddRange(existingGroup);
+            dbContext.Groups.Add(existingGroup);
             await dbContext.SaveChangesAsync();
         });
 

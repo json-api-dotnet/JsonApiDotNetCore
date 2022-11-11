@@ -1142,7 +1142,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         {
             if (!workItem.Subscribers.IsNullOrEmpty())
             {
-                PreloadedSubscribers.AddRange(workItem.Subscribers);
+                PreloadedSubscribers.UnionWith(workItem.Subscribers);
             }
 
             foreach (long subscriberId in ExtraSubscribersIdsToRemove)
@@ -1158,7 +1158,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         {
             if (!workItem.Tags.IsNullOrEmpty())
             {
-                PreloadedTags.AddRange(workItem.Tags);
+                PreloadedTags.UnionWith(workItem.Tags);
             }
 
             foreach (int tagId in ExtraTagIdsToRemove)

@@ -471,7 +471,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
         if (rightResourceIdsStored.Any())
         {
-            rightResourceIdsStored.AddRange(rightResourceIdsToAdd);
+            rightResourceIdsStored.UnionWith(rightResourceIdsToAdd);
             return rightResourceIdsStored;
         }
 

@@ -110,7 +110,7 @@ public class IncludeParser : QueryExpressionParser
 
             if (relationships.Any())
             {
-                relationshipsFound.AddRange(relationships);
+                relationshipsFound.UnionWith(relationships);
 
                 RelationshipAttribute[] relationshipsToInclude = relationships.Where(relationship => !relationship.IsIncludeBlocked()).ToArray();
                 ICollection<IncludeTreeNode> affectedChildren = parent.EnsureChildren(relationshipsToInclude);

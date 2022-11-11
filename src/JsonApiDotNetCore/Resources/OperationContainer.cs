@@ -58,6 +58,6 @@ public sealed class OperationContainer
         object? rightValue = relationship.GetValue(Resource);
         IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
 
-        secondaryResources.AddRange(rightResources);
+        secondaryResources.UnionWith(rightResources);
     }
 }

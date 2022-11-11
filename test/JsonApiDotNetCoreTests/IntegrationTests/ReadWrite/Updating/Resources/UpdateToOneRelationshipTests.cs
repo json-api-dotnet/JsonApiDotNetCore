@@ -209,7 +209,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.RgbColors.AddRange(existingColor);
+            dbContext.RgbColors.Add(existingColor);
             await dbContext.SaveChangesAsync();
         });
 
