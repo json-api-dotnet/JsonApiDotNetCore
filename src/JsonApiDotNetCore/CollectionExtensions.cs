@@ -79,15 +79,4 @@ internal static class CollectionExtensions
         return source.Where(element => element is not null)!;
 #pragma warning restore AV1250 // Evaluate LINQ query before returning it
     }
-
-    public static void AddRange<T>(this ICollection<T> source, IEnumerable<T> itemsToAdd)
-    {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(itemsToAdd);
-
-        foreach (T item in itemsToAdd)
-        {
-            source.Add(item);
-        }
-    }
 }

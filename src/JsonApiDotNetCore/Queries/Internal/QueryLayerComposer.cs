@@ -254,7 +254,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         IDictionary<IncludeElementExpression, IImmutableSet<IncludeElementExpression>> updatesInChildren)
     {
         ImmutableHashSet<IncludeElementExpression>.Builder newElementsBuilder = ImmutableHashSet.CreateBuilder<IncludeElementExpression>();
-        newElementsBuilder.AddRange(includeElements);
+        newElementsBuilder.UnionWith(includeElements);
 
         foreach ((IncludeElementExpression existingElement, IImmutableSet<IncludeElementExpression> updatedChildren) in updatesInChildren)
         {
