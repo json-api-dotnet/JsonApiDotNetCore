@@ -23,7 +23,7 @@ internal sealed class CascadingCodeTimer : ICodeTimer
             // https://www.codeproject.com/Articles/61964/Performance-Tests-Precise-Run-Time-Measurements-wi
 
             // The most important thing is to prevent switching between CPU cores or processors. Switching dismisses the cache, etc. and has a huge performance impact on the test.
-            Process.GetCurrentProcess().ProcessorAffinity = new IntPtr(2);
+            Process.GetCurrentProcess().ProcessorAffinity = new nint(2);
 
             // To get the CPU core more exclusively, we must prevent that other processes can use this CPU core. We set our process priority to achieve this.
             // Note we should NOT set the thread priority, because async/await usage makes the code jump between pooled threads (depending on Synchronization Context).
