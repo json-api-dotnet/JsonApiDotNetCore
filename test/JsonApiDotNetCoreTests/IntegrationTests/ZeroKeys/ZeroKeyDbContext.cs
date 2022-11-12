@@ -27,5 +27,7 @@ public sealed class ZeroKeyDbContext : TestableDbContext
         builder.Entity<Player>()
             .HasOne(player => player.ActiveGame)
             .WithMany(game => game.ActivePlayers);
+
+        base.OnModelCreating(builder);
     }
 }

@@ -49,5 +49,7 @@ public sealed class ReadWriteDbContext : TestableDbContext
                 left => left
                     .HasOne(joinEntity => joinEntity.ToItem)
                     .WithMany());
+
+        base.OnModelCreating(builder);
     }
 }
