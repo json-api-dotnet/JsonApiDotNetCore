@@ -104,11 +104,8 @@ CheckLastExitCode
 dotnet build -c Release
 CheckLastExitCode
 
-# https://youtrack.jetbrains.com/issue/RSRP-488628/Breaking-InspectCode-fails-with-Roslyn-Worker-process-exited-unexpectedly-after-update
-if ($IsWindows) {
-    RunInspectCode
-    RunCleanupCode
-}
+RunInspectCode
+RunCleanupCode
 
 dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
 CheckLastExitCode
