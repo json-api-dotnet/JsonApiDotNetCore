@@ -4,7 +4,7 @@ image:
 
 version: '{build}'
 
-stack: postgresql 13.4
+stack: postgresql 15
 
 environment:
   PGUSER: postgres
@@ -34,7 +34,7 @@ for:
     only:
     - image: Visual Studio 2022
   services:
-  - postgresql13
+  - postgresql15
   # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
   before_build:
     - pwsh: |
@@ -101,7 +101,7 @@ build_script:
 
     Write-Output "PostgreSQL version:"
     if ($IsWindows) {
-        . "${env:ProgramFiles}\PostgreSQL\13\bin\psql" --version
+        . "${env:ProgramFiles}\PostgreSQL\15\bin\psql" --version
     }
     else {
         psql --version
