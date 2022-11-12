@@ -48,7 +48,7 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
     {
         try
         {
-            _includeExpression = GetInclude(parameterValue);
+            _includeExpression = GetInclude(parameterValue.ToString());
         }
         catch (QueryParseException exception)
         {

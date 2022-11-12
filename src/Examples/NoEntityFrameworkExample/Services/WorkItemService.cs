@@ -11,12 +11,12 @@ namespace NoEntityFrameworkExample.Services;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class WorkItemService : IResourceService<WorkItem, int>
 {
-    private readonly string _connectionString;
+    private readonly string? _connectionString;
 
     public WorkItemService(IConfiguration configuration)
     {
         string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
-        _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
+        _connectionString = configuration["Data:DefaultConnection"]?.Replace("###", postgresPassword);
     }
 
     public async Task<IReadOnlyCollection<WorkItem>> GetAsync(CancellationToken cancellationToken)

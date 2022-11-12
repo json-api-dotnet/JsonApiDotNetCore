@@ -36,7 +36,7 @@ public sealed class AppDbContext : DbContext
     private string GetConnectionString()
     {
         string? tenantName = GetTenantName();
-        string connectionString = _configuration[$"Data:{tenantName ?? "Default"}Connection"];
+        string? connectionString = _configuration[$"Data:{tenantName ?? "Default"}Connection"];
 
         if (connectionString == null)
         {
