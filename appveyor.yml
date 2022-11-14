@@ -35,6 +35,9 @@ for:
     - image: Visual Studio 2022
   services:
   - postgresql15
+  install:
+  # Temporary workaround for https://help.appveyor.com/discussions/questions/60488-postgresql-version
+  - net start postgresql-x64-15
   # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
   before_build:
     - pwsh: |
