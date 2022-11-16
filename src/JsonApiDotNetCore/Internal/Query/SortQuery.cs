@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Models;
 using System;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Internal.Query
 {

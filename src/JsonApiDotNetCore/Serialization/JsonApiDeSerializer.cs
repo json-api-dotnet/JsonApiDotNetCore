@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -46,7 +51,10 @@ namespace JsonApiDotNetCore.Serialization
                     // deserialization again from the string
                     var operations = JsonConvert.DeserializeObject<OperationsDocument>(requestBody);
                     if (operations == null)
-                        throw new JsonApiException(400, "Failed to deserialize operations request.");
+                        throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = "Failed to deserialize operations request."
+                    });
 
                     return operations;
                 }
@@ -63,7 +71,11 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (Exception e)
             {
-                throw new JsonApiException(400, "Failed to deserialize request body", e);
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "Failed to deserialize request body",
+                    Source = e
+                });
             }
         }
 
@@ -86,7 +98,11 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (Exception e)
             {
-                throw new JsonApiException(400, "Failed to deserialize request body", e);
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "Failed to deserialize request body",
+                    Source = e
+                });
             }
         }
 
@@ -107,21 +123,30 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (Exception e)
             {
-                throw new JsonApiException(400, "Failed to deserialize request body", e);
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = "Failed to deserialize request body",
+                    Source = e
+                });
             }
         }
 
         public object DocumentToObject(ResourceObject data, List<ResourceObject> included = null)
         {
             if (data == null)
-                throw new JsonApiException(422, "Failed to deserialize document as json:api.");
+                throw new JsonApiException(new Error(HttpStatusCode.UnprocessableEntity)
+                    {
+                        Title = "Failed to deserialize document as json:api."
+                    });
 
             var contextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(data.Type?.ToString());
-            _jsonApiContext.RequestEntity = contextEntity ?? throw new JsonApiException(400,
-                    message: $"This API does not contain a json:api resource named '{data.Type}'.",
-                    detail: "This resource is not registered on the ResourceGraph. "
-                            + "If you are using Entity Framework, make sure the DbSet matches the expected resource name. "
-                            + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name.");
+            _jsonApiContext.RequestEntity = contextEntity ?? throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+            {
+                Title =  $"This API does not contain a json:api resource named '{data.Type}'.",
+                Detail =  "This resource is not registered on the ResourceGraph. "
+                        + "If you are using Entity Framework, make sure the DbSet matches the expected resource name. "
+                        + "If you have manually registered the resource, check that the call to AddResource correctly sets the public name."
+            });
 
             var entity = Activator.CreateInstance(contextEntity.EntityType);
 
@@ -215,14 +240,14 @@ namespace JsonApiDotNetCore.Serialization
             SetHasOneNavigationPropertyValue(entity, attr, rio, included);
 
             // recursive call ...
-            if(included != null) 
+            if(included != null)
             {
                 var navigationPropertyValue = attr.GetValue(entity);
                 var resourceGraphEntity = _jsonApiContext.ResourceGraph.GetContextEntity(attr.Type);
                 if(navigationPropertyValue != null && resourceGraphEntity != null)
                 {
                     var includedResource = included.SingleOrDefault(r => r.Type == rio.Type && r.Id == rio.Id);
-                    if(includedResource != null) 
+                    if(includedResource != null)
                         SetRelationships(navigationPropertyValue, resourceGraphEntity, includedResource.Relationships, included);
                 }
             }
@@ -241,7 +266,10 @@ namespace JsonApiDotNetCore.Serialization
                 // e.g. PATCH /articles
                 // {... { "relationships":{ "Owner": { "data": null } } } }
                 if (rio == null && Nullable.GetUnderlyingType(foreignKeyProperty.PropertyType) == null)
-                    throw new JsonApiException(400, $"Cannot set required relationship identifier '{hasOneAttr.IdentifiablePropertyName}' to null because it is a non-nullable type.");
+                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"Cannot set required relationship identifier '{hasOneAttr.IdentifiablePropertyName}' to null because it is a non-nullable type."
+                    });
 
                 var convertedValue = TypeHelper.ConvertType(foreignKeyPropertyValue, foreignKeyProperty.PropertyType);
                 foreignKeyProperty.SetValue(entity, convertedValue);
@@ -318,7 +346,10 @@ namespace JsonApiDotNetCore.Serialization
 
             var contextEntity = _jsonApiContext.ResourceGraph.GetContextEntity(relationshipAttr.Type);
             if (contextEntity == null)
-                throw new JsonApiException(400, $"Included type '{relationshipAttr.Type}' is not a registered json:api resource.");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"Included type '{relationshipAttr.Type}' is not a registered json:api resource."
+                    });
 
             SetEntityAttributes(relatedInstance, contextEntity, includedResource.Attributes);
 
@@ -333,8 +364,12 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (InvalidOperationException e)
             {
-                throw new JsonApiException(400, $"A compound document MUST NOT include more than one resource object for each type and id pair."
-                        + $"The duplicate pair was '{relatedResourceIdentifier.Type}, {relatedResourceIdentifier.Id}'", e);
+                throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
+                {
+                    Title = $"A compound document MUST NOT include more than one resource object for each type and id pair."
+                            + $"The duplicate pair was '{relatedResourceIdentifier.Type}, {relatedResourceIdentifier.Id}'",
+                    Source = e
+                });
             }
         }
     }

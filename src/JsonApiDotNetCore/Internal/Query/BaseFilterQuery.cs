@@ -1,5 +1,8 @@
 using JsonApiDotNetCore.Services;
 using System;
+using System.Net;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Internal.Query
 {
@@ -22,7 +25,10 @@ namespace JsonApiDotNetCore.Internal.Query
             if (prefix.Length == 0) return FilterOperations.eq;
 
             if (Enum.TryParse(prefix, out FilterOperations opertion) == false)
-                throw new JsonApiException(400, $"Invalid filter prefix '{prefix}'");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"Invalid filter prefix '{prefix}'"
+                    });
 
             return opertion;
         }

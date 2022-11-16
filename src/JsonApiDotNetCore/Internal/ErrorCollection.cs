@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;

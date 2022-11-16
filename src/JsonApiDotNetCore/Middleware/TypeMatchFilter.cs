@@ -1,6 +1,9 @@
 using System;
 using System.Linq;
+using System.Net;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -31,10 +34,13 @@ namespace JsonApiDotNetCore.Middleware
                 {
                     var expectedJsonApiResource = _jsonApiContext.ResourceGraph.GetContextEntity(targetType);
 
-                    throw new JsonApiException(409,
-                        $"Cannot '{context.HttpContext.Request.Method}' type '{_jsonApiContext.RequestEntity.EntityName}' "
-                        + $"to '{expectedJsonApiResource?.EntityName}' endpoint.",
-                        detail: "Check that the request payload type matches the type expected by this endpoint.");
+                    throw new JsonApiException(new Error(HttpStatusCode.Conflict)
+                    {
+                        Title =
+                            $"Cannot '{context.HttpContext.Request.Method}' type '{_jsonApiContext.RequestEntity.EntityName}' "
+                            + $"to '{expectedJsonApiResource?.EntityName}' endpoint.",
+                        Detail = "Check that the request payload type matches the type expected by this endpoint."
+                    });
                 }
             }
         }

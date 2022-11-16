@@ -1,41 +1,41 @@
-using System;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Models
+namespace JsonApiDotNetCore.Resources.Annotations
 {
     public class HasOneAttribute : RelationshipAttribute
     {
-        /// <summary>
-        /// Create a HasOne relational link to another entity
-        /// </summary>
-        /// 
-        /// <param name="publicName">The relationship name as exposed by the API</param>
-        /// <param name="documentLinks">Which links are available. Defaults to <see cref="Link.All"/></param>
-        /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
-        /// <param name="withForeignKey">The foreign key property name. Defaults to <c>"{RelationshipName}Id"</c></param>
-        /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
-        /// 
-        /// <example>
-        /// Using an alternative foreign key:
-        /// 
-        /// <code>
-        /// public class Article : Identifiable 
-        /// {
-        ///     [HasOne("author", withForeignKey: nameof(AuthorKey)]
-        ///     public Author Author { get; set; }
-        ///     public int AuthorKey { get; set; }
-        /// }
-        /// </code>
-        /// 
-        /// </example>
-        public HasOneAttribute(string publicName = null, Link documentLinks = Link.All, bool canInclude = true, string withForeignKey = null, string mappedBy = null)
-        : base(publicName, documentLinks, canInclude, mappedBy)
-        {
-            _explicitIdentifiablePropertyName = withForeignKey;
-        }
+        // /// <summary>
+        // /// Create a HasOne relational link to another entity
+        // /// </summary>
+        // ///
+        // /// <param name="publicName">The relationship name as exposed by the API</param>
+        // /// <param name="documentLinks">Which links are available. Defaults to <see cref="LinkTypes.All"/></param>
+        // /// <param name="canInclude">Whether or not this relationship can be included using the <c>?include=public-name</c> query string</param>
+        // /// <param name="withForeignKey">The foreign key property name. Defaults to <c>"{RelationshipName}Id"</c></param>
+        // /// <param name="mappedBy">The name of the entity mapped property, defaults to null</param>
+        // ///
+        // /// <example>
+        // /// Using an alternative foreign key:
+        // ///
+        // /// <code>
+        // /// public class Article : Identifiable
+        // /// {
+        // ///     [HasOne(PublicName = "author"]
+        // ///     public Author Author { get; set; }
+        // ///     public int AuthorKey { get; set; }
+        // /// }
+        // /// </code>
+        // ///
+        // /// </example>
+        // public HasOneAttribute(string publicName = null, LinkTypes documentLinks = LinkTypes.All, bool canInclude = true, string withForeignKey = null, string mappedBy = null)
+        // : base(publicName, documentLinks, canInclude, mappedBy)
+        // {
+        //     _explicitIdentifiablePropertyName = withForeignKey;
+        // }
 
         private readonly string _explicitIdentifiablePropertyName;
-        
+
         /// <summary>
         /// The independent resource identifier.
         /// </summary>
@@ -66,11 +66,11 @@ namespace JsonApiDotNetCore.Models
         /// <summary>
         /// Gets the value of the independent identifier (e.g. Article.AuthorId)
         /// </summary>
-        /// 
+        ///
         /// <param name="resource">
         /// An instance of dependent resource
         /// </param>
-        /// 
+        ///
         /// <returns>
         /// The property value or null if the property does not exist on the model.
         /// </returns>

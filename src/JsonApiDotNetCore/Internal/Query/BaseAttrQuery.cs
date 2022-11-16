@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
 using System;
 using System.Linq;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Internal.Query
 {

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 

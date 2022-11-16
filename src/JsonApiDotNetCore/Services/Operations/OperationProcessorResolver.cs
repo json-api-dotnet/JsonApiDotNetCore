@@ -1,6 +1,9 @@
+using System.Net;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Models.Operations;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services.Operations.Processors;
 
 namespace JsonApiDotNetCore.Services.Operations
@@ -106,7 +109,10 @@ namespace JsonApiDotNetCore.Services.Operations
         {
             var contextEntity = _context.ResourceGraph.GetContextEntity(resourceName);
             if(contextEntity == null)
-                throw new JsonApiException(400, $"This API does not expose a resource of type '{resourceName}'.");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"This API does not expose a resource of type '{resourceName}'."
+                    });
 
             return contextEntity;
         }

@@ -2,12 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -339,7 +344,10 @@ namespace JsonApiDotNetCore.Data
         /// <inheritdoc />
         public virtual IQueryable<TEntity> Include(IQueryable<TEntity> entities, string relationshipName)
         {
-            if (string.IsNullOrWhiteSpace(relationshipName)) throw new JsonApiException(400, "Include parameter must not be empty if provided");
+            if (string.IsNullOrWhiteSpace(relationshipName)) throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = "Include parameter must not be empty if provided"
+                    });
 
             var relationshipChain = relationshipName.Split('.');
 
@@ -353,13 +361,19 @@ namespace JsonApiDotNetCore.Data
                 var relationship = entity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
                 if (relationship == null)
                 {
-                    throw new JsonApiException(400, $"Invalid relationship {requestedRelationship} on {entity.EntityName}",
-                        $"{entity.EntityName} does not have a relationship named {requestedRelationship}");
+                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"Invalid relationship {requestedRelationship} on {entity.EntityName}",
+                        Detail = $"{entity.EntityName} does not have a relationship named {requestedRelationship}"
+                    });
                 }
 
                 if (relationship.CanInclude == false)
                 {
-                    throw new JsonApiException(400, $"Including the relationship {requestedRelationship} on {entity.EntityName} is not allowed");
+                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"Including the relationship {requestedRelationship} on {entity.EntityName} is not allowed"
+                    });
                 }
 
                 internalRelationshipPath = (internalRelationshipPath == null)

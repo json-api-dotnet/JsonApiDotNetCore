@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Models;
 using System.Collections.Generic;
+using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Request
 {

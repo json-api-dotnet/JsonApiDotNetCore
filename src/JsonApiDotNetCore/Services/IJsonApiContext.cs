@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Request;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Services
 {

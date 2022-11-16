@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Services
 {

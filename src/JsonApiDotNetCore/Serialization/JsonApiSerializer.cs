@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;

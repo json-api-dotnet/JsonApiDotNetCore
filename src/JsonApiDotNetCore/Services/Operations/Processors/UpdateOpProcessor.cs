@@ -1,9 +1,13 @@
+using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
@@ -50,13 +54,19 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
         public async Task<Operation> ProcessAsync(Operation operation)
         {
             if (string.IsNullOrWhiteSpace(operation?.DataObject?.Id?.ToString()))
-                throw new JsonApiException(400, "The data.id parameter is required for replace operations");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = "The data.id parameter is required for replace operations"
+                    });
 
             var model = (T)_deSerializer.DocumentToObject(operation.DataObject);
 
             var result = await _service.UpdateAsync(model.Id, model);
             if (result == null)
-                throw new JsonApiException(404, $"Could not find an instance of '{operation.DataObject.Type}' with id {operation.DataObject.Id}");
+                throw new JsonApiException(new Error(HttpStatusCode.NotFound)
+                    {
+                        Title = $"Could not find an instance of '{operation.DataObject.Type}' with id {operation.DataObject.Id}"
+                    });
 
             var operationResult = new Operation
             {

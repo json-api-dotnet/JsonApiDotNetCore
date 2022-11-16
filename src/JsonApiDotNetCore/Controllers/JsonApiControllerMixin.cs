@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Controllers

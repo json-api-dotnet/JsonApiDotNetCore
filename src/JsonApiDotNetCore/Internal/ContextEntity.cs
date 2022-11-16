@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -42,6 +43,6 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// Links to include in resource responses
         /// </summary>
-        public Link Links { get; set; } = Link.All;
+        public LinkTypes Links { get; set; } = LinkTypes.All;
     }
 }

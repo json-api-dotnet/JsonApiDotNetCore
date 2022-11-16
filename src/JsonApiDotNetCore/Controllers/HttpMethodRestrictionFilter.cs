@@ -1,6 +1,9 @@
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Controllers
@@ -16,7 +19,10 @@ namespace JsonApiDotNetCore.Controllers
             var method = context.HttpContext.Request.Method;
 
             if (CanExecuteAction(method) == false)
-                throw new JsonApiException(405, $"This resource does not support {method} requests.");
+                throw new JsonApiException(new Error(HttpStatusCode.MethodNotAllowed)
+                    {
+                        Title = $"This resource does not support {method} requests."
+                    });
 
             await next();
         }

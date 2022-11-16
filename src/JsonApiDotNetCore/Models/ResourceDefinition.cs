@@ -4,7 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Reflection;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Models
 {
@@ -14,7 +19,7 @@ namespace JsonApiDotNetCore.Models
     }
 
     /// <summary>
-    /// exposes developer friendly hooks into how their resources are exposed. 
+    /// exposes developer friendly hooks into how their resources are exposed.
     /// It is intended to improve the experience and reduce boilerplate for commonly required features.
     /// The goal of this class is to reduce the frequency with which developers have to override the
     /// service and repository layers.
@@ -49,7 +54,7 @@ namespace JsonApiDotNetCore.Models
                 .FirstOrDefault();
             var declaringType = instanceMethod?.DeclaringType;
             return declaringType == derivedType;
-        }   
+        }
 
         // TODO: need to investigate options for caching these
         protected List<AttrAttribute> Remove(Expression<Func<T, dynamic>> filter, List<AttrAttribute> from = null)
@@ -73,10 +78,12 @@ namespace JsonApiDotNetCore.Models
                 return attributes;
             }
 
-            throw new JsonApiException(500,
-                message: $"The expression returned by '{filter}' for '{GetType()}' is of type {filter.Body.GetType()}"
+            throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
+            {
+                Title = $"The expression returned by '{filter}' for '{GetType()}' is of type {filter.Body.GetType()}"
                         + " and cannot be used to select resource attributes. ",
-                detail: "The type must be a NewExpression. Example: article => new { article.Author }; ");
+                Detail = "The type must be a NewExpression. Example: article => new { article.Author }; "
+            });
         }
 
         /// <summary>
@@ -134,12 +141,12 @@ namespace JsonApiDotNetCore.Models
         ///
         /// <example>
         /// <code>
-        /// protected override QueryFilters GetQueryFilters() =>  { 
+        /// protected override QueryFilters GetQueryFilters() =>  {
         ///     { "facility", (t, value) => t.Include(t => t.Tenant)
         ///                                   .Where(t => t.Facility == value) }
         ///  }
         /// </code>
-        /// 
+        ///
         /// If the logic is simply too complex for an in-line expression, you can
         /// delegate to a private method:
         /// <code>
@@ -147,7 +154,7 @@ namespace JsonApiDotNetCore.Models
         ///     => new QueryFilters {
         ///         { "is-active", FilterIsActive }
         ///     };
-        /// 
+        ///
         /// private IQueryable&lt;Model&gt; FilterIsActive(IQueryable&lt;Model&gt; query, string value)
         /// {
         ///     // some complex logic goes here...
@@ -192,7 +199,7 @@ namespace JsonApiDotNetCore.Models
                     // TODO: error handling, log or throw?
                     if (sortProp.Item1.Body is MemberExpression memberExpression)
                         order.Add(
-                            (_contextEntity.Attributes.SingleOrDefault(a => a.InternalAttributeName != memberExpression.Member.Name), 
+                            (_contextEntity.Attributes.SingleOrDefault(a => a.InternalAttributeName != memberExpression.Member.Name),
                             sortProp.Item2)
                         );
                 }

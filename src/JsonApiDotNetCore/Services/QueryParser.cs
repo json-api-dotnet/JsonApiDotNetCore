@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
-using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Internal.Query;
-using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
@@ -71,7 +74,10 @@ namespace JsonApiDotNetCore.Services
                 }
 
                 if (_options.AllowCustomQueryParameters == false)
-                    throw new JsonApiException(400, $"{pair} is not a valid query.");
+                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"{pair} is not a valid query."
+                    });
             }
 
             return querySet;
@@ -135,12 +141,18 @@ namespace JsonApiDotNetCore.Services
             if (propertyName == SIZE)
                 pageQuery.PageSize = int.TryParse(value, out var pageSize) ?
                 pageSize :
-                throw new JsonApiException(400, $"Invalid page size '{value}'");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"Invalid page size '{value}'"
+                    });
 
             else if (propertyName == NUMBER)
                 pageQuery.PageOffset = int.TryParse(value, out var pageOffset) ?
                 pageOffset :
-                throw new JsonApiException(400, $"Invalid page size '{value}'");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"Invalid page size '{value}'"
+                    });
 
             return pageQuery;
         }
@@ -182,7 +194,7 @@ namespace JsonApiDotNetCore.Services
         {
             // expected: fields[TYPE]=prop1,prop2
             var typeName = key.Split(QueryConstants.OPEN_BRACKET, QueryConstants.CLOSE_BRACKET)[1];
-            var includedFields = new List<string> { nameof(Identifiable.Id) };
+            var includedFields = new List<string> { nameof(Identifiable<int>.Id) };
 
             var relationship = _controllerContext.RequestEntity.Relationships.SingleOrDefault(a => a.Is(typeName));
             if (relationship == default && string.Equals(typeName, _controllerContext.RequestEntity.EntityName, StringComparison.OrdinalIgnoreCase) == false)
@@ -196,7 +208,10 @@ namespace JsonApiDotNetCore.Services
                     var relationProperty = _options.ResourceGraph.GetContextEntity(relationship.Type);
                     var attr = relationProperty.Attributes.SingleOrDefault(a => a.Is(field));
                     if(attr == null)
-                        throw new JsonApiException(400, $"'{relationship.Type.Name}' does not contain '{field}'.");
+                        throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"'{relationship.Type.Name}' does not contain '{field}'."
+                    });
 
                     // e.g. "Owner.Name"
                     includedFields.Add(relationship.InternalRelationshipName + "." + attr.InternalAttributeName);
@@ -205,7 +220,10 @@ namespace JsonApiDotNetCore.Services
                 {
                     var attr = _controllerContext.RequestEntity.Attributes.SingleOrDefault(a => a.Is(field));
                     if (attr == null)
-                        throw new JsonApiException(400, $"'{_controllerContext.RequestEntity.EntityName}' does not contain '{field}'.");
+                        throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"'{_controllerContext.RequestEntity.EntityName}' does not contain '{field}'."
+                    });
 
                     // e.g. "Name"
                     includedFields.Add(attr.InternalAttributeName);
@@ -226,7 +244,11 @@ namespace JsonApiDotNetCore.Services
             }
             catch (InvalidOperationException e)
             {
-                throw new JsonApiException(400, $"Attribute '{propertyName}' does not exist on resource '{_controllerContext.RequestEntity.EntityName}'", e);
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                {
+                    Title = $"Attribute '{propertyName}' does not exist on resource '{_controllerContext.RequestEntity.EntityName}'",
+                    Source = e
+                });
             }
         }
 

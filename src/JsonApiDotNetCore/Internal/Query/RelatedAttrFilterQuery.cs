@@ -1,5 +1,9 @@
 using System;
+using System.Net;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Internal.Query
@@ -12,13 +16,22 @@ namespace JsonApiDotNetCore.Internal.Query
             :base(jsonApiContext, filterQuery)
         {
             if (Relationship == null)
-                throw new JsonApiException(400, $"{filterQuery.Relationship} is not a valid relationship on {jsonApiContext.RequestEntity.EntityName}.");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"{filterQuery.Relationship} is not a valid relationship on {jsonApiContext.RequestEntity.EntityName}."
+                    });
 
             if (Attribute == null)
-                throw new JsonApiException(400, $"'{filterQuery.Attribute}' is not a valid attribute.");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"'{filterQuery.Attribute}' is not a valid attribute."
+                    });
 
             if (Attribute.IsFilterable == false)
-                throw new JsonApiException(400, $"Filter is not allowed for attribute '{Attribute.PublicAttributeName}'.");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"Filter is not allowed for attribute '{Attribute.PublicAttributeName}'."
+                    });
 
             FilteredRelationship = Relationship;
             FilteredAttribute = Attribute;

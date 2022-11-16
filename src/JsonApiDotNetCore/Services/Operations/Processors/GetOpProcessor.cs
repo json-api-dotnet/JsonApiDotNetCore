@@ -1,17 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Builders;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors
 {
     /// <summary>
-    /// Handles all "<see cref="OperationCode.get"/>" operations 
+    /// Handles all "<see cref="OperationCode.get"/>" operations
     /// </summary>
     /// <typeparam name="T">The resource type</typeparam>
     public interface IGetOpProcessor<T> : IGetOpProcessor<T, int>
@@ -19,7 +23,7 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
     { }
 
     /// <summary>
-    ///  Handles all "<see cref="OperationCode.get"/>" operations 
+    ///  Handles all "<see cref="OperationCode.get"/>" operations
     /// </summary>
     /// <typeparam name="T">The resource type</typeparam>
     /// <typeparam name="TId">The resource identifier type</typeparam>
@@ -114,11 +118,14 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             var result = await _getById.GetAsync(id);
 
             // this is a bit ugly but we need to bomb the entire transaction if the entity cannot be found
-            // in the future it would probably be better to return a result status along with the doc to 
+            // in the future it would probably be better to return a result status along with the doc to
             // avoid throwing exceptions on 4xx errors.
             // consider response type (status, document)
             if (result == null)
-                throw new JsonApiException(404, $"Could not find '{operation.Ref.Type}' record with id '{operation.Ref.Id}'");
+                throw new JsonApiException(new Error(HttpStatusCode.NotFound)
+                    {
+                        Title = $"Could not find '{operation.Ref.Type}' record with id '{operation.Ref.Id}'"
+                    });
 
             var doc = _documentBuilder.GetData(
                 _resourceGraph.GetContextEntity(operation.GetResourceTypeName()),
@@ -148,9 +155,11 @@ namespace JsonApiDotNetCore.Services.Operations.Processors
             if (result is IEnumerable multipleResults)
                 return GetData(relatedContextEntity, multipleResults);
 
-            throw new JsonApiException(500,
-                $"An unexpected type was returned from '{_getRelationship.GetType()}.{nameof(IGetRelationshipService<T, TId>.GetRelationshipAsync)}'.",
-                detail: $"Type '{result.GetType()} does not implement {nameof(IIdentifiable)} nor {nameof(IEnumerable<IIdentifiable>)}'");
+            throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
+            {
+                Title =  $"An unexpected type was returned from '{_getRelationship.GetType()}.{nameof(IGetRelationshipService<T, TId>.GetRelationshipAsync)}'.",
+                Detail = $"Type '{result.GetType()} does not implement {nameof(IIdentifiable)} nor {nameof(IEnumerable<IIdentifiable>)}'"
+            });
         }
 
         private ResourceObject GetData(ContextEntity contextEntity, IIdentifiable singleResource)

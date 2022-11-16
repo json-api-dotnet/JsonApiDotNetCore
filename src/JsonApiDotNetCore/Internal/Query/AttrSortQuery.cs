@@ -1,3 +1,6 @@
+using System.Net;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Internal.Query
@@ -10,10 +13,16 @@ namespace JsonApiDotNetCore.Internal.Query
             :base(jsonApiContext, sortQuery)
         {
             if (Attribute == null)
-                throw new JsonApiException(400, $"'{sortQuery.Attribute}' is not a valid attribute.");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"'{sortQuery.Attribute}' is not a valid attribute."
+                    });
 
             if (Attribute.IsSortable == false)
-                throw new JsonApiException(400, $"Sort is not allowed for attribute '{Attribute.PublicAttributeName}'.");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"Sort is not allowed for attribute '{Attribute.PublicAttributeName}'."
+                    });
 
             Direction = sortQuery.Direction;
         }

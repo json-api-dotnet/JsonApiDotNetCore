@@ -3,6 +3,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Extensions
 {
@@ -46,7 +49,7 @@ namespace JsonApiDotNetCore.Extensions
         }
 
         /// <summary>
-        /// Creates a new instance of type t, casting it to the specified TInterface 
+        /// Creates a new instance of type t, casting it to the specified TInterface
         /// </summary>
         public static TInterface New<TInterface>(this Type t)
         {
@@ -64,32 +67,36 @@ namespace JsonApiDotNetCore.Extensions
             }
             catch (Exception e)
             {
-                throw new JsonApiException(500, $"Type '{type}' cannot be instantiated using the default constructor.", e);
+                throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
+                {
+                    Title = $"Type '{type}' cannot be instantiated using the default constructor.",
+                    Source = e
+                });
             }
         }
 
         /// <summary>
         /// Whether or not a type implements an interface.
         /// </summary>
-        public static bool Implements<T>(this Type concreteType) 
+        public static bool Implements<T>(this Type concreteType)
             => Implements(concreteType, typeof(T));
 
         /// <summary>
         /// Whether or not a type implements an interface.
         /// </summary>
-        public static bool Implements(this Type concreteType, Type interfaceType) 
+        public static bool Implements(this Type concreteType, Type interfaceType)
             => interfaceType?.IsAssignableFrom(concreteType) == true;
 
         /// <summary>
         /// Whether or not a type inherits a base type.
         /// </summary>
-        public static bool Inherits<T>(this Type concreteType) 
+        public static bool Inherits<T>(this Type concreteType)
             => Inherits(concreteType, typeof(T));
 
         /// <summary>
         /// Whether or not a type inherits a base type.
         /// </summary>
-        public static bool Inherits(this Type concreteType, Type interfaceType) 
+        public static bool Inherits(this Type concreteType, Type interfaceType)
             => interfaceType?.IsAssignableFrom(concreteType) == true;
     }
 }

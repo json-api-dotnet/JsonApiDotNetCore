@@ -1,6 +1,9 @@
 using System;
 using System.Linq;
+using System.Net;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Services
@@ -33,7 +36,10 @@ namespace JsonApiDotNetCore.Services
         public T GetRequired<T>(string key)
         {
             if (TryGetValue<T>(key, out T result) == false)
-                throw new JsonApiException(422, $"'{key}' is not a valid '{typeof(T).Name}' value for query parameter {key}");
+                throw new JsonApiException(new Error(HttpStatusCode.UnprocessableEntity)
+                    {
+                        Title = $"'{key}' is not a valid '{typeof(T).Name}' value for query parameter {key}"
+                    });
 
             return result;
         }
@@ -73,13 +79,13 @@ namespace JsonApiDotNetCore.Services
         private string GetFilterValue(string key) {
             var publicValue = _jsonApiContext.QuerySet.Filters
                 .FirstOrDefault(f => string.Equals(f.Attribute, key, StringComparison.OrdinalIgnoreCase))?.Value;
-            
-            if(publicValue != null) 
+
+            if(publicValue != null)
                 return publicValue;
-            
+
             var internalValue = _jsonApiContext.QuerySet.Filters
                 .FirstOrDefault(f => string.Equals(f.Attribute, key, StringComparison.OrdinalIgnoreCase))?.Value;
-            
+
             if(internalValue != null) {
                 _logger.LogWarning("Locating filters by the internal propterty name is deprecated. You should use the public attribute name instead.");
                 return publicValue;

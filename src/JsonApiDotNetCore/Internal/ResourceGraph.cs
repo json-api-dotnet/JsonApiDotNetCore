@@ -2,7 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -20,7 +25,7 @@ namespace JsonApiDotNetCore.Internal
         /// </code>
         /// </example>
         /// <remarks>
-        /// In the case of a `HasManyThrough` relationship, it will not traverse the relationship 
+        /// In the case of a `HasManyThrough` relationship, it will not traverse the relationship
         /// and will instead return the value of the shadow property (e.g. Articles.Tags).
         /// If you want to traverse the relationship, you should use <see cref="GetRelationshipValue" />.
         /// </remarks>
@@ -29,7 +34,7 @@ namespace JsonApiDotNetCore.Internal
         /// <summary>
         /// Gets the value of the navigation property (defined by the <see cref="RelationshipAttribute" />)
         /// on the provided instance.
-        /// In the case of `HasManyThrough` relationships, it will traverse the through entity and return the 
+        /// In the case of `HasManyThrough` relationships, it will traverse the through entity and return the
         /// value of the relationship on the other side of a join entity (e.g. Articles.ArticleTags.Tag).
         /// </summary>
         /// <param name="resource">The resource instance</param>
@@ -124,14 +129,17 @@ namespace JsonApiDotNetCore.Internal
                 .SingleOrDefault(p => string.Equals(p.Name, relationshipName, StringComparison.OrdinalIgnoreCase));
 
             if (navigationProperty == null)
-                throw new JsonApiException(400, $"{parentEntityType} does not contain a relationship named {relationshipName}");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"{parentEntityType} does not contain a relationship named {relationshipName}"
+                    });
 
             return navigationProperty.GetValue(entity);
         }
 
         public object GetRelationshipValue<TParent>(TParent resource, RelationshipAttribute relationship) where TParent : IIdentifiable
         {
-            if(relationship is HasManyThroughAttribute hasManyThroughRelationship) 
+            if(relationship is HasManyThroughAttribute hasManyThroughRelationship)
             {
                 return GetHasManyThrough(resource, hasManyThroughRelationship);
             }

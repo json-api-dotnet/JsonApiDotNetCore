@@ -5,7 +5,11 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Services
 {
@@ -134,7 +138,10 @@ namespace JsonApiDotNetCore.Services
             // vs the relationship not being set on the instance of T
             if (entity == null)
             {
-                throw new JsonApiException(404, $"Relationship '{relationshipName}' not found.");
+                throw new JsonApiException(new Error(HttpStatusCode.NotFound)
+                    {
+                        Title = $"Relationship '{relationshipName}' not found."
+                    });
             }
 
             var resource = MapOut(entity);
@@ -142,7 +149,10 @@ namespace JsonApiDotNetCore.Services
             // compound-property -> CompoundProperty
             var navigationPropertyName = _jsonApiContext.ResourceGraph.GetRelationshipName<TResource>(relationshipName);
             if (navigationPropertyName == null)
-                throw new JsonApiException(422, $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'.");
+                throw new JsonApiException(new Error(HttpStatusCode.UnprocessableEntity)
+                    {
+                        Title = $"Relationship '{relationshipName}' does not exist on resource '{typeof(TResource)}'."
+                    });
 
             var relationshipValue = _jsonApiContext.ResourceGraph.GetRelationship(resource, navigationPropertyName);
             return relationshipValue;
@@ -162,7 +172,10 @@ namespace JsonApiDotNetCore.Services
             var entity = await _entities.GetAndIncludeAsync(id, relationshipName);
             if (entity == null)
             {
-                throw new JsonApiException(404, $"Entity with id {id} could not be found.");
+                throw new JsonApiException(new Error(HttpStatusCode.NotFound)
+                    {
+                        Title = $"Entity with id {id} could not be found."
+                    });
             }
 
             var relationship = _jsonApiContext.ResourceGraph
@@ -176,8 +189,11 @@ namespace JsonApiDotNetCore.Services
             var entityProperty = typeof(TEntity).GetProperty(relationship.InternalRelationshipName);
             if (entityProperty == null)
             {
-                throw new JsonApiException(404, $"Property {relationship.InternalRelationshipName} " +
-                    $"could not be found on entity.");
+                throw new JsonApiException(new Error(HttpStatusCode.NotFound)
+                {
+                    Title = $"Property {relationship.InternalRelationshipName} " +
+                            $"could not be found on entity."
+                });
             }
 
             relationship.Type = relationship.IsHasMany

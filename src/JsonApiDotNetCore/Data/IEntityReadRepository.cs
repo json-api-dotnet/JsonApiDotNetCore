@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Data
 {

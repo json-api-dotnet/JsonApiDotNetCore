@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
 
 namespace JsonApiDotNetCore.Services.Operations.Processors

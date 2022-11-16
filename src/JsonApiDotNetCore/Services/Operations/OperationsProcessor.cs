@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Data;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Models.Operations;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Services.Operations
@@ -55,12 +58,18 @@ namespace JsonApiDotNetCore.Services.Operations
                 catch (JsonApiException e)
                 {
                     transaction.Rollback();
-                    throw new JsonApiException(e.GetStatusCode(), $"Transaction failed on operation[{opIndex}] ({lastAttemptedOperation}).", e);
+                    throw new JsonApiException(new Error((HttpStatusCode)e.GetStatusCode())
+                    {
+                        Title = $"Transaction failed on operation[{opIndex}] ({lastAttemptedOperation})."
+                    });
                 }
                 catch (Exception e)
                 {
                     transaction.Rollback();
-                    throw new JsonApiException(500, $"Transaction failed on operation[{opIndex}] ({lastAttemptedOperation}) for an unexpected reason.", e);
+                    throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
+                    {
+                        Title = $"Transaction failed on operation[{opIndex}] ({lastAttemptedOperation}) for an unexpected reason."
+                    });
                 }
             }
         }
@@ -88,7 +97,7 @@ namespace JsonApiDotNetCore.Services.Operations
             //
             // we also create a scenario where I might try to update a resource I just created
             // in this case, the 'data.id' will be null, but the 'ref.id' will be replaced by the correct 'id' from 'outputOps'
-            // 
+            //
             // if(HasLocalId(resourceObject))
             //     resourceObject.Id = GetIdFromLocalId(outputOps, resourceObject.LocalId);
 
@@ -124,7 +133,10 @@ namespace JsonApiDotNetCore.Services.Operations
         private string GetIdFromLocalId(List<Operation> outputOps, string localId)
         {
             var referencedOp = outputOps.FirstOrDefault(o => o.DataObject.LocalId == localId);
-            if (referencedOp == null) throw new JsonApiException(400, $"Could not locate lid '{localId}' in document.");
+            if (referencedOp == null) throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"Could not locate lid '{localId}' in document."
+                    });
             return referencedOp.DataObject.Id;
         }
 
@@ -141,7 +153,10 @@ namespace JsonApiDotNetCore.Services.Operations
                 case OperationCode.update:
                     return _processorResolver.LocateUpdateService(op);
                 default:
-                    throw new JsonApiException(400, $"'{op.Op}' is not a valid operation code");
+                    throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"'{op.Op}' is not a valid operation code"
+                    });
             }
         }
     }

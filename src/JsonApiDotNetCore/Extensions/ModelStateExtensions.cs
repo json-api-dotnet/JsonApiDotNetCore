@@ -1,5 +1,8 @@
 using System;
+using System.Net;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore.Internal;
 
@@ -21,7 +24,11 @@ namespace JsonApiDotNetCore.Extensions
                     if (modelError.Exception is JsonApiException jex)
                         collection.Errors.AddRange(jex.GetError().Errors);
                     else
-                        collection.Errors.Add(new Error(400, entry.Key, modelError.ErrorMessage, modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null));
+                        collection.Errors.Add(new Error(HttpStatusCode.BadRequest)
+                            {
+                                Title = modelError.ErrorMessage,
+                                Meta = modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null
+                            });
                 }
             }
 
@@ -40,16 +47,18 @@ namespace JsonApiDotNetCore.Extensions
                 foreach (var modelError in entry.Value.Errors)
                 {
                     if (modelError.Exception is JsonApiException jex)
-                        collection.Errors.AddRange(jex.GetError().Errors);
+                        collection.Errors.AddRange(jex.GetError().
+                            Errors);
                     else
-                        collection.Errors.Add(new Error(
-                            status: 422,
-                            title: entry.Key,
-                            detail: modelError.ErrorMessage,
-                            meta: modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null,
-                            source: attrName == null ? null : new {
+                        collection.Errors.Add(new Error(HttpStatusCode.UnprocessableEntity)
+                        {
+                            Title = entry.Key,
+                            Detail = modelError.ErrorMessage,
+                            Meta = modelError.Exception != null ? ErrorMeta.FromException(modelError.Exception) : null,
+                            Source = attrName == null ? null : new {
                                 pointer = $"/data/attributes/{attrName}"
-                            }));
+                                }
+                        });
                 }
             }
 

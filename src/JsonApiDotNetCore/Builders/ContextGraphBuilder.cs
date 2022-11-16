@@ -8,6 +8,8 @@ using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -69,9 +71,9 @@ namespace JsonApiDotNetCore.Builders
         IResourceGraphBuilder UseNameFormatter(IResourceNameFormatter resourceNameFormatter);
 
         /// <summary>
-        /// Which links to include. Defaults to <see cref="Link.All"/>.
+        /// Which links to include. Defaults to <see cref="LinkTypes.All"/>.
         /// </summary>
-        Link DocumentLinks { get; set; }
+        LinkTypes DocumentLinks { get; set; }
     }
 
     public class ResourceGraphBuilder : IResourceGraphBuilder
@@ -81,7 +83,7 @@ namespace JsonApiDotNetCore.Builders
         private bool _usesDbContext;
         private IResourceNameFormatter _resourceNameFormatter = JsonApiOptions.ResourceNameFormatter;
 
-        public Link DocumentLinks { get; set; } = Link.All;
+        public LinkTypes DocumentLinks { get; set; } = LinkTypes.All;
 
         public IResourceGraph Build()
         {
@@ -122,7 +124,7 @@ namespace JsonApiDotNetCore.Builders
             ResourceType = GetResourceDefinitionType(entityType)
         };
 
-        private Link GetLinkFlags(Type entityType)
+        private LinkTypes GetLinkFlags(Type entityType)
         {
             var attribute = (LinksAttribute)entityType.GetTypeInfo().GetCustomAttribute(typeof(LinksAttribute));
             if (attribute != null)
@@ -139,7 +141,7 @@ namespace JsonApiDotNetCore.Builders
 
             foreach (var prop in properties)
             {
-                if (prop.Name == nameof(Identifiable.Id))
+                if (prop.Name == nameof(Identifiable<int>.Id))
                 {
                     var idAttr = new AttrAttribute()
                     {

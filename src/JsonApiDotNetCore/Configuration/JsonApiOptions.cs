@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Graph;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -30,7 +31,7 @@ namespace JsonApiDotNetCore.Configuration
         /// Whether or not stack traces should be serialized in Error objects
         /// </summary>
         public static bool DisableErrorStackTraces { get; set; }
-        
+
         /// <summary>
         /// Whether or not source URLs should be serialized in Error objects
         /// </summary>
@@ -64,8 +65,8 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <summary>
         /// Whether or not clients can provide ids when creating resources.
-        /// Defaults to false.  When disabled the application will respond 
-        /// with a 403 Forbidden respponse if a client attempts to create a 
+        /// Defaults to false.  When disabled the application will respond
+        /// with a 403 Forbidden respponse if a client attempts to create a
         /// resource with a defined id.
         /// </summary>
         /// <example>
@@ -103,11 +104,11 @@ namespace JsonApiDotNetCore.Configuration
         public bool RelativeLinks { get; set; }
 
         /// <summary>
-        /// Which links to include in relationships. Defaults to <see cref="Link.All"/>.
+        /// Which links to include in relationships. Defaults to <see cref="LinkTypes.All"/>.
         /// </summary>
         /// <example>
         /// <code>
-        /// options.DefaultRelationshipLinks = Link.None;
+        /// options.DefaultRelationshipLinks = Links = LinkTypes.None;
         /// </code>
         /// <code>
         /// {
@@ -120,7 +121,7 @@ namespace JsonApiDotNetCore.Configuration
         /// }
         /// </code>
         /// </example>
-        public Link DefaultRelationshipLinks { get; set; } = Link.All;
+        public LinkTypes DefaultRelationshipLinks { get; set; } = LinkTypes.All;
 
         /// <summary>
         /// Whether or not to allow all custom query parameters.

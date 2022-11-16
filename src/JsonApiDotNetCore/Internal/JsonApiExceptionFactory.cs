@@ -1,4 +1,7 @@
 using System;
+using System.Net;
+using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Internal
 {
@@ -11,7 +14,10 @@ namespace JsonApiDotNetCore.Internal
             if (exceptionType == typeof(JsonApiException))
                 return (JsonApiException)exception;
 
-            return new JsonApiException(500, exceptionType.Name, exception);
+            return new JsonApiException(new Error(HttpStatusCode.BadRequest)
+            {
+                Title = exceptionType.Name
+            });
         }
     }
 }

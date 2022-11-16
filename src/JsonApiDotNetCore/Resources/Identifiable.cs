@@ -1,12 +1,10 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using JsonApiDotNetCore.Internal;
+using JsonApiDotNetCore.Models;
 
-namespace JsonApiDotNetCore.Models
+namespace JsonApiDotNetCore.Resources
 {
-    public class Identifiable : Identifiable<int>
-    { }
-
     public class Identifiable<T> : IIdentifiable<T>
     {
         /// <summary>
@@ -31,6 +29,11 @@ namespace JsonApiDotNetCore.Models
             get => GetStringId(Id);
             set => Id = GetTypedId(value);
         }
+        
+        /// <inheritdoc />
+        [NotMapped]
+        public string LocalId { get; set; }
+
 
         /// <summary>
         /// Convert the provided resource identifier to a string.
@@ -69,4 +72,7 @@ namespace JsonApiDotNetCore.Models
             return TypeHelper.ConvertType(value, typeof(T));
         }
     }
+    
+    
+  
 }

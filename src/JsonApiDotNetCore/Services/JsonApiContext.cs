@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using JsonApiDotNetCore.Builders;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Generics;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Request;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Services
@@ -59,12 +63,18 @@ namespace JsonApiDotNetCore.Services
         public IJsonApiContext ApplyContext<T>(object controller)
         {
             if (controller == null)
-                throw new JsonApiException(500, $"Cannot ApplyContext from null controller for type {typeof(T)}");
+                throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
+                    {
+                        Title = $"Cannot ApplyContext from null controller for type {typeof(T)}"
+                    });
 
             _controllerContext.ControllerType = controller.GetType();
             _controllerContext.RequestEntity = ResourceGraph.GetContextEntity(typeof(T));
             if (_controllerContext.RequestEntity == null)
-                throw new JsonApiException(500, $"A resource has not been properly defined for type '{typeof(T)}'. Ensure it has been registered on the ResourceGraph.");
+                throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
+                    {
+                        Title = $"A resource has not been properly defined for type '{typeof(T)}'. Ensure it has been registered on the ResourceGraph."
+                    });
 
             var context = _httpContextAccessor.HttpContext;
 
@@ -95,7 +105,7 @@ namespace JsonApiDotNetCore.Services
             // -2 is chosen in case the path ends with '/'
             for (var i = requestPath.Length - 2; i >= 0; i--)
             {
-                // if there are not enough characters left in the path to 
+                // if there are not enough characters left in the path to
                 // contain "relationships"
                 if (i < relationships.Length)
                     return false;

@@ -1,8 +1,10 @@
 using System;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 
@@ -14,7 +16,7 @@ namespace JsonApiDotNetCore.Formatters
         private readonly IJsonApiSerializer _serializer;
 
         public JsonApiWriter(
-            IJsonApiSerializer serializer, 
+            IJsonApiSerializer serializer,
             ILoggerFactory loggerFactory)
         {
             _serializer = serializer;
@@ -51,7 +53,11 @@ namespace JsonApiDotNetCore.Formatters
         private string GetErrorResponse(Exception e)
         {
             var errors = new ErrorCollection();
-            errors.Add(new Error(400, e.Message, ErrorMeta.FromException(e)));
+            errors.Add(new Error(HttpStatusCode.BadRequest)
+            {
+                Title = e.Message,
+                Meta = ErrorMeta.FromException(e)
+            });
             return errors.GetJson();
         }
     }

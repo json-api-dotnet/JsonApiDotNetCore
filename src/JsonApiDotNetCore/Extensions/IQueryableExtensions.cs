@@ -3,10 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Reflection;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Internal.Query;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Extensions
@@ -186,7 +190,10 @@ namespace JsonApiDotNetCore.Extensions
                     body = Expression.Equal(left, right);
                     break;
                 default:
-                    throw new JsonApiException(500, $"Unknown filter operation {operation}");
+                    throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
+                    {
+                        Title = $"Unknown filter operation {operation}"
+                    });
             }
 
             return body;
@@ -232,7 +239,10 @@ namespace JsonApiDotNetCore.Extensions
             }
             catch (FormatException)
             {
-                throw new JsonApiException(400, $"Could not cast {filter.PropertyValue} to {property.PropertyType.Name}");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"Could not cast {filter.PropertyValue} to {property.PropertyType.Name}"
+                    });
             }
         }
 
@@ -294,7 +304,10 @@ namespace JsonApiDotNetCore.Extensions
             }
             catch (FormatException)
             {
-                throw new JsonApiException(400, $"Could not cast {filter.PropertyValue} to {property.PropertyType.Name}");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"Could not cast {filter.PropertyValue} to {property.PropertyType.Name}"
+                    });
             }
         }
 
@@ -316,7 +329,7 @@ namespace JsonApiDotNetCore.Extensions
                 if (props.Length > 1) // Nested property
                 {
                     if (nestedTypesAndProperties.TryGetValue(props[0], out var properties) == false)
-                        nestedTypesAndProperties.Add(props[0], new List<string>() { nameof(Identifiable.Id), props[1] });
+                        nestedTypesAndProperties.Add(props[0], new List<string>() { nameof(Identifiable<int>.Id), props[1] });
                     else
                         properties.Add(props[1]);
                 }

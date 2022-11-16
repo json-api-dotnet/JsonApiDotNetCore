@@ -2,9 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Extensions;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Builders
@@ -93,7 +98,7 @@ namespace JsonApiDotNetCore.Builders
             return null;
         }
 
-        private bool ShouldIncludePageLinks(ContextEntity entity) => entity.Links.HasFlag(Link.Paging);
+        private bool ShouldIncludePageLinks(ContextEntity entity) => entity.Links.HasFlag(LinkTypes.Paging);
 
         private List<ResourceObject> AppendIncludedObject(List<ResourceObject> includedObject, ContextEntity contextEntity, IIdentifiable entity)
         {
@@ -141,7 +146,7 @@ namespace JsonApiDotNetCore.Builders
         private bool ShouldIncludeAttribute(AttrAttribute attr, object attributeValue, RelationshipAttribute relationship = null)
         {
             return OmitNullValuedAttribute(attr, attributeValue) == false
-                    && attr.InternalAttributeName != nameof(Identifiable.Id)
+                    && attr.InternalAttributeName != nameof(Identifiable<int>.Id)
                    && ((_jsonApiContext.QuerySet == null
                        || _jsonApiContext.QuerySet.Fields.Count == 0)
                        || _jsonApiContext.QuerySet.Fields.Contains(relationship != null ?
@@ -171,13 +176,13 @@ namespace JsonApiDotNetCore.Builders
 
             var relationshipData = new RelationshipData();
 
-            if (_jsonApiContext.Options.DefaultRelationshipLinks.HasFlag(Link.None) == false && attr.DocumentLinks.HasFlag(Link.None) == false)
+            if (_jsonApiContext.Options.DefaultRelationshipLinks.HasFlag(LinkTypes.None) == false && attr.DocumentLinks.HasFlag(LinkTypes.None) == false)
             {
                 relationshipData.Links = new Links();
-                if (attr.DocumentLinks.HasFlag(Link.Self))
+                if (attr.DocumentLinks.HasFlag(LinkTypes.Self))
                     relationshipData.Links.Self = linkBuilder.GetSelfRelationLink(contextEntity.EntityName, entity.StringId, attr.PublicRelationshipName);
 
-                if (attr.DocumentLinks.HasFlag(Link.Related))
+                if (attr.DocumentLinks.HasFlag(LinkTypes.Related))
                     relationshipData.Links.Related = linkBuilder.GetRelatedRelationLink(contextEntity.EntityName, entity.StringId, attr.PublicRelationshipName);
             }
 
@@ -218,7 +223,10 @@ namespace JsonApiDotNetCore.Builders
             var requestedRelationship = relationshipChain[relationshipChainIndex];
             var relationship = parentEntity.Relationships.FirstOrDefault(r => r.PublicRelationshipName == requestedRelationship);
             if(relationship == null)
-                throw new JsonApiException(400, $"{parentEntity.EntityName} does not contain relationship {requestedRelationship}");
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                    {
+                        Title = $"{parentEntity.EntityName} does not contain relationship {requestedRelationship}"
+                    });
 
             var navigationEntity = _jsonApiContext.ResourceGraph.GetRelationshipValue(parentResource, relationship);
             if(navigationEntity == null)
@@ -304,7 +312,7 @@ namespace JsonApiDotNetCore.Builders
                 // this method makes the assumption that entities is a homogenous collection
                 // so, we just lookup the type of the first entity on the graph
                 // this is better than trying to get it from the generic parameter since it could
-                // be less specific than what is registered on the graph (e.g. IEnumerable<object>) 
+                // be less specific than what is registered on the graph (e.g. IEnumerable<object>)
                 typeName = typeName ?? _jsonApiContext.ResourceGraph.GetContextEntity(entity.GetType()).EntityName;
                 relationships.Add(new ResourceIdentifierObject
                 {

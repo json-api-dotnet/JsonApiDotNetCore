@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Models;
+using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Data
 {
