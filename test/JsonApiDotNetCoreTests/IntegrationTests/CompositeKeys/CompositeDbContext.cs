@@ -39,5 +39,7 @@ public sealed class CompositeDbContext : TestableDbContext
         builder.Entity<Car>()
             .HasMany(car => car.PreviousDealerships)
             .WithMany(dealership => dealership.SoldCars);
+
+        base.OnModelCreating(builder);
     }
 }

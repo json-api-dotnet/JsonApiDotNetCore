@@ -33,5 +33,7 @@ public sealed class DefaultBehaviorDbContext : TestableDbContext
             .HasOne(order => order.Shipment)
             .WithOne(shipment => shipment.Order)
             .HasForeignKey<Shipment>("OrderId");
+
+        base.OnModelCreating(builder);
     }
 }

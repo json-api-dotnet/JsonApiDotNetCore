@@ -21,5 +21,7 @@ public sealed class FilterDbContext : TestableDbContext
         builder.Entity<FilterableResource>()
             .Property(resource => resource.SomeDateTimeInLocalZone)
             .HasColumnType("timestamp without time zone");
+
+        base.OnModelCreating(builder);
     }
 }

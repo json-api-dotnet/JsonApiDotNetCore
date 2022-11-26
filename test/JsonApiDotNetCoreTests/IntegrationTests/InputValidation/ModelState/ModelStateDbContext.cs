@@ -37,5 +37,7 @@ public sealed class ModelStateDbContext : TestableDbContext
         builder.Entity<SystemDirectory>()
             .HasOne(systemDirectory => systemDirectory.AlsoSelf)
             .WithOne();
+
+        base.OnModelCreating(builder);
     }
 }

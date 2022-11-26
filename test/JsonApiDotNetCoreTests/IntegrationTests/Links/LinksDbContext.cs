@@ -24,5 +24,7 @@ public sealed class LinksDbContext : TestableDbContext
             .HasOne(photo => photo.Location)
             .WithOne(location => location.Photo)
             .HasForeignKey<Photo>("LocationId");
+
+        base.OnModelCreating(builder);
     }
 }

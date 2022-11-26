@@ -32,5 +32,7 @@ public sealed class TablePerTypeDbContext : ResourceInheritanceDbContext
         builder.Entity<GenericProperty>().ToTable("GenericProperties");
         builder.Entity<StringProperty>().ToTable("StringProperties");
         builder.Entity<NumberProperty>().ToTable("NumberProperties");
+
+        base.OnModelCreating(builder);
     }
 }
