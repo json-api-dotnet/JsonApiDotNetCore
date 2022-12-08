@@ -40,6 +40,7 @@ public sealed class ResponseModelAdapterTests
         // Assert
         string text = JsonSerializer.Serialize(document, new JsonSerializerOptions(options.SerializerWriteOptions));
 
+        // ReSharper disable StringLiteralTypo
         text.Should().BeJson(@"{
   ""data"": {
     ""type"": ""articles"",
@@ -145,6 +146,7 @@ public sealed class ResponseModelAdapterTests
     }
   ]
 }");
+        // ReSharper restore StringLiteralTypo
     }
 
     [Fact]
@@ -177,6 +179,7 @@ public sealed class ResponseModelAdapterTests
         // Assert
         string text = JsonSerializer.Serialize(document, new JsonSerializerOptions(options.SerializerWriteOptions));
 
+        // ReSharper disable StringLiteralTypo
         text.Should().BeJson(@"{
   ""data"": [
     {
@@ -299,6 +302,7 @@ public sealed class ResponseModelAdapterTests
     }
   ]
 }");
+        // ReSharper restore StringLiteralTypo
     }
 
     [Fact]
@@ -335,6 +339,7 @@ public sealed class ResponseModelAdapterTests
         // Assert
         string text = JsonSerializer.Serialize(document, new JsonSerializerOptions(options.SerializerWriteOptions));
 
+        // ReSharper disable StringLiteralTypo
         text.Should().BeJson(@"{
   ""data"": {
     ""type"": ""articles"",
@@ -514,6 +519,7 @@ public sealed class ResponseModelAdapterTests
     }
   ]
 }");
+        // ReSharper restore StringLiteralTypo
     }
 
     [Fact]
