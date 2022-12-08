@@ -10,6 +10,7 @@ namespace JsonApiDotNetCoreExample.Data;
 public sealed class AppDbContext : DbContext
 {
     public DbSet<TodoItem> TodoItems => Set<TodoItem>();
+    public DbSet<PostIt> PostIts => Set<PostIt>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)

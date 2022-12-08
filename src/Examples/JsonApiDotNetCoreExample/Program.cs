@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCoreExample.Data;
+using JsonApiDotNetCoreExample.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -98,5 +99,20 @@ static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
     await using AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
 
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    await dbContext.Database.EnsureDeletedAsync();
     await dbContext.Database.EnsureCreatedAsync();
+
+    var postIt = new PostIt
+    {
+        Id = 835405,
+        Actif = true,
+        Date = DateTime.UtcNow,
+        Message = "ab",
+        RefOperateur = "some-ref"
+    };
+
+    dbContext.PostIts.Add(postIt);
+
+    await dbContext.SaveChangesAsync();
 }
