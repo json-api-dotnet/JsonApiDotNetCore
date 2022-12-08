@@ -1,6 +1,7 @@
 using System.Net;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCore.Errors;
@@ -20,20 +21,35 @@ public sealed class UnsuccessfulActionResultException : JsonApiException
     }
 
     public UnsuccessfulActionResultException(ProblemDetails problemDetails)
-        : base(ToError(problemDetails))
+        : base(ToErrorObjects(problemDetails))
     {
     }
 
-    private static ErrorObject ToError(ProblemDetails problemDetails)
+    private static IEnumerable<ErrorObject> ToErrorObjects(ProblemDetails problemDetails)
     {
         ArgumentGuard.NotNull(problemDetails);
 
         HttpStatusCode status = problemDetails.Status != null ? (HttpStatusCode)problemDetails.Status.Value : HttpStatusCode.InternalServerError;
 
+        if (problemDetails is HttpValidationProblemDetails validationProblemDetails && validationProblemDetails.Errors.Any())
+        {
+            foreach (string errorMessage in validationProblemDetails.Errors.SelectMany(pair => pair.Value))
+            {
+                yield return ToErrorObject(status, validationProblemDetails, errorMessage);
+            }
+        }
+        else
+        {
+            yield return ToErrorObject(status, problemDetails, problemDetails.Detail);
+        }
+    }
+
+    private static ErrorObject ToErrorObject(HttpStatusCode status, ProblemDetails problemDetails, string detail)
+    {
         var error = new ErrorObject(status)
         {
             Title = problemDetails.Title,
-            Detail = problemDetails.Detail
+            Detail = detail
         };
 
         if (!string.IsNullOrWhiteSpace(problemDetails.Instance))

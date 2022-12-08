@@ -20,6 +20,10 @@ public class PostIt : Identifiable<int>
     public string Message { get; set; }
 
     [Attr]
+    [MaxLength(2)]
+    public string OtherMessage { get; set; }
+
+    [Attr]
     [Required]
     public string RefOperateur { get; set; }
 }

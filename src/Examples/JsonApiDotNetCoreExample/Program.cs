@@ -109,6 +109,7 @@ static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
         Actif = true,
         Date = DateTime.UtcNow,
         Message = "ab",
+        OtherMessage = "cd",
         RefOperateur = "some-ref"
     };
 
