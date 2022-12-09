@@ -10,6 +10,7 @@ namespace JsonApiDotNetCoreExample.Data;
 public sealed class AppDbContext : DbContext
 {
     public DbSet<TodoItem> TodoItems => Set<TodoItem>();
+    public DbSet<MyDto> MyDtos => Set<MyDto>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
@@ -27,5 +28,13 @@ public sealed class AppDbContext : DbContext
         builder.Entity<TodoItem>()
             .HasOne(todoItem => todoItem.Owner)
             .WithMany();
+
+        builder.Entity<MyDto>()
+            .Property(myDto => myDto.EmployeeId)
+            .HasConversion<int?>(
+                // Convert to DB type
+                value => value == null ? null : int.Parse(value),
+                // Convert to model type
+                value => value.ToString());
     }
 }
