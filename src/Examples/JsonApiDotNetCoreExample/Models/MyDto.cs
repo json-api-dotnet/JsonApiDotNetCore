@@ -7,5 +7,11 @@ namespace JsonApiDotNetCoreExample.Models;
 public sealed class MyDto : Identifiable<int>
 {
     [Attr]
-    public string? EmployeeId { get; set; }
+    public int? EmployeeId { get; set; }
+
+    [Attr]
+    public int SomeInt { get; set; }
+
+    [Attr]
+    public string? SomeString { get; set; }
 }

@@ -2,8 +2,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
+using JsonApiDotNetCore.Serialization.JsonConverters;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExample.Serialization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -36,6 +38,12 @@ static WebApplication CreateWebApplication(string[] args)
         string timingResults = CodeTimingSessionManager.Current.GetResults();
         webApplication.Logger.LogInformation($"Measurement results for application startup:{Environment.NewLine}{timingResults}");
     }
+
+    // Replace built-in ResourceObjectConverter with wrapper for #1226.
+    var options = webApplication.Services.GetRequiredService<IJsonApiOptions>();
+    ResourceObjectConverter existingConverter = options.SerializerOptions.Converters.OfType<ResourceObjectConverter>().Single();
+    options.SerializerOptions.Converters.Remove(existingConverter);
+    options.SerializerOptions.Converters.Add(new WritePropertyNamesEndingInIdAsStringConverter(existingConverter));
 
     return webApplication;
 }
@@ -105,10 +113,14 @@ static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
 
     dbContext.MyDtos.AddRange(new MyDto
     {
-        EmployeeId = "123"
+        EmployeeId = 123,
+        SomeInt = 456,
+        SomeString = "some"
     }, new MyDto
     {
-        EmployeeId = null
+        EmployeeId = null,
+        SomeInt = 0,
+        SomeString = null
     });
 
     await dbContext.SaveChangesAsync();

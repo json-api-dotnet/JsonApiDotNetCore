@@ -28,13 +28,5 @@ public sealed class AppDbContext : DbContext
         builder.Entity<TodoItem>()
             .HasOne(todoItem => todoItem.Owner)
             .WithMany();
-
-        builder.Entity<MyDto>()
-            .Property(myDto => myDto.EmployeeId)
-            .HasConversion<int?>(
-                // Convert to DB type
-                value => value == null ? null : int.Parse(value),
-                // Convert to model type
-                value => value.ToString());
     }
 }
