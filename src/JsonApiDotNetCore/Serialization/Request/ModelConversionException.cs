@@ -18,7 +18,7 @@ public sealed class ModelConversionException : Exception
     public ModelConversionException(RequestAdapterPosition position, string? genericMessage, string? specificMessage, HttpStatusCode? statusCode = null)
         : base(genericMessage)
     {
-        ArgumentGuard.NotNull(position, nameof(position));
+        ArgumentGuard.NotNull(position);
 
         GenericMessage = genericMessage;
         SpecificMessage = specificMessage;

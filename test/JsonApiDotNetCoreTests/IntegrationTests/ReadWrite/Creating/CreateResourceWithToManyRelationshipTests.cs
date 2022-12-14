@@ -17,6 +17,7 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         _testContext = testContext;
 
         testContext.UseController<WorkItemsController>();
+        testContext.UseController<WorkItemGroupsController>();
         testContext.UseController<UserAccountsController>();
     }
 
@@ -788,6 +789,51 @@ public sealed class CreateResourceWithToManyRelationshipTests : IClassFixture<In
         error.Detail.Should().BeNull();
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data/lid");
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+    }
+
+    [Fact]
+    public async Task Cannot_assign_relationship_with_blocked_capability()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItemGroups",
+                relationships = new
+                {
+                    items = new
+                    {
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "workItems",
+                                id = Unknown.StringId.For<WorkItem, int>()
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/workItemGroups";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be assigned.");
+        error.Detail.Should().Be("The relationship 'items' on resource type 'workItemGroups' cannot be assigned to.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/data/relationships/items");
         error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
     }
 }

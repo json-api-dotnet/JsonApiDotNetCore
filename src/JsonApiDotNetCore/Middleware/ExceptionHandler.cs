@@ -17,8 +17,8 @@ public class ExceptionHandler : IExceptionHandler
 
     public ExceptionHandler(ILoggerFactory loggerFactory, IJsonApiOptions options)
     {
-        ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
-        ArgumentGuard.NotNull(options, nameof(options));
+        ArgumentGuard.NotNull(loggerFactory);
+        ArgumentGuard.NotNull(options);
 
         _options = options;
         _logger = loggerFactory.CreateLogger<ExceptionHandler>();
@@ -26,7 +26,7 @@ public class ExceptionHandler : IExceptionHandler
 
     public IReadOnlyList<ErrorObject> HandleException(Exception exception)
     {
-        ArgumentGuard.NotNull(exception, nameof(exception));
+        ArgumentGuard.NotNull(exception);
 
         Exception demystified = exception.Demystify();
 
@@ -45,7 +45,7 @@ public class ExceptionHandler : IExceptionHandler
 
     protected virtual LogLevel GetLogLevel(Exception exception)
     {
-        ArgumentGuard.NotNull(exception, nameof(exception));
+        ArgumentGuard.NotNull(exception);
 
         if (exception is OperationCanceledException)
         {
@@ -62,14 +62,14 @@ public class ExceptionHandler : IExceptionHandler
 
     protected virtual string GetLogMessage(Exception exception)
     {
-        ArgumentGuard.NotNull(exception, nameof(exception));
+        ArgumentGuard.NotNull(exception);
 
         return exception is JsonApiException jsonApiException ? jsonApiException.GetSummary() : exception.Message;
     }
 
     protected virtual IReadOnlyList<ErrorObject> CreateErrorResponse(Exception exception)
     {
-        ArgumentGuard.NotNull(exception, nameof(exception));
+        ArgumentGuard.NotNull(exception);
 
         IReadOnlyList<ErrorObject> errors = exception is JsonApiException jsonApiException ? jsonApiException.Errors :
             exception is OperationCanceledException ? new ErrorObject((HttpStatusCode)499)

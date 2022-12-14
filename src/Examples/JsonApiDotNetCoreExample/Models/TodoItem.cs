@@ -25,9 +25,9 @@ public sealed class TodoItem : Identifiable<int>
     [HasOne]
     public Person Owner { get; set; } = null!;
 
-    [HasOne]
+    [HasOne(Capabilities = HasOneCapabilities.AllowView | HasOneCapabilities.AllowSet)]
     public Person? Assignee { get; set; }
 
-    [HasMany]
+    [HasMany(Capabilities = HasManyCapabilities.AllowView | HasManyCapabilities.AllowFilter)]
     public ISet<Tag> Tags { get; set; } = new HashSet<Tag>();
 }

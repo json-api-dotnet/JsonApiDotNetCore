@@ -27,6 +27,12 @@ public sealed class JsonApiOptions : IJsonApiOptions
     public AttrCapabilities DefaultAttrCapabilities { get; set; } = AttrCapabilities.All;
 
     /// <inheritdoc />
+    public HasOneCapabilities DefaultHasOneCapabilities { get; set; } = HasOneCapabilities.All;
+
+    /// <inheritdoc />
+    public HasManyCapabilities DefaultHasManyCapabilities { get; set; } = HasManyCapabilities.All;
+
+    /// <inheritdoc />
     public bool IncludeJsonApiVersion { get; set; }
 
     /// <inheritdoc />

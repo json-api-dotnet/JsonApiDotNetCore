@@ -15,9 +15,9 @@ public sealed class DocumentInResourceOrRelationshipRequestAdapter : IDocumentIn
     public DocumentInResourceOrRelationshipRequestAdapter(IJsonApiOptions options, IResourceDataAdapter resourceDataAdapter,
         IRelationshipDataAdapter relationshipDataAdapter)
     {
-        ArgumentGuard.NotNull(options, nameof(options));
-        ArgumentGuard.NotNull(resourceDataAdapter, nameof(resourceDataAdapter));
-        ArgumentGuard.NotNull(relationshipDataAdapter, nameof(relationshipDataAdapter));
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(resourceDataAdapter);
+        ArgumentGuard.NotNull(relationshipDataAdapter);
 
         _options = options;
         _resourceDataAdapter = resourceDataAdapter;
@@ -48,6 +48,7 @@ public sealed class DocumentInResourceOrRelationshipRequestAdapter : IDocumentIn
                 }
 
                 ResourceIdentityAdapter.AssertToManyInAddOrRemoveRelationship(state.Request.Relationship, state);
+                ResourceIdentityAdapter.AssertRelationshipChangeNotBlocked(state.Request.Relationship, state);
 
                 state.WritableTargetedFields.Relationships.Add(state.Request.Relationship);
                 return _relationshipDataAdapter.Convert(document.Data, state.Request.Relationship, false, state);

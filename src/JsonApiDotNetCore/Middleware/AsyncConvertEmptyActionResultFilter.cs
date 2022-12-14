@@ -10,8 +10,8 @@ public sealed class AsyncConvertEmptyActionResultFilter : IAsyncConvertEmptyActi
     /// <inheritdoc />
     public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
     {
-        ArgumentGuard.NotNull(context, nameof(context));
-        ArgumentGuard.NotNull(next, nameof(next));
+        ArgumentGuard.NotNull(context);
+        ArgumentGuard.NotNull(next);
 
         if (context.HttpContext.IsJsonApiRequest())
         {

@@ -18,8 +18,8 @@ public sealed class TargetedFields : ITargetedFields
     {
         Clear();
 
-        Attributes.AddRange(other.Attributes);
-        Relationships.AddRange(other.Relationships);
+        Attributes.UnionWith(other.Attributes);
+        Relationships.UnionWith(other.Relationships);
     }
 
     public void Clear()

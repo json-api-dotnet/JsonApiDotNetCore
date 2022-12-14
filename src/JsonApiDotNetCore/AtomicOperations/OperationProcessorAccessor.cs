@@ -15,7 +15,7 @@ public class OperationProcessorAccessor : IOperationProcessorAccessor
 
     public OperationProcessorAccessor(IServiceProvider serviceProvider)
     {
-        ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
+        ArgumentGuard.NotNull(serviceProvider);
 
         _serviceProvider = serviceProvider;
     }
@@ -23,7 +23,7 @@ public class OperationProcessorAccessor : IOperationProcessorAccessor
     /// <inheritdoc />
     public Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(operation, nameof(operation));
+        ArgumentGuard.NotNull(operation);
 
         IOperationProcessor processor = ResolveProcessor(operation);
         return processor.ProcessAsync(operation, cancellationToken);

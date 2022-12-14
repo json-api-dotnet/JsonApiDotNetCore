@@ -27,7 +27,7 @@ public sealed class LegacyFilterNotationConverter
 
     public IEnumerable<string> ExtractConditions(string parameterValue)
     {
-        ArgumentGuard.NotNullNorEmpty(parameterValue, nameof(parameterValue));
+        ArgumentGuard.NotNullNorEmpty(parameterValue);
 
         if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal) || parameterValue.StartsWith(InPrefix, StringComparison.Ordinal) ||
             parameterValue.StartsWith(NotInPrefix, StringComparison.Ordinal))
@@ -45,8 +45,8 @@ public sealed class LegacyFilterNotationConverter
 
     public (string parameterName, string parameterValue) Convert(string parameterName, string parameterValue)
     {
-        ArgumentGuard.NotNullNorEmpty(parameterName, nameof(parameterName));
-        ArgumentGuard.NotNullNorEmpty(parameterValue, nameof(parameterValue));
+        ArgumentGuard.NotNullNorEmpty(parameterName);
+        ArgumentGuard.NotNullNorEmpty(parameterValue);
 
         if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal))
         {

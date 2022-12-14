@@ -19,7 +19,7 @@ public abstract class ResourceFieldAttribute : Attribute
     private ResourceType? _type;
 
     /// <summary>
-    /// The publicly exposed name of this JSON:API field. When not explicitly assigned, the configured naming convention is applied on the property name.
+    /// The publicly exposed name of this JSON:API field. When not explicitly set, the configured naming convention is applied on the property name.
     /// </summary>
     public string PublicName
     {
@@ -43,7 +43,7 @@ public abstract class ResourceFieldAttribute : Attribute
         get => _property!;
         internal set
         {
-            ArgumentGuard.NotNull(value, nameof(value));
+            ArgumentGuard.NotNull(value);
             _property = value;
         }
     }
@@ -56,7 +56,7 @@ public abstract class ResourceFieldAttribute : Attribute
         get => _type!;
         internal set
         {
-            ArgumentGuard.NotNull(value, nameof(value));
+            ArgumentGuard.NotNull(value);
             _type = value;
         }
     }
@@ -67,7 +67,7 @@ public abstract class ResourceFieldAttribute : Attribute
     /// </summary>
     public object? GetValue(object resource)
     {
-        ArgumentGuard.NotNull(resource, nameof(resource));
+        ArgumentGuard.NotNull(resource);
 
         if (Property.GetMethod == null)
         {
@@ -92,7 +92,7 @@ public abstract class ResourceFieldAttribute : Attribute
     /// </summary>
     public void SetValue(object resource, object? newValue)
     {
-        ArgumentGuard.NotNull(resource, nameof(resource));
+        ArgumentGuard.NotNull(resource);
 
         if (Property.SetMethod == null)
         {

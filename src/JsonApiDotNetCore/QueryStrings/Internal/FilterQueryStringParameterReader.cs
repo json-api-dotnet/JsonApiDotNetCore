@@ -31,7 +31,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     public FilterQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IResourceFactory resourceFactory, IJsonApiOptions options)
         : base(request, resourceGraph)
     {
-        ArgumentGuard.NotNull(options, nameof(options));
+        ArgumentGuard.NotNull(options);
 
         _options = options;
         _scopeParser = new QueryStringParameterScopeParser(FieldChainRequirements.EndsInToMany);
@@ -40,17 +40,19 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
 
     protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
     {
-        if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowFilter))
+        if (field.IsFilterBlocked())
         {
-            throw new InvalidQueryStringParameterException(_lastParameterName!, "Filtering on the requested attribute is not allowed.",
-                $"Filtering on attribute '{attribute.PublicName}' is not allowed.");
+            string kind = field is AttrAttribute ? "attribute" : "relationship";
+
+            throw new InvalidQueryStringParameterException(_lastParameterName!, $"Filtering on the requested {kind} is not allowed.",
+                $"Filtering on {kind} '{field.PublicName}' is not allowed.");
         }
     }
 
     /// <inheritdoc />
     public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
     {
-        ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
+        ArgumentGuard.NotNull(disableQueryStringAttribute);
 
         return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Filter);
     }
@@ -58,7 +60,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     /// <inheritdoc />
     public virtual bool CanRead(string parameterName)
     {
-        ArgumentGuard.NotNullNorEmpty(parameterName, nameof(parameterName));
+        ArgumentGuard.NotNullNorEmpty(parameterName);
 
         bool isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
         return parameterName == "filter" || isNested;
@@ -75,18 +77,21 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
         }
     }
 
-    private IEnumerable<string> ExtractParameterValue(string parameterValue)
+    private IEnumerable<string> ExtractParameterValue(string? parameterValue)
     {
-        if (_options.EnableLegacyFilterNotation)
+        if (parameterValue != null)
         {
-            foreach (string condition in LegacyConverter.ExtractConditions(parameterValue))
+            if (_options.EnableLegacyFilterNotation)
             {
-                yield return condition;
+                foreach (string condition in LegacyConverter.ExtractConditions(parameterValue))
+                {
+                    yield return condition;
+                }
             }
-        }
-        else
-        {
-            yield return parameterValue;
+            else
+            {
+                yield return parameterValue;
+            }
         }
     }
 

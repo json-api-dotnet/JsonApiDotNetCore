@@ -17,10 +17,10 @@ internal sealed class ResourceObjectSchemaGenerator
     public ResourceObjectSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options,
         ISchemaRepositoryAccessor schemaRepositoryAccessor)
     {
-        ArgumentGuard.NotNull(defaultSchemaGenerator, nameof(defaultSchemaGenerator));
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-        ArgumentGuard.NotNull(options, nameof(options));
-        ArgumentGuard.NotNull(schemaRepositoryAccessor, nameof(schemaRepositoryAccessor));
+        ArgumentGuard.NotNull(defaultSchemaGenerator);
+        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(schemaRepositoryAccessor);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceGraph = resourceGraph;
@@ -36,7 +36,7 @@ internal sealed class ResourceObjectSchemaGenerator
 
     public OpenApiSchema GenerateSchema(Type resourceObjectType)
     {
-        ArgumentGuard.NotNull(resourceObjectType, nameof(resourceObjectType));
+        ArgumentGuard.NotNull(resourceObjectType);
 
         (OpenApiSchema fullSchemaForResourceObject, OpenApiSchema referenceSchemaForResourceObject) = EnsureSchemasExist(resourceObjectType);
 

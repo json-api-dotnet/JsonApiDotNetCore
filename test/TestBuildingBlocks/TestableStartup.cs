@@ -1,12 +1,11 @@
 using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace TestBuildingBlocks;
 
 public class TestableStartup<TDbContext>
-    where TDbContext : DbContext
+    where TDbContext : TestableDbContext
 {
     public virtual void ConfigureServices(IServiceCollection services)
     {

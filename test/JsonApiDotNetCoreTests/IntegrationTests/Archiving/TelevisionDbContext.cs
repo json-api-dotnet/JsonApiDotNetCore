@@ -1,10 +1,11 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class TelevisionDbContext : DbContext
+public sealed class TelevisionDbContext : TestableDbContext
 {
     public DbSet<TelevisionNetwork> Networks => Set<TelevisionNetwork>();
     public DbSet<TelevisionStation> Stations => Set<TelevisionStation>();

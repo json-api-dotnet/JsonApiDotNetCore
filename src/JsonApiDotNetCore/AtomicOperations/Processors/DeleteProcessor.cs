@@ -13,7 +13,7 @@ public class DeleteProcessor<TResource, TId> : IDeleteProcessor<TResource, TId>
 
     public DeleteProcessor(IDeleteService<TResource, TId> service)
     {
-        ArgumentGuard.NotNull(service, nameof(service));
+        ArgumentGuard.NotNull(service);
 
         _service = service;
     }
@@ -21,7 +21,7 @@ public class DeleteProcessor<TResource, TId> : IDeleteProcessor<TResource, TId>
     /// <inheritdoc />
     public virtual async Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(operation, nameof(operation));
+        ArgumentGuard.NotNull(operation);
 
         var id = (TId)operation.Resource.GetTypedId();
         await _service.DeleteAsync(id, cancellationToken);

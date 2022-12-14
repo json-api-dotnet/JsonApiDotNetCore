@@ -22,8 +22,8 @@ public class ResourceGraphBuilder
 
     public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
     {
-        ArgumentGuard.NotNull(options, nameof(options));
-        ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(loggerFactory);
 
         _options = options;
         _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
@@ -144,7 +144,7 @@ public class ResourceGraphBuilder
 
     public ResourceGraphBuilder Add(DbContext dbContext)
     {
-        ArgumentGuard.NotNull(dbContext, nameof(dbContext));
+        ArgumentGuard.NotNull(dbContext);
 
         foreach (IEntityType entityType in dbContext.Model.GetEntityTypes())
         {
@@ -200,7 +200,7 @@ public class ResourceGraphBuilder
     public ResourceGraphBuilder Add(Type resourceClrType, Type? idClrType = null, string? publicName = null)
 #pragma warning restore AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     {
-        ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
+        ArgumentGuard.NotNull(resourceClrType);
 
         if (_resourceTypesByClrType.ContainsKey(resourceClrType))
         {
@@ -307,6 +307,7 @@ public class ResourceGraphBuilder
             {
                 relationship.Property = property;
                 SetPublicName(relationship, property);
+                SetRelationshipCapabilities(relationship);
 
                 IncludeField(relationshipsByName, relationship);
             }
@@ -317,8 +318,54 @@ public class ResourceGraphBuilder
 
     private void SetPublicName(ResourceFieldAttribute field, PropertyInfo property)
     {
-        // ReSharper disable once ConstantNullCoalescingCondition
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         field.PublicName ??= FormatPropertyName(property);
+    }
+
+    private void SetRelationshipCapabilities(RelationshipAttribute relationship)
+    {
+#pragma warning disable CS0618 // Type or member is obsolete
+        bool canInclude = relationship.CanInclude;
+#pragma warning restore CS0618 // Type or member is obsolete
+
+        if (relationship is HasOneAttribute hasOneRelationship)
+        {
+            SetHasOneRelationshipCapabilities(hasOneRelationship, canInclude);
+        }
+        else if (relationship is HasManyAttribute hasManyRelationship)
+        {
+            SetHasManyRelationshipCapabilities(hasManyRelationship, canInclude);
+        }
+    }
+
+    private void SetHasOneRelationshipCapabilities(HasOneAttribute hasOneRelationship, bool canInclude)
+    {
+        if (!hasOneRelationship.HasExplicitCapabilities)
+        {
+            hasOneRelationship.Capabilities = _options.DefaultHasOneCapabilities;
+        }
+
+        if (hasOneRelationship.HasExplicitCanInclude)
+        {
+            hasOneRelationship.Capabilities = canInclude
+                ? hasOneRelationship.Capabilities | HasOneCapabilities.AllowInclude
+                : hasOneRelationship.Capabilities & ~HasOneCapabilities.AllowInclude;
+        }
+    }
+
+    private void SetHasManyRelationshipCapabilities(HasManyAttribute hasManyRelationship, bool canInclude)
+    {
+        if (!hasManyRelationship.HasExplicitCapabilities)
+        {
+            hasManyRelationship.Capabilities = _options.DefaultHasManyCapabilities;
+        }
+
+        if (hasManyRelationship.HasExplicitCanInclude)
+        {
+            hasManyRelationship.Capabilities = canInclude
+                ? hasManyRelationship.Capabilities | HasManyCapabilities.AllowInclude
+                : hasManyRelationship.Capabilities & ~HasManyCapabilities.AllowInclude;
+        }
     }
 
     private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceClrType, int recursionDepth = 0)

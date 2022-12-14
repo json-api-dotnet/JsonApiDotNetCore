@@ -30,10 +30,10 @@ internal sealed class ResourceFieldObjectSchemaBuilder
     public ResourceFieldObjectSchemaBuilder(ResourceTypeInfo resourceTypeInfo, ISchemaRepositoryAccessor schemaRepositoryAccessor,
         SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, JsonNamingPolicy? namingPolicy)
     {
-        ArgumentGuard.NotNull(resourceTypeInfo, nameof(resourceTypeInfo));
-        ArgumentGuard.NotNull(schemaRepositoryAccessor, nameof(schemaRepositoryAccessor));
-        ArgumentGuard.NotNull(defaultSchemaGenerator, nameof(defaultSchemaGenerator));
-        ArgumentGuard.NotNull(resourceTypeSchemaGenerator, nameof(resourceTypeSchemaGenerator));
+        ArgumentGuard.NotNull(resourceTypeInfo);
+        ArgumentGuard.NotNull(schemaRepositoryAccessor);
+        ArgumentGuard.NotNull(defaultSchemaGenerator);
+        ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
 
         _resourceTypeInfo = resourceTypeInfo;
         _schemaRepositoryAccessor = schemaRepositoryAccessor;

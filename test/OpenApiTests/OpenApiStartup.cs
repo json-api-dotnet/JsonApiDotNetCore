@@ -1,14 +1,13 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 
 namespace OpenApiTests;
 
 public abstract class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
-    where TDbContext : DbContext
+    where TDbContext : TestableDbContext
 {
     public override void ConfigureServices(IServiceCollection services)
     {

@@ -19,9 +19,9 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
 
     public ResourceRepositoryAccessor(IServiceProvider serviceProvider, IResourceGraph resourceGraph, IJsonApiRequest request)
     {
-        ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-        ArgumentGuard.NotNull(request, nameof(request));
+        ArgumentGuard.NotNull(serviceProvider);
+        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(request);
 
         _serviceProvider = serviceProvider;
         _resourceGraph = resourceGraph;
@@ -39,7 +39,7 @@ public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     /// <inheritdoc />
     public async Task<IReadOnlyCollection<IIdentifiable>> GetAsync(ResourceType resourceType, QueryLayer queryLayer, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+        ArgumentGuard.NotNull(resourceType);
 
         dynamic repository = ResolveReadRepository(resourceType);
         return (IReadOnlyCollection<IIdentifiable>)await repository.GetAsync(queryLayer, cancellationToken);

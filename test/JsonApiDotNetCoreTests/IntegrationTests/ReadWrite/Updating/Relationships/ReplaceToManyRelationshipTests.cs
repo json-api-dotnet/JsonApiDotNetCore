@@ -18,6 +18,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         _testContext = testContext;
 
         testContext.UseController<WorkItemsController>();
+        testContext.UseController<WorkItemGroupsController>();
     }
 
     [Fact]
@@ -1012,5 +1013,47 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
             workItemInDatabase.RelatedTo.ShouldHaveCount(1);
             workItemInDatabase.RelatedTo[0].Id.Should().Be(existingWorkItem.Id);
         });
+    }
+
+    [Fact]
+    public async Task Cannot_assign_relationship_with_blocked_capability()
+    {
+        // Arrange
+        WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Groups.Add(existingWorkItemGroup);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new[]
+            {
+                new
+                {
+                    type = "workItems",
+                    id = Unknown.StringId.For<WorkItem, int>()
+                }
+            }
+        };
+
+        string route = $"/workItemGroups/{existingWorkItemGroup.StringId}/relationships/items";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be assigned.");
+        error.Detail.Should().Be("The relationship 'items' on resource type 'workItemGroups' cannot be assigned to.");
+        error.Source.Should().BeNull();
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
     }
 }

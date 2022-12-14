@@ -18,7 +18,7 @@ public sealed class ResourceGraph : IResourceGraph
 
     public ResourceGraph(IReadOnlySet<ResourceType> resourceTypeSet)
     {
-        ArgumentGuard.NotNull(resourceTypeSet, nameof(resourceTypeSet));
+        ArgumentGuard.NotNull(resourceTypeSet);
 
         _resourceTypeSet = resourceTypeSet;
 
@@ -51,7 +51,7 @@ public sealed class ResourceGraph : IResourceGraph
     /// <inheritdoc />
     public ResourceType? FindResourceType(string publicName)
     {
-        ArgumentGuard.NotNull(publicName, nameof(publicName));
+        ArgumentGuard.NotNull(publicName);
 
         return _resourceTypesByPublicName.TryGetValue(publicName, out ResourceType? resourceType) ? resourceType : null;
     }
@@ -72,7 +72,7 @@ public sealed class ResourceGraph : IResourceGraph
     /// <inheritdoc />
     public ResourceType? FindResourceType(Type resourceClrType)
     {
-        ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
+        ArgumentGuard.NotNull(resourceClrType);
 
         Type typeToFind = IsLazyLoadingProxyForResourceType(resourceClrType) ? resourceClrType.BaseType! : resourceClrType;
         return _resourceTypesByClrType.TryGetValue(typeToFind, out ResourceType? resourceType) ? resourceType : null;
@@ -94,7 +94,7 @@ public sealed class ResourceGraph : IResourceGraph
     public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(selector, nameof(selector));
+        ArgumentGuard.NotNull(selector);
 
         return FilterFields<TResource, ResourceFieldAttribute>(selector);
     }
@@ -103,7 +103,7 @@ public sealed class ResourceGraph : IResourceGraph
     public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(selector, nameof(selector));
+        ArgumentGuard.NotNull(selector);
 
         return FilterFields<TResource, AttrAttribute>(selector);
     }
@@ -112,7 +112,7 @@ public sealed class ResourceGraph : IResourceGraph
     public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, object?>> selector)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(selector, nameof(selector));
+        ArgumentGuard.NotNull(selector);
 
         return FilterFields<TResource, RelationshipAttribute>(selector);
     }

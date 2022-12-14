@@ -13,7 +13,7 @@ public sealed class LambdaParameterNameFactory
 
     public LambdaParameterNameScope Create(string typeName)
     {
-        ArgumentGuard.NotNullNorEmpty(typeName, nameof(typeName));
+        ArgumentGuard.NotNullNorEmpty(typeName);
 
         string parameterName = typeName.Camelize();
         parameterName = EnsureNameIsUnique(parameterName);

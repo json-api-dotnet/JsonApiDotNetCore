@@ -12,8 +12,8 @@ internal static class ParameterInfoExtensions
 
     public static ParameterInfo WithName(this ParameterInfo source, string name)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
-        ArgumentGuard.NotNullNorEmpty(name, nameof(name));
+        ArgumentGuard.NotNull(source);
+        ArgumentGuard.NotNullNorEmpty(name);
 
         var cloned = (ParameterInfo)source.MemberwiseClone();
         NameField.Value.SetValue(cloned, name);
@@ -23,8 +23,8 @@ internal static class ParameterInfoExtensions
 
     public static ParameterInfo WithParameterType(this ParameterInfo source, Type parameterType)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
-        ArgumentGuard.NotNull(parameterType, nameof(parameterType));
+        ArgumentGuard.NotNull(source);
+        ArgumentGuard.NotNull(parameterType);
 
         var cloned = (ParameterInfo)source.MemberwiseClone();
         ParameterTypeField.Value.SetValue(cloned, parameterType);

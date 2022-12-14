@@ -33,8 +33,8 @@ internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IA
     /// <inheritdoc />
     public IReadOnlyList<string> GetSupportedContentTypes(string contentType, Type objectType)
     {
-        ArgumentGuard.NotNullNorEmpty(contentType, nameof(contentType));
-        ArgumentGuard.NotNull(objectType, nameof(objectType));
+        ArgumentGuard.NotNullNorEmpty(contentType);
+        ArgumentGuard.NotNull(objectType);
 
         if (contentType == HeaderConstants.MediaType && objectType.IsGenericType &&
             JsonApiRequestObjectOpenType.Contains(objectType.GetGenericTypeDefinition()))

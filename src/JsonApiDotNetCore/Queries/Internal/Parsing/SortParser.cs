@@ -19,7 +19,7 @@ public class SortParser : QueryExpressionParser
 
     public SortExpression Parse(string source, ResourceType resourceTypeInScope)
     {
-        ArgumentGuard.NotNull(resourceTypeInScope, nameof(resourceTypeInScope));
+        ArgumentGuard.NotNull(resourceTypeInScope);
 
         _resourceTypeInScope = resourceTypeInScope;
 

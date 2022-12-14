@@ -37,14 +37,14 @@ public class ResponseModelAdapter : IResponseModelAdapter
         IResourceDefinitionAccessor resourceDefinitionAccessor, IEvaluatedIncludeCache evaluatedIncludeCache, ISparseFieldSetCache sparseFieldSetCache,
         IRequestQueryStringAccessor requestQueryStringAccessor)
     {
-        ArgumentGuard.NotNull(request, nameof(request));
-        ArgumentGuard.NotNull(options, nameof(options));
-        ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
-        ArgumentGuard.NotNull(metaBuilder, nameof(metaBuilder));
-        ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
-        ArgumentGuard.NotNull(evaluatedIncludeCache, nameof(evaluatedIncludeCache));
-        ArgumentGuard.NotNull(sparseFieldSetCache, nameof(sparseFieldSetCache));
-        ArgumentGuard.NotNull(requestQueryStringAccessor, nameof(requestQueryStringAccessor));
+        ArgumentGuard.NotNull(request);
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(linkBuilder);
+        ArgumentGuard.NotNull(metaBuilder);
+        ArgumentGuard.NotNull(resourceDefinitionAccessor);
+        ArgumentGuard.NotNull(evaluatedIncludeCache);
+        ArgumentGuard.NotNull(sparseFieldSetCache);
+        ArgumentGuard.NotNull(requestQueryStringAccessor);
 
         _request = request;
         _options = options;
@@ -286,6 +286,13 @@ public class ResponseModelAdapter : IResponseModelAdapter
         RelationshipAttribute effectiveRelationship = !leftTreeNode.ResourceType.Equals(relationship.LeftType)
             ? leftTreeNode.ResourceType.GetRelationshipByPropertyName(relationship.Property.Name)
             : relationship;
+
+        if (effectiveRelationship.IsViewBlocked())
+        {
+            // Hide related resources when blocked. According to JSON:API, breaking full linkage is only allowed
+            // when the client explicitly requested it by sending a sparse fieldset.
+            return;
+        }
 
         object? rightValue = effectiveRelationship.GetValue(leftResource);
         IReadOnlyCollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);

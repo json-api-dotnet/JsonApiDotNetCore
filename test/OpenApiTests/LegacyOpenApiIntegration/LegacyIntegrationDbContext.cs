@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 // @formatter:keep_existing_linebreaks true
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace OpenApiTests.LegacyOpenApiIntegration;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class LegacyIntegrationDbContext : DbContext
+public sealed class LegacyIntegrationDbContext : TestableDbContext
 {
     public DbSet<Airplane> Airplanes => Set<Airplane>();
     public DbSet<Flight> Flights => Set<Flight>();

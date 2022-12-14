@@ -17,7 +17,7 @@ internal sealed class NullableReferenceSchemaGenerator
 
     public NullableReferenceSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor, JsonNamingPolicy? namingPolicy)
     {
-        ArgumentGuard.NotNull(schemaRepositoryAccessor, nameof(schemaRepositoryAccessor));
+        ArgumentGuard.NotNull(schemaRepositoryAccessor);
 
         _schemaRepositoryAccessor = schemaRepositoryAccessor;
 
@@ -26,7 +26,7 @@ internal sealed class NullableReferenceSchemaGenerator
 
     public OpenApiSchema GenerateSchema(OpenApiSchema referenceSchema)
     {
-        ArgumentGuard.NotNull(referenceSchema, nameof(referenceSchema));
+        ArgumentGuard.NotNull(referenceSchema);
 
         return new OpenApiSchema
         {

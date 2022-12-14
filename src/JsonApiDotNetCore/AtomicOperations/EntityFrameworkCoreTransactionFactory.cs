@@ -15,8 +15,8 @@ public sealed class EntityFrameworkCoreTransactionFactory : IOperationsTransacti
 
     public EntityFrameworkCoreTransactionFactory(IDbContextResolver dbContextResolver, IJsonApiOptions options)
     {
-        ArgumentGuard.NotNull(dbContextResolver, nameof(dbContextResolver));
-        ArgumentGuard.NotNull(options, nameof(options));
+        ArgumentGuard.NotNull(dbContextResolver);
+        ArgumentGuard.NotNull(options);
 
         _dbContextResolver = dbContextResolver;
         _options = options;

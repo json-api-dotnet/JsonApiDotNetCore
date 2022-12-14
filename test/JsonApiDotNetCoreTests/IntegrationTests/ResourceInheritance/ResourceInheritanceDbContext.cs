@@ -1,11 +1,12 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public abstract class ResourceInheritanceDbContext : DbContext
+public abstract class ResourceInheritanceDbContext : TestableDbContext
 {
     public DbSet<Vehicle> Vehicles => Set<Vehicle>();
     public DbSet<Bike> Bikes => Set<Bike>();

@@ -1,12 +1,13 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ModelStateDbContext : DbContext
+public sealed class ModelStateDbContext : TestableDbContext
 {
     public DbSet<SystemVolume> Volumes => Set<SystemVolume>();
     public DbSet<SystemDirectory> Directories => Set<SystemDirectory>();
@@ -36,5 +37,7 @@ public sealed class ModelStateDbContext : DbContext
         builder.Entity<SystemDirectory>()
             .HasOne(systemDirectory => systemDirectory.AlsoSelf)
             .WithOne();
+
+        base.OnModelCreating(builder);
     }
 }

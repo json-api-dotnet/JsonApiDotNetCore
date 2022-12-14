@@ -16,9 +16,9 @@ public sealed class MetaBuilder : IMetaBuilder
 
     public MetaBuilder(IPaginationContext paginationContext, IJsonApiOptions options, IResponseMeta responseMeta)
     {
-        ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
-        ArgumentGuard.NotNull(options, nameof(options));
-        ArgumentGuard.NotNull(responseMeta, nameof(responseMeta));
+        ArgumentGuard.NotNull(paginationContext);
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(responseMeta);
 
         _paginationContext = paginationContext;
         _options = options;
@@ -28,7 +28,7 @@ public sealed class MetaBuilder : IMetaBuilder
     /// <inheritdoc />
     public void Add(IDictionary<string, object?> values)
     {
-        ArgumentGuard.NotNull(values, nameof(values));
+        ArgumentGuard.NotNull(values);
 
         _meta = values.Keys.Union(_meta.Keys).ToDictionary(key => key, key => values.ContainsKey(key) ? values[key] : _meta[key]);
     }

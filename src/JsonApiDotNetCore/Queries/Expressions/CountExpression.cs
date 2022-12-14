@@ -13,7 +13,7 @@ public class CountExpression : FunctionExpression
 
     public CountExpression(ResourceFieldChainExpression targetCollection)
     {
-        ArgumentGuard.NotNull(targetCollection, nameof(targetCollection));
+        ArgumentGuard.NotNull(targetCollection);
 
         TargetCollection = targetCollection;
     }

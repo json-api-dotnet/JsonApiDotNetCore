@@ -74,7 +74,7 @@ public sealed class DependencyContainerRegistrationTests
         IHostBuilder hostBuilder = Host.CreateDefaultBuilder().ConfigureWebHostDefaults(webBuilder =>
         {
             webBuilder.ConfigureServices(services =>
-                services.AddDbContext<DependencyContainerRegistrationDbContext>(options => options.UseInMemoryDatabase("db")));
+                services.AddDbContext<DependencyContainerRegistrationDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString())));
 
             webBuilder.UseStartup<TestableStartup<DependencyContainerRegistrationDbContext>>();
 
@@ -94,7 +94,7 @@ public sealed class DependencyContainerRegistrationTests
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         public SomeSingletonService(SomeScopedService scopedService)
         {
-            ArgumentGuard.NotNull(scopedService, nameof(scopedService));
+            ArgumentGuard.NotNull(scopedService);
         }
     }
 
@@ -109,7 +109,7 @@ public sealed class DependencyContainerRegistrationTests
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         public CircularServiceA(CircularServiceB serviceB)
         {
-            ArgumentGuard.NotNull(serviceB, nameof(serviceB));
+            ArgumentGuard.NotNull(serviceB);
         }
     }
 
@@ -119,12 +119,12 @@ public sealed class DependencyContainerRegistrationTests
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         public CircularServiceB(CircularServiceA serviceA)
         {
-            ArgumentGuard.NotNull(serviceA, nameof(serviceA));
+            ArgumentGuard.NotNull(serviceA);
         }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class DependencyContainerRegistrationDbContext : DbContext
+    private sealed class DependencyContainerRegistrationDbContext : TestableDbContext
     {
         public DbSet<Resource> Resources => Set<Resource>();
 

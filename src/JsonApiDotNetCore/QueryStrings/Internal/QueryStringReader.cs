@@ -20,10 +20,10 @@ public class QueryStringReader : IQueryStringReader
     public QueryStringReader(IJsonApiOptions options, IRequestQueryStringAccessor queryStringAccessor,
         IEnumerable<IQueryStringParameterReader> parameterReaders, ILoggerFactory loggerFactory)
     {
-        ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
-        ArgumentGuard.NotNull(options, nameof(options));
-        ArgumentGuard.NotNull(queryStringAccessor, nameof(queryStringAccessor));
-        ArgumentGuard.NotNull(parameterReaders, nameof(parameterReaders));
+        ArgumentGuard.NotNull(loggerFactory);
+        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(queryStringAccessor);
+        ArgumentGuard.NotNull(parameterReaders);
 
         _options = options;
         _queryStringAccessor = queryStringAccessor;
