@@ -37,5 +37,7 @@ public sealed class QueryStringDbContext : TestableDbContext
             .HasOne(man => man.Wife)
             .WithOne(woman => woman.Husband)
             .HasForeignKey<Man>();
+
+        base.OnModelCreating(builder);
     }
 }

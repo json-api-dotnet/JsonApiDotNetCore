@@ -69,7 +69,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
         try
         {
             ResourceType targetResourceType = GetSparseFieldType(parameterName);
-            SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue, targetResourceType);
+            SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue.ToString(), targetResourceType);
 
             _sparseFieldTableBuilder[targetResourceType] = sparseFieldSet;
         }

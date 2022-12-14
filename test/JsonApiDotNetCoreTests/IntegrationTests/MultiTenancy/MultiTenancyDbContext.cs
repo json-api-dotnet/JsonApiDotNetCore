@@ -31,5 +31,7 @@ public sealed class MultiTenancyDbContext : TestableDbContext
 
         builder.Entity<WebProduct>()
             .HasQueryFilter(webProduct => webProduct.Shop.TenantId == _tenantProvider.TenantId);
+
+        base.OnModelCreating(builder);
     }
 }

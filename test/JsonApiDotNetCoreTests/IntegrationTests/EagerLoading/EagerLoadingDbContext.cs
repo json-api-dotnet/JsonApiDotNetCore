@@ -34,5 +34,7 @@ public sealed class EagerLoadingDbContext : TestableDbContext
             .HasOne(building => building.SecondaryDoor)
             .WithOne()
             .HasForeignKey<Building>("SecondaryDoorId");
+
+        base.OnModelCreating(builder);
     }
 }

@@ -31,5 +31,7 @@ public sealed class OperationsDbContext : TestableDbContext
         builder.Entity<MusicTrack>()
             .HasMany(musicTrack => musicTrack.OccursIn)
             .WithMany(playlist => playlist.Tracks);
+
+        base.OnModelCreating(builder);
     }
 }

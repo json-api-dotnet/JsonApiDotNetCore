@@ -51,7 +51,7 @@ function RunCleanupCode {
 
         if ($baseCommitHash -ne $headCommitHash) {
             Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
-            dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
+            dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
             CheckLastExitCode
         }
     }

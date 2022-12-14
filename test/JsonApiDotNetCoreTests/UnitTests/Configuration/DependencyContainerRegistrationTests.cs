@@ -74,7 +74,7 @@ public sealed class DependencyContainerRegistrationTests
         IHostBuilder hostBuilder = Host.CreateDefaultBuilder().ConfigureWebHostDefaults(webBuilder =>
         {
             webBuilder.ConfigureServices(services =>
-                services.AddDbContext<DependencyContainerRegistrationDbContext>(options => options.UseInMemoryDatabase("db")));
+                services.AddDbContext<DependencyContainerRegistrationDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString())));
 
             webBuilder.UseStartup<TestableStartup<DependencyContainerRegistrationDbContext>>();
 

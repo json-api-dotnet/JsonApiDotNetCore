@@ -24,7 +24,7 @@ namespace TestBuildingBlocks;
 /// The Entity Framework Core database context, which can be defined in the test project or API project.
 /// </typeparam>
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IDisposable
+public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
     where TStartup : class
     where TDbContext : TestableDbContext
 {
@@ -103,16 +103,6 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IDi
         return factoryWithConfiguredContentRoot;
     }
 
-    public void Dispose()
-    {
-        if (_lazyFactory.IsValueCreated)
-        {
-            RunOnDatabaseAsync(async dbContext => await dbContext.Database.EnsureDeletedAsync()).Wait();
-
-            _lazyFactory.Value.Dispose();
-        }
-    }
-
     public void ConfigureLogging(Action<ILoggingBuilder> loggingConfiguration)
     {
         _loggingConfiguration = loggingConfiguration;
@@ -134,6 +124,22 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IDi
         var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
         await asyncAction(dbContext);
+    }
+
+    public override async Task DisposeAsync()
+    {
+        try
+        {
+            if (_lazyFactory.IsValueCreated)
+            {
+                await RunOnDatabaseAsync(async dbContext => await dbContext.Database.EnsureDeletedAsync());
+                await _lazyFactory.Value.DisposeAsync();
+            }
+        }
+        finally
+        {
+            await base.DisposeAsync();
+        }
     }
 
     private sealed class IntegrationTestWebApplicationFactory : WebApplicationFactory<TStartup>

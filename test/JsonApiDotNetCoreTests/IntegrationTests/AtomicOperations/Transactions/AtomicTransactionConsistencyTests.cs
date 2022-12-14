@@ -9,7 +9,8 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions;
 
-public sealed class AtomicTransactionConsistencyTests : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+public sealed class AtomicTransactionConsistencyTests
+    : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>, IAsyncLifetime
 {
     private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
     private readonly OperationsFakers _fakers = new();
@@ -27,7 +28,7 @@ public sealed class AtomicTransactionConsistencyTests : IClassFixture<Integratio
             services.AddResourceRepository<LyricRepository>();
 
             string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
-            string dbConnectionString = $"Host=localhost;Port=5432;Database=JsonApiTest-{Guid.NewGuid():N};User ID=postgres;Password={postgresPassword}";
+            string dbConnectionString = $"Host=localhost;Port=5432;Database=JsonApiTest-Extra-{Guid.NewGuid():N};User ID=postgres;Password={postgresPassword}";
 
             services.AddDbContext<ExtraDbContext>(options => options.UseNpgsql(dbConnectionString));
         });
@@ -157,5 +158,23 @@ public sealed class AtomicTransactionConsistencyTests : IClassFixture<Integratio
         error.Detail.Should().Be("All operations need to participate in a single shared transaction, which is not the case for this request.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
+    }
+
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    Task IAsyncLifetime.DisposeAsync()
+    {
+        return DeleteExtraDatabaseAsync();
+    }
+
+    private async Task DeleteExtraDatabaseAsync()
+    {
+        await using AsyncServiceScope scope = _testContext.Factory.Services.CreateAsyncScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ExtraDbContext>();
+
+        await dbContext.Database.EnsureDeletedAsync();
     }
 }

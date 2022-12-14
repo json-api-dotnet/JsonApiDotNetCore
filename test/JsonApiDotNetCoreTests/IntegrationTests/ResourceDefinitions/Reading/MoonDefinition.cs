@@ -51,7 +51,7 @@ public sealed class MoonDefinition : HitCountingResourceDefinition<Moon, int>
 
     private static IQueryable<Moon> FilterByRadius(IQueryable<Moon> source, StringValues parameterValue)
     {
-        bool isFilterOnLargerThan = bool.Parse(parameterValue);
+        bool isFilterOnLargerThan = bool.Parse(parameterValue.ToString());
         return isFilterOnLargerThan ? source.Where(moon => moon.SolarRadius > 1m) : source.Where(moon => moon.SolarRadius <= 1m);
     }
 }

@@ -24,5 +24,7 @@ public sealed class SoftDeletionDbContext : TestableDbContext
 
         builder.Entity<Department>()
             .HasQueryFilter(department => department.SoftDeletedAt == null);
+
+        base.OnModelCreating(builder);
     }
 }

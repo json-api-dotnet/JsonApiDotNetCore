@@ -77,18 +77,21 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
         }
     }
 
-    private IEnumerable<string> ExtractParameterValue(string parameterValue)
+    private IEnumerable<string> ExtractParameterValue(string? parameterValue)
     {
-        if (_options.EnableLegacyFilterNotation)
+        if (parameterValue != null)
         {
-            foreach (string condition in LegacyConverter.ExtractConditions(parameterValue))
+            if (_options.EnableLegacyFilterNotation)
             {
-                yield return condition;
+                foreach (string condition in LegacyConverter.ExtractConditions(parameterValue))
+                {
+                    yield return condition;
+                }
             }
-        }
-        else
-        {
-            yield return parameterValue;
+            else
+            {
+                yield return parameterValue;
+            }
         }
     }
 

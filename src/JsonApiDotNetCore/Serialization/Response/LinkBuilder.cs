@@ -140,13 +140,13 @@ public class LinkBuilder : ILinkBuilder
 
     private string? CalculatePageSizeValue(PageSize? topPageSize, ResourceType resourceType)
     {
-        string pageSizeParameterValue = HttpContext.Request.Query[PageSizeParameterName];
+        string? pageSizeParameterValue = HttpContext.Request.Query[PageSizeParameterName];
 
         PageSize? newTopPageSize = Equals(topPageSize, _options.DefaultPageSize) ? null : topPageSize;
         return ChangeTopPageSize(pageSizeParameterValue, newTopPageSize, resourceType);
     }
 
-    private string? ChangeTopPageSize(string pageSizeParameterValue, PageSize? topPageSize, ResourceType resourceType)
+    private string? ChangeTopPageSize(string? pageSizeParameterValue, PageSize? topPageSize, ResourceType resourceType)
     {
         IImmutableList<PaginationElementQueryStringValueExpression> elements = ParsePageSizeExpression(pageSizeParameterValue, resourceType);
         int elementInTopScopeIndex = elements.FindIndex(expression => expression.Scope == null);

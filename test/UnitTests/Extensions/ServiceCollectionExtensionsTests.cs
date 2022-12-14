@@ -25,7 +25,7 @@ public sealed class ServiceCollectionExtensionsTests
         // Arrange
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddDbContext<TestDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"));
+        services.AddDbContext<TestDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
         // Act
         services.AddJsonApi<TestDbContext>();

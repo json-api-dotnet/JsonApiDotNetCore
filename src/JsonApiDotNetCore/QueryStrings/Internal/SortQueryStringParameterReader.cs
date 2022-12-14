@@ -62,7 +62,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
         try
         {
             ResourceFieldChainExpression? scope = GetScope(parameterName);
-            SortExpression sort = GetSort(parameterValue, scope);
+            SortExpression sort = GetSort(parameterValue.ToString(), scope);
 
             var expressionInScope = new ExpressionInScope(scope, sort);
             _constraints.Add(expressionInScope);

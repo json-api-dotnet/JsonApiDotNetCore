@@ -22,5 +22,7 @@ public sealed class SerializationDbContext : TestableDbContext
         builder.Entity<Scholarship>()
             .HasMany(scholarship => scholarship.Participants)
             .WithOne(student => student.Scholarship!);
+
+        base.OnModelCreating(builder);
     }
 }

@@ -53,7 +53,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
     {
         try
         {
-            PaginationQueryStringValueExpression constraint = GetPageConstraint(parameterValue);
+            PaginationQueryStringValueExpression constraint = GetPageConstraint(parameterValue.ToString());
 
             if (constraint.Elements.Any(element => element.Scope == null))
             {
