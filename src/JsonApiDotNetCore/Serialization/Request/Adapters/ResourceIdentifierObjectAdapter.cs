@@ -15,9 +15,9 @@ public sealed class ResourceIdentifierObjectAdapter : ResourceIdentityAdapter, I
     /// <inheritdoc />
     public IIdentifiable Convert(ResourceIdentifierObject resourceIdentifierObject, ResourceIdentityRequirements requirements, RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(resourceIdentifierObject, nameof(resourceIdentifierObject));
-        ArgumentGuard.NotNull(requirements, nameof(requirements));
-        ArgumentGuard.NotNull(state, nameof(state));
+        ArgumentGuard.NotNull(resourceIdentifierObject);
+        ArgumentGuard.NotNull(requirements);
+        ArgumentGuard.NotNull(state);
 
         (IIdentifiable resource, _) = ConvertResourceIdentity(resourceIdentifierObject, requirements, state);
         return resource;

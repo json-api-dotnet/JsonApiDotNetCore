@@ -12,8 +12,6 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class ResourceFieldObjectSchemaBuilder
 {
-    private static readonly NullabilityInfoContext NullabilityInfoContext = new();
-
     private static readonly Type[] RelationshipSchemaInResponseOpenTypes =
     {
         typeof(ToOneRelationshipInResponse<>),
@@ -39,11 +37,11 @@ internal sealed class ResourceFieldObjectSchemaBuilder
     public ResourceFieldObjectSchemaBuilder(ResourceTypeInfo resourceTypeInfo, ISchemaRepositoryAccessor schemaRepositoryAccessor,
         SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, IJsonApiOptions options)
     {
-        ArgumentGuard.NotNull(resourceTypeInfo, nameof(resourceTypeInfo));
-        ArgumentGuard.NotNull(schemaRepositoryAccessor, nameof(schemaRepositoryAccessor));
-        ArgumentGuard.NotNull(defaultSchemaGenerator, nameof(defaultSchemaGenerator));
-        ArgumentGuard.NotNull(resourceTypeSchemaGenerator, nameof(resourceTypeSchemaGenerator));
-        ArgumentGuard.NotNull(options, nameof(options));
+        ArgumentGuard.NotNull(resourceTypeInfo);
+        ArgumentGuard.NotNull(schemaRepositoryAccessor);
+        ArgumentGuard.NotNull(defaultSchemaGenerator);
+        ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
+        ArgumentGuard.NotNull(options);
 
         _resourceTypeInfo = resourceTypeInfo;
         _schemaRepositoryAccessor = schemaRepositoryAccessor;
@@ -121,7 +119,8 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
         bool hasRequiredAttribute = field.Property.HasAttribute<RequiredAttribute>();
 
-        NullabilityInfo nullabilityInfo = NullabilityInfoContext.Create(field.Property);
+        NullabilityInfoContext nullabilityContext = new();
+        NullabilityInfo nullabilityInfo = nullabilityContext.Create(field.Property);
 
         return field.Property.PropertyType.IsValueType switch
         {

@@ -21,7 +21,7 @@ public sealed class QueryLayer
 
     public QueryLayer(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+        ArgumentGuard.NotNull(resourceType);
 
         ResourceType = resourceType;
     }

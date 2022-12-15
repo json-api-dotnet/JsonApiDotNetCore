@@ -25,7 +25,7 @@ public sealed class WriteOnlyDocumentConverter : JsonObjectConverter<Document>
     }
 
     /// <summary>
-    /// Conditionally writes <code>"data": null</code> or omits it, depending on <see cref="SingleOrManyData{TObject}.IsAssigned" />.
+    /// Conditionally writes <code><![CDATA["data": null]]></code> or omits it, depending on <see cref="SingleOrManyData{TObject}.IsAssigned" />.
     /// </summary>
     public override void Write(Utf8JsonWriter writer, Document value, JsonSerializerOptions options)
     {

@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>$(TargetFrameworkName)</TargetFramework>
+    <TargetFrameworks>$(TargetFrameworkName);netstandard1.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RootNamespace>JsonApiDotNetCore</RootNamespace>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -26,5 +27,27 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
+  </ItemGroup>
+
+  <!-- We multi-target against NetStandard solely to enable consumers to share their models project with .NET Framework code. -->
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
+    <Using Remove="System.Net.Http" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
+    <Compile Remove="**/*.cs" />
+    <Compile Include="**/*.shared.cs" />
+    <Compile Include="**/*.netstandard.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.0' ">
+    <Compile Remove="**/*.netstandard.cs" />
+    <None Include="**/*.netstandard.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="SauceControl.InheritDoc" Version="1.3.0" PrivateAssets="All" />
   </ItemGroup>
 </Project>

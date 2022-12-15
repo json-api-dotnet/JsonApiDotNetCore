@@ -23,21 +23,21 @@ internal sealed class NonPrimaryDocumentTypeFactory
 
     public Type GetForSecondaryResponse(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship, nameof(relationship));
+        ArgumentGuard.NotNull(relationship);
 
         return Get(relationship, SecondaryResponseDocumentOpenTypes);
     }
 
     public Type GetForRelationshipRequest(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship, nameof(relationship));
+        ArgumentGuard.NotNull(relationship);
 
         return Get(relationship, RelationshipRequestDocumentOpenTypes);
     }
 
     public Type GetForRelationshipResponse(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship, nameof(relationship));
+        ArgumentGuard.NotNull(relationship);
 
         return Get(relationship, RelationshipResponseDocumentOpenTypes);
     }
@@ -65,9 +65,9 @@ internal sealed class NonPrimaryDocumentTypeFactory
 
         public DocumentOpenTypes(Type manyDataOpenType, Type nullableSingleDataOpenType, Type singleDataOpenType)
         {
-            ArgumentGuard.NotNull(manyDataOpenType, nameof(manyDataOpenType));
-            ArgumentGuard.NotNull(nullableSingleDataOpenType, nameof(nullableSingleDataOpenType));
-            ArgumentGuard.NotNull(singleDataOpenType, nameof(singleDataOpenType));
+            ArgumentGuard.NotNull(manyDataOpenType);
+            ArgumentGuard.NotNull(nullableSingleDataOpenType);
+            ArgumentGuard.NotNull(singleDataOpenType);
 
             ManyDataOpenType = manyDataOpenType;
             NullableSingleDataOpenType = nullableSingleDataOpenType;

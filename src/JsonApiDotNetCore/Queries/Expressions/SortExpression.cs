@@ -13,7 +13,7 @@ public class SortExpression : QueryExpression
 
     public SortExpression(IImmutableList<SortElementExpression> elements)
     {
-        ArgumentGuard.NotNullNorEmpty(elements, nameof(elements));
+        ArgumentGuard.NotNullNorEmpty(elements);
 
         Elements = elements;
     }

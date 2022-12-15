@@ -12,7 +12,7 @@ public class SparseFieldTypeParser : QueryExpressionParser
 
     public SparseFieldTypeParser(IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+        ArgumentGuard.NotNull(resourceGraph);
 
         _resourceGraph = resourceGraph;
     }

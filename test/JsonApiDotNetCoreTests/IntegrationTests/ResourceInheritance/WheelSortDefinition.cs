@@ -19,7 +19,7 @@ public sealed class WheelSortDefinition : JsonApiResourceDefinition<Wheel, long>
     public WheelSortDefinition(IResourceGraph resourceGraph, IHttpContextAccessor httpContextAccessor)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(httpContextAccessor, nameof(httpContextAccessor));
+        ArgumentGuard.NotNull(httpContextAccessor);
 
         _httpContextAccessor = httpContextAccessor;
     }

@@ -24,12 +24,12 @@ public class QueryableBuilder
     public QueryableBuilder(Expression source, Type elementType, Type extensionType, LambdaParameterNameFactory nameFactory, IResourceFactory resourceFactory,
         IModel entityModel, LambdaScopeFactory? lambdaScopeFactory = null)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
-        ArgumentGuard.NotNull(elementType, nameof(elementType));
-        ArgumentGuard.NotNull(extensionType, nameof(extensionType));
-        ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
-        ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
-        ArgumentGuard.NotNull(entityModel, nameof(entityModel));
+        ArgumentGuard.NotNull(source);
+        ArgumentGuard.NotNull(elementType);
+        ArgumentGuard.NotNull(extensionType);
+        ArgumentGuard.NotNull(nameFactory);
+        ArgumentGuard.NotNull(resourceFactory);
+        ArgumentGuard.NotNull(entityModel);
 
         _source = source;
         _elementType = elementType;
@@ -42,7 +42,7 @@ public class QueryableBuilder
 
     public virtual Expression ApplyQuery(QueryLayer layer)
     {
-        ArgumentGuard.NotNull(layer, nameof(layer));
+        ArgumentGuard.NotNull(layer);
 
         Expression expression = _source;
 

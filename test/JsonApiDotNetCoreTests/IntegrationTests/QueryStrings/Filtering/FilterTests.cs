@@ -18,6 +18,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         _testContext = testContext;
 
         testContext.UseController<WebAccountsController>();
+        testContext.UseController<CalendarsController>();
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.EnableLegacyFilterNotation = false;
@@ -85,6 +86,28 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("Filtering on the requested attribute is not allowed.");
         error.Detail.Should().Be("Filtering on attribute 'dateOfBirth' is not allowed.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("filter");
+    }
+
+    [Fact]
+    public async Task Cannot_filter_on_ToMany_relationship_with_blocked_capability()
+    {
+        // Arrange
+        const string route = "/calendars?filter=has(appointments)";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("Filtering on the requested relationship is not allowed.");
+        error.Detail.Should().Be("Filtering on relationship 'appointments' is not allowed.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }

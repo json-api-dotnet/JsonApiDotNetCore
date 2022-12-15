@@ -41,9 +41,9 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
     public JsonApiSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options)
     {
-        ArgumentGuard.NotNull(defaultSchemaGenerator, nameof(defaultSchemaGenerator));
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-        ArgumentGuard.NotNull(options, nameof(options));
+        ArgumentGuard.NotNull(defaultSchemaGenerator);
+        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(options);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(_schemaRepositoryAccessor, options.SerializerOptions.PropertyNamingPolicy);
@@ -53,8 +53,8 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
     public OpenApiSchema GenerateSchema(Type modelType, SchemaRepository schemaRepository, MemberInfo? memberInfo = null, ParameterInfo? parameterInfo = null,
         ApiParameterRouteInfo? routeInfo = null)
     {
-        ArgumentGuard.NotNull(modelType, nameof(modelType));
-        ArgumentGuard.NotNull(schemaRepository, nameof(schemaRepository));
+        ArgumentGuard.NotNull(modelType);
+        ArgumentGuard.NotNull(schemaRepository);
 
         _schemaRepositoryAccessor.Current = schemaRepository;
 

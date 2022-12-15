@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Serialization.Objects;
 
 /// <summary>
-/// See https://jsonapi.org/format/1.1/#document-jsonapi-object.
+/// See https://jsonapi.org/format/#document-jsonapi-object.
 /// </summary>
 [PublicAPI]
 public sealed class JsonApiObject

@@ -10,7 +10,7 @@ public sealed class JsonApiOutputFormatter : IJsonApiOutputFormatter
     /// <inheritdoc />
     public bool CanWriteResult(OutputFormatterCanWriteContext context)
     {
-        ArgumentGuard.NotNull(context, nameof(context));
+        ArgumentGuard.NotNull(context);
 
         return context.HttpContext.IsJsonApiRequest();
     }
@@ -18,7 +18,7 @@ public sealed class JsonApiOutputFormatter : IJsonApiOutputFormatter
     /// <inheritdoc />
     public async Task WriteAsync(OutputFormatterWriteContext context)
     {
-        ArgumentGuard.NotNull(context, nameof(context));
+        ArgumentGuard.NotNull(context);
 
         var writer = context.HttpContext.RequestServices.GetRequiredService<IJsonApiWriter>();
         await writer.WriteAsync(context.Object, context.HttpContext);

@@ -21,8 +21,8 @@ public class IncludeClauseBuilder : QueryClauseBuilder<object?>
     public IncludeClauseBuilder(Expression source, LambdaScope lambdaScope, ResourceType resourceType)
         : base(lambdaScope)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
-        ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+        ArgumentGuard.NotNull(source);
+        ArgumentGuard.NotNull(resourceType);
 
         _source = source;
         _resourceType = resourceType;
@@ -30,7 +30,7 @@ public class IncludeClauseBuilder : QueryClauseBuilder<object?>
 
     public Expression ApplyInclude(IncludeExpression include)
     {
-        ArgumentGuard.NotNull(include, nameof(include));
+        ArgumentGuard.NotNull(include);
 
         return Visit(include, null);
     }

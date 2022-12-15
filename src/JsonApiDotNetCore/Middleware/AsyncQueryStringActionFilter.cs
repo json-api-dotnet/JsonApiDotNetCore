@@ -12,7 +12,7 @@ public sealed class AsyncQueryStringActionFilter : IAsyncQueryStringActionFilter
 
     public AsyncQueryStringActionFilter(IQueryStringReader queryStringReader)
     {
-        ArgumentGuard.NotNull(queryStringReader, nameof(queryStringReader));
+        ArgumentGuard.NotNull(queryStringReader);
 
         _queryStringReader = queryStringReader;
     }
@@ -20,8 +20,8 @@ public sealed class AsyncQueryStringActionFilter : IAsyncQueryStringActionFilter
     /// <inheritdoc />
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        ArgumentGuard.NotNull(context, nameof(context));
-        ArgumentGuard.NotNull(next, nameof(next));
+        ArgumentGuard.NotNull(context);
+        ArgumentGuard.NotNull(next);
 
         if (context.HttpContext.IsJsonApiRequest())
         {

@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Serialization.Objects;
 
 /// <summary>
-/// See https://jsonapi.org/format/1.1/#error-objects.
+/// See https://jsonapi.org/format/#error-objects.
 /// </summary>
 [PublicAPI]
 public sealed class ErrorObject

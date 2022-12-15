@@ -20,6 +20,9 @@ public sealed class DuplicateResourceControllerTests : IntegrationTestContext<Te
         Action action = () => _ = Factory;
 
         // Assert
-        action.Should().ThrowExactly<InvalidConfigurationException>().WithMessage("Multiple controllers found for resource type 'knownResources'.");
+        InvalidConfigurationException exception = action.Should().ThrowExactly<InvalidConfigurationException>().Which!;
+        exception.Message.Should().StartWith("Multiple controllers found for resource type 'knownResources': ");
+        exception.Message.Should().Contain($"'{typeof(KnownResourcesController).FullName}'");
+        exception.Message.Should().Contain($"'{typeof(DuplicateKnownResourcesController).FullName}'");
     }
 }

@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Serialization.Objects;
 
 /// <summary>
-/// See "source" in https://jsonapi.org/format/1.1/#error-objects.
+/// See "source" in https://jsonapi.org/format/#error-objects.
 /// </summary>
 [PublicAPI]
 public sealed class ErrorSource

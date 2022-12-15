@@ -17,7 +17,7 @@ public class IncludeExpression : QueryExpression
 
     public IncludeExpression(IImmutableSet<IncludeElementExpression> elements)
     {
-        ArgumentGuard.NotNullNorEmpty(elements, nameof(elements));
+        ArgumentGuard.NotNullNorEmpty(elements);
 
         Elements = elements;
     }

@@ -14,8 +14,8 @@ public static class SparseFieldSetExpressionExtensions
         Expression<Func<TResource, object?>> fieldSelector, IResourceGraph resourceGraph)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+        ArgumentGuard.NotNull(fieldSelector);
+        ArgumentGuard.NotNull(resourceGraph);
 
         SparseFieldSetExpression? newSparseFieldSet = sparseFieldSet;
 
@@ -42,8 +42,8 @@ public static class SparseFieldSetExpressionExtensions
         Expression<Func<TResource, object?>> fieldSelector, IResourceGraph resourceGraph)
         where TResource : class, IIdentifiable
     {
-        ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+        ArgumentGuard.NotNull(fieldSelector);
+        ArgumentGuard.NotNull(resourceGraph);
 
         SparseFieldSetExpression? newSparseFieldSet = sparseFieldSet;
 

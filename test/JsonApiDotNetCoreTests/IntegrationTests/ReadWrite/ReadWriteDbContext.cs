@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 // @formatter:keep_existing_linebreaks true
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ReadWriteDbContext : DbContext
+public sealed class ReadWriteDbContext : TestableDbContext
 {
     public DbSet<WorkItem> WorkItems => Set<WorkItem>();
     public DbSet<WorkTag> WorkTags => Set<WorkTag>();
@@ -48,5 +49,7 @@ public sealed class ReadWriteDbContext : DbContext
                 left => left
                     .HasOne(joinEntity => joinEntity.ToItem)
                     .WithMany());
+
+        base.OnModelCreating(builder);
     }
 }

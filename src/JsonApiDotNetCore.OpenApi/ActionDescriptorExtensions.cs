@@ -10,7 +10,7 @@ internal static class ActionDescriptorExtensions
 {
     public static MethodInfo GetActionMethod(this ActionDescriptor descriptor)
     {
-        ArgumentGuard.NotNull(descriptor, nameof(descriptor));
+        ArgumentGuard.NotNull(descriptor);
 
         return ((ControllerActionDescriptor)descriptor).MethodInfo;
     }
@@ -18,7 +18,7 @@ internal static class ActionDescriptorExtensions
     public static TFilterMetaData? GetFilterMetadata<TFilterMetaData>(this ActionDescriptor descriptor)
         where TFilterMetaData : IFilterMetadata
     {
-        ArgumentGuard.NotNull(descriptor, nameof(descriptor));
+        ArgumentGuard.NotNull(descriptor);
 
         IFilterMetadata? filterMetadata = descriptor.FilterDescriptors.Select(filterDescriptor => filterDescriptor.Filter)
             .FirstOrDefault(filter => filter is TFilterMetaData);
@@ -28,7 +28,7 @@ internal static class ActionDescriptorExtensions
 
     public static ControllerParameterDescriptor? GetBodyParameterDescriptor(this ActionDescriptor descriptor)
     {
-        ArgumentGuard.NotNull(descriptor, nameof(descriptor));
+        ArgumentGuard.NotNull(descriptor);
 
         return (ControllerParameterDescriptor?)descriptor.Parameters.FirstOrDefault(parameterDescriptor =>
             // ReSharper disable once ConstantConditionalAccessQualifier

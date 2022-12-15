@@ -15,8 +15,8 @@ public sealed class InverseNavigationResolver : IInverseNavigationResolver
 
     public InverseNavigationResolver(IResourceGraph resourceGraph, IEnumerable<IDbContextResolver> dbContextResolvers)
     {
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-        ArgumentGuard.NotNull(dbContextResolvers, nameof(dbContextResolvers));
+        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(dbContextResolvers);
 
         _resourceGraph = resourceGraph;
         _dbContextResolvers = dbContextResolvers;

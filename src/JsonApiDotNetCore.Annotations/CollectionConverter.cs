@@ -26,8 +26,8 @@ internal sealed class CollectionConverter
     /// </param>
     public IEnumerable CopyToTypedCollection(IEnumerable source, Type collectionType)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
-        ArgumentGuard.NotNull(collectionType, nameof(collectionType));
+        ArgumentGuard.NotNull(source);
+        ArgumentGuard.NotNull(collectionType);
 
         Type concreteCollectionType = ToConcreteCollectionType(collectionType);
         dynamic concreteCollectionInstance = Activator.CreateInstance(concreteCollectionType)!;
@@ -121,7 +121,7 @@ internal sealed class CollectionConverter
     /// </summary>
     public bool TypeCanContainHashSet(Type collectionType)
     {
-        ArgumentGuard.NotNull(collectionType, nameof(collectionType));
+        ArgumentGuard.NotNull(collectionType);
 
         if (collectionType.IsGenericType)
         {

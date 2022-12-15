@@ -13,14 +13,14 @@ internal sealed class RelationshipTypeFactory
 
     public Type GetForRequest(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship, nameof(relationship));
+        ArgumentGuard.NotNull(relationship);
 
         return NonPrimaryDocumentTypeFactory.Instance.GetForRelationshipRequest(relationship);
     }
 
     public Type GetForResponse(RelationshipAttribute relationship)
     {
-        ArgumentGuard.NotNull(relationship, nameof(relationship));
+        ArgumentGuard.NotNull(relationship);
 
         // @formatter:nested_ternary_style expanded
 

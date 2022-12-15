@@ -25,13 +25,13 @@ public class OperationsProcessor : IOperationsProcessor
         ILocalIdTracker localIdTracker, IResourceGraph resourceGraph, IJsonApiRequest request, ITargetedFields targetedFields,
         ISparseFieldSetCache sparseFieldSetCache)
     {
-        ArgumentGuard.NotNull(operationProcessorAccessor, nameof(operationProcessorAccessor));
-        ArgumentGuard.NotNull(operationsTransactionFactory, nameof(operationsTransactionFactory));
-        ArgumentGuard.NotNull(localIdTracker, nameof(localIdTracker));
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-        ArgumentGuard.NotNull(request, nameof(request));
-        ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
-        ArgumentGuard.NotNull(sparseFieldSetCache, nameof(sparseFieldSetCache));
+        ArgumentGuard.NotNull(operationProcessorAccessor);
+        ArgumentGuard.NotNull(operationsTransactionFactory);
+        ArgumentGuard.NotNull(localIdTracker);
+        ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(request);
+        ArgumentGuard.NotNull(targetedFields);
+        ArgumentGuard.NotNull(sparseFieldSetCache);
 
         _operationProcessorAccessor = operationProcessorAccessor;
         _operationsTransactionFactory = operationsTransactionFactory;
@@ -46,7 +46,7 @@ public class OperationsProcessor : IOperationsProcessor
     /// <inheritdoc />
     public virtual async Task<IList<OperationContainer?>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(operations, nameof(operations));
+        ArgumentGuard.NotNull(operations);
 
         _localIdValidator.Validate(operations);
         _localIdTracker.Reset();

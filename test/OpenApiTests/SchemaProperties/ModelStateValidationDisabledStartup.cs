@@ -1,13 +1,13 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 namespace OpenApiTests.SchemaProperties;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class ModelStateValidationDisabledStartup<TDbContext> : OpenApiStartup<TDbContext>
-    where TDbContext : DbContext
+    where TDbContext : TestableDbContext
 {
     protected override void SetJsonApiOptions(JsonApiOptions options)
     {

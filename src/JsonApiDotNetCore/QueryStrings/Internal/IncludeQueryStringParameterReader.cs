@@ -18,12 +18,12 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
 
     private IncludeExpression? _includeExpression;
 
-    public bool AllowEmptyValue => false;
+    public bool AllowEmptyValue => true;
 
     public IncludeQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
         : base(request, resourceGraph)
     {
-        ArgumentGuard.NotNull(options, nameof(options));
+        ArgumentGuard.NotNull(options);
 
         _options = options;
         _includeParser = new IncludeParser();
@@ -32,7 +32,7 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
     /// <inheritdoc />
     public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
     {
-        ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
+        ArgumentGuard.NotNull(disableQueryStringAttribute);
 
         return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Include);
     }
@@ -48,7 +48,7 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
     {
         try
         {
-            _includeExpression = GetInclude(parameterValue);
+            _includeExpression = GetInclude(parameterValue.ToString());
         }
         catch (QueryParseException exception)
         {

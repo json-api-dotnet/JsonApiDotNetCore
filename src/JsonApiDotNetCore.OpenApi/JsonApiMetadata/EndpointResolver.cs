@@ -9,7 +9,7 @@ internal sealed class EndpointResolver
 {
     public JsonApiEndpoint? Get(MethodInfo controllerAction)
     {
-        ArgumentGuard.NotNull(controllerAction, nameof(controllerAction));
+        ArgumentGuard.NotNull(controllerAction);
 
         // This is a temporary work-around to prevent the JsonApiDotNetCoreExample project from crashing upon startup.
         if (!IsJsonApiController(controllerAction) || IsOperationsController(controllerAction))

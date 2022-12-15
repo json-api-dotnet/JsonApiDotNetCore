@@ -12,7 +12,7 @@ public class LiteralConstantExpression : IdentifierExpression
 
     public LiteralConstantExpression(string text)
     {
-        ArgumentGuard.NotNull(text, nameof(text));
+        ArgumentGuard.NotNull(text);
 
         Value = text;
     }

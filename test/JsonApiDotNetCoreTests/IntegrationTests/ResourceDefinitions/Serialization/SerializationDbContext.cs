@@ -1,12 +1,13 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class SerializationDbContext : DbContext
+public sealed class SerializationDbContext : TestableDbContext
 {
     public DbSet<Student> Students => Set<Student>();
     public DbSet<Scholarship> Scholarships => Set<Scholarship>();
@@ -21,5 +22,7 @@ public sealed class SerializationDbContext : DbContext
         builder.Entity<Scholarship>()
             .HasMany(scholarship => scholarship.Participants)
             .WithOne(student => student.Scholarship!);
+
+        base.OnModelCreating(builder);
     }
 }

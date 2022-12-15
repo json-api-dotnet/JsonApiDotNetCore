@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace JsonApiDotNetCore.Serialization.Objects;
 
 /// <summary>
-/// See https://jsonapi.org/format/1.1/#document-top-level and https://jsonapi.org/ext/atomic/#document-structure.
+/// See https://jsonapi.org/format#document-top-level and https://jsonapi.org/ext/atomic/#document-structure.
 /// </summary>
 public sealed class Document
 {

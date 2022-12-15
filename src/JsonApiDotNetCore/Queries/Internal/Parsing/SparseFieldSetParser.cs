@@ -19,7 +19,7 @@ public class SparseFieldSetParser : QueryExpressionParser
 
     public SparseFieldSetExpression? Parse(string source, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+        ArgumentGuard.NotNull(resourceType);
 
         _resourceType = resourceType;
 

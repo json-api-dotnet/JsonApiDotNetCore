@@ -93,10 +93,11 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
-        settingsProvider.AutoIncludeOrbitingPlanetForMoons();
+        settingsProvider.AutoIncludeStarGivingLightToMoon();
 
         Moon moon = _fakers.Moon.Generate();
         moon.OrbitsAround = _fakers.Planet.Generate();
+        moon.IsGivenLightBy = _fakers.Star.Generate();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -114,18 +115,18 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("orbitsAround").With(value =>
+        responseDocument.Data.SingleValue.Relationships.ShouldContainKey("isGivenLightBy").With(value =>
         {
             value.ShouldNotBeNull();
             value.Data.SingleValue.ShouldNotBeNull();
-            value.Data.SingleValue.Type.Should().Be("planets");
-            value.Data.SingleValue.Id.Should().Be(moon.OrbitsAround.StringId);
+            value.Data.SingleValue.Type.Should().Be("stars");
+            value.Data.SingleValue.Id.Should().Be(moon.IsGivenLightBy.StringId);
         });
 
         responseDocument.Included.ShouldHaveCount(1);
-        responseDocument.Included[0].Type.Should().Be("planets");
-        responseDocument.Included[0].Id.Should().Be(moon.OrbitsAround.StringId);
-        responseDocument.Included[0].Attributes.ShouldContainKey("publicName").With(value => value.Should().Be(moon.OrbitsAround.PublicName));
+        responseDocument.Included[0].Type.Should().Be("stars");
+        responseDocument.Included[0].Id.Should().Be(moon.IsGivenLightBy.StringId);
+        responseDocument.Included[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(moon.IsGivenLightBy.Name));
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -134,12 +135,12 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplySort),
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.GetMeta),
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.GetMeta)
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.GetMeta)
         }, options => options.WithStrictOrdering());
     }
 
@@ -150,11 +151,11 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
         var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
-        settingsProvider.AutoIncludeOrbitingPlanetForMoons();
+        settingsProvider.AutoIncludeStarGivingLightToMoon();
 
         Planet planet = _fakers.Planet.Generate();
         planet.Moons = _fakers.Moon.Generate(1).ToHashSet();
-        planet.Moons.ElementAt(0).OrbitsAround = _fakers.Planet.Generate();
+        planet.Moons.ElementAt(0).IsGivenLightBy = _fakers.Star.Generate();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -178,11 +179,9 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         responseDocument.Included[0].Id.Should().Be(planet.Moons.ElementAt(0).StringId);
         responseDocument.Included[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(planet.Moons.ElementAt(0).Name));
 
-        string moonName = planet.Moons.ElementAt(0).OrbitsAround.PublicName;
-
-        responseDocument.Included[1].Type.Should().Be("planets");
-        responseDocument.Included[1].Id.Should().Be(planet.Moons.ElementAt(0).OrbitsAround.StringId);
-        responseDocument.Included[1].Attributes.ShouldContainKey("publicName").With(value => value.Should().Be(moonName));
+        responseDocument.Included[1].Type.Should().Be("stars");
+        responseDocument.Included[1].Id.Should().Be(planet.Moons.ElementAt(0).IsGivenLightBy!.StringId);
+        responseDocument.Included[1].Attributes.ShouldContainKey("name").With(value => value.Should().Be(planet.Moons.ElementAt(0).IsGivenLightBy!.Name));
 
         hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
         {
@@ -196,11 +195,14 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplyPagination),
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
-            (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplyIncludes),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
             (typeof(Planet), ResourceDefinitionExtensibilityPoints.GetMeta),
             (typeof(Moon), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
-            (typeof(Moon), ResourceDefinitionExtensibilityPoints.GetMeta)
+            (typeof(Moon), ResourceDefinitionExtensibilityPoints.GetMeta),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet),
+            (typeof(Star), ResourceDefinitionExtensibilityPoints.GetMeta)
         }, options => options.WithStrictOrdering());
     }
 

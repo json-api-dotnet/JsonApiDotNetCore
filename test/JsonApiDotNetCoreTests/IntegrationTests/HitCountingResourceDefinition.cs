@@ -22,7 +22,7 @@ public abstract class HitCountingResourceDefinition<TResource, TId> : JsonApiRes
     protected HitCountingResourceDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(hitCounter, nameof(hitCounter));
+        ArgumentGuard.NotNull(hitCounter);
 
         _hitCounter = hitCounter;
     }

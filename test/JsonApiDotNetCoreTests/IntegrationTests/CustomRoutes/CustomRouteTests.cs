@@ -67,12 +67,12 @@ public sealed class CustomRouteTests : IClassFixture<IntegrationTestContext<Test
     public async Task Can_get_resources_at_custom_action_method()
     {
         // Arrange
-        List<Town> town = _fakers.Town.Generate(7);
+        List<Town> towns = _fakers.Town.Generate(7);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             await dbContext.ClearTableAsync<Town>();
-            dbContext.Towns.AddRange(town);
+            dbContext.Towns.AddRange(towns);
             await dbContext.SaveChangesAsync();
         });
 

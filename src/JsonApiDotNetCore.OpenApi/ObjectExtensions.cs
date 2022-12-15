@@ -10,7 +10,7 @@ internal static class ObjectExtensions
 
     public static object MemberwiseClone(this object source)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
+        ArgumentGuard.NotNull(source);
 
         return MemberwiseCloneMethod.Value.Invoke(source, null)!;
     }

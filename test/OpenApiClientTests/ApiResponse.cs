@@ -12,7 +12,7 @@ internal static class ApiResponse
     {
         // Workaround for https://github.com/RicoSuter/NSwag/issues/2499
 
-        ArgumentGuard.NotNull(operation, nameof(operation));
+        ArgumentGuard.NotNull(operation);
 
         try
         {

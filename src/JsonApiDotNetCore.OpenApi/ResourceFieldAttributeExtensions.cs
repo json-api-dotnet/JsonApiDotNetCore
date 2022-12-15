@@ -7,8 +7,6 @@ namespace JsonApiDotNetCore.OpenApi;
 
 internal static class ResourceFieldAttributeExtensions
 {
-    private static readonly NullabilityInfoContext NullabilityInfoContext = new();
-
     public static bool IsNullable(this ResourceFieldAttribute source)
     {
         bool hasRequiredAttribute = source.Property.HasAttribute<RequiredAttribute>();
@@ -24,7 +22,8 @@ internal static class ResourceFieldAttributeExtensions
             return false;
         }
 
-        NullabilityInfo nullabilityInfo = NullabilityInfoContext.Create(source.Property);
+        NullabilityInfoContext nullabilityContext = new();
+        NullabilityInfo nullabilityInfo = nullabilityContext.Create(source.Property);
 
         //  Reflects the following cases:
         //    Independent of NRT:

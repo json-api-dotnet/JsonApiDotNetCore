@@ -64,7 +64,6 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Theory]
-    [InlineData("include")]
     [InlineData("filter")]
     [InlineData("sort")]
     [InlineData("page[size]")]

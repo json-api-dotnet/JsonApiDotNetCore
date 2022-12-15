@@ -15,7 +15,7 @@ public class HasExpression : FilterExpression
 
     public HasExpression(ResourceFieldChainExpression targetCollection, FilterExpression? filter)
     {
-        ArgumentGuard.NotNull(targetCollection, nameof(targetCollection));
+        ArgumentGuard.NotNull(targetCollection);
 
         TargetCollection = targetCollection;
         Filter = filter;

@@ -13,7 +13,7 @@ public class NotExpression : FilterExpression
 
     public NotExpression(FilterExpression child)
     {
-        ArgumentGuard.NotNull(child, nameof(child));
+        ArgumentGuard.NotNull(child);
 
         Child = child;
     }

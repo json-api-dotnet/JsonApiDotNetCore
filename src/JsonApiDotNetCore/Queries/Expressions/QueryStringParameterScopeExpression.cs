@@ -13,7 +13,7 @@ public class QueryStringParameterScopeExpression : QueryExpression
 
     public QueryStringParameterScopeExpression(LiteralConstantExpression parameterName, ResourceFieldChainExpression? scope)
     {
-        ArgumentGuard.NotNull(parameterName, nameof(parameterName));
+        ArgumentGuard.NotNull(parameterName);
 
         ParameterName = parameterName;
         Scope = scope;

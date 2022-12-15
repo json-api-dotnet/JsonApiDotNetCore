@@ -17,8 +17,8 @@ public class OrderClauseBuilder : QueryClauseBuilder<Expression?>
     public OrderClauseBuilder(Expression source, LambdaScope lambdaScope, Type extensionType)
         : base(lambdaScope)
     {
-        ArgumentGuard.NotNull(source, nameof(source));
-        ArgumentGuard.NotNull(extensionType, nameof(extensionType));
+        ArgumentGuard.NotNull(source);
+        ArgumentGuard.NotNull(extensionType);
 
         _source = source;
         _extensionType = extensionType;
@@ -26,7 +26,7 @@ public class OrderClauseBuilder : QueryClauseBuilder<Expression?>
 
     public Expression ApplyOrderBy(SortExpression expression)
     {
-        ArgumentGuard.NotNull(expression, nameof(expression));
+        ArgumentGuard.NotNull(expression);
 
         return Visit(expression, null);
     }

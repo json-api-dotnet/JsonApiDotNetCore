@@ -12,7 +12,7 @@ public sealed class DbContextResolver<TDbContext> : IDbContextResolver
 
     public DbContextResolver(TDbContext dbContext)
     {
-        ArgumentGuard.NotNull(dbContext, nameof(dbContext));
+        ArgumentGuard.NotNull(dbContext);
 
         _dbContext = dbContext;
     }

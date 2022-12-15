@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Serialization.Objects;
 
 /// <summary>
-/// See "links" in https://jsonapi.org/format/1.1/#error-objects.
+/// See "links" in https://jsonapi.org/format/#error-objects.
 /// </summary>
 [PublicAPI]
 public sealed class ErrorLinks

@@ -21,8 +21,8 @@ public class ResourceDefinitionQueryableParameterReader : IResourceDefinitionQue
 
     public ResourceDefinitionQueryableParameterReader(IJsonApiRequest request, IResourceDefinitionAccessor resourceDefinitionAccessor)
     {
-        ArgumentGuard.NotNull(request, nameof(request));
-        ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
+        ArgumentGuard.NotNull(request);
+        ArgumentGuard.NotNull(resourceDefinitionAccessor);
 
         _request = request;
         _resourceDefinitionAccessor = resourceDefinitionAccessor;

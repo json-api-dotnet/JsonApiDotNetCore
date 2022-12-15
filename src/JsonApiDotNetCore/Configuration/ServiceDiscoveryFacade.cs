@@ -52,9 +52,9 @@ public sealed class ServiceDiscoveryFacade
 
     public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, ILoggerFactory loggerFactory)
     {
-        ArgumentGuard.NotNull(services, nameof(services));
-        ArgumentGuard.NotNull(resourceGraphBuilder, nameof(resourceGraphBuilder));
-        ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+        ArgumentGuard.NotNull(services);
+        ArgumentGuard.NotNull(resourceGraphBuilder);
+        ArgumentGuard.NotNull(loggerFactory);
 
         _logger = loggerFactory.CreateLogger<ServiceDiscoveryFacade>();
         _services = services;
@@ -74,7 +74,7 @@ public sealed class ServiceDiscoveryFacade
     /// </summary>
     public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
     {
-        ArgumentGuard.NotNull(assembly, nameof(assembly));
+        ArgumentGuard.NotNull(assembly);
 
         _assemblyCache.RegisterAssembly(assembly);
         _logger.LogDebug($"Registering assembly '{assembly.FullName}' for discovery of resources and injectables.");

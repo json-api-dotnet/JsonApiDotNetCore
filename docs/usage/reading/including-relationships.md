@@ -1,6 +1,6 @@
 # Including Relationships
 
-JsonApiDotNetCore supports [request include params](http://jsonapi.org/format/#fetching-includes) out of the box,
+JsonApiDotNetCore supports [request include params](https://jsonapi.org/format/#fetching-includes) out of the box,
 for side-loading related resources.
 
 ```http

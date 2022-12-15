@@ -10,7 +10,7 @@ public static class RuntimeTypeConverter
 {
     public static object? ConvertType(object? value, Type type)
     {
-        ArgumentGuard.NotNull(type, nameof(type));
+        ArgumentGuard.NotNull(type);
 
         if (value == null)
         {

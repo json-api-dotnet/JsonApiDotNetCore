@@ -1,7 +1,6 @@
 using System.Reflection;
 using System.Text.Json;
 using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
@@ -10,7 +9,7 @@ namespace OpenApiTests;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<TStartup, TDbContext>
     where TStartup : class
-    where TDbContext : DbContext
+    where TDbContext : TestableDbContext
 {
     private readonly Lazy<Task<JsonElement>> _lazySwaggerDocument;
 

@@ -39,7 +39,7 @@ internal sealed class JsonApiOperationIdSelector
 
     public JsonApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, JsonNamingPolicy? namingPolicy)
     {
-        ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
+        ArgumentGuard.NotNull(controllerResourceMapping);
 
         _controllerResourceMapping = controllerResourceMapping;
         _namingPolicy = namingPolicy;
@@ -47,7 +47,7 @@ internal sealed class JsonApiOperationIdSelector
 
     public string GetOperationId(ApiDescription endpoint)
     {
-        ArgumentGuard.NotNull(endpoint, nameof(endpoint));
+        ArgumentGuard.NotNull(endpoint);
 
         ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(endpoint.ActionDescriptor.GetActionMethod().ReflectedType);
 

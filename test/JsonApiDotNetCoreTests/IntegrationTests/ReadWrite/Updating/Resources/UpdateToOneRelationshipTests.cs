@@ -209,7 +209,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.RgbColors.AddRange(existingColor);
+            dbContext.RgbColors.Add(existingColor);
             await dbContext.SaveChangesAsync();
         });
 
@@ -940,5 +940,56 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
             workItemInDatabase.Parent.ShouldNotBeNull();
             workItemInDatabase.Parent.Id.Should().Be(existingWorkItem.Id);
         });
+    }
+
+    [Fact]
+    public async Task Cannot_assign_relationship_with_blocked_capability()
+    {
+        // Arrange
+        WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.WorkItems.Add(existingWorkItem);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItems",
+                id = existingWorkItem.StringId,
+                relationships = new
+                {
+                    group = new
+                    {
+                        data = new
+                        {
+                            type = "workItemGroups",
+                            id = Unknown.StringId.For<WorkItemGroup, Guid>()
+                        }
+                    }
+                }
+            }
+        };
+
+        string route = $"/workItems/{existingWorkItem.StringId}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be assigned.");
+        error.Detail.Should().Be("The relationship 'group' on resource type 'workItems' cannot be assigned to.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/data/relationships/group");
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
     }
 }

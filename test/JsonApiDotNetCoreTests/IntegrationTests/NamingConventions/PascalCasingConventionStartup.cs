@@ -1,13 +1,12 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class PascalCasingConventionStartup<TDbContext> : TestableStartup<TDbContext>
-    where TDbContext : DbContext
+    where TDbContext : TestableDbContext
 {
     protected override void SetJsonApiOptions(JsonApiOptions options)
     {
