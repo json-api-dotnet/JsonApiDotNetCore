@@ -32,5 +32,7 @@ public sealed class LegacyIntegrationDbContext : TestableDbContext
         builder.Entity<Flight>()
             .HasOne(flight => flight.BackupPurser)
             .WithMany();
+
+        base.OnModelCreating(builder);
     }
 }
