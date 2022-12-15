@@ -1,12 +1,13 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class EagerLoadingDbContext : DbContext
+public sealed class EagerLoadingDbContext : TestableDbContext
 {
     public DbSet<State> States => Set<State>();
     public DbSet<Street> Streets => Set<Street>();
@@ -33,5 +34,7 @@ public sealed class EagerLoadingDbContext : DbContext
             .HasOne(building => building.SecondaryDoor)
             .WithOne()
             .HasForeignKey<Building>("SecondaryDoorId");
+
+        base.OnModelCreating(builder);
     }
 }

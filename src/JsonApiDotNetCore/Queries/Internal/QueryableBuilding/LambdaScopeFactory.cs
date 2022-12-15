@@ -10,14 +10,14 @@ public sealed class LambdaScopeFactory
 
     public LambdaScopeFactory(LambdaParameterNameFactory nameFactory)
     {
-        ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
+        ArgumentGuard.NotNull(nameFactory);
 
         _nameFactory = nameFactory;
     }
 
     public LambdaScope CreateScope(Type elementType, Expression? accessorExpression = null)
     {
-        ArgumentGuard.NotNull(elementType, nameof(elementType));
+        ArgumentGuard.NotNull(elementType);
 
         return LambdaScope.Create(_nameFactory, elementType, accessorExpression);
     }

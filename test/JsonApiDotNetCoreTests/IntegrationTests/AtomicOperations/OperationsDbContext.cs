@@ -1,12 +1,13 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class OperationsDbContext : DbContext
+public sealed class OperationsDbContext : TestableDbContext
 {
     public DbSet<Playlist> Playlists => Set<Playlist>();
     public DbSet<MusicTrack> MusicTracks => Set<MusicTrack>();
@@ -30,5 +31,7 @@ public sealed class OperationsDbContext : DbContext
         builder.Entity<MusicTrack>()
             .HasMany(musicTrack => musicTrack.OccursIn)
             .WithMany(playlist => playlist.Tracks);
+
+        base.OnModelCreating(builder);
     }
 }

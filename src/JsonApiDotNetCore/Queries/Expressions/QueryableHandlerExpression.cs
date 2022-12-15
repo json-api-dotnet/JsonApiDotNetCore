@@ -15,7 +15,7 @@ public class QueryableHandlerExpression : QueryExpression
 
     public QueryableHandlerExpression(object queryableHandler, StringValues parameterValue)
     {
-        ArgumentGuard.NotNull(queryableHandler, nameof(queryableHandler));
+        ArgumentGuard.NotNull(queryableHandler);
 
         _queryableHandler = queryableHandler;
         _parameterValue = parameterValue;

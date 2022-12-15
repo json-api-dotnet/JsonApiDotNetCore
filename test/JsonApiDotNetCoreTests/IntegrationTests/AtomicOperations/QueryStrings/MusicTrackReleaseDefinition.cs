@@ -15,7 +15,7 @@ public sealed class MusicTrackReleaseDefinition : JsonApiResourceDefinition<Musi
     public MusicTrackReleaseDefinition(IResourceGraph resourceGraph, ISystemClock systemClock)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(systemClock, nameof(systemClock));
+        ArgumentGuard.NotNull(systemClock);
 
         _systemClock = systemClock;
     }
@@ -32,7 +32,7 @@ public sealed class MusicTrackReleaseDefinition : JsonApiResourceDefinition<Musi
     {
         IQueryable<MusicTrack> tracks = source;
 
-        if (bool.Parse(parameterValue))
+        if (bool.Parse(parameterValue.ToString()))
         {
             tracks = tracks.Where(musicTrack => musicTrack.ReleasedAt < _systemClock.UtcNow && musicTrack.ReleasedAt > _systemClock.UtcNow.AddMonths(-3));
         }

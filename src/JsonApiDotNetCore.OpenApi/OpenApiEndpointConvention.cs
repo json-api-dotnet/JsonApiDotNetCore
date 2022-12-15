@@ -18,14 +18,14 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
     public OpenApiEndpointConvention(IControllerResourceMapping controllerResourceMapping)
     {
-        ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
+        ArgumentGuard.NotNull(controllerResourceMapping);
 
         _controllerResourceMapping = controllerResourceMapping;
     }
 
     public void Apply(ActionModel action)
     {
-        ArgumentGuard.NotNull(action, nameof(action));
+        ArgumentGuard.NotNull(action);
 
         JsonApiEndpoint? endpoint = _endpointResolver.Get(action.ActionMethod);
 

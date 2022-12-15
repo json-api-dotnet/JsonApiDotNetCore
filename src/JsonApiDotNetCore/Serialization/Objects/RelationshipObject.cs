@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Serialization.Objects;
 
 /// <summary>
-/// See https://jsonapi.org/format/1.1/#document-resource-object-relationships.
+/// See https://jsonapi.org/format/#document-resource-object-relationships.
 /// </summary>
 [PublicAPI]
 public sealed class RelationshipObject

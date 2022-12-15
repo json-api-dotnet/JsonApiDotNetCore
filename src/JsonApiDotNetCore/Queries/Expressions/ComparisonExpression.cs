@@ -15,8 +15,8 @@ public class ComparisonExpression : FilterExpression
 
     public ComparisonExpression(ComparisonOperator @operator, QueryExpression left, QueryExpression right)
     {
-        ArgumentGuard.NotNull(left, nameof(left));
-        ArgumentGuard.NotNull(right, nameof(right));
+        ArgumentGuard.NotNull(left);
+        ArgumentGuard.NotNull(right);
 
         Operator = @operator;
         Left = left;

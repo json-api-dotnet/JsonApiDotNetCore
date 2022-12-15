@@ -1504,57 +1504,6 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
     }
 
     [Fact]
-    public async Task Cannot_update_resource_attribute_with_blocked_capability()
-    {
-        // Arrange
-        Lyric existingLyric = _fakers.Lyric.Generate();
-
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            dbContext.Lyrics.Add(existingLyric);
-            await dbContext.SaveChangesAsync();
-        });
-
-        var requestBody = new
-        {
-            atomic__operations = new[]
-            {
-                new
-                {
-                    op = "update",
-                    data = new
-                    {
-                        type = "lyrics",
-                        id = existingLyric.StringId,
-                        attributes = new
-                        {
-                            createdAt = 12.July(1980)
-                        }
-                    }
-                }
-            }
-        };
-
-        const string route = "/operations";
-
-        // Act
-        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
-
-        // Assert
-        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
-
-        responseDocument.Errors.ShouldHaveCount(1);
-
-        ErrorObject error = responseDocument.Errors[0];
-        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-        error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when updating resource.");
-        error.Detail.Should().Be("The attribute 'createdAt' on resource type 'lyrics' cannot be assigned to.");
-        error.Source.ShouldNotBeNull();
-        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/createdAt");
-        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
-    }
-
-    [Fact]
     public async Task Cannot_update_resource_with_readonly_attribute()
     {
         // Arrange
@@ -1814,5 +1763,56 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
             trackInDatabase.Performers.ShouldHaveCount(1);
             trackInDatabase.Performers[0].Id.Should().Be(existingPerformer.Id);
         });
+    }
+
+    [Fact]
+    public async Task Cannot_assign_attribute_with_blocked_capability()
+    {
+        // Arrange
+        Lyric existingLyric = _fakers.Lyric.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Lyrics.Add(existingLyric);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "update",
+                    data = new
+                    {
+                        type = "lyrics",
+                        id = existingLyric.StringId,
+                        attributes = new
+                        {
+                            createdAt = 12.July(1980)
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when updating resource.");
+        error.Detail.Should().Be("The attribute 'createdAt' on resource type 'lyrics' cannot be assigned to.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/createdAt");
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
     }
 }

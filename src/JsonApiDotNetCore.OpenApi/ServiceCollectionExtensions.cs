@@ -18,8 +18,8 @@ public static class ServiceCollectionExtensions
     /// </summary>
     public static void AddOpenApi(this IServiceCollection services, IMvcCoreBuilder mvcBuilder, Action<SwaggerGenOptions>? setupSwaggerGenAction = null)
     {
-        ArgumentGuard.NotNull(services, nameof(services));
-        ArgumentGuard.NotNull(mvcBuilder, nameof(mvcBuilder));
+        ArgumentGuard.NotNull(services);
+        ArgumentGuard.NotNull(mvcBuilder);
 
         AddCustomApiExplorer(services, mvcBuilder);
 

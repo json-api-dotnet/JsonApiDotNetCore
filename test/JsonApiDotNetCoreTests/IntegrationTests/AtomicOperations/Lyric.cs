@@ -17,7 +17,7 @@ public sealed class Lyric : Identifiable<long>
     [Attr(Capabilities = AttrCapabilities.None)]
     public DateTimeOffset CreatedAt { get; set; }
 
-    [HasOne]
+    [HasOne(Capabilities = HasOneCapabilities.All & ~HasOneCapabilities.AllowSet)]
     public TextLanguage? Language { get; set; }
 
     [HasOne]

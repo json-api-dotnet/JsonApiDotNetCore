@@ -16,8 +16,8 @@ public class MatchTextExpression : FilterExpression
 
     public MatchTextExpression(ResourceFieldChainExpression targetAttribute, LiteralConstantExpression textValue, TextMatchKind matchKind)
     {
-        ArgumentGuard.NotNull(targetAttribute, nameof(targetAttribute));
-        ArgumentGuard.NotNull(textValue, nameof(textValue));
+        ArgumentGuard.NotNull(targetAttribute);
+        ArgumentGuard.NotNull(textValue);
 
         TargetAttribute = targetAttribute;
         TextValue = textValue;

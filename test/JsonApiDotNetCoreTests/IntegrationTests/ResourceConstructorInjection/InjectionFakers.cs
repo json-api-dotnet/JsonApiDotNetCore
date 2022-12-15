@@ -20,7 +20,7 @@ internal sealed class InjectionFakers : FakerContainer
 
     public InjectionFakers(IServiceProvider serviceProvider)
     {
-        ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
+        ArgumentGuard.NotNull(serviceProvider);
 
         _serviceProvider = serviceProvider;
 

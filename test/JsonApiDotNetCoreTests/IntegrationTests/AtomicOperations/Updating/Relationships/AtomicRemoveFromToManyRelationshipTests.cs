@@ -1042,4 +1042,57 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
             trackInDatabase.Performers[0].Id.Should().Be(existingTrack.Performers[0].Id);
         });
     }
+
+    [Fact]
+    public async Task Cannot_remove_with_blocked_capability()
+    {
+        // Arrange
+        MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.MusicTracks.Add(existingTrack);
+            await dbContext.SaveChangesAsync();
+        });
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "remove",
+                    @ref = new
+                    {
+                        type = "musicTracks",
+                        id = existingTrack.StringId,
+                        relationship = "occursIn"
+                    },
+                    data = new
+                    {
+                        type = "playlists",
+                        id = Unknown.StringId.For<Playlist, long>()
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be removed from.");
+        error.Detail.Should().Be("The relationship 'occursIn' on resource type 'musicTracks' cannot be removed from.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/relationship");
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+    }
 }

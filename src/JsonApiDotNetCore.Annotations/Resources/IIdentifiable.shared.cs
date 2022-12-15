@@ -1,8 +1,11 @@
+using JetBrains.Annotations;
+
 namespace JsonApiDotNetCore.Resources;
 
 /// <summary>
 /// Defines the basic contract for a JSON:API resource. All resource classes must implement <see cref="IIdentifiable{TId}" />.
 /// </summary>
+[PublicAPI]
 public interface IIdentifiable
 {
     /// <summary>
@@ -22,6 +25,7 @@ public interface IIdentifiable
 /// <typeparam name="TId">
 /// The resource identifier type.
 /// </typeparam>
+[PublicAPI]
 public interface IIdentifiable<TId> : IIdentifiable
 {
     /// <summary>

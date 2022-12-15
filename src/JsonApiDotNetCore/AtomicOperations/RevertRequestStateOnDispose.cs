@@ -16,7 +16,7 @@ internal sealed class RevertRequestStateOnDispose : IDisposable
 
     public RevertRequestStateOnDispose(IJsonApiRequest request, ITargetedFields? targetedFields)
     {
-        ArgumentGuard.NotNull(request, nameof(request));
+        ArgumentGuard.NotNull(request);
 
         _sourceRequest = request;
         _backupRequest.CopyFrom(request);

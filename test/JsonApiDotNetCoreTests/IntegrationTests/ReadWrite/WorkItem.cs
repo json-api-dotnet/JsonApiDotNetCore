@@ -19,7 +19,7 @@ public sealed class WorkItem : Identifiable<int>
     public WorkItemPriority Priority { get; set; }
 
     [NotMapped]
-    [Attr(Capabilities = ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
+    [Attr(Capabilities = AttrCapabilities.All & ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
     public bool IsImportant
     {
         get => Priority == WorkItemPriority.High;
@@ -47,6 +47,6 @@ public sealed class WorkItem : Identifiable<int>
     [HasMany]
     public IList<WorkItem> RelatedTo { get; set; } = new List<WorkItem>();
 
-    [HasOne]
+    [HasOne(Capabilities = HasOneCapabilities.All & ~HasOneCapabilities.AllowSet)]
     public WorkItemGroup? Group { get; set; }
 }

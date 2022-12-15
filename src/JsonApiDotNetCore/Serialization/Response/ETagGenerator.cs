@@ -9,7 +9,7 @@ internal sealed class ETagGenerator : IETagGenerator
 
     public ETagGenerator(IFingerprintGenerator fingerprintGenerator)
     {
-        ArgumentGuard.NotNull(fingerprintGenerator, nameof(fingerprintGenerator));
+        ArgumentGuard.NotNull(fingerprintGenerator);
 
         _fingerprintGenerator = fingerprintGenerator;
     }

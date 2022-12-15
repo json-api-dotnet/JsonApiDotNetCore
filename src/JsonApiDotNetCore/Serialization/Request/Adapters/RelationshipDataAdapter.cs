@@ -14,7 +14,7 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
 
     public RelationshipDataAdapter(IResourceIdentifierObjectAdapter resourceIdentifierObjectAdapter)
     {
-        ArgumentGuard.NotNull(resourceIdentifierObjectAdapter, nameof(resourceIdentifierObjectAdapter));
+        ArgumentGuard.NotNull(resourceIdentifierObjectAdapter);
 
         _resourceIdentifierObjectAdapter = resourceIdentifierObjectAdapter;
     }
@@ -61,8 +61,8 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
     public object? Convert(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship, bool useToManyElementType,
         RequestAdapterState state)
     {
-        ArgumentGuard.NotNull(relationship, nameof(relationship));
-        ArgumentGuard.NotNull(state, nameof(state));
+        ArgumentGuard.NotNull(relationship);
+        ArgumentGuard.NotNull(state);
         AssertHasData(data, state);
 
         using IDisposable _ = state.Position.PushElement("data");
@@ -111,7 +111,7 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
         }
 
         var resourceSet = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
-        resourceSet.AddRange(rightResources);
+        resourceSet.UnionWith(rightResources);
         return resourceSet;
     }
 }

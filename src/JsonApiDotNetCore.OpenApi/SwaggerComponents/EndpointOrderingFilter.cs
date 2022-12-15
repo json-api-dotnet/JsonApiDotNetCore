@@ -13,8 +13,8 @@ internal sealed class EndpointOrderingFilter : IDocumentFilter
 
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
-        ArgumentGuard.NotNull(swaggerDoc, nameof(swaggerDoc));
-        ArgumentGuard.NotNull(context, nameof(context));
+        ArgumentGuard.NotNull(swaggerDoc);
+        ArgumentGuard.NotNull(context);
 
         List<KeyValuePair<string, OpenApiPathItem>> orderedEndpoints = swaggerDoc.Paths.OrderBy(GetPrimaryResourcePublicName)
             .ThenBy(GetRelationshipName).ThenBy(IsSecondaryEndpoint).ToList();

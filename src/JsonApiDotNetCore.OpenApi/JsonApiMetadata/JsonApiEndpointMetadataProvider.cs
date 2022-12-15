@@ -18,14 +18,14 @@ internal sealed class JsonApiEndpointMetadataProvider
 
     public JsonApiEndpointMetadataProvider(IControllerResourceMapping controllerResourceMapping)
     {
-        ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
+        ArgumentGuard.NotNull(controllerResourceMapping);
 
         _controllerResourceMapping = controllerResourceMapping;
     }
 
     public JsonApiEndpointMetadataContainer Get(MethodInfo controllerAction)
     {
-        ArgumentGuard.NotNull(controllerAction, nameof(controllerAction));
+        ArgumentGuard.NotNull(controllerAction);
 
         JsonApiEndpoint? endpoint = _endpointResolver.Get(controllerAction);
 

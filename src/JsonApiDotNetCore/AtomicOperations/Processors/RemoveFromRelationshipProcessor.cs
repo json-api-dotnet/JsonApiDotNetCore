@@ -13,7 +13,7 @@ public class RemoveFromRelationshipProcessor<TResource, TId> : IRemoveFromRelati
 
     public RemoveFromRelationshipProcessor(IRemoveFromRelationshipService<TResource, TId> service)
     {
-        ArgumentGuard.NotNull(service, nameof(service));
+        ArgumentGuard.NotNull(service);
 
         _service = service;
     }
@@ -21,7 +21,7 @@ public class RemoveFromRelationshipProcessor<TResource, TId> : IRemoveFromRelati
     /// <inheritdoc />
     public virtual async Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(operation, nameof(operation));
+        ArgumentGuard.NotNull(operation);
 
         var leftId = (TId)operation.Resource.GetTypedId();
         ISet<IIdentifiable> rightResourceIds = operation.GetSecondaryResources();

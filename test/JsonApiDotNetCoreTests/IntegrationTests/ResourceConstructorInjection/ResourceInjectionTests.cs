@@ -72,7 +72,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             await dbContext.ClearTableAsync<PostOffice>();
-            dbContext.PostOffice.AddRange(postOffices);
+            dbContext.PostOffices.AddRange(postOffices);
             await dbContext.SaveChangesAsync();
         });
 
@@ -133,7 +133,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.PostOffice.Add(existingOffice);
+            dbContext.PostOffices.Add(existingOffice);
             await dbContext.SaveChangesAsync();
         });
 
@@ -216,7 +216,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.PostOffice.Add(existingOffice);
+            dbContext.PostOffices.Add(existingOffice);
             await dbContext.SaveChangesAsync();
         });
 
@@ -259,7 +259,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            PostOffice officeInDatabase = await dbContext.PostOffice.Include(postOffice => postOffice.GiftCertificates).FirstWithIdAsync(existingOffice.Id);
+            PostOffice officeInDatabase = await dbContext.PostOffices.Include(postOffice => postOffice.GiftCertificates).FirstWithIdAsync(existingOffice.Id);
 
             officeInDatabase.Address.Should().Be(newAddress);
 
@@ -276,7 +276,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.PostOffice.Add(existingOffice);
+            dbContext.PostOffices.Add(existingOffice);
             await dbContext.SaveChangesAsync();
         });
 
@@ -292,7 +292,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            PostOffice? officeInDatabase = await dbContext.PostOffice.FirstWithIdOrDefaultAsync(existingOffice.Id);
+            PostOffice? officeInDatabase = await dbContext.PostOffices.FirstWithIdOrDefaultAsync(existingOffice.Id);
 
             officeInDatabase.Should().BeNull();
         });
@@ -359,7 +359,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            PostOffice officeInDatabase = await dbContext.PostOffice.Include(postOffice => postOffice.GiftCertificates).FirstWithIdAsync(existingOffice.Id);
+            PostOffice officeInDatabase = await dbContext.PostOffices.Include(postOffice => postOffice.GiftCertificates).FirstWithIdAsync(existingOffice.Id);
 
             officeInDatabase.GiftCertificates.ShouldHaveCount(2);
         });

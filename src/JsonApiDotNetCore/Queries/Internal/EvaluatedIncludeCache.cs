@@ -10,7 +10,7 @@ internal sealed class EvaluatedIncludeCache : IEvaluatedIncludeCache
     /// <inheritdoc />
     public void Set(IncludeExpression include)
     {
-        ArgumentGuard.NotNull(include, nameof(include));
+        ArgumentGuard.NotNull(include);
 
         _include = include;
     }

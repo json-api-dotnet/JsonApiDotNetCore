@@ -15,7 +15,7 @@ public class SetRelationshipProcessor<TResource, TId> : ISetRelationshipProcesso
 
     public SetRelationshipProcessor(ISetRelationshipService<TResource, TId> service)
     {
-        ArgumentGuard.NotNull(service, nameof(service));
+        ArgumentGuard.NotNull(service);
 
         _service = service;
     }
@@ -23,7 +23,7 @@ public class SetRelationshipProcessor<TResource, TId> : ISetRelationshipProcesso
     /// <inheritdoc />
     public virtual async Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
     {
-        ArgumentGuard.NotNull(operation, nameof(operation));
+        ArgumentGuard.NotNull(operation);
 
         var leftId = (TId)operation.Resource.GetTypedId();
         object? rightValue = GetRelationshipRightValue(operation);

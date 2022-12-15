@@ -14,8 +14,12 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
 {
     private protected static readonly CollectionConverter CollectionConverter = new();
 
-    // These are definitely assigned after building the resource graph, which is why their public equivalents are declared as non-nullable.
+    // This field is definitely assigned after building the resource graph, which is why its public equivalent is declared as non-nullable.
     private ResourceType? _rightType;
+
+    private bool? _canInclude;
+
+    internal bool HasExplicitCanInclude => _canInclude != null;
 
     /// <summary>
     /// The <see cref="PropertyInfo" /> of the Entity Framework Core inverse navigation, which may or may not exist. Even if it exists, it may not be exposed
@@ -57,7 +61,7 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
         get => _rightType!;
         internal set
         {
-            ArgumentGuard.NotNull(value, nameof(value));
+            ArgumentGuard.NotNull(value);
             _rightType = value;
         }
     }
@@ -69,13 +73,18 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
     public LinkTypes Links { get; set; } = LinkTypes.NotConfigured;
 
     /// <summary>
-    /// Whether or not this relationship can be included using the
-    /// <c>
-    /// ?include=publicName
-    /// </c>
-    /// query string parameter. This is <c>true</c> by default.
+    /// Whether or not this relationship can be included using the <c>include</c> query string parameter. This is <c>true</c> by default.
     /// </summary>
-    public bool CanInclude { get; set; } = true;
+    /// <remarks>
+    /// When explicitly set, this value takes precedence over Capabilities for backwards-compatibility. Capabilities are adjusted accordingly when building
+    /// the resource graph.
+    /// </remarks>
+    [Obsolete("Use AllowInclude in Capabilities instead.")]
+    public bool CanInclude
+    {
+        get => _canInclude ?? true;
+        set => _canInclude = value;
+    }
 
     public override bool Equals(object? obj)
     {
@@ -91,11 +100,11 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
 
         var other = (RelationshipAttribute)obj;
 
-        return _rightType?.ClrType == other._rightType?.ClrType && Links == other.Links && CanInclude == other.CanInclude && base.Equals(other);
+        return _rightType?.ClrType == other._rightType?.ClrType && Links == other.Links && base.Equals(other);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_rightType?.ClrType, Links, CanInclude, base.GetHashCode());
+        return HashCode.Combine(_rightType?.ClrType, Links, base.GetHashCode());
     }
 }

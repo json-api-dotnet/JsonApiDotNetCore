@@ -14,7 +14,7 @@ public class PaginationExpression : QueryExpression
 
     public PaginationExpression(PageNumber pageNumber, PageSize? pageSize)
     {
-        ArgumentGuard.NotNull(pageNumber, nameof(pageNumber));
+        ArgumentGuard.NotNull(pageNumber);
 
         PageNumber = pageNumber;
         PageSize = pageSize;

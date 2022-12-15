@@ -6,7 +6,7 @@ internal sealed class PrimaryRequestMetadata : IJsonApiRequestMetadata
 
     public PrimaryRequestMetadata(Type documentType)
     {
-        ArgumentGuard.NotNull(documentType, nameof(documentType));
+        ArgumentGuard.NotNull(documentType);
 
         DocumentType = documentType;
     }

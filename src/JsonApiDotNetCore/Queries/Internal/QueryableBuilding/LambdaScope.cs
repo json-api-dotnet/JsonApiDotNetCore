@@ -23,8 +23,8 @@ public sealed class LambdaScope : IDisposable
 
     public static LambdaScope Create(LambdaParameterNameFactory nameFactory, Type elementType, Expression? accessorExpression)
     {
-        ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
-        ArgumentGuard.NotNull(elementType, nameof(elementType));
+        ArgumentGuard.NotNull(nameFactory);
+        ArgumentGuard.NotNull(elementType);
 
         LambdaParameterNameScope parameterNameScope = nameFactory.Create(elementType.Name);
         ParameterExpression parameter = Expression.Parameter(elementType, parameterNameScope.Name);
@@ -35,7 +35,7 @@ public sealed class LambdaScope : IDisposable
 
     public LambdaScope WithAccessor(Expression accessorExpression)
     {
-        ArgumentGuard.NotNull(accessorExpression, nameof(accessorExpression));
+        ArgumentGuard.NotNull(accessorExpression);
 
         return new LambdaScope(_parameterNameScope, Parameter, accessorExpression);
     }

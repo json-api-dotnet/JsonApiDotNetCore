@@ -15,7 +15,7 @@ public class SortElementExpression : QueryExpression
 
     public SortElementExpression(ResourceFieldChainExpression targetAttribute, bool isAscending)
     {
-        ArgumentGuard.NotNull(targetAttribute, nameof(targetAttribute));
+        ArgumentGuard.NotNull(targetAttribute);
 
         TargetAttribute = targetAttribute;
         IsAscending = isAscending;
@@ -23,7 +23,7 @@ public class SortElementExpression : QueryExpression
 
     public SortElementExpression(CountExpression count, bool isAscending)
     {
-        ArgumentGuard.NotNull(count, nameof(count));
+        ArgumentGuard.NotNull(count);
 
         Count = count;
         IsAscending = isAscending;

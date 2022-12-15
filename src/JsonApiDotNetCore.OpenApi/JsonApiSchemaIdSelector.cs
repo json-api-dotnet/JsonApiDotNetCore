@@ -43,7 +43,7 @@ internal sealed class JsonApiSchemaIdSelector
 
     public JsonApiSchemaIdSelector(JsonNamingPolicy? namingPolicy, IResourceGraph resourceGraph)
     {
-        ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+        ArgumentGuard.NotNull(resourceGraph);
 
         _namingPolicy = namingPolicy;
         _resourceGraph = resourceGraph;
@@ -51,7 +51,7 @@ internal sealed class JsonApiSchemaIdSelector
 
     public string GetSchemaId(Type type)
     {
-        ArgumentGuard.NotNull(type, nameof(type));
+        ArgumentGuard.NotNull(type);
 
         ResourceType? resourceType = _resourceGraph.FindResourceType(type);
 

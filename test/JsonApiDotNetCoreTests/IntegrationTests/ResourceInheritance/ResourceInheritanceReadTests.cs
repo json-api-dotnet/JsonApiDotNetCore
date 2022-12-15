@@ -2429,7 +2429,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Vehicle>();
+            await dbContext.ClearTableAsync<Wheel>();
             dbContext.Wheels.AddRange(chromeWheel1, chromeWheel2, chromeWheel3, carbonWheel1, carbonWheel2);
             await dbContext.SaveChangesAsync();
         });
@@ -2487,7 +2487,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            await dbContext.ClearTableAsync<Vehicle>();
+            await dbContext.ClearTableAsync<Wheel>();
             dbContext.Wheels.AddRange(chromeWheel1, chromeWheel2, chromeWheel3, carbonWheel1, carbonWheel2);
             await dbContext.SaveChangesAsync();
         });

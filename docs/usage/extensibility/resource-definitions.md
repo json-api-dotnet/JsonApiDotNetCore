@@ -34,10 +34,10 @@ from Entity Framework Core `IQueryable` execution.
 
 ### Excluding fields
 
-There are some cases where you want attributes (or relationships) conditionally excluded from your resource response.
+There are some cases where you want attributes or relationships conditionally excluded from your resource response.
 For example, you may accept some sensitive data that should only be exposed to administrators after creation.
 
-**Note:** to exclude attributes unconditionally, use `[Attr(Capabilities = ~AttrCapabilities.AllowView)]` on a resource class property.
+**Note:** to exclude fields unconditionally, [attribute capabilities](~/usage/resources/attributes.md#capabilities) and [relationship capabilities](~/usage/resources/relationships.md#capabilities) can be used instead.
 
 ```c#
 public class UserDefinition : JsonApiResourceDefinition<User, int>

@@ -21,8 +21,8 @@ public class IncludeElementExpression : QueryExpression
 
     public IncludeElementExpression(RelationshipAttribute relationship, IImmutableSet<IncludeElementExpression> children)
     {
-        ArgumentGuard.NotNull(relationship, nameof(relationship));
-        ArgumentGuard.NotNull(children, nameof(children));
+        ArgumentGuard.NotNull(relationship);
+        ArgumentGuard.NotNull(children);
 
         Relationship = relationship;
         Children = children;

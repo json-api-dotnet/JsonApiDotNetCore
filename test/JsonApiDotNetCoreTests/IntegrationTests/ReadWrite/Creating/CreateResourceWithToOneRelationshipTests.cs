@@ -762,4 +762,46 @@ public sealed class CreateResourceWithToOneRelationshipTests : IClassFixture<Int
         error.Source.Pointer.Should().Be("/data/lid");
         error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
     }
+
+    [Fact]
+    public async Task Cannot_assign_relationship_with_blocked_capability()
+    {
+        // Arrange
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "workItems",
+                relationships = new
+                {
+                    group = new
+                    {
+                        data = new
+                        {
+                            type = "workItemGroups",
+                            id = Unknown.StringId.For<WorkItemGroup, Guid>()
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/workItems";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: Relationship cannot be assigned.");
+        error.Detail.Should().Be("The relationship 'group' on resource type 'workItems' cannot be assigned to.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/data/relationships/group");
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
+    }
 }

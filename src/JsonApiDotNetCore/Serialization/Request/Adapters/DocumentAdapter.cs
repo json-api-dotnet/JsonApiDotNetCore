@@ -16,10 +16,10 @@ public sealed class DocumentAdapter : IDocumentAdapter
         IDocumentInResourceOrRelationshipRequestAdapter documentInResourceOrRelationshipRequestAdapter,
         IDocumentInOperationsRequestAdapter documentInOperationsRequestAdapter)
     {
-        ArgumentGuard.NotNull(request, nameof(request));
-        ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
-        ArgumentGuard.NotNull(documentInResourceOrRelationshipRequestAdapter, nameof(documentInResourceOrRelationshipRequestAdapter));
-        ArgumentGuard.NotNull(documentInOperationsRequestAdapter, nameof(documentInOperationsRequestAdapter));
+        ArgumentGuard.NotNull(request);
+        ArgumentGuard.NotNull(targetedFields);
+        ArgumentGuard.NotNull(documentInResourceOrRelationshipRequestAdapter);
+        ArgumentGuard.NotNull(documentInOperationsRequestAdapter);
 
         _request = request;
         _targetedFields = targetedFields;
@@ -30,7 +30,7 @@ public sealed class DocumentAdapter : IDocumentAdapter
     /// <inheritdoc />
     public object? Convert(Document document)
     {
-        ArgumentGuard.NotNull(document, nameof(document));
+        ArgumentGuard.NotNull(document);
 
         using var adapterState = new RequestAdapterState(_request, _targetedFields);
 

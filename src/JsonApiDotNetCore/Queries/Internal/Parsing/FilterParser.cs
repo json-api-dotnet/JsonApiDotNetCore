@@ -18,7 +18,7 @@ public class FilterParser : QueryExpressionParser
 
     public FilterParser(IResourceFactory resourceFactory, Action<ResourceFieldAttribute, ResourceType, string>? validateSingleFieldCallback = null)
     {
-        ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+        ArgumentGuard.NotNull(resourceFactory);
 
         _resourceFactory = resourceFactory;
         _validateSingleFieldCallback = validateSingleFieldCallback;
@@ -26,7 +26,7 @@ public class FilterParser : QueryExpressionParser
 
     public FilterExpression Parse(string source, ResourceType resourceTypeInScope)
     {
-        ArgumentGuard.NotNull(resourceTypeInScope, nameof(resourceTypeInScope));
+        ArgumentGuard.NotNull(resourceTypeInScope);
 
         return InScopeOfResourceType(resourceTypeInScope, () =>
         {
