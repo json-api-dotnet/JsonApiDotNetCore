@@ -12,8 +12,6 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class ResourceFieldObjectSchemaBuilder
 {
-    private static readonly NullabilityInfoContext NullabilityInfoContext = new();
-
     private static readonly Type[] RelationshipSchemaInResponseOpenTypes =
     {
         typeof(ToOneRelationshipInResponse<>),
@@ -121,7 +119,8 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
         bool hasRequiredAttribute = field.Property.HasAttribute<RequiredAttribute>();
 
-        NullabilityInfo nullabilityInfo = NullabilityInfoContext.Create(field.Property);
+        NullabilityInfoContext nullabilityContext = new();
+        NullabilityInfo nullabilityInfo = nullabilityContext.Create(field.Property);
 
         return field.Property.PropertyType.IsValueType switch
         {
