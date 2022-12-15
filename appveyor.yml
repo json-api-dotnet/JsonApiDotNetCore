@@ -14,6 +14,7 @@ environment:
 
 branches:
   only:
+  - merge-openapi-into-1185
   - master
   - openapi
   - develop
