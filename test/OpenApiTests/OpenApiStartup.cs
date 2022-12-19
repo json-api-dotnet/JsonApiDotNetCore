@@ -26,4 +26,3 @@ public class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
         app.UseEndpoints(endpoints => endpoints.MapControllers());
     }
 }
-

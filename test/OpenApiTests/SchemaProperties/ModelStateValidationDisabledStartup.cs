@@ -15,4 +15,3 @@ public sealed class ModelStateValidationDisabledStartup<TDbContext> : OpenApiSta
         options.ValidateModelState = false;
     }
 }
-
