@@ -25,9 +25,9 @@ public sealed class ModelStateValidationEnabledTests
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.cowAttributesInPostRequest.required").With(requiredElement =>
+        document.ShouldContainPath("components.schemas.cowAttributesInPostRequest.required").With(propertySet =>
         {
-            var requiredAttributes = JsonSerializer.Deserialize<List<string>>(requiredElement.GetRawText());
+            var requiredAttributes = JsonSerializer.Deserialize<List<string>>(propertySet.GetRawText());
             requiredAttributes.ShouldHaveCount(5);
 
             requiredAttributes.Should().Contain("name");

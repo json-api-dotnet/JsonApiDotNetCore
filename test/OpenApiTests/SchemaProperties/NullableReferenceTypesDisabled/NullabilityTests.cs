@@ -25,36 +25,36 @@ public sealed class NullabilityTests
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.chickenAttributesInResponse.properties").With(propertiesElement =>
+        document.ShouldContainPath("components.schemas.chickenAttributesInResponse.properties").With(schemaProperties =>
         {
-            propertiesElement.ShouldContainPath("name").With(propertyElement =>
+            schemaProperties.ShouldContainPath("name").With(schemaProperty =>
             {
-                propertyElement.ShouldContainPath("nullable").With(element => element.ValueKind.Should().Be(JsonValueKind.True));
+                schemaProperty.ShouldContainPath("nullable").With(nullableProperty => nullableProperty.ValueKind.Should().Be(JsonValueKind.True));
             });
 
-            propertiesElement.ShouldContainPath("nameOfCurrentFarm").With(propertyElement =>
+            schemaProperties.ShouldContainPath("nameOfCurrentFarm").With(schemaProperty =>
             {
-                propertyElement.ShouldNotContainPath("nullable");
+                schemaProperty.ShouldNotContainPath("nullable");
             });
 
-            propertiesElement.ShouldContainPath("age").With(propertyElement =>
+            schemaProperties.ShouldContainPath("age").With(schemaProperty =>
             {
-                propertyElement.ShouldNotContainPath("nullable");
+                schemaProperty.ShouldNotContainPath("nullable");
             });
 
-            propertiesElement.ShouldContainPath("weight").With(propertyElement =>
+            schemaProperties.ShouldContainPath("weight").With(schemaProperty =>
             {
-                propertyElement.ShouldNotContainPath("nullable");
+                schemaProperty.ShouldNotContainPath("nullable");
             });
 
-            propertiesElement.ShouldContainPath("timeAtCurrentFarmInDays").With(propertyElement =>
+            schemaProperties.ShouldContainPath("timeAtCurrentFarmInDays").With(schemaProperty =>
             {
-                propertyElement.ShouldContainPath("nullable").With(element => element.ValueKind.Should().Be(JsonValueKind.True));
+                schemaProperty.ShouldContainPath("nullable").With(nullableProperty => nullableProperty.ValueKind.Should().Be(JsonValueKind.True));
             });
 
-            propertiesElement.ShouldContainPath("hasProducedEggs").With(propertyElement =>
+            schemaProperties.ShouldContainPath("hasProducedEggs").With(schemaProperty =>
             {
-                propertyElement.ShouldNotContainPath("nullable");
+                schemaProperty.ShouldNotContainPath("nullable");
             });
         });
     }

@@ -20,15 +20,15 @@ public sealed class ModelStateValidationDisabledTests
     }
 
     [Fact]
-    public async Task Produces_expected_required_property_in_schema_for_resource()
+    public async Task Produces_expected_required_property_set_in_schema_for_resource()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.cowAttributesInPostRequest.required").With(requiredElement =>
+        document.ShouldContainPath("components.schemas.cowAttributesInPostRequest.required").With(propertySet =>
         {
-            var requiredAttributes = JsonSerializer.Deserialize<List<string>>(requiredElement.GetRawText());
+            var requiredAttributes = JsonSerializer.Deserialize<List<string>>(propertySet.GetRawText());
             requiredAttributes.ShouldHaveCount(4);
 
             requiredAttributes.Should().Contain("nameOfCurrentFarm");
