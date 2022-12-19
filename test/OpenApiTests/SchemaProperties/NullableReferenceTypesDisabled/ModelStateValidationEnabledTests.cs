@@ -6,12 +6,12 @@ using Xunit;
 namespace OpenApiTests.SchemaProperties.NullableReferenceTypesDisabled;
 
 public sealed class ModelStateValidationEnabledTests
-    : IClassFixture<OpenApiTestContext<SchemaPropertiesStartup<NullableReferenceTypesDisabledDbContext>, NullableReferenceTypesDisabledDbContext>>
+    : IClassFixture<OpenApiTestContext<OpenApiStartup<NullableReferenceTypesDisabledDbContext>, NullableReferenceTypesDisabledDbContext>>
 {
-    private readonly OpenApiTestContext<SchemaPropertiesStartup<NullableReferenceTypesDisabledDbContext>, NullableReferenceTypesDisabledDbContext> _testContext;
+    private readonly OpenApiTestContext<OpenApiStartup<NullableReferenceTypesDisabledDbContext>, NullableReferenceTypesDisabledDbContext> _testContext;
 
     public ModelStateValidationEnabledTests(
-        OpenApiTestContext<SchemaPropertiesStartup<NullableReferenceTypesDisabledDbContext>, NullableReferenceTypesDisabledDbContext> testContext)
+        OpenApiTestContext<OpenApiStartup<NullableReferenceTypesDisabledDbContext>, NullableReferenceTypesDisabledDbContext> testContext)
     {
         _testContext = testContext;
 
@@ -19,7 +19,7 @@ public sealed class ModelStateValidationEnabledTests
     }
 
     [Fact]
-    public async Task Resource_when_ModelStateValidation_is_enabled_produces_expected_required_property_in_schema()
+    public async Task Produces_expected_required_property_in_schema_for_resource()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -28,13 +28,12 @@ public sealed class ModelStateValidationEnabledTests
         document.ShouldContainPath("components.schemas.chickenAttributesInPostRequest.required").With(requiredElement =>
         {
             var requiredAttributes = JsonSerializer.Deserialize<List<string>>(requiredElement.GetRawText());
-            requiredAttributes.ShouldNotBeNull();
+            requiredAttributes.ShouldHaveCount(3);
 
             requiredAttributes.Should().Contain("nameOfCurrentFarm");
             requiredAttributes.Should().Contain("weight");
             requiredAttributes.Should().Contain("hasProducedEggs");
-
-            requiredAttributes.ShouldHaveCount(3);
         });
     }
 }
+

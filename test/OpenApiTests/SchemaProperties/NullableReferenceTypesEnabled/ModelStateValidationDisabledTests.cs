@@ -20,7 +20,7 @@ public sealed class ModelStateValidationDisabledTests
     }
 
     [Fact]
-    public async Task Resource_when_ModelStateValidation_is_disabled_produces_expected_required_property_in_schema()
+    public async Task Produces_expected_required_property_in_schema_for_resource()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -29,14 +29,13 @@ public sealed class ModelStateValidationDisabledTests
         document.ShouldContainPath("components.schemas.cowAttributesInPostRequest.required").With(requiredElement =>
         {
             var requiredAttributes = JsonSerializer.Deserialize<List<string>>(requiredElement.GetRawText());
-            requiredAttributes.ShouldNotBeNull();
+            requiredAttributes.ShouldHaveCount(4);
 
             requiredAttributes.Should().Contain("nameOfCurrentFarm");
             requiredAttributes.Should().Contain("nickname");
             requiredAttributes.Should().Contain("weight");
             requiredAttributes.Should().Contain("hasProducedMilk");
-
-            requiredAttributes.ShouldHaveCount(4);
         });
     }
 }
+

@@ -6,12 +6,11 @@ using Xunit;
 namespace OpenApiTests.SchemaProperties.NullableReferenceTypesEnabled;
 
 public sealed class NullabilityTests
-    : IClassFixture<OpenApiTestContext<SchemaPropertiesStartup<NullableReferenceTypesEnabledDbContext>, NullableReferenceTypesEnabledDbContext>>
+    : IClassFixture<OpenApiTestContext<OpenApiStartup<NullableReferenceTypesEnabledDbContext>, NullableReferenceTypesEnabledDbContext>>
 {
-    private readonly OpenApiTestContext<SchemaPropertiesStartup<NullableReferenceTypesEnabledDbContext>, NullableReferenceTypesEnabledDbContext> _testContext;
+    private readonly OpenApiTestContext<OpenApiStartup<NullableReferenceTypesEnabledDbContext>, NullableReferenceTypesEnabledDbContext> _testContext;
 
-    public NullabilityTests(
-        OpenApiTestContext<SchemaPropertiesStartup<NullableReferenceTypesEnabledDbContext>, NullableReferenceTypesEnabledDbContext> testContext)
+    public NullabilityTests(OpenApiTestContext<OpenApiStartup<NullableReferenceTypesEnabledDbContext>, NullableReferenceTypesEnabledDbContext> testContext)
     {
         _testContext = testContext;
 
@@ -20,7 +19,7 @@ public sealed class NullabilityTests
     }
 
     [Fact]
-    public async Task Resource_produces_expected_nullable_properties_in_schema()
+    public async Task Produces_expected_nullable_properties_in_schema_for_resource()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -40,7 +39,7 @@ public sealed class NullabilityTests
 
             propertiesElement.ShouldContainPath("nameOfPreviousFarm").With(propertyElement =>
             {
-                propertyElement.ShouldContainPath("nullable").With(nullableProperty => nullableProperty.ValueKind.Should().Be(JsonValueKind.True));
+                propertyElement.ShouldContainPath("nullable").With(element => element.ValueKind.Should().Be(JsonValueKind.True));
             });
 
             propertiesElement.ShouldContainPath("nickname").With(propertyElement =>
@@ -60,7 +59,7 @@ public sealed class NullabilityTests
 
             propertiesElement.ShouldContainPath("timeAtCurrentFarmInDays").With(propertyElement =>
             {
-                propertyElement.ShouldContainPath("nullable").With(nullableProperty => nullableProperty.ValueKind.Should().Be(JsonValueKind.True));
+                propertyElement.ShouldContainPath("nullable").With(element => element.ValueKind.Should().Be(JsonValueKind.True));
             });
 
             propertiesElement.ShouldContainPath("hasProducedMilk").With(propertyElement =>
@@ -70,3 +69,4 @@ public sealed class NullabilityTests
         });
     }
 }
+

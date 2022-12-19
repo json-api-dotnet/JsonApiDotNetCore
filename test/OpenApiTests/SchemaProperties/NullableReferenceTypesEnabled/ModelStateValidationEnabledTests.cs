@@ -6,12 +6,12 @@ using Xunit;
 namespace OpenApiTests.SchemaProperties.NullableReferenceTypesEnabled;
 
 public sealed class ModelStateValidationEnabledTests
-    : IClassFixture<OpenApiTestContext<SchemaPropertiesStartup<NullableReferenceTypesEnabledDbContext>, NullableReferenceTypesEnabledDbContext>>
+    : IClassFixture<OpenApiTestContext<OpenApiStartup<NullableReferenceTypesEnabledDbContext>, NullableReferenceTypesEnabledDbContext>>
 {
-    private readonly OpenApiTestContext<SchemaPropertiesStartup<NullableReferenceTypesEnabledDbContext>, NullableReferenceTypesEnabledDbContext> _testContext;
+    private readonly OpenApiTestContext<OpenApiStartup<NullableReferenceTypesEnabledDbContext>, NullableReferenceTypesEnabledDbContext> _testContext;
 
     public ModelStateValidationEnabledTests(
-        OpenApiTestContext<SchemaPropertiesStartup<NullableReferenceTypesEnabledDbContext>, NullableReferenceTypesEnabledDbContext> testContext)
+        OpenApiTestContext<OpenApiStartup<NullableReferenceTypesEnabledDbContext>, NullableReferenceTypesEnabledDbContext> testContext)
     {
         _testContext = testContext;
 
@@ -19,7 +19,7 @@ public sealed class ModelStateValidationEnabledTests
     }
 
     [Fact]
-    public async Task Resource_when_ModelStateValidation_is_enabled_produces_expected_required_property_in_schema()
+    public async Task Produces_expected_required_property_in_schema_for_resource()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -28,15 +28,14 @@ public sealed class ModelStateValidationEnabledTests
         document.ShouldContainPath("components.schemas.cowAttributesInPostRequest.required").With(requiredElement =>
         {
             var requiredAttributes = JsonSerializer.Deserialize<List<string>>(requiredElement.GetRawText());
-            requiredAttributes.ShouldNotBeNull();
+            requiredAttributes.ShouldHaveCount(5);
 
             requiredAttributes.Should().Contain("name");
             requiredAttributes.Should().Contain("nameOfCurrentFarm");
             requiredAttributes.Should().Contain("nickname");
             requiredAttributes.Should().Contain("weight");
             requiredAttributes.Should().Contain("hasProducedMilk");
-
-            requiredAttributes.ShouldHaveCount(5);
         });
     }
 }
+

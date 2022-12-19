@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using TestBuildingBlocks;
@@ -13,7 +12,7 @@ public sealed class ModelStateValidationDisabledStartup<TDbContext> : OpenApiSta
     {
         base.SetJsonApiOptions(options);
 
-        options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
         options.ValidateModelState = false;
     }
 }
+

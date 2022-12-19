@@ -203,8 +203,6 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
         OpenApiSchema fullSchema = _schemaRepositoryAccessor.Current.Schemas[referenceSchema.Reference.Id];
 
-        Console.WriteLine(relationshipSchemaType.FullName);
-
         if (IsDataPropertyNullableInRelationshipSchemaType(relationshipSchemaType))
         {
             fullSchema.Properties[JsonApiObjectPropertyName.Data] =
