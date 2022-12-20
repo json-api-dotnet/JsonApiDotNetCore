@@ -7,21 +7,19 @@ namespace OpenApiClientTests.SchemaProperties.NullableReferenceTypesEnabled;
 
 public sealed class NullabilityTests
 {
-    [Fact]
-    public void Nullability_of_generated_types_is_as_expected()
+    [Theory]
+    [InlineData(nameof(CowAttributesInResponse.Name), NullabilityState.NotNull)]
+    [InlineData(nameof(CowAttributesInResponse.NameOfCurrentFarm), NullabilityState.NotNull)]
+    [InlineData(nameof(CowAttributesInResponse.NameOfPreviousFarm), NullabilityState.Nullable)]
+    [InlineData(nameof(CowAttributesInResponse.Nickname), NullabilityState.NotNull)]
+    [InlineData(nameof(CowAttributesInResponse.Age), NullabilityState.NotNull)]
+    [InlineData(nameof(CowAttributesInResponse.Weight), NullabilityState.NotNull)]
+    [InlineData(nameof(CowAttributesInResponse.TimeAtCurrentFarmInDays), NullabilityState.Nullable)]
+    [InlineData(nameof(CowAttributesInResponse.HasProducedMilk), NullabilityState.NotNull)]
+    public void Nullability_of_generated_property_is_as_expected(string propertyName, NullabilityState expectedState)
     {
-        PropertyInfo[] propertyInfos = typeof(CowAttributesInResponse).GetProperties();
-
-        PropertyInfo? propertyInfo = propertyInfos.FirstOrDefault(property => property.Name == nameof(CowAttributesInResponse.Name));
-        propertyInfo.Should().BeNonNullable();
-
-        propertyInfo = propertyInfos.FirstOrDefault(property => property.Name == nameof(CowAttributesInResponse.NameOfPreviousFarm));
-        propertyInfo.Should().BeNullable();
-
-        propertyInfo = propertyInfos.FirstOrDefault(property => property.Name == nameof(CowAttributesInResponse.Age));
-        propertyInfo.Should().BeNonNullable();
-
-        propertyInfo = propertyInfos.FirstOrDefault(property => property.Name == nameof(CowAttributesInResponse.TimeAtCurrentFarmInDays));
-        propertyInfo.Should().BeNullable();
+        PropertyInfo[] properties = typeof(CowAttributesInResponse).GetProperties();
+        PropertyInfo property = properties.Single(property => property.Name == propertyName);
+        property.Should().HaveNullabilityState(expectedState);
     }
 }

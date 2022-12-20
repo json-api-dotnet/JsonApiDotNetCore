@@ -18,8 +18,10 @@ public sealed class NullabilityTests
         testContext.SwaggerDocumentOutputPath = "test/OpenApiClientTests/SchemaProperties/NullableReferenceTypesEnabled";
     }
 
-    [Fact]
-    public async Task Produces_expected_nullable_properties_in_schema_for_resource()
+    [Theory]
+    [InlineData("nameOfPreviousFarm")]
+    [InlineData("timeAtCurrentFarmInDays")]
+    public async Task Property_in_schema_for_resource_should_be_nullable(string propertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -27,42 +29,29 @@ public sealed class NullabilityTests
         // Assert
         document.ShouldContainPath("components.schemas.cowAttributesInResponse.properties").With(schemaProperties =>
         {
-            schemaProperties.ShouldContainPath("name").With(schemaProperty =>
+            schemaProperties.ShouldContainPath(propertyName).With(schemaProperty =>
             {
-                schemaProperty.ShouldNotContainPath("nullable");
+                schemaProperty.ShouldContainPath("nullable").With(nullableProperty => nullableProperty.ValueKind.Should().Be(JsonValueKind.True));
             });
+        });
+    }
 
-            schemaProperties.ShouldContainPath("nameOfCurrentFarm").With(schemaProperty =>
-            {
-                schemaProperty.ShouldNotContainPath("nullable");
-            });
+    [Theory]
+    [InlineData("name")]
+    [InlineData("nameOfCurrentFarm")]
+    [InlineData("nickname")]
+    [InlineData("age")]
+    [InlineData("weight")]
+    [InlineData("hasProducedMilk")]
+    public async Task Property_in_schema_for_resource_should_not_be_nullable(string attributeName)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
-            schemaProperties.ShouldContainPath("nameOfPreviousFarm").With(schemaProperty =>
-            {
-                schemaProperty.ShouldContainPath("nullable").With(element => element.ValueKind.Should().Be(JsonValueKind.True));
-            });
-
-            schemaProperties.ShouldContainPath("nickname").With(schemaProperty =>
-            {
-                schemaProperty.ShouldNotContainPath("nullable");
-            });
-
-            schemaProperties.ShouldContainPath("age").With(schemaProperty =>
-            {
-                schemaProperty.ShouldNotContainPath("nullable");
-            });
-
-            schemaProperties.ShouldContainPath("weight").With(schemaProperty =>
-            {
-                schemaProperty.ShouldNotContainPath("nullable");
-            });
-
-            schemaProperties.ShouldContainPath("timeAtCurrentFarmInDays").With(schemaProperty =>
-            {
-                schemaProperty.ShouldContainPath("nullable").With(element => element.ValueKind.Should().Be(JsonValueKind.True));
-            });
-
-            schemaProperties.ShouldContainPath("hasProducedMilk").With(schemaProperty =>
+        // Assert
+        document.ShouldContainPath("components.schemas.cowAttributesInResponse.properties").With(schemaProperties =>
+        {
+            schemaProperties.ShouldContainPath(attributeName).With(schemaProperty =>
             {
                 schemaProperty.ShouldNotContainPath("nullable");
             });

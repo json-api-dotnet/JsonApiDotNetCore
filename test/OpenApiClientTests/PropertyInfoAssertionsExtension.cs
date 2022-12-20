@@ -7,24 +7,14 @@ namespace OpenApiClientTests;
 internal static class PropertyInfoAssertionsExtensions
 {
     [CustomAssertion]
-    public static void BeNullable(this PropertyInfoAssertions source, string because = "", params object[] becauseArgs)
+    public static void HaveNullabilityState(this PropertyInfoAssertions source, NullabilityState expected, string because = "", params object[] becauseArgs)
     {
         PropertyInfo propertyInfo = source.Subject;
 
         NullabilityInfoContext nullabilityContext = new();
         NullabilityInfo nullabilityInfo = nullabilityContext.Create(propertyInfo);
 
-        nullabilityInfo.ReadState.Should().NotBe(NullabilityState.NotNull, because, becauseArgs);
-    }
-
-    [CustomAssertion]
-    public static void BeNonNullable(this PropertyInfoAssertions source, string because = "", params object[] becauseArgs)
-    {
-        PropertyInfo propertyInfo = source.Subject;
-
-        NullabilityInfoContext nullabilityContext = new();
-        NullabilityInfo nullabilityInfo = nullabilityContext.Create(propertyInfo);
-
-        nullabilityInfo.ReadState.Should().Be(NullabilityState.NotNull, because, becauseArgs);
+        nullabilityInfo.ReadState.Should().Be(expected, because, becauseArgs);
+        nullabilityInfo.WriteState.Should().Be(expected, because, becauseArgs);
     }
 }

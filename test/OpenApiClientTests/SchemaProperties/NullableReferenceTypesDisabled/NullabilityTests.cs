@@ -7,21 +7,17 @@ namespace OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled;
 
 public sealed class NullabilityTests
 {
-    [Fact]
-    public void Nullability_of_generated_types_is_as_expected()
+    [Theory]
+    [InlineData(nameof(ChickenAttributesInResponse.Name), NullabilityState.Unknown)]
+    [InlineData(nameof(ChickenAttributesInResponse.NameOfCurrentFarm), NullabilityState.Unknown)]
+    [InlineData(nameof(ChickenAttributesInResponse.Age), NullabilityState.NotNull)]
+    [InlineData(nameof(ChickenAttributesInResponse.Weight), NullabilityState.NotNull)]
+    [InlineData(nameof(ChickenAttributesInResponse.TimeAtCurrentFarmInDays), NullabilityState.Nullable)]
+    [InlineData(nameof(ChickenAttributesInResponse.HasProducedEggs), NullabilityState.NotNull)]
+    public void Nullability_of_generated_property_is_as_expected(string propertyName, NullabilityState expectedState)
     {
-        PropertyInfo[] propertyInfos = typeof(ChickenAttributesInResponse).GetProperties();
-
-        PropertyInfo? propertyInfo = propertyInfos.FirstOrDefault(property => property.Name == nameof(ChickenAttributesInResponse.Name));
-        propertyInfo.Should().BeNullable();
-
-        propertyInfo = propertyInfos.FirstOrDefault(property => property.Name == nameof(ChickenAttributesInResponse.NameOfCurrentFarm));
-        propertyInfo.Should().BeNullable();
-
-        propertyInfo = propertyInfos.FirstOrDefault(property => property.Name == nameof(ChickenAttributesInResponse.Age));
-        propertyInfo.Should().BeNonNullable();
-
-        propertyInfo = propertyInfos.FirstOrDefault(property => property.Name == nameof(ChickenAttributesInResponse.TimeAtCurrentFarmInDays));
-        propertyInfo.Should().BeNullable();
+        PropertyInfo[] properties = typeof(ChickenAttributesInResponse).GetProperties();
+        PropertyInfo property = properties.Single(property => property.Name == propertyName);
+        property.Should().HaveNullabilityState(expectedState);
     }
 }

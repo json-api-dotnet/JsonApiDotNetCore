@@ -18,8 +18,10 @@ public sealed class NullabilityTests
         testContext.SwaggerDocumentOutputPath = "test/OpenApiClientTests/SchemaProperties/NullableReferenceTypesDisabled";
     }
 
-    [Fact]
-    public async Task Produces_expected_nullable_properties_in_schema_for_resource()
+    [Theory]
+    [InlineData("name")]
+    [InlineData("timeAtCurrentFarmInDays")]
+    public async Task Property_in_schema_for_resource_should_be_nullable(string propertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -27,32 +29,27 @@ public sealed class NullabilityTests
         // Assert
         document.ShouldContainPath("components.schemas.chickenAttributesInResponse.properties").With(schemaProperties =>
         {
-            schemaProperties.ShouldContainPath("name").With(schemaProperty =>
+            schemaProperties.ShouldContainPath(propertyName).With(schemaProperty =>
             {
                 schemaProperty.ShouldContainPath("nullable").With(nullableProperty => nullableProperty.ValueKind.Should().Be(JsonValueKind.True));
             });
+        });
+    }
 
-            schemaProperties.ShouldContainPath("nameOfCurrentFarm").With(schemaProperty =>
-            {
-                schemaProperty.ShouldNotContainPath("nullable");
-            });
+    [Theory]
+    [InlineData("nameOfCurrentFarm")]
+    [InlineData("age")]
+    [InlineData("weight")]
+    [InlineData("hasProducedEggs")]
+    public async Task Property_in_schema_for_resource_should_not_be_nullable(string propertyName)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
-            schemaProperties.ShouldContainPath("age").With(schemaProperty =>
-            {
-                schemaProperty.ShouldNotContainPath("nullable");
-            });
-
-            schemaProperties.ShouldContainPath("weight").With(schemaProperty =>
-            {
-                schemaProperty.ShouldNotContainPath("nullable");
-            });
-
-            schemaProperties.ShouldContainPath("timeAtCurrentFarmInDays").With(schemaProperty =>
-            {
-                schemaProperty.ShouldContainPath("nullable").With(nullableProperty => nullableProperty.ValueKind.Should().Be(JsonValueKind.True));
-            });
-
-            schemaProperties.ShouldContainPath("hasProducedEggs").With(schemaProperty =>
+        // Assert
+        document.ShouldContainPath("components.schemas.chickenAttributesInResponse.properties").With(schemaProperties =>
+        {
+            schemaProperties.ShouldContainPath(propertyName).With(schemaProperty =>
             {
                 schemaProperty.ShouldNotContainPath("nullable");
             });
