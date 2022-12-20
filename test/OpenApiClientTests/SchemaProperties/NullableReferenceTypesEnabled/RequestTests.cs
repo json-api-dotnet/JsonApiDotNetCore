@@ -10,7 +10,7 @@ using Xunit;
 
 namespace OpenApiClientTests.SchemaProperties.NullableReferenceTypesEnabled;
 
-public sealed class RequiredAttributesTests
+public sealed class RequestTests
 {
     private const string CowUrl = "http://localhost/cows";
 
