@@ -320,7 +320,10 @@ public sealed class RequestDocumentRegistrationLifetimeTests
             Data = new AirplaneDataInPostRequest
             {
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPostRequest()
+                Attributes = new AirplaneAttributesInPostRequest
+                {
+                    Name = "Jay Jay the Jet Plane"
+                }
             }
         };
 
