@@ -86,7 +86,7 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "any(null,'a','b')", "Attribute 'null' does not exist on resource type 'blogs'.")]
     [InlineData("filter", "any('a','b','c')", "Field name expected.")]
     [InlineData("filter", "any(title,'b','c',)", "Value between quotes expected.")]
-    [InlineData("filter", "any(title,'b')", ", expected.")]
+    [InlineData("filter", "any(title)", ", expected.")]
     [InlineData("filter[posts]", "any(author,'a','b')", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter", "and(", "Filter function expected.")]
     [InlineData("filter", "or(equals(title,'some'),equals(title,'other')", ") expected.")]
@@ -146,6 +146,7 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "contains(title,'this')", null, "contains(title,'this')")]
     [InlineData("filter", "startsWith(title,'this')", null, "startsWith(title,'this')")]
     [InlineData("filter", "endsWith(title,'this')", null, "endsWith(title,'this')")]
+    [InlineData("filter", "any(title,'this')", null, "any(title,'this')")]
     [InlineData("filter", "any(title,'this','that','there')", null, "any(title,'that','there','this')")]
     [InlineData("filter", "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))", null,
         "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))")]
