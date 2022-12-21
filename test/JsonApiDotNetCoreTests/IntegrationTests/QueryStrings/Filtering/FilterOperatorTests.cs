@@ -466,6 +466,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Theory]
+    [InlineData("yes", "no", "'yes'")]
     [InlineData("two", "one two", "'one','two','three'")]
     [InlineData("two", "nine", "'one','two','three','four','five'")]
     public async Task Can_filter_in_set(string matchingText, string nonMatchingText, string filterText)

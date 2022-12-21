@@ -199,11 +199,6 @@ public class FilterParser : QueryExpressionParser
         LiteralConstantExpression constant = ParseConstant();
         constantsBuilder.Add(constant);
 
-        EatSingleCharacterToken(TokenKind.Comma);
-
-        constant = ParseConstant();
-        constantsBuilder.Add(constant);
-
         while (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Comma)
         {
             EatSingleCharacterToken(TokenKind.Comma);

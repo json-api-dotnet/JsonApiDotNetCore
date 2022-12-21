@@ -196,7 +196,7 @@ matchTextExpression:
     ( 'contains' | 'startsWith' | 'endsWith' ) LPAREN fieldChain COMMA literalConstant RPAREN;
 
 anyExpression:
-    'any' LPAREN fieldChain COMMA literalConstant ( COMMA literalConstant )+ RPAREN;
+    'any' LPAREN fieldChain ( COMMA literalConstant )+ RPAREN;
 
 hasExpression:
     'has' LPAREN fieldChain ( COMMA filterExpression )? RPAREN;
