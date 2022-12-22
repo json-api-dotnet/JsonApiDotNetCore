@@ -185,13 +185,13 @@ public abstract class JsonApiClient : IJsonApiClient
 
         private static void SerializeAttributesObject(AttributesObjectInfo alwaysIncludedAttributes, JsonWriter writer, object value, JsonSerializer serializer)
         {
-            AssertRequiredPropertiesAreNotExcluded(value, alwaysIncludedAttributes);
+            AssertRequiredPropertiesAreNotExcluded(value, alwaysIncludedAttributes, writer);
 
             serializer.ContractResolver = new JsonApiAttributeContractResolver(alwaysIncludedAttributes);
             serializer.Serialize(writer, value);
         }
 
-        private static void AssertRequiredPropertiesAreNotExcluded(object value, AttributesObjectInfo alwaysIncludedAttributes)
+        private static void AssertRequiredPropertiesAreNotExcluded(object value, AttributesObjectInfo alwaysIncludedAttributes, JsonWriter jsonWriter)
         {
             PropertyInfo[] propertyInfos = value.GetType().GetProperties();
 
@@ -204,11 +204,11 @@ public abstract class JsonApiClient : IJsonApiClient
                     return;
                 }
 
-                AssertRequiredPropertyIsNotIgnored(value, attributesPropertyInfo);
+                AssertRequiredPropertyIsNotIgnored(value, attributesPropertyInfo, jsonWriter.Path);
             }
         }
 
-        private static void AssertRequiredPropertyIsNotIgnored(object value, PropertyInfo attribute)
+        private static void AssertRequiredPropertyIsNotIgnored(object value, PropertyInfo attribute, string path)
         {
             JsonPropertyAttribute jsonPropertyForAttribute = attribute.GetCustomAttributes<JsonPropertyAttribute>().Single();
 
@@ -222,7 +222,7 @@ public abstract class JsonApiClient : IJsonApiClient
             if (isPropertyIgnored)
             {
                 throw new JsonSerializationException(
-                    $"Ignored property '{jsonPropertyForAttribute.PropertyName}' must have a value because it is required. Path 'data.attributes'.");
+                    $"Ignored property '{jsonPropertyForAttribute.PropertyName}' must have a value because it is required. Path '{path}'.");
             }
         }
 
@@ -345,3 +345,4 @@ public abstract class JsonApiClient : IJsonApiClient
         }
     }
 }
+

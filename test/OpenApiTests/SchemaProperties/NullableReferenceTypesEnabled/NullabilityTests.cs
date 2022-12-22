@@ -21,7 +21,7 @@ public sealed class NullabilityTests
     [Theory]
     [InlineData("nameOfPreviousFarm")]
     [InlineData("timeAtCurrentFarmInDays")]
-    public async Task Property_in_schema_for_resource_should_be_nullable(string propertyName)
+    public async Task Property_in_schema_for_attribute_of_resource_should_be_nullable(string propertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -43,7 +43,7 @@ public sealed class NullabilityTests
     [InlineData("age")]
     [InlineData("weight")]
     [InlineData("hasProducedMilk")]
-    public async Task Property_in_schema_for_resource_should_not_be_nullable(string attributeName)
+    public async Task Property_in_schema_for_attribute_of_resource_should_not_be_nullable(string attributeName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -58,3 +58,4 @@ public sealed class NullabilityTests
         });
     }
 }
+

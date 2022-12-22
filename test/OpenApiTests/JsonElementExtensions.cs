@@ -2,6 +2,7 @@
 using BlushingPenguin.JsonPath;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using JetBrains.Annotations;
 using TestBuildingBlocks;
 
 namespace OpenApiTests;
@@ -34,15 +35,28 @@ internal static class JsonElementExtensions
 
     public static SchemaReferenceIdContainer ShouldBeSchemaReferenceId(this JsonElement source, string value)
     {
+        string schemaReferenceId = GetSchemaReferenceId(source);
+        schemaReferenceId.Should().Be(value);
+
+        return new SchemaReferenceIdContainer(value);
+    }
+
+    public static string GetSchemaReferenceId(this JsonElement source)
+    {
         source.ValueKind.Should().Be(JsonValueKind.String);
 
         string? jsonElementValue = source.GetString();
         jsonElementValue.ShouldNotBeNull();
 
         string schemaReferenceId = jsonElementValue.Split('/').Last();
-        schemaReferenceId.Should().Be(value);
+        return schemaReferenceId;
+    }
 
-        return new SchemaReferenceIdContainer(value);
+    public static void WithSchemaReferenceId(this JsonElement subject, [InstantHandle] Action<string> continuation)
+    {
+        string schemaReferenceId = GetSchemaReferenceId(subject);
+
+        continuation(schemaReferenceId);
     }
 
     public sealed class SchemaReferenceIdContainer
@@ -84,3 +98,4 @@ internal static class JsonElementExtensions
         }
     }
 }
+

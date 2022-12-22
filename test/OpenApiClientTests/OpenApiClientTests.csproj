@@ -66,5 +66,19 @@
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:false</Options>
     </OpenApiReference>
+    <OpenApiReference Include="SchemaProperties\NullableReferenceTypesEnabled\RelationshipsObject\swagger.g.json">
+      <Namespace>OpenApiClientTests.SchemaProperties.NullableReferenceTypesEnabled.RelationshipsObject.GeneratedCode</Namespace>
+      <ClassName>NullableReferenceTypesEnabledClientRelationshipsObject</ClassName>
+      <OutputPath>NullableReferenceTypesEnabledClientRelationshipsObject.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:true</Options>
+    </OpenApiReference>
+    <OpenApiReference Include="SchemaProperties\NullableReferenceTypesDisabled\RelationshipsObject\swagger.g.json">
+      <Namespace>OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled.RelationshipsObject.GeneratedCode</Namespace>
+      <ClassName>NullableReferenceTypesDisabledClientRelationshipsObject</ClassName>
+      <OutputPath>NullableReferenceTypesDisabledClientRelationshipsObject.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:false</Options>
+    </OpenApiReference>
   </ItemGroup>
 </Project>
