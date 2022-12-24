@@ -12,4 +12,3 @@ internal partial class NullableReferenceTypesDisabledClient : JsonApiClient
         settings.Formatting = Formatting.Indented;
     }
 }
-

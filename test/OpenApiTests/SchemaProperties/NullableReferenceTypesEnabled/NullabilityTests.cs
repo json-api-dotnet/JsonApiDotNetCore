@@ -58,6 +58,42 @@ public sealed class NullabilityTests
             });
         });
     }
+
+    [Theory]
+    [InlineData("albinoCow")]
+    public async Task Property_in_schema_for_relationship_of_resource_should_be_nullable(string propertyName)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.ShouldContainPath("components.schemas.cowStableRelationshipsInPostRequest.properties").With(schemaProperties =>
+        {
+            schemaProperties.ShouldContainPath($"{propertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
+            {
+                document.ShouldContainPath($"components.schemas.{schemaReferenceId}.properties.data.oneOf[1].$ref").ShouldBeSchemaReferenceId("nullValue");
+            });
+        });
+    }
+
+    [Theory]
+    [InlineData("oldestCow")]
+    [InlineData("firstCow")]
+    [InlineData("cowsReadyForMilking")]
+    [InlineData("allCows")]
+    [InlineData("favoriteCow")]
+    public async Task Data_property_in_schema_for_relationship_of_resource_should_not_be_nullable(string propertyName)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.ShouldContainPath("components.schemas.cowStableRelationshipsInPostRequest.properties").With(schemaProperties =>
+        {
+            schemaProperties.ShouldContainPath($"{propertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
+            {
+                document.ShouldContainPath($"components.schemas.{schemaReferenceId}.properties.data").ShouldNotContainPath("oneOf[1].$ref");
+            });
+        });
+    }
 }
-
-

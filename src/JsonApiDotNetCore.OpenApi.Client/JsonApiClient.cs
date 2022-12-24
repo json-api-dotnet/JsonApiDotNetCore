@@ -345,4 +345,3 @@ public abstract class JsonApiClient : IJsonApiClient
         }
     }
 }
-

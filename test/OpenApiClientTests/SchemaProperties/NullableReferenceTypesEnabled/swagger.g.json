@@ -1553,7 +1553,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
@@ -1622,7 +1622,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
@@ -1659,7 +1659,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
@@ -1682,7 +1682,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
@@ -1729,7 +1729,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
@@ -1758,7 +1758,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
@@ -1784,7 +1784,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
@@ -1853,7 +1853,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
@@ -1894,7 +1894,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
@@ -2009,7 +2009,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
@@ -2166,7 +2166,7 @@
               "type": "array"
             }
           ],
-          "items": {}
+          "items": { }
         },
         "nullable": true
       },
@@ -2189,7 +2189,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
@@ -2219,7 +2219,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
@@ -2270,7 +2270,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
@@ -2307,7 +2307,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
@@ -2338,7 +2338,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
