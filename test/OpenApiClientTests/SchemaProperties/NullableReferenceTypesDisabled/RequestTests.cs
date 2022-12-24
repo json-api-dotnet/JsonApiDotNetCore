@@ -10,7 +10,7 @@ using Xunit;
 
 namespace OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled;
 
-public sealed class RequestTests
+public sealed class RelationshipRequestTests
 {
     private const string ChickenUrl = "http://localhost/chickens";
 
@@ -328,3 +328,4 @@ public sealed class RequestTests
 }");
     }
 }
+

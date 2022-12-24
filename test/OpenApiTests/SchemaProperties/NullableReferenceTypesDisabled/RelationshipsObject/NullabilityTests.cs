@@ -13,19 +13,18 @@ public sealed class NullabilityTests
     {
         _testContext = testContext;
 
-        testContext.UseController<NrtDisabledModelsController>();
-        testContext.SwaggerDocumentOutputPath = "test/OpenApiClientTests/SchemaProperties/NullableReferenceTypesDisabled/RelationshipsObject";
+        testContext.UseController<HenHousesController>();
     }
 
     [Theory]
-    [InlineData("hasOne")]
+    [InlineData("oldestChicken")]
     public async Task Property_in_schema_for_relationship_of_resource_should_be_nullable(string propertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.nrtDisabledModelRelationshipsInPostRequest.properties").With(schemaProperties =>
+        document.ShouldContainPath("components.schemas.henHouseRelationshipsInPostRequest.properties").With(schemaProperties =>
         {
             schemaProperties.ShouldContainPath($"{propertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
             {
@@ -35,16 +34,16 @@ public sealed class NullabilityTests
     }
 
     [Theory]
-    [InlineData("hasMany")]
-    [InlineData("requiredHasOne")]
-    [InlineData("requiredHasMany")]
+    [InlineData("allChickens")]
+    [InlineData("firstChicken")]
+    [InlineData("chickensReadyForLaying")]
     public async Task Property_in_schema_for_relationship_of_resource_should_not_be_nullable(string propertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.nrtDisabledModelRelationshipsInPostRequest.properties").With(schemaProperties =>
+        document.ShouldContainPath("components.schemas.henHouseRelationshipsInPostRequest.properties").With(schemaProperties =>
         {
             schemaProperties.ShouldContainPath($"{propertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
             {
@@ -53,4 +52,5 @@ public sealed class NullabilityTests
         });
     }
 }
+
 

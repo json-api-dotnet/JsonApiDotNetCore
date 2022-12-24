@@ -195,6 +195,925 @@
           }
         }
       }
+    },
+    "/henHouses": {
+      "get": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "getHenHouseCollection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/henHouseCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "headHenHouseCollection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/henHouseCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "postHenHouse",
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/henHousePostRequestDocument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/henHousePrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/henHouses/{id}": {
+      "get": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "getHenHouse",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/henHousePrimaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "headHenHouse",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/henHousePrimaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "patchHenHouse",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/henHousePatchRequestDocument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/henHousePrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "deleteHenHouse",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/henHouses/{id}/allChickens": {
+      "get": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "getHenHouseAllChickens",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "headHenHouseAllChickens",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/henHouses/{id}/relationships/allChickens": {
+      "get": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "getHenHouseAllChickensRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "headHenHouseAllChickensRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "postHenHouseAllChickensRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyChickenInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "patchHenHouseAllChickensRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyChickenInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "deleteHenHouseAllChickensRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyChickenInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/henHouses/{id}/chickensReadyForLaying": {
+      "get": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "getHenHouseChickensReadyForLaying",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "headHenHouseChickensReadyForLaying",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/henHouses/{id}/relationships/chickensReadyForLaying": {
+      "get": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "getHenHouseChickensReadyForLayingRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "headHenHouseChickensReadyForLayingRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "postHenHouseChickensReadyForLayingRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyChickenInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "patchHenHouseChickensReadyForLayingRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyChickenInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "deleteHenHouseChickensReadyForLayingRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyChickenInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/henHouses/{id}/firstChicken": {
+      "get": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "getHenHouseFirstChicken",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenSecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "headHenHouseFirstChicken",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenSecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/henHouses/{id}/relationships/firstChicken": {
+      "get": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "getHenHouseFirstChickenRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "headHenHouseFirstChickenRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chickenIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "patchHenHouseFirstChickenRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toOneChickenInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/henHouses/{id}/oldestChicken": {
+      "get": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "getHenHouseOldestChicken",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableChickenSecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "headHenHouseOldestChicken",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableChickenSecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/henHouses/{id}/relationships/oldestChicken": {
+      "get": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "getHenHouseOldestChickenRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableChickenIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "headHenHouseOldestChickenRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableChickenIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "henHouses"
+        ],
+        "operationId": "patchHenHouseOldestChickenRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/nullableToOneChickenInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -309,7 +1228,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
@@ -378,7 +1297,73 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
+          }
+        },
+        "additionalProperties": false
+      },
+      "chickenIdentifier": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/chickenResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "chickenIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/chickenIdentifier"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "chickenIdentifierResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/chickenIdentifier"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
           }
         },
         "additionalProperties": false
@@ -419,7 +1404,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
@@ -433,6 +1418,229 @@
       "chickenResourceType": {
         "enum": [
           "chickens"
+        ],
+        "type": "string"
+      },
+      "chickenSecondaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/chickenDataInResponse"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "henHouseCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/henHouseDataInResponse"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "henHouseDataInPatchRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/henHouseResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/henHouseRelationshipsInPatchRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "henHouseDataInPostRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/henHouseResourceType"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/henHouseRelationshipsInPostRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "henHouseDataInResponse": {
+        "required": [
+          "id",
+          "links",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/henHouseResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/henHouseRelationshipsInResponse"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "additionalProperties": false
+      },
+      "henHousePatchRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/henHouseDataInPatchRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "henHousePostRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/henHouseDataInPostRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "henHousePrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/henHouseDataInResponse"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "henHouseRelationshipsInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "oldestChicken": {
+            "$ref": "#/components/schemas/nullableToOneChickenInRequest"
+          },
+          "firstChicken": {
+            "$ref": "#/components/schemas/toOneChickenInRequest"
+          },
+          "allChickens": {
+            "$ref": "#/components/schemas/toManyChickenInRequest"
+          },
+          "chickensReadyForLaying": {
+            "$ref": "#/components/schemas/toManyChickenInRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "henHouseRelationshipsInPostRequest": {
+        "required": [
+          "chickensReadyForLaying",
+          "firstChicken"
+        ],
+        "type": "object",
+        "properties": {
+          "oldestChicken": {
+            "$ref": "#/components/schemas/nullableToOneChickenInRequest"
+          },
+          "firstChicken": {
+            "$ref": "#/components/schemas/toOneChickenInRequest"
+          },
+          "allChickens": {
+            "$ref": "#/components/schemas/toManyChickenInRequest"
+          },
+          "chickensReadyForLaying": {
+            "$ref": "#/components/schemas/toManyChickenInRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "henHouseRelationshipsInResponse": {
+        "type": "object",
+        "properties": {
+          "oldestChicken": {
+            "$ref": "#/components/schemas/nullableToOneChickenInResponse"
+          },
+          "firstChicken": {
+            "$ref": "#/components/schemas/toOneChickenInResponse"
+          },
+          "allChickens": {
+            "$ref": "#/components/schemas/toManyChickenInResponse"
+          },
+          "chickensReadyForLaying": {
+            "$ref": "#/components/schemas/toManyChickenInResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "henHouseResourceType": {
+        "enum": [
+          "henHouses"
         ],
         "type": "string"
       },
@@ -456,7 +1664,25 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInRelationshipObject": {
+        "required": [
+          "related",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "related": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -507,6 +1733,62 @@
         },
         "additionalProperties": false
       },
+      "linksInResourceIdentifierCollectionDocument": {
+        "required": [
+          "first",
+          "related",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "related": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "first": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceIdentifierDocument": {
+        "required": [
+          "related",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "related": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "linksInResourceObject": {
         "required": [
           "self"
@@ -516,6 +1798,202 @@
           "self": {
             "minLength": 1,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullValue": {
+        "not": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "array"
+            }
+          ],
+          "items": {}
+        },
+        "nullable": true
+      },
+      "nullableChickenIdentifierResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/chickenIdentifier"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableChickenSecondaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/chickenDataInResponse"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableToOneChickenInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/chickenIdentifier"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableToOneChickenInResponse": {
+        "required": [
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/chickenIdentifier"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInRelationshipObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyChickenInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/chickenIdentifier"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyChickenInResponse": {
+        "required": [
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/chickenIdentifier"
+            }
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInRelationshipObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "additionalProperties": false
+      },
+      "toOneChickenInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/chickenIdentifier"
+          }
+        },
+        "additionalProperties": false
+      },
+      "toOneChickenInResponse": {
+        "required": [
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/chickenIdentifier"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInRelationshipObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
           }
         },
         "additionalProperties": false

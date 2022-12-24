@@ -37,3 +37,5 @@ public sealed class Cow : Identifiable<int>
     [Required]
     public bool? HasProducedMilk { get; set; }
 }
+
+

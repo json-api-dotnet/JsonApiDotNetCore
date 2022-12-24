@@ -16,19 +16,19 @@ public sealed class ModelStateValidationDisabledTests
     {
         _testContext = testContext;
 
-        testContext.UseController<NrtDisabledModelsController>();
+        testContext.UseController<HenHousesController>();
     }
 
     [Theory]
-    [InlineData("requiredHasOne")]
-    [InlineData("requiredHasMany")]
+    [InlineData("firstChicken")]
+    [InlineData("chickensReadyForLaying")]
     public async Task Property_in_schema_for_relationships_in_POST_request_should_be_required(string propertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.nrtDisabledModelRelationshipsInPostRequest.required").With(propertySet =>
+        document.ShouldContainPath("components.schemas.henHouseRelationshipsInPostRequest.required").With(propertySet =>
         {
             var requiredAttributes = JsonSerializer.Deserialize<List<string>>(propertySet.GetRawText());
 
@@ -37,15 +37,15 @@ public sealed class ModelStateValidationDisabledTests
     }
 
     [Theory]
-    [InlineData("hasOne")]
-    [InlineData("hasMany")]
+    [InlineData("oldestChicken")]
+    [InlineData("allChickens")]
     public async Task Property_in_schema_for_relationships_in_POST_request_should_not_be_required(string propertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.nrtDisabledModelRelationshipsInPostRequest.required").With(propertySet =>
+        document.ShouldContainPath("components.schemas.henHouseRelationshipsInPostRequest.required").With(propertySet =>
         {
             var requiredProperties = JsonSerializer.Deserialize<List<string>>(propertySet.GetRawText());
 
@@ -60,7 +60,8 @@ public sealed class ModelStateValidationDisabledTests
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldNotContainPath("components.schemas.nrtDisabledModelRelationshipsInPatchRequest.required");
+        document.ShouldNotContainPath("components.schemas.henHouseRelationshipsInPatchRequest.required");
     }
 }
+
 

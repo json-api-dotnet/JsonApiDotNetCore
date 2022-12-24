@@ -15,21 +15,21 @@ public sealed class ModelStateValidationEnabledTests
     {
         _testContext = testContext;
 
-        testContext.UseController<NrtEnabledModelsController>();
+        testContext.UseController<CowStablesController>();
     }
 
     [Theory]
-    [InlineData("hasOne")]
-    [InlineData("requiredHasOne")]
-    [InlineData("requiredHasMany")]
-    [InlineData("nullableRequiredHasOne")]
+    [InlineData("oldestCow")]
+    [InlineData("firstCow")]
+    [InlineData("allCows")]
+    [InlineData("favoriteCow")]
     public async Task Property_in_schema_for_relationships_in_POST_request_should_be_required(string propertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.nrtEnabledModelRelationshipsInPostRequest.required").With(propertySet =>
+        document.ShouldContainPath("components.schemas.cowStableRelationshipsInPostRequest.required").With(propertySet =>
         {
             var requiredAttributes = JsonSerializer.Deserialize<List<string>>(propertySet.GetRawText());
 
@@ -38,15 +38,15 @@ public sealed class ModelStateValidationEnabledTests
     }
 
     [Theory]
-    [InlineData("hasMany")]
-    [InlineData("nullableHasOne")]
+    [InlineData("cowsReadyForMilking")]
+    [InlineData("albinoCow")]
     public async Task Property_in_schema_for_relationships_in_POST_request_should_not_be_required(string propertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.nrtEnabledModelRelationshipsInPostRequest.required").With(propertySet =>
+        document.ShouldContainPath("components.schemas.cowStableRelationshipsInPostRequest.required").With(propertySet =>
         {
             var requiredProperties = JsonSerializer.Deserialize<List<string>>(propertySet.GetRawText());
 
@@ -61,7 +61,8 @@ public sealed class ModelStateValidationEnabledTests
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldNotContainPath("components.schemas.nrtEnabledModelRelationshipsInPatchRequest.required");
+        document.ShouldNotContainPath("components.schemas.cowStableRelationshipsInPatchRequest.required");
     }
 }
+
 

@@ -5,40 +5,39 @@ using FluentAssertions.Specialized;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
-using OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled.RelationshipsObject.GeneratedCode;
+using OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled.GeneratedCode;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled.RelationshipsObject;
+namespace OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled;
 
 public sealed class RequestTestsAlt
 {
-    private const string NrtDisabledModelUrl = "http://localhost/nrtDisabledModels";
+    private const string HenHouseUrl = "http://localhost/henHouses";
 
     private readonly Dictionary<string, string> _partials = new()
     {
         {
-            nameof(NrtDisabledModelRelationshipsInPostRequest.HasOne), @"""hasOne"": {
+            nameof(HenHouseRelationshipsInPostRequest.OldestChicken), @"""oldestChicken"": {
         ""data"": {
-          ""type"": ""relationshipModels"",
+          ""type"": ""chickens"",
           ""id"": ""1""
         }
       }"
         },
         {
-            nameof(NrtDisabledModelRelationshipsInPostRequest.RequiredHasOne), @"""requiredHasOne"": {
+            nameof(HenHouseRelationshipsInPostRequest.FirstChicken), @"""firstChicken"": {
         ""data"": {
-          ""type"": ""relationshipModels"",
+          ""type"": ""chickens"",
           ""id"": ""1""
         }
       }"
         },
-
         {
-            nameof(NrtDisabledModelRelationshipsInPostRequest.HasMany), @"""hasMany"": {
+            nameof(HenHouseRelationshipsInPostRequest.AllChickens), @"""allChickens"": {
         ""data"": [
           {
-            ""type"": ""relationshipModels"",
+            ""type"": ""chickens"",
             ""id"": ""1""
           }
         ]
@@ -46,10 +45,10 @@ public sealed class RequestTestsAlt
         },
 
         {
-            nameof(NrtDisabledModelRelationshipsInPostRequest.RequiredHasMany), @"""requiredHasMany"": {
+            nameof(HenHouseRelationshipsInPostRequest.ChickensReadyForLaying), @"""chickensReadyForLaying"": {
         ""data"": [
           {
-            ""type"": ""relationshipModels"",
+            ""type"": ""chickens"",
             ""id"": ""1""
           }
         ]
@@ -58,51 +57,51 @@ public sealed class RequestTestsAlt
     };
 
     [Theory]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.HasOne))]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.HasMany))]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.OldestChicken))]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.AllChickens))]
     public async Task Can_exclude_optional_relationships(string propertyName)
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        var apiClient = new NullableReferenceTypesDisabledClientRelationshipsObject(wrapper.HttpClient);
+        var apiClient = new NullableReferenceTypesDisabledClient(wrapper.HttpClient);
 
-        NrtDisabledModelRelationshipsInPostRequest relationshipsObject = new()
+        HenHouseRelationshipsInPostRequest relationshipsObject = new()
         {
-            HasOne = new NullableToOneRelationshipModelInRequest
+            OldestChicken = new NullableToOneChickenInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new ChickenIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = ChickenResourceType.Chickens
                 }
             },
-            RequiredHasOne = new ToOneRelationshipModelInRequest
+            FirstChicken = new ToOneChickenInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new ChickenIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = ChickenResourceType.Chickens
                 }
             },
-            HasMany = new ToManyRelationshipModelInRequest
+            AllChickens = new ToManyChickenInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<ChickenIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = ChickenResourceType.Chickens
                     }
                 }
             },
-            RequiredHasMany = new ToManyRelationshipModelInRequest
+            ChickensReadyForLaying = new ToManyChickenInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<ChickenIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = ChickenResourceType.Chickens
                     }
                 }
             }
@@ -110,22 +109,21 @@ public sealed class RequestTestsAlt
 
         relationshipsObject.SetPropertyToDefaultValue(propertyName);
 
-        var requestDocument = new NrtDisabledModelPostRequestDocument
+        var requestDocument = new HenHousePostRequestDocument
         {
-            Data = new NrtDisabledModelDataInPostRequest
+            Data = new HenHouseDataInPostRequest
             {
                 Relationships = relationshipsObject
             }
         };
 
-
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostNrtDisabledModelAsync(requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostHenHouseAsync(requestDocument));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Post);
-        wrapper.Request.RequestUri.Should().Be(NrtDisabledModelUrl);
+        wrapper.Request.RequestUri.Should().Be(HenHouseUrl);
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
@@ -134,58 +132,58 @@ public sealed class RequestTestsAlt
 
         wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
-    ""type"": ""nrtDisabledModels"",
-    ""relationships"": "+ body +@"
+    ""type"": ""henHouses"",
+    ""relationships"": " + body + @"
   }
 }");
     }
 
     [Theory]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.RequiredHasOne), "requiredHasOne")]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.RequiredHasMany), "requiredHasMany")]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.FirstChicken), "firstChicken")]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.ChickensReadyForLaying), "chickensReadyForLaying")]
     public async Task Cannot_exclude_required_relationship_when_performing_POST_with_document_registration(string propertyName, string jsonName)
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        var apiClient = new NullableReferenceTypesDisabledClientRelationshipsObject(wrapper.HttpClient);
+        var apiClient = new NullableReferenceTypesDisabledClient(wrapper.HttpClient);
 
-        NrtDisabledModelRelationshipsInPostRequest relationshipsInPostDocument = new()
+        HenHouseRelationshipsInPostRequest relationshipsInPostDocument = new()
         {
-            HasOne = new NullableToOneRelationshipModelInRequest
+            OldestChicken = new NullableToOneChickenInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new ChickenIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = ChickenResourceType.Chickens
                 }
             },
-            RequiredHasOne = new ToOneRelationshipModelInRequest
+            FirstChicken = new ToOneChickenInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new ChickenIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = ChickenResourceType.Chickens
                 }
             },
-            HasMany = new ToManyRelationshipModelInRequest
+            AllChickens = new ToManyChickenInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<ChickenIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = ChickenResourceType.Chickens
                     }
                 }
             },
-            RequiredHasMany = new ToManyRelationshipModelInRequest
+            ChickensReadyForLaying = new ToManyChickenInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<ChickenIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = ChickenResourceType.Chickens
                     }
                 }
             }
@@ -193,75 +191,74 @@ public sealed class RequestTestsAlt
 
         relationshipsInPostDocument.SetPropertyToDefaultValue(propertyName);
 
-        var requestDocument = new NrtDisabledModelPostRequestDocument
+        var requestDocument = new HenHousePostRequestDocument
         {
-            Data = new NrtDisabledModelDataInPostRequest
+            Data = new HenHouseDataInPostRequest
             {
                 Relationships = relationshipsInPostDocument
             }
         };
 
-        Func<Task<NrtDisabledModelPrimaryResponseDocument?>> action;
-
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<NrtDisabledModelPostRequestDocument, NrtDisabledModelRelationshipsInPostRequest>(requestDocument))
+        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<HenHousePostRequestDocument, HenHouseRelationshipsInPostRequest>(requestDocument))
         {
             // Act
-            action = async () => await ApiResponse.TranslateAsync(async () => await apiClient.PostNrtDisabledModelAsync(requestDocument));
+            Func<Task<HenHousePrimaryResponseDocument?>> action = async () =>
+                await ApiResponse.TranslateAsync(async () => await apiClient.PostHenHouseAsync(requestDocument));
+
+            // Assert
+            ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
+            JsonSerializationException exception = assertion.Subject.Single();
+
+            exception.Message.Should().Be($"Ignored property '{jsonName}' must have a value because it is required. Path 'data.relationships'.");
         }
-
-        // Assert
-        ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-        JsonSerializationException exception = assertion.Subject.Single();
-
-        exception.Message.Should().Be($"Ignored property '{jsonName}' must have a value because it is required. Path 'data.relationships'.");
     }
 
     [Theory]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.RequiredHasOne), "requiredHasOne")]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.RequiredHasMany), "requiredHasMany")]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.FirstChicken), "firstChicken")]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.ChickensReadyForLaying), "chickensReadyForLaying")]
     public async Task Cannot_exclude_required_relationship_when_performing_POST_without_document_registration(string propertyName, string jsonName)
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        var apiClient = new NullableReferenceTypesDisabledClientRelationshipsObject(wrapper.HttpClient);
+        var apiClient = new NullableReferenceTypesDisabledClient(wrapper.HttpClient);
 
-        NrtDisabledModelRelationshipsInPostRequest relationshipsInPostDocument = new()
+        HenHouseRelationshipsInPostRequest relationshipsInPostDocument = new()
         {
-            HasOne = new NullableToOneRelationshipModelInRequest
+            OldestChicken = new NullableToOneChickenInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new ChickenIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = ChickenResourceType.Chickens
                 }
             },
-            RequiredHasOne = new ToOneRelationshipModelInRequest
+            FirstChicken = new ToOneChickenInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new ChickenIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = ChickenResourceType.Chickens
                 }
             },
-            HasMany = new ToManyRelationshipModelInRequest
+            AllChickens = new ToManyChickenInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<ChickenIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = ChickenResourceType.Chickens
                     }
                 }
             },
-            RequiredHasMany = new ToManyRelationshipModelInRequest
+            ChickensReadyForLaying = new ToManyChickenInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<ChickenIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = ChickenResourceType.Chickens
                     }
                 }
             }
@@ -269,17 +266,17 @@ public sealed class RequestTestsAlt
 
         relationshipsInPostDocument.SetPropertyToDefaultValue(propertyName);
 
-        var requestDocument = new NrtDisabledModelPostRequestDocument
+        var requestDocument = new HenHousePostRequestDocument
         {
-            Data = new NrtDisabledModelDataInPostRequest
+            Data = new HenHouseDataInPostRequest
             {
                 Relationships = relationshipsInPostDocument
             }
         };
 
         // Act
-        Func<Task<NrtDisabledModelPrimaryResponseDocument?>> action = async () =>
-            await ApiResponse.TranslateAsync(async () => await apiClient.PostNrtDisabledModelAsync(requestDocument));
+        Func<Task<HenHousePrimaryResponseDocument?>> action = async () =>
+            await ApiResponse.TranslateAsync(async () => await apiClient.PostHenHouseAsync(requestDocument));
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -289,51 +286,51 @@ public sealed class RequestTestsAlt
     }
 
     [Theory]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.RequiredHasOne))]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.RequiredHasMany))]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.FirstChicken))]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.ChickensReadyForLaying))]
     public async Task Can_exclude_relationships_that_are_required_for_POST_when_performing_PATCH(string propertyName)
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        var apiClient = new NullableReferenceTypesDisabledClientRelationshipsObject(wrapper.HttpClient);
+        var apiClient = new NullableReferenceTypesDisabledClient(wrapper.HttpClient);
 
-        var relationshipsObject = new NrtDisabledModelRelationshipsInPatchRequest()
+        var relationshipsObject = new HenHouseRelationshipsInPatchRequest
         {
-            HasOne = new NullableToOneRelationshipModelInRequest
+            OldestChicken = new NullableToOneChickenInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new ChickenIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = ChickenResourceType.Chickens
                 }
             },
-            RequiredHasOne = new ToOneRelationshipModelInRequest
+            FirstChicken = new ToOneChickenInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new ChickenIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = ChickenResourceType.Chickens
                 }
             },
-            HasMany = new ToManyRelationshipModelInRequest
+            AllChickens = new ToManyChickenInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<ChickenIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = ChickenResourceType.Chickens
                     }
                 }
             },
-            RequiredHasMany = new ToManyRelationshipModelInRequest
+            ChickensReadyForLaying = new ToManyChickenInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<ChickenIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = ChickenResourceType.Chickens
                     }
                 }
             }
@@ -341,23 +338,23 @@ public sealed class RequestTestsAlt
 
         relationshipsObject.SetPropertyToDefaultValue(propertyName);
 
-        var requestDocument = new NrtDisabledModelPatchRequestDocument()
+        var requestDocument = new HenHousePatchRequestDocument
         {
-            Data = new NrtDisabledModelDataInPatchRequest
+            Data = new HenHouseDataInPatchRequest
             {
                 Id = "1",
-                Type = NrtDisabledModelResourceType.NrtDisabledModels,
+                Type = HenHouseResourceType.HenHouses,
                 Relationships = relationshipsObject
             }
         };
 
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchNrtDisabledModelAsync(1, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PatchHenHouseAsync(1, requestDocument));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Patch);
-        wrapper.Request.RequestUri.Should().Be(NrtDisabledModelUrl + "/1");
+        wrapper.Request.RequestUri.Should().Be(HenHouseUrl + "/1");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
@@ -366,9 +363,9 @@ public sealed class RequestTestsAlt
 
         wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
-    ""type"": ""nrtDisabledModels"",
+    ""type"": ""henHouses"",
     ""id"": ""1"",
-    ""relationships"": "+ serializedRelationshipsObject +@"
+    ""relationships"": " + serializedRelationshipsObject + @"
   }
 }");
     }
@@ -378,45 +375,45 @@ public sealed class RequestTestsAlt
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        var apiClient = new NullableReferenceTypesDisabledClientRelationshipsObject(wrapper.HttpClient);
+        var apiClient = new NullableReferenceTypesDisabledClient(wrapper.HttpClient);
 
-        var requestDocument = new NrtDisabledModelPostRequestDocument()
+        var requestDocument = new HenHousePostRequestDocument
         {
-            Data = new NrtDisabledModelDataInPostRequest
+            Data = new HenHouseDataInPostRequest
             {
-                Relationships = new NrtDisabledModelRelationshipsInPostRequest
+                Relationships = new HenHouseRelationshipsInPostRequest
                 {
-                    HasOne = new NullableToOneRelationshipModelInRequest
+                    OldestChicken = new NullableToOneChickenInRequest
                     {
                         Data = null
                     },
-                    RequiredHasOne = new ToOneRelationshipModelInRequest
+                    FirstChicken = new ToOneChickenInRequest
                     {
-                        Data = new RelationshipModelIdentifier
+                        Data = new ChickenIdentifier
                         {
                             Id = "1",
-                            Type = RelationshipModelResourceType.RelationshipModels
+                            Type = ChickenResourceType.Chickens
                         }
                     },
-                    HasMany = new ToManyRelationshipModelInRequest
+                    AllChickens = new ToManyChickenInRequest
                     {
-                        Data = new List<RelationshipModelIdentifier>
+                        Data = new List<ChickenIdentifier>
                         {
                             new()
                             {
                                 Id = "1",
-                                Type = RelationshipModelResourceType.RelationshipModels
+                                Type = ChickenResourceType.Chickens
                             }
                         }
                     },
-                    RequiredHasMany = new ToManyRelationshipModelInRequest
+                    ChickensReadyForLaying = new ToManyChickenInRequest
                     {
-                        Data = new List<RelationshipModelIdentifier>
+                        Data = new List<ChickenIdentifier>
                         {
                             new()
                             {
                                 Id = "1",
-                                Type = RelationshipModelResourceType.RelationshipModels
+                                Type = ChickenResourceType.Chickens
                             }
                         }
                     }
@@ -424,42 +421,42 @@ public sealed class RequestTestsAlt
             }
         };
 
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostNrtDisabledModelAsync(requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostHenHouseAsync(requestDocument));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Post);
-        wrapper.Request.RequestUri.Should().Be(NrtDisabledModelUrl);
+        wrapper.Request.RequestUri.Should().Be(HenHouseUrl);
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
 
         wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
-    ""type"": ""nrtDisabledModels"",
+    ""type"": ""henHouses"",
     ""relationships"": {
-      ""hasOne"": {
+      ""oldestChicken"": {
         ""data"": null
       },
-      ""requiredHasOne"": {
+      ""firstChicken"": {
         ""data"": {
-          ""type"": ""relationshipModels"",
+          ""type"": ""chickens"",
           ""id"": ""1""
         }
       },
-      ""hasMany"": {
+      ""allChickens"": {
         ""data"": [
           {
-            ""type"": ""relationshipModels"",
+            ""type"": ""chickens"",
             ""id"": ""1""
           }
         ]
       },
-      ""requiredHasMany"": {
+      ""chickensReadyForLaying"": {
         ""data"": [
           {
-            ""type"": ""relationshipModels"",
+            ""type"": ""chickens"",
             ""id"": ""1""
           }
         ]
@@ -470,52 +467,52 @@ public sealed class RequestTestsAlt
     }
 
     [Theory]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.RequiredHasOne), "requiredHasOne")]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.HasMany), "hasMany")]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.RequiredHasMany), "requiredHasMany")]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.FirstChicken), "firstChicken")]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.AllChickens), "allChickens")]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.ChickensReadyForLaying), "chickensReadyForLaying")]
     public async Task Cannot_clear_non_nullable_relationships_with_document_registration(string propertyName, string jsonName)
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        var apiClient = new NullableReferenceTypesDisabledClientRelationshipsObject(wrapper.HttpClient);
+        var apiClient = new NullableReferenceTypesDisabledClient(wrapper.HttpClient);
 
-        NrtDisabledModelRelationshipsInPostRequest relationshipsInPostDocument = new()
+        HenHouseRelationshipsInPostRequest relationshipsInPostDocument = new()
         {
-            HasOne = new NullableToOneRelationshipModelInRequest
+            OldestChicken = new NullableToOneChickenInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new ChickenIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = ChickenResourceType.Chickens
                 }
             },
-            RequiredHasOne = new ToOneRelationshipModelInRequest
+            FirstChicken = new ToOneChickenInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new ChickenIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = ChickenResourceType.Chickens
                 }
             },
-            HasMany = new ToManyRelationshipModelInRequest
+            AllChickens = new ToManyChickenInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<ChickenIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = ChickenResourceType.Chickens
                     }
                 }
             },
-            RequiredHasMany = new ToManyRelationshipModelInRequest
+            ChickensReadyForLaying = new ToManyChickenInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<ChickenIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = ChickenResourceType.Chickens
                     }
                 }
             }
@@ -525,19 +522,20 @@ public sealed class RequestTestsAlt
         object relationshipToClear = relationshipToClearPropertyInfo.GetValue(relationshipsInPostDocument)!;
         relationshipToClear.SetPropertyToDefaultValue("Data");
 
-        var requestDocument = new NrtDisabledModelPostRequestDocument
+        var requestDocument = new HenHousePostRequestDocument
         {
-            Data = new NrtDisabledModelDataInPostRequest
+            Data = new HenHouseDataInPostRequest
             {
                 Relationships = relationshipsInPostDocument
             }
         };
 
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<NrtDisabledModelPostRequestDocument, NrtDisabledModelRelationshipsInPostRequest>(requestDocument, model => model.RequiredHasOne, model => model.HasMany, model => model.RequiredHasMany))
+        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<HenHousePostRequestDocument, HenHouseRelationshipsInPostRequest>(requestDocument,
+            model => model.FirstChicken, model => model.AllChickens, model => model.ChickensReadyForLaying))
         {
             // Act
-            Func<Task<NrtDisabledModelPrimaryResponseDocument?>> action = async () =>
-                await ApiResponse.TranslateAsync(async () => await apiClient.PostNrtDisabledModelAsync(requestDocument));
+            Func<Task<HenHousePrimaryResponseDocument?>> action = async () =>
+                await ApiResponse.TranslateAsync(async () => await apiClient.PostHenHouseAsync(requestDocument));
 
             // Assert
             ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -546,54 +544,54 @@ public sealed class RequestTestsAlt
             exception.Message.Should().Be($"Cannot write a null value for property 'data'. Property requires a value. Path 'data.relationships.{jsonName}'.");
         }
     }
-    
+
     [Theory]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.RequiredHasOne), "requiredHasOne")]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.HasMany), "hasMany")]
-    [InlineData(nameof(NrtDisabledModelRelationshipsInPostRequest.RequiredHasMany), "requiredHasMany")]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.FirstChicken), "firstChicken")]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.AllChickens), "allChickens")]
+    [InlineData(nameof(HenHouseRelationshipsInPostRequest.ChickensReadyForLaying), "chickensReadyForLaying")]
     public async Task Cannot_clear_non_nullable_relationships_without_document_registration(string propertyName, string jsonName)
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        var apiClient = new NullableReferenceTypesDisabledClientRelationshipsObject(wrapper.HttpClient);
+        var apiClient = new NullableReferenceTypesDisabledClient(wrapper.HttpClient);
 
-        NrtDisabledModelRelationshipsInPostRequest relationshipsInPostDocument = new()
+        HenHouseRelationshipsInPostRequest relationshipsInPostDocument = new()
         {
-            HasOne = new NullableToOneRelationshipModelInRequest
+            OldestChicken = new NullableToOneChickenInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new ChickenIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = ChickenResourceType.Chickens
                 }
             },
-            RequiredHasOne = new ToOneRelationshipModelInRequest
+            FirstChicken = new ToOneChickenInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new ChickenIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = ChickenResourceType.Chickens
                 }
             },
-            HasMany = new ToManyRelationshipModelInRequest
+            AllChickens = new ToManyChickenInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<ChickenIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = ChickenResourceType.Chickens
                     }
                 }
             },
-            RequiredHasMany = new ToManyRelationshipModelInRequest
+            ChickensReadyForLaying = new ToManyChickenInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<ChickenIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = ChickenResourceType.Chickens
                     }
                 }
             }
@@ -603,17 +601,17 @@ public sealed class RequestTestsAlt
         object relationshipToClear = relationshipToClearPropertyInfo.GetValue(relationshipsInPostDocument)!;
         relationshipToClear.SetPropertyToDefaultValue("Data");
 
-        var requestDocument = new NrtDisabledModelPostRequestDocument
+        var requestDocument = new HenHousePostRequestDocument
         {
-            Data = new NrtDisabledModelDataInPostRequest
+            Data = new HenHouseDataInPostRequest
             {
                 Relationships = relationshipsInPostDocument
             }
         };
-        
+
         // Act
-        Func<Task<NrtDisabledModelPrimaryResponseDocument?>> action = async () =>
-            await ApiResponse.TranslateAsync(async () => await apiClient.PostNrtDisabledModelAsync(requestDocument));
+        Func<Task<HenHousePrimaryResponseDocument?>> action = async () =>
+            await ApiResponse.TranslateAsync(async () => await apiClient.PostHenHouseAsync(requestDocument));
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -621,7 +619,7 @@ public sealed class RequestTestsAlt
 
         exception.Message.Should().Be($"Cannot write a null value for property 'data'. Property requires a value. Path 'data.relationships.{jsonName}'.");
     }
-    
+
     private string GetRelationshipsObjectWithSinglePropertyOmitted(string excludeProperty)
     {
         string partial = "";
@@ -631,7 +629,7 @@ public sealed class RequestTestsAlt
             if (excludeProperty == key)
             {
                 continue;
-            } 
+            }
 
             if (partial.Length > 0)
             {
@@ -646,3 +644,4 @@ public sealed class RequestTestsAlt
     }";
     }
 }
+
