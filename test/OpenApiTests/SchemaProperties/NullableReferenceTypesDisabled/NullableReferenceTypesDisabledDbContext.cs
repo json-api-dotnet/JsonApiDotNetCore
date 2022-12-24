@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
-using OpenApiTests.SchemaProperties.NullableReferenceTypesDisabled.RelationshipsObject;
 using TestBuildingBlocks;
 
 namespace OpenApiTests.SchemaProperties.NullableReferenceTypesDisabled;

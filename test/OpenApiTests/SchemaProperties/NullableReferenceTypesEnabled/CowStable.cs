@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.SchemaProperties.NullableReferenceTypesEnabled.RelationshipsObject;
+namespace OpenApiTests.SchemaProperties.NullableReferenceTypesEnabled;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "OpenApiTests.SchemaProperties")]

@@ -41,7 +41,7 @@ internal static class JsonElementExtensions
         return new SchemaReferenceIdContainer(value);
     }
 
-    public static string GetSchemaReferenceId(this JsonElement source)
+    private static string GetSchemaReferenceId(this JsonElement source)
     {
         source.ValueKind.Should().Be(JsonValueKind.String);
 
@@ -98,4 +98,3 @@ internal static class JsonElementExtensions
         }
     }
 }
-

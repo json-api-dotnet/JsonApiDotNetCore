@@ -238,4 +238,3 @@ internal sealed class ResourceFieldObjectSchemaBuilder
         return NullableRelationshipSchemaOpenTypes.Contains(relationshipSchemaOpenType);
     }
 }
-
