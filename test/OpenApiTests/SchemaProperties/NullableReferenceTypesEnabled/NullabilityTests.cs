@@ -15,6 +15,7 @@ public sealed class NullabilityTests
         _testContext = testContext;
 
         testContext.UseController<CowsController>();
+        testContext.UseController<CowStablesController>();
         testContext.SwaggerDocumentOutputPath = "test/OpenApiClientTests/SchemaProperties/NullableReferenceTypesEnabled";
     }
 
@@ -58,4 +59,5 @@ public sealed class NullabilityTests
         });
     }
 }
+
 

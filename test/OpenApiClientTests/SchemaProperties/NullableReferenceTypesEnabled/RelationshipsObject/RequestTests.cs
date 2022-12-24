@@ -4,61 +4,61 @@ using FluentAssertions.Specialized;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
-using OpenApiClientTests.SchemaProperties.NullableReferenceTypesEnabled.RelationshipsObject.GeneratedCode;
+using OpenApiClientTests.SchemaProperties.NullableReferenceTypesEnabled.GeneratedCode;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace OpenApiClientTests.SchemaProperties.NullableReferenceTypesEnabled.RelationshipsObject;
+namespace OpenApiClientTests.SchemaProperties.NullableReferenceTypesEnabled;
 
-public sealed class RequestTests
+public sealed class RelationshipsRequestTests
 {
-    private const string NrtEnabledModelUrl = "http://localhost/nrtEnabledModels";
+    private const string CowStableUrl = "http://localhost/cowStables";
 
     [Fact]
     public async Task Can_exclude_optional_relationships()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        var apiClient = new NullableReferenceTypesEnabledClientRelationshipsObject(wrapper.HttpClient);
+        var apiClient = new NullableReferenceTypesEnabledClient(wrapper.HttpClient);
 
-        var requestDocument = new NrtEnabledModelPostRequestDocument()
+        var requestDocument = new CowStablePostRequestDocument
         {
-            Data = new NrtEnabledModelDataInPostRequest
+            Data = new CowStableDataInPostRequest
             {
-                Relationships = new NrtEnabledModelRelationshipsInPostRequest
+                Relationships = new CowStableRelationshipsInPostRequest
                 {
-                    HasOne = new ToOneRelationshipModelInRequest
+                    OldestCow = new ToOneCowInRequest
                     {
-                        Data = new RelationshipModelIdentifier
+                        Data = new CowIdentifier
                         {
                             Id = "1",
-                            Type = RelationshipModelResourceType.RelationshipModels
+                            Type = CowResourceType.Cows
                         }
                     },
-                    RequiredHasOne = new ToOneRelationshipModelInRequest
+                    FirstCow = new ToOneCowInRequest
                     {
-                        Data = new RelationshipModelIdentifier
+                        Data = new CowIdentifier
                         {
                             Id = "1",
-                            Type = RelationshipModelResourceType.RelationshipModels
+                            Type = CowResourceType.Cows
                         }
                     },
-                    NullableRequiredHasOne = new ToOneRelationshipModelInRequest
+                    FavoriteCow = new ToOneCowInRequest
                     {
-                        Data = new RelationshipModelIdentifier
+                        Data = new CowIdentifier
                         {
                             Id = "1",
-                            Type = RelationshipModelResourceType.RelationshipModels
+                            Type = CowResourceType.Cows
                         }
                     },
-                    RequiredHasMany = new ToManyRelationshipModelInRequest
+                    AllCows = new ToManyCowInRequest
                     {
-                        Data = new List<RelationshipModelIdentifier>
+                        Data = new List<CowIdentifier>
                         {
                             new()
                             {
                                 Id = "1",
-                                Type = RelationshipModelResourceType.RelationshipModels
+                                Type = CowResourceType.Cows
                             }
                         }
                     }
@@ -66,43 +66,43 @@ public sealed class RequestTests
             }
         };
 
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostNrtEnabledModelAsync(requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostCowStableAsync(requestDocument));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Post);
-        wrapper.Request.RequestUri.Should().Be(NrtEnabledModelUrl);
+        wrapper.Request.RequestUri.Should().Be(CowStableUrl);
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
 
         wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
-    ""type"": ""nrtEnabledModels"",
+    ""type"": ""cowStables"",
     ""relationships"": {
-      ""hasOne"": {
+      ""oldestCow"": {
         ""data"": {
-          ""type"": ""relationshipModels"",
+          ""type"": ""cows"",
           ""id"": ""1""
         }
       },
-      ""requiredHasOne"": {
+      ""firstCow"": {
         ""data"": {
-          ""type"": ""relationshipModels"",
+          ""type"": ""cows"",
           ""id"": ""1""
         }
       },
-      ""nullableRequiredHasOne"": {
+      ""favoriteCow"": {
         ""data"": {
-          ""type"": ""relationshipModels"",
+          ""type"": ""cows"",
           ""id"": ""1""
         }
       },
-      ""requiredHasMany"": {
+      ""allCows"": {
         ""data"": [
           {
-            ""type"": ""relationshipModels"",
+            ""type"": ""cows"",
             ""id"": ""1""
           }
         ]
@@ -113,61 +113,61 @@ public sealed class RequestTests
     }
 
     [Theory]
-    [InlineData(nameof(NrtEnabledModelRelationshipsInPostRequest.HasOne), "hasOne")]
-    [InlineData(nameof(NrtEnabledModelRelationshipsInPostRequest.RequiredHasOne), "requiredHasOne")]
-    [InlineData(nameof(NrtEnabledModelRelationshipsInPostRequest.NullableRequiredHasOne), "nullableRequiredHasOne")]
-    [InlineData(nameof(NrtEnabledModelRelationshipsInPostRequest.RequiredHasMany), "requiredHasMany")]
+    [InlineData(nameof(CowStableRelationshipsInPostRequest.OldestCow), "oldestCow")]
+    [InlineData(nameof(CowStableRelationshipsInPostRequest.FirstCow), "firstCow")]
+    [InlineData(nameof(CowStableRelationshipsInPostRequest.FavoriteCow), "favoriteCow")]
+    [InlineData(nameof(CowStableRelationshipsInPostRequest.AllCows), "allCows")]
     public async Task Cannot_exclude_required_relationship_when_performing_POST_with_document_registration(string propertyName, string jsonName)
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        var apiClient = new NullableReferenceTypesEnabledClientRelationshipsObject(wrapper.HttpClient);
+        var apiClient = new NullableReferenceTypesEnabledClient(wrapper.HttpClient);
 
-        NrtEnabledModelRelationshipsInPostRequest relationshipsInPostDocument = new()
+        CowStableRelationshipsInPostRequest relationshipsInPostDocument = new()
         {
-            HasOne = new ToOneRelationshipModelInRequest
+            OldestCow = new ToOneCowInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new CowIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = CowResourceType.Cows
                 }
             },
-            RequiredHasOne = new ToOneRelationshipModelInRequest
+            FirstCow = new ToOneCowInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new CowIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = CowResourceType.Cows
                 }
             },
-            NullableRequiredHasOne = new ToOneRelationshipModelInRequest
+            FavoriteCow = new ToOneCowInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new CowIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = CowResourceType.Cows
                 }
             },
-            HasMany = new ToManyRelationshipModelInRequest
+            CowsReadyForMilking = new ToManyCowInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<CowIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = CowResourceType.Cows
                     }
                 }
             },
-            RequiredHasMany = new ToManyRelationshipModelInRequest
+            AllCows = new ToManyCowInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<CowIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = CowResourceType.Cows
                     }
                 }
             }
@@ -175,93 +175,92 @@ public sealed class RequestTests
 
         relationshipsInPostDocument.SetPropertyToDefaultValue(propertyName);
 
-        var requestDocument = new NrtEnabledModelPostRequestDocument
+        var requestDocument = new CowStablePostRequestDocument
         {
-            Data = new NrtEnabledModelDataInPostRequest
+            Data = new CowStableDataInPostRequest
             {
                 Relationships = relationshipsInPostDocument
             }
         };
 
-        Func<Task<NrtEnabledModelPrimaryResponseDocument?>> action;
-        
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<NrtEnabledModelPostRequestDocument, NrtEnabledModelRelationshipsInPostRequest>(requestDocument))
+        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<CowStablePostRequestDocument, CowStableRelationshipsInPostRequest>(requestDocument))
         {
             // Act
-            action = async () => await ApiResponse.TranslateAsync(async () => await apiClient.PostNrtEnabledModelAsync(requestDocument));
-        }
-        
-        // Assert
-        ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-        JsonSerializationException exception = assertion.Subject.Single();
+            Func<Task<CowStablePrimaryResponseDocument?>> action = async () =>
+                await ApiResponse.TranslateAsync(async () => await apiClient.PostCowStableAsync(requestDocument));
 
-        exception.Message.Should().Be($"Ignored property '{jsonName}' must have a value because it is required. Path 'data.relationships'.");
+            // Assert
+            ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
+            JsonSerializationException exception = assertion.Subject.Single();
+
+            exception.Message.Should().Be($"Ignored property '{jsonName}' must have a value because it is required. Path 'data.relationships'.");
+        }
     }
 
     [Theory]
-    [InlineData(nameof(NrtEnabledModelRelationshipsInPostRequest.HasOne), "hasOne")]
-    [InlineData(nameof(NrtEnabledModelRelationshipsInPostRequest.RequiredHasOne), "requiredHasOne")]
-    [InlineData(nameof(NrtEnabledModelRelationshipsInPostRequest.NullableRequiredHasOne), "nullableRequiredHasOne")]
-    [InlineData(nameof(NrtEnabledModelRelationshipsInPostRequest.RequiredHasMany), "requiredHasMany")]
+    [InlineData(nameof(CowStableRelationshipsInPostRequest.OldestCow), "oldestCow")]
+    [InlineData(nameof(CowStableRelationshipsInPostRequest.FirstCow), "firstCow")]
+    [InlineData(nameof(CowStableRelationshipsInPostRequest.FavoriteCow), "favoriteCow")]
+    [InlineData(nameof(CowStableRelationshipsInPostRequest.AllCows), "allCows")]
     public async Task Cannot_exclude_required_relationship_when_performing_POST_without_document_registration(string propertyName, string jsonName)
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        var apiClient = new NullableReferenceTypesEnabledClientRelationshipsObject(wrapper.HttpClient);
+        var apiClient = new NullableReferenceTypesEnabledClient(wrapper.HttpClient);
 
-        NrtEnabledModelRelationshipsInPostRequest relationshipsInPostDocument = new()
+        CowStableRelationshipsInPostRequest relationshipsInPostDocument = new()
         {
-            HasOne = new ToOneRelationshipModelInRequest
+            OldestCow = new ToOneCowInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new CowIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = CowResourceType.Cows
                 }
             },
-            RequiredHasOne = new ToOneRelationshipModelInRequest
+            FirstCow = new ToOneCowInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new CowIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = CowResourceType.Cows
                 }
             },
-            NullableHasOne = new NullableToOneRelationshipModelInRequest
+            AlbinoCow = new NullableToOneCowInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new CowIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = CowResourceType.Cows
                 }
             },
-            NullableRequiredHasOne = new ToOneRelationshipModelInRequest
+            FavoriteCow = new ToOneCowInRequest
             {
-                Data = new RelationshipModelIdentifier
+                Data = new CowIdentifier
                 {
                     Id = "1",
-                    Type = RelationshipModelResourceType.RelationshipModels
+                    Type = CowResourceType.Cows
                 }
             },
-            HasMany = new ToManyRelationshipModelInRequest
+            CowsReadyForMilking = new ToManyCowInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<CowIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = CowResourceType.Cows
                     }
                 }
             },
-            RequiredHasMany = new ToManyRelationshipModelInRequest
+            AllCows = new ToManyCowInRequest
             {
-                Data = new List<RelationshipModelIdentifier>
+                Data = new List<CowIdentifier>
                 {
                     new()
                     {
                         Id = "1",
-                        Type = RelationshipModelResourceType.RelationshipModels
+                        Type = CowResourceType.Cows
                     }
                 }
             }
@@ -269,17 +268,17 @@ public sealed class RequestTests
 
         relationshipsInPostDocument.SetPropertyToDefaultValue(propertyName);
 
-        var requestDocument = new NrtEnabledModelPostRequestDocument
+        var requestDocument = new CowStablePostRequestDocument
         {
-            Data = new NrtEnabledModelDataInPostRequest
+            Data = new CowStableDataInPostRequest
             {
                 Relationships = relationshipsInPostDocument
             }
         };
 
         // Act
-        Func<Task<NrtEnabledModelPrimaryResponseDocument?>> action = async () =>
-            await ApiResponse.TranslateAsync(async () => await apiClient.PostNrtEnabledModelAsync(requestDocument));
+        Func<Task<CowStablePrimaryResponseDocument?>> action = async () =>
+            await ApiResponse.TranslateAsync(async () => await apiClient.PostCowStableAsync(requestDocument));
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -293,32 +292,32 @@ public sealed class RequestTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        var apiClient = new NullableReferenceTypesEnabledClientRelationshipsObject(wrapper.HttpClient);
+        var apiClient = new NullableReferenceTypesEnabledClient(wrapper.HttpClient);
 
-        var requestDocument = new NrtEnabledModelPatchRequestDocument()
+        var requestDocument = new CowStablePatchRequestDocument
         {
-            Data = new NrtEnabledModelDataInPatchRequest
+            Data = new CowStableDataInPatchRequest
             {
                 Id = "1",
-                Type = NrtEnabledModelResourceType.NrtEnabledModels,
-                Relationships = new NrtEnabledModelRelationshipsInPatchRequest()
+                Type = CowStableResourceType.CowStables,
+                Relationships = new CowStableRelationshipsInPatchRequest
                 {
-                    NullableHasOne = new NullableToOneRelationshipModelInRequest
+                    AlbinoCow = new NullableToOneCowInRequest
                     {
-                        Data = new RelationshipModelIdentifier
+                        Data = new CowIdentifier
                         {
                             Id = "1",
-                            Type = RelationshipModelResourceType.RelationshipModels
+                            Type = CowResourceType.Cows
                         }
                     },
-                    HasMany = new ToManyRelationshipModelInRequest
+                    CowsReadyForMilking = new ToManyCowInRequest
                     {
-                        Data = new List<RelationshipModelIdentifier>
+                        Data = new List<CowIdentifier>
                         {
                             new()
                             {
                                 Id = "1",
-                                Type = RelationshipModelResourceType.RelationshipModels
+                                Type = CowResourceType.Cows
                             }
                         }
                     }
@@ -326,32 +325,32 @@ public sealed class RequestTests
             }
         };
 
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchNrtEnabledModelAsync(1, requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PatchCowStableAsync(1, requestDocument));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Patch);
-        wrapper.Request.RequestUri.Should().Be(NrtEnabledModelUrl + "/1");
+        wrapper.Request.RequestUri.Should().Be(CowStableUrl + "/1");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
 
         wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
-    ""type"": ""nrtEnabledModels"",
+    ""type"": ""cowStables"",
     ""id"": ""1"",
     ""relationships"": {
-      ""nullableHasOne"": {
+      ""albinoCow"": {
         ""data"": {
-          ""type"": ""relationshipModels"",
+          ""type"": ""cows"",
           ""id"": ""1""
         }
       },
-      ""hasMany"": {
+      ""cowsReadyForMilking"": {
         ""data"": [
           {
-            ""type"": ""relationshipModels"",
+            ""type"": ""cows"",
             ""id"": ""1""
           }
         ]
@@ -366,61 +365,61 @@ public sealed class RequestTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        var apiClient = new NullableReferenceTypesEnabledClientRelationshipsObject(wrapper.HttpClient);
+        var apiClient = new NullableReferenceTypesEnabledClient(wrapper.HttpClient);
 
-        var requestDocument = new NrtEnabledModelPostRequestDocument()
+        var requestDocument = new CowStablePostRequestDocument
         {
-            Data = new NrtEnabledModelDataInPostRequest
+            Data = new CowStableDataInPostRequest
             {
-                Relationships = new NrtEnabledModelRelationshipsInPostRequest
+                Relationships = new CowStableRelationshipsInPostRequest
                 {
-                    NullableHasOne = new NullableToOneRelationshipModelInRequest
+                    AlbinoCow = new NullableToOneCowInRequest
                     {
                         Data = null
                     },
-                    HasOne = new ToOneRelationshipModelInRequest
+                    OldestCow = new ToOneCowInRequest
                     {
-                        Data = new RelationshipModelIdentifier
+                        Data = new CowIdentifier
                         {
                             Id = "1",
-                            Type = RelationshipModelResourceType.RelationshipModels
+                            Type = CowResourceType.Cows
                         }
                     },
-                    RequiredHasOne = new ToOneRelationshipModelInRequest
+                    FirstCow = new ToOneCowInRequest
                     {
-                        Data = new RelationshipModelIdentifier
+                        Data = new CowIdentifier
                         {
                             Id = "1",
-                            Type = RelationshipModelResourceType.RelationshipModels
+                            Type = CowResourceType.Cows
                         }
                     },
-                    NullableRequiredHasOne = new ToOneRelationshipModelInRequest
+                    FavoriteCow = new ToOneCowInRequest
                     {
-                        Data = new RelationshipModelIdentifier
+                        Data = new CowIdentifier
                         {
                             Id = "1",
-                            Type = RelationshipModelResourceType.RelationshipModels
+                            Type = CowResourceType.Cows
                         }
                     },
-                    HasMany = new ToManyRelationshipModelInRequest
+                    CowsReadyForMilking = new ToManyCowInRequest
                     {
-                        Data = new List<RelationshipModelIdentifier>
+                        Data = new List<CowIdentifier>
                         {
                             new()
                             {
                                 Id = "1",
-                                Type = RelationshipModelResourceType.RelationshipModels
+                                Type = CowResourceType.Cows
                             }
                         }
                     },
-                    RequiredHasMany = new ToManyRelationshipModelInRequest
+                    AllCows = new ToManyCowInRequest
                     {
-                        Data = new List<RelationshipModelIdentifier>
+                        Data = new List<CowIdentifier>
                         {
                             new()
                             {
                                 Id = "1",
-                                Type = RelationshipModelResourceType.RelationshipModels
+                                Type = CowResourceType.Cows
                             }
                         }
                     }
@@ -428,54 +427,54 @@ public sealed class RequestTests
             }
         };
 
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostNrtEnabledModelAsync(requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostCowStableAsync(requestDocument));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Post);
-        wrapper.Request.RequestUri.Should().Be(NrtEnabledModelUrl);
+        wrapper.Request.RequestUri.Should().Be(CowStableUrl);
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
 
         wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
-    ""type"": ""nrtEnabledModels"",
+    ""type"": ""cowStables"",
     ""relationships"": {
-      ""hasOne"": {
+      ""oldestCow"": {
         ""data"": {
-          ""type"": ""relationshipModels"",
+          ""type"": ""cows"",
           ""id"": ""1""
         }
       },
-      ""requiredHasOne"": {
+      ""firstCow"": {
         ""data"": {
-          ""type"": ""relationshipModels"",
+          ""type"": ""cows"",
           ""id"": ""1""
         }
       },
-      ""nullableHasOne"": {
+      ""albinoCow"": {
         ""data"": null
       },
-      ""nullableRequiredHasOne"": {
+      ""favoriteCow"": {
         ""data"": {
-          ""type"": ""relationshipModels"",
+          ""type"": ""cows"",
           ""id"": ""1""
         }
       },
-      ""hasMany"": {
+      ""cowsReadyForMilking"": {
         ""data"": [
           {
-            ""type"": ""relationshipModels"",
+            ""type"": ""cows"",
             ""id"": ""1""
           }
         ]
       },
-      ""requiredHasMany"": {
+      ""allCows"": {
         ""data"": [
           {
-            ""type"": ""relationshipModels"",
+            ""type"": ""cows"",
             ""id"": ""1""
           }
         ]
@@ -485,3 +484,4 @@ public sealed class RequestTests
 }");
     }
 }
+

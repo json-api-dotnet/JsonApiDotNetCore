@@ -13,19 +13,18 @@ public sealed class NullabilityTests
     {
         _testContext = testContext;
 
-        testContext.UseController<NrtEnabledModelsController>();
-        testContext.SwaggerDocumentOutputPath = "test/OpenApiClientTests/SchemaProperties/NullableReferenceTypesEnabled/RelationshipsObject";
+        testContext.UseController<CowStablesController>();
     }
 
     [Theory]
-    [InlineData("nullableHasOne")]
+    [InlineData("albinoCow")]
     public async Task Property_in_schema_for_relationship_of_resource_should_be_nullable(string propertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.nrtEnabledModelRelationshipsInPostRequest.properties").With(schemaProperties =>
+        document.ShouldContainPath("components.schemas.cowStableRelationshipsInPostRequest.properties").With(schemaProperties =>
         {
             schemaProperties.ShouldContainPath($"{propertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
             {
@@ -35,18 +34,18 @@ public sealed class NullabilityTests
     }
 
     [Theory]
-    [InlineData("hasOne")]
-    [InlineData("requiredHasOne")]
-    [InlineData("hasMany")]
-    [InlineData("requiredHasMany")]
-    [InlineData("nullableRequiredHasOne")]
+    [InlineData("oldestCow")]
+    [InlineData("firstCow")]
+    [InlineData("cowsReadyForMilking")]
+    [InlineData("allCows")]
+    [InlineData("favoriteCow")]
     public async Task Property_in_schema_for_relationship_of_resource_should_not_be_nullable(string propertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.nrtEnabledModelRelationshipsInPostRequest.properties").With(schemaProperties =>
+        document.ShouldContainPath("components.schemas.cowStableRelationshipsInPostRequest.properties").With(schemaProperties =>
         {
             schemaProperties.ShouldContainPath($"{propertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
             {
@@ -55,4 +54,5 @@ public sealed class NullabilityTests
         });
     }
 }
+
 
