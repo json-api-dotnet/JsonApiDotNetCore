@@ -28,13 +28,6 @@ internal sealed class CachingSwaggerGenerator : ISwaggerProvider
 
         string cacheKey = $"{documentName}#{host}#{basePath}";
 
-        return _openApiDocumentCache.GetOrAdd(cacheKey, _ =>
-        {
-            OpenApiDocument document = _defaultSwaggerGenerator.GetSwagger(documentName, host, basePath);
-
-            // Remove once https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2283 is addressed.
-            document.Components.Schemas = new SortedDictionary<string, OpenApiSchema>(document.Components.Schemas, StringComparer.Ordinal);
-            return document;
-        });
+        return _openApiDocumentCache.GetOrAdd(cacheKey, _ => _defaultSwaggerGenerator.GetSwagger(documentName, host, basePath));
     }
 }
