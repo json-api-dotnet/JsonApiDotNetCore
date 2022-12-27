@@ -112,20 +112,28 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
     private bool IsFieldRequired(ResourceFieldAttribute field)
     {
-        if (field is HasManyAttribute || _resourceTypeInfo.ResourceObjectOpenType != typeof(ResourceObjectInPostRequest<>))
+        if (_resourceTypeInfo.ResourceObjectOpenType != typeof(ResourceObjectInPostRequest<>))
         {
             return false;
         }
 
-        bool hasRequiredAttribute = field.Property.HasAttribute<RequiredAttribute>();
+        if (field.Property.HasAttribute<RequiredAttribute>())
+        {
+            return true;
+        }
+
+        if (field is HasManyAttribute)
+        {
+            return false;
+        }
 
         NullabilityInfoContext nullabilityContext = new();
         NullabilityInfo nullabilityInfo = nullabilityContext.Create(field.Property);
 
         return field.Property.PropertyType.IsValueType switch
         {
-            true => hasRequiredAttribute,
-            false => _options.ValidateModelState ? nullabilityInfo.ReadState == NullabilityState.NotNull || hasRequiredAttribute : hasRequiredAttribute
+            true => false,
+            false => _options.ValidateModelState && nullabilityInfo.ReadState == NullabilityState.NotNull
         };
     }
 

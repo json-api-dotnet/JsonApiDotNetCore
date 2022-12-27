@@ -6,10 +6,10 @@ using Xunit;
 
 namespace OpenApiClientTests.LegacyClient;
 
-public sealed class ClientAttributeRegistrationLifetimeTests
+public sealed class RequestDocumentRegistrationLifetimeTests
 {
     [Fact]
-    public async Task Disposed_attribute_registration_for_document_does_not_affect_request()
+    public async Task Disposed_request_document_registration_does_not_affect_request()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -27,7 +27,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
             airplane => airplane.AirtimeInHours))
         {
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
@@ -51,7 +51,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Attribute_registration_can_be_used_for_multiple_requests()
+    public async Task Request_document_registration_can_be_used_for_multiple_requests()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -72,7 +72,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
             airplane => airplane.AirtimeInHours))
         {
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
@@ -98,7 +98,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Request_is_unaffected_by_attribute_registration_for_different_document_of_same_type()
+    public async Task Request_is_unaffected_by_request_document_registration_of_different_request_document_of_same_type()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -128,10 +128,10 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
             airplane => airplane.AirtimeInHours))
         {
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+            using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
                 airplane => airplane.SerialNumber))
             {
             }
@@ -153,7 +153,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Attribute_values_can_be_changed_after_attribute_registration()
+    public async Task Attribute_values_can_be_changed_after_request_document_registration()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -174,7 +174,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
             airplane => airplane.IsInMaintenance))
         {
             requestDocument.Data.Attributes.IsInMaintenance = false;
@@ -196,7 +196,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Attribute_registration_is_unaffected_by_successive_attribute_registration_for_document_of_different_type()
+    public async Task Request_document_registration_is_unaffected_by_successive_registration_of_request_document_of_different_type()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -223,10 +223,10 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
             airplane => airplane.IsInMaintenance))
         {
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument2,
+            using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument2,
                 airplane => airplane.AirtimeInHours))
             {
                 // Act
@@ -247,7 +247,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Attribute_registration_is_unaffected_by_preceding_disposed_attribute_registration_for_different_document_of_same_type()
+    public async Task Request_document_registration_is_unaffected_by_preceding_disposed_registration_of_different_request_document_of_same_type()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -265,7 +265,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
             airplane => airplane.AirtimeInHours))
         {
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId1, requestDocument1));
@@ -288,7 +288,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
 
         wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
-        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
             airplane => airplane.SerialNumber))
         {
             // Act
@@ -309,7 +309,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Attribute_registration_is_unaffected_by_preceding_disposed_attribute_registration_for_document_of_different_type()
+    public async Task Request_document_registration_is_unaffected_by_preceding_disposed_registration_of_request_document_of_different_type()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -320,11 +320,14 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             Data = new AirplaneDataInPostRequest
             {
                 Type = AirplaneResourceType.Airplanes,
-                Attributes = new AirplaneAttributesInPostRequest()
+                Attributes = new AirplaneAttributesInPostRequest
+                {
+                    Name = "Jay Jay the Jet Plane"
+                }
             }
         };
 
-        using (apiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument1,
+        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument1,
             airplane => airplane.AirtimeInHours))
         {
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(requestDocument1));
@@ -347,7 +350,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
 
         wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
-        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
             airplane => airplane.SerialNumber))
         {
             // Act
@@ -368,7 +371,7 @@ public sealed class ClientAttributeRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Attribute_registration_is_unaffected_by_preceding_attribute_registration_for_different_document_of_same_type()
+    public async Task Request_document_registration_is_unaffected_by_preceding_registration_of_different_request_document_of_same_type()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -398,10 +401,10 @@ public sealed class ClientAttributeRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
             airplane => airplane.SerialNumber))
         {
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+            using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
                 airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))
             {
                 // Act

@@ -195,6 +195,1227 @@
           }
         }
       }
+    },
+    "/cowStables": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStableCollection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowStableCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStableCollection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowStableCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "postCowStable",
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/cowStablePostRequestDocument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowStablePrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/cowStables/{id}": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStable",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowStablePrimaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStable",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowStablePrimaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "patchCowStable",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/cowStablePatchRequestDocument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowStablePrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "deleteCowStable",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/cowStables/{id}/albinoCow": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStableAlbinoCow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableCowSecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStableAlbinoCow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableCowSecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cowStables/{id}/relationships/albinoCow": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStableAlbinoCowRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableCowIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStableAlbinoCowRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableCowIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "patchCowStableAlbinoCowRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/nullableToOneCowInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/cowStables/{id}/allCows": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStableAllCows",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStableAllCows",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cowStables/{id}/relationships/allCows": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStableAllCowsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStableAllCowsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "postCowStableAllCowsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyCowInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "patchCowStableAllCowsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyCowInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "deleteCowStableAllCowsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyCowInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/cowStables/{id}/cowsReadyForMilking": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStableCowsReadyForMilking",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStableCowsReadyForMilking",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cowStables/{id}/relationships/cowsReadyForMilking": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStableCowsReadyForMilkingRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStableCowsReadyForMilkingRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "postCowStableCowsReadyForMilkingRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyCowInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "patchCowStableCowsReadyForMilkingRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyCowInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "deleteCowStableCowsReadyForMilkingRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyCowInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/cowStables/{id}/favoriteCow": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStableFavoriteCow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowSecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStableFavoriteCow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowSecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cowStables/{id}/relationships/favoriteCow": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStableFavoriteCowRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStableFavoriteCowRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "patchCowStableFavoriteCowRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toOneCowInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/cowStables/{id}/firstCow": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStableFirstCow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowSecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStableFirstCow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowSecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cowStables/{id}/relationships/firstCow": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStableFirstCowRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStableFirstCowRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "patchCowStableFirstCowRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toOneCowInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/cowStables/{id}/oldestCow": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStableOldestCow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowSecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStableOldestCow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowSecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cowStables/{id}/relationships/oldestCow": {
+      "get": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "getCowStableOldestCowRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "headCowStableOldestCowRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/cowIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "cowStables"
+        ],
+        "operationId": "patchCowStableOldestCowRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toOneCowInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -406,6 +1627,72 @@
         },
         "additionalProperties": false
       },
+      "cowIdentifier": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/cowResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/cowIdentifier"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowIdentifierResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/cowIdentifier"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+          }
+        },
+        "additionalProperties": false
+      },
       "cowPatchRequestDocument": {
         "required": [
           "data"
@@ -459,6 +1746,249 @@
         ],
         "type": "string"
       },
+      "cowSecondaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/cowDataInResponse"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowStableCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/cowStableDataInResponse"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowStableDataInPatchRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/cowStableResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/cowStableRelationshipsInPatchRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowStableDataInPostRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/cowStableResourceType"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/cowStableRelationshipsInPostRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowStableDataInResponse": {
+        "required": [
+          "id",
+          "links",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/cowStableResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/cowStableRelationshipsInResponse"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowStablePatchRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/cowStableDataInPatchRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowStablePostRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/cowStableDataInPostRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowStablePrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/cowStableDataInResponse"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowStableRelationshipsInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "oldestCow": {
+            "$ref": "#/components/schemas/toOneCowInRequest"
+          },
+          "firstCow": {
+            "$ref": "#/components/schemas/toOneCowInRequest"
+          },
+          "albinoCow": {
+            "$ref": "#/components/schemas/nullableToOneCowInRequest"
+          },
+          "favoriteCow": {
+            "$ref": "#/components/schemas/toOneCowInRequest"
+          },
+          "cowsReadyForMilking": {
+            "$ref": "#/components/schemas/toManyCowInRequest"
+          },
+          "allCows": {
+            "$ref": "#/components/schemas/toManyCowInRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowStableRelationshipsInPostRequest": {
+        "required": [
+          "allCows",
+          "favoriteCow",
+          "firstCow",
+          "oldestCow"
+        ],
+        "type": "object",
+        "properties": {
+          "oldestCow": {
+            "$ref": "#/components/schemas/toOneCowInRequest"
+          },
+          "firstCow": {
+            "$ref": "#/components/schemas/toOneCowInRequest"
+          },
+          "albinoCow": {
+            "$ref": "#/components/schemas/nullableToOneCowInRequest"
+          },
+          "favoriteCow": {
+            "$ref": "#/components/schemas/toOneCowInRequest"
+          },
+          "cowsReadyForMilking": {
+            "$ref": "#/components/schemas/toManyCowInRequest"
+          },
+          "allCows": {
+            "$ref": "#/components/schemas/toManyCowInRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowStableRelationshipsInResponse": {
+        "type": "object",
+        "properties": {
+          "oldestCow": {
+            "$ref": "#/components/schemas/toOneCowInResponse"
+          },
+          "firstCow": {
+            "$ref": "#/components/schemas/toOneCowInResponse"
+          },
+          "albinoCow": {
+            "$ref": "#/components/schemas/nullableToOneCowInResponse"
+          },
+          "favoriteCow": {
+            "$ref": "#/components/schemas/toOneCowInResponse"
+          },
+          "cowsReadyForMilking": {
+            "$ref": "#/components/schemas/toManyCowInResponse"
+          },
+          "allCows": {
+            "$ref": "#/components/schemas/toManyCowInResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "cowStableResourceType": {
+        "enum": [
+          "cowStables"
+        ],
+        "type": "string"
+      },
       "jsonapiObject": {
         "type": "object",
         "properties": {
@@ -480,6 +2010,24 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInRelationshipObject": {
+        "required": [
+          "related",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "related": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -530,6 +2078,62 @@
         },
         "additionalProperties": false
       },
+      "linksInResourceIdentifierCollectionDocument": {
+        "required": [
+          "first",
+          "related",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "related": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "first": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceIdentifierDocument": {
+        "required": [
+          "related",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "related": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "linksInResourceObject": {
         "required": [
           "self"
@@ -539,6 +2143,202 @@
           "self": {
             "minLength": 1,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullValue": {
+        "not": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "array"
+            }
+          ],
+          "items": { }
+        },
+        "nullable": true
+      },
+      "nullableCowIdentifierResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/cowIdentifier"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableCowSecondaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/cowDataInResponse"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableToOneCowInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/cowIdentifier"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableToOneCowInResponse": {
+        "required": [
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/cowIdentifier"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInRelationshipObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyCowInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/cowIdentifier"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyCowInResponse": {
+        "required": [
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/cowIdentifier"
+            }
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInRelationshipObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "toOneCowInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/cowIdentifier"
+          }
+        },
+        "additionalProperties": false
+      },
+      "toOneCowInResponse": {
+        "required": [
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/cowIdentifier"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInRelationshipObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false

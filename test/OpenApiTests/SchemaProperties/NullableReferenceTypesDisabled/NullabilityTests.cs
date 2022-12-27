@@ -15,13 +15,14 @@ public sealed class NullabilityTests
         _testContext = testContext;
 
         testContext.UseController<ChickensController>();
+        testContext.UseController<HenHousesController>();
         testContext.SwaggerDocumentOutputPath = "test/OpenApiClientTests/SchemaProperties/NullableReferenceTypesDisabled";
     }
 
     [Theory]
     [InlineData("name")]
     [InlineData("timeAtCurrentFarmInDays")]
-    public async Task Property_in_schema_for_resource_should_be_nullable(string propertyName)
+    public async Task Property_in_schema_for_attribute_of_resource_should_be_nullable(string propertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -41,7 +42,7 @@ public sealed class NullabilityTests
     [InlineData("age")]
     [InlineData("weight")]
     [InlineData("hasProducedEggs")]
-    public async Task Property_in_schema_for_resource_should_not_be_nullable(string propertyName)
+    public async Task Property_in_schema_for_attribute_of_should_not_be_nullable(string propertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -52,6 +53,42 @@ public sealed class NullabilityTests
             schemaProperties.ShouldContainPath(propertyName).With(schemaProperty =>
             {
                 schemaProperty.ShouldNotContainPath("nullable");
+            });
+        });
+    }
+
+    [Theory]
+    [InlineData("oldestChicken")]
+    public async Task Property_in_schema_for_relationship_of_resource_should_be_nullable(string propertyName)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.ShouldContainPath("components.schemas.henHouseRelationshipsInPostRequest.properties").With(schemaProperties =>
+        {
+            schemaProperties.ShouldContainPath($"{propertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
+            {
+                document.ShouldContainPath($"components.schemas.{schemaReferenceId}.properties.data.oneOf[1].$ref").ShouldBeSchemaReferenceId("nullValue");
+            });
+        });
+    }
+
+    [Theory]
+    [InlineData("allChickens")]
+    [InlineData("firstChicken")]
+    [InlineData("chickensReadyForLaying")]
+    public async Task Data_property_in_schema_for_relationship_of_resource_should_not_be_nullable(string propertyName)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.ShouldContainPath("components.schemas.henHouseRelationshipsInPostRequest.properties").With(schemaProperties =>
+        {
+            schemaProperties.ShouldContainPath($"{propertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
+            {
+                document.ShouldContainPath($"components.schemas.{schemaReferenceId}.properties.data").ShouldNotContainPath("oneOf[1].$ref");
             });
         });
     }
