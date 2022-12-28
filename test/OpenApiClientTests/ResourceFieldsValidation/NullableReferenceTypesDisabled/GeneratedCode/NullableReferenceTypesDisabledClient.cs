@@ -1,9 +1,9 @@
 using JsonApiDotNetCore.OpenApi.Client;
 using Newtonsoft.Json;
 
-namespace OpenApiClientTests.SchemaProperties.NullableReferenceTypesEnabled.GeneratedCode;
+namespace OpenApiClientTests.ResourceFieldsValidation.NullableReferenceTypesDisabled.GeneratedCode;
 
-internal partial class NullableReferenceTypesEnabledClient : JsonApiClient
+internal partial class NullableReferenceTypesDisabledClient : JsonApiClient
 {
     partial void UpdateJsonSerializerSettings(JsonSerializerSettings settings)
     {

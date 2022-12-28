@@ -3,11 +3,10 @@ using BlushingPenguin.JsonPath;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using JetBrains.Annotations;
-using TestBuildingBlocks;
 
-namespace OpenApiTests;
+namespace TestBuildingBlocks;
 
-internal static class JsonElementExtensions
+public static class JsonElementExtensions
 {
     public static JsonElementAssertions Should(this JsonElement source)
     {
@@ -31,6 +30,12 @@ internal static class JsonElementExtensions
     {
         source.ValueKind.Should().Be(JsonValueKind.String);
         source.GetString().Should().Be(value);
+    }
+
+    public static void ShouldBeInteger(this JsonElement source, int value)
+    {
+        source.ValueKind.Should().Be(JsonValueKind.Number);
+        source.GetInt32().Should().Be(value);
     }
 
     public static SchemaReferenceIdContainer ShouldBeSchemaReferenceId(this JsonElement source, string value)
@@ -63,7 +68,7 @@ internal static class JsonElementExtensions
     {
         public string SchemaReferenceId { get; }
 
-        public SchemaReferenceIdContainer(string schemaReferenceId)
+        internal SchemaReferenceIdContainer(string schemaReferenceId)
         {
             SchemaReferenceId = schemaReferenceId;
         }
@@ -71,7 +76,7 @@ internal static class JsonElementExtensions
 
     public sealed class JsonElementAssertions : JsonElementAssertions<JsonElementAssertions>
     {
-        public JsonElementAssertions(JsonElement subject)
+        internal JsonElementAssertions(JsonElement subject)
             : base(subject)
         {
         }

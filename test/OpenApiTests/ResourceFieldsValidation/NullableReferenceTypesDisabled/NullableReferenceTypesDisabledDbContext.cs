@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 
-namespace OpenApiTests.SchemaProperties.NullableReferenceTypesDisabled;
+namespace OpenApiTests.ResourceFieldsValidation.NullableReferenceTypesDisabled;
 
 // @formatter:wrap_chained_method_calls chop_always
 

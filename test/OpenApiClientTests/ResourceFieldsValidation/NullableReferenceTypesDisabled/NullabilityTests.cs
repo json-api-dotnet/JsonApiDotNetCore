@@ -1,9 +1,9 @@
 using System.Reflection;
 using FluentAssertions;
-using OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled.GeneratedCode;
+using OpenApiClientTests.ResourceFieldsValidation.NullableReferenceTypesDisabled.GeneratedCode;
 using Xunit;
 
-namespace OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled;
+namespace OpenApiClientTests.ResourceFieldsValidation.NullableReferenceTypesDisabled;
 
 public sealed class NullabilityTests
 {

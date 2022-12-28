@@ -3,10 +3,10 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.SchemaProperties.NullableReferenceTypesEnabled;
+namespace OpenApiTests.ResourceFieldsValidation.NullableReferenceTypesEnabled;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.SchemaProperties")]
+[Resource(ControllerNamespace = "OpenApiTests.ResourceFieldsValidation")]
 public sealed class Cow : Identifiable<int>
 {
     [Attr]

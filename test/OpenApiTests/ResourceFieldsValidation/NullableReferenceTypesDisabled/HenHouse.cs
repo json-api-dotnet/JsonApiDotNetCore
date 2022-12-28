@@ -5,10 +5,10 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.SchemaProperties.NullableReferenceTypesDisabled;
+namespace OpenApiTests.ResourceFieldsValidation.NullableReferenceTypesDisabled;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.SchemaProperties")]
+[Resource(ControllerNamespace = "OpenApiTests.ResourceFieldsValidation")]
 public sealed class HenHouse : Identifiable<int>
 {
     [HasOne]

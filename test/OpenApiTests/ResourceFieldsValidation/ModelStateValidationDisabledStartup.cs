@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using TestBuildingBlocks;
 
-namespace OpenApiTests.SchemaProperties;
+namespace OpenApiTests.ResourceFieldsValidation;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class ModelStateValidationDisabledStartup<TDbContext> : OpenApiStartup<TDbContext>

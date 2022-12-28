@@ -52,15 +52,15 @@
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
     </OpenApiReference>
-    <OpenApiReference Include="SchemaProperties\NullableReferenceTypesEnabled\swagger.g.json">
-      <Namespace>OpenApiClientTests.SchemaProperties.NullableReferenceTypesEnabled.GeneratedCode</Namespace>
+    <OpenApiReference Include="ResourceFieldsValidation\NullableReferenceTypesEnabled\swagger.g.json">
+      <Namespace>OpenApiClientTests.ResourceFieldsValidation.NullableReferenceTypesEnabled.GeneratedCode</Namespace>
       <ClassName>NullableReferenceTypesEnabledClient</ClassName>
       <OutputPath>NullableReferenceTypesEnabledClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:true</Options>
     </OpenApiReference>
-    <OpenApiReference Include="SchemaProperties\NullableReferenceTypesDisabled\swagger.g.json">
-      <Namespace>OpenApiClientTests.SchemaProperties.NullableReferenceTypesDisabled.GeneratedCode</Namespace>
+    <OpenApiReference Include="ResourceFieldsValidation\NullableReferenceTypesDisabled\swagger.g.json">
+      <Namespace>OpenApiClientTests.ResourceFieldsValidation.NullableReferenceTypesDisabled.GeneratedCode</Namespace>
       <ClassName>NullableReferenceTypesDisabledClient</ClassName>
       <OutputPath>NullableReferenceTypesDisabledClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>

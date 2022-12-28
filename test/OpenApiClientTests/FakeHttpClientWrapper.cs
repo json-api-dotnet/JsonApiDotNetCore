@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using JsonApiDotNetCore.OpenApi.Client;
 
 namespace OpenApiClientTests;
@@ -20,6 +21,17 @@ internal sealed class FakeHttpClientWrapper : IDisposable
     {
         HttpClient = httpClient;
         _handler = handler;
+    }
+
+    public JsonElement ParseRequestBody()
+    {
+        if (RequestBody == null)
+        {
+            throw new InvalidOperationException();
+        }
+
+        using JsonDocument jsonDocument = JsonDocument.Parse(RequestBody);
+        return jsonDocument.RootElement.Clone();
     }
 
     public static FakeHttpClientWrapper Create(HttpStatusCode statusCode, string? responseBody)
