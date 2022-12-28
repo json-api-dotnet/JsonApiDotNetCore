@@ -372,6 +372,7 @@ public sealed class RequestTests
         HenHousePostRequestDocument requestDocument = _fakers.HenHousePostRequestDocument.Generate();
         requestDocument.Data.Relationships.OldestChicken.Data = null;
 
+        // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PostHenHouseAsync(requestDocument));
 
         // Assert
@@ -612,6 +613,7 @@ public sealed class RequestTests
         requestDocument.Data.Relationships.ChickensReadyForLaying = default!;
         requestDocument.Data.Relationships.AllChickens = default!;
 
+        // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PatchHenHouseAsync(int.Parse(requestDocument.Data.Id), requestDocument));
 
         // Assert

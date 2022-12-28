@@ -458,6 +458,7 @@ public sealed class RequestTests
         CowStablePostRequestDocument requestDocument = _fakers.CowStablePostRequestDocument.Generate();
         requestDocument.Data.Relationships.AlbinoCow.Data = null;
 
+        // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PostCowStableAsync(requestDocument));
 
         // Assert
@@ -487,6 +488,7 @@ public sealed class RequestTests
         CowStablePostRequestDocument requestDocument = _fakers.CowStablePostRequestDocument.Generate();
         requestDocument.Data.Relationships.AlbinoCow = default!;
 
+        // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PostCowStableAsync(requestDocument));
 
         // Assert
@@ -561,6 +563,7 @@ public sealed class RequestTests
         CowStablePostRequestDocument requestDocument = _fakers.CowStablePostRequestDocument.Generate();
         requestDocument.Data.Relationships.CowsReadyForMilking = default!;
 
+        // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PostCowStableAsync(requestDocument));
 
         // Assert
@@ -700,6 +703,7 @@ public sealed class RequestTests
         requestDocument.Data.Relationships.FavoriteCow = default!;
         requestDocument.Data.Relationships.AllCows = default!;
 
+        // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PatchCowStableAsync(int.Parse(requestDocument.Data.Id), requestDocument));
 
         // Assert
