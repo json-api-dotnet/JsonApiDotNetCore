@@ -149,7 +149,9 @@ public sealed class ResponseTests
         // Arrange
         const string flightId = "ZvuH1";
         const string departsAtInZuluTime = "2021-06-08T12:53:30.554Z";
+        const string flightDestination = "Amsterdam";
         const string arrivesAtWithUtcOffset = "2019-02-20T11:56:33.0721266+01:00";
+        const string flightServiceOnBoard = "Movies";
 
         const string responseBody = @"{
   ""links"": {
@@ -160,7 +162,9 @@ public sealed class ResponseTests
       ""id"": """ + flightId + @""",
       ""attributes"": {
         ""departs-at"": """ + departsAtInZuluTime + @""",
-        ""arrives-at"": """ + arrivesAtWithUtcOffset + @"""
+        ""arrives-at"": """ + arrivesAtWithUtcOffset + @""",
+        ""final-destination"": """ + flightDestination + @""",
+        ""services-on-board"": [""" + flightServiceOnBoard + @"""]
       },
       ""links"": {
         ""self"": """ + HostPrefix + @"flights/" + flightId + @"""
@@ -181,8 +185,8 @@ public sealed class ResponseTests
         document.Data.Relationships.Should().BeNull();
         document.Data.Attributes.DepartsAt.Should().Be(DateTimeOffset.Parse(departsAtInZuluTime));
         document.Data.Attributes.ArrivesAt.Should().Be(DateTimeOffset.Parse(arrivesAtWithUtcOffset));
-        document.Data.Attributes.ServicesOnBoard.Should().BeNull();
-        document.Data.Attributes.FinalDestination.Should().BeNull();
+        document.Data.Attributes.ServicesOnBoard.Should().Contain(flightServiceOnBoard);
+        document.Data.Attributes.FinalDestination.Should().Be(flightDestination);
         document.Data.Attributes.StopOverDestination.Should().BeNull();
         document.Data.Attributes.OperatedBy.Should().Be(default);
     }

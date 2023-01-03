@@ -35,7 +35,7 @@ public interface IJsonApiClient
     /// An <see cref="IDisposable" /> to clear the current registration. For efficient memory usage, it is recommended to wrap calls to this method in a
     /// <c>using</c> statement, so the registrations are cleaned up after executing the request.
     /// </returns>
-    IDisposable OmitDefaultValuesForAttributesInRequestDocument<TRequestDocument, TAttributesObject>(TRequestDocument requestDocument,
+    IDisposable WithPartialAttributeSerialization<TRequestDocument, TAttributesObject>(TRequestDocument requestDocument,
         params Expression<Func<TAttributesObject, object?>>[] alwaysIncludedAttributeSelectors)
         where TRequestDocument : class;
 }

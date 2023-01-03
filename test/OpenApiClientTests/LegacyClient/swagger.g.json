@@ -1970,6 +1970,9 @@
         "additionalProperties": false
       },
       "airplane-attributes-in-response": {
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -2238,6 +2241,10 @@
         "additionalProperties": false
       },
       "flight-attendant-attributes-in-response": {
+        "required": [
+          "email-address",
+          "profile-image-url"
+        ],
         "type": "object",
         "properties": {
           "email-address": {
@@ -2557,6 +2564,10 @@
         "additionalProperties": false
       },
       "flight-attributes-in-response": {
+        "required": [
+          "final-destination",
+          "services-on-board"
+        ],
         "type": "object",
         "properties": {
           "final-destination": {
@@ -2815,6 +2826,9 @@
         "additionalProperties": false
       },
       "flight-relationships-in-response": {
+        "required": [
+          "purser"
+        ],
         "type": "object",
         "properties": {
           "cabin-crew-members": {

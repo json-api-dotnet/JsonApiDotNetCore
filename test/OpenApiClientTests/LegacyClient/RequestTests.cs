@@ -152,7 +152,7 @@ public sealed class RequestTests
             }
         };
 
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument,
+        using (apiClient.WithPartialAttributeSerialization<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument,
             airplane => airplane.SerialNumber))
         {
             // Act
@@ -203,7 +203,7 @@ public sealed class RequestTests
             }
         };
 
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
             airplane => airplane.SerialNumber, airplane => airplane.LastServicedAt, airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))
         {
             // Act

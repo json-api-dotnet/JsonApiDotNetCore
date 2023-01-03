@@ -34,13 +34,18 @@ public static class ServiceCollectionExtensions
 
     private static void AddCustomApiExplorer(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
     {
+        services.AddSingleton<ResourceFieldValidationMetadataProvider>();
+
         services.AddSingleton<IApiDescriptionGroupCollectionProvider>(provider =>
         {
             var controllerResourceMapping = provider.GetRequiredService<IControllerResourceMapping>();
             var actionDescriptorCollectionProvider = provider.GetRequiredService<IActionDescriptorCollectionProvider>();
             var apiDescriptionProviders = provider.GetRequiredService<IEnumerable<IApiDescriptionProvider>>();
+            var resourceFieldValidationMetadataProvider = provider.GetRequiredService<ResourceFieldValidationMetadataProvider>();
 
-            JsonApiActionDescriptorCollectionProvider descriptorCollectionProviderWrapper = new(controllerResourceMapping, actionDescriptorCollectionProvider);
+            JsonApiActionDescriptorCollectionProvider descriptorCollectionProviderWrapper =
+                new(controllerResourceMapping, actionDescriptorCollectionProvider, resourceFieldValidationMetadataProvider);
+
             return new ApiDescriptionGroupCollectionProvider(descriptorCollectionProviderWrapper, apiDescriptionProviders);
         });
 

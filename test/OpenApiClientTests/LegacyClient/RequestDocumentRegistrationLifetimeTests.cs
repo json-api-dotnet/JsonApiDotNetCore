@@ -27,7 +27,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
             airplane => airplane.AirtimeInHours))
         {
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
@@ -72,7 +72,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
             airplane => airplane.AirtimeInHours))
         {
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
@@ -128,10 +128,10 @@ public sealed class RequestDocumentRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
             airplane => airplane.AirtimeInHours))
         {
-            using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+            using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
                 airplane => airplane.SerialNumber))
             {
             }
@@ -174,7 +174,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
             airplane => airplane.IsInMaintenance))
         {
             requestDocument.Data.Attributes.IsInMaintenance = false;
@@ -223,10 +223,10 @@ public sealed class RequestDocumentRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
             airplane => airplane.IsInMaintenance))
         {
-            using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument2,
+            using (apiClient.WithPartialAttributeSerialization<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument2,
                 airplane => airplane.AirtimeInHours))
             {
                 // Act
@@ -265,7 +265,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
             airplane => airplane.AirtimeInHours))
         {
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId1, requestDocument1));
@@ -288,7 +288,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
 
         wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
             airplane => airplane.SerialNumber))
         {
             // Act
@@ -327,7 +327,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument1,
+        using (apiClient.WithPartialAttributeSerialization<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument1,
             airplane => airplane.AirtimeInHours))
         {
             _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(requestDocument1));
@@ -350,7 +350,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
 
         wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
             airplane => airplane.SerialNumber))
         {
             // Act
@@ -401,10 +401,10 @@ public sealed class RequestDocumentRegistrationLifetimeTests
             }
         };
 
-        using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+        using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
             airplane => airplane.SerialNumber))
         {
-            using (apiClient.OmitDefaultValuesForAttributesInRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+            using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
                 airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))
             {
                 // Act

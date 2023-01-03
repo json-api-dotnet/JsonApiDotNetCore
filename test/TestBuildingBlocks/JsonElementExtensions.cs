@@ -32,6 +32,22 @@ public static class JsonElementExtensions
         source.GetString().Should().Be(value);
     }
 
+    public static void ShouldBeArrayWithElement(this JsonElement source, string value)
+    {
+        source.ValueKind.Should().Be(JsonValueKind.Array);
+
+        var deserializedCollection = JsonSerializer.Deserialize<List<string>>(source.GetRawText());
+        deserializedCollection.Should().Contain(value);
+    }
+
+    public static void ShouldBeArrayWithoutElement(this JsonElement source, string value)
+    {
+        source.ValueKind.Should().Be(JsonValueKind.Array);
+
+        var deserializedCollection = JsonSerializer.Deserialize<List<string>>(source.GetRawText());
+        deserializedCollection.Should().NotContain(value);
+    }
+
     public static void ShouldBeInteger(this JsonElement source, int value)
     {
         source.ValueKind.Should().Be(JsonValueKind.Number);

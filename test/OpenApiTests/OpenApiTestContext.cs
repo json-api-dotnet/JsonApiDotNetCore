@@ -2,7 +2,6 @@ using System.Reflection;
 using System.Text.Json;
 using JetBrains.Annotations;
 using TestBuildingBlocks;
-using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace OpenApiTests;
 

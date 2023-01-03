@@ -15,10 +15,13 @@ internal sealed class NonPrimaryDocumentTypeFactory
     private static readonly DocumentOpenTypes RelationshipResponseDocumentOpenTypes = new(typeof(ResourceIdentifierCollectionResponseDocument<>),
         typeof(NullableResourceIdentifierResponseDocument<>), typeof(ResourceIdentifierResponseDocument<>));
 
-    public static NonPrimaryDocumentTypeFactory Instance { get; } = new();
+    private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
 
-    private NonPrimaryDocumentTypeFactory()
+    public NonPrimaryDocumentTypeFactory(ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
+        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
+
+        _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
     }
 
     public Type GetForSecondaryResponse(RelationshipAttribute relationship)
@@ -42,13 +45,13 @@ internal sealed class NonPrimaryDocumentTypeFactory
         return Get(relationship, RelationshipResponseDocumentOpenTypes);
     }
 
-    private static Type Get(RelationshipAttribute relationship, DocumentOpenTypes types)
+    private Type Get(RelationshipAttribute relationship, DocumentOpenTypes types)
     {
         // @formatter:nested_ternary_style expanded
 
         Type documentOpenType = relationship is HasManyAttribute
             ? types.ManyDataOpenType
-            : relationship.IsNullable()
+            : _resourceFieldValidationMetadataProvider.IsNullable(relationship)
                 ? types.NullableSingleDataOpenType
                 : types.SingleDataOpenType;
 

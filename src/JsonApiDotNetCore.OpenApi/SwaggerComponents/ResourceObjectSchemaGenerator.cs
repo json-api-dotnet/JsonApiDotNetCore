@@ -15,7 +15,7 @@ internal sealed class ResourceObjectSchemaGenerator
     private readonly Func<ResourceTypeInfo, ResourceFieldObjectSchemaBuilder> _resourceFieldObjectSchemaBuilderFactory;
 
     public ResourceObjectSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options,
-        ISchemaRepositoryAccessor schemaRepositoryAccessor)
+        ISchemaRepositoryAccessor schemaRepositoryAccessor, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(resourceGraph);
@@ -31,7 +31,7 @@ internal sealed class ResourceObjectSchemaGenerator
         _allowClientGeneratedIds = options.AllowClientGeneratedIds;
 
         _resourceFieldObjectSchemaBuilderFactory = resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor,
-            defaultSchemaGenerator, _resourceTypeSchemaGenerator, options);
+            defaultSchemaGenerator, _resourceTypeSchemaGenerator, options, resourceFieldValidationMetadataProvider);
     }
 
     public OpenApiSchema GenerateSchema(Type resourceObjectType)

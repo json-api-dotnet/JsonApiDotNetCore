@@ -24,7 +24,7 @@ public abstract class JsonApiClient : IJsonApiClient
     }
 
     /// <inheritdoc />
-    public IDisposable OmitDefaultValuesForAttributesInRequestDocument<TRequestDocument, TAttributesObject>(TRequestDocument requestDocument,
+    public IDisposable WithPartialAttributeSerialization<TRequestDocument, TAttributesObject>(TRequestDocument requestDocument,
         params Expression<Func<TAttributesObject, object?>>[] alwaysIncludedAttributeSelectors)
         where TRequestDocument : class
     {
@@ -40,12 +40,12 @@ public abstract class JsonApiClient : IJsonApiClient
             }
             else
             {
-                throw new ArgumentException($"The expression '{selector}' should select a single property. For example: 'article => article.Title'.");
+                throw new ArgumentException(
+                    $"The expression '{nameof(alwaysIncludedAttributeSelectors)}' should select a single property. For example: 'article => article.Title'.");
             }
         }
 
-        _jsonApiJsonConverter.RegisterRequestDocumentForAttributesOmission(requestDocument,
-            new AttributesObjectInfo(attributeNames, typeof(TAttributesObject)));
+        _jsonApiJsonConverter.RegisterDocument(requestDocument, new AttributeNamesContainer(attributeNames, typeof(TAttributesObject)));
 
         return new RequestDocumentRegistrationScope(_jsonApiJsonConverter, requestDocument);
     }
@@ -69,15 +69,15 @@ public abstract class JsonApiClient : IJsonApiClient
 
     private sealed class JsonApiJsonConverter : JsonConverter
     {
-        private readonly Dictionary<object, AttributesObjectInfo> _attributesObjectInfoByRequestDocument = new();
+        private readonly Dictionary<object, AttributeNamesContainer> _alwaysIncludedAttributesByRequestDocument = new();
         private readonly Dictionary<Type, ISet<object>> _requestDocumentsByType = new();
         private SerializationScope? _serializationScope;
 
         public override bool CanRead => false;
 
-        public void RegisterRequestDocumentForAttributesOmission(object requestDocument, AttributesObjectInfo attributesObjectInfo)
+        public void RegisterDocument(object requestDocument, AttributeNamesContainer alwaysIncludedAttributes)
         {
-            _attributesObjectInfoByRequestDocument[requestDocument] = attributesObjectInfo;
+            _alwaysIncludedAttributesByRequestDocument[requestDocument] = alwaysIncludedAttributes;
 
             Type requestDocumentType = requestDocument.GetType();
 
@@ -91,9 +91,9 @@ public abstract class JsonApiClient : IJsonApiClient
 
         public void RemoveRegistration(object requestDocument)
         {
-            if (_attributesObjectInfoByRequestDocument.ContainsKey(requestDocument))
+            if (_alwaysIncludedAttributesByRequestDocument.ContainsKey(requestDocument))
             {
-                _attributesObjectInfoByRequestDocument.Remove(requestDocument);
+                _alwaysIncludedAttributesByRequestDocument.Remove(requestDocument);
 
                 Type requestDocumentType = requestDocument.GetType();
                 _requestDocumentsByType[requestDocumentType].Remove(requestDocument);
@@ -136,7 +136,7 @@ public abstract class JsonApiClient : IJsonApiClient
             }
             else
             {
-                AttributesObjectInfo? attributesObjectInfo = _serializationScope.AttributesObjectInScope;
+                AttributeNamesContainer? attributesObjectInfo = _serializationScope.AttributesObjectInScope;
 
                 AssertObjectMatchesSerializationScope(attributesObjectInfo, value);
 
@@ -158,7 +158,7 @@ public abstract class JsonApiClient : IJsonApiClient
         {
             _serializationScope = new SerializationScope();
 
-            if (_attributesObjectInfoByRequestDocument.TryGetValue(value, out AttributesObjectInfo? attributesObjectInfo))
+            if (_alwaysIncludedAttributesByRequestDocument.TryGetValue(value, out AttributeNamesContainer? attributesObjectInfo))
             {
                 _serializationScope.AttributesObjectInScope = attributesObjectInfo;
             }
@@ -173,17 +173,18 @@ public abstract class JsonApiClient : IJsonApiClient
             }
         }
 
-        private static void AssertObjectMatchesSerializationScope([SysNotNull] AttributesObjectInfo? attributesObjectInfo, object value)
+        private static void AssertObjectMatchesSerializationScope([SysNotNull] AttributeNamesContainer? attributesObjectInfo, object value)
         {
             Type objectType = value.GetType();
 
-            if (attributesObjectInfo == null || !attributesObjectInfo.MatchesType(objectType))
+            if (attributesObjectInfo == null || !attributesObjectInfo.MatchesAttributesObjectType(objectType))
             {
                 throw new UnreachableCodeException();
             }
         }
 
-        private static void SerializeAttributesObject(AttributesObjectInfo alwaysIncludedAttributes, JsonWriter writer, object value, JsonSerializer serializer)
+        private static void SerializeAttributesObject(AttributeNamesContainer alwaysIncludedAttributes, JsonWriter writer, object value,
+            JsonSerializer serializer)
         {
             AssertRequiredPropertiesAreNotExcluded(value, alwaysIncludedAttributes, writer);
 
@@ -191,13 +192,13 @@ public abstract class JsonApiClient : IJsonApiClient
             serializer.Serialize(writer, value);
         }
 
-        private static void AssertRequiredPropertiesAreNotExcluded(object value, AttributesObjectInfo alwaysIncludedAttributes, JsonWriter jsonWriter)
+        private static void AssertRequiredPropertiesAreNotExcluded(object value, AttributeNamesContainer alwaysIncludedAttributes, JsonWriter jsonWriter)
         {
             PropertyInfo[] propertyInfos = value.GetType().GetProperties();
 
             foreach (PropertyInfo attributesPropertyInfo in propertyInfos)
             {
-                bool isExplicitlyIncluded = alwaysIncludedAttributes.IsAttributeMarkedForInclusion(attributesPropertyInfo.Name);
+                bool isExplicitlyIncluded = alwaysIncludedAttributes.ContainsAttribute(attributesPropertyInfo.Name);
 
                 if (isExplicitlyIncluded)
                 {
@@ -212,7 +213,7 @@ public abstract class JsonApiClient : IJsonApiClient
         {
             JsonPropertyAttribute jsonPropertyForAttribute = attribute.GetCustomAttributes<JsonPropertyAttribute>().Single();
 
-            if (jsonPropertyForAttribute.Required != Required.Always)
+            if (jsonPropertyForAttribute.Required is not (Required.Always or Required.AllowNull))
             {
                 return;
             }
@@ -221,8 +222,7 @@ public abstract class JsonApiClient : IJsonApiClient
 
             if (isPropertyIgnored)
             {
-                throw new JsonSerializationException(
-                    $"Ignored property '{jsonPropertyForAttribute.PropertyName}' must have a value because it is required. Path '{path}'.");
+                throw new InvalidOperationException($"The following property should not be omitted: {path}.{jsonPropertyForAttribute.PropertyName}.");
             }
         }
 
@@ -248,7 +248,7 @@ public abstract class JsonApiClient : IJsonApiClient
     private sealed class SerializationScope
     {
         private bool _isFirstAttemptToConvertAttributes = true;
-        public AttributesObjectInfo? AttributesObjectInScope { get; set; }
+        public AttributeNamesContainer? AttributesObjectInScope { get; set; }
 
         public bool ShouldConvertAsAttributesObject(Type type)
         {
@@ -257,7 +257,7 @@ public abstract class JsonApiClient : IJsonApiClient
                 return false;
             }
 
-            if (!AttributesObjectInScope.MatchesType(type))
+            if (!AttributesObjectInScope.MatchesAttributesObjectType(type))
             {
                 return false;
             }
@@ -267,26 +267,26 @@ public abstract class JsonApiClient : IJsonApiClient
         }
     }
 
-    private sealed class AttributesObjectInfo
+    private sealed class AttributeNamesContainer
     {
-        private readonly ISet<string> _attributesMarkedForInclusion;
+        private readonly ISet<string> _attributeNames;
         private readonly Type _attributesObjectType;
 
-        public AttributesObjectInfo(ISet<string> attributesMarkedForInclusion, Type attributesObjectType)
+        public AttributeNamesContainer(ISet<string> attributeNames, Type attributesObjectType)
         {
-            ArgumentGuard.NotNull(attributesMarkedForInclusion);
+            ArgumentGuard.NotNull(attributeNames);
             ArgumentGuard.NotNull(attributesObjectType);
 
-            _attributesMarkedForInclusion = attributesMarkedForInclusion;
+            _attributeNames = attributeNames;
             _attributesObjectType = attributesObjectType;
         }
 
-        public bool IsAttributeMarkedForInclusion(string name)
+        public bool ContainsAttribute(string name)
         {
-            return _attributesMarkedForInclusion.Contains(name);
+            return _attributeNames.Contains(name);
         }
 
-        public bool MatchesType(Type type)
+        public bool MatchesAttributesObjectType(Type type)
         {
             return _attributesObjectType == type;
         }
@@ -314,22 +314,24 @@ public abstract class JsonApiClient : IJsonApiClient
 
     private sealed class JsonApiAttributeContractResolver : DefaultContractResolver
     {
-        private readonly AttributesObjectInfo _attributesObjectInfo;
+        private readonly AttributeNamesContainer _alwaysIncludedAttributes;
 
-        public JsonApiAttributeContractResolver(AttributesObjectInfo attributesObjectInfo)
+        public JsonApiAttributeContractResolver(AttributeNamesContainer alwaysIncludedAttributes)
         {
-            ArgumentGuard.NotNull(attributesObjectInfo);
+            ArgumentGuard.NotNull(alwaysIncludedAttributes);
 
-            _attributesObjectInfo = attributesObjectInfo;
+            _alwaysIncludedAttributes = alwaysIncludedAttributes;
         }
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             JsonProperty property = base.CreateProperty(member, memberSerialization);
 
-            if (_attributesObjectInfo.MatchesType(property.DeclaringType!))
+            bool canOmitAttribute = property.Required != Required.Always;
+
+            if (canOmitAttribute && _alwaysIncludedAttributes.MatchesAttributesObjectType(property.DeclaringType!))
             {
-                if (_attributesObjectInfo.IsAttributeMarkedForInclusion(property.UnderlyingName!))
+                if (_alwaysIncludedAttributes.ContainsAttribute(property.UnderlyingName!))
                 {
                     property.NullValueHandling = NullValueHandling.Include;
                     property.DefaultValueHandling = DefaultValueHandling.Include;
