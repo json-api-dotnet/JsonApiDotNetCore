@@ -1,6 +1,5 @@
 using Bogus;
 using OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesDisabled.ModelStateValidationEnabled.GeneratedCode;
-using TestBuildingBlocks;
 
 namespace OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesDisabled.ModelStateValidationEnabled;
 

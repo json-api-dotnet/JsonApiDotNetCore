@@ -524,8 +524,6 @@ public sealed class CreateResourceTests : OpenApiClientTests
 
     [Theory]
     [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredNonNullableToOne), "requiredNonNullableToOne")]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredNullableToOne), "requiredNullableToOne", Skip = "Known limitation")]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToMany), "requiredToMany", Skip = "Known limitation")]
     public async Task Cannot_exclude_relationship_with_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
@@ -570,8 +568,6 @@ public sealed class CreateResourceTests : OpenApiClientTests
 
     [Theory]
     [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredNonNullableToOne), "requiredNonNullableToOne")]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredNullableToOne), "requiredNullableToOne", Skip = "Known limitation")]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToMany), "requiredToMany", Skip = "Known limitation")]
     public async Task Cannot_exclude_relationship_without_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
