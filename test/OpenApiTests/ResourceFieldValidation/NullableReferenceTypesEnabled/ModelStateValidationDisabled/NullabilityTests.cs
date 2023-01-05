@@ -21,31 +21,11 @@ public sealed class NullabilityTests
     }
 
     [Theory]
-    [InlineData("nonNullableReferenceType")]
-    [InlineData("requiredNonNullableReferenceType")]
-    [InlineData("valueType")]
-    [InlineData("requiredValueType")]
-    public async Task Schema_property_that_describes_attribute_is_not_nullable(string jsonPropertyName)
-    {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        document.ShouldContainPath("components.schemas.resourceAttributesInResponse.properties").With(schemaProperties =>
-        {
-            schemaProperties.ShouldContainPath(jsonPropertyName).With(schemaProperty =>
-            {
-                schemaProperty.ShouldNotContainPath("nullable");
-            });
-        });
-    }
-
-    [Theory]
     [InlineData("nullableReferenceType")]
     [InlineData("requiredNullableReferenceType")]
     [InlineData("nullableValueType")]
     [InlineData("requiredNullableValueType")]
-    public async Task Schema_property_that_describes_attribute_is_nullable(string jsonPropertyName)
+    public async Task Schema_property_for_attribute_is_nullable(string jsonPropertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -61,21 +41,21 @@ public sealed class NullabilityTests
     }
 
     [Theory]
-    [InlineData("nonNullableToOne")]
-    [InlineData("requiredNonNullableToOne")]
-    [InlineData("toMany")]
-    [InlineData("requiredToMany")]
-    public async Task Schema_property_that_describes_relationship_is_not_nullable(string jsonPropertyName)
+    [InlineData("nonNullableReferenceType")]
+    [InlineData("requiredNonNullableReferenceType")]
+    [InlineData("valueType")]
+    [InlineData("requiredValueType")]
+    public async Task Schema_property_for_attribute_is_not_nullable(string jsonPropertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.resourceRelationshipsInPostRequest.properties").With(schemaProperties =>
+        document.ShouldContainPath("components.schemas.resourceAttributesInResponse.properties").With(schemaProperties =>
         {
-            schemaProperties.ShouldContainPath($"{jsonPropertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
+            schemaProperties.ShouldContainPath(jsonPropertyName).With(schemaProperty =>
             {
-                document.ShouldContainPath($"components.schemas.{schemaReferenceId}.properties.data").ShouldNotContainPath("oneOf[1].$ref");
+                schemaProperty.ShouldNotContainPath("nullable");
             });
         });
     }
@@ -83,7 +63,7 @@ public sealed class NullabilityTests
     [Theory]
     [InlineData("nullableToOne")]
     [InlineData("requiredNullableToOne")]
-    public async Task Schema_property_that_describes_relationship_is_nullable(string jsonPropertyName)
+    public async Task Schema_property_for_relationship_is_nullable(string jsonPropertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -94,6 +74,26 @@ public sealed class NullabilityTests
             schemaProperties.ShouldContainPath($"{jsonPropertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
             {
                 document.ShouldContainPath($"components.schemas.{schemaReferenceId}.properties.data.oneOf[1].$ref").ShouldBeSchemaReferenceId("nullValue");
+            });
+        });
+    }
+
+    [Theory]
+    [InlineData("nonNullableToOne")]
+    [InlineData("requiredNonNullableToOne")]
+    [InlineData("toMany")]
+    [InlineData("requiredToMany")]
+    public async Task Schema_property_for_relationship_is_not_nullable(string jsonPropertyName)
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.ShouldContainPath("components.schemas.resourceRelationshipsInPostRequest.properties").With(schemaProperties =>
+        {
+            schemaProperties.ShouldContainPath($"{jsonPropertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
+            {
+                document.ShouldContainPath($"components.schemas.{schemaReferenceId}.properties.data").ShouldNotContainPath("oneOf[1].$ref");
             });
         });
     }

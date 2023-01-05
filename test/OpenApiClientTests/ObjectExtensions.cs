@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Reflection;
 using JsonApiDotNetCore.OpenApi.Client;
 
@@ -6,29 +5,14 @@ namespace OpenApiClientTests;
 
 internal static class ObjectExtensions
 {
-    private static readonly ConcurrentDictionary<string, PropertyInfo> PropertyInfoCache = new();
-
     public static object? GetPropertyValue(this object source, string propertyName)
     {
         ArgumentGuard.NotNull(source);
         ArgumentGuard.NotNull(propertyName);
 
-        string cacheKey = EnsurePropertyInfoIsCached(source, propertyName);
+        PropertyInfo propertyInfo = source.GetType().GetProperties().Single(property => property.Name == propertyName);
 
-        return PropertyInfoCache[cacheKey].GetValue(source);
-    }
-
-    private static string EnsurePropertyInfoIsCached(object source, string propertyName)
-    {
-        string cacheKey = $"{source.GetType().FullName}-{propertyName}";
-
-        if (!PropertyInfoCache.ContainsKey(cacheKey))
-        {
-            PropertyInfo propertyInfo = source.GetType().GetProperties().Single(attribute => attribute.Name == propertyName);
-            PropertyInfoCache[cacheKey] = propertyInfo;
-        }
-
-        return cacheKey;
+        return propertyInfo.GetValue(source);
     }
 
     public static void SetPropertyValue(this object source, string propertyName, object? value)
@@ -36,9 +20,9 @@ internal static class ObjectExtensions
         ArgumentGuard.NotNull(source);
         ArgumentGuard.NotNull(propertyName);
 
-        string cacheKey = EnsurePropertyInfoIsCached(source, propertyName);
+        PropertyInfo propertyInfo = source.GetType().GetProperties().Single(property => property.Name == propertyName);
 
-        PropertyInfoCache[cacheKey].SetValue(source, value);
+        propertyInfo.SetValue(source, value);
     }
 
     public static object? GetDefaultValueForProperty(this object source, string propertyName)
@@ -46,8 +30,8 @@ internal static class ObjectExtensions
         ArgumentGuard.NotNull(source);
         ArgumentGuard.NotNull(propertyName);
 
-        string cacheKey = EnsurePropertyInfoIsCached(source, propertyName);
+        PropertyInfo propertyInfo = source.GetType().GetProperties().Single(property => property.Name == propertyName);
 
-        return Activator.CreateInstance(PropertyInfoCache[cacheKey].PropertyType);
+        return Activator.CreateInstance(propertyInfo.PropertyType);
     }
 }

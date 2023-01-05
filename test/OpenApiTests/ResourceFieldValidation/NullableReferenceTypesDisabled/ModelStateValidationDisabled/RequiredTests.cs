@@ -18,8 +18,11 @@ public sealed class RequiredTests
         testContext.UseController<NrtDisabledResourcesController>();
     }
 
-    [Fact]
-    public async Task Schema_property_for_reference_type_attribute_is_not_required()
+    [Theory]
+    [InlineData("requiredReferenceType")]
+    [InlineData("requiredValueType")]
+    [InlineData("requiredNullableValueType")]
+    public async Task Schema_property_for_attribute_is_required_for_creating_resource(string jsonPropertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -27,13 +30,16 @@ public sealed class RequiredTests
         // Assert
         document.ShouldContainPath("components.schemas.resourceAttributesInPostRequest").With(attributesObjectSchema =>
         {
-            attributesObjectSchema.ShouldContainPath("properties.referenceType");
-            attributesObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithoutElement("referenceType"));
+            attributesObjectSchema.ShouldContainPath($"properties.{jsonPropertyName}");
+            attributesObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithElement(jsonPropertyName));
         });
     }
 
-    [Fact]
-    public async Task Schema_property_for_required_reference_type_attribute_is_required()
+    [Theory]
+    [InlineData("referenceType")]
+    [InlineData("valueType")]
+    [InlineData("nullableValueType")]
+    public async Task Schema_property_for_attribute_is_not_required_for_creating_resource(string jsonPropertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -41,69 +47,15 @@ public sealed class RequiredTests
         // Assert
         document.ShouldContainPath("components.schemas.resourceAttributesInPostRequest").With(attributesObjectSchema =>
         {
-            attributesObjectSchema.ShouldContainPath("properties.requiredReferenceType");
-            attributesObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithElement("requiredReferenceType"));
+            attributesObjectSchema.ShouldContainPath($"properties.{jsonPropertyName}");
+            attributesObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithoutElement(jsonPropertyName));
         });
     }
 
-    [Fact]
-    public async Task Schema_property_for_value_type_attribute_is_not_required()
-    {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        document.ShouldContainPath("components.schemas.resourceAttributesInPostRequest").With(attributesObjectSchema =>
-        {
-            attributesObjectSchema.ShouldContainPath("properties.valueType");
-            attributesObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithoutElement("valueType"));
-        });
-    }
-
-    [Fact]
-    public async Task Schema_property_for_required_value_type_attribute_is_required()
-    {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        document.ShouldContainPath("components.schemas.resourceAttributesInPostRequest").With(attributesObjectSchema =>
-        {
-            attributesObjectSchema.ShouldContainPath("properties.requiredValueType");
-            attributesObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithElement("requiredValueType"));
-        });
-    }
-
-    [Fact]
-    public async Task Schema_property_for_nullable_value_type_attribute_is_not_required()
-    {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        document.ShouldContainPath("components.schemas.resourceAttributesInPostRequest").With(attributesObjectSchema =>
-        {
-            attributesObjectSchema.ShouldContainPath("properties.nullableValueType");
-            attributesObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithoutElement("nullableValueType"));
-        });
-    }
-
-    [Fact]
-    public async Task Schema_property_for_required_nullable_value_type_attribute_is_required()
-    {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        document.ShouldContainPath("components.schemas.resourceAttributesInPostRequest").With(attributesObjectSchema =>
-        {
-            attributesObjectSchema.ShouldContainPath("properties.requiredNullableValueType");
-            attributesObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithElement("requiredNullableValueType"));
-        });
-    }
-
-    [Fact]
-    public async Task Schema_property_for_to_one_relationship_is_not_required()
+    [Theory]
+    [InlineData("requiredToOne")]
+    [InlineData("requiredToMany")]
+    public async Task Schema_property_for_relationship_is_required_for_creating_resource(string jsonPropertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -111,13 +63,15 @@ public sealed class RequiredTests
         // Assert
         document.ShouldContainPath("components.schemas.resourceRelationshipsInPostRequest").With(relationshipsObjectSchema =>
         {
-            relationshipsObjectSchema.ShouldContainPath("properties.toOne");
-            relationshipsObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithoutElement("toOne"));
+            relationshipsObjectSchema.ShouldContainPath($"properties.{jsonPropertyName}");
+            relationshipsObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithElement(jsonPropertyName));
         });
     }
 
-    [Fact]
-    public async Task Schema_property_for_required_to_one_relationship_is_required()
+    [Theory]
+    [InlineData("toOne")]
+    [InlineData("toMany")]
+    public async Task Schema_property_for_relationship_is_not_required_for_creating_resource(string jsonPropertyName)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -125,41 +79,13 @@ public sealed class RequiredTests
         // Assert
         document.ShouldContainPath("components.schemas.resourceRelationshipsInPostRequest").With(relationshipsObjectSchema =>
         {
-            relationshipsObjectSchema.ShouldContainPath("properties.requiredToOne");
-            relationshipsObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithElement("requiredToOne"));
+            relationshipsObjectSchema.ShouldContainPath($"properties.{jsonPropertyName}");
+            relationshipsObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithoutElement(jsonPropertyName));
         });
     }
 
     [Fact]
-    public async Task Schema_property_for_to_many_relationship_is_not_required()
-    {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        document.ShouldContainPath("components.schemas.resourceRelationshipsInPostRequest").With(relationshipsObjectSchema =>
-        {
-            relationshipsObjectSchema.ShouldContainPath("properties.toMany");
-            relationshipsObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithoutElement("toMany"));
-        });
-    }
-
-    [Fact]
-    public async Task Schema_property_for_required_to_many_relationship_is_required()
-    {
-        // Act
-        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
-
-        // Assert
-        document.ShouldContainPath("components.schemas.resourceRelationshipsInPostRequest").With(relationshipsObjectSchema =>
-        {
-            relationshipsObjectSchema.ShouldContainPath("properties.requiredToMany");
-            relationshipsObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithElement("requiredToMany"));
-        });
-    }
-
-    [Fact]
-    public async Task No_schema_properties_for_attributes_are_required_when_updating_resource()
+    public async Task No_attribute_schema_properties_are_required_when_updating_resource()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -169,7 +95,7 @@ public sealed class RequiredTests
     }
 
     [Fact]
-    public async Task No_schema_properties_for_relationships_when_updating_resource()
+    public async Task No_relationship_schema_properties_are_required_when_updating_resource()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
