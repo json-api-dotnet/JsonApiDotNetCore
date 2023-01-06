@@ -68,9 +68,12 @@ public sealed class NullabilityTests
         // Assert
         document.ShouldContainPath("components.schemas.resourceRelationshipsInPostRequest.properties").With(schemaProperties =>
         {
-            schemaProperties.ShouldContainPath($"{jsonPropertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
+            schemaProperties.ShouldContainPath($"{jsonPropertyName}.allOf[0].$ref").WithSchemaReferenceId(schemaReferenceId =>
             {
-                document.ShouldContainPath($"components.schemas.{schemaReferenceId}.properties.data.oneOf[1].$ref").ShouldBeSchemaReferenceId("nullValue");
+                document.ShouldContainPath($"components.schemas.{schemaReferenceId}.properties.data").With(relationshipDataSchema =>
+                {
+                    relationshipDataSchema.ShouldContainPath("nullable").With(nullableProperty => nullableProperty.ValueKind.Should().Be(JsonValueKind.True));
+                });
             });
         });
     }
@@ -89,9 +92,12 @@ public sealed class NullabilityTests
         // Assert
         document.ShouldContainPath("components.schemas.resourceRelationshipsInPostRequest.properties").With(schemaProperties =>
         {
-            schemaProperties.ShouldContainPath($"{jsonPropertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
+            schemaProperties.ShouldContainPath($"{jsonPropertyName}.allOf[0].$ref").WithSchemaReferenceId(schemaReferenceId =>
             {
-                document.ShouldContainPath($"components.schemas.{schemaReferenceId}.properties.data").ShouldNotContainPath("oneOf[1].$ref");
+                document.ShouldContainPath($"components.schemas.{schemaReferenceId}.properties.data").With(relationshipDataSchema =>
+                {
+                    relationshipDataSchema.ShouldNotContainPath("nullable");
+                });
             });
         });
     }

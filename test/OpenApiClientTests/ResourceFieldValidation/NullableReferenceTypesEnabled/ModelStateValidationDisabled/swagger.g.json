@@ -51,7 +51,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/resourcePostRequestDocument"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourcePostRequestDocument"
+                  }
+                ]
               }
             }
           }
@@ -152,7 +156,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/resourcePatchRequestDocument"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourcePatchRequestDocument"
+                  }
+                ]
               }
             }
           }
@@ -335,7 +343,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+                  }
+                ]
               }
             }
           }
@@ -486,7 +498,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+                  }
+                ]
               }
             }
           }
@@ -637,7 +653,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+                  }
+                ]
               }
             }
           }
@@ -788,7 +808,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+                  }
+                ]
               }
             }
           }
@@ -939,7 +963,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                  }
+                ]
               }
             }
           }
@@ -970,7 +998,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                  }
+                ]
               }
             }
           }
@@ -1001,7 +1033,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                  }
+                ]
               }
             }
           }
@@ -1152,7 +1188,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                  }
+                ]
               }
             }
           }
@@ -1183,7 +1223,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                  }
+                ]
               }
             }
           }
@@ -1214,7 +1258,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                  }
+                ]
               }
             }
           }
@@ -1244,13 +1292,21 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapiObject"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1264,18 +1320,26 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/emptyResourceResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyResourceResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceObject"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           }
         },
         "additionalProperties": false
@@ -1288,7 +1352,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/emptyResourceResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyResourceResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -1312,13 +1380,21 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapiObject"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1331,17 +1407,29 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/emptyResourceIdentifier"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyResourceIdentifier"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapiObject"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1360,17 +1448,29 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/emptyResourceDataInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyResourceDataInResponse"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapiObject"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceDocument"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1395,7 +1495,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           }
         },
         "additionalProperties": false
@@ -1533,29 +1633,6 @@
         },
         "additionalProperties": false
       },
-      "nullValue": {
-        "not": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object"
-            },
-            {
-              "type": "array"
-            }
-          ],
-          "items": { }
-        },
-        "nullable": true
-      },
       "nullableEmptyResourceIdentifierResponseDocument": {
         "required": [
           "data",
@@ -1564,24 +1641,30 @@
         "type": "object",
         "properties": {
           "data": {
-            "oneOf": [
+            "allOf": [
               {
                 "$ref": "#/components/schemas/emptyResourceIdentifier"
-              },
-              {
-                "$ref": "#/components/schemas/nullValue"
               }
-            ]
+            ],
+            "nullable": true
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapiObject"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1594,24 +1677,30 @@
         "type": "object",
         "properties": {
           "data": {
-            "oneOf": [
+            "allOf": [
               {
                 "$ref": "#/components/schemas/emptyResourceDataInResponse"
-              },
-              {
-                "$ref": "#/components/schemas/nullValue"
               }
-            ]
+            ],
+            "nullable": true
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapiObject"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceDocument"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1623,14 +1712,12 @@
         "type": "object",
         "properties": {
           "data": {
-            "oneOf": [
+            "allOf": [
               {
                 "$ref": "#/components/schemas/emptyResourceIdentifier"
-              },
-              {
-                "$ref": "#/components/schemas/nullValue"
               }
-            ]
+            ],
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1642,21 +1729,23 @@
         "type": "object",
         "properties": {
           "data": {
-            "oneOf": [
+            "allOf": [
               {
                 "$ref": "#/components/schemas/emptyResourceIdentifier"
-              },
+              }
+            ],
+            "nullable": true
+          },
+          "links": {
+            "allOf": [
               {
-                "$ref": "#/components/schemas/nullValue"
+                "$ref": "#/components/schemas/linksInRelationshipObject"
               }
             ]
           },
-          "links": {
-            "$ref": "#/components/schemas/linksInRelationshipObject"
-          },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           }
         },
         "additionalProperties": false
@@ -1808,13 +1897,21 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapiObject"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1827,17 +1924,29 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/resourceResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/resourceAttributesInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceAttributesInPatchRequest"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/resourceRelationshipsInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceRelationshipsInPatchRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1849,13 +1958,25 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/resourceResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceResourceType"
+              }
+            ]
           },
           "attributes": {
-            "$ref": "#/components/schemas/resourceAttributesInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceAttributesInPostRequest"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/resourceRelationshipsInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceRelationshipsInPostRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1869,24 +1990,40 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/resourceResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/resourceAttributesInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceAttributesInResponse"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/resourceRelationshipsInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceRelationshipsInResponse"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceObject"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           }
         },
         "additionalProperties": false
@@ -1898,7 +2035,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/resourceDataInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceDataInPatchRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1910,7 +2051,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/resourceDataInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceDataInPostRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1923,17 +2068,29 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/resourceDataInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceDataInResponse"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           },
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapiObject"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceDocument"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1942,22 +2099,46 @@
         "type": "object",
         "properties": {
           "nonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+              }
+            ]
           },
           "requiredNonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+              }
+            ]
           },
           "nullableToOne": {
-            "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+              }
+            ]
           },
           "requiredNullableToOne": {
-            "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+              }
+            ]
           },
           "toMany": {
-            "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+              }
+            ]
           },
           "requiredToMany": {
-            "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -1971,22 +2152,46 @@
         "type": "object",
         "properties": {
           "nonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+              }
+            ]
           },
           "requiredNonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+              }
+            ]
           },
           "nullableToOne": {
-            "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+              }
+            ]
           },
           "requiredNullableToOne": {
-            "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+              }
+            ]
           },
           "toMany": {
-            "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+              }
+            ]
           },
           "requiredToMany": {
-            "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2000,22 +2205,46 @@
         "type": "object",
         "properties": {
           "nonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyResourceInResponse"
+              }
+            ]
           },
           "requiredNonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyResourceInResponse"
+              }
+            ]
           },
           "nullableToOne": {
-            "$ref": "#/components/schemas/nullableToOneEmptyResourceInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneEmptyResourceInResponse"
+              }
+            ]
           },
           "requiredNullableToOne": {
-            "$ref": "#/components/schemas/nullableToOneEmptyResourceInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneEmptyResourceInResponse"
+              }
+            ]
           },
           "toMany": {
-            "$ref": "#/components/schemas/toManyEmptyResourceInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyResourceInResponse"
+              }
+            ]
           },
           "requiredToMany": {
-            "$ref": "#/components/schemas/toManyEmptyResourceInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyResourceInResponse"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2054,11 +2283,15 @@
             }
           },
           "links": {
-            "$ref": "#/components/schemas/linksInRelationshipObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInRelationshipObject"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           }
         },
         "additionalProperties": false
@@ -2070,7 +2303,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/emptyResourceIdentifier"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyResourceIdentifier"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2082,14 +2319,22 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/emptyResourceIdentifier"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyResourceIdentifier"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInRelationshipObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInRelationshipObject"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {}
           }
         },
         "additionalProperties": false

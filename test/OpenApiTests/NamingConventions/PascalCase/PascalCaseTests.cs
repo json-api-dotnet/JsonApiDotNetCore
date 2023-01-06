@@ -44,9 +44,9 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.ShouldContainPath("jsonapi.$ref").ShouldBeSchemaReferenceId("JsonapiObject");
+                propertiesElement.ShouldContainPath("jsonapi.allOf[0].$ref").ShouldBeSchemaReferenceId("JsonapiObject");
 
-                linksInResourceCollectionDocumentSchemaRefId = propertiesElement.ShouldContainPath("links.$ref")
+                linksInResourceCollectionDocumentSchemaRefId = propertiesElement.ShouldContainPath("links.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("LinksInResourceCollectionDocument").SchemaReferenceId;
 
                 resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.items.$ref").ShouldBeSchemaReferenceId("SupermarketDataInResponse")
@@ -70,16 +70,16 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                linksInResourceObjectSchemaRefId = propertiesElement.ShouldContainPath("links.$ref").ShouldBeSchemaReferenceId("LinksInResourceObject")
+                linksInResourceObjectSchemaRefId = propertiesElement.ShouldContainPath("links.allOf[0].$ref").ShouldBeSchemaReferenceId("LinksInResourceObject")
                     .SchemaReferenceId;
 
-                primaryResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeSchemaReferenceId("SupermarketResourceType")
+                primaryResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketResourceType")
                     .SchemaReferenceId;
 
-                resourceAttributesInResponseSchemaRefId = propertiesElement.ShouldContainPath("attributes.$ref")
+                resourceAttributesInResponseSchemaRefId = propertiesElement.ShouldContainPath("attributes.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("SupermarketAttributesInResponse").SchemaReferenceId;
 
-                resourceRelationshipInResponseSchemaRefId = propertiesElement.ShouldContainPath("relationships.$ref")
+                resourceRelationshipInResponseSchemaRefId = propertiesElement.ShouldContainPath("relationships.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("SupermarketRelationshipsInResponse").SchemaReferenceId;
             });
 
@@ -97,7 +97,7 @@ public sealed class PascalCaseTests
             {
                 propertiesElement.Should().ContainProperty("NameOfCity");
                 propertiesElement.Should().ContainProperty("Kind");
-                propertiesElement.ShouldContainPath("Kind.$ref").ShouldBeSchemaReferenceId("SupermarketType");
+                propertiesElement.ShouldContainPath("Kind.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketType");
             });
 
             string? nullableToOneResourceResponseDataSchemaRefId = null;
@@ -106,13 +106,13 @@ public sealed class PascalCaseTests
             {
                 propertiesElement.Should().ContainProperty("StoreManager");
 
-                propertiesElement.ShouldContainPath("StoreManager.$ref").ShouldBeSchemaReferenceId("ToOneStaffMemberInResponse");
+                propertiesElement.ShouldContainPath("StoreManager.allOf[0].$ref").ShouldBeSchemaReferenceId("ToOneStaffMemberInResponse");
 
-                nullableToOneResourceResponseDataSchemaRefId = propertiesElement.ShouldContainPath("BackupStoreManager.$ref")
+                nullableToOneResourceResponseDataSchemaRefId = propertiesElement.ShouldContainPath("BackupStoreManager.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("NullableToOneStaffMemberInResponse").SchemaReferenceId;
 
                 propertiesElement.Should().ContainProperty("Cashiers");
-                propertiesElement.ShouldContainPath("Cashiers.$ref").ShouldBeSchemaReferenceId("ToManyStaffMemberInResponse");
+                propertiesElement.ShouldContainPath("Cashiers.allOf[0].$ref").ShouldBeSchemaReferenceId("ToManyStaffMemberInResponse");
             });
 
             string? linksInRelationshipObjectSchemaRefId = null;
@@ -120,13 +120,11 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{nullableToOneResourceResponseDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                linksInRelationshipObjectSchemaRefId = propertiesElement.ShouldContainPath("links.$ref").ShouldBeSchemaReferenceId("LinksInRelationshipObject")
-                    .SchemaReferenceId;
+                linksInRelationshipObjectSchemaRefId = propertiesElement.ShouldContainPath("links.allOf[0].$ref")
+                    .ShouldBeSchemaReferenceId("LinksInRelationshipObject").SchemaReferenceId;
 
-                relatedResourceIdentifierSchemaRefId = propertiesElement.ShouldContainPath("data.oneOf[0].$ref")
+                relatedResourceIdentifierSchemaRefId = propertiesElement.ShouldContainPath("data.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("StaffMemberIdentifier").SchemaReferenceId;
-
-                propertiesElement.ShouldContainPath("data.oneOf[1].$ref").ShouldBeSchemaReferenceId("NullValue");
             });
 
             schemasElement.ShouldContainPath($"{linksInRelationshipObjectSchemaRefId}.properties").With(propertiesElement =>
@@ -139,7 +137,7 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{relatedResourceIdentifierSchemaRefId}.properties").With(propertiesElement =>
             {
-                relatedResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.$ref").ShouldBeSchemaReferenceId("StaffMemberResourceType")
+                relatedResourceTypeSchemaRefId = propertiesElement.ShouldContainPath("type.allOf[0].$ref").ShouldBeSchemaReferenceId("StaffMemberResourceType")
                     .SchemaReferenceId;
             });
 
@@ -173,8 +171,8 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                linksInResourceDocumentSchemaRefId = propertiesElement.ShouldContainPath("links.$ref").ShouldBeSchemaReferenceId("LinksInResourceDocument")
-                    .SchemaReferenceId;
+                linksInResourceDocumentSchemaRefId = propertiesElement.ShouldContainPath("links.allOf[0].$ref")
+                    .ShouldBeSchemaReferenceId("LinksInResourceDocument").SchemaReferenceId;
             });
 
             schemasElement.ShouldContainPath($"{linksInResourceDocumentSchemaRefId}.properties").With(propertiesElement =>
@@ -211,13 +209,13 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeSchemaReferenceId("StaffMemberDataInResponse")
+                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("StaffMemberDataInResponse")
                     .SchemaReferenceId;
             });
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.ShouldContainPath("attributes.$ref").ShouldBeSchemaReferenceId("StaffMemberAttributesInResponse");
+                propertiesElement.ShouldContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("StaffMemberAttributesInResponse");
             });
         });
     }
@@ -286,7 +284,7 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                linksInResourceIdentifierDocumentSchemaRefId = propertiesElement.ShouldContainPath("links.$ref")
+                linksInResourceIdentifierDocumentSchemaRefId = propertiesElement.ShouldContainPath("links.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("LinksInResourceIdentifierDocument").SchemaReferenceId;
             });
 
@@ -344,7 +342,7 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                linksInResourceIdentifierCollectionDocumentSchemaRefId = propertiesElement.ShouldContainPath("links.$ref")
+                linksInResourceIdentifierCollectionDocumentSchemaRefId = propertiesElement.ShouldContainPath("links.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("LinksInResourceIdentifierCollectionDocument").SchemaReferenceId;
             });
 
@@ -377,7 +375,7 @@ public sealed class PascalCaseTests
                 operationElement.ShouldBeString("PostSupermarket");
             });
 
-            documentSchemaRefId = getElement.ShouldContainPath("requestBody.content['application/vnd.api+json'].schema.$ref")
+            documentSchemaRefId = getElement.ShouldContainPath("requestBody.content['application/vnd.api+json'].schema.allOf[0].$ref")
                 .ShouldBeSchemaReferenceId("SupermarketPostRequestDocument").SchemaReferenceId;
         });
 
@@ -387,7 +385,7 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeSchemaReferenceId("SupermarketDataInPostRequest")
+                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketDataInPostRequest")
                     .SchemaReferenceId;
             });
 
@@ -395,22 +393,22 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.ShouldContainPath("attributes.$ref").ShouldBeSchemaReferenceId("SupermarketAttributesInPostRequest");
+                propertiesElement.ShouldContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketAttributesInPostRequest");
 
-                resourceRelationshipInPostRequestSchemaRefId = propertiesElement.ShouldContainPath("relationships.$ref")
+                resourceRelationshipInPostRequestSchemaRefId = propertiesElement.ShouldContainPath("relationships.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("SupermarketRelationshipsInPostRequest").SchemaReferenceId;
             });
 
             schemasElement.ShouldContainPath($"{resourceRelationshipInPostRequestSchemaRefId}.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("StoreManager");
-                propertiesElement.ShouldContainPath("StoreManager.$ref").ShouldBeSchemaReferenceId("ToOneStaffMemberInRequest");
+                propertiesElement.ShouldContainPath("StoreManager.allOf[0].$ref").ShouldBeSchemaReferenceId("ToOneStaffMemberInRequest");
 
                 propertiesElement.Should().ContainProperty("BackupStoreManager");
-                propertiesElement.ShouldContainPath("BackupStoreManager.$ref").ShouldBeSchemaReferenceId("NullableToOneStaffMemberInRequest");
+                propertiesElement.ShouldContainPath("BackupStoreManager.allOf[0].$ref").ShouldBeSchemaReferenceId("NullableToOneStaffMemberInRequest");
 
                 propertiesElement.Should().ContainProperty("Cashiers");
-                propertiesElement.ShouldContainPath("Cashiers.$ref").ShouldBeSchemaReferenceId("ToManyStaffMemberInRequest");
+                propertiesElement.ShouldContainPath("Cashiers.allOf[0].$ref").ShouldBeSchemaReferenceId("ToManyStaffMemberInRequest");
             });
         });
     }
@@ -447,7 +445,7 @@ public sealed class PascalCaseTests
                 operationElement.ShouldBeString("PatchSupermarket");
             });
 
-            documentSchemaRefId = getElement.ShouldContainPath("requestBody.content['application/vnd.api+json'].schema.$ref")
+            documentSchemaRefId = getElement.ShouldContainPath("requestBody.content['application/vnd.api+json'].schema.allOf[0].$ref")
                 .ShouldBeSchemaReferenceId("SupermarketPatchRequestDocument").SchemaReferenceId;
         });
 
@@ -457,14 +455,14 @@ public sealed class PascalCaseTests
 
             schemasElement.ShouldContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.$ref").ShouldBeSchemaReferenceId("SupermarketDataInPatchRequest")
+                resourceDataSchemaRefId = propertiesElement.ShouldContainPath("data.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketDataInPatchRequest")
                     .SchemaReferenceId;
             });
 
             schemasElement.ShouldContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.ShouldContainPath("attributes.$ref").ShouldBeSchemaReferenceId("SupermarketAttributesInPatchRequest");
-                propertiesElement.ShouldContainPath("relationships.$ref").ShouldBeSchemaReferenceId("SupermarketRelationshipsInPatchRequest");
+                propertiesElement.ShouldContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketAttributesInPatchRequest");
+                propertiesElement.ShouldContainPath("relationships.allOf[0].$ref").ShouldBeSchemaReferenceId("SupermarketRelationshipsInPatchRequest");
             });
         });
     }

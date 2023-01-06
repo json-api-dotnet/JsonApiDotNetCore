@@ -69,6 +69,7 @@ public static class ServiceCollectionExtensions
             SetOperationInfo(swaggerGenOptions, controllerResourceMapping, namingPolicy);
             SetSchemaIdSelector(swaggerGenOptions, resourceGraph, namingPolicy);
             swaggerGenOptions.DocumentFilter<EndpointOrderingFilter>();
+            swaggerGenOptions.UseAllOfToExtendReferenceSchemas();
 
             setupSwaggerGenAction?.Invoke(swaggerGenOptions);
         });
