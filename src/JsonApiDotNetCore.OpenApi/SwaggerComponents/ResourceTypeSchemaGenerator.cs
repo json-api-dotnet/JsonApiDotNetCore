@@ -28,9 +28,9 @@ internal sealed class ResourceTypeSchemaGenerator
     {
         ArgumentGuard.NotNull(resourceClrType);
 
-        if (_resourceClrTypeSchemaCache.TryGetValue(resourceClrType, out OpenApiSchema? referenceSchema))
+        if (_resourceClrTypeSchemaCache.TryGetValue(resourceClrType, out OpenApiSchema? extendedReferenceSchema))
         {
-            return referenceSchema;
+            return extendedReferenceSchema;
         }
 
         ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
@@ -46,7 +46,7 @@ internal sealed class ResourceTypeSchemaGenerator
 
         string schemaId = GetSchemaId(resourceType);
 
-        referenceSchema = new OpenApiSchema
+        var referenceSchema = new OpenApiSchema
         {
             Reference = new OpenApiReference
             {
@@ -55,10 +55,18 @@ internal sealed class ResourceTypeSchemaGenerator
             }
         };
 
-        _schemaRepositoryAccessor.Current.AddDefinition(referenceSchema.Reference.Id, fullSchema);
-        _resourceClrTypeSchemaCache.Add(resourceType.ClrType, referenceSchema);
+        extendedReferenceSchema = new OpenApiSchema
+        {
+            AllOf = new List<OpenApiSchema>
+            {
+                referenceSchema
+            }
+        };
 
-        return referenceSchema;
+        _schemaRepositoryAccessor.Current.AddDefinition(schemaId, fullSchema);
+        _resourceClrTypeSchemaCache.Add(resourceType.ClrType, extendedReferenceSchema);
+
+        return extendedReferenceSchema;
     }
 
     private string GetSchemaId(ResourceType resourceType)

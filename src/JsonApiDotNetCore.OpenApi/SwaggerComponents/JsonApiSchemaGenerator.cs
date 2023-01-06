@@ -47,7 +47,6 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
     private readonly ISchemaGenerator _defaultSchemaGenerator;
     private readonly IJsonApiOptions _options;
     private readonly ResourceObjectSchemaGenerator _resourceObjectSchemaGenerator;
-    private readonly NullableReferenceSchemaGenerator _nullableReferenceSchemaGenerator;
     private readonly SchemaRepositoryAccessor _schemaRepositoryAccessor = new();
 
     public JsonApiSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options,
@@ -60,7 +59,6 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _options = options;
-        _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(_schemaRepositoryAccessor, options.SerializerOptions.PropertyNamingPolicy);
 
         _resourceObjectSchemaGenerator = new ResourceObjectSchemaGenerator(defaultSchemaGenerator, resourceGraph, options, _schemaRepositoryAccessor,
             resourceFieldValidationMetadataProvider);
@@ -76,7 +74,11 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
         if (schemaRepository.TryLookupByType(modelType, out OpenApiSchema jsonApiDocumentSchema))
         {
-            return jsonApiDocumentSchema;
+            // For unknown reasons, Swashbuckle chooses to wrap root request bodies, but not response bodies.
+            // See https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/861#issuecomment-1373631712
+            return memberInfo != null || parameterInfo != null
+                ? _defaultSchemaGenerator.GenerateSchema(modelType, schemaRepository, memberInfo, parameterInfo)
+                : jsonApiDocumentSchema;
         }
 
         if (IsJsonApiDocument(modelType))
@@ -92,6 +94,8 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
             {
                 RemoveJsonApiObject(schema);
             }
+
+            // Schema might depend on other schemas not handled by us, so should not return here.
         }
 
         return _defaultSchemaGenerator.GenerateSchema(modelType, schemaRepository, memberInfo, parameterInfo, routeInfo);
@@ -116,7 +120,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
         OpenApiSchema referenceSchemaForDataObject = IsManyDataDocument(documentType)
             ? CreateArrayTypeDataSchema(referenceSchemaForResourceObject)
-            : referenceSchemaForResourceObject;
+            : CreateExtendedReferenceSchema(referenceSchemaForResourceObject);
 
         fullSchemaForDocument.Properties[JsonApiPropertyName.Data] = referenceSchemaForDataObject;
 
@@ -150,7 +154,8 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
     {
         OpenApiSchema fullSchemaForDocument = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForDocument.Reference.Id];
         OpenApiSchema referenceSchemaForData = fullSchemaForDocument.Properties[JsonApiPropertyName.Data];
-        fullSchemaForDocument.Properties[JsonApiPropertyName.Data] = _nullableReferenceSchemaGenerator.GenerateSchema(referenceSchemaForData);
+        referenceSchemaForData.Nullable = true;
+        fullSchemaForDocument.Properties[JsonApiPropertyName.Data] = referenceSchemaForData;
     }
 
     private void RemoveJsonApiObject(OpenApiSchema referenceSchemaForDocument)
@@ -159,5 +164,16 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         fullSchemaForDocument.Properties.Remove(JsonApiPropertyName.Jsonapi);
 
         _schemaRepositoryAccessor.Current.Schemas.Remove("jsonapi-object");
+    }
+
+    private static OpenApiSchema CreateExtendedReferenceSchema(OpenApiSchema referenceSchemaForResourceObject)
+    {
+        return new OpenApiSchema
+        {
+            AllOf = new List<OpenApiSchema>
+            {
+                referenceSchemaForResourceObject
+            }
+        };
     }
 }

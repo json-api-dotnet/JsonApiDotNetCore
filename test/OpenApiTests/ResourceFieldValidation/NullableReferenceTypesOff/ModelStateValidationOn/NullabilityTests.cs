@@ -65,9 +65,12 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<OpenApiS
         // Assert
         document.Should().ContainPath("components.schemas.resourceRelationshipsInPostRequest.properties").With(schemaProperties =>
         {
-            schemaProperties.Should().ContainPath($"{jsonPropertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
+            schemaProperties.Should().ContainPath($"{jsonPropertyName}.allOf[0].$ref").WithSchemaReferenceId(schemaReferenceId =>
             {
-                document.Should().ContainPath($"components.schemas.{schemaReferenceId}.properties.data.oneOf[1].$ref").ShouldBeSchemaReferenceId("nullValue");
+                document.Should().ContainPath($"components.schemas.{schemaReferenceId}.properties.data").With(relationshipDataSchema =>
+                {
+                    relationshipDataSchema.Should().ContainPath("nullable").With(nullableProperty => nullableProperty.Should().Be(true));
+                });
             });
         });
     }
@@ -84,9 +87,12 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<OpenApiS
         // Assert
         document.Should().ContainPath("components.schemas.resourceRelationshipsInPostRequest.properties").With(schemaProperties =>
         {
-            schemaProperties.Should().ContainPath($"{jsonPropertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
+            schemaProperties.Should().ContainPath($"{jsonPropertyName}.allOf[0].$ref").WithSchemaReferenceId(schemaReferenceId =>
             {
-                document.Should().ContainPath($"components.schemas.{schemaReferenceId}.properties.data").Should().NotContainPath("oneOf[1].$ref");
+                document.Should().ContainPath($"components.schemas.{schemaReferenceId}.properties.data").With(relationshipDataSchema =>
+                {
+                    relationshipDataSchema.Should().NotContainPath("nullable");
+                });
             });
         });
     }

@@ -49,7 +49,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/airplane-post-request-document"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/airplane-post-request-document"
+                  }
+                ]
               }
             }
           }
@@ -166,7 +170,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/airplane-patch-request-document"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/airplane-patch-request-document"
+                  }
+                ]
               }
             }
           }
@@ -371,7 +379,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
               }
             }
           }
@@ -413,7 +425,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
               }
             }
           }
@@ -455,7 +471,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
               }
             }
           }
@@ -520,7 +540,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/flight-attendant-post-request-document"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/flight-attendant-post-request-document"
+                  }
+                ]
               }
             }
           }
@@ -637,7 +661,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/flight-attendant-patch-request-document"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/flight-attendant-patch-request-document"
+                  }
+                ]
               }
             }
           }
@@ -842,7 +870,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
               }
             }
           }
@@ -884,7 +916,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
               }
             }
           }
@@ -926,7 +962,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
               }
             }
           }
@@ -1092,7 +1132,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
               }
             }
           }
@@ -1134,7 +1178,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
               }
             }
           }
@@ -1176,7 +1224,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-flight-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-in-request"
+                  }
+                ]
               }
             }
           }
@@ -1241,7 +1293,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/flight-post-request-document"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/flight-post-request-document"
+                  }
+                ]
               }
             }
           }
@@ -1358,7 +1414,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/flight-patch-request-document"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/flight-patch-request-document"
+                  }
+                ]
               }
             }
           }
@@ -1563,7 +1623,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-request"
+                  }
+                ]
               }
             }
           }
@@ -1729,7 +1793,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
+                  }
+                ]
               }
             }
           }
@@ -1771,7 +1839,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
+                  }
+                ]
               }
             }
           }
@@ -1813,7 +1885,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
+                  }
+                ]
               }
             }
           }
@@ -1979,7 +2055,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-passenger-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-passenger-in-request"
+                  }
+                ]
               }
             }
           }
@@ -2021,7 +2101,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-passenger-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-passenger-in-request"
+                  }
+                ]
               }
             }
           }
@@ -2063,7 +2147,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-passenger-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-many-passenger-in-request"
+                  }
+                ]
               }
             }
           }
@@ -2229,7 +2317,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-one-flight-attendant-in-request"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/to-one-flight-attendant-in-request"
+                  }
+                ]
               }
             }
           }
@@ -2371,7 +2463,11 @@
             "nullable": true
           },
           "kind": {
-            "$ref": "#/components/schemas/aircraft-kind"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/aircraft-kind"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2384,10 +2480,18 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi-object"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-collection-document"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-collection-document"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -2410,17 +2514,29 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/airplane-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/airplane-attributes-in-patch-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-attributes-in-patch-request"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/airplane-relationships-in-patch-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-relationships-in-patch-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2432,13 +2548,25 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/airplane-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-resource-type"
+              }
+            ]
           },
           "attributes": {
-            "$ref": "#/components/schemas/airplane-attributes-in-post-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-attributes-in-post-request"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/airplane-relationships-in-post-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-relationships-in-post-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2452,20 +2580,36 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/airplane-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/airplane-attributes-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-attributes-in-response"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/airplane-relationships-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-relationships-in-response"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-object"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -2481,7 +2625,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/airplane-data-in-patch-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-data-in-patch-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2493,7 +2641,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/airplane-data-in-post-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-data-in-post-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2506,13 +2658,25 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi-object"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-document"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-document"
+              }
+            ]
           },
           "data": {
-            "$ref": "#/components/schemas/airplane-data-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airplane-data-in-response"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -2525,7 +2689,11 @@
         "type": "object",
         "properties": {
           "flights": {
-            "$ref": "#/components/schemas/to-many-flight-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-flight-in-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2534,7 +2702,11 @@
         "type": "object",
         "properties": {
           "flights": {
-            "$ref": "#/components/schemas/to-many-flight-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-flight-in-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2543,7 +2715,11 @@
         "type": "object",
         "properties": {
           "flights": {
-            "$ref": "#/components/schemas/to-many-flight-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-flight-in-response"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2641,10 +2817,18 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi-object"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-collection-document"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-collection-document"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -2667,17 +2851,29 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-attendant-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/flight-attendant-attributes-in-patch-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-attributes-in-patch-request"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/flight-attendant-relationships-in-patch-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-relationships-in-patch-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2689,13 +2885,25 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-attendant-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-resource-type"
+              }
+            ]
           },
           "attributes": {
-            "$ref": "#/components/schemas/flight-attendant-attributes-in-post-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-attributes-in-post-request"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/flight-attendant-relationships-in-post-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-relationships-in-post-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2709,20 +2917,36 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-attendant-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/flight-attendant-attributes-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-attributes-in-response"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/flight-attendant-relationships-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-relationships-in-response"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-object"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -2739,7 +2963,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-attendant-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -2756,10 +2984,18 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi-object"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -2782,13 +3018,25 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi-object"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-identifier-document"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-identifier-document"
+              }
+            ]
           },
           "data": {
-            "$ref": "#/components/schemas/flight-attendant-identifier"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-identifier"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -2804,7 +3052,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/flight-attendant-data-in-patch-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-data-in-patch-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2816,7 +3068,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/flight-attendant-data-in-post-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-data-in-post-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2829,13 +3085,25 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi-object"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-document"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-document"
+              }
+            ]
           },
           "data": {
-            "$ref": "#/components/schemas/flight-attendant-data-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-data-in-response"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -2848,10 +3116,18 @@
         "type": "object",
         "properties": {
           "scheduled-for-flights": {
-            "$ref": "#/components/schemas/to-many-flight-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-flight-in-request"
+              }
+            ]
           },
           "purser-on-flights": {
-            "$ref": "#/components/schemas/to-many-flight-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-flight-in-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2860,10 +3136,18 @@
         "type": "object",
         "properties": {
           "scheduled-for-flights": {
-            "$ref": "#/components/schemas/to-many-flight-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-flight-in-request"
+              }
+            ]
           },
           "purser-on-flights": {
-            "$ref": "#/components/schemas/to-many-flight-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-flight-in-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2872,10 +3156,18 @@
         "type": "object",
         "properties": {
           "scheduled-for-flights": {
-            "$ref": "#/components/schemas/to-many-flight-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-flight-in-response"
+              }
+            ]
           },
           "purser-on-flights": {
-            "$ref": "#/components/schemas/to-many-flight-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-flight-in-response"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2894,13 +3186,25 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi-object"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-document"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-document"
+              }
+            ]
           },
           "data": {
-            "$ref": "#/components/schemas/flight-attendant-data-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-data-in-response"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -2922,7 +3226,11 @@
             "nullable": true
           },
           "operated-by": {
-            "$ref": "#/components/schemas/airline"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airline"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2944,7 +3252,11 @@
             "nullable": true
           },
           "operated-by": {
-            "$ref": "#/components/schemas/airline"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/airline"
+              }
+            ]
           },
           "departs-at": {
             "type": "string",
@@ -2973,10 +3285,18 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi-object"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-collection-document"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-collection-document"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -2999,17 +3319,29 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/flight-attributes-in-patch-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attributes-in-patch-request"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/flight-relationships-in-patch-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-relationships-in-patch-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3021,10 +3353,18 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-resource-type"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/flight-relationships-in-post-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-relationships-in-post-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3038,20 +3378,36 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/flight-attributes-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attributes-in-response"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/flight-relationships-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-relationships-in-response"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-object"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -3068,7 +3424,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/flight-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -3085,10 +3445,18 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi-object"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -3110,7 +3478,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/flight-data-in-patch-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-data-in-patch-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3122,7 +3494,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/flight-data-in-post-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-data-in-post-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3135,13 +3511,25 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi-object"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-document"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-document"
+              }
+            ]
           },
           "data": {
-            "$ref": "#/components/schemas/flight-data-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-data-in-response"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -3154,16 +3542,32 @@
         "type": "object",
         "properties": {
           "cabin-crew-members": {
-            "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
+              }
+            ]
           },
           "purser": {
-            "$ref": "#/components/schemas/to-one-flight-attendant-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-one-flight-attendant-in-request"
+              }
+            ]
           },
           "backup-purser": {
-            "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-request"
+              }
+            ]
           },
           "passengers": {
-            "$ref": "#/components/schemas/to-many-passenger-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-passenger-in-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3175,16 +3579,32 @@
         "type": "object",
         "properties": {
           "cabin-crew-members": {
-            "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-flight-attendant-in-request"
+              }
+            ]
           },
           "purser": {
-            "$ref": "#/components/schemas/to-one-flight-attendant-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-one-flight-attendant-in-request"
+              }
+            ]
           },
           "backup-purser": {
-            "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-request"
+              }
+            ]
           },
           "passengers": {
-            "$ref": "#/components/schemas/to-many-passenger-in-request"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-passenger-in-request"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3196,16 +3616,32 @@
         "type": "object",
         "properties": {
           "cabin-crew-members": {
-            "$ref": "#/components/schemas/to-many-flight-attendant-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-flight-attendant-in-response"
+              }
+            ]
           },
           "purser": {
-            "$ref": "#/components/schemas/to-one-flight-attendant-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-one-flight-attendant-in-response"
+              }
+            ]
           },
           "backup-purser": {
-            "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullable-to-one-flight-attendant-in-response"
+              }
+            ]
           },
           "passengers": {
-            "$ref": "#/components/schemas/to-many-passenger-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/to-many-passenger-in-response"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3374,29 +3810,6 @@
         },
         "additionalProperties": false
       },
-      "null-value": {
-        "not": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object"
-            },
-            {
-              "type": "array"
-            }
-          ],
-          "items": { }
-        },
-        "nullable": true
-      },
       "nullable-flight-attendant-identifier-response-document": {
         "required": [
           "data",
@@ -3405,20 +3818,26 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-identifier-document"
-          },
-          "data": {
-            "oneOf": [
+            "allOf": [
               {
-                "$ref": "#/components/schemas/flight-attendant-identifier"
-              },
-              {
-                "$ref": "#/components/schemas/null-value"
+                "$ref": "#/components/schemas/jsonapi-object"
               }
             ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-identifier-document"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-identifier"
+              }
+            ],
+            "nullable": true
           },
           "meta": {
             "type": "object",
@@ -3435,20 +3854,26 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-document"
-          },
-          "data": {
-            "oneOf": [
+            "allOf": [
               {
-                "$ref": "#/components/schemas/flight-attendant-data-in-response"
-              },
-              {
-                "$ref": "#/components/schemas/null-value"
+                "$ref": "#/components/schemas/jsonapi-object"
               }
             ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-document"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-data-in-response"
+              }
+            ],
+            "nullable": true
           },
           "meta": {
             "type": "object",
@@ -3464,14 +3889,12 @@
         "type": "object",
         "properties": {
           "data": {
-            "oneOf": [
+            "allOf": [
               {
                 "$ref": "#/components/schemas/flight-attendant-identifier"
-              },
-              {
-                "$ref": "#/components/schemas/null-value"
               }
-            ]
+            ],
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -3483,17 +3906,19 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/links-in-relationship-object"
-          },
-          "data": {
-            "oneOf": [
+            "allOf": [
               {
-                "$ref": "#/components/schemas/flight-attendant-identifier"
-              },
-              {
-                "$ref": "#/components/schemas/null-value"
+                "$ref": "#/components/schemas/links-in-relationship-object"
               }
             ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-identifier"
+              }
+            ],
+            "nullable": true
           },
           "meta": {
             "type": "object",
@@ -3510,7 +3935,11 @@
             "nullable": true
           },
           "cabin-area": {
-            "$ref": "#/components/schemas/cabin-area"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/cabin-area"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3523,10 +3952,18 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi-object"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-collection-document"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-collection-document"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -3550,17 +3987,29 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/passenger-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/passenger-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/passenger-attributes-in-response"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/passenger-attributes-in-response"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-object"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -3577,7 +4026,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/passenger-resource-type"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/passenger-resource-type"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -3594,10 +4047,18 @@
         "type": "object",
         "properties": {
           "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi-object"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -3640,7 +4101,11 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/links-in-relationship-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-relationship-object"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -3677,7 +4142,11 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/links-in-relationship-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-relationship-object"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -3714,7 +4183,11 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/links-in-relationship-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-relationship-object"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -3736,7 +4209,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/flight-attendant-identifier"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-identifier"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -3748,10 +4225,18 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/links-in-relationship-object"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/links-in-relationship-object"
+              }
+            ]
           },
           "data": {
-            "$ref": "#/components/schemas/flight-attendant-identifier"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-identifier"
+              }
+            ]
           },
           "meta": {
             "type": "object",
