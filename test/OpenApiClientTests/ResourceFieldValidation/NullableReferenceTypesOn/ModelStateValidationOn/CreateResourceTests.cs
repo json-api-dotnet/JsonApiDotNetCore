@@ -275,9 +275,9 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
 
-        // Act
         using (apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument))
         {
+            // Act
             await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
         }
 
@@ -461,9 +461,9 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
 
-        // Act
         using (apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument))
         {
+            // Act
             await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
         }
 
