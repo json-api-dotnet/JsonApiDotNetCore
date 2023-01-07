@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>$(TargetFrameworkName)</TargetFramework>
   </PropertyGroup>
@@ -53,32 +53,32 @@
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
     </OpenApiReference>
-    <OpenApiReference Include="ResourceFieldValidation\NullableReferenceTypesDisabled\ModelStateValidationDisabled\swagger.g.json">
+    <OpenApiReference Include="ResourceFieldValidation\NullableReferenceTypesOff\ModelStateValidationOff\swagger.g.json">
       <ClassName>NrtOffMsvOffClient</ClassName>
       <OutputPath>NrtOffMsvOffClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Namespace>OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesDisabled.ModelStateValidationDisabled.GeneratedCode</Namespace>
+      <Namespace>OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOff.ModelStateValidationOff.GeneratedCode</Namespace>
       <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:false</Options>
     </OpenApiReference>
-    <OpenApiReference Include="ResourceFieldValidation\NullableReferenceTypesDisabled\ModelStateValidationEnabled\swagger.g.json">
+    <OpenApiReference Include="ResourceFieldValidation\NullableReferenceTypesOff\ModelStateValidationOn\swagger.g.json">
       <ClassName>NrtOffMsvOnClient</ClassName>
       <OutputPath>NrtOffMsvOnClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Namespace>OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesDisabled.ModelStateValidationEnabled.GeneratedCode</Namespace>
+      <Namespace>OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOff.ModelStateValidationOn.GeneratedCode</Namespace>
       <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:false</Options>
     </OpenApiReference>
-    <OpenApiReference Include="ResourceFieldValidation\NullableReferenceTypesEnabled\ModelStateValidationDisabled\swagger.g.json">
+    <OpenApiReference Include="ResourceFieldValidation\NullableReferenceTypesOn\ModelStateValidationOff\swagger.g.json">
       <ClassName>NrtOnMsvOffClient</ClassName>
       <OutputPath>NrtOnMsvOffClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Namespace>OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesEnabled.ModelStateValidationDisabled.GeneratedCode</Namespace>
+      <Namespace>OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOn.ModelStateValidationOff.GeneratedCode</Namespace>
       <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:true</Options>
     </OpenApiReference>
-    <OpenApiReference Include="ResourceFieldValidation\NullableReferenceTypesEnabled\ModelStateValidationEnabled\swagger.g.json">
+    <OpenApiReference Include="ResourceFieldValidation\NullableReferenceTypesOn\ModelStateValidationOn\swagger.g.json">
       <ClassName>NrtOnMsvOnClient</ClassName>
       <OutputPath>NrtOnMsvOnClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Namespace>OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesEnabled.ModelStateValidationEnabled.GeneratedCode</Namespace>
+      <Namespace>OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOn.ModelStateValidationOn.GeneratedCode</Namespace>
       <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:true</Options>
     </OpenApiReference>
   </ItemGroup>
