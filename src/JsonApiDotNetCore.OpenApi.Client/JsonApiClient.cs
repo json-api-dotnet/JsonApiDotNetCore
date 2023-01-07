@@ -40,8 +40,8 @@ public abstract class JsonApiClient : IJsonApiClient
             }
             else
             {
-                throw new ArgumentException(
-                    $"The expression '{nameof(alwaysIncludedAttributeSelectors)}' should select a single property. For example: 'article => article.Title'.");
+                throw new ArgumentException($"The expression '{selector}' should select a single property. For example: 'article => article.Title'.",
+                    nameof(alwaysIncludedAttributeSelectors));
             }
         }
 
