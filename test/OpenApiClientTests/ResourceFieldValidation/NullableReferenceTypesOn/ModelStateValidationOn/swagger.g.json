@@ -5,10 +5,10 @@
     "version": "1.0"
   },
   "paths": {
-    "/Resource": {
+    "/resources": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceCollection",
         "responses": {
@@ -26,7 +26,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceCollection",
         "responses": {
@@ -44,7 +44,7 @@
       },
       "post": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "postResource",
         "requestBody": {
@@ -73,10 +73,10 @@
         }
       }
     },
-    "/Resource/{id}": {
+    "/resources/{id}": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResource",
         "parameters": [
@@ -105,7 +105,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResource",
         "parameters": [
@@ -134,7 +134,7 @@
       },
       "patch": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "patchResource",
         "parameters": [
@@ -175,7 +175,7 @@
       },
       "delete": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "deleteResource",
         "parameters": [
@@ -196,10 +196,10 @@
         }
       }
     },
-    "/Resource/{id}/nonNullableToOne": {
+    "/resources/{id}/nonNullableToOne": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceNonNullableToOne",
         "parameters": [
@@ -228,7 +228,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceNonNullableToOne",
         "parameters": [
@@ -256,10 +256,10 @@
         }
       }
     },
-    "/Resource/{id}/relationships/nonNullableToOne": {
+    "/resources/{id}/relationships/nonNullableToOne": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceNonNullableToOneRelationship",
         "parameters": [
@@ -288,7 +288,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceNonNullableToOneRelationship",
         "parameters": [
@@ -317,7 +317,7 @@
       },
       "patch": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "patchResourceNonNullableToOneRelationship",
         "parameters": [
@@ -347,10 +347,10 @@
         }
       }
     },
-    "/Resource/{id}/nullableToOne": {
+    "/resources/{id}/nullableToOne": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceNullableToOne",
         "parameters": [
@@ -379,7 +379,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceNullableToOne",
         "parameters": [
@@ -407,10 +407,10 @@
         }
       }
     },
-    "/Resource/{id}/relationships/nullableToOne": {
+    "/resources/{id}/relationships/nullableToOne": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceNullableToOneRelationship",
         "parameters": [
@@ -439,7 +439,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceNullableToOneRelationship",
         "parameters": [
@@ -468,7 +468,7 @@
       },
       "patch": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "patchResourceNullableToOneRelationship",
         "parameters": [
@@ -498,10 +498,10 @@
         }
       }
     },
-    "/Resource/{id}/requiredNonNullableToOne": {
+    "/resources/{id}/requiredNonNullableToOne": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceRequiredNonNullableToOne",
         "parameters": [
@@ -530,7 +530,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceRequiredNonNullableToOne",
         "parameters": [
@@ -558,10 +558,10 @@
         }
       }
     },
-    "/Resource/{id}/relationships/requiredNonNullableToOne": {
+    "/resources/{id}/relationships/requiredNonNullableToOne": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceRequiredNonNullableToOneRelationship",
         "parameters": [
@@ -590,7 +590,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceRequiredNonNullableToOneRelationship",
         "parameters": [
@@ -619,7 +619,7 @@
       },
       "patch": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "patchResourceRequiredNonNullableToOneRelationship",
         "parameters": [
@@ -649,10 +649,10 @@
         }
       }
     },
-    "/Resource/{id}/requiredNullableToOne": {
+    "/resources/{id}/requiredNullableToOne": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceRequiredNullableToOne",
         "parameters": [
@@ -681,7 +681,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceRequiredNullableToOne",
         "parameters": [
@@ -709,10 +709,10 @@
         }
       }
     },
-    "/Resource/{id}/relationships/requiredNullableToOne": {
+    "/resources/{id}/relationships/requiredNullableToOne": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceRequiredNullableToOneRelationship",
         "parameters": [
@@ -741,7 +741,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceRequiredNullableToOneRelationship",
         "parameters": [
@@ -770,7 +770,7 @@
       },
       "patch": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "patchResourceRequiredNullableToOneRelationship",
         "parameters": [
@@ -800,10 +800,10 @@
         }
       }
     },
-    "/Resource/{id}/requiredToMany": {
+    "/resources/{id}/requiredToMany": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceRequiredToMany",
         "parameters": [
@@ -832,7 +832,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceRequiredToMany",
         "parameters": [
@@ -860,10 +860,10 @@
         }
       }
     },
-    "/Resource/{id}/relationships/requiredToMany": {
+    "/resources/{id}/relationships/requiredToMany": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceRequiredToManyRelationship",
         "parameters": [
@@ -892,7 +892,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceRequiredToManyRelationship",
         "parameters": [
@@ -921,7 +921,7 @@
       },
       "post": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "postResourceRequiredToManyRelationship",
         "parameters": [
@@ -952,7 +952,7 @@
       },
       "patch": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "patchResourceRequiredToManyRelationship",
         "parameters": [
@@ -983,7 +983,7 @@
       },
       "delete": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "deleteResourceRequiredToManyRelationship",
         "parameters": [
@@ -1013,10 +1013,10 @@
         }
       }
     },
-    "/Resource/{id}/toMany": {
+    "/resources/{id}/toMany": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceToMany",
         "parameters": [
@@ -1045,7 +1045,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceToMany",
         "parameters": [
@@ -1073,10 +1073,10 @@
         }
       }
     },
-    "/Resource/{id}/relationships/toMany": {
+    "/resources/{id}/relationships/toMany": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceToManyRelationship",
         "parameters": [
@@ -1105,7 +1105,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceToManyRelationship",
         "parameters": [
@@ -1134,7 +1134,7 @@
       },
       "post": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "postResourceToManyRelationship",
         "parameters": [
@@ -1165,7 +1165,7 @@
       },
       "patch": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "patchResourceToManyRelationship",
         "parameters": [
@@ -1196,7 +1196,7 @@
       },
       "delete": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "deleteResourceToManyRelationship",
         "parameters": [
@@ -2016,7 +2016,7 @@
       },
       "resourceResourceType": {
         "enum": [
-          "Resource"
+          "resources"
         ],
         "type": "string"
       },

@@ -5,10 +5,10 @@
     "version": "1.0"
   },
   "paths": {
-    "/Resource": {
+    "/resources": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceCollection",
         "responses": {
@@ -26,7 +26,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceCollection",
         "responses": {
@@ -44,7 +44,7 @@
       },
       "post": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "postResource",
         "requestBody": {
@@ -73,10 +73,10 @@
         }
       }
     },
-    "/Resource/{id}": {
+    "/resources/{id}": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResource",
         "parameters": [
@@ -105,7 +105,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResource",
         "parameters": [
@@ -134,7 +134,7 @@
       },
       "patch": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "patchResource",
         "parameters": [
@@ -175,7 +175,7 @@
       },
       "delete": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "deleteResource",
         "parameters": [
@@ -196,10 +196,10 @@
         }
       }
     },
-    "/Resource/{id}/requiredToMany": {
+    "/resources/{id}/requiredToMany": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceRequiredToMany",
         "parameters": [
@@ -228,7 +228,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceRequiredToMany",
         "parameters": [
@@ -256,10 +256,10 @@
         }
       }
     },
-    "/Resource/{id}/relationships/requiredToMany": {
+    "/resources/{id}/relationships/requiredToMany": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceRequiredToManyRelationship",
         "parameters": [
@@ -288,7 +288,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceRequiredToManyRelationship",
         "parameters": [
@@ -317,7 +317,7 @@
       },
       "post": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "postResourceRequiredToManyRelationship",
         "parameters": [
@@ -348,7 +348,7 @@
       },
       "patch": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "patchResourceRequiredToManyRelationship",
         "parameters": [
@@ -379,7 +379,7 @@
       },
       "delete": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "deleteResourceRequiredToManyRelationship",
         "parameters": [
@@ -409,10 +409,10 @@
         }
       }
     },
-    "/Resource/{id}/requiredToOne": {
+    "/resources/{id}/requiredToOne": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceRequiredToOne",
         "parameters": [
@@ -441,7 +441,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceRequiredToOne",
         "parameters": [
@@ -469,10 +469,10 @@
         }
       }
     },
-    "/Resource/{id}/relationships/requiredToOne": {
+    "/resources/{id}/relationships/requiredToOne": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceRequiredToOneRelationship",
         "parameters": [
@@ -501,7 +501,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceRequiredToOneRelationship",
         "parameters": [
@@ -530,7 +530,7 @@
       },
       "patch": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "patchResourceRequiredToOneRelationship",
         "parameters": [
@@ -560,10 +560,10 @@
         }
       }
     },
-    "/Resource/{id}/toMany": {
+    "/resources/{id}/toMany": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceToMany",
         "parameters": [
@@ -592,7 +592,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceToMany",
         "parameters": [
@@ -620,10 +620,10 @@
         }
       }
     },
-    "/Resource/{id}/relationships/toMany": {
+    "/resources/{id}/relationships/toMany": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceToManyRelationship",
         "parameters": [
@@ -652,7 +652,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceToManyRelationship",
         "parameters": [
@@ -681,7 +681,7 @@
       },
       "post": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "postResourceToManyRelationship",
         "parameters": [
@@ -712,7 +712,7 @@
       },
       "patch": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "patchResourceToManyRelationship",
         "parameters": [
@@ -743,7 +743,7 @@
       },
       "delete": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "deleteResourceToManyRelationship",
         "parameters": [
@@ -773,10 +773,10 @@
         }
       }
     },
-    "/Resource/{id}/toOne": {
+    "/resources/{id}/toOne": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceToOne",
         "parameters": [
@@ -805,7 +805,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceToOne",
         "parameters": [
@@ -833,10 +833,10 @@
         }
       }
     },
-    "/Resource/{id}/relationships/toOne": {
+    "/resources/{id}/relationships/toOne": {
       "get": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "getResourceToOneRelationship",
         "parameters": [
@@ -865,7 +865,7 @@
       },
       "head": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "headResourceToOneRelationship",
         "parameters": [
@@ -894,7 +894,7 @@
       },
       "patch": {
         "tags": [
-          "Resource"
+          "resources"
         ],
         "operationId": "patchResourceToOneRelationship",
         "parameters": [
@@ -1667,7 +1667,7 @@
       },
       "resourceResourceType": {
         "enum": [
-          "Resource"
+          "resources"
         ],
         "type": "string"
       },

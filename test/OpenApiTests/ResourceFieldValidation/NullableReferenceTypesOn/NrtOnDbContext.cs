@@ -9,7 +9,8 @@ namespace OpenApiTests.ResourceFieldValidation.NullableReferenceTypesOn;
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class NrtOnDbContext : TestableDbContext
 {
-    public DbSet<NrtOnResource> NrtOnResources => Set<NrtOnResource>();
+    public DbSet<NrtOnResource> Resources => Set<NrtOnResource>();
+    public DbSet<NrtOnEmpty> Empties => Set<NrtOnEmpty>();
 
     public NrtOnDbContext(DbContextOptions<NrtOnDbContext> options)
         : base(options)
@@ -19,22 +20,34 @@ public sealed class NrtOnDbContext : TestableDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<NrtOnResource>()
-            .HasOne(resource => resource.NonNullableToOne);
+            .HasOne(resource => resource.NonNullableToOne)
+            .WithOne()
+            .HasForeignKey<NrtOnResource>("NonNullableToOneId");
 
         builder.Entity<NrtOnResource>()
-            .HasOne(resource => resource.RequiredNonNullableToOne);
+            .HasOne(resource => resource.RequiredNonNullableToOne)
+            .WithOne()
+            .HasForeignKey<NrtOnResource>("RequiredNonNullableToOneId");
 
         builder.Entity<NrtOnResource>()
-            .HasOne(resource => resource.NullableToOne);
+            .HasOne(resource => resource.NullableToOne)
+            .WithOne()
+            .HasForeignKey<NrtOnResource>("NullableToOneId");
 
         builder.Entity<NrtOnResource>()
-            .HasOne(resource => resource.RequiredNullableToOne);
+            .HasOne(resource => resource.RequiredNullableToOne)
+            .WithOne()
+            .HasForeignKey<NrtOnResource>("RequiredNullableToOneId");
 
         builder.Entity<NrtOnResource>()
-            .HasMany(resource => resource.ToMany);
+            .HasMany(resource => resource.ToMany)
+            .WithOne()
+            .HasForeignKey("ToManyId");
 
         builder.Entity<NrtOnResource>()
-            .HasMany(resource => resource.RequiredToMany);
+            .HasMany(resource => resource.RequiredToMany)
+            .WithOne()
+            .HasForeignKey("RequiredToManyId");
 
         base.OnModelCreating(builder);
     }

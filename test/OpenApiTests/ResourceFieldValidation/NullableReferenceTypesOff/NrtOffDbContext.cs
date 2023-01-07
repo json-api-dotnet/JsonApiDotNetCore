@@ -9,7 +9,8 @@ namespace OpenApiTests.ResourceFieldValidation.NullableReferenceTypesOff;
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class NrtOffDbContext : TestableDbContext
 {
-    public DbSet<NrtOffResource> NrtOffResources => Set<NrtOffResource>();
+    public DbSet<NrtOffResource> Resources => Set<NrtOffResource>();
+    public DbSet<NrtOffEmpty> Empties => Set<NrtOffEmpty>();
 
     public NrtOffDbContext(DbContextOptions<NrtOffDbContext> options)
         : base(options)
@@ -19,16 +20,24 @@ public sealed class NrtOffDbContext : TestableDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<NrtOffResource>()
-            .HasOne(resource => resource.ToOne);
+            .HasOne(resource => resource.ToOne)
+            .WithOne()
+            .HasForeignKey<NrtOffResource>("ToOneId");
 
         builder.Entity<NrtOffResource>()
-            .HasOne(resource => resource.RequiredToOne);
+            .HasOne(resource => resource.RequiredToOne)
+            .WithOne()
+            .HasForeignKey<NrtOffResource>("RequiredToOneId");
 
         builder.Entity<NrtOffResource>()
-            .HasMany(resource => resource.ToMany);
+            .HasMany(resource => resource.ToMany)
+            .WithOne()
+            .HasForeignKey("ToManyId");
 
         builder.Entity<NrtOffResource>()
-            .HasMany(resource => resource.RequiredToMany);
+            .HasMany(resource => resource.RequiredToMany)
+            .WithOne()
+            .HasForeignKey("RequiredToManyId");
 
         base.OnModelCreating(builder);
     }

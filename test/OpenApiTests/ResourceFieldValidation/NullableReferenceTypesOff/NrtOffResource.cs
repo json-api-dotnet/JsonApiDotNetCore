@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace OpenApiTests.ResourceFieldValidation.NullableReferenceTypesOff;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(PublicName = "Resource", ControllerNamespace = "OpenApiTests.ResourceFieldValidation")]
+[Resource(PublicName = "resources", ControllerNamespace = "OpenApiTests.ResourceFieldValidation")]
 public sealed class NrtOffResource : Identifiable<int>
 {
     [Attr]
@@ -33,16 +33,16 @@ public sealed class NrtOffResource : Identifiable<int>
     public int? RequiredNullableValueType { get; set; }
 
     [HasOne]
-    public Empty ToOne { get; set; }
+    public NrtOffEmpty ToOne { get; set; }
 
     [Required]
     [HasOne]
-    public Empty RequiredToOne { get; set; }
+    public NrtOffEmpty RequiredToOne { get; set; }
 
     [HasMany]
-    public ICollection<Empty> ToMany { get; set; } = new HashSet<Empty>();
+    public ICollection<NrtOffEmpty> ToMany { get; set; } = new HashSet<NrtOffEmpty>();
 
     [Required]
     [HasMany]
-    public ICollection<Empty> RequiredToMany { get; set; } = new HashSet<Empty>();
+    public ICollection<NrtOffEmpty> RequiredToMany { get; set; } = new HashSet<NrtOffEmpty>();
 }
