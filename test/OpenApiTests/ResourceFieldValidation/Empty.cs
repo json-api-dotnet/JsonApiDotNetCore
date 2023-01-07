@@ -4,6 +4,6 @@ using JsonApiDotNetCore.Resources;
 namespace OpenApiTests.ResourceFieldValidation;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public class EmptyResource : Identifiable<int>
+public class Empty : Identifiable<int>
 {
 }

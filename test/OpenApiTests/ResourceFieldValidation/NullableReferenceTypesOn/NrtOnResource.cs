@@ -38,23 +38,23 @@ public sealed class NrtOnResource : Identifiable<int>
     public int? RequiredNullableValueType { get; set; }
 
     [HasOne]
-    public EmptyResource NonNullableToOne { get; set; } = null!;
+    public Empty NonNullableToOne { get; set; } = null!;
 
     [Required]
     [HasOne]
-    public EmptyResource RequiredNonNullableToOne { get; set; } = null!;
+    public Empty RequiredNonNullableToOne { get; set; } = null!;
 
     [HasOne]
-    public EmptyResource? NullableToOne { get; set; }
+    public Empty? NullableToOne { get; set; }
 
     [Required]
     [HasOne]
-    public EmptyResource? RequiredNullableToOne { get; set; }
+    public Empty? RequiredNullableToOne { get; set; }
 
     [HasMany]
-    public ICollection<EmptyResource> ToMany { get; set; } = new HashSet<EmptyResource>();
+    public ICollection<Empty> ToMany { get; set; } = new HashSet<Empty>();
 
     [Required]
     [HasMany]
-    public ICollection<EmptyResource> RequiredToMany { get; set; } = new HashSet<EmptyResource>();
+    public ICollection<Empty> RequiredToMany { get; set; } = new HashSet<Empty>();
 }

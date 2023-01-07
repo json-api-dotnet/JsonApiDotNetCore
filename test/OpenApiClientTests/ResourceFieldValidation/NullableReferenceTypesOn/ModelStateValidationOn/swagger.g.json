@@ -219,7 +219,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/emptySecondaryResponseDocument"
                 }
               }
             }
@@ -248,7 +248,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/emptySecondaryResponseDocument"
                 }
               }
             }
@@ -279,7 +279,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceIdentifierResponseDocument"
+                  "$ref": "#/components/schemas/emptyIdentifierResponseDocument"
                 }
               }
             }
@@ -308,7 +308,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceIdentifierResponseDocument"
+                  "$ref": "#/components/schemas/emptyIdentifierResponseDocument"
                 }
               }
             }
@@ -335,7 +335,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+                "$ref": "#/components/schemas/toOneEmptyInRequest"
               }
             }
           }
@@ -370,7 +370,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/nullableEmptyResourceSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/nullableEmptySecondaryResponseDocument"
                 }
               }
             }
@@ -399,7 +399,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/nullableEmptyResourceSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/nullableEmptySecondaryResponseDocument"
                 }
               }
             }
@@ -430,7 +430,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/nullableEmptyResourceIdentifierResponseDocument"
+                  "$ref": "#/components/schemas/nullableEmptyIdentifierResponseDocument"
                 }
               }
             }
@@ -459,7 +459,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/nullableEmptyResourceIdentifierResponseDocument"
+                  "$ref": "#/components/schemas/nullableEmptyIdentifierResponseDocument"
                 }
               }
             }
@@ -486,7 +486,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
               }
             }
           }
@@ -521,7 +521,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/emptySecondaryResponseDocument"
                 }
               }
             }
@@ -550,7 +550,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/emptySecondaryResponseDocument"
                 }
               }
             }
@@ -581,7 +581,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceIdentifierResponseDocument"
+                  "$ref": "#/components/schemas/emptyIdentifierResponseDocument"
                 }
               }
             }
@@ -610,7 +610,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceIdentifierResponseDocument"
+                  "$ref": "#/components/schemas/emptyIdentifierResponseDocument"
                 }
               }
             }
@@ -637,7 +637,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+                "$ref": "#/components/schemas/toOneEmptyInRequest"
               }
             }
           }
@@ -672,7 +672,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/emptySecondaryResponseDocument"
                 }
               }
             }
@@ -701,7 +701,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceSecondaryResponseDocument"
+                  "$ref": "#/components/schemas/emptySecondaryResponseDocument"
                 }
               }
             }
@@ -732,7 +732,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceIdentifierResponseDocument"
+                  "$ref": "#/components/schemas/emptyIdentifierResponseDocument"
                 }
               }
             }
@@ -761,7 +761,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceIdentifierResponseDocument"
+                  "$ref": "#/components/schemas/emptyIdentifierResponseDocument"
                 }
               }
             }
@@ -788,7 +788,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+                "$ref": "#/components/schemas/toOneEmptyInRequest"
               }
             }
           }
@@ -823,7 +823,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceCollectionResponseDocument"
+                  "$ref": "#/components/schemas/emptyCollectionResponseDocument"
                 }
               }
             }
@@ -852,7 +852,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceCollectionResponseDocument"
+                  "$ref": "#/components/schemas/emptyCollectionResponseDocument"
                 }
               }
             }
@@ -883,7 +883,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceIdentifierCollectionResponseDocument"
+                  "$ref": "#/components/schemas/emptyIdentifierCollectionResponseDocument"
                 }
               }
             }
@@ -912,7 +912,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceIdentifierCollectionResponseDocument"
+                  "$ref": "#/components/schemas/emptyIdentifierCollectionResponseDocument"
                 }
               }
             }
@@ -939,7 +939,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
               }
             }
           }
@@ -970,7 +970,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
               }
             }
           }
@@ -1001,7 +1001,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
               }
             }
           }
@@ -1036,7 +1036,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceCollectionResponseDocument"
+                  "$ref": "#/components/schemas/emptyCollectionResponseDocument"
                 }
               }
             }
@@ -1065,7 +1065,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceCollectionResponseDocument"
+                  "$ref": "#/components/schemas/emptyCollectionResponseDocument"
                 }
               }
             }
@@ -1096,7 +1096,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceIdentifierCollectionResponseDocument"
+                  "$ref": "#/components/schemas/emptyIdentifierCollectionResponseDocument"
                 }
               }
             }
@@ -1125,7 +1125,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/emptyResourceIdentifierCollectionResponseDocument"
+                  "$ref": "#/components/schemas/emptyIdentifierCollectionResponseDocument"
                 }
               }
             }
@@ -1152,7 +1152,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
               }
             }
           }
@@ -1183,7 +1183,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
               }
             }
           }
@@ -1214,7 +1214,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
               }
             }
           }
@@ -1229,7 +1229,7 @@
   },
   "components": {
     "schemas": {
-      "emptyResourceCollectionResponseDocument": {
+      "emptyCollectionResponseDocument": {
         "required": [
           "data",
           "links"
@@ -1239,7 +1239,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/emptyResourceDataInResponse"
+              "$ref": "#/components/schemas/emptyDataInResponse"
             }
           },
           "meta": {
@@ -1255,7 +1255,7 @@
         },
         "additionalProperties": false
       },
-      "emptyResourceDataInResponse": {
+      "emptyDataInResponse": {
         "required": [
           "id",
           "links",
@@ -1264,7 +1264,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/emptyResourceResourceType"
+            "$ref": "#/components/schemas/emptyResourceType"
           },
           "id": {
             "minLength": 1,
@@ -1280,7 +1280,7 @@
         },
         "additionalProperties": false
       },
-      "emptyResourceIdentifier": {
+      "emptyIdentifier": {
         "required": [
           "id",
           "type"
@@ -1288,7 +1288,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/emptyResourceResourceType"
+            "$ref": "#/components/schemas/emptyResourceType"
           },
           "id": {
             "minLength": 1,
@@ -1297,7 +1297,7 @@
         },
         "additionalProperties": false
       },
-      "emptyResourceIdentifierCollectionResponseDocument": {
+      "emptyIdentifierCollectionResponseDocument": {
         "required": [
           "data",
           "links"
@@ -1307,7 +1307,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/emptyResourceIdentifier"
+              "$ref": "#/components/schemas/emptyIdentifier"
             }
           },
           "meta": {
@@ -1323,7 +1323,7 @@
         },
         "additionalProperties": false
       },
-      "emptyResourceIdentifierResponseDocument": {
+      "emptyIdentifierResponseDocument": {
         "required": [
           "data",
           "links"
@@ -1331,7 +1331,7 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/emptyResourceIdentifier"
+            "$ref": "#/components/schemas/emptyIdentifier"
           },
           "meta": {
             "type": "object",
@@ -1346,13 +1346,13 @@
         },
         "additionalProperties": false
       },
-      "emptyResourceResourceType": {
+      "emptyResourceType": {
         "enum": [
-          "emptyResources"
+          "empties"
         ],
         "type": "string"
       },
-      "emptyResourceSecondaryResponseDocument": {
+      "emptySecondaryResponseDocument": {
         "required": [
           "data",
           "links"
@@ -1360,7 +1360,7 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/emptyResourceDataInResponse"
+            "$ref": "#/components/schemas/emptyDataInResponse"
           },
           "meta": {
             "type": "object",
@@ -1556,7 +1556,7 @@
         },
         "nullable": true
       },
-      "nullableEmptyResourceIdentifierResponseDocument": {
+      "nullableEmptyIdentifierResponseDocument": {
         "required": [
           "data",
           "links"
@@ -1566,7 +1566,7 @@
           "data": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/emptyResourceIdentifier"
+                "$ref": "#/components/schemas/emptyIdentifier"
               },
               {
                 "$ref": "#/components/schemas/nullValue"
@@ -1586,7 +1586,7 @@
         },
         "additionalProperties": false
       },
-      "nullableEmptyResourceSecondaryResponseDocument": {
+      "nullableEmptySecondaryResponseDocument": {
         "required": [
           "data",
           "links"
@@ -1596,7 +1596,7 @@
           "data": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/emptyResourceDataInResponse"
+                "$ref": "#/components/schemas/emptyDataInResponse"
               },
               {
                 "$ref": "#/components/schemas/nullValue"
@@ -1616,7 +1616,7 @@
         },
         "additionalProperties": false
       },
-      "nullableToOneEmptyResourceInRequest": {
+      "nullableToOneEmptyInRequest": {
         "required": [
           "data"
         ],
@@ -1625,7 +1625,7 @@
           "data": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/emptyResourceIdentifier"
+                "$ref": "#/components/schemas/emptyIdentifier"
               },
               {
                 "$ref": "#/components/schemas/nullValue"
@@ -1635,7 +1635,7 @@
         },
         "additionalProperties": false
       },
-      "nullableToOneEmptyResourceInResponse": {
+      "nullableToOneEmptyInResponse": {
         "required": [
           "links"
         ],
@@ -1644,7 +1644,7 @@
           "data": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/emptyResourceIdentifier"
+                "$ref": "#/components/schemas/emptyIdentifier"
               },
               {
                 "$ref": "#/components/schemas/nullValue"
@@ -1936,22 +1936,22 @@
         "type": "object",
         "properties": {
           "nonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+            "$ref": "#/components/schemas/toOneEmptyInRequest"
           },
           "requiredNonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+            "$ref": "#/components/schemas/toOneEmptyInRequest"
           },
           "nullableToOne": {
-            "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+            "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
           },
           "requiredNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+            "$ref": "#/components/schemas/toOneEmptyInRequest"
           },
           "toMany": {
-            "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+            "$ref": "#/components/schemas/toManyEmptyInRequest"
           },
           "requiredToMany": {
-            "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+            "$ref": "#/components/schemas/toManyEmptyInRequest"
           }
         },
         "additionalProperties": false
@@ -1965,22 +1965,22 @@
         "type": "object",
         "properties": {
           "nonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+            "$ref": "#/components/schemas/toOneEmptyInRequest"
           },
           "requiredNonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+            "$ref": "#/components/schemas/toOneEmptyInRequest"
           },
           "nullableToOne": {
-            "$ref": "#/components/schemas/nullableToOneEmptyResourceInRequest"
+            "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
           },
           "requiredNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInRequest"
+            "$ref": "#/components/schemas/toOneEmptyInRequest"
           },
           "toMany": {
-            "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+            "$ref": "#/components/schemas/toManyEmptyInRequest"
           },
           "requiredToMany": {
-            "$ref": "#/components/schemas/toManyEmptyResourceInRequest"
+            "$ref": "#/components/schemas/toManyEmptyInRequest"
           }
         },
         "additionalProperties": false
@@ -1994,22 +1994,22 @@
         "type": "object",
         "properties": {
           "nonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInResponse"
+            "$ref": "#/components/schemas/toOneEmptyInResponse"
           },
           "requiredNonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInResponse"
+            "$ref": "#/components/schemas/toOneEmptyInResponse"
           },
           "nullableToOne": {
-            "$ref": "#/components/schemas/nullableToOneEmptyResourceInResponse"
+            "$ref": "#/components/schemas/nullableToOneEmptyInResponse"
           },
           "requiredNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyResourceInResponse"
+            "$ref": "#/components/schemas/toOneEmptyInResponse"
           },
           "toMany": {
-            "$ref": "#/components/schemas/toManyEmptyResourceInResponse"
+            "$ref": "#/components/schemas/toManyEmptyInResponse"
           },
           "requiredToMany": {
-            "$ref": "#/components/schemas/toManyEmptyResourceInResponse"
+            "$ref": "#/components/schemas/toManyEmptyInResponse"
           }
         },
         "additionalProperties": false
@@ -2020,7 +2020,7 @@
         ],
         "type": "string"
       },
-      "toManyEmptyResourceInRequest": {
+      "toManyEmptyInRequest": {
         "required": [
           "data"
         ],
@@ -2029,13 +2029,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/emptyResourceIdentifier"
+              "$ref": "#/components/schemas/emptyIdentifier"
             }
           }
         },
         "additionalProperties": false
       },
-      "toManyEmptyResourceInResponse": {
+      "toManyEmptyInResponse": {
         "required": [
           "links"
         ],
@@ -2044,7 +2044,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/emptyResourceIdentifier"
+              "$ref": "#/components/schemas/emptyIdentifier"
             }
           },
           "links": {
@@ -2057,26 +2057,26 @@
         },
         "additionalProperties": false
       },
-      "toOneEmptyResourceInRequest": {
+      "toOneEmptyInRequest": {
         "required": [
           "data"
         ],
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/emptyResourceIdentifier"
+            "$ref": "#/components/schemas/emptyIdentifier"
           }
         },
         "additionalProperties": false
       },
-      "toOneEmptyResourceInResponse": {
+      "toOneEmptyInResponse": {
         "required": [
           "links"
         ],
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/emptyResourceIdentifier"
+            "$ref": "#/components/schemas/emptyIdentifier"
           },
           "links": {
             "$ref": "#/components/schemas/linksInRelationshipObject"
