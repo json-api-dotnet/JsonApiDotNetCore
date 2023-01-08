@@ -6,10 +6,10 @@ using Xunit;
 
 namespace OpenApiClientTests.LegacyClient;
 
-public sealed class RequestDocumentRegistrationLifetimeTests
+public sealed class PartialAttributeSerializationLifetimeTests
 {
     [Fact]
-    public async Task Disposed_request_document_registration_does_not_affect_request()
+    public async Task Disposed_registration_does_not_affect_request()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -51,7 +51,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Request_document_registration_can_be_used_for_multiple_requests()
+    public async Task Registration_can_be_used_for_multiple_requests()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -98,7 +98,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Request_is_unaffected_by_request_document_registration_of_different_request_document_of_same_type()
+    public async Task Request_is_unaffected_by_registration_for_different_document_of_same_type()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -153,7 +153,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Attribute_values_can_be_changed_after_request_document_registration()
+    public async Task Attribute_values_can_be_changed_after_registration()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -196,7 +196,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Request_document_registration_is_unaffected_by_successive_registration_of_request_document_of_different_type()
+    public async Task Registration_is_unaffected_by_successive_registration_for_document_of_different_type()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -247,7 +247,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Request_document_registration_is_unaffected_by_preceding_disposed_registration_of_different_request_document_of_same_type()
+    public async Task Registration_is_unaffected_by_preceding_disposed_registration_for_different_document_of_same_type()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -309,7 +309,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Request_document_registration_is_unaffected_by_preceding_disposed_registration_of_request_document_of_different_type()
+    public async Task Registration_is_unaffected_by_preceding_disposed_registration_for_document_of_different_type()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
@@ -371,7 +371,7 @@ public sealed class RequestDocumentRegistrationLifetimeTests
     }
 
     [Fact]
-    public async Task Request_document_registration_is_unaffected_by_preceding_registration_of_different_request_document_of_same_type()
+    public async Task Registration_is_unaffected_by_preceding_registration_for_different_document_of_same_type()
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);

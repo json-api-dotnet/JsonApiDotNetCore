@@ -242,7 +242,9 @@ public sealed class CreateResourceTests : OpenApiClientTests
             // Assert
             ExceptionAssertions<InvalidOperationException> assertion = await action.Should().ThrowExactlyAsync<InvalidOperationException>();
             InvalidOperationException exception = assertion.Subject.Single();
-            exception.Message.Should().Be($"The following property should not be omitted: data.attributes.{jsonPropertyName}.");
+
+            exception.Message.Should().Be(
+                $"Required property '{attributePropertyName}' at JSON path 'data.attributes.{jsonPropertyName}' is not set. If sending its default value is intended, include it explicitly.");
         }
     }
 
