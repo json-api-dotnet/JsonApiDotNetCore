@@ -52,7 +52,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         }
 
         // Assert
-        JsonElement document = wrapper.ParseRequestBody();
+        JsonElement document = wrapper.GetRequestBodyAsJson();
 
         document.ShouldContainPath("data.attributes").With(attributesObject =>
         {
@@ -100,7 +100,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         }
 
         // Assert
-        JsonElement document = wrapper.ParseRequestBody();
+        JsonElement document = wrapper.GetRequestBodyAsJson();
 
         document.ShouldContainPath("data.attributes").With(attributesObject =>
         {
@@ -193,7 +193,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         }
 
         // Assert
-        JsonElement document = wrapper.ParseRequestBody();
+        JsonElement document = wrapper.GetRequestBodyAsJson();
 
         document.ShouldContainPath("data.attributes").With(attributesObject =>
         {
@@ -282,7 +282,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         }
 
         // Assert
-        JsonElement document = wrapper.ParseRequestBody();
+        JsonElement document = wrapper.GetRequestBodyAsJson();
 
         document.ShouldContainPath($"data.relationships.{jsonPropertyName}.data").With(relationshipDataObject =>
         {
@@ -323,7 +323,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
 
         // Assert
-        JsonElement document = wrapper.ParseRequestBody();
+        JsonElement document = wrapper.GetRequestBodyAsJson();
 
         document.ShouldContainPath($"data.relationships.{jsonPropertyName}.data").With(relationshipDataObject =>
         {
@@ -468,7 +468,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         }
 
         // Assert
-        JsonElement document = wrapper.ParseRequestBody();
+        JsonElement document = wrapper.GetRequestBodyAsJson();
 
         document.ShouldContainPath("data.relationships").With(relationshipsObject =>
         {
@@ -514,7 +514,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         }
 
         // Assert
-        JsonElement document = wrapper.ParseRequestBody();
+        JsonElement document = wrapper.GetRequestBodyAsJson();
 
         document.ShouldContainPath("data.relationships").With(relationshipsObject =>
         {

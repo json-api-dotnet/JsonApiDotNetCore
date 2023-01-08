@@ -96,7 +96,7 @@ public sealed class UpdateResourceTests
         }
 
         // Assert
-        JsonElement document = wrapper.ParseRequestBody();
+        JsonElement document = wrapper.GetRequestBodyAsJson();
 
         document.ShouldContainPath("data.attributes").With(attributesObject =>
         {
@@ -146,7 +146,7 @@ public sealed class UpdateResourceTests
         }
 
         // Assert
-        JsonElement document = wrapper.ParseRequestBody();
+        JsonElement document = wrapper.GetRequestBodyAsJson();
 
         document.ShouldContainPath("data.relationships").With(relationshipsObject =>
         {
