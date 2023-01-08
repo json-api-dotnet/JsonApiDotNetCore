@@ -28,11 +28,11 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<MsvOffSt
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.resourceAttributesInResponse.properties").With(schemaProperties =>
+        document.Should().ContainPath("components.schemas.resourceAttributesInResponse.properties").With(schemaProperties =>
         {
-            schemaProperties.ShouldContainPath(jsonPropertyName).With(schemaProperty =>
+            schemaProperties.Should().ContainPath(jsonPropertyName).With(schemaProperty =>
             {
-                schemaProperty.ShouldContainPath("nullable").With(nullableProperty => nullableProperty.ValueKind.Should().Be(JsonValueKind.True));
+                schemaProperty.Should().ContainPath("nullable").With(nullableProperty => nullableProperty.ValueKind.Should().Be(JsonValueKind.True));
             });
         });
     }
@@ -48,11 +48,11 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<MsvOffSt
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.resourceAttributesInResponse.properties").With(schemaProperties =>
+        document.Should().ContainPath("components.schemas.resourceAttributesInResponse.properties").With(schemaProperties =>
         {
-            schemaProperties.ShouldContainPath(jsonPropertyName).With(schemaProperty =>
+            schemaProperties.Should().ContainPath(jsonPropertyName).With(schemaProperty =>
             {
-                schemaProperty.ShouldNotContainPath("nullable");
+                schemaProperty.Should().NotContainPath("nullable");
             });
         });
     }
@@ -66,11 +66,11 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<MsvOffSt
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.resourceRelationshipsInPostRequest.properties").With(schemaProperties =>
+        document.Should().ContainPath("components.schemas.resourceRelationshipsInPostRequest.properties").With(schemaProperties =>
         {
-            schemaProperties.ShouldContainPath($"{jsonPropertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
+            schemaProperties.Should().ContainPath($"{jsonPropertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
             {
-                document.ShouldContainPath($"components.schemas.{schemaReferenceId}.properties.data.oneOf[1].$ref").ShouldBeSchemaReferenceId("nullValue");
+                document.Should().ContainPath($"components.schemas.{schemaReferenceId}.properties.data.oneOf[1].$ref").ShouldBeSchemaReferenceId("nullValue");
             });
         });
     }
@@ -86,11 +86,11 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<MsvOffSt
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.resourceRelationshipsInPostRequest.properties").With(schemaProperties =>
+        document.Should().ContainPath("components.schemas.resourceRelationshipsInPostRequest.properties").With(schemaProperties =>
         {
-            schemaProperties.ShouldContainPath($"{jsonPropertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
+            schemaProperties.Should().ContainPath($"{jsonPropertyName}.$ref").WithSchemaReferenceId(schemaReferenceId =>
             {
-                document.ShouldContainPath($"components.schemas.{schemaReferenceId}.properties.data").ShouldNotContainPath("oneOf[1].$ref");
+                document.Should().ContainPath($"components.schemas.{schemaReferenceId}.properties.data").Should().NotContainPath("oneOf[1].$ref");
             });
         });
     }

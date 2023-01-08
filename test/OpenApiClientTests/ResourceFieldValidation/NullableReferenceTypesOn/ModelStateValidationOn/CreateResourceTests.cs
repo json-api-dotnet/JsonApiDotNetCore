@@ -54,9 +54,9 @@ public sealed class CreateResourceTests : OpenApiClientTests
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
 
-        document.ShouldContainPath("data.attributes").With(attributesObject =>
+        document.Should().ContainPath("data.attributes").With(attributesObject =>
         {
-            attributesObject.ShouldContainPath(jsonPropertyName).With(attribute => attribute.ValueKind.Should().Be(JsonValueKind.Null));
+            attributesObject.Should().ContainPath(jsonPropertyName).With(attribute => attribute.ValueKind.Should().Be(JsonValueKind.Null));
         });
     }
 
@@ -102,9 +102,9 @@ public sealed class CreateResourceTests : OpenApiClientTests
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
 
-        document.ShouldContainPath("data.attributes").With(attributesObject =>
+        document.Should().ContainPath("data.attributes").With(attributesObject =>
         {
-            attributesObject.ShouldContainPath(jsonPropertyName).With(attribute => attribute.ShouldBeInteger(0));
+            attributesObject.Should().ContainPath(jsonPropertyName).With(attribute => attribute.Should().Be(0));
         });
     }
 
@@ -195,9 +195,9 @@ public sealed class CreateResourceTests : OpenApiClientTests
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
 
-        document.ShouldContainPath("data.attributes").With(attributesObject =>
+        document.Should().ContainPath("data.attributes").With(attributesObject =>
         {
-            attributesObject.ShouldNotContainPath(jsonPropertyName);
+            attributesObject.Should().NotContainPath(jsonPropertyName);
         });
     }
 
@@ -286,7 +286,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
 
-        document.ShouldContainPath($"data.relationships.{jsonPropertyName}.data").With(relationshipDataObject =>
+        document.Should().ContainPath($"data.relationships.{jsonPropertyName}.data").With(relationshipDataObject =>
         {
             relationshipDataObject.ValueKind.Should().Be(JsonValueKind.Null);
         });
@@ -327,7 +327,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
 
-        document.ShouldContainPath($"data.relationships.{jsonPropertyName}.data").With(relationshipDataObject =>
+        document.Should().ContainPath($"data.relationships.{jsonPropertyName}.data").With(relationshipDataObject =>
         {
             relationshipDataObject.ValueKind.Should().Be(JsonValueKind.Null);
         });
@@ -472,9 +472,9 @@ public sealed class CreateResourceTests : OpenApiClientTests
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
 
-        document.ShouldContainPath("data.relationships").With(relationshipsObject =>
+        document.Should().ContainPath("data.relationships").With(relationshipsObject =>
         {
-            relationshipsObject.ShouldNotContainPath(jsonPropertyName);
+            relationshipsObject.Should().NotContainPath(jsonPropertyName);
         });
     }
 
@@ -518,9 +518,9 @@ public sealed class CreateResourceTests : OpenApiClientTests
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
 
-        document.ShouldContainPath("data.relationships").With(relationshipsObject =>
+        document.Should().ContainPath("data.relationships").With(relationshipsObject =>
         {
-            relationshipsObject.ShouldNotContainPath(jsonPropertyName);
+            relationshipsObject.Should().NotContainPath(jsonPropertyName);
         });
     }
 

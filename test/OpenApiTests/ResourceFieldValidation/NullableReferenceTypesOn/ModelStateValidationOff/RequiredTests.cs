@@ -26,10 +26,10 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.resourceAttributesInPostRequest").With(attributesObjectSchema =>
+        document.Should().ContainPath("components.schemas.resourceAttributesInPostRequest").With(attributesObjectSchema =>
         {
-            attributesObjectSchema.ShouldContainPath($"properties.{jsonPropertyName}");
-            attributesObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithElement(jsonPropertyName));
+            attributesObjectSchema.Should().ContainPath($"properties.{jsonPropertyName}");
+            attributesObjectSchema.Should().ContainPath("required").With(propertySet => propertySet.Should().ContainArrayElement(jsonPropertyName));
         });
     }
 
@@ -44,10 +44,10 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.resourceAttributesInPostRequest").With(attributesObjectSchema =>
+        document.Should().ContainPath("components.schemas.resourceAttributesInPostRequest").With(attributesObjectSchema =>
         {
-            attributesObjectSchema.ShouldContainPath($"properties.{jsonPropertyName}");
-            attributesObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithoutElement(jsonPropertyName));
+            attributesObjectSchema.Should().ContainPath($"properties.{jsonPropertyName}");
+            attributesObjectSchema.Should().ContainPath("required").With(propertySet => propertySet.Should().NotContainArrayElement(jsonPropertyName));
         });
     }
 
@@ -61,10 +61,10 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.resourceRelationshipsInPostRequest").With(relationshipsObjectSchema =>
+        document.Should().ContainPath("components.schemas.resourceRelationshipsInPostRequest").With(relationshipsObjectSchema =>
         {
-            relationshipsObjectSchema.ShouldContainPath($"properties.{jsonPropertyName}");
-            relationshipsObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithElement(jsonPropertyName));
+            relationshipsObjectSchema.Should().ContainPath($"properties.{jsonPropertyName}");
+            relationshipsObjectSchema.Should().ContainPath("required").With(propertySet => propertySet.Should().ContainArrayElement(jsonPropertyName));
         });
     }
 
@@ -78,10 +78,10 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldContainPath("components.schemas.resourceRelationshipsInPostRequest").With(relationshipsObjectSchema =>
+        document.Should().ContainPath("components.schemas.resourceRelationshipsInPostRequest").With(relationshipsObjectSchema =>
         {
-            relationshipsObjectSchema.ShouldContainPath($"properties.{jsonPropertyName}");
-            relationshipsObjectSchema.ShouldContainPath("required").With(propertySet => propertySet.ShouldBeArrayWithoutElement(jsonPropertyName));
+            relationshipsObjectSchema.Should().ContainPath($"properties.{jsonPropertyName}");
+            relationshipsObjectSchema.Should().ContainPath("required").With(propertySet => propertySet.Should().NotContainArrayElement(jsonPropertyName));
         });
     }
 
@@ -92,7 +92,7 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldNotContainPath("components.schemas.resourceAttributesInPatchRequest.required");
+        document.Should().NotContainPath("components.schemas.resourceAttributesInPatchRequest.required");
     }
 
     [Fact]
@@ -102,6 +102,6 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.ShouldNotContainPath("components.schemas.resourceRelationshipsInPatchRequest.required");
+        document.Should().NotContainPath("components.schemas.resourceRelationshipsInPatchRequest.required");
     }
 }

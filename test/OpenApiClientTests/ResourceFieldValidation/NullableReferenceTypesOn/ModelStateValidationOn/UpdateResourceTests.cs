@@ -98,9 +98,9 @@ public sealed class UpdateResourceTests
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
 
-        document.ShouldContainPath("data.attributes").With(attributesObject =>
+        document.Should().ContainPath("data.attributes").With(attributesObject =>
         {
-            attributesObject.ShouldNotContainPath(jsonPropertyName);
+            attributesObject.Should().NotContainPath(jsonPropertyName);
         });
     }
 
@@ -148,9 +148,9 @@ public sealed class UpdateResourceTests
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
 
-        document.ShouldContainPath("data.relationships").With(relationshipsObject =>
+        document.Should().ContainPath("data.relationships").With(relationshipsObject =>
         {
-            relationshipsObject.ShouldNotContainPath(jsonPropertyName);
+            relationshipsObject.Should().NotContainPath(jsonPropertyName);
         });
     }
 }
