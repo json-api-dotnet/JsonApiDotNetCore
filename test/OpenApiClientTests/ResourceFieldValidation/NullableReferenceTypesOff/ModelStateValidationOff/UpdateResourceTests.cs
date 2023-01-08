@@ -40,7 +40,7 @@ public sealed class UpdateResourceTests
         var apiClient = new NrtOffMsvOffClient(wrapper.HttpClient);
 
         // Act
-        Func<Task> action = async () => await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(999, requestDocument));
+        Func<Task> action = async () => await apiClient.PatchResourceAsync(999, requestDocument);
 
         // Assert
         await action.Should().ThrowAsync<JsonSerializationException>();

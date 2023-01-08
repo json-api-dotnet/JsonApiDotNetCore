@@ -2,11 +2,11 @@ using System.Linq.Expressions;
 
 namespace OpenApiClientTests;
 
-public class OpenApiClientTests
+public abstract class OpenApiClientTests
 {
     private const string AttributesObjectParameterName = "attributesObject";
 
-    protected static Expression<Func<TAttributesObject, object?>> CreateIncludedAttributeSelector<TAttributesObject>(string propertyName)
+    protected static Expression<Func<TAttributesObject, object?>> CreateAttributeSelectorFor<TAttributesObject>(string propertyName)
         where TAttributesObject : class
     {
         Type attributesObjectType = typeof(TAttributesObject);

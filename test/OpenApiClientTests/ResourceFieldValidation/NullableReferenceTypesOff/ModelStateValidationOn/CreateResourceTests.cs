@@ -12,6 +12,7 @@ namespace OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOff.M
 
 public sealed class CreateResourceTests : OpenApiClientTests
 {
+    private const string DataPropertyName = "Data";
     private readonly NrtOffMsvOnFakers _fakers = new();
 
     [Theory]
@@ -41,7 +42,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
         Expression<Func<ResourceAttributesInPostRequest, object?>> includeAttributeSelector =
-            CreateIncludedAttributeSelector<ResourceAttributesInPostRequest>(attributePropertyName);
+            CreateAttributeSelectorFor<ResourceAttributesInPostRequest>(attributePropertyName);
 
         using (apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector))
         {
@@ -84,7 +85,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         requestDocument.Data.Attributes.SetPropertyValue(attributePropertyName, defaultValue);
 
         Expression<Func<ResourceAttributesInPostRequest, object?>> includeAttributeSelector =
-            CreateIncludedAttributeSelector<ResourceAttributesInPostRequest>(attributePropertyName);
+            CreateAttributeSelectorFor<ResourceAttributesInPostRequest>(attributePropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
@@ -106,7 +107,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
 
     [Theory]
     [InlineData(nameof(ResourceAttributesInPostRequest.RequiredReferenceType), "requiredReferenceType")]
-    public async Task Cannot_clear_attribute(string clrPropertyName, string jsonPropertyName)
+    public async Task Cannot_clear_attribute(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePostRequestDocument
@@ -124,19 +125,18 @@ public sealed class CreateResourceTests : OpenApiClientTests
             }
         };
 
-        requestDocument.Data.Attributes.SetPropertyValue(clrPropertyName, null);
+        requestDocument.Data.Attributes.SetPropertyValue(attributePropertyName, null);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
         Expression<Func<ResourceAttributesInPostRequest, object?>> includeAttributeSelector =
-            CreateIncludedAttributeSelector<ResourceAttributesInPostRequest>(clrPropertyName);
+            CreateAttributeSelectorFor<ResourceAttributesInPostRequest>(attributePropertyName);
 
         using (apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector))
         {
             // Act
-            Func<Task<ResourcePrimaryResponseDocument?>> action = async () =>
-                await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
+            Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
 
             // Assert
             ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -222,8 +222,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using (apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument))
         {
             // Act
-            Func<Task<ResourcePrimaryResponseDocument?>> action = async () =>
-                await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
+            Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
 
             // Assert
             ExceptionAssertions<InvalidOperationException> assertion = await action.Should().ThrowExactlyAsync<InvalidOperationException>();
@@ -235,9 +234,8 @@ public sealed class CreateResourceTests : OpenApiClientTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToOne), nameof(ResourceRelationshipsInPostRequest.ToOne.Data), "toOne")]
-    public async Task Can_clear_relationship_with_partial_attribute_serialization(string relationshipPropertyName, string dataPropertyName,
-        string jsonPropertyName)
+    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToOne), "toOne")]
+    public async Task Can_clear_relationship_with_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePostRequestDocument
@@ -256,7 +254,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         };
 
         object? relationshipObject = requestDocument.Data.Relationships.GetPropertyValue(relationshipPropertyName);
-        relationshipObject!.SetPropertyValue(dataPropertyName, null);
+        relationshipObject!.SetPropertyValue(DataPropertyName, null);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
@@ -277,9 +275,8 @@ public sealed class CreateResourceTests : OpenApiClientTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToOne), nameof(ResourceRelationshipsInPostRequest.ToOne.Data), "toOne")]
-    public async Task Can_clear_relationship_without_partial_attribute_serialization(string relationshipPropertyName, string dataPropertyName,
-        string jsonPropertyName)
+    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToOne), "toOne")]
+    public async Task Can_clear_relationship_without_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePostRequestDocument
@@ -298,7 +295,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         };
 
         object? relationshipObject = requestDocument.Data.Relationships.GetPropertyValue(relationshipPropertyName);
-        relationshipObject!.SetPropertyValue(dataPropertyName, null);
+        relationshipObject!.SetPropertyValue(DataPropertyName, null);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
@@ -316,11 +313,10 @@ public sealed class CreateResourceTests : OpenApiClientTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToOne), nameof(ResourceRelationshipsInPostRequest.RequiredToOne.Data), "requiredToOne")]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToMany), nameof(ResourceRelationshipsInPostRequest.ToMany.Data), "toMany")]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToMany), nameof(ResourceRelationshipsInPostRequest.RequiredToMany.Data), "requiredToMany")]
-    public async Task Cannot_clear_relationship_with_partial_attribute_serialization(string relationshipPropertyName, string dataPropertyName,
-        string jsonPropertyName)
+    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToOne), "requiredToOne")]
+    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToMany), "toMany")]
+    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToMany), "requiredToMany")]
+    public async Task Cannot_clear_relationship_with_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePostRequestDocument
@@ -339,7 +335,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         };
 
         object? relationshipObject = requestDocument.Data.Relationships.GetPropertyValue(relationshipPropertyName);
-        relationshipObject!.SetPropertyValue(dataPropertyName, null);
+        relationshipObject!.SetPropertyValue(DataPropertyName, null);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
@@ -347,8 +343,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using (apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument))
         {
             // Act
-            Func<Task<ResourcePrimaryResponseDocument?>> action = async () =>
-                await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
+            Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
 
             // Assert
             ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -360,11 +355,10 @@ public sealed class CreateResourceTests : OpenApiClientTests
     }
 
     [Theory]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToOne), nameof(ResourceRelationshipsInPostRequest.RequiredToOne.Data), "requiredToOne")]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToMany), nameof(ResourceRelationshipsInPostRequest.ToMany.Data), "toMany")]
-    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToMany), nameof(ResourceRelationshipsInPostRequest.RequiredToMany.Data), "requiredToMany")]
-    public async Task Cannot_clear_relationship_without_partial_attribute_serialization(string relationshipPropertyName, string dataPropertyName,
-        string jsonPropertyName)
+    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToOne), "requiredToOne")]
+    [InlineData(nameof(ResourceRelationshipsInPostRequest.ToMany), "toMany")]
+    [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToMany), "requiredToMany")]
+    public async Task Cannot_clear_relationship_without_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePostRequestDocument
@@ -383,14 +377,13 @@ public sealed class CreateResourceTests : OpenApiClientTests
         };
 
         object? relationshipObject = requestDocument.Data.Relationships.GetPropertyValue(relationshipPropertyName);
-        relationshipObject!.SetPropertyValue(dataPropertyName, null);
+        relationshipObject!.SetPropertyValue(DataPropertyName, null);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
         // Act
-        Func<Task<ResourcePrimaryResponseDocument?>> action = async () =>
-            await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
+        Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -518,8 +511,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using (apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument))
         {
             // Act
-            Func<Task<ResourcePrimaryResponseDocument?>> action = async () =>
-                await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
+            Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
 
             // Assert
             ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -558,8 +550,7 @@ public sealed class CreateResourceTests : OpenApiClientTests
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
         // Act
-        Func<Task<ResourcePrimaryResponseDocument?>> action = async () =>
-            await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
+        Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
