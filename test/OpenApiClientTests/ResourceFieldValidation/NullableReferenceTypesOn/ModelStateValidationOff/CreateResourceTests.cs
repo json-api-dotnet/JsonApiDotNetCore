@@ -88,11 +88,11 @@ public sealed class CreateResourceTests : OpenApiClientTests
         object? defaultValue = requestDocument.Data.Attributes.GetDefaultValueForProperty(attributePropertyName);
         requestDocument.Data.Attributes.SetPropertyValue(attributePropertyName, defaultValue);
 
-        Expression<Func<ResourceAttributesInPostRequest, object?>> includeAttributeSelector =
-            CreateAttributeSelectorFor<ResourceAttributesInPostRequest>(attributePropertyName);
-
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOffClient(wrapper.HttpClient);
+
+        Expression<Func<ResourceAttributesInPostRequest, object?>> includeAttributeSelector =
+            CreateAttributeSelectorFor<ResourceAttributesInPostRequest>(attributePropertyName);
 
         using IDisposable _ = apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector);
 
