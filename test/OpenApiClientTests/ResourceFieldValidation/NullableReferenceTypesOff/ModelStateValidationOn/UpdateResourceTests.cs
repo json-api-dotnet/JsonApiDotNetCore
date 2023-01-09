@@ -83,11 +83,10 @@ public sealed class UpdateResourceTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        using (apiClient.WithPartialAttributeSerialization<ResourcePatchRequestDocument, ResourceAttributesInPatchRequest>(requestDocument))
-        {
-            // Act
-            await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(int.Parse(requestDocument.Data.Id), requestDocument));
-        }
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePatchRequestDocument, ResourceAttributesInPatchRequest>(requestDocument);
+
+        // Act
+        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(int.Parse(requestDocument.Data.Id), requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -129,11 +128,10 @@ public sealed class UpdateResourceTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        using (apiClient.WithPartialAttributeSerialization<ResourcePatchRequestDocument, ResourceAttributesInPatchRequest>(requestDocument))
-        {
-            // Act
-            await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(int.Parse(requestDocument.Data.Id), requestDocument));
-        }
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePatchRequestDocument, ResourceAttributesInPatchRequest>(requestDocument);
+
+        // Act
+        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(int.Parse(requestDocument.Data.Id), requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();

@@ -48,11 +48,10 @@ public sealed class CreateResourceTests : OpenApiClientTests
         Expression<Func<ResourceAttributesInPostRequest, object?>> includeAttributeSelector =
             CreateAttributeSelectorFor<ResourceAttributesInPostRequest>(attributePropertyName);
 
-        using (apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector))
-        {
-            // Act
-            await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
-        }
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector);
+
+        // Act
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -95,11 +94,10 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOffClient(wrapper.HttpClient);
 
-        using (apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector))
-        {
-            // Act
-            await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
-        }
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector);
+
+        // Act
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -141,17 +139,16 @@ public sealed class CreateResourceTests : OpenApiClientTests
         Expression<Func<ResourceAttributesInPostRequest, object?>> includeAttributeSelector =
             CreateAttributeSelectorFor<ResourceAttributesInPostRequest>(attributePropertyName);
 
-        using (apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector))
-        {
-            // Act
-            Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector);
 
-            // Assert
-            ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-            JsonSerializationException exception = assertion.Subject.Single();
+        // Act
+        Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
 
-            exception.Message.Should().Contain($"Cannot write a null value for property '{jsonPropertyName}'.");
-        }
+        // Assert
+        ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
+        JsonSerializationException exception = assertion.Subject.Single();
+
+        exception.Message.Should().Contain($"Cannot write a null value for property '{jsonPropertyName}'.");
     }
 
     [Theory]
@@ -186,11 +183,10 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOffClient(wrapper.HttpClient);
 
-        using (apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument))
-        {
-            // Act
-            await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
-        }
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument);
+
+        // Act
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -233,18 +229,17 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOffClient(wrapper.HttpClient);
 
-        using (apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument))
-        {
-            // Act
-            Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument);
 
-            // Assert
-            ExceptionAssertions<InvalidOperationException> assertion = await action.Should().ThrowExactlyAsync<InvalidOperationException>();
-            InvalidOperationException exception = assertion.Subject.Single();
+        // Act
+        Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
 
-            exception.Message.Should().Be(
-                $"Required property '{attributePropertyName}' at JSON path 'data.attributes.{jsonPropertyName}' is not set. If sending its default value is intended, include it explicitly.");
-        }
+        // Assert
+        ExceptionAssertions<InvalidOperationException> assertion = await action.Should().ThrowExactlyAsync<InvalidOperationException>();
+        InvalidOperationException exception = assertion.Subject.Single();
+
+        exception.Message.Should().Be(
+            $"Required property '{attributePropertyName}' at JSON path 'data.attributes.{jsonPropertyName}' is not set. If sending its default value is intended, include it explicitly.");
     }
 
     [Theory]
@@ -276,11 +271,10 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOffClient(wrapper.HttpClient);
 
-        using (apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument))
-        {
-            // Act
-            await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
-        }
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument);
+
+        // Act
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -363,18 +357,17 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOffClient(wrapper.HttpClient);
 
-        using (apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument))
-        {
-            // Act
-            Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument);
 
-            // Assert
-            ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-            JsonSerializationException exception = assertion.Subject.Single();
+        // Act
+        Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
 
-            exception.Message.Should()
-                .Be($"Cannot write a null value for property 'data'. Property requires a value. Path 'data.relationships.{jsonPropertyName}'.");
-        }
+        // Assert
+        ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
+        JsonSerializationException exception = assertion.Subject.Single();
+
+        exception.Message.Should()
+            .Be($"Cannot write a null value for property 'data'. Property requires a value. Path 'data.relationships.{jsonPropertyName}'.");
     }
 
     [Theory]
@@ -450,11 +443,10 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOffClient(wrapper.HttpClient);
 
-        using (apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument))
-        {
-            // Act
-            await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
-        }
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument);
+
+        // Act
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -496,11 +488,10 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOffClient(wrapper.HttpClient);
 
-        using (apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument))
-        {
-            // Act
-            await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
-        }
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument);
+
+        // Act
+        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -540,18 +531,17 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOffClient(wrapper.HttpClient);
 
-        using (apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument))
-        {
-            // Act
-            Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
+        using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument);
 
-            // Assert
-            ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-            JsonSerializationException exception = assertion.Subject.Single();
+        // Act
+        Func<Task<ResourcePrimaryResponseDocument?>> action = async () => await apiClient.PostResourceAsync(requestDocument);
 
-            exception.Message.Should()
-                .Be($"Cannot write a null value for property 'id'. Property requires a value. Path 'data.relationships.{jsonPropertyName}.data'.");
-        }
+        // Assert
+        ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
+        JsonSerializationException exception = assertion.Subject.Single();
+
+        exception.Message.Should()
+            .Be($"Cannot write a null value for property 'id'. Property requires a value. Path 'data.relationships.{jsonPropertyName}.data'.");
     }
 
     [Theory]
