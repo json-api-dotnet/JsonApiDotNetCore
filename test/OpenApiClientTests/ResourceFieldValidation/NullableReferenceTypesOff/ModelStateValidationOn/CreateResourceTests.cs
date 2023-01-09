@@ -458,8 +458,6 @@ public sealed class CreateResourceTests : OpenApiClientTests
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
-        using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePostRequestDocument, ResourceAttributesInPostRequest>(requestDocument);
-
         // Act
         await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
 
