@@ -61,7 +61,7 @@ public sealed class UpdateResourceTests
     [InlineData(nameof(ResourceAttributesInPatchRequest.RequiredValueType), "requiredValueType")]
     [InlineData(nameof(ResourceAttributesInPatchRequest.NullableValueType), "nullableValueType")]
     [InlineData(nameof(ResourceAttributesInPatchRequest.RequiredNullableValueType), "requiredNullableValueType")]
-    public async Task Can_exclude_attribute_that_is_required_in_create_resource(string attributePropertyName, string jsonPropertyName)
+    public async Task Can_exclude_attribute(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePatchRequestDocument
@@ -110,7 +110,7 @@ public sealed class UpdateResourceTests
     [InlineData(nameof(ResourceRelationshipsInPatchRequest.RequiredNullableToOne), "requiredNullableToOne")]
     [InlineData(nameof(ResourceRelationshipsInPatchRequest.ToMany), "toMany")]
     [InlineData(nameof(ResourceRelationshipsInPatchRequest.RequiredToMany), "requiredToMany")]
-    public async Task Can_exclude_relationship_that_is_required_in_create_resource(string relationshipPropertyName, string jsonPropertyName)
+    public async Task Can_exclude_relationship(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePatchRequestDocument
