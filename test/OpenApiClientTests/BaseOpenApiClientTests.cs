@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace OpenApiClientTests;
 
-public abstract class OpenApiClientTests
+public abstract class BaseOpenApiClientTests
 {
     private const string AttributesObjectParameterName = "attributesObject";
 

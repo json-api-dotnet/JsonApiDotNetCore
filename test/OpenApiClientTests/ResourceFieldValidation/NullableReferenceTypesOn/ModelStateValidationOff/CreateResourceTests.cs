@@ -10,7 +10,7 @@ using Xunit;
 
 namespace OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOn.ModelStateValidationOff;
 
-public sealed class CreateResourceTests : OpenApiClientTests
+public sealed class CreateResourceTests : BaseOpenApiClientTests
 {
     private const string DataPropertyName = "Data";
     private readonly NrtOnMsvOffFakers _fakers = new();
