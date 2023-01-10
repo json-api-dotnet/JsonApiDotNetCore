@@ -14,7 +14,7 @@ public sealed class UpdateResourceTests
     private readonly NrtOffMsvOnFakers _fakers = new();
 
     [Fact]
-    public async Task Cannot_exclude_id()
+    public async Task Cannot_exclude_Id()
     {
         // Arrange
         var requestDocument = new ResourcePatchRequestDocument
