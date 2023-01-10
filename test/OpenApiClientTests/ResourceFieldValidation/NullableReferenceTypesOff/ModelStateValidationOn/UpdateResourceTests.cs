@@ -21,7 +21,7 @@ public sealed class UpdateResourceTests
         {
             Data = new ResourceDataInPatchRequest
             {
-                Id = "1",
+                Id = null,
                 Attributes = _fakers.PatchAttributes.Generate(),
                 Relationships = new ResourceRelationshipsInPatchRequest
                 {
@@ -33,14 +33,11 @@ public sealed class UpdateResourceTests
             }
         };
 
-        ResourceDataInPatchRequest emptyDataObject = new();
-        requestDocument.Data.Id = emptyDataObject.Id;
-
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
         // Act
-        Func<Task> action = async () => await apiClient.PatchResourceAsync(999, requestDocument);
+        Func<Task> action = async () => await apiClient.PatchResourceAsync(Unknown.TypedId.Int32, requestDocument);
 
         // Assert
         await action.Should().ThrowAsync<JsonSerializationException>();
