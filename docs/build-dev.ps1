@@ -1,9 +1,6 @@
 #Requires -Version 7.0
 
 # This script builds the documentation website, starts a web server and opens the site in your browser. Intended for local development.
-# It is assumed that you have already installed httpserver.
-# If that's not the case, run the next command:
-#   npm install -g httpserver
 
 param(
     # Specify -NoBuild to skip code build and examples generation. This runs faster, so handy when only editing Markdown files.
@@ -15,6 +12,21 @@ function VerifySuccessExitCode {
         throw "Command failed with exit code $LastExitCode."
     }
 }
+
+function EnsureHttpServerIsInstalled {
+    if ((Get-Command "npm" -ErrorAction SilentlyContinue) -eq $null) {
+        throw "Unable to find npm in your PATH. please install Node.js first."
+    }
+
+    npm list --depth 1 --global httpserver >$null
+
+    if ($LastExitCode -eq 1) {
+        npm install -g httpserver
+    }
+}
+
+EnsureHttpServerIsInstalled
+VerifySuccessExitCode
 
 if (-Not $NoBuild -Or -Not (Test-Path -Path _site)) {
     Remove-Item _site -Recurse -ErrorAction Ignore
