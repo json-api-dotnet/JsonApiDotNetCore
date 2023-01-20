@@ -4,16 +4,16 @@
 
 dotnet tool restore
 
-if ($LASTEXITCODE -ne 0) {
-    throw "Tool restore failed with exit code $LASTEXITCODE"
+if ($LastExitCode -ne 0) {
+    throw "Tool restore failed with exit code $LastExitCode"
 }
 
 $outputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
 $resultPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.html')
 dotnet jb inspectcode JsonApiDotNetCore.sln --build --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
 
-if ($LASTEXITCODE -ne 0) {
-    throw "Code inspection failed with exit code $LASTEXITCODE"
+if ($LastExitCode -ne 0) {
+    throw "Code inspection failed with exit code $LastExitCode"
 }
 
 [xml]$xml = Get-Content "$outputPath"

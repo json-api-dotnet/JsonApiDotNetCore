@@ -50,8 +50,8 @@ for:
         CD ./docs
         & ./generate-examples.ps1
         & dotnet docfx docfx.json
-        if ($lastexitcode -ne 0) {
-            throw "docfx build failed with exit code $lastexitcode."
+        if ($LastExitCode -ne 0) {
+            throw "docfx failed with exit code $LastExitCode."
         }
 
         # https://www.appveyor.com/docs/how-to/git-push/
