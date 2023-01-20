@@ -1,9 +1,8 @@
 #Requires -Version 7.0
 
 # This script builds the documentation website, starts a web server and opens the site in your browser. Intended for local development.
-# It is assumed that you have already installed docfx and httpserver.
-# If that's not the case, run the next commands:
-#   choco install docfx -y
+# It is assumed that you have already installed httpserver.
+# If that's not the case, run the next command:
 #   npm install -g httpserver
 
 param(
@@ -26,7 +25,7 @@ if (-Not $NoBuild -Or -Not (Test-Path -Path _site)) {
     Invoke-Expression ./generate-examples.ps1
 }
 
-docfx ./docfx.json
+dotnet docfx ./docfx.json
 VerifySuccessExitCode
 
 Copy-Item -Force home/*.html _site/
