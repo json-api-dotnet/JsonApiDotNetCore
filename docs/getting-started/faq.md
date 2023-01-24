@@ -115,6 +115,7 @@ There are a few things to keep in mind, though:
 - Prevent users from executing slow queries by locking down [attribute capabilities](~/usage/resources/attributes.md#capabilities) and [relationship capabilities](~/usage/resources/relationships.md#capabilities).
   Ensure the right database indexes are in place for what you enable.
 - Prevent users from fetching lots of data by tweaking [maximum page size/number](~/usage/options.md#pagination) and [maximum include depth](~/usage/options.md#maximum-include-depth).
+- Avoid long-running transactions by tweaking `MaximumOperationsPerRequest` in options.
 - Tell your users to utilize [E-Tags](~/usage/caching.md) to reduce network traffic.
 - Not included in JsonApiDotNetCore: Apply general practices such as rate limiting, load balancing, authentication/authorization, blocking very large URLs/request bodies, etc.
 
