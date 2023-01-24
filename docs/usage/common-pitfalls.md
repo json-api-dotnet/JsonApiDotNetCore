@@ -47,7 +47,7 @@ public sealed class LoginAccount : Identifiable<long>
 }
 ```
 Did you notice the missing type of the `LoginAccount.Customer` property? We must choose between `WebCustomer` or `AdminCustomer`, but neither is correct.
-This is just one of the issues you'll run into. Just don't go there.
+This is only one of the issues you'll run into. Just don't go there.
 
 The right way to model this is by having only `Customer` instead of `WebCustomer` and `AdminCustomer`. And then:
 - Hide the `CreditRating` property for web users using [this](https://www.jsonapi.net/usage/extensibility/resource-definitions.html#excluding-fields) approach.
