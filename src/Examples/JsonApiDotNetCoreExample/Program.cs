@@ -47,7 +47,7 @@ static void ConfigureServices(WebApplicationBuilder builder)
 
     builder.Services.AddDbContext<AppDbContext>(options =>
     {
-        string connectionString = GetConnectionString(builder.Configuration);
+        string? connectionString = GetConnectionString(builder.Configuration);
 
         options.UseNpgsql(connectionString);
 #if DEBUG
@@ -73,10 +73,10 @@ static void ConfigureServices(WebApplicationBuilder builder)
     }
 }
 
-static string GetConnectionString(IConfiguration configuration)
+static string? GetConnectionString(IConfiguration configuration)
 {
     string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
-    return configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
+    return configuration["Data:DefaultConnection"]?.Replace("###", postgresPassword);
 }
 
 static void ConfigurePipeline(WebApplication webApplication)
