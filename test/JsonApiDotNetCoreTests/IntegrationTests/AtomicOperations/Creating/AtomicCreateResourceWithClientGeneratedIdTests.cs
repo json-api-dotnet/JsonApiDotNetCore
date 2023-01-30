@@ -2,6 +2,7 @@ using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
@@ -28,6 +29,7 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
             services.AddResourceDefinition<ImplicitlyChangingTextLanguageDefinition>();
 
             services.AddSingleton<ResourceDefinitionHitCounter>();
+            services.AddSingleton<ISystemClock, FrozenSystemClock>();
         });
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
