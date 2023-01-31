@@ -24,7 +24,11 @@ options.AllowClientGeneratedIds = true;
 
 The default page size used for all resources can be overridden in options (10 by default). To disable paging, set it to `null`.
 The maximum page size and number allowed from client requests can be set too (unconstrained by default).
-You can also include the total number of resources in each response. Note that when using this feature, it does add some query overhead since we have to also request the total number of resources.
+
+You can also include the total number of resources in each response.
+
+> [!NOTE]
+> Including the total number of resources adds some overhead, because the count is fetched in a separate query.
 
 ```c#
 options.DefaultPageSize = new PageSize(25);

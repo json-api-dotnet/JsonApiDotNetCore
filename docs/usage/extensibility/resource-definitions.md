@@ -7,19 +7,19 @@ They are resolved from the dependency injection container, so you can inject dep
 
 In v4.2 we introduced an extension method that you can use to register your resource definition.
 
-**Note:** If you're using [auto-discovery](~/usage/resource-graph.md#auto-discovery), this happens automatically.
-
 ```c#
 // Program.cs
 builder.Services.AddResourceDefinition<ArticleDefinition>();
 ```
 
-**Note:** Prior to the introduction of auto-discovery (in v3), you needed to register the
-resource definition on the container yourself:
+> [!TIP]
+> If you're using [auto-discovery](~/usage/resource-graph.md#auto-discovery), then resource services, repositories and resource definitions will be automatically registered for you.
 
-```c#
-builder.Services.AddScoped<ResourceDefinition<Article, int>, ArticleDefinition>();
-```
+> [!NOTE]
+> Prior to the introduction of auto-discovery (in v3), you needed to register the resource definition on the container yourself:
+> ```c#
+> builder.Services.AddScoped<ResourceDefinition<Article, int>, ArticleDefinition>();
+> ```
 
 ## Customizing queries
 
@@ -37,7 +37,8 @@ from Entity Framework Core `IQueryable` execution.
 There are some cases where you want attributes or relationships conditionally excluded from your resource response.
 For example, you may accept some sensitive data that should only be exposed to administrators after creation.
 
-**Note:** to exclude fields unconditionally, [attribute capabilities](~/usage/resources/attributes.md#capabilities) and [relationship capabilities](~/usage/resources/relationships.md#capabilities) can be used instead.
+> [!NOTE]
+> To exclude fields unconditionally, [attribute capabilities](~/usage/resources/attributes.md#capabilities) and [relationship capabilities](~/usage/resources/relationships.md#capabilities) can be used instead.
 
 ```c#
 public class UserDefinition : JsonApiResourceDefinition<User, int>
@@ -218,7 +219,8 @@ _since v3_
 You can define additional query string parameters with the LINQ expression that should be used.
 If the key is present in a query string, the supplied LINQ expression will be added to the database query.
 
-Note this directly influences the Entity Framework Core `IQueryable`. As opposed to using `OnApplyFilter`, this enables the full range of Entity Framework Core operators. 
+> [!NOTE]
+> This directly influences the Entity Framework Core `IQueryable`. As opposed to using `OnApplyFilter`, this enables the full range of Entity Framework Core operators. 
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).
 
 ```c#
