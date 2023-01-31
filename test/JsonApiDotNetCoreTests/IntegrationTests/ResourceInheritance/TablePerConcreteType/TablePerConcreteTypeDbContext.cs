@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.TablePerType;
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.TablePerConcreteType;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class TablePerTypeDbContext : ResourceInheritanceDbContext
+public sealed class TablePerConcreteTypeDbContext : ResourceInheritanceDbContext
 {
-    public TablePerTypeDbContext(DbContextOptions<TablePerTypeDbContext> options)
+    public TablePerConcreteTypeDbContext(DbContextOptions<TablePerConcreteTypeDbContext> options)
         : base(options)
     {
     }
@@ -17,16 +17,16 @@ public sealed class TablePerTypeDbContext : ResourceInheritanceDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Vehicle>()
-            .UseTptMappingStrategy();
+            .UseTpcMappingStrategy();
 
         builder.Entity<Wheel>()
-            .UseTptMappingStrategy();
+            .UseTpcMappingStrategy();
 
         builder.Entity<Engine>()
-            .UseTptMappingStrategy();
+            .UseTpcMappingStrategy();
 
         builder.Entity<GenericProperty>()
-            .UseTptMappingStrategy();
+            .UseTpcMappingStrategy();
 
         base.OnModelCreating(builder);
     }
