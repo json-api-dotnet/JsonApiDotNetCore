@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -60,7 +61,9 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
         });
 
         string attributeName = propertyName.Camelize();
-        string route = $"/filterableResources?filter=equals({attributeName},'{propertyValue}')";
+        string? attributeValue = Convert.ToString(propertyValue, CultureInfo.InvariantCulture);
+
+        string route = $"/filterableResources?filter=equals({attributeName},'{attributeValue}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -88,7 +91,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/filterableResources?filter=equals(someDecimal,'{resource.SomeDecimal}')";
+        string route = $"/filterableResources?filter=equals(someDecimal,'{resource.SomeDecimal.ToString(CultureInfo.InvariantCulture)}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -232,7 +235,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/filterableResources?filter=equals(someTimeSpan,'{resource.SomeTimeSpan}')";
+        string route = $"/filterableResources?filter=equals(someTimeSpan,'{resource.SomeTimeSpan:c}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
