@@ -1,6 +1,7 @@
 using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -17,6 +18,12 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
 
         testContext.UseController<SystemDirectoriesController>();
         testContext.UseController<SystemFilesController>();
+
+        testContext.ConfigureServicesBeforeStartup(services =>
+        {
+            // Polyfill for missing DateOnly/TimeOnly support in .NET 6 ModelState validation.
+            services.AddDateOnlyTimeOnlyStringConverters();
+        });
     }
 
     [Fact]
@@ -121,6 +128,53 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         error.Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/directoryName");
+    }
+
+    [Fact]
+    public async Task Cannot_create_resource_with_invalid_DateOnly_TimeOnly_attribute_value()
+    {
+        // Arrange
+        SystemFile newFile = _fakers.SystemFile.Generate();
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "systemFiles",
+                attributes = new
+                {
+                    fileName = newFile.FileName,
+                    attributes = newFile.Attributes,
+                    sizeInBytes = newFile.SizeInBytes,
+                    createdOn = DateOnly.MinValue,
+                    createdAt = TimeOnly.MinValue
+                }
+            }
+        };
+
+        const string route = "/systemFiles";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(2);
+
+        ErrorObject error1 = responseDocument.Errors[0];
+        error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error1.Title.Should().Be("Input validation failed.");
+        error1.Detail.Should().StartWith("The field CreatedAt must be between ");
+        error1.Source.ShouldNotBeNull();
+        error1.Source.Pointer.Should().Be("/data/attributes/createdAt");
+
+        ErrorObject error2 = responseDocument.Errors[1];
+        error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error2.Title.Should().Be("Input validation failed.");
+        error2.Detail.Should().StartWith("The field CreatedOn must be between ");
+        error2.Source.ShouldNotBeNull();
+        error2.Source.Pointer.Should().Be("/data/attributes/createdOn");
     }
 
     [Fact]

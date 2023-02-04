@@ -248,6 +248,62 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
+    public async Task Can_filter_equality_on_type_DateOnly()
+    {
+        // Arrange
+        var resource = new FilterableResource
+        {
+            SomeDateOnly = DateOnly.FromDateTime(27.January(2003))
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resource, new FilterableResource());
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter=equals(someDateOnly,'{resource.SomeDateOnly:O}')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateOnly").With(value => value.Should().Be(resource.SomeDateOnly));
+    }
+
+    [Fact]
+    public async Task Can_filter_equality_on_type_TimeOnly()
+    {
+        // Arrange
+        var resource = new FilterableResource
+        {
+            SomeTimeOnly = new TimeOnly(23, 59, 59, 999)
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resource, new FilterableResource());
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter=equals(someTimeOnly,'{resource.SomeTimeOnly:O}')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someTimeOnly").With(value => value.Should().Be(resource.SomeTimeOnly));
+    }
+
+    [Fact]
     public async Task Cannot_filter_equality_on_incompatible_value()
     {
         // Arrange
@@ -291,6 +347,8 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
     [InlineData(nameof(FilterableResource.SomeNullableDateTime))]
     [InlineData(nameof(FilterableResource.SomeNullableDateTimeOffset))]
     [InlineData(nameof(FilterableResource.SomeNullableTimeSpan))]
+    [InlineData(nameof(FilterableResource.SomeNullableDateOnly))]
+    [InlineData(nameof(FilterableResource.SomeNullableTimeOnly))]
     [InlineData(nameof(FilterableResource.SomeNullableEnum))]
     public async Task Can_filter_is_null_on_type(string propertyName)
     {
@@ -311,6 +369,8 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
             SomeNullableDateTime = 1.January(2001).AsUtc(),
             SomeNullableDateTimeOffset = 1.January(2001).AsUtc(),
             SomeNullableTimeSpan = TimeSpan.FromHours(1),
+            SomeNullableDateOnly = DateOnly.FromDateTime(1.January(2001)),
+            SomeNullableTimeOnly = new TimeOnly(1, 0),
             SomeNullableEnum = DayOfWeek.Friday
         };
 
@@ -345,6 +405,8 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
     [InlineData(nameof(FilterableResource.SomeNullableDateTime))]
     [InlineData(nameof(FilterableResource.SomeNullableDateTimeOffset))]
     [InlineData(nameof(FilterableResource.SomeNullableTimeSpan))]
+    [InlineData(nameof(FilterableResource.SomeNullableDateOnly))]
+    [InlineData(nameof(FilterableResource.SomeNullableTimeOnly))]
     [InlineData(nameof(FilterableResource.SomeNullableEnum))]
     public async Task Can_filter_is_not_null_on_type(string propertyName)
     {
@@ -361,6 +423,8 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
             SomeNullableDateTime = 1.January(2001).AsUtc(),
             SomeNullableDateTimeOffset = 1.January(2001).AsUtc(),
             SomeNullableTimeSpan = TimeSpan.FromHours(1),
+            SomeNullableDateOnly = DateOnly.FromDateTime(1.January(2001)),
+            SomeNullableTimeOnly = new TimeOnly(1, 0),
             SomeNullableEnum = DayOfWeek.Friday
         };
 
