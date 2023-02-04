@@ -166,8 +166,6 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
                 type = "systemDirectories",
                 attributes = new
                 {
-                    isCaseSensitive = false,
-                    sizeInBytes = -1
                 }
             }
         };
@@ -192,9 +190,9 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
-        error2.Detail.Should().Be("The field SizeInBytes must be between 0 and 9223372036854775807.");
+        error2.Detail.Should().Be("The IsCaseSensitive field is required.");
         error2.Source.ShouldNotBeNull();
-        error2.Source.Pointer.Should().Be("/data/attributes/sizeInBytes");
+        error2.Source.Pointer.Should().Be("/data/attributes/isCaseSensitive");
     }
 
     [Fact]
@@ -205,15 +203,14 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         {
             data = new
             {
-                type = "systemDirectories",
+                type = "systemFiles",
                 attributes = new
                 {
-                    sizeInBytes = -1
                 }
             }
         };
 
-        const string route = "/systemDirectories";
+        const string route = "/systemFiles";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -232,16 +229,16 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error2.Title.Should().Be("Input validation failed.");
-        error2.Detail.Should().Be("The Name field is required.");
+        error2.Detail.Should().Be("The FileName field is required.");
         error2.Source.ShouldNotBeNull();
-        error2.Source.Pointer.Should().Be("/data/attributes/directoryName");
+        error2.Source.Pointer.Should().Be("/data/attributes/fileName");
 
         ErrorObject error3 = responseDocument.Errors[2];
         error3.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error3.Title.Should().Be("Input validation failed.");
-        error3.Detail.Should().Be("The IsCaseSensitive field is required.");
+        error3.Detail.Should().Be("The Attributes field is required.");
         error3.Source.ShouldNotBeNull();
-        error3.Source.Pointer.Should().Be("/data/attributes/isCaseSensitive");
+        error3.Source.Pointer.Should().Be("/data/attributes/attributes");
     }
 
     [Fact]
@@ -360,13 +357,13 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
     public async Task Can_update_resource_with_omitted_required_attribute_value()
     {
         // Arrange
-        SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+        SystemFile existingFile = _fakers.SystemFile.Generate();
 
-        long newSizeInBytes = _fakers.SystemDirectory.Generate().SizeInBytes;
+        long? newSizeInBytes = _fakers.SystemFile.Generate().SizeInBytes;
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.Directories.Add(existingDirectory);
+            dbContext.Files.Add(existingFile);
             await dbContext.SaveChangesAsync();
         });
 
@@ -374,8 +371,8 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         {
             data = new
             {
-                type = "systemDirectories",
-                id = existingDirectory.StringId,
+                type = "systemFiles",
+                id = existingFile.StringId,
                 attributes = new
                 {
                     sizeInBytes = newSizeInBytes
@@ -383,7 +380,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
             }
         };
 
-        string route = $"/systemDirectories/{existingDirectory.StringId}";
+        string route = $"/systemFiles/{existingFile.StringId}";
 
         // Act
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
