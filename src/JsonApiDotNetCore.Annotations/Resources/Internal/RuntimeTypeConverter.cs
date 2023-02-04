@@ -82,6 +82,18 @@ public static class RuntimeTypeConverter
                 return isNullableTypeRequested ? (TimeSpan?)convertedValue : convertedValue;
             }
 
+            if (nonNullableType == typeof(DateOnly))
+            {
+                DateOnly convertedValue = DateOnly.Parse(stringValue, cultureInfo);
+                return isNullableTypeRequested ? (DateOnly?)convertedValue : convertedValue;
+            }
+
+            if (nonNullableType == typeof(TimeOnly))
+            {
+                TimeOnly convertedValue = TimeOnly.Parse(stringValue, cultureInfo);
+                return isNullableTypeRequested ? (TimeOnly?)convertedValue : convertedValue;
+            }
+
             if (nonNullableType.IsEnum)
             {
                 object convertedValue = Enum.Parse(nonNullableType, stringValue);

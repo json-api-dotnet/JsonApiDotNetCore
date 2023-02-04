@@ -35,6 +35,18 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     private const string TimeSpanInTheRange = "2:15:51:42.397";
     private const string TimeSpanUpperBound = "2:16:22:41.736";
 
+    private const string IsoDateOnlyLowerBound = "2000-10-22";
+    private const string IsoDateOnlyInTheRange = "2000-11-22";
+    private const string IsoDateOnlyUpperBound = "2000-12-22";
+
+    private const string InvariantDateOnlyLowerBound = "10/22/2000";
+    private const string InvariantDateOnlyInTheRange = "11/22/2000";
+    private const string InvariantDateOnlyUpperBound = "12/22/2000";
+
+    private const string TimeOnlyLowerBound = "15:28:54.997";
+    private const string TimeOnlyInTheRange = "15:51:42.397";
+    private const string TimeOnlyUpperBound = "16:22:41.736";
+
     private readonly IntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> _testContext;
 
     public FilterOperatorTests(IntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> testContext)
@@ -554,6 +566,96 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someTimeSpan").With(value => value.Should().Be(resource.SomeTimeSpan));
+    }
+
+    [Theory]
+    [InlineData(IsoDateOnlyLowerBound, IsoDateOnlyUpperBound, ComparisonOperator.LessThan, IsoDateOnlyInTheRange)]
+    [InlineData(IsoDateOnlyLowerBound, IsoDateOnlyUpperBound, ComparisonOperator.LessThan, IsoDateOnlyUpperBound)]
+    [InlineData(IsoDateOnlyLowerBound, IsoDateOnlyUpperBound, ComparisonOperator.LessOrEqual, IsoDateOnlyInTheRange)]
+    [InlineData(IsoDateOnlyLowerBound, IsoDateOnlyUpperBound, ComparisonOperator.LessOrEqual, IsoDateOnlyLowerBound)]
+    [InlineData(IsoDateOnlyUpperBound, IsoDateOnlyLowerBound, ComparisonOperator.GreaterThan, IsoDateOnlyInTheRange)]
+    [InlineData(IsoDateOnlyUpperBound, IsoDateOnlyLowerBound, ComparisonOperator.GreaterThan, IsoDateOnlyLowerBound)]
+    [InlineData(IsoDateOnlyUpperBound, IsoDateOnlyLowerBound, ComparisonOperator.GreaterOrEqual, IsoDateOnlyInTheRange)]
+    [InlineData(IsoDateOnlyUpperBound, IsoDateOnlyLowerBound, ComparisonOperator.GreaterOrEqual, IsoDateOnlyUpperBound)]
+    [InlineData(InvariantDateOnlyLowerBound, InvariantDateOnlyUpperBound, ComparisonOperator.LessThan, InvariantDateOnlyInTheRange)]
+    [InlineData(InvariantDateOnlyLowerBound, InvariantDateOnlyUpperBound, ComparisonOperator.LessThan, InvariantDateOnlyUpperBound)]
+    [InlineData(InvariantDateOnlyLowerBound, InvariantDateOnlyUpperBound, ComparisonOperator.LessOrEqual, InvariantDateOnlyInTheRange)]
+    [InlineData(InvariantDateOnlyLowerBound, InvariantDateOnlyUpperBound, ComparisonOperator.LessOrEqual, InvariantDateOnlyLowerBound)]
+    [InlineData(InvariantDateOnlyUpperBound, InvariantDateOnlyLowerBound, ComparisonOperator.GreaterThan, InvariantDateOnlyInTheRange)]
+    [InlineData(InvariantDateOnlyUpperBound, InvariantDateOnlyLowerBound, ComparisonOperator.GreaterThan, InvariantDateOnlyLowerBound)]
+    [InlineData(InvariantDateOnlyUpperBound, InvariantDateOnlyLowerBound, ComparisonOperator.GreaterOrEqual, InvariantDateOnlyInTheRange)]
+    [InlineData(InvariantDateOnlyUpperBound, InvariantDateOnlyLowerBound, ComparisonOperator.GreaterOrEqual, InvariantDateOnlyUpperBound)]
+    public async Task Can_filter_comparison_on_DateOnly(string matchingValue, string nonMatchingValue, ComparisonOperator filterOperator, string filterValue)
+    {
+        // Arrange
+        var resource = new FilterableResource
+        {
+            SomeDateOnly = DateOnly.Parse(matchingValue, CultureInfo.InvariantCulture)
+        };
+
+        var otherResource = new FilterableResource
+        {
+            SomeDateOnly = DateOnly.Parse(nonMatchingValue, CultureInfo.InvariantCulture)
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resource, otherResource);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someDateOnly,'{filterValue}')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateOnly").With(value => value.Should().Be(resource.SomeDateOnly));
+    }
+
+    [Theory]
+    [InlineData(TimeOnlyLowerBound, TimeOnlyUpperBound, ComparisonOperator.LessThan, TimeOnlyInTheRange)]
+    [InlineData(TimeOnlyLowerBound, TimeOnlyUpperBound, ComparisonOperator.LessThan, TimeOnlyUpperBound)]
+    [InlineData(TimeOnlyLowerBound, TimeOnlyUpperBound, ComparisonOperator.LessOrEqual, TimeOnlyInTheRange)]
+    [InlineData(TimeOnlyLowerBound, TimeOnlyUpperBound, ComparisonOperator.LessOrEqual, TimeOnlyLowerBound)]
+    [InlineData(TimeOnlyUpperBound, TimeOnlyLowerBound, ComparisonOperator.GreaterThan, TimeOnlyInTheRange)]
+    [InlineData(TimeOnlyUpperBound, TimeOnlyLowerBound, ComparisonOperator.GreaterThan, TimeOnlyLowerBound)]
+    [InlineData(TimeOnlyUpperBound, TimeOnlyLowerBound, ComparisonOperator.GreaterOrEqual, TimeOnlyInTheRange)]
+    [InlineData(TimeOnlyUpperBound, TimeOnlyLowerBound, ComparisonOperator.GreaterOrEqual, TimeOnlyUpperBound)]
+    public async Task Can_filter_comparison_on_TimeOnly(string matchingValue, string nonMatchingValue, ComparisonOperator filterOperator, string filterValue)
+    {
+        // Arrange
+        var resource = new FilterableResource
+        {
+            SomeTimeOnly = TimeOnly.Parse(matchingValue, CultureInfo.InvariantCulture)
+        };
+
+        var otherResource = new FilterableResource
+        {
+            SomeTimeOnly = TimeOnly.Parse(nonMatchingValue, CultureInfo.InvariantCulture)
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resource, otherResource);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someTimeOnly,'{filterValue}')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someTimeOnly").With(value => value.Should().Be(resource.SomeTimeOnly));
     }
 
     [Theory]
