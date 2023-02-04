@@ -23,6 +23,7 @@ public sealed class MusicTrack : Identifiable<Guid>
     public string? Genre { get; set; }
 
     [Attr]
+    [DateMustBeInThePast]
     public DateTimeOffset ReleasedAt { get; set; }
 
     [HasOne]

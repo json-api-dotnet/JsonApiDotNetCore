@@ -166,7 +166,8 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
                 ModelState =
                 {
                     MaxAllowedErrors = maxErrorsRemaining
-                }
+                },
+                HttpContext = HttpContext
             };
 
             ObjectValidator.Validate(validationContext, null, string.Empty, operation.Resource);
