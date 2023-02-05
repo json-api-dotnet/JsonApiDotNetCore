@@ -8,7 +8,7 @@ function Get-WebServer-ProcessId {
         $processId = $(lsof -ti:14141)
     }
     elseif ($IsWindows) {
-        $processId = $(Get-NetTCPConnection -LocalPort 14141 -ErrorAction SilentlyContinue).OwningProcess
+        $processId = $(Get-NetTCPConnection -LocalPort 14141 -ErrorAction SilentlyContinue).OwningProcess?[0]
     }
     else {
         throw [System.Exception] "Unsupported operating system."
@@ -22,7 +22,11 @@ function Kill-WebServer {
 
     if ($processId -ne $null) {
         Write-Output "Stopping web server"
-        Get-Process -Id $processId | Stop-Process
+        Get-Process -Id $processId | Stop-Process -ErrorVariable stopErrorMessage
+
+        if ($stopErrorMessage) {
+            throw "Failed to stop web server: $stopErrorMessage"
+        }
     }
 }
 
@@ -40,18 +44,21 @@ function Start-WebServer {
 Kill-WebServer
 Start-WebServer
 
-Remove-Item -Force -Path .\request-examples\*.json
+try {
+    Remove-Item -Force -Path .\request-examples\*.json
 
-$scriptFiles = Get-ChildItem .\request-examples\*.ps1
-foreach ($scriptFile in $scriptFiles) {
-    $jsonFileName = [System.IO.Path]::GetFileNameWithoutExtension($scriptFile.Name) + "_Response.json"
+    $scriptFiles = Get-ChildItem .\request-examples\*.ps1
+    foreach ($scriptFile in $scriptFiles) {
+        $jsonFileName = [System.IO.Path]::GetFileNameWithoutExtension($scriptFile.Name) + "_Response.json"
 
-    Write-Output "Writing file: $jsonFileName"
-    & $scriptFile.FullName > .\request-examples\$jsonFileName
+        Write-Output "Writing file: $jsonFileName"
+        & $scriptFile.FullName > .\request-examples\$jsonFileName
 
-    if ($LastExitCode -ne 0) {
-        throw [System.Exception] "Example request from '$($scriptFile.Name)' failed with exit code $LastExitCode."
+        if ($LastExitCode -ne 0) {
+            throw [System.Exception] "Example request from '$($scriptFile.Name)' failed with exit code $LastExitCode."
+        }
     }
 }
-
-Kill-WebServer
+finally {
+    Kill-WebServer
+}

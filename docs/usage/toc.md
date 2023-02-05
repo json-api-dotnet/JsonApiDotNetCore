@@ -24,6 +24,8 @@
 # [Metadata](meta.md)
 # [Caching](caching.md)
 
+# [Common Pitfalls](common-pitfalls.md)
+
 # Extensibility
 ## [Layer Overview](extensibility/layer-overview.md)
 ## [Resource Definitions](extensibility/resource-definitions.md)

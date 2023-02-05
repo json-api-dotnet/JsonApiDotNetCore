@@ -71,4 +71,6 @@ POST /articles?include=owner&fields[people]=firstName HTTP/1.1
 }
 ```
 
-After the resource has been created on the server, it is re-fetched from the database using the specified query string parameters and returned to the client.
+> [!NOTE]
+> After the resource has been created on the server, it is re-fetched from the database using the specified query string parameters and returned to the client.
+> However, the used query string parameters only have an effect when `200 OK` is returned.

@@ -36,7 +36,8 @@ Example for both top-level and relationship:
 GET /articles?include=author&fields[articles]=title,body,author&fields[authors]=name HTTP/1.1
 ```
 
-Note that in the last example, the `author` relationship is also added to the `articles` fieldset, so that the relationship from article to author is returned.
+> [!NOTE]
+> In the last example, the `author` relationship is also added to the `articles` fieldset, so that the relationship from article to author is returned.
 When omitted, you'll get the included resources returned, but without full resource linkage (as described [here](https://jsonapi.org/examples/#sparse-fieldsets)).
 
 ## Overriding

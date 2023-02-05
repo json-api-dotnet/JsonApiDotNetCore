@@ -4,7 +4,8 @@ These requests have been generated against the "GettingStarted" application and 
 
 All of these requests have been created using out-of-the-box features.
 
-_Note that cURL requires "[" and "]" in URLs to be escaped._
+> [!NOTE]
+> curl requires "[" and "]" in URLs to be escaped.
 
 # Reading data
 
