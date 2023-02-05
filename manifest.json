@@ -969,7 +969,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.UnsuccessfulActionResultException.html",
-          "hash": "4wY+aTWPNyO3n8cSvPbxx39a00rdVCqu8aVTgEMNw9k="
+          "hash": "QKKkxnJO2AYk4JkCpwQtZ4xHfW1yIzEwFGgxbGEZAp8="
         }
       },
       "is_incremental": false,
@@ -1233,7 +1233,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html",
-          "hash": "9PSA+91DowdS2YCFC7iyVdTk54DDrl+T9Cr1/Z0D4iA="
+          "hash": "/pnEJS/POpg0TJbjYppILXhWC4fMH+EFyA/ug8RP4iA="
         }
       },
       "is_incremental": false,

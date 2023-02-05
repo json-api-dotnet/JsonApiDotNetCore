@@ -4773,12 +4773,15 @@ references:
   commentId: T:JsonApiDotNetCore.Middleware.JsonApiRoutingConvention
   fullName: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention
   nameWithType: JsonApiRoutingConvention
-- uid: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Configuration.IResourceGraph)
-  name: JsonApiRoutingConvention(IJsonApiOptions, IResourceGraph)
-  href: api/JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html#JsonApiDotNetCore_Middleware_JsonApiRoutingConvention__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Configuration_IResourceGraph_
-  commentId: M:JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Configuration.IResourceGraph)
-  fullName: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.JsonApiRoutingConvention(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Configuration.IResourceGraph)
-  nameWithType: JsonApiRoutingConvention.JsonApiRoutingConvention(IJsonApiOptions, IResourceGraph)
+- uid: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Configuration.IResourceGraph,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Middleware.JsonApiRoutingConvention})
+  name: JsonApiRoutingConvention(IJsonApiOptions, IResourceGraph, ILogger<JsonApiRoutingConvention>)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html#JsonApiDotNetCore_Middleware_JsonApiRoutingConvention__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Configuration_IResourceGraph_Microsoft_Extensions_Logging_ILogger_JsonApiDotNetCore_Middleware_JsonApiRoutingConvention__
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Configuration.IResourceGraph,Microsoft.Extensions.Logging.ILogger{JsonApiDotNetCore.Middleware.JsonApiRoutingConvention})
+  name.vb: JsonApiRoutingConvention(IJsonApiOptions, IResourceGraph, ILogger(Of JsonApiRoutingConvention))
+  fullName: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.JsonApiRoutingConvention(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Configuration.IResourceGraph, Microsoft.Extensions.Logging.ILogger<JsonApiDotNetCore.Middleware.JsonApiRoutingConvention>)
+  fullName.vb: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.JsonApiRoutingConvention(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Configuration.IResourceGraph, Microsoft.Extensions.Logging.ILogger(Of JsonApiDotNetCore.Middleware.JsonApiRoutingConvention))
+  nameWithType: JsonApiRoutingConvention.JsonApiRoutingConvention(IJsonApiOptions, IResourceGraph, ILogger<JsonApiRoutingConvention>)
+  nameWithType.vb: JsonApiRoutingConvention.JsonApiRoutingConvention(IJsonApiOptions, IResourceGraph, ILogger(Of JsonApiRoutingConvention))
 - uid: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.#ctor*
   name: JsonApiRoutingConvention
   href: api/JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html#JsonApiDotNetCore_Middleware_JsonApiRoutingConvention__ctor_
