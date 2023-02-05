@@ -106,7 +106,7 @@ This is useful if you want to add a few RPC-style endpoints or provide binary fi
 A middle-ground approach is to add custom action methods to existing JSON:API controllers.
 While you can route them as you like, they must return JSON:API resources.
 And on error, a JSON:API error response is produced.
-This is useful if you want to stay in the JSON:API-compliant world, but need to expose something on-standard, for example: `GET /users/me`.
+This is useful if you want to stay in the JSON:API-compliant world, but need to expose something non-standard, for example: `GET /users/me`.
 
 #### How do I optimize for high scalability and prevent denial of service?
 Fortunately, JsonApiDotNetCore [scales pretty well](https://github.com/json-api-dotnet/PerformanceReports) under high load and/or large database tables.
