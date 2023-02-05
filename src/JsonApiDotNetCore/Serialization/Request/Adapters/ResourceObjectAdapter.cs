@@ -63,12 +63,16 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
 
         AssertIsKnownAttribute(attr, attributeName, resourceType, state);
         AssertNoInvalidAttribute(attributeValue, state);
+        AssertNoMissingRequiredAttribute(attributeValue, state);
         AssertSetAttributeInCreateResourceNotBlocked(attr, resourceType, state);
         AssertSetAttributeInUpdateResourceNotBlocked(attr, resourceType, state);
         AssertNotReadOnly(attr, resourceType, state);
 
-        attr.SetValue(resource, attributeValue);
-        state.WritableTargetedFields!.Attributes.Add(attr);
+        if (attributeValue is not JsonMissingRequiredAttributeInfo)
+        {
+            attr.SetValue(resource, attributeValue);
+            state.WritableTargetedFields!.Attributes.Add(attr);
+        }
     }
 
     private static void AssertIsKnownAttribute([NotNull] AttrAttribute? attr, string attributeName, ResourceType resourceType, RequestAdapterState state)
@@ -93,6 +97,18 @@ public sealed class ResourceObjectAdapter : ResourceIdentityAdapter, IResourceOb
 
             throw new ModelConversionException(state.Position, "Incompatible attribute value found.",
                 $"Failed to convert attribute '{info.AttributeName}' with value '{info.JsonValue}' of type '{info.JsonType}' to type '{typeName}'.");
+        }
+    }
+
+    private void AssertNoMissingRequiredAttribute(object? attributeValue, RequestAdapterState state)
+    {
+        if (state.Request.WriteOperation == WriteOperationKind.CreateResource)
+        {
+            if (attributeValue is JsonMissingRequiredAttributeInfo info)
+            {
+                throw new ModelConversionException(state.Position, "Required attribute is missing.",
+                    $"The required attribute '{info.AttributeName}' on resource type '{info.ResourceName}' is missing.");
+            }
         }
     }
 

@@ -1,9 +1,11 @@
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Resources.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request;
 
@@ -161,12 +163,18 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
     {
         var attributes = new Dictionary<string, object?>();
 
+        // Should consider caching these per ResourceType.
+        HashSet<AttrAttribute> nonNullableValueTypeAttributesRequired = resourceType.Attributes.Where(attr =>
+            attr.Property.GetCustomAttribute<RequiredAttribute>() != null && attr.Property.PropertyType.IsValueType &&
+            !RuntimeTypeConverter.CanContainNull(attr.Property.PropertyType)).ToHashSet();
+
         while (reader.Read())
         {
             switch (reader.TokenType)
             {
                 case JsonTokenType.EndObject:
                 {
+                    AddSentinelsForMissingRequiredValueTypeAttributes(attributes, nonNullableValueTypeAttributesRequired);
                     return attributes;
                 }
                 case JsonTokenType.PropertyName:
@@ -217,6 +225,19 @@ public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject
         }
 
         throw GetEndOfStreamError();
+    }
+
+    private static void AddSentinelsForMissingRequiredValueTypeAttributes(Dictionary<string, object?> incomingAttributes,
+        IEnumerable<AttrAttribute> nonNullableValueTypeAttributesRequired)
+    {
+        foreach (AttrAttribute requiredAttribute in nonNullableValueTypeAttributesRequired)
+        {
+            if (!incomingAttributes.ContainsKey(requiredAttribute.PublicName))
+            {
+                var attributeValue = new JsonMissingRequiredAttributeInfo(requiredAttribute.PublicName, requiredAttribute.Type.PublicName);
+                incomingAttributes.Add(requiredAttribute.PublicName, attributeValue);
+            }
+        }
     }
 
     /// <summary>
