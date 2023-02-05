@@ -1,29 +1,28 @@
 ﻿<!DOCTYPE html>
 <!--[if IE]><![endif]-->
 <html>
-  
+
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Resource Definitions </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Resource Definitions ">
-    <meta name="generator" content="docfx 2.59.4.0">
-    
+  
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
     <link rel="stylesheet" href="../../styles/docfx.css">
     <link rel="stylesheet" href="../../styles/main.css">
     <meta property="docfx:navrel" content="../../toc.html">
     <meta property="docfx:tocrel" content="../toc.html">
-    
-    
-    
+  
+  
+  
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
       <header>
-        
+
         <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
           <div class="container">
             <div class="navbar-header">
@@ -33,7 +32,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              
+
               <a class="navbar-brand" href="../../index.html">
                 <img id="logo" class="svg" src="../../logo.svg" alt="">
               </a>
@@ -47,7 +46,7 @@
             </div>
           </div>
         </nav>
-        
+
         <div class="subnav navbar navbar-default">
           <div class="container hide-when-search" id="breadcrumb">
             <ul class="breadcrumb">
@@ -57,7 +56,7 @@
         </div>
       </header>
       <div role="main" class="container body-content hide-when-search">
-        
+
         <div class="sidenav hide-when-search">
           <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
           <div class="sidetoggle collapse" id="sidetoggle">
@@ -73,13 +72,14 @@
 <p>Resource definitions provide a resource-oriented way to handle custom business logic (irrespective of the originating endpoint).
 They are resolved from the dependency injection container, so you can inject dependencies in their constructor.</p>
 <p>In v4.2 we introduced an extension method that you can use to register your resource definition.</p>
-<p><strong>Note:</strong> If you&#39;re using <a href="../resource-graph.html#auto-discovery">auto-discovery</a>, this happens automatically.</p>
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddResourceDefinition&lt;ArticleDefinition&gt;();
-</code></pre><p><strong>Note:</strong> Prior to the introduction of auto-discovery (in v3), you needed to register the
-resource definition on the container yourself:</p>
+</code></pre><div class="TIP"><h5>Tip</h5><p>If you&#39;re using <a href="../resource-graph.html#auto-discovery">auto-discovery</a>, then resource services, repositories and resource definitions will be automatically registered for you.</p>
+</div>
+<div class="NOTE"><h5>Note</h5><p>Prior to the introduction of auto-discovery (in v3), you needed to register the resource definition on the container yourself:</p>
 <pre><code class="lang-c#">builder.Services.AddScoped&lt;ResourceDefinition&lt;Article, int&gt;, ArticleDefinition&gt;();
-</code></pre><h2 id="customizing-queries">Customizing queries</h2>
+</code></pre></div>
+<h2 id="customizing-queries">Customizing queries</h2>
 <p><em>since v4.0</em></p>
 <p>For various reasons (see examples below) you may need to change parts of the query, depending on resource type.
 <code>JsonApiResourceDefinition&lt;TResource, TId&gt;</code> (which is an empty implementation of <code>IResourceDefinition&lt;TResource, TId&gt;</code>) provides overridable methods that pass you the result of query string parameter parsing.
@@ -89,7 +89,8 @@ from Entity Framework Core <code>IQueryable</code> execution.</p>
 <h3 id="excluding-fields">Excluding fields</h3>
 <p>There are some cases where you want attributes or relationships conditionally excluded from your resource response.
 For example, you may accept some sensitive data that should only be exposed to administrators after creation.</p>
-<p><strong>Note:</strong> to exclude fields unconditionally, <a href="../resources/attributes.html#capabilities">attribute capabilities</a> and <a href="../resources/relationships.html#capabilities">relationship capabilities</a> can be used instead.</p>
+<div class="NOTE"><h5>Note</h5><p>To exclude fields unconditionally, <a href="../resources/attributes.html#capabilities">attribute capabilities</a> and <a href="../resources/relationships.html#capabilities">relationship capabilities</a> can be used instead.</p>
+</div>
 <pre><code class="lang-c#">public class UserDefinition : JsonApiResourceDefinition&lt;User, int&gt;
 {
     public UserDefinition(IResourceGraph resourceGraph)
@@ -236,8 +237,9 @@ Content-Type: application/vnd.api+json
 <p><em>since v3</em></p>
 <p>You can define additional query string parameters with the LINQ expression that should be used.
 If the key is present in a query string, the supplied LINQ expression will be added to the database query.</p>
-<p>Note this directly influences the Entity Framework Core <code>IQueryable</code>. As opposed to using <code>OnApplyFilter</code>, this enables the full range of Entity Framework Core operators. 
+<div class="NOTE"><h5>Note</h5><p>This directly influences the Entity Framework Core <code>IQueryable</code>. As opposed to using <code>OnApplyFilter</code>, this enables the full range of Entity Framework Core operators. 
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).</p>
+</div>
 <pre><code class="lang-c#">public class ItemDefinition : JsonApiResourceDefinition&lt;Item, int&gt;
 {
     public ItemDefinition(IResourceGraph resourceGraph)
@@ -329,7 +331,7 @@ Click on a diagram to open it full-size in a new window.</p>
 </ol>
 </article>
           </div>
-          
+
           <div class="hidden-sm col-md-2" role="complementary">
             <div class="sideaffix">
               <div class="contribution">
@@ -347,7 +349,7 @@ Click on a diagram to open it full-size in a new window.</p>
           </div>
         </div>
       </div>
-      
+
       <footer>
         <div class="grad-bottom"></div>
         <div class="footer">
@@ -355,13 +357,13 @@ Click on a diagram to open it full-size in a new window.</p>
             <span class="pull-right">
               <a href="#top">Back to top</a>
             </span>
-            
-            <span>Generated by <strong>DocFX</strong></span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
           </div>
         </div>
       </footer>
     </div>
-    
+
     <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
     <script type="text/javascript" src="../../styles/docfx.js"></script>
     <script type="text/javascript" src="../../styles/main.js"></script>

@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Common Pitfalls </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Common Pitfalls ">
+  
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+  
+  
+  
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="common-pitfalls">Common Pitfalls</h1>
+
+<p>This section lists various problems we&#39;ve seen users run into over the years when using JsonApiDotNetCore.
+See also <a href="../getting-started/faq.html">Frequently Asked Questions</a>.</p>
+<h4 id="jsonapi-resources-are-not-dtos-or-viewmodels">JSON:API resources are not DTOs or ViewModels</h4>
+<p>This is a common misconception.
+Similar to a database model, which consists of tables and foreign keys, JSON:API defines resources that are connected via relationships.
+You&#39;re opening up a can of worms when trying to model a single table to multiple JSON:API resources.</p>
+<p>This is best clarified using an example. Let&#39;s assume we&#39;re building a public website and an admin portal, both using the same API.
+The API uses the database tables &quot;Customers&quot; and &quot;LoginAccounts&quot;, having a one-to-one relationship between them.</p>
+<p>Now let&#39;s try to define the resource classes:</p>
+<pre><code class="lang-c#">[Table(&quot;Customers&quot;)]
+public sealed class WebCustomer : Identifiable&lt;long&gt;
+{
+    [Attr]
+    public string Name { get; set; } = null!;
+
+    [HasOne]
+    public LoginAccount? Account { get; set; }
+}
+
+[Table(&quot;Customers&quot;)]
+public sealed class AdminCustomer : Identifiable&lt;long&gt;
+{
+    [Attr]
+    public string Name { get; set; } = null!;
+
+    [Attr]
+    public string? CreditRating { get; set; }
+
+    [HasOne]
+    public LoginAccount? Account { get; set; }
+}
+
+[Table(&quot;LoginAccounts&quot;)]
+public sealed class LoginAccount : Identifiable&lt;long&gt;
+{
+    [Attr]
+    public string EmailAddress { get; set; } = null!;
+
+    [HasOne]
+    public ??? Customer { get; set; }
+}
+</code></pre><p>Did you notice the missing type of the <code>LoginAccount.Customer</code> property? We must choose between <code>WebCustomer</code> or <code>AdminCustomer</code>, but neither is correct.
+This is only one of the issues you&#39;ll run into. Just don&#39;t go there.</p>
+<p>The right way to model this is by having only <code>Customer</code> instead of <code>WebCustomer</code> and <code>AdminCustomer</code>. And then:</p>
+<ul>
+<li>Hide the <code>CreditRating</code> property for web users using <a href="https://www.jsonapi.net/usage/extensibility/resource-definitions.html#excluding-fields">this</a> approach.</li>
+<li>Block web users from setting the <code>CreditRating</code> property from POST/PATCH resource endpoints by either:<ul>
+<li>Detecting if the <code>CreditRating</code> property has changed, such as done <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/test/JsonApiDotNetCoreTests/IntegrationTests/InputValidation/RequestBody/WorkflowDefinition.cs">here</a>.</li>
+<li>Injecting <code>ITargetedFields</code>, throwing an error when it contains the <code>CreditRating</code> property.</li>
+</ul>
+</li>
+</ul>
+<h4 id="jsonapi-resources-are-not-ddd-domain-entities">JSON:API resources are not DDD domain entities</h4>
+<p>In <a href="https://martinfowler.com/bliki/DomainDrivenDesign.html">Domain-driven design</a>, it&#39;s considered best practice to implement business rules inside entities, with changes being controlled through an aggregate root.
+This paradigm <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1092#issuecomment-932749676">doesn&#39;t work well</a> with JSON:API, because each resource can be changed in isolation.
+So if your API needs to guard invariants such as &quot;the sum of all orders must never exceed 500 dollars&quot;, then you&#39;re better off with an RPC-style API instead of the REST paradigm that JSON:API follows.</p>
+<p>Adding constructors to resource classes that validate incoming parameters before assigning them to properties does not work.
+Entity Framework Core <a href="https://learn.microsoft.com/en-us/ef/core/modeling/constructors#binding-to-mapped-properties">supports</a> that,
+but does so via internal implementation details that are inaccessible by JsonApiDotNetCore.</p>
+<p>In JsonApiDotNetCore, resources are what DDD calls <a href="https://thedomaindrivendesign.io/anemic-model/">anemic models</a>.
+Validation and business rules are typically implemented in <a href="extensibility/resource-definitions.html">Resource Definitions</a>.</p>
+<h4 id="model-relationships-instead-of-foreign-key-attributes">Model relationships instead of foreign key attributes</h4>
+<p>It may be tempting to expose numeric resource attributes such as <code>customerId</code>, <code>orderId</code>, etc. You&#39;re better off using relationships instead, because they give you
+the richness of JSON:API. For example, it enables users to include related resources in a single request, apply filters over related resources and use dedicated endpoints for updating relationships.
+As an API developer, you&#39;ll benefit from rich input validation and fine-grained control for setting what&#39;s permitted when users access relationships.</p>
+<h4 id="model-relationships-instead-of-complex-json-attributes">Model relationships instead of complex (JSON) attributes</h4>
+<p>Similar to the above, returning a complex object takes away all the relationship features of JSON:API. Users can&#39;t filter inside a complex object. Or update
+a nested value, without risking accidentally overwriting another unrelated nested value from a concurrent request. Basically, there&#39;s no partial PATCH to prevent that.</p>
+<h4 id="stay-away-from-stored-procedures">Stay away from stored procedures</h4>
+<p>There are <a href="https://stackoverflow.com/questions/1761601/is-the-usage-of-stored-procedures-a-bad-practice/9483781#9483781">many reasons</a> to not use stored procedures.
+But with JSON:API, there&#39;s an additional concern. Due to its dynamic nature of filtering, sorting, pagination, sparse fieldsets, and including related resources,
+the number of required stored procedures to support all that either explodes, or you&#39;ll end up with one extremely complex stored proceduce to handle it all.
+With stored procedures, you&#39;re either going to have a lot of work to do, or you&#39;ll end up with an API that has very limited capabilities.
+Neither sounds very compelling. If stored procedures is what you need, you&#39;re better off creating an RPC-style API that doesn&#39;t use JsonApiDotNetCore.</p>
+<h4 id="do-not-use-apicontroller-on-jsonapi-controllers">Do not use <code>[ApiController]</code> on JSON:API controllers</h4>
+<p>Although recommended by Microsoft for hard-written controllers, the opinionated behavior of <a href="https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-7.0#apicontroller-attribute"><code>[ApiController]</code></a> violates the JSON:API specification.
+Despite JsonApiDotNetCore trying its best to deal with it, the experience won&#39;t be as good as leaving it out.</p>
+<h4 id="replace-injectable-services-after-calling-addjsonapi">Replace injectable services <em>after</em> calling <code>AddJsonApi()</code></h4>
+<p>Registering your own services in the IoC container afterwards increases the chances that your replacements will take effect.
+Also, register with <code>services.AddResourceDefinition/AddResourceService/AddResourceRepository()</code> instead of <code>services.AddScoped()</code>.
+When using <a href="resource-graph.html#auto-discovery">Auto-discovery</a>, you don&#39;t need to register these at all.</p>
+<h4 id="never-use-the-entity-framework-core-in-memory-database-provider">Never use the Entity Framework Core In-Memory Database Provider</h4>
+<p>When using this provider, many invalid mappings go unnoticed, leading to strange errors or wrong behavior. A real SQL engine fails to create the schema when mappings are invalid.
+If you&#39;re in need of a quick setup, use <a href="https://www.sqlite.org/">SQLite</a>. After adding its <a href="https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.Sqlite">NuGet package</a>, it&#39;s as simple as:</p>
+<pre><code class="lang-c#">// Program.cs
+builder.Services.AddSqlite&lt;AppDbContext&gt;(&quot;Data Source=temp.db&quot;);
+</code></pre><p>Which creates <code>temp.db</code> on disk. Simply deleting the file gives you a clean slate.
+This is a lot more convenient compared to using <a href="https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb">SqlLocalDB</a>, which runs a background service that breaks if you delete its underlying storage files.</p>
+<p>However, even SQLite does not support all queries produced by Entity Framework Core. You&#39;ll get the best (and fastest) experience with <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/run-docker-postgres.ps1">PostgreSQL in a docker container</a>.</p>
+<h4 id="one-to-one-relationships-require-custom-entity-framework-core-mappings">One-to-one relationships require custom Entity Framework Core mappings</h4>
+<p>Entity Framework Core has great conventions and sane mapping defaults. But two of them are problematic for JSON:API: identifying foreign keys and default delete behavior.
+See <a href="resources/relationships.html#one-to-one-relationships-in-entity-framework-core">here</a> for how to get it right.</p>
+<h4 id="prefer-model-attributes-over-fluent-mappings">Prefer model attributes over fluent mappings</h4>
+<p>Validation attributes such as <code>[Required]</code> are detected by ASP.NET ModelState validation, Entity Framework Core, OpenAPI, and JsonApiDotNetCore.
+When using a Fluent API instead, the other frameworks cannot know about it, resulting in a less streamlined experience.</p>
+<h4 id="validation-of-required-value-types-doesnt-work">Validation of <code>[Required]</code> value types doesn&#39;t work</h4>
+<p>This is a limitation of ASP.NET ModelState validation. For example:</p>
+<pre><code class="lang-c#">[Required] public int Age { get; set; }
+</code></pre><p>won&#39;t cause a validation error when sending <code>0</code> or omitting it entirely in the request body.
+This limitation does not apply to reference types.
+The workaround is to make it nullable:</p>
+<pre><code class="lang-c#">[Required] public int? Age { get; set; }
+</code></pre><p>Entity Framework Core recognizes this and generates a non-nullable column.</p>
+<h4 id="dont-change-resource-property-values-from-postpatch-controller-methods">Don&#39;t change resource property values from POST/PATCH controller methods</h4>
+<p>It simply won&#39;t work. Without going into details, this has to do with JSON:API partial POST/PATCH.
+Use <a href="extensibility/resource-definitions.html">Resource Definition</a> callback methods to apply such changes from code.</p>
+<h4 id="you-cant-mix-up-pipeline-methods">You can&#39;t mix up pipeline methods</h4>
+<p>For example, you can&#39;t call <code>service.UpdateAsync()</code> from <code>controller.GetAsync()</code>, or call <code>service.SetRelationshipAsync()</code> from <code>controller.PatchAsync()</code>.
+The reason is that various ambient injectable objects are in play, used to track what&#39;s going on during the request pipeline internally.
+And they won&#39;t match up with the current endpoint when switching to a different pipeline halfway during a request.</p>
+<p>If you need such side effects, it&#39;s easiest to inject your <code>DbContext</code> in the controller, directly apply the changes on it and save.
+A better way is to inject your <code>DbContext</code> in a <a href="extensibility/resource-definitions.html">Resource Definition</a> and apply the changes there.</p>
+<h4 id="concurrency-tokens-timestamprowversionxmin-wont-work">Concurrency tokens (timestamp/rowversion/xmin) won&#39;t work</h4>
+<p>While we&#39;d love to support such <a href="https://learn.microsoft.com/en-us/ef/core/saving/concurrency?tabs=data-annotations">tokens for optimistic concurrency</a>,
+it turns out that the implementation is far from trivial. We&#39;ve come a long way, but aren&#39;t sure how it should work when relationship endpoints and atomic operations are involved.
+If you&#39;re interested, we welcome your feedback at <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1119">https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1119</a>.</p>
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/common-pitfalls.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In This Article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      
+      <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
