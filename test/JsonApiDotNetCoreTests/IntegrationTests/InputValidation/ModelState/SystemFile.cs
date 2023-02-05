@@ -15,6 +15,9 @@ public sealed class SystemFile : Identifiable<int>
 
     [Attr]
     [Required]
-    [Range(typeof(long), "0", "9223372036854775807")]
-    public long? SizeInBytes { get; set; }
+    public FileAttributes? Attributes { get; set; }
+
+    [Attr]
+    [Range(typeof(long), "1", "9223372036854775807")]
+    public long SizeInBytes { get; set; }
 }

@@ -17,14 +17,14 @@ internal sealed class ModelStateFakers : FakerContainer
         new Faker<SystemFile>()
             .UseSeed(GetFakerSeed())
             .RuleFor(systemFile => systemFile.FileName, faker => faker.System.FileName())
+            .RuleFor(systemFile => systemFile.Attributes, faker => faker.Random.Enum(FileAttributes.Normal, FileAttributes.Hidden, FileAttributes.ReadOnly))
             .RuleFor(systemFile => systemFile.SizeInBytes, faker => faker.Random.Long(0, 1_000_000)));
 
     private readonly Lazy<Faker<SystemDirectory>> _lazySystemDirectoryFaker = new(() =>
         new Faker<SystemDirectory>()
             .UseSeed(GetFakerSeed())
-            .RuleFor(systemDirectory => systemDirectory.Name, faker => faker.Address.City())
-            .RuleFor(systemDirectory => systemDirectory.IsCaseSensitive, faker => faker.Random.Bool())
-            .RuleFor(systemDirectory => systemDirectory.SizeInBytes, faker => faker.Random.Long(0, 1_000_000)));
+            .RuleFor(systemDirectory => systemDirectory.Name, faker => Path.GetFileNameWithoutExtension(faker.System.FileName()))
+            .RuleFor(systemDirectory => systemDirectory.IsCaseSensitive, faker => faker.Random.Bool()));
 
     public Faker<SystemVolume> SystemVolume => _lazySystemVolumeFaker.Value;
     public Faker<SystemFile> SystemFile => _lazySystemFileFaker.Value;

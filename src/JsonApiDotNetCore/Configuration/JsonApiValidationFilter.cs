@@ -1,6 +1,7 @@
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,15 +24,13 @@ internal sealed class JsonApiValidationFilter : IPropertyValidationFilter
     /// <inheritdoc />
     public bool ShouldValidateEntry(ValidationEntry entry, ValidationEntry parentEntry)
     {
-        IServiceProvider serviceProvider = GetScopedServiceProvider();
-
-        var request = serviceProvider.GetRequiredService<IJsonApiRequest>();
-
-        if (IsId(entry.Key))
+        if (entry.Metadata.MetadataKind == ModelMetadataKind.Type || IsId(entry.Key))
         {
             return true;
         }
 
+        IServiceProvider serviceProvider = GetScopedServiceProvider();
+        var request = serviceProvider.GetRequiredService<IJsonApiRequest>();
         bool isTopResourceInPrimaryRequest = string.IsNullOrEmpty(parentEntry.Key) && IsAtPrimaryEndpoint(request);
 
         if (!isTopResourceInPrimaryRequest)
