@@ -8,7 +8,8 @@ public class Person : Identifiable<Guid>
 }
 ```
 
-**Note:** Earlier versions of JsonApiDotNetCore allowed a short-hand notation when `TId` is of type `int`. This was removed in v5.
+> [!NOTE]
+> Earlier versions of JsonApiDotNetCore allowed a short-hand notation when `TId` is of type `int`. This was removed in v5.
 
 If you need to attach annotations or attributes on the `Id` property, you can override the virtual property.
 

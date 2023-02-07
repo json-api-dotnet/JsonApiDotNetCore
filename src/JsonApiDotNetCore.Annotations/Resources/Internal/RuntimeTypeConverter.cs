@@ -8,9 +8,25 @@ namespace JsonApiDotNetCore.Resources.Internal;
 [PublicAPI]
 public static class RuntimeTypeConverter
 {
+    private const string ParseQueryStringsUsingCurrentCultureSwitchName = "JsonApiDotNetCore.ParseQueryStringsUsingCurrentCulture";
+
     public static object? ConvertType(object? value, Type type)
     {
         ArgumentGuard.NotNull(type);
+
+        // Earlier versions of JsonApiDotNetCore failed to pass CultureInfo.InvariantCulture in the parsing below, which resulted in the 'current'
+        // culture being used. Unlike parsing JSON request/response bodies, this effectively meant that query strings were parsed based on the
+        // OS-level regional settings of the web server.
+        // Because this was fixed in a non-major release, the switch below enables to revert to the old behavior.
+
+        // With the switch activated, API developers can still choose between:
+        // - Requiring localized date/number formats: parsing occurs using the OS-level regional settings (the default).
+        // - Requiring culture-invariant date/number formats: requires setting CultureInfo.DefaultThreadCurrentCulture to CultureInfo.InvariantCulture at startup.
+        // - Allowing clients to choose by sending an Accept-Language HTTP header: requires app.UseRequestLocalization() at startup.
+
+        CultureInfo? cultureInfo = AppContext.TryGetSwitch(ParseQueryStringsUsingCurrentCultureSwitchName, out bool useCurrentCulture) && useCurrentCulture
+            ? null
+            : CultureInfo.InvariantCulture;
 
         if (value == null)
         {
@@ -50,20 +66,32 @@ public static class RuntimeTypeConverter
 
             if (nonNullableType == typeof(DateTime))
             {
-                DateTime convertedValue = DateTime.Parse(stringValue, null, DateTimeStyles.RoundtripKind);
+                DateTime convertedValue = DateTime.Parse(stringValue, cultureInfo, DateTimeStyles.RoundtripKind);
                 return isNullableTypeRequested ? (DateTime?)convertedValue : convertedValue;
             }
 
             if (nonNullableType == typeof(DateTimeOffset))
             {
-                DateTimeOffset convertedValue = DateTimeOffset.Parse(stringValue, null, DateTimeStyles.RoundtripKind);
+                DateTimeOffset convertedValue = DateTimeOffset.Parse(stringValue, cultureInfo, DateTimeStyles.RoundtripKind);
                 return isNullableTypeRequested ? (DateTimeOffset?)convertedValue : convertedValue;
             }
 
             if (nonNullableType == typeof(TimeSpan))
             {
-                TimeSpan convertedValue = TimeSpan.Parse(stringValue);
+                TimeSpan convertedValue = TimeSpan.Parse(stringValue, cultureInfo);
                 return isNullableTypeRequested ? (TimeSpan?)convertedValue : convertedValue;
+            }
+
+            if (nonNullableType == typeof(DateOnly))
+            {
+                DateOnly convertedValue = DateOnly.Parse(stringValue, cultureInfo);
+                return isNullableTypeRequested ? (DateOnly?)convertedValue : convertedValue;
+            }
+
+            if (nonNullableType == typeof(TimeOnly))
+            {
+                TimeOnly convertedValue = TimeOnly.Parse(stringValue, cultureInfo);
+                return isNullableTypeRequested ? (TimeOnly?)convertedValue : convertedValue;
             }
 
             if (nonNullableType.IsEnum)
@@ -75,7 +103,7 @@ public static class RuntimeTypeConverter
             }
 
             // https://bradwilson.typepad.com/blog/2008/07/creating-nullab.html
-            return Convert.ChangeType(stringValue, nonNullableType);
+            return Convert.ChangeType(stringValue, nonNullableType, cultureInfo);
         }
         catch (Exception exception) when (exception is FormatException or OverflowException or InvalidCastException or ArgumentException)
         {

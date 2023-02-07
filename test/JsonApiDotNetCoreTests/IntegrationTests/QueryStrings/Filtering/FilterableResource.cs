@@ -78,6 +78,18 @@ public sealed class FilterableResource : Identifiable<int>
     public TimeSpan? SomeNullableTimeSpan { get; set; }
 
     [Attr]
+    public DateOnly SomeDateOnly { get; set; }
+
+    [Attr]
+    public DateOnly? SomeNullableDateOnly { get; set; }
+
+    [Attr]
+    public TimeOnly SomeTimeOnly { get; set; }
+
+    [Attr]
+    public TimeOnly? SomeNullableTimeOnly { get; set; }
+
+    [Attr]
     public DayOfWeek SomeEnum { get; set; }
 
     [Attr]

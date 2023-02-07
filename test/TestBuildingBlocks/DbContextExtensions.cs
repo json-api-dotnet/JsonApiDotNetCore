@@ -34,8 +34,18 @@ public static class DbContextExtensions
                 throw new InvalidOperationException($"Table for '{model.Name}' not found.");
             }
 
-            string tableName = entityType.GetTableName()!;
-            await dbContext.Database.ExecuteSqlRawAsync($"delete from \"{tableName}\"");
+            string? tableName = entityType.GetTableName();
+
+            if (tableName == null)
+            {
+                // There is no table for the specified abstract base type when using TablePerConcreteType inheritance.
+                IEnumerable<IEntityType> derivedTypes = entityType.GetConcreteDerivedTypesInclusive();
+                await ClearTablesAsync(dbContext, derivedTypes.Select(derivedType => derivedType.ClrType).ToArray());
+            }
+            else
+            {
+                await dbContext.Database.ExecuteSqlRawAsync($"delete from \"{tableName}\"");
+            }
         }
     }
 }

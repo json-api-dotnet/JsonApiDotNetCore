@@ -2,15 +2,15 @@
   <PropertyGroup>
     <TargetFrameworkName>net6.0</TargetFrameworkName>
     <AspNetVersion>6.0.*</AspNetVersion>
-    <EFCoreVersion>6.0.*</EFCoreVersion>
-    <EFCorePostgresVersion>6.0.*</EFCorePostgresVersion>
-    <MicrosoftCodeAnalysisVersion>4.3.*</MicrosoftCodeAnalysisVersion>
+    <EFCoreVersion>7.0.*</EFCoreVersion>
+    <EFCorePostgresVersion>7.0.*</EFCorePostgresVersion>
+    <MicrosoftCodeAnalysisVersion>4.4.*</MicrosoftCodeAnalysisVersion>
     <HumanizerVersion>2.14.1</HumanizerVersion>
     <SwashbuckleVersion>6.4.*</SwashbuckleVersion>
     <NSwagApiClientVersion>13.16.*</NSwagApiClientVersion>
     <MicrosoftApiClientVersion>6.0.*</MicrosoftApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
-    <JsonApiDotNetCoreVersionPrefix>5.1.1</JsonApiDotNetCoreVersionPrefix>
+    <JsonApiDotNetCoreVersionPrefix>5.1.3</JsonApiDotNetCoreVersionPrefix>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>9999</WarningLevel>
     <Nullable>enable</Nullable>
@@ -37,8 +37,8 @@
 
   <!-- Test Project Dependencies -->
   <PropertyGroup>
-    <CoverletVersion>3.2.0</CoverletVersion>
-    <MoqVersion>4.18.2</MoqVersion>
-    <TestSdkVersion>17.4.0</TestSdkVersion>
+    <CoverletVersion>3.2.*</CoverletVersion>
+    <MoqVersion>4.18.*</MoqVersion>
+    <TestSdkVersion>17.4.*</TestSdkVersion>
   </PropertyGroup>
 </Project>

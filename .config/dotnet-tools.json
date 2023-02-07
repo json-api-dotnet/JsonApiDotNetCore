@@ -9,7 +9,7 @@
       ]
     },
     "regitlint": {
-      "version": "6.2.1",
+      "version": "6.3.10",
       "commands": [
         "regitlint"
       ]
@@ -21,9 +21,15 @@
       ]
     },
     "dotnet-reportgenerator-globaltool": {
-      "version": "5.1.11",
+      "version": "5.1.15",
       "commands": [
         "reportgenerator"
+      ]
+    },
+    "docfx": {
+      "version": "2.60.2",
+      "commands": [
+        "docfx"
       ]
     }
   }

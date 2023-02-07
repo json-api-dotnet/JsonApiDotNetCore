@@ -9,7 +9,13 @@ namespace SourceGeneratorTests;
 
 internal sealed class CompilationBuilder
 {
-    private static readonly CSharpCompilationOptions DefaultOptions = new(OutputKind.DynamicallyLinkedLibrary);
+    private static readonly CSharpCompilationOptions DefaultOptions =
+        new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary).WithSpecificDiagnosticOptions(new Dictionary<string, ReportDiagnostic>
+        {
+            // Suppress warning for version conflict on Microsoft.Extensions.Logging.Abstractions:
+            // JsonApiDotNetCore indirectly depends on v6 (via Entity Framework Core 6), whereas Entity Framework Core 7 depends on v7.
+            ["CS1701"] = ReportDiagnostic.Suppress
+        });
 
     private readonly HashSet<SyntaxTree> _syntaxTrees = new();
     private readonly HashSet<MetadataReference> _references = new();
