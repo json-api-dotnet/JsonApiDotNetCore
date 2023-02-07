@@ -20,4 +20,12 @@ public sealed class SystemFile : Identifiable<int>
     [Attr]
     [Range(typeof(long), "1", "9223372036854775807")]
     public long SizeInBytes { get; set; }
+
+    [Attr]
+    [Range(typeof(DateOnly), "2000-01-01", "2050-01-01")]
+    public DateOnly CreatedOn { get; set; }
+
+    [Attr]
+    [Range(typeof(TimeOnly), "09:00:00", "17:30:00")]
+    public TimeOnly CreatedAt { get; set; }
 }
