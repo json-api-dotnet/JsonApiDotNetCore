@@ -13,12 +13,13 @@ builder.Services.AddScoped<IResourceWriteRepository<Article, int>, ArticleReposi
 In v4.0 we introduced an extension method that you can use to register a resource repository on all of its JsonApiDotNetCore interfaces.
 This is helpful when you implement (a subset of) the resource interfaces and want to register them all in one go.
 
-**Note:** If you're using [auto-discovery](~/usage/resource-graph.md#auto-discovery), this happens automatically.
-
 ```c#
 // Program.cs
 builder.Services.AddResourceRepository<ArticleRepository>();
 ```
+
+> [!TIP]
+> If you're using [auto-discovery](~/usage/resource-graph.md#auto-discovery), then resource services, repositories and resource definitions will be automatically registered for you.
 
 A sample implementation that performs authorization might look like this.
 

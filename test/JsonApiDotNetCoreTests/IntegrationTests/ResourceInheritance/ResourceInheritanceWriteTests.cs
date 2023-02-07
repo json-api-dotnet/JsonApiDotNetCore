@@ -2298,7 +2298,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.Set<VehicleManufacturer>().Add(existingManufacturer);
+            dbContext.VehicleManufacturers.Add(existingManufacturer);
             dbContext.Vehicles.Add(existingTandem);
             await dbContext.SaveChangesAsync();
         });
@@ -2327,8 +2327,16 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            VehicleManufacturer manufacturerInDatabase = await dbContext.Set<VehicleManufacturer>().Include(manufacturer => manufacturer.Vehicles)
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
+            VehicleManufacturer manufacturerInDatabase = await dbContext.VehicleManufacturers
+                .Include(manufacturer => manufacturer.Vehicles
+                    .OrderByDescending(vehicle => vehicle.Id))
                 .FirstWithIdAsync(existingManufacturer.Id);
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
             manufacturerInDatabase.Vehicles.ShouldHaveCount(2);
             manufacturerInDatabase.Vehicles.ElementAt(0).Should().BeOfType<Car>();
@@ -2578,7 +2586,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.Set<VehicleManufacturer>().Add(existingManufacturer);
+            dbContext.VehicleManufacturers.Add(existingManufacturer);
             await dbContext.SaveChangesAsync();
         });
 
@@ -2606,7 +2614,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            VehicleManufacturer manufacturerInDatabase = await dbContext.Set<VehicleManufacturer>().Include(manufacturer => manufacturer.Vehicles)
+            VehicleManufacturer manufacturerInDatabase = await dbContext.VehicleManufacturers.Include(manufacturer => manufacturer.Vehicles)
                 .FirstWithIdAsync(existingManufacturer.Id);
 
             manufacturerInDatabase.Vehicles.ShouldHaveCount(1);

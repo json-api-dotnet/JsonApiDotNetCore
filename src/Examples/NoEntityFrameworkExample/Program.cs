@@ -7,7 +7,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-string connectionString = GetConnectionString(builder.Configuration);
+string? connectionString = GetConnectionString(builder.Configuration);
 builder.Services.AddNpgsql<AppDbContext>(connectionString);
 
 builder.Services.AddJsonApi(options => options.Namespace = "api/v1", resources: resourceGraphBuilder => resourceGraphBuilder.Add<WorkItem, int>());
@@ -26,10 +26,10 @@ await CreateDatabaseAsync(app.Services);
 
 app.Run();
 
-static string GetConnectionString(IConfiguration configuration)
+static string? GetConnectionString(IConfiguration configuration)
 {
     string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
-    return configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
+    return configuration["Data:DefaultConnection"]?.Replace("###", postgresPassword);
 }
 
 static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)

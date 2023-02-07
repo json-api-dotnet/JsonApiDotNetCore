@@ -87,7 +87,7 @@ public sealed class QueryTokenizer
                 }
                 else
                 {
-                    if (_textBuffer.Length == 0 && ch == ' ' && !_isInQuotedSection)
+                    if (ch == ' ' && !_isInQuotedSection)
                     {
                         throw new QueryParseException("Unexpected whitespace.");
                     }

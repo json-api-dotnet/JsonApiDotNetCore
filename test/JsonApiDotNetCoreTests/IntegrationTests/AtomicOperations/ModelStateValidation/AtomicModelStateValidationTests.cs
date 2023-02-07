@@ -1,7 +1,9 @@
 using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -15,6 +17,11 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     public AtomicModelStateValidationTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
     {
         _testContext = testContext;
+
+        _testContext.ConfigureServicesBeforeStartup(services =>
+        {
+            services.AddSingleton<ISystemClock, FrozenSystemClock>();
+        });
 
         testContext.UseController<OperationsController>();
     }
@@ -65,6 +72,51 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
         error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
         error2.Source.ShouldNotBeNull();
         error2.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/lengthInSeconds");
+    }
+
+    [Fact]
+    public async Task Cannot_create_resource_when_violation_from_custom_ValidationAttribute()
+    {
+        // Arrange
+        var clock = _testContext.Factory.Services.GetRequiredService<ISystemClock>();
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "musicTracks",
+                        attributes = new
+                        {
+                            title = "some",
+                            lengthInSeconds = 120,
+                            releasedAt = clock.UtcNow.AddDays(1)
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Input validation failed.");
+        error.Detail.Should().Be("ReleasedAt must be in the past.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/releasedAt");
     }
 
     [Fact]

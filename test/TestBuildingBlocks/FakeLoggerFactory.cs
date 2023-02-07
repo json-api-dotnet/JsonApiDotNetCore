@@ -59,6 +59,7 @@ public sealed class FakeLoggerFactory : ILoggerFactory, ILoggerProvider
         }
 
         public IDisposable BeginScope<TState>(TState state)
+            where TState : notnull
         {
             return NullScope.Instance;
         }

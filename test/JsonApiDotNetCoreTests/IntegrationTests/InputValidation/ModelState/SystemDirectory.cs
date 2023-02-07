@@ -20,10 +20,6 @@ public sealed class SystemDirectory : Identifiable<int>
     [Required]
     public bool? IsCaseSensitive { get; set; }
 
-    [Attr]
-    [Range(typeof(long), "0", "9223372036854775807")]
-    public long SizeInBytes { get; set; }
-
     [HasMany]
     public ICollection<SystemDirectory> Subdirectories { get; set; } = new List<SystemDirectory>();
 

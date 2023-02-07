@@ -12,7 +12,7 @@ public abstract class FakerContainer
     {
         // Setting the system DateTime to kind Utc, so that faker calls like PastOffset() don't depend on the system time zone.
         // See https://docs.microsoft.com/en-us/dotnet/api/system.datetimeoffset.op_implicit?view=net-6.0#remarks
-        Date.SystemClock = () => 1.January(2020).AsUtc();
+        Date.SystemClock = () => 1.January(2020).At(1, 1, 1).AsUtc();
     }
 
     protected static int GetFakerSeed()
