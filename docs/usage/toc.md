@@ -23,7 +23,6 @@
 # [Errors](errors.md)
 # [Metadata](meta.md)
 # [Caching](caching.md)
-
 # [Common Pitfalls](common-pitfalls.md)
 
 # Extensibility

@@ -10,7 +10,7 @@ environment:
   PGUSER: postgres
   PGPASSWORD: Password12!
   GIT_ACCESS_TOKEN:
-    secure: vw2jhp7V38fTOqphzFgnXtLwHoHRW2zM2K5RJgDAnmkoaIKT6jXLDIfkFdyVz9nJ
+    secure: WPzhuEyDE7yuHeEgLi3RoGJ8we+AHU6nMksbFoWQ0AmI/HJLh4bjOR0Jnnzc6aaG
 
 branches:
   only:
