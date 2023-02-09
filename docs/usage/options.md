@@ -42,7 +42,7 @@ If `IncludeTotalResourceCount` is set to `false` (or the inverse relationship is
 
 ## Relative Links
 
-All links are absolute by default. However, you can configure relative links.
+All links are absolute by default. However, you can configure relative links:
 
 ```c#
 options.UseRelativeLinks = true;
