@@ -490,9 +490,8 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
 
-        runResult.Should()
-            .HaveSingleDiagnostic(
-                "(6,21): warning JADNC001: Type 'Item' must implement IIdentifiable<TId> when using ResourceAttribute to auto-generate ASP.NET controllers");
+        runResult.Should().HaveSingleDiagnostic(
+            "(6,21): warning JADNC001: Type 'Item' must implement IIdentifiable<TId> when using ResourceAttribute to auto-generate ASP.NET controllers");
 
         runResult.Should().NotHaveProducedSourceCode();
     }
