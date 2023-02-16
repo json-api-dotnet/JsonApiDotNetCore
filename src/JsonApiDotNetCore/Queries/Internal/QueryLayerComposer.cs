@@ -114,14 +114,14 @@ public class QueryLayerComposer : IQueryLayerComposer
         AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
         var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(inverseRelationship, idAttribute));
 
-        return new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId!.ToString()!));
+        return new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId!));
     }
 
     private static FilterExpression GetInverseHasManyRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship, HasManyAttribute inverseRelationship)
     {
         AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
         var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(idAttribute));
-        var idComparison = new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId!.ToString()!));
+        var idComparison = new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId!));
 
         return new HasExpression(new ResourceFieldChainExpression(inverseRelationship), idComparison);
     }
@@ -360,12 +360,12 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         if (ids.Count == 1)
         {
-            var constant = new LiteralConstantExpression(ids.Single()!.ToString()!);
+            var constant = new LiteralConstantExpression(ids.Single()!);
             filter = new ComparisonExpression(ComparisonOperator.Equals, idChain, constant);
         }
         else if (ids.Count > 1)
         {
-            ImmutableHashSet<LiteralConstantExpression> constants = ids.Select(id => new LiteralConstantExpression(id!.ToString()!)).ToImmutableHashSet();
+            ImmutableHashSet<LiteralConstantExpression> constants = ids.Select(id => new LiteralConstantExpression(id!)).ToImmutableHashSet();
             filter = new AnyExpression(idChain, constants);
         }
 

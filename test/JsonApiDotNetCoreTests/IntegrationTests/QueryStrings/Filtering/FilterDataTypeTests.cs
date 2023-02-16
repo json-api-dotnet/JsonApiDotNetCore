@@ -304,7 +304,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task Cannot_filter_equality_on_incompatible_value()
+    public async Task Cannot_filter_equality_on_incompatible_values()
     {
         // Arrange
         var resource = new FilterableResource
@@ -331,9 +331,10 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Query creation failed due to incompatible types.");
+        error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be("Failed to convert 'ABC' of type 'String' to type 'Int32'.");
-        error.Source.Should().BeNull();
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("filter");
     }
 
     [Theory]
