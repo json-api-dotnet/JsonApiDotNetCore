@@ -10,4 +10,7 @@ public sealed class SupportTicket : Identifiable<int>
 {
     [Attr]
     public string Description { get; set; } = null!;
+
+    [HasOne]
+    public ProductFamily? ProductFamily { get; set; }
 }

@@ -82,13 +82,11 @@ public class QueryLayerComposer : IQueryLayerComposer
 
         ExpressionInScope[] constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
 
-        var secondaryScope = new ResourceFieldChainExpression(hasManyRelationship);
-
         // @formatter:wrap_chained_method_calls chop_always
         // @formatter:keep_existing_linebreaks true
 
         FilterExpression[] filtersInSecondaryScope = constraints
-            .Where(constraint => secondaryScope.Equals(constraint.Scope))
+            .Where(constraint => constraint.Scope == null)
             .Select(constraint => constraint.Expression)
             .OfType<FilterExpression>()
             .ToArray();

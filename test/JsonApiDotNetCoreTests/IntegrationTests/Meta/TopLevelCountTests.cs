@@ -32,19 +32,21 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
-    public async Task Renders_resource_count_for_collection()
+    public async Task Renders_resource_count_for_primary_resources_endpoint_with_filter()
     {
         // Arrange
-        SupportTicket ticket = _fakers.SupportTicket.Generate();
+        List<SupportTicket> tickets = _fakers.SupportTicket.Generate(2);
+
+        tickets[1].Description = "Update firmware version";
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             await dbContext.ClearTableAsync<SupportTicket>();
-            dbContext.SupportTickets.Add(ticket);
+            dbContext.SupportTickets.AddRange(tickets);
             await dbContext.SaveChangesAsync();
         });
 
-        const string route = "/supportTickets";
+        const string route = "/supportTickets?filter=startsWith(description,'Update ')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -53,6 +55,36 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Meta.ShouldNotBeNull();
+
+        responseDocument.Meta.ShouldContainKey("total").With(value =>
+        {
+            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+            element.GetInt32().Should().Be(1);
+        });
+    }
+
+    [Fact]
+    public async Task Renders_resource_count_for_secondary_resources_endpoint_with_filter()
+    {
+        // Arrange
+        ProductFamily family = _fakers.ProductFamily.Generate();
+        family.Tickets = _fakers.SupportTicket.Generate(2);
+
+        family.Tickets[1].Description = "Update firmware version";
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.ProductFamilies.Add(family);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/productFamilies/{family.StringId}/tickets?filter=contains(description,'firmware')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
         responseDocument.Meta.ShouldContainKey("total").With(value =>
         {
