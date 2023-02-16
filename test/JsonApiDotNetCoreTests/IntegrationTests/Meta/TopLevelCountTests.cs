@@ -52,8 +52,6 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Meta.ShouldNotBeNull();
-
         responseDocument.Meta.ShouldContainKey("total").With(value =>
         {
             JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
@@ -77,8 +75,6 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
 
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
-
-        responseDocument.Meta.ShouldNotBeNull();
 
         responseDocument.Meta.ShouldContainKey("total").With(value =>
         {
