@@ -614,9 +614,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/chromeWheels/{resource.Id}");
 
-            resource.Attributes.ShouldHaveCount(2);
-            resource.Attributes.ShouldContainKey("radius");
-            resource.Attributes.ShouldContainKey("paintColor");
+            resource.Attributes.ShouldOnlyContainKeys("radius", "paintColor");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "carbonWheels"))
@@ -624,9 +622,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/carbonWheels/{resource.Id}");
 
-            resource.Attributes.ShouldHaveCount(2);
-            resource.Attributes.ShouldContainKey("radius");
-            resource.Attributes.ShouldContainKey("hasTube");
+            resource.Attributes.ShouldOnlyContainKeys("radius", "hasTube");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue)
@@ -686,9 +682,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/chromeWheels/{resource.Id}");
 
-            resource.Attributes.ShouldHaveCount(2);
-            resource.Attributes.ShouldContainKey("radius");
-            resource.Attributes.ShouldContainKey("paintColor");
+            resource.Attributes.ShouldOnlyContainKeys("radius", "paintColor");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "carbonWheels"))
@@ -696,9 +690,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/carbonWheels/{resource.Id}");
 
-            resource.Attributes.ShouldHaveCount(2);
-            resource.Attributes.ShouldContainKey("radius");
-            resource.Attributes.ShouldContainKey("hasTube");
+            resource.Attributes.ShouldOnlyContainKeys("radius", "hasTube");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue)
@@ -752,9 +744,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/chromeWheels/{resource.Id}");
 
-            resource.Attributes.ShouldHaveCount(2);
-            resource.Attributes.ShouldContainKey("radius");
-            resource.Attributes.ShouldContainKey("paintColor");
+            resource.Attributes.ShouldOnlyContainKeys("radius", "paintColor");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "carbonWheels"))
@@ -762,9 +752,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/carbonWheels/{resource.Id}");
 
-            resource.Attributes.ShouldHaveCount(2);
-            resource.Attributes.ShouldContainKey("radius");
-            resource.Attributes.ShouldContainKey("hasTube");
+            resource.Attributes.ShouldOnlyContainKeys("radius", "hasTube");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue)
