@@ -22,10 +22,10 @@ public sealed class SystemFile : Identifiable<int>
     public long SizeInBytes { get; set; }
 
     [Attr]
-    [Range(typeof(DateOnly), "2000-01-01", "2050-01-01")]
+    [Range(typeof(DateOnly), "2000-01-01", "2050-01-01", ParseLimitsInInvariantCulture = true)]
     public DateOnly CreatedOn { get; set; }
 
     [Attr]
-    [Range(typeof(TimeOnly), "09:00:00", "17:30:00")]
+    [Range(typeof(TimeOnly), "09:00:00", "17:30:00", ParseLimitsInInvariantCulture = true)]
     public TimeOnly CreatedAt { get; set; }
 }
