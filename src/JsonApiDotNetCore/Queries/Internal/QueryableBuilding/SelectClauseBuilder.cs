@@ -136,10 +136,10 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
 
         if (fieldSelectors.ContainsReadOnlyAttribute || fieldSelectors.ContainsOnlyRelationships)
         {
-            // If a read-only attribute is selected, its calculated value likely depends on another property, so select all properties.
-            // And only selecting relationships implicitly means to select all attributes too.
+            // If a read-only attribute is selected, its calculated value likely depends on another property, so fetch all scalar properties.
+            // And only selecting relationships implicitly means to fetch all scalar properties as well.
 
-            IncludeAllAttributes(elementType, propertySelectors);
+            IncludeAllScalarProperties(elementType, propertySelectors);
         }
 
         IncludeFields(fieldSelectors, propertySelectors);
@@ -148,7 +148,7 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
         return propertySelectors.Values;
     }
 
-    private void IncludeAllAttributes(Type elementType, Dictionary<PropertyInfo, PropertySelector> propertySelectors)
+    private void IncludeAllScalarProperties(Type elementType, Dictionary<PropertyInfo, PropertySelector> propertySelectors)
     {
         IEntityType entityModel = _entityModel.GetEntityTypes().Single(type => type.ClrType == elementType);
         IEnumerable<IProperty> entityProperties = entityModel.GetProperties().Where(property => !property.IsShadowProperty()).ToArray();
