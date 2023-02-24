@@ -256,9 +256,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("Failed to clear a required relationship.");
-
-        error.Detail.Should().Be($"The relationship 'customer' on resource type 'orders' with ID '{existingOrder.StringId}' " +
-            "cannot be cleared because it is a required relationship.");
+        error.Detail.Should().Be("The relationship 'customer' on resource type 'orders' cannot be cleared because it is a required relationship.");
     }
 
     [Fact]
