@@ -529,8 +529,6 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
             if (!rightResourceIdsToStore.SetEquals(rightResourceIdsStored))
             {
-                AssertIsNotClearingRequiredToOneRelationship(relationship, leftResourceTracked, rightResourceIdsToStore);
-
                 await UpdateRelationshipAsync(relationship, leftResourceTracked, rightResourceIdsToStore, cancellationToken);
 
                 await _resourceDefinitionAccessor.OnWritingAsync(leftResourceTracked, WriteOperationKind.RemoveFromRelationship, cancellationToken);
