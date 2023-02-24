@@ -154,11 +154,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
                 return _globalScope;
             }
 
-            if (!_nestedScopes.ContainsKey(scope))
-            {
-                _nestedScopes.Add(scope, new MutablePaginationEntry());
-            }
-
+            _nestedScopes.TryAdd(scope, new MutablePaginationEntry());
             return _nestedScopes[scope];
         }
 

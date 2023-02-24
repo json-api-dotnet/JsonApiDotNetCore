@@ -12,10 +12,7 @@ internal sealed class ResourceDescriptorAssemblyCache
 
     public void RegisterAssembly(Assembly assembly)
     {
-        if (!_resourceDescriptorsPerAssembly.ContainsKey(assembly))
-        {
-            _resourceDescriptorsPerAssembly[assembly] = null;
-        }
+        _resourceDescriptorsPerAssembly.TryAdd(assembly, null);
     }
 
     public IReadOnlyCollection<ResourceDescriptor> GetResourceDescriptors()

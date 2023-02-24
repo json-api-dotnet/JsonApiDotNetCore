@@ -185,10 +185,7 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
 
             // When an entity navigation property is decorated with both EagerLoadAttribute and RelationshipAttribute,
             // it may already exist with a sub-layer. So do not overwrite in that case.
-            if (!propertySelectors.ContainsKey(propertySelector.Property))
-            {
-                propertySelectors[propertySelector.Property] = propertySelector;
-            }
+            propertySelectors.TryAdd(propertySelector.Property, propertySelector);
         }
     }
 
