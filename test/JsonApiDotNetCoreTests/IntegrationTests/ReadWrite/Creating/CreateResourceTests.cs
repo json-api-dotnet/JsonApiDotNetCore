@@ -49,7 +49,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
             }
         };
 
-        const string route = "/workItems";
+        const string route = "/workItems/";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -61,7 +61,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         httpResponse.Headers.Location.Should().Be($"/workItems/{newWorkItemId}");
 
         responseDocument.Links.ShouldNotBeNull();
-        responseDocument.Links.Self.Should().Be("http://localhost/workItems");
+        responseDocument.Links.Self.Should().Be("http://localhost/workItems/");
         responseDocument.Links.First.Should().BeNull();
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
