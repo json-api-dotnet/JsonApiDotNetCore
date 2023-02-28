@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
@@ -57,11 +56,7 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
         responseDocument.Included[0].Relationships.Should().BeNull();
         responseDocument.Included[0].Links.ShouldNotBeNull().Self.Should().Be($"/public-api/diving-boards/{pools[1].DivingBoards[0].StringId}");
 
-        responseDocument.Meta.ShouldContainKey("total").With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            element.GetInt32().Should().Be(2);
-        });
+        responseDocument.Meta.Should().ContainTotal(2);
     }
 
     [Fact]
