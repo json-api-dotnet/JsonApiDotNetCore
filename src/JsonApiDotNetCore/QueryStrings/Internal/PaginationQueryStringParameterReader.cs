@@ -73,7 +73,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
         }
         catch (QueryParseException exception)
         {
-            throw new InvalidQueryStringParameterException(parameterName, "The specified paging is invalid.", exception.Message, exception);
+            throw new InvalidQueryStringParameterException(parameterName, "The specified pagination is invalid.", exception.Message, exception);
         }
     }
 

@@ -99,7 +99,7 @@ public interface IJsonApiOptions
     bool IncludeTotalResourceCount { get; }
 
     /// <summary>
-    /// The page size (10 by default) that is used when not specified in query string. Set to <c>null</c> to not use paging by default.
+    /// The page size (10 by default) that is used when not specified in query string. Set to <c>null</c> to not use pagination by default.
     /// </summary>
     PageSize? DefaultPageSize { get; }
 

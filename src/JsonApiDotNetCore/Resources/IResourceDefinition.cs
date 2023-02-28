@@ -60,7 +60,7 @@ public interface IResourceDefinition<TResource, in TId>
     /// An optional existing pagination, coming from query string. Can be <c>null</c>.
     /// </param>
     /// <returns>
-    /// The changed pagination, or <c>null</c> to use the first page with default size from options. To disable paging, set
+    /// The changed pagination, or <c>null</c> to use the first page with default size from options. To disable pagination, set
     /// <see cref="PaginationExpression.PageSize" /> to <c>null</c>.
     /// </returns>
     PaginationExpression? OnApplyPagination(PaginationExpression? existingPagination);

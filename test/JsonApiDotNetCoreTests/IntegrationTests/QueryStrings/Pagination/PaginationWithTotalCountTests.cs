@@ -88,7 +88,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
+        error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
@@ -185,7 +185,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
+        error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
@@ -463,7 +463,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
+        error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
@@ -485,7 +485,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
+        error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource type 'blogPosts'.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
@@ -528,7 +528,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     }
 
     [Fact]
-    public async Task Returns_all_resources_when_paging_is_disabled()
+    public async Task Returns_all_resources_when_pagination_is_disabled()
     {
         // Arrange
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
