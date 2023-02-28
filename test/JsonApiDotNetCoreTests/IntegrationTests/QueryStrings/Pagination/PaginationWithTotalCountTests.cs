@@ -500,6 +500,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         Blog blog = _fakers.Blog.Generate();
         blog.Posts = _fakers.BlogPost.Generate(3);
+        blog.Posts.ToList().ForEach(post => post.Labels = _fakers.Label.Generate(3).ToHashSet());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -507,7 +508,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/blogs/{blog.StringId}/posts";
+        string route = $"/blogs/{blog.StringId}/posts?include=labels";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -519,10 +520,12 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(blog.Posts[1].StringId);
 
+        responseDocument.Included.ShouldHaveCount(4);
+
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
-        responseDocument.Links.Last.Should().Be($"{HostPrefix}{route}?page%5Bnumber%5D=2");
+        responseDocument.Links.Last.Should().Be($"{responseDocument.Links.Self}&page%5Bnumber%5D=2");
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().Be(responseDocument.Links.Last);
     }
