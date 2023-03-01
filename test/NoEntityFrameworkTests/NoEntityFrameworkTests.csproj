@@ -1,6 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>NoEntityFrameworkTests</AssemblyName>
     <OutputType>Exe</OutputType>

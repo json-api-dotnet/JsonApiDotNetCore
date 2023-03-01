@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Internal;
 using JsonApiDotNetCore.Models;
 using JsonApiDotNetCore.Services;
-using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Moq;
 

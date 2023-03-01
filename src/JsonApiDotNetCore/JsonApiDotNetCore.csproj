@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>3.0.0</VersionPrefix>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <VersionPrefix>6.0.0</VersionPrefix>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>JsonApiDotNetCore</AssemblyName>    
     
   </PropertyGroup>
@@ -16,7 +16,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <Version>0.2.1</Version>
+    <Version>0.2.2</Version>
     <PackageId>LANDR.JsonApiDotNetCore</PackageId>
     <Company>LANDR</Company>
     <Authors>LANDR</Authors>
@@ -26,11 +26,14 @@
   <ItemGroup>
     <PackageReference Include="Ben.Demystifier" Version="0.1.1" />
     <PackageReference Include="Humanizer" Version="2.4.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-62925-02" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <!-- 
