@@ -25,12 +25,12 @@ public sealed class ControllerGenerationTests
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -87,12 +87,12 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithNamespaceImportFor(typeof(JsonApiEndpoints))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource(GenerateControllerEndpoints = JsonApiEndpoints.Query)]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource(GenerateControllerEndpoints = JsonApiEndpoints.Query)]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -149,12 +149,12 @@ public sealed partial class ItemsController : JsonApiQueryController<Item, long>
             .WithNamespaceImportFor(typeof(JsonApiEndpoints))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource(GenerateControllerEndpoints = JsonApiEndpoints.Command)]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource(GenerateControllerEndpoints = JsonApiEndpoints.Command)]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -211,15 +211,15 @@ public sealed partial class ItemsController : JsonApiCommandController<Item, lon
             .WithNamespaceImportFor(typeof(JsonApiEndpoints))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource(GenerateControllerEndpoints = NoRelationshipEndpoints)]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        private const JsonApiEndpoints NoRelationshipEndpoints = JsonApiEndpoints.GetCollection |
-                            JsonApiEndpoints.GetSingle | JsonApiEndpoints.Post | JsonApiEndpoints.Patch | JsonApiEndpoints.Delete;
+                [Resource(GenerateControllerEndpoints = NoRelationshipEndpoints)]
+                public sealed class Item : Identifiable<long>
+                {
+                    private const JsonApiEndpoints NoRelationshipEndpoints = JsonApiEndpoints.GetCollection |
+                        JsonApiEndpoints.GetSingle | JsonApiEndpoints.Post | JsonApiEndpoints.Patch | JsonApiEndpoints.Delete;
 
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -284,11 +284,11 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithNamespaceImportFor(typeof(AttrAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -326,12 +326,12 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithNamespaceImportFor(typeof(JsonApiEndpoints))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource(GenerateControllerEndpoints = JsonApiEndpoints.None)]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource(GenerateControllerEndpoints = JsonApiEndpoints.None)]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -366,24 +366,24 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         string source = new SourceCodeBuilder()
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    public abstract class Identifiable<TId>
-                    {
-                    }
+                public abstract class Identifiable<TId>
+                {
+                }
 
-                    public sealed class ResourceAttribute : System.Attribute
-                    {
-                    }
+                public sealed class ResourceAttribute : System.Attribute
+                {
+                }
 
-                    public sealed class AttrAttribute : System.Attribute
-                    {
-                    }
+                public sealed class AttrAttribute : System.Attribute
+                {
+                }
 
-                    [Resource]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -422,12 +422,12 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -465,12 +465,12 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource]
-                    public sealed class Item
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -491,7 +491,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriverRunResult runResult = driver.GetRunResult();
 
         runResult.Should().HaveSingleDiagnostic(
-            "(6,21): warning JADNC001: Type 'Item' must implement IIdentifiable<TId> when using ResourceAttribute to auto-generate ASP.NET controllers");
+            "(6,17): warning JADNC001: Type 'Item' must implement IIdentifiable<TId> when using ResourceAttribute to auto-generate ASP.NET controllers");
 
         runResult.Should().NotHaveProducedSourceCode();
     }
@@ -510,14 +510,14 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    #nullable enable
+                #nullable enable
 
-                    [Resource]
-                    public sealed class Item : Identifiable<string?>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item : Identifiable<string?>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -555,12 +555,12 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource(ControllerNamespace = ""Some.Path.To.Generate.Code.In"")]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource(ControllerNamespace = ""Some.Path.To.Generate.Code.In"")]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -616,12 +616,12 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("TopLevel")
             .WithCode(@"
-                    [Resource]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -676,12 +676,12 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .WithCode(@"
-                    [Resource]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -734,12 +734,12 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi")
             .WithCode(@"
-                    [Resource(ControllerNamespace = ""ExampleApi"")]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource(ControllerNamespace = ""ExampleApi"")]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -793,25 +793,25 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .WithCode(@"
-                    namespace The.First.One
+                namespace The.First.One
+                {
+                    [Resource]
+                    public sealed class Item : Identifiable<long>
                     {
-                        [Resource]
-                        public sealed class Item : Identifiable<long>
-                        {
-                            [Attr]
-                            public int Value { get; set; }
-                        }
+                        [Attr]
+                        public int Value { get; set; }
                     }
+                }
 
-                    namespace The.Second.One
+                namespace The.Second.One
+                {
+                    [Resource]
+                    public sealed class Item : Identifiable<long>
                     {
-                        [Resource]
-                        public sealed class Item : Identifiable<long>
-                        {
-                            [Attr]
-                            public int Value { get; set; }
-                        }
-                    }")
+                        [Attr]
+                        public int Value { get; set; }
+                    }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
