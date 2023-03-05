@@ -66,7 +66,7 @@ internal sealed class SourceCodeWriter
             WriteNullableEnable();
         }
 
-        WriteNamespaceImports(loggerFactoryInterface, resourceType);
+        WriteNamespaceImports(loggerFactoryInterface, resourceType, controllerNamespace);
 
         if (controllerNamespace != null)
         {
@@ -96,7 +96,7 @@ internal sealed class SourceCodeWriter
         _sourceBuilder.AppendLine();
     }
 
-    private void WriteNamespaceImports(INamedTypeSymbol loggerFactoryInterface, INamedTypeSymbol resourceType)
+    private void WriteNamespaceImports(INamedTypeSymbol loggerFactoryInterface, INamedTypeSymbol resourceType, string? controllerNamespace)
     {
         _sourceBuilder.AppendLine($@"using {loggerFactoryInterface.ContainingNamespace};");
 
@@ -104,7 +104,7 @@ internal sealed class SourceCodeWriter
         _sourceBuilder.AppendLine("using JsonApiDotNetCore.Controllers;");
         _sourceBuilder.AppendLine("using JsonApiDotNetCore.Services;");
 
-        if (!resourceType.ContainingNamespace.IsGlobalNamespace)
+        if (!resourceType.ContainingNamespace.IsGlobalNamespace && resourceType.ContainingNamespace.ToString() != controllerNamespace)
         {
             _sourceBuilder.AppendLine($"using {resourceType.ContainingNamespace};");
         }
