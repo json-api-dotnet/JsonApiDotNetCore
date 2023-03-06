@@ -20,6 +20,12 @@ public interface IJsonApiRequest
     string? PrimaryId { get; }
 
     /// <summary>
+    /// The version of the primary resource for this request, when using optimistic concurrency. This would be "abc" in "/blogs/123;v~abc/author". This is
+    /// <c>null</c> when not using optimistic concurrency, and before and after processing operations in an atomic:operations request.
+    /// </summary>
+    string? PrimaryVersion { get; }
+
+    /// <summary>
     /// The primary resource type for this request. This would be "blogs" in "/blogs", "/blogs/123" or "/blogs/123/author". This is <c>null</c> before and
     /// after processing operations in an atomic:operations request.
     /// </summary>

@@ -143,6 +143,10 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
         }
 
         IncludeFields(fieldSelectors, propertySelectors);
+
+        // Implicitly add concurrency tokens, which we need for rendering links, but may not be exposed as attributes.
+        IncludeConcurrencyTokens(resourceType, elementType, propertySelectors);
+
         IncludeEagerLoads(resourceType, propertySelectors);
 
         return propertySelectors.Values;
@@ -166,6 +170,21 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
         {
             var propertySelector = new PropertySelector(resourceField.Property, queryLayer);
             IncludeWritableProperty(propertySelector, propertySelectors);
+        }
+    }
+
+    private void IncludeConcurrencyTokens(ResourceType resourceType, Type elementType, Dictionary<PropertyInfo, PropertySelector> propertySelectors)
+    {
+        if (resourceType.IsVersioned)
+        {
+            IEntityType entityModel = _entityModel.GetEntityTypes().Single(type => type.ClrType == elementType);
+            IEnumerable<IProperty> tokenProperties = entityModel.GetProperties().Where(property => property.IsConcurrencyToken).ToArray();
+
+            foreach (IProperty tokenProperty in tokenProperties)
+            {
+                var propertySelector = new PropertySelector(tokenProperty.PropertyInfo!);
+                IncludeWritableProperty(propertySelector, propertySelectors);
+            }
         }
     }
 

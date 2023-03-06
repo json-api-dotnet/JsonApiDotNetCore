@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Configuration;
@@ -37,6 +38,11 @@ public sealed class ResourceType
     /// The resource types that directly derive from this one.
     /// </summary>
     public IReadOnlySet<ResourceType> DirectlyDerivedTypes { get; internal set; } = new HashSet<ResourceType>();
+
+    /// <summary>
+    /// When <c>true</c>, this resource type uses optimistic concurrency.
+    /// </summary>
+    public bool IsVersioned => ClrType.IsOrImplementsInterface<IVersionedIdentifiable>();
 
     /// <summary>
     /// Exposed resource attributes and relationships. See https://jsonapi.org/format/#document-resource-object-fields. When using resource inheritance, this

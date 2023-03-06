@@ -62,6 +62,11 @@ public sealed class JsonApiMiddleware
 
                 SetupResourceRequest((JsonApiRequest)request, primaryResourceType, routeValues, httpContext.Request);
 
+                if (!await ValidateVersionAsync(request, httpContext, options.SerializerWriteOptions))
+                {
+                    return;
+                }
+
                 httpContext.RegisterJsonApiRequest();
             }
             else if (IsRouteForOperations(routeValues))
@@ -192,6 +197,36 @@ public sealed class JsonApiMiddleware
         return true;
     }
 
+    private static async Task<bool> ValidateVersionAsync(IJsonApiRequest request, HttpContext httpContext, JsonSerializerOptions serializerOptions)
+    {
+        if (!request.IsReadOnly)
+        {
+            if (request.PrimaryResourceType!.IsVersioned && request.WriteOperation != WriteOperationKind.CreateResource && request.PrimaryVersion == null)
+            {
+                await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.BadRequest)
+                {
+                    Title = "The 'version' parameter is required at this endpoint.",
+                    Detail = $"Resources of type '{request.PrimaryResourceType.PublicName}' require the version to be specified."
+                });
+
+                return false;
+            }
+
+            if (!request.PrimaryResourceType.IsVersioned && request.PrimaryVersion != null)
+            {
+                await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.BadRequest)
+                {
+                    Title = "The 'version' parameter is not supported at this endpoint.",
+                    Detail = $"Resources of type '{request.PrimaryResourceType.PublicName}' are not versioned."
+                });
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerOptions serializerOptions, ErrorObject error)
     {
         httpResponse.ContentType = HeaderConstants.MediaType;
@@ -212,6 +247,7 @@ public sealed class JsonApiMiddleware
         request.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method || httpRequest.Method == HttpMethod.Head.Method;
         request.PrimaryResourceType = primaryResourceType;
         request.PrimaryId = GetPrimaryRequestId(routeValues);
+        request.PrimaryVersion = GetPrimaryRequestVersion(routeValues);
 
         string? relationshipName = GetRelationshipNameForSecondaryRequest(routeValues);
 
@@ -261,6 +297,11 @@ public sealed class JsonApiMiddleware
     private static string? GetPrimaryRequestId(RouteValueDictionary routeValues)
     {
         return routeValues.TryGetValue("id", out object? id) ? (string?)id : null;
+    }
+
+    private static string? GetPrimaryRequestVersion(RouteValueDictionary routeValues)
+    {
+        return routeValues.TryGetValue("version", out object? id) ? (string?)id : null;
     }
 
     private static string? GetRelationshipNameForSecondaryRequest(RouteValueDictionary routeValues)

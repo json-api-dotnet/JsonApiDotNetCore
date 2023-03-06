@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
@@ -16,10 +17,10 @@ public sealed class ResultCapturingRepository<TResource, TId> : EntityFrameworkC
 {
     private readonly ResourceCaptureStore _captureStore;
 
-    public ResultCapturingRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
-        IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
-        IResourceDefinitionAccessor resourceDefinitionAccessor, ResourceCaptureStore captureStore)
-        : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
+    public ResultCapturingRepository(ResourceCaptureStore captureStore, IJsonApiRequest request, ITargetedFields targetedFields,
+        IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
+        IResourceDefinitionAccessor resourceDefinitionAccessor, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
+        : base(request, targetedFields, dbContextResolver, resourceGraph, resourceFactory, resourceDefinitionAccessor, constraintProviders, loggerFactory)
     {
         _captureStore = captureStore;
     }

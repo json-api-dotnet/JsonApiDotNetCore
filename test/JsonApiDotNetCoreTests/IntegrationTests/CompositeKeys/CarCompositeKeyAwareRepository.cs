@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
@@ -14,10 +15,10 @@ public class CarCompositeKeyAwareRepository<TResource, TId> : EntityFrameworkCor
 {
     private readonly CarExpressionRewriter _writer;
 
-    public CarCompositeKeyAwareRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
-        IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
-        IResourceDefinitionAccessor resourceDefinitionAccessor)
-        : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
+    public CarCompositeKeyAwareRepository(IJsonApiRequest request, ITargetedFields targetedFields, IDbContextResolver dbContextResolver,
+        IResourceGraph resourceGraph, IResourceFactory resourceFactory, IResourceDefinitionAccessor resourceDefinitionAccessor,
+        IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
+        : base(request, targetedFields, dbContextResolver, resourceGraph, resourceFactory, resourceDefinitionAccessor, constraintProviders, loggerFactory)
     {
         _writer = new CarExpressionRewriter(resourceGraph);
     }

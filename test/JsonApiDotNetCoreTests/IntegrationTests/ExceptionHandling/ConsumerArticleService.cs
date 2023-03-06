@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -17,8 +18,9 @@ public sealed class ConsumerArticleService : JsonApiResourceService<ConsumerArti
 
     public ConsumerArticleService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
         IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request, IResourceChangeTracker<ConsumerArticle> resourceChangeTracker,
-        IResourceDefinitionAccessor resourceDefinitionAccessor)
-        : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker, resourceDefinitionAccessor)
+        IVersionTracker versionTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
+        : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker, versionTracker,
+            resourceDefinitionAccessor)
     {
     }
 

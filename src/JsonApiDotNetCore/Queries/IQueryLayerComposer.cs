@@ -48,6 +48,11 @@ public interface IQueryLayerComposer
     QueryLayer ComposeForUpdate<TId>(TId id, ResourceType primaryResourceType);
 
     /// <summary>
+    /// Builds a query that retrieves the primary resource, along with the subset of versioned targeted relationships, after a create/update/delete request.
+    /// </summary>
+    QueryLayer ComposeForGetVersionsAfterWrite<TId>(TId id, ResourceType primaryResourceType, TopFieldSelection fieldSelection);
+
+    /// <summary>
     /// Builds a query for each targeted relationship with a filter to match on its right resource IDs.
     /// </summary>
     IEnumerable<(QueryLayer, RelationshipAttribute)> ComposeForGetTargetedSecondaryResourceIds(IIdentifiable primaryResource);

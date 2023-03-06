@@ -47,14 +47,18 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
     }
 
     /// <inheritdoc />
+    // The {version} parameter is allowed, but ignored. It occurs in rendered links, because POST/PATCH/DELETE use it.
     [HttpGet("{id}")]
+    [HttpGet("{id};v~{version}")]
     [HttpHead("{id}")]
+    [HttpHead("{id};v~{version}")]
     public override async Task<IActionResult> GetAsync(TId id, CancellationToken cancellationToken)
     {
         return await base.GetAsync(id, cancellationToken);
     }
 
     /// <inheritdoc />
+    // No {version} parameter, because it does not occur in rendered links.
     [HttpGet("{id}/{relationshipName}")]
     [HttpHead("{id}/{relationshipName}")]
     public override async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken)
@@ -63,8 +67,11 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
     }
 
     /// <inheritdoc />
+    // The {version} parameter is allowed, but ignored. It occurs in rendered links, because POST/PATCH/DELETE use it.
     [HttpGet("{id}/relationships/{relationshipName}")]
+    [HttpGet("{id};v~{version}/relationships/{relationshipName}")]
     [HttpHead("{id}/relationships/{relationshipName}")]
+    [HttpHead("{id};v~{version}/relationships/{relationshipName}")]
     public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)
     {
         return await base.GetRelationshipAsync(id, relationshipName, cancellationToken);
@@ -79,6 +86,7 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
 
     /// <inheritdoc />
     [HttpPost("{id}/relationships/{relationshipName}")]
+    [HttpPost("{id};v~{version}/relationships/{relationshipName}")]
     public override async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
@@ -87,6 +95,7 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
 
     /// <inheritdoc />
     [HttpPatch("{id}")]
+    [HttpPatch("{id};v~{version}")]
     public override async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource, CancellationToken cancellationToken)
     {
         return await base.PatchAsync(id, resource, cancellationToken);
@@ -94,6 +103,7 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
 
     /// <inheritdoc />
     [HttpPatch("{id}/relationships/{relationshipName}")]
+    [HttpPatch("{id};v~{version}/relationships/{relationshipName}")]
     public override async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object? rightValue,
         CancellationToken cancellationToken)
     {
@@ -102,6 +112,7 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
 
     /// <inheritdoc />
     [HttpDelete("{id}")]
+    [HttpDelete("{id};v~{version}")]
     public override async Task<IActionResult> DeleteAsync(TId id, CancellationToken cancellationToken)
     {
         return await base.DeleteAsync(id, cancellationToken);
@@ -109,6 +120,7 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
 
     /// <inheritdoc />
     [HttpDelete("{id}/relationships/{relationshipName}")]
+    [HttpDelete("{id};v~{version}/relationships/{relationshipName}")]
     public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {

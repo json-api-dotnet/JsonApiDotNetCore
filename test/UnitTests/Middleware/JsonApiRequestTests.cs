@@ -21,30 +21,30 @@ public sealed class JsonApiRequestTests
 {
     // @formatter:wrap_lines false
     [Theory]
-    [InlineData("HEAD", "/todoItems", EndpointKind.Primary, null, "todoItems", null, null, IsCollection.Yes, IsReadOnly.Yes, null)]
-    [InlineData("HEAD", "/people/1", EndpointKind.Primary, "1", "people", null, null, IsCollection.No, IsReadOnly.Yes, null)]
-    [InlineData("HEAD", "/todoItems/2/owner", EndpointKind.Secondary, "2", "todoItems", "people", "owner", IsCollection.No, IsReadOnly.Yes, null)]
-    [InlineData("HEAD", "/todoItems/3/tags", EndpointKind.Secondary, "3", "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.Yes, null)]
-    [InlineData("HEAD", "/todoItems/ABC/relationships/owner", EndpointKind.Relationship, "ABC", "todoItems", "people", "owner", IsCollection.No, IsReadOnly.Yes, null)]
-    [InlineData("HEAD", "/todoItems/ABC/relationships/tags", EndpointKind.Relationship, "ABC", "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.Yes, null)]
-    [InlineData("GET", "/todoItems", EndpointKind.Primary, null, "todoItems", null, null, IsCollection.Yes, IsReadOnly.Yes, null)]
-    [InlineData("GET", "/todoItems/-1", EndpointKind.Primary, "-1", "todoItems", null, null, IsCollection.No, IsReadOnly.Yes, null)]
-    [InlineData("GET", "/todoItems/1/owner", EndpointKind.Secondary, "1", "todoItems", "people", "owner", IsCollection.No, IsReadOnly.Yes, null)]
-    [InlineData("GET", "/todoItems/1/tags", EndpointKind.Secondary, "1", "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.Yes, null)]
-    [InlineData("GET", "/todoItems/1/relationships/owner", EndpointKind.Relationship, "1", "todoItems", "people", "owner", IsCollection.No, IsReadOnly.Yes, null)]
-    [InlineData("GET", "/todoItems/1/relationships/tags", EndpointKind.Relationship, "1", "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.Yes, null)]
-    [InlineData("POST", "/todoItems", EndpointKind.Primary, null, "todoItems", null, null, IsCollection.No, IsReadOnly.No, WriteOperationKind.CreateResource)]
-    [InlineData("POST", "/todoItems/1/relationships/tags", EndpointKind.Relationship, "1", "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.No, WriteOperationKind.AddToRelationship)]
-    [InlineData("PATCH", "/itemTags/1", EndpointKind.Primary, "1", "itemTags", null, null, IsCollection.No, IsReadOnly.No, WriteOperationKind.UpdateResource)]
-    [InlineData("PATCH", "/todoItems/1/relationships/owner", EndpointKind.Relationship, "1", "todoItems", "people", "owner", IsCollection.No, IsReadOnly.No, WriteOperationKind.SetRelationship)]
-    [InlineData("PATCH", "/todoItems/1/relationships/tags", EndpointKind.Relationship, "1", "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.No, WriteOperationKind.SetRelationship)]
-    [InlineData("DELETE", "/todoItems/1", EndpointKind.Primary, "1", "todoItems", null, null, IsCollection.No, IsReadOnly.No, WriteOperationKind.DeleteResource)]
-    [InlineData("DELETE", "/todoItems/1/relationships/tags", EndpointKind.Relationship, "1", "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.No, WriteOperationKind.RemoveFromRelationship)]
-    [InlineData("POST", "/operations", EndpointKind.AtomicOperations, null, null, null, null, IsCollection.No, IsReadOnly.No, null)]
+    [InlineData("HEAD", "/todoItems", EndpointKind.Primary, null, null, "todoItems", null, null, IsCollection.Yes, IsReadOnly.Yes, null)]
+    [InlineData("HEAD", "/people/1", EndpointKind.Primary, "1", null, "people", null, null, IsCollection.No, IsReadOnly.Yes, null)]
+    [InlineData("HEAD", "/todoItems/2/owner", EndpointKind.Secondary, "2", null, "todoItems", "people", "owner", IsCollection.No, IsReadOnly.Yes, null)]
+    [InlineData("HEAD", "/todoItems/3/tags", EndpointKind.Secondary, "3", null, "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.Yes, null)]
+    [InlineData("HEAD", "/todoItems/ABC/relationships/owner", EndpointKind.Relationship, "ABC", null, "todoItems", "people", "owner", IsCollection.No, IsReadOnly.Yes, null)]
+    [InlineData("HEAD", "/todoItems/ABC/relationships/tags", EndpointKind.Relationship, "ABC", null, "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.Yes, null)]
+    [InlineData("GET", "/todoItems", EndpointKind.Primary, null, null, "todoItems", null, null, IsCollection.Yes, IsReadOnly.Yes, null)]
+    [InlineData("GET", "/todoItems/-1", EndpointKind.Primary, "-1", null, "todoItems", null, null, IsCollection.No, IsReadOnly.Yes, null)]
+    [InlineData("GET", "/todoItems/1;v~25/owner", EndpointKind.Secondary, "1", "25", "todoItems", "people", "owner", IsCollection.No, IsReadOnly.Yes, null)]
+    [InlineData("GET", "/todoItems/1/tags", EndpointKind.Secondary, "1", null, "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.Yes, null)]
+    [InlineData("GET", "/todoItems/1/relationships/owner", EndpointKind.Relationship, "1", null, "todoItems", "people", "owner", IsCollection.No, IsReadOnly.Yes, null)]
+    [InlineData("GET", "/todoItems/1/relationships/tags", EndpointKind.Relationship, "1", null, "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.Yes, null)]
+    [InlineData("POST", "/todoItems", EndpointKind.Primary, null, null, "todoItems", null, null, IsCollection.No, IsReadOnly.No, WriteOperationKind.CreateResource)]
+    [InlineData("POST", "/todoItems/1/relationships/tags", EndpointKind.Relationship, "1", null, "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.No, WriteOperationKind.AddToRelationship)]
+    [InlineData("PATCH", "/itemTags/1", EndpointKind.Primary, "1", null, "itemTags", null, null, IsCollection.No, IsReadOnly.No, WriteOperationKind.UpdateResource)]
+    [InlineData("PATCH", "/todoItems/1/relationships/owner", EndpointKind.Relationship, "1", null, "todoItems", "people", "owner", IsCollection.No, IsReadOnly.No, WriteOperationKind.SetRelationship)]
+    [InlineData("PATCH", "/todoItems/1/relationships/tags", EndpointKind.Relationship, "1", null, "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.No, WriteOperationKind.SetRelationship)]
+    [InlineData("DELETE", "/todoItems/1;v~18", EndpointKind.Primary, "1", "18", "todoItems", null, null, IsCollection.No, IsReadOnly.No, WriteOperationKind.DeleteResource)]
+    [InlineData("DELETE", "/todoItems/1/relationships/tags", EndpointKind.Relationship, "1", null, "todoItems", "itemTags", "tags", IsCollection.Yes, IsReadOnly.No, WriteOperationKind.RemoveFromRelationship)]
+    [InlineData("POST", "/operations", EndpointKind.AtomicOperations, null, null, null, null, null, IsCollection.No, IsReadOnly.No, null)]
     // @formatter:wrap_lines restore
     public async Task Sets_request_properties_correctly(string requestMethod, string requestPath, EndpointKind expectKind, string? expectPrimaryId,
-        string? expectPrimaryResourceType, string? expectSecondaryResourceType, string? expectRelationshipName, IsCollection expectIsCollection,
-        IsReadOnly expectIsReadOnly, WriteOperationKind? expectWriteOperation)
+        string? expectPrimaryVersion, string? expectPrimaryResourceType, string? expectSecondaryResourceType, string? expectRelationshipName,
+        IsCollection expectIsCollection, IsReadOnly expectIsReadOnly, WriteOperationKind? expectWriteOperation)
     {
         // Arrange
         var options = new JsonApiOptions();
@@ -74,6 +74,7 @@ public sealed class JsonApiRequestTests
         // Assert
         request.Kind.Should().Be(expectKind);
         request.PrimaryId.Should().Be(expectPrimaryId);
+        request.PrimaryVersion.Should().Be(expectPrimaryVersion);
 
         if (expectPrimaryResourceType == null)
         {
@@ -127,7 +128,10 @@ public sealed class JsonApiRequestTests
 
         if (pathSegments.Length > 1)
         {
-            feature.RouteValues["id"] = pathSegments[1];
+            string[] idVersionSegments = pathSegments[1].Split(";v~");
+
+            feature.RouteValues["id"] = idVersionSegments[0];
+            feature.RouteValues["version"] = idVersionSegments.Length > 1 ? idVersionSegments[1] : null;
 
             if (pathSegments.Length >= 3)
             {

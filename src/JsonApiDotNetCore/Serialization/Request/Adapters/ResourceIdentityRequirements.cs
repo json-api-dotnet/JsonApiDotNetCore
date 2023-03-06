@@ -31,6 +31,16 @@ public sealed class ResourceIdentityRequirements
     public string? LidValue { get; init; }
 
     /// <summary>
+    /// When not null, indicates the presence or absence of the "version" element.
+    /// </summary>
+    public JsonElementConstraint? VersionConstraint { get; init; }
+
+    /// <summary>
+    /// When not null, indicates what the value of the "version" element must be.
+    /// </summary>
+    public string? VersionValue { get; init; }
+
+    /// <summary>
     /// When not null, indicates the name of the relationship to use in error messages.
     /// </summary>
     public string? RelationshipName { get; init; }
