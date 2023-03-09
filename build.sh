@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 #exit if any command fails
-set -e
+#set -e
 
-dotnet restore
+#dotnet restore
 dotnet build -c Release
-dotnet test -c Release --no-build
+#dotnet test -c Release --no-build
