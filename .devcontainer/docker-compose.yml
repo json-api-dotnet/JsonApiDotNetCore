@@ -1,0 +1,13 @@
+version: '3'
+services:
+  discover-server:
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        VARIANT: "3.1"
+    tty: true
+    volumes:
+      - ../:/workspaces/discover-server
+      - ~/.ssh:/home/vscode/.ssh
+    user: vscode
