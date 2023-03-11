@@ -73,7 +73,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
         }
         catch (QueryParseException exception)
         {
-            throw new InvalidQueryStringParameterException(parameterName, "The specified paging is invalid.", exception.Message, exception);
+            throw new InvalidQueryStringParameterException(parameterName, "The specified pagination is invalid.", exception.Message, exception);
         }
     }
 
@@ -154,11 +154,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
                 return _globalScope;
             }
 
-            if (!_nestedScopes.ContainsKey(scope))
-            {
-                _nestedScopes.Add(scope, new MutablePaginationEntry());
-            }
-
+            _nestedScopes.TryAdd(scope, new MutablePaginationEntry());
             return _nestedScopes[scope];
         }
 

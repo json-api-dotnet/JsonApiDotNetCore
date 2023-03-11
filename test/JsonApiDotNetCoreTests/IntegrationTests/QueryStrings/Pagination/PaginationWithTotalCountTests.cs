@@ -88,7 +88,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
+        error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
@@ -185,7 +185,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
+        error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
@@ -463,7 +463,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
+        error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
@@ -485,7 +485,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
+        error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource type 'blogPosts'.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
@@ -500,6 +500,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         Blog blog = _fakers.Blog.Generate();
         blog.Posts = _fakers.BlogPost.Generate(3);
+        blog.Posts.ToList().ForEach(post => post.Labels = _fakers.Label.Generate(3).ToHashSet());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -507,7 +508,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/blogs/{blog.StringId}/posts";
+        string route = $"/blogs/{blog.StringId}/posts?include=labels";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -519,16 +520,18 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         responseDocument.Data.ManyValue[1].Id.Should().Be(blog.Posts[1].StringId);
 
+        responseDocument.Included.ShouldHaveCount(4);
+
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
-        responseDocument.Links.Last.Should().Be($"{HostPrefix}{route}?page%5Bnumber%5D=2");
+        responseDocument.Links.Last.Should().Be($"{responseDocument.Links.Self}&page%5Bnumber%5D=2");
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().Be(responseDocument.Links.Last);
     }
 
     [Fact]
-    public async Task Returns_all_resources_when_paging_is_disabled()
+    public async Task Returns_all_resources_when_pagination_is_disabled()
     {
         // Arrange
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

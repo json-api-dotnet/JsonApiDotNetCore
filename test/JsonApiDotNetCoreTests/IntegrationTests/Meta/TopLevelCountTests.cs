@@ -1,5 +1,4 @@
 using System.Net;
-using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -54,11 +53,7 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Meta.ShouldContainKey("total").With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            element.GetInt32().Should().Be(1);
-        });
+        responseDocument.Meta.Should().ContainTotal(1);
     }
 
     [Fact]
@@ -84,11 +79,7 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Meta.ShouldContainKey("total").With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            element.GetInt32().Should().Be(1);
-        });
+        responseDocument.Meta.Should().ContainTotal(1);
     }
 
     [Fact]
@@ -108,11 +99,7 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Meta.ShouldContainKey("total").With(value =>
-        {
-            JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
-            element.GetInt32().Should().Be(0);
-        });
+        responseDocument.Meta.Should().ContainTotal(0);
     }
 
     [Fact]

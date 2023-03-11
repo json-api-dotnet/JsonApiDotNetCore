@@ -269,7 +269,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             object? rightValueEvaluated = await VisitSetRelationshipAsync(resourceFromDatabase, relationship, rightValue, WriteOperationKind.UpdateResource,
                 cancellationToken);
 
-            AssertIsNotClearingRequiredToOneRelationship(relationship, resourceFromDatabase, rightValueEvaluated);
+            AssertIsNotClearingRequiredToOneRelationship(relationship, rightValueEvaluated);
 
             await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightValueEvaluated, cancellationToken);
         }
@@ -288,7 +288,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         _dbContext.ResetChangeTracker();
     }
 
-    protected void AssertIsNotClearingRequiredToOneRelationship(RelationshipAttribute relationship, TResource leftResource, object? rightValue)
+    protected void AssertIsNotClearingRequiredToOneRelationship(RelationshipAttribute relationship, object? rightValue)
     {
         if (relationship is HasOneAttribute)
         {
@@ -300,7 +300,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             if (isRelationshipRequired && isClearingRelationship)
             {
                 string resourceName = _resourceGraph.GetResourceType<TResource>().PublicName;
-                throw new CannotClearRequiredRelationshipException(relationship.PublicName, leftResource.StringId!, resourceName);
+                throw new CannotClearRequiredRelationshipException(relationship.PublicName, resourceName);
             }
         }
     }
@@ -403,7 +403,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         object? rightValueEvaluated =
             await VisitSetRelationshipAsync(leftResource, relationship, rightValue, WriteOperationKind.SetRelationship, cancellationToken);
 
-        AssertIsNotClearingRequiredToOneRelationship(relationship, leftResource, rightValueEvaluated);
+        AssertIsNotClearingRequiredToOneRelationship(relationship, rightValueEvaluated);
 
         await UpdateRelationshipAsync(relationship, leftResource, rightValueEvaluated, cancellationToken);
 
@@ -529,8 +529,6 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
             if (!rightResourceIdsToStore.SetEquals(rightResourceIdsStored))
             {
-                AssertIsNotClearingRequiredToOneRelationship(relationship, leftResourceTracked, rightResourceIdsToStore);
-
                 await UpdateRelationshipAsync(relationship, leftResourceTracked, rightResourceIdsToStore, cancellationToken);
 
                 await _resourceDefinitionAccessor.OnWritingAsync(leftResourceTracked, WriteOperationKind.RemoveFromRelationship, cancellationToken);

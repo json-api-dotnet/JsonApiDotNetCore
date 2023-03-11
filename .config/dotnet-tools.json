@@ -21,13 +21,13 @@
       ]
     },
     "dotnet-reportgenerator-globaltool": {
-      "version": "5.1.15",
+      "version": "5.1.19",
       "commands": [
         "reportgenerator"
       ]
     },
     "docfx": {
-      "version": "2.60.2",
+      "version": "2.62.2",
       "commands": [
         "docfx"
       ]

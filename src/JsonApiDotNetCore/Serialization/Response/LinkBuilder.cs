@@ -85,7 +85,7 @@ public class LinkBuilder : ILinkBuilder
             links.Related = GetLinkForRelationshipRelated(_request.PrimaryId!, _request.Relationship);
         }
 
-        if (_request.IsCollection && _paginationContext.PageSize != null && ShouldIncludeTopLevelLink(LinkTypes.Paging, resourceType))
+        if (_request.IsCollection && _paginationContext.PageSize != null && ShouldIncludeTopLevelLink(LinkTypes.Pagination, resourceType))
         {
             SetPaginationInTopLevelLinks(resourceType!, links);
         }

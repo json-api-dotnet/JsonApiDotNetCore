@@ -101,10 +101,10 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
                             $"resource type '{resourceClrType}', which does not exist in the resource graph.");
                     }
 
-                    if (_controllerPerResourceTypeMap.ContainsKey(resourceType))
+                    if (_controllerPerResourceTypeMap.TryGetValue(resourceType, out ControllerModel? existingModel))
                     {
                         throw new InvalidConfigurationException(
-                            $"Multiple controllers found for resource type '{resourceType}': '{_controllerPerResourceTypeMap[resourceType].ControllerType}' and '{controller.ControllerType}'.");
+                            $"Multiple controllers found for resource type '{resourceType}': '{existingModel.ControllerType}' and '{controller.ControllerType}'.");
                     }
 
                     _resourceTypePerControllerTypeMap.Add(controller.ControllerType, resourceType);
@@ -119,10 +119,10 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
 
             string template = TemplateFromResource(controller) ?? TemplateFromController(controller);
 
-            if (_registeredControllerNameByTemplate.ContainsKey(template))
+            if (_registeredControllerNameByTemplate.TryGetValue(template, out string? controllerName))
             {
                 throw new InvalidConfigurationException(
-                    $"Cannot register '{controller.ControllerType.FullName}' for template '{template}' because '{_registeredControllerNameByTemplate[template]}' was already registered for this template.");
+                    $"Cannot register '{controller.ControllerType.FullName}' for template '{template}' because '{controllerName}' was already registered for this template.");
             }
 
             _registeredControllerNameByTemplate.Add(template, controller.ControllerType.FullName!);
