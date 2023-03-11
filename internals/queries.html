@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Processing queries </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Processing queries ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Processing queries </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Processing queries ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -71,30 +71,33 @@
 <p><em>since v4.0</em></p>
 <p>The query pipeline roughly looks like this:</p>
 <pre><code>HTTP --[ASP.NET]--&gt; QueryString --[JADNC:QueryStringParameterReader]--&gt; QueryExpression[] --[JADNC:ResourceService]--&gt; QueryLayer --[JADNC:Repository]--&gt; IQueryable --[Entity Framework Core]--&gt; SQL
-</code></pre><p>Processing a request involves the following steps:</p>
+</code></pre>
+<p>Processing a request involves the following steps:</p>
 <ul>
 <li><code>JsonApiMiddleware</code> collects resource info from routing data for the current request.</li>
 <li><code>JsonApiReader</code> transforms json request body into objects.</li>
 <li><code>JsonApiController</code> accepts get/post/patch/delete verb and delegates to service.</li>
-<li><code>IQueryStringParameterReader</code>s delegate to <code>QueryParser</code>s that transform query string text into <code>QueryExpression</code> objects.<ul>
-<li>By using prefix notation in filters, we don&#39;t need users to remember operator precedence and associativity rules.</li>
+<li><code>IQueryStringParameterReader</code>s delegate to <code>QueryParser</code>s that transform query string text into <code>QueryExpression</code> objects.
+<ul>
+<li>By using prefix notation in filters, we don't need users to remember operator precedence and associativity rules.</li>
 <li>These validated expressions contain direct references to attributes and relationships.</li>
 <li>The readers also implement <code>IQueryConstraintProvider</code>, which exposes expressions through <code>ExpressionInScope</code> objects.</li>
 </ul>
 </li>
-<li><code>QueryLayerComposer</code> (used from <code>JsonApiResourceService</code>) collects all query constraints.<ul>
+<li><code>QueryLayerComposer</code> (used from <code>JsonApiResourceService</code>) collects all query constraints.
+<ul>
 <li>It combines them with default options and <code>IResourceDefinition</code> overrides and composes a tree of <code>QueryLayer</code> objects.</li>
 <li>It lifts the tree for secondary endpoints like /blogs/1/articles and rewrites includes.</li>
 <li><code>JsonApiResourceService</code> contains no more usage of <code>IQueryable</code>.</li>
 </ul>
 </li>
 <li><code>EntityFrameworkCoreRepository</code> delegates to <code>QueryableBuilder</code> to transform the <code>QueryLayer</code> tree into <code>IQueryable</code> expression trees.
-  <code>QueryBuilder</code> depends on <code>QueryClauseBuilder</code> implementations that visit the tree nodes, transforming them to <code>System.Linq.Expression</code> equivalents.
-  The <code>IQueryable</code> expression trees are passed to Entity Framework Core, which produces SQL statements out of them.</li>
+<code>QueryBuilder</code> depends on <code>QueryClauseBuilder</code> implementations that visit the tree nodes, transforming them to <code>System.Linq.Expression</code> equivalents.
+The <code>IQueryable</code> expression trees are passed to Entity Framework Core, which produces SQL statements out of them.</li>
 <li><code>JsonApiWriter</code> transforms resource objects into json response.</li>
 </ul>
 <h1 id="example">Example</h1>
-<p>To get a sense of what this all looks like, let&#39;s look at an example query string:</p>
+<p>To get a sense of what this all looks like, let's look at an example query string:</p>
 <pre><code>/api/v1/blogs?
   include=owner,posts.comments.author&amp;
   filter=has(posts)&amp;
@@ -104,10 +107,11 @@
     filter[posts]=and(not(equals(author.userName,null)),has(comments))&amp;
     sort[posts]=author.displayName&amp;
     fields[blogPosts]=url&amp;
-      filter[posts.comments]=and(greaterThan(createdAt,&#39;2001-01-01Z&#39;),startsWith(author.userName,&#39;J&#39;))&amp;
+      filter[posts.comments]=and(greaterThan(createdAt,'2001-01-01Z'),startsWith(author.userName,'J'))&amp;
       sort[posts.comments]=-createdAt,author.displayName&amp;
       fields[comments]=createdAt
-</code></pre><p>After parsing, the set of scoped expressions is transformed into the following tree by <code>QueryLayerComposer</code>:</p>
+</code></pre>
+<p>After parsing, the set of scoped expressions is transformed into the following tree by <code>QueryLayerComposer</code>:</p>
 <pre><code>QueryLayer&lt;Blog&gt;
 {
   Include: owner,posts.comments.author
@@ -133,7 +137,7 @@
             id
             comments: QueryLayer&lt;Comment&gt;
             {
-              Filter: and(greaterThan(createdAt,&#39;2001-01-01&#39;),startsWith(author.userName,&#39;J&#39;))
+              Filter: and(greaterThan(createdAt,'2001-01-01'),startsWith(author.userName,'J'))
               Sort: -createdAt,author.displayName
               Pagination: Page number: 1, size: 5
               Selection
@@ -157,7 +161,8 @@
     }
   }
 }
-</code></pre><p>Next, the repository translates this into a LINQ query that the following C# code would represent:</p>
+</code></pre>
+<p>Next, the repository translates this into a LINQ query that the following C# code would represent:</p>
 <pre><code class="lang-c#">IQueryable&lt;Blog&gt; query = dbContext.Blogs
     .Include(&quot;Posts.Comments.Author&quot;)
     .Include(&quot;Owner&quot;)
@@ -192,7 +197,8 @@
             }).ToList(),
         Owner = blog.Owner
     });
-</code></pre><p>The LINQ query gets translated by Entity Framework Core into the following SQL:</p>
+</code></pre>
+<p>The LINQ query gets translated by Entity Framework Core into the following SQL:</p>
 <pre><code class="lang-sql">SELECT t.&quot;Title&quot;, t.&quot;Id&quot;, a.&quot;Id&quot;, t2.&quot;Url&quot;, t2.&quot;Id&quot;, t2.&quot;Id0&quot;, t2.&quot;CreatedAt&quot;, t2.&quot;Id1&quot;, t2.&quot;Id00&quot;, t2.&quot;DateOfBirth&quot;, t2.&quot;DisplayName&quot;, t2.&quot;EmailAddress&quot;, t2.&quot;Password&quot;, t2.&quot;PersonId&quot;, t2.&quot;PreferencesId&quot;, t2.&quot;UserName&quot;, a.&quot;DateOfBirth&quot;, a.&quot;DisplayName&quot;, a.&quot;EmailAddress&quot;, a.&quot;Password&quot;, a.&quot;PersonId&quot;, a.&quot;PreferencesId&quot;, a.&quot;UserName&quot;
 FROM (
     SELECT b.&quot;Id&quot;, b.&quot;OwnerId&quot;, b.&quot;Title&quot;, (
@@ -230,13 +236,14 @@ LEFT JOIN LATERAL (
             SELECT c0.&quot;CreatedAt&quot;, c0.&quot;Id&quot;, a1.&quot;Id&quot; AS &quot;Id0&quot;, a1.&quot;DateOfBirth&quot;, a1.&quot;DisplayName&quot;, a1.&quot;EmailAddress&quot;, a1.&quot;Password&quot;, a1.&quot;PersonId&quot;, a1.&quot;PreferencesId&quot;, a1.&quot;UserName&quot;, c0.&quot;ParentId&quot;, ROW_NUMBER() OVER(PARTITION BY c0.&quot;ParentId&quot; ORDER BY c0.&quot;CreatedAt&quot; DESC, a1.&quot;DisplayName&quot;) AS row
             FROM &quot;Comments&quot; AS c0
             LEFT JOIN &quot;Accounts&quot; AS a1 ON c0.&quot;AuthorId&quot; = a1.&quot;Id&quot;
-            WHERE (c0.&quot;CreatedAt&quot; &gt; @__Create_Item1_2) AND ((@__Create_Item1_3 = &#39;&#39;) OR (((a1.&quot;UserName&quot; IS NOT NULL)) AND ((a1.&quot;UserName&quot; LIKE @__Create_Item1_3 || &#39;%&#39; ESCAPE &#39;&#39;) AND (left(a1.&quot;UserName&quot;, length(@__Create_Item1_3))::text = @__Create_Item1_3::text))))
+            WHERE (c0.&quot;CreatedAt&quot; &gt; @__Create_Item1_2) AND ((@__Create_Item1_3 = '') OR (((a1.&quot;UserName&quot; IS NOT NULL)) AND ((a1.&quot;UserName&quot; LIKE @__Create_Item1_3 || '%' ESCAPE '') AND (left(a1.&quot;UserName&quot;, length(@__Create_Item1_3))::text = @__Create_Item1_3::text))))
         ) AS t3
         WHERE t3.row &lt;= @__Create_Item1_1
     ) AS t1 ON t0.&quot;Id&quot; = t1.&quot;ParentId&quot;
 ) AS t2 ON TRUE
 ORDER BY t.c, t.&quot;Id&quot;, a.&quot;Id&quot;, t2.&quot;DisplayName0&quot;, t2.&quot;Id&quot;, t2.&quot;Id0&quot;, t2.&quot;ParentId&quot;, t2.&quot;CreatedAt&quot; DESC, t2.&quot;DisplayName&quot;, t2.&quot;Id1&quot;
-</code></pre></article>
+</code></pre>
+</article>
           </div>
 
           <div class="hidden-sm col-md-2" role="complementary">

@@ -4,22 +4,22 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IRelationshipDataAdapter
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Interface IRelationshipDataAdapter
  </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IRelationshipDataAdapter
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Interface IRelationshipDataAdapter
  ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -77,7 +77,7 @@ an entry of an atomic:operations request that targets a relationship and in the 
 resource.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Serialization.Request.Adapters.html">JsonApiDotNetCore.Serialization.Request.Adapters</a></h6>
+  <h6><strong>Namespace</strong>: <span class="xref">JsonApiDotNetCore</span>.<span class="xref">Serialization</span>.<a class="xref" href="JsonApiDotNetCore.Serialization.Request.html">Request</a>.<a class="xref" href="JsonApiDotNetCore.Serialization.Request.Adapters.html">Adapters</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Serialization_Request_Adapters_IRelationshipDataAdapter_syntax">Syntax</h5>
   <div class="codewrapper">
@@ -93,13 +93,13 @@ resource.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Request/Adapters/IRelationshipDataAdapter.cs/#L21">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Request_Adapters_IRelationshipDataAdapter_Convert_" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.IRelationshipDataAdapter.Convert*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_Request_Adapters_IRelationshipDataAdapter_Convert_JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject__JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Boolean_JsonApiDotNetCore_Serialization_Request_Adapters_RequestAdapterState_" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.IRelationshipDataAdapter.Convert(JsonApiDotNetCore.Serialization.Objects.SingleOrManyData{JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject},JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Boolean,JsonApiDotNetCore.Serialization.Request.Adapters.RequestAdapterState)">Convert(SingleOrManyData&lt;ResourceIdentifierObject&gt;, RelationshipAttribute, Boolean, RequestAdapterState)</h4>
+  <h4 id="JsonApiDotNetCore_Serialization_Request_Adapters_IRelationshipDataAdapter_Convert_JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject__JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Boolean_JsonApiDotNetCore_Serialization_Request_Adapters_RequestAdapterState_" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.IRelationshipDataAdapter.Convert(JsonApiDotNetCore.Serialization.Objects.SingleOrManyData{JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject},JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Boolean,JsonApiDotNetCore.Serialization.Request.Adapters.RequestAdapterState)">Convert(SingleOrManyData&lt;ResourceIdentifierObject&gt;, RelationshipAttribute, bool, RequestAdapterState)</h4>
   <div class="markdown level1 summary"><p>Validates and converts the specified <code data-dev-comment-type="paramref" class="paramref">data</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">object Convert(SingleOrManyData&lt;ResourceIdentifierObject&gt; data, RelationshipAttribute relationship, bool useToManyElementType, RequestAdapterState state)</code></pre>
+    <pre><code class="lang-csharp hljs">object? Convert(SingleOrManyData&lt;ResourceIdentifierObject&gt; data, RelationshipAttribute relationship, bool useToManyElementType, RequestAdapterState state)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -122,7 +122,7 @@ resource.</p>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">bool</span></td>
         <td><span class="parametername">useToManyElementType</span></td>
         <td></td>
       </tr>
@@ -143,7 +143,7 @@ resource.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Object</span></td>
+        <td><span class="xref">object</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -156,13 +156,13 @@ resource.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Request/Adapters/IRelationshipDataAdapter.cs/#L16">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Request_Adapters_IRelationshipDataAdapter_Convert_" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.IRelationshipDataAdapter.Convert*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_Request_Adapters_IRelationshipDataAdapter_Convert_JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_JsonApiDotNetCore_Serialization_Objects_ResourceObject__JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Boolean_JsonApiDotNetCore_Serialization_Request_Adapters_RequestAdapterState_" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.IRelationshipDataAdapter.Convert(JsonApiDotNetCore.Serialization.Objects.SingleOrManyData{JsonApiDotNetCore.Serialization.Objects.ResourceObject},JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Boolean,JsonApiDotNetCore.Serialization.Request.Adapters.RequestAdapterState)">Convert(SingleOrManyData&lt;ResourceObject&gt;, RelationshipAttribute, Boolean, RequestAdapterState)</h4>
+  <h4 id="JsonApiDotNetCore_Serialization_Request_Adapters_IRelationshipDataAdapter_Convert_JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_JsonApiDotNetCore_Serialization_Objects_ResourceObject__JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Boolean_JsonApiDotNetCore_Serialization_Request_Adapters_RequestAdapterState_" data-uid="JsonApiDotNetCore.Serialization.Request.Adapters.IRelationshipDataAdapter.Convert(JsonApiDotNetCore.Serialization.Objects.SingleOrManyData{JsonApiDotNetCore.Serialization.Objects.ResourceObject},JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Boolean,JsonApiDotNetCore.Serialization.Request.Adapters.RequestAdapterState)">Convert(SingleOrManyData&lt;ResourceObject&gt;, RelationshipAttribute, bool, RequestAdapterState)</h4>
   <div class="markdown level1 summary"><p>Validates and converts the specified <code data-dev-comment-type="paramref" class="paramref">data</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">object Convert(SingleOrManyData&lt;ResourceObject&gt; data, RelationshipAttribute relationship, bool useToManyElementType, RequestAdapterState state)</code></pre>
+    <pre><code class="lang-csharp hljs">object? Convert(SingleOrManyData&lt;ResourceObject&gt; data, RelationshipAttribute relationship, bool useToManyElementType, RequestAdapterState state)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -185,7 +185,7 @@ resource.</p>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">bool</span></td>
         <td><span class="parametername">useToManyElementType</span></td>
         <td></td>
       </tr>
@@ -206,7 +206,7 @@ resource.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Object</span></td>
+        <td><span class="xref">object</span></td>
         <td></td>
       </tr>
     </tbody>

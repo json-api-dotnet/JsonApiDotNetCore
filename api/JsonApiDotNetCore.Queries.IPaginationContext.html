@@ -4,22 +4,22 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IPaginationContext
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Interface IPaginationContext
  </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IPaginationContext
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Interface IPaginationContext
  ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -72,10 +72,11 @@
 
   <h1 id="JsonApiDotNetCore_Queries_IPaginationContext" data-uid="JsonApiDotNetCore.Queries.IPaginationContext" class="text-break">Interface IPaginationContext
 </h1>
-  <div class="markdown level0 summary"><p>Tracks values used for pagination, which is a combined effort from options, query string parsing and fetching the total number of rows.</p>
+  <div class="markdown level0 summary"><p>Tracks values used for top-level pagination, which is a combined effort from options, query string parsing, resource definition callbacks and
+fetching the total number of rows.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Queries.html">JsonApiDotNetCore.Queries</a></h6>
+  <h6><strong>Namespace</strong>: <span class="xref">JsonApiDotNetCore</span>.<a class="xref" href="JsonApiDotNetCore.Queries.html">Queries</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Queries_IPaginationContext_syntax">Syntax</h5>
   <div class="codewrapper">
@@ -88,7 +89,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IPaginationContext_IsPageFull.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IPaginationContext.IsPageFull%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IPaginationContext.cs/#L25">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IPaginationContext.cs/#L26">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_IPaginationContext_IsPageFull_" data-uid="JsonApiDotNetCore.Queries.IPaginationContext.IsPageFull*"></a>
   <h4 id="JsonApiDotNetCore_Queries_IPaginationContext_IsPageFull" data-uid="JsonApiDotNetCore.Queries.IPaginationContext.IsPageFull">IsPageFull</h4>
@@ -110,7 +111,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">bool</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -120,11 +121,11 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IPaginationContext_PageNumber.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IPaginationContext.PageNumber%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IPaginationContext.cs/#L13">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IPaginationContext.cs/#L14">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_IPaginationContext_PageNumber_" data-uid="JsonApiDotNetCore.Queries.IPaginationContext.PageNumber*"></a>
   <h4 id="JsonApiDotNetCore_Queries_IPaginationContext_PageNumber" data-uid="JsonApiDotNetCore.Queries.IPaginationContext.PageNumber">PageNumber</h4>
-  <div class="markdown level1 summary"><p>The value 1, unless specified from query string. Never null. Cannot be higher than options.MaximumPageNumber.</p>
+  <div class="markdown level1 summary"><p>The value 1, unless overridden from query string or resource definition. Should not be higher than <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_MaximumPageNumber">MaximumPageNumber</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -151,17 +152,17 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IPaginationContext_PageSize.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IPaginationContext.PageSize%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IPaginationContext.cs/#L19">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IPaginationContext.cs/#L20">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_IPaginationContext_PageSize_" data-uid="JsonApiDotNetCore.Queries.IPaginationContext.PageSize*"></a>
   <h4 id="JsonApiDotNetCore_Queries_IPaginationContext_PageSize" data-uid="JsonApiDotNetCore.Queries.IPaginationContext.PageSize">PageSize</h4>
-  <div class="markdown level1 summary"><p>The default page size from options, unless specified in query string. Can be <code>null</code>, which means no paging. Cannot be higher than
-options.MaximumPageSize.</p>
+  <div class="markdown level1 summary"><p>The default page size from options, unless overridden from query string or resource definition. Should not be higher than
+<a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_MaximumPageSize">MaximumPageSize</a>. Can be <code>null</code>, which means pagination is disabled.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">PageSize PageSize { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">PageSize? PageSize { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -183,11 +184,11 @@ options.MaximumPageSize.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IPaginationContext_TotalPageCount.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IPaginationContext.TotalPageCount%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IPaginationContext.cs/#L36">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IPaginationContext.cs/#L37">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_IPaginationContext_TotalPageCount_" data-uid="JsonApiDotNetCore.Queries.IPaginationContext.TotalPageCount*"></a>
   <h4 id="JsonApiDotNetCore_Queries_IPaginationContext_TotalPageCount" data-uid="JsonApiDotNetCore.Queries.IPaginationContext.TotalPageCount">TotalPageCount</h4>
-  <div class="markdown level1 summary"><p>The total number of resource pages. <code>null</code> when <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_IncludeTotalResourceCount">IncludeTotalResourceCount</a> is set to <code>false</code> or
+  <div class="markdown level1 summary"><p>The total number of resource pages, or <code>null</code> when <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_IncludeTotalResourceCount">IncludeTotalResourceCount</a> is set to <code>false</code> or
 <a class="xref" href="JsonApiDotNetCore.Queries.IPaginationContext.html#JsonApiDotNetCore_Queries_IPaginationContext_PageSize">PageSize</a> is <code>null</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -205,7 +206,7 @@ options.MaximumPageSize.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="xref">int</span>?</td>
         <td></td>
       </tr>
     </tbody>
@@ -215,11 +216,11 @@ options.MaximumPageSize.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IPaginationContext_TotalResourceCount.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IPaginationContext.TotalResourceCount%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IPaginationContext.cs/#L30">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IPaginationContext.cs/#L31">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_IPaginationContext_TotalResourceCount_" data-uid="JsonApiDotNetCore.Queries.IPaginationContext.TotalResourceCount*"></a>
   <h4 id="JsonApiDotNetCore_Queries_IPaginationContext_TotalResourceCount" data-uid="JsonApiDotNetCore.Queries.IPaginationContext.TotalResourceCount">TotalResourceCount</h4>
-  <div class="markdown level1 summary"><p>The total number of resources. <code>null</code> when <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_IncludeTotalResourceCount">IncludeTotalResourceCount</a> is set to <code>false</code>.</p>
+  <div class="markdown level1 summary"><p>The total number of resources, or <code>null</code> when <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_IncludeTotalResourceCount">IncludeTotalResourceCount</a> is set to <code>false</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
@@ -236,7 +237,7 @@ options.MaximumPageSize.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="xref">int</span>?</td>
         <td></td>
       </tr>
     </tbody>
@@ -252,7 +253,7 @@ options.MaximumPageSize.</p>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IPaginationContext.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IPaginationContext%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IPaginationContext.cs/#L8" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IPaginationContext.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

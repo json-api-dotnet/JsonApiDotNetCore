@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>The Resource Graph </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="The Resource Graph ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>The Resource Graph </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="The Resource Graph ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -70,7 +70,9 @@
 
 <p>The <code>ResourceGraph</code> is a map of all the JSON:API resources and their relationships that your API serves.
 It is built at app startup and available as a singleton through Dependency Injection.</p>
-<div class="NOTE"><h5>Note</h5><p>Prior to v4, this was called the <code>ContextGraph</code>.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>Prior to v4, this was called the <code>ContextGraph</code>.</p>
 </div>
 <h2 id="constructing-the-graph">Constructing The Graph</h2>
 <p>There are three ways the resource graph can be created:</p>
@@ -79,7 +81,7 @@ It is built at app startup and available as a singleton through Dependency Injec
 <li>Specifying an entire DbContext</li>
 <li>Manually specifying each resource</li>
 </ol>
-<p>It is also possible to combine the three of them at once. Be aware that some configuration might overlap, 
+<p>It is also possible to combine the three of them at once. Be aware that some configuration might overlap,
 for example one could manually add a resource to the graph which is also auto-discovered. In such a scenario, the configuration
 is prioritized by the list above in descending order.</p>
 <h3 id="auto-discovery">Auto-discovery</h3>
@@ -89,41 +91,49 @@ detecting all of the JSON:API resources, resource definitions, resource services
 You can enable auto-discovery for the current assembly by adding the following at startup.</p>
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddJsonApi(discovery =&gt; discovery.AddCurrentAssembly());
-</code></pre><h3 id="specifying-an-entity-framework-core-dbcontext">Specifying an Entity Framework Core DbContext</h3>
+</code></pre>
+<h3 id="specifying-an-entity-framework-core-dbcontext">Specifying an Entity Framework Core DbContext</h3>
 <p>If you are using Entity Framework Core as your ORM, you can add all the models of a <code>DbContext</code> to the resource graph.</p>
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddJsonApi&lt;AppDbContext&gt;();
-</code></pre><p>Be aware that this does not register resource definitions, resource services and repositories. You can combine it with auto-discovery to achieve this.</p>
+</code></pre>
+<p>Be aware that this does not register resource definitions, resource services and repositories. You can combine it with auto-discovery to achieve this.</p>
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddJsonApi&lt;AppDbContext&gt;(discovery =&gt; discovery.AddCurrentAssembly());
-</code></pre><h3 id="manual-specification">Manual Specification</h3>
+</code></pre>
+<h3 id="manual-specification">Manual Specification</h3>
 <p>You can manually construct the graph.</p>
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddJsonApi(resources: resourceGraphBuilder =&gt;
     resourceGraphBuilder.Add&lt;Person, int&gt;());
-</code></pre><h2 id="resource-name">Resource Name</h2>
+</code></pre>
+<h2 id="resource-name">Resource Name</h2>
 <p>The public resource name is exposed through the <code>type</code> member in the JSON:API payload. This can be configured using the following approaches (in order of priority):</p>
 <ol>
-<li><p>The <code>publicName</code> parameter when manually adding a resource to the graph.</p>
+<li>The <code>publicName</code> parameter when manually adding a resource to the graph.</li>
+</ol>
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddJsonApi(resources: resourceGraphBuilder =&gt;
 {
- resourceGraphBuilder.Add&lt;Person, int&gt;(publicName: &quot;individuals&quot;);
+    resourceGraphBuilder.Add&lt;Person, int&gt;(publicName: &quot;individuals&quot;);
 });
-</code></pre></li>
-<li><p>The <code>PublicName</code> property when a model is decorated with a <code>ResourceAttribute</code>.</p>
+</code></pre>
+<ol start="2">
+<li>The <code>PublicName</code> property when a model is decorated with a <code>ResourceAttribute</code>.</li>
+</ol>
 <pre><code class="lang-c#">[Resource(PublicName = &quot;individuals&quot;)]
 public class Person : Identifiable&lt;int&gt;
 {
 }
-</code></pre></li>
-<li><p>The configured naming convention (by default this is camel-case), after pluralization.</p>
+</code></pre>
+<ol start="3">
+<li>The configured naming convention (by default this is camel-case), after pluralization.</li>
+</ol>
 <pre><code class="lang-c#">// this will be registered as &quot;people&quot;
 public class Person : Identifiable&lt;int&gt;
 {
 }
-</code></pre></li>
-</ol>
+</code></pre>
 <p>The default naming convention can be changed in <a href="options.html#customize-serializer-options">options</a>.</p>
 </article>
           </div>

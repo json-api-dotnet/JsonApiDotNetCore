@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Including Relationships </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Including Relationships ">
-  
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Including Relationships </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Including Relationships ">
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -109,16 +109,20 @@ for side-loading related resources.</p>
     }
   ]
 }
-</code></pre><h2 id="nested-inclusions">Nested Inclusions</h2>
+</code></pre>
+<h2 id="nested-inclusions">Nested Inclusions</h2>
 <p><em>since v3</em></p>
 <p>JsonApiDotNetCore also supports nested inclusions.
 This allows you to include data across relationships by using a period-delimited relationship path, for example:</p>
 <pre><code class="lang-http">GET /api/articles?include=author.livingAddress.country
-</code></pre><p>which is equivalent to:</p>
+</code></pre>
+<p>which is equivalent to:</p>
 <pre><code class="lang-http">GET /api/articles?include=author&amp;include=author.livingAddress&amp;include=author.livingAddress.country
-</code></pre><p>This can be used on secondary endpoints too:</p>
+</code></pre>
+<p>This can be used on secondary endpoints too:</p>
 <pre><code class="lang-http">GET /api/blogs/1/articles?include=author.livingAddress.country
-</code></pre></article>
+</code></pre>
+</article>
           </div>
 
           <div class="hidden-sm col-md-2" role="complementary">

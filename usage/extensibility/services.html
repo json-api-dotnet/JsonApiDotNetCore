@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Resource Services </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Resource Services ">
-  
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Resource Services </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Resource Services ">
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -72,7 +72,7 @@
 This allows you to customize it however you want. While this is still a potential place to implement custom business logic,
 since v4, <a href="resource-definitions.html">Resource Definitions</a> are more suitable for that.</p>
 <h2 id="supplementing-default-behavior">Supplementing Default Behavior</h2>
-<p>If you don&#39;t need to alter the underlying mechanisms, you can inherit from <code>JsonApiResourceService&lt;TResource, TId&gt;</code> and override the existing methods.
+<p>If you don't need to alter the underlying mechanisms, you can inherit from <code>JsonApiResourceService&lt;TResource, TId&gt;</code> and override the existing methods.
 In simple cases, you can also just wrap the base implementation with your custom logic.</p>
 <p>A simple example would be to send notifications when a resource gets created.</p>
 <pre><code class="lang-c#">public class TodoItemService : JsonApiResourceService&lt;TodoItem, int&gt;
@@ -103,9 +103,10 @@ In simple cases, you can also just wrap the base implementation with your custom
         return newResource;
     }
 }
-</code></pre><h2 id="not-using-entity-framework-core">Not Using Entity Framework Core?</h2>
+</code></pre>
+<h2 id="not-using-entity-framework-core">Not Using Entity Framework Core?</h2>
 <p>As previously discussed, this library uses Entity Framework Core by default.
-If you&#39;d like to use another ORM that does not provide what JsonApiResourceService depends upon, you can use a custom <code>IResourceService&lt;TResource, TId&gt;</code> implementation.</p>
+If you'd like to use another ORM that does not provide what JsonApiResourceService depends upon, you can use a custom <code>IResourceService&lt;TResource, TId&gt;</code> implementation.</p>
 <pre><code class="lang-c#">// Program.cs
 
 // Add the service override for Product.
@@ -131,7 +132,8 @@ public class ProductService : IResourceService&lt;Product, int&gt;
         return await _dao.GetProductsAsync(cancellationToken);
     }
 }
-</code></pre><h2 id="limited-requirements">Limited Requirements</h2>
+</code></pre>
+<h2 id="limited-requirements">Limited Requirements</h2>
 <p>In some cases it may be necessary to only expose a few actions on a resource. For this reason, we have created a hierarchy of service interfaces that can be used to get the exact implementation you require.</p>
 <p>This interface hierarchy is defined by this tree structure.</p>
 <pre><code>IResourceService
@@ -169,7 +171,8 @@ public class ProductService : IResourceService&lt;Product, int&gt;
     |
     +-- IRemoveFromRelationshipService
         DELETE /{id}/relationships/{relationship}
-</code></pre><p>In order to take advantage of these interfaces you first need to register the service for each implemented interface.</p>
+</code></pre>
+<p>In order to take advantage of these interfaces you first need to register the service for each implemented interface.</p>
 <pre><code class="lang-c#">public class ArticleService : ICreateService&lt;Article, int&gt;, IDeleteService&lt;Article, int&gt;
 {
     // ...
@@ -178,20 +181,25 @@ public class ProductService : IResourceService&lt;Product, int&gt;
 // Program.cs
 builder.Services.AddScoped&lt;ICreateService&lt;Article, int&gt;, ArticleService&gt;();
 builder.Services.AddScoped&lt;IDeleteService&lt;Article, int&gt;, ArticleService&gt;();
-</code></pre><p>In v3.0 we introduced an extension method that you can use to register a resource service on all of its JsonApiDotNetCore interfaces.
+</code></pre>
+<p>In v3.0 we introduced an extension method that you can use to register a resource service on all of its JsonApiDotNetCore interfaces.
 This is helpful when you implement (a subset of) the resource interfaces and want to register them all in one go.</p>
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddResourceService&lt;ArticleService&gt;();
-</code></pre><div class="TIP"><h5>Tip</h5><p>If you&#39;re using <a href="../resource-graph.html#auto-discovery">auto-discovery</a>, then resource services, repositories and resource definitions will be automatically registered for you.</p>
+</code></pre>
+<div class="TIP">
+<h5>Tip</h5>
+<p>If you're using <a href="../resource-graph.html#auto-discovery">auto-discovery</a>, then resource services, repositories and resource definitions will be automatically registered for you.</p>
 </div>
-<p>Then on your model, pass in the set of endpoints to expose (the ones that you&#39;ve registered services for):</p>
+<p>Then on your model, pass in the set of endpoints to expose (the ones that you've registered services for):</p>
 <pre><code class="lang-c#">[Resource(GenerateControllerEndpoints =
     JsonApiEndpoints.Create | JsonApiEndpoints.Delete)]
 public class Article : Identifiable&lt;int&gt;
 {
     // ...
 }
-</code></pre><p>Alternatively, when using a hand-written controller, you should inherit from the JSON:API controller and pass the services into the named, optional base parameters:</p>
+</code></pre>
+<p>Alternatively, when using a hand-written controller, you should inherit from the JSON:API controller and pass the services into the named, optional base parameters:</p>
 <pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article, int&gt;
 {
     public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
@@ -201,7 +209,8 @@ public class Article : Identifiable&lt;int&gt;
     {
     }
 }
-</code></pre></article>
+</code></pre>
+</article>
           </div>
 
           <div class="hidden-sm col-md-2" role="complementary">

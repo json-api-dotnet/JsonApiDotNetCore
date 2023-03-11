@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Errors </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Errors ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Errors </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Errors ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -77,13 +77,15 @@ Please keep in mind that JSON:API requires <code>Title</code> to be a generic me
     Title = &quot;Target resource was modified by another user.&quot;,
     Detail = $&quot;User {userName} changed the {resourceField} field on {resourceName} resource.&quot;
 });
-</code></pre><p>From other code:</p>
+</code></pre>
+<p>From other code:</p>
 <pre><code class="lang-c#">throw new JsonApiException(new ErrorObject(HttpStatusCode.Conflict)
 {
     Title = &quot;Target resource was modified by another user.&quot;,
     Detail = $&quot;User {userName} changed the {resourceField} field on {resourceName} resource.&quot;
 });
-</code></pre><p>In both cases, the middleware will properly serialize it and return it as a JSON:API error.</p>
+</code></pre>
+<p>In both cases, the middleware will properly serialize it and return it as a JSON:API error.</p>
 <h1 id="exception-handling">Exception handling</h1>
 <p>The translation of user-defined exceptions to error responses can be customized by registering your own handler.
 This handler is also the place to choose the log level and message, based on the exception type.</p>
@@ -145,7 +147,8 @@ public class CustomExceptionHandler : ExceptionHandler
 
 // Program.cs
 builder.Services.AddScoped&lt;IExceptionHandler, CustomExceptionHandler&gt;();
-</code></pre></article>
+</code></pre>
+</article>
           </div>
 
           <div class="hidden-sm col-md-2" role="complementary">

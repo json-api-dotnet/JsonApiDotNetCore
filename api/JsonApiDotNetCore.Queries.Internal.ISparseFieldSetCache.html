@@ -4,22 +4,22 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface ISparseFieldSetCache
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Interface ISparseFieldSetCache
  </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface ISparseFieldSetCache
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Interface ISparseFieldSetCache
  ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -73,10 +73,10 @@
   <h1 id="JsonApiDotNetCore_Queries_Internal_ISparseFieldSetCache" data-uid="JsonApiDotNetCore.Queries.Internal.ISparseFieldSetCache" class="text-break">Interface ISparseFieldSetCache
 </h1>
   <div class="markdown level0 summary"><p>Takes sparse fieldsets from <a class="xref" href="JsonApiDotNetCore.Queries.IQueryConstraintProvider.html">IQueryConstraintProvider</a>s and invokes
-<a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplySparseFieldSet_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_">OnApplySparseFieldSet(SparseFieldSetExpression)</a> on them.</p>
+<a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplySparseFieldSet_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_">OnApplySparseFieldSet(SparseFieldSetExpression?)</a> on them.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Queries.Internal.html">JsonApiDotNetCore.Queries.Internal</a></h6>
+  <h6><strong>Namespace</strong>: <span class="xref">JsonApiDotNetCore</span>.<a class="xref" href="JsonApiDotNetCore.Queries.html">Queries</a>.<a class="xref" href="JsonApiDotNetCore.Queries.Internal.html">Internal</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Queries_Internal_ISparseFieldSetCache_syntax">Syntax</h5>
   <div class="codewrapper">
@@ -98,7 +98,7 @@ fields to write to the response body.</p>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_ISparseFieldSetCache_GetIdAttributeSetForRelationshipQuery_" data-uid="JsonApiDotNetCore.Queries.Internal.ISparseFieldSetCache.GetIdAttributeSetForRelationshipQuery*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Internal_ISparseFieldSetCache_GetIdAttributeSetForRelationshipQuery_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.Internal.ISparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceType)">GetIdAttributeSetForRelationshipQuery(ResourceType)</h4>
-  <div class="markdown level1 summary"><p>Gets the set of attributes to retrieve from the underlying data store for relationship endpoints. This always returns &apos;id&apos;, along with any additional
+  <div class="markdown level1 summary"><p>Gets the set of attributes to retrieve from the underlying data store for relationship endpoints. This always returns 'id', along with any additional
 attributes from resource definition callback.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -133,7 +133,7 @@ attributes from resource definition callback.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Immutable.IImmutableSet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.AttrAttribute.html">AttrAttribute</a>&gt;</td>
+        <td><span class="xref">System.Collections.Immutable.IImmutableSet&lt;T&gt;</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.AttrAttribute.html">AttrAttribute</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -186,7 +186,7 @@ fields to write to the response body.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Immutable.IImmutableSet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html">ResourceFieldAttribute</a>&gt;</td>
+        <td><span class="xref">System.Collections.Immutable.IImmutableSet&lt;T&gt;</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html">ResourceFieldAttribute</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -239,7 +239,7 @@ fields to write to the response body.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Immutable.IImmutableSet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html">ResourceFieldAttribute</a>&gt;</td>
+        <td><span class="xref">System.Collections.Immutable.IImmutableSet&lt;T&gt;</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html">ResourceFieldAttribute</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>

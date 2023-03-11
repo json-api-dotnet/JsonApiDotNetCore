@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Request Examples </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Request Examples ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Request Examples </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Request Examples ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -63,155 +63,23 @@
 
 <p>To update these requests:</p>
 <ol>
-<li><p>Add a PowerShell (.ps1) script prefixed by a number that is used to determine the order the scripts are executed. The script should execute a request and output the response. Example:</p>
-<pre><code>curl -s http://localhost:14141/api/books
-</code></pre></li>
-<li><p>Add the example to <code>index.md</code>. Example:</p>
-<pre><code>### Get with relationship
-</code></pre></li>
+<li>Add a PowerShell (.ps1) script prefixed by a number that is used to determine the order the scripts are executed. The script should execute a request and output the response. Example:</li>
 </ol>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?include=author
-</code></pre><pre><code class="lang-json" name="RESPONSE">{
-  &quot;links&quot;: {
-    &quot;self&quot;: &quot;/api/books?include=author&quot;,
-    &quot;first&quot;: &quot;/api/books?include=author&quot;,
-    &quot;last&quot;: &quot;/api/books?include=author&quot;
-  },
-  &quot;data&quot;: [
-    {
-      &quot;type&quot;: &quot;books&quot;,
-      &quot;id&quot;: &quot;1&quot;,
-      &quot;attributes&quot;: {
-        &quot;title&quot;: &quot;Frankenstein&quot;,
-        &quot;publishYear&quot;: 1818
-      },
-      &quot;relationships&quot;: {
-        &quot;author&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;/api/books/1/relationships/author&quot;,
-            &quot;related&quot;: &quot;/api/books/1/author&quot;
-          },
-          &quot;data&quot;: {
-            &quot;type&quot;: &quot;people&quot;,
-            &quot;id&quot;: &quot;1&quot;
-          }
-        }
-      },
-      &quot;links&quot;: {
-        &quot;self&quot;: &quot;/api/books/1&quot;
-      }
-    },
-    {
-      &quot;type&quot;: &quot;books&quot;,
-      &quot;id&quot;: &quot;2&quot;,
-      &quot;attributes&quot;: {
-        &quot;title&quot;: &quot;Robinson Crusoe&quot;,
-        &quot;publishYear&quot;: 1719
-      },
-      &quot;relationships&quot;: {
-        &quot;author&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;/api/books/2/relationships/author&quot;,
-            &quot;related&quot;: &quot;/api/books/2/author&quot;
-          },
-          &quot;data&quot;: {
-            &quot;type&quot;: &quot;people&quot;,
-            &quot;id&quot;: &quot;2&quot;
-          }
-        }
-      },
-      &quot;links&quot;: {
-        &quot;self&quot;: &quot;/api/books/2&quot;
-      }
-    },
-    {
-      &quot;type&quot;: &quot;books&quot;,
-      &quot;id&quot;: &quot;3&quot;,
-      &quot;attributes&quot;: {
-        &quot;title&quot;: &quot;Gulliver&#39;s Travels&quot;,
-        &quot;publishYear&quot;: 1726
-      },
-      &quot;relationships&quot;: {
-        &quot;author&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;/api/books/3/relationships/author&quot;,
-            &quot;related&quot;: &quot;/api/books/3/author&quot;
-          },
-          &quot;data&quot;: {
-            &quot;type&quot;: &quot;people&quot;,
-            &quot;id&quot;: &quot;3&quot;
-          }
-        }
-      },
-      &quot;links&quot;: {
-        &quot;self&quot;: &quot;/api/books/3&quot;
-      }
-    }
-  ],
-  &quot;included&quot;: [
-    {
-      &quot;type&quot;: &quot;people&quot;,
-      &quot;id&quot;: &quot;1&quot;,
-      &quot;attributes&quot;: {
-        &quot;name&quot;: &quot;Mary Shelley&quot;
-      },
-      &quot;relationships&quot;: {
-        &quot;books&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;/api/people/1/relationships/books&quot;,
-            &quot;related&quot;: &quot;/api/people/1/books&quot;
-          }
-        }
-      },
-      &quot;links&quot;: {
-        &quot;self&quot;: &quot;/api/people/1&quot;
-      }
-    },
-    {
-      &quot;type&quot;: &quot;people&quot;,
-      &quot;id&quot;: &quot;2&quot;,
-      &quot;attributes&quot;: {
-        &quot;name&quot;: &quot;Daniel Defoe&quot;
-      },
-      &quot;relationships&quot;: {
-        &quot;books&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;/api/people/2/relationships/books&quot;,
-            &quot;related&quot;: &quot;/api/people/2/books&quot;
-          }
-        }
-      },
-      &quot;links&quot;: {
-        &quot;self&quot;: &quot;/api/people/2&quot;
-      }
-    },
-    {
-      &quot;type&quot;: &quot;people&quot;,
-      &quot;id&quot;: &quot;3&quot;,
-      &quot;attributes&quot;: {
-        &quot;name&quot;: &quot;Jonathan Swift&quot;
-      },
-      &quot;relationships&quot;: {
-        &quot;books&quot;: {
-          &quot;links&quot;: {
-            &quot;self&quot;: &quot;/api/people/3/relationships/books&quot;,
-            &quot;related&quot;: &quot;/api/people/3/books&quot;
-          }
-        }
-      },
-      &quot;links&quot;: {
-        &quot;self&quot;: &quot;/api/people/3&quot;
-      }
-    }
-  ],
-  &quot;meta&quot;: {
-    &quot;total&quot;: 3
-  }
-}
-</code></pre><pre><code>
-3. Run `pwsh ../generate-examples.ps1`
-4. Verify the results by running `pwsh ../build-dev.ps1`
-</code></pre></article>
+<pre><code>curl -s http://localhost:14141/api/books
+</code></pre>
+<ol start="2">
+<li>Add the example to <code>index.md</code>. Example:</li>
+</ol>
+<pre><code>### Get with relationship
+
+[!code-ps[REQUEST](003_GET_Books-including-Author.ps1)]
+[!code-json[RESPONSE](003_GET_Books-including-Author_Response.json)]
+</code></pre>
+<ol start="3">
+<li>Run <code>pwsh ../generate-examples.ps1</code></li>
+<li>Verify the results by running <code>pwsh ../build-dev.ps1</code></li>
+</ol>
+</article>
           </div>
 
           <div class="hidden-sm col-md-2" role="complementary">

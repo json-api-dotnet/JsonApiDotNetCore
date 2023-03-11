@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Middleware </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Middleware ">
-  
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Middleware </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Middleware ">
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -70,12 +70,13 @@
 
 <p>The default middleware validates incoming <code>Content-Type</code> and <code>Accept</code> HTTP headers.
 Based on routing configuration, it fills <code>IJsonApiRequest</code>, an injectable object that contains JSON:API-related information about the request being processed.</p>
-<p>It is possible to replace the built-in middleware components by configuring the IoC container and by configuring <code>MvcOptions</code>. </p>
+<p>It is possible to replace the built-in middleware components by configuring the IoC container and by configuring <code>MvcOptions</code>.</p>
 <h2 id="configuring-the-ioc-container">Configuring the IoC container</h2>
 <p>The following example replaces the internal exception filter with a custom implementation.</p>
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddService&lt;IAsyncJsonApiExceptionFilter, CustomAsyncExceptionFilter&gt;();
-</code></pre><h2 id="configuring-mvcoptions">Configuring <code>MvcOptions</code></h2>
+</code></pre>
+<h2 id="configuring-mvcoptions">Configuring <code>MvcOptions</code></h2>
 <p>The following example replaces the built-in query string action filter with a custom filter.</p>
 <pre><code class="lang-c#">// Program.cs
 
@@ -118,7 +119,8 @@ app.UseJsonApi();
 app.MapControllers();
 
 app.Run();
-</code></pre></article>
+</code></pre>
+</article>
           </div>
 
           <div class="hidden-sm col-md-2" role="complementary">

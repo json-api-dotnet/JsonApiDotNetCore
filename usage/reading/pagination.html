@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Pagination </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Pagination ">
-  
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Pagination </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Pagination ">
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -70,11 +70,14 @@
 
 <p>Resources can be paginated. This request would fetch the second page of 10 articles (articles 11 - 20).</p>
 <pre><code class="lang-http">GET /articles?page[size]=10&amp;page[number]=2 HTTP/1.1
-</code></pre><p>Pagination can be used on secondary endpoints, such as:</p>
+</code></pre>
+<p>Pagination can be used on secondary endpoints, such as:</p>
 <pre><code class="lang-http">GET /blogs/1/articles?page[number]=2 HTTP/1.1
-</code></pre><p>and on included resources, for example:</p>
+</code></pre>
+<p>and on included resources, for example:</p>
 <pre><code class="lang-http">GET /api/blogs/1/articles?include=revisions&amp;page[size]=10,revisions:5&amp;page[number]=2,revisions:3 HTTP/1.1
-</code></pre><h2 id="configuring-default-behavior">Configuring Default Behavior</h2>
+</code></pre>
+<h2 id="configuring-default-behavior">Configuring Default Behavior</h2>
 <p>You can configure the global default behavior as described <a href="../options.html#pagination">here</a>.</p>
 </article>
           </div>

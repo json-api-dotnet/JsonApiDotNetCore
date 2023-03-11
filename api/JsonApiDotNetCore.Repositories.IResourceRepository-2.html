@@ -4,22 +4,22 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IResourceRepository&lt;TResource, TId&gt;
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Interface IResourceRepository&lt;TResource, TId&gt;
  </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IResourceRepository&lt;TResource, TId&gt;
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Interface IResourceRepository&lt;TResource, TId&gt;
  ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -99,7 +99,7 @@
       <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_DeleteAsync__0__1_System_Threading_CancellationToken_">IResourceWriteRepository&lt;TResource, TId&gt;.DeleteAsync(TResource, TId, CancellationToken)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_SetRelationshipAsync__0_System_Object_System_Threading_CancellationToken_">IResourceWriteRepository&lt;TResource, TId&gt;.SetRelationshipAsync(TResource, Object, CancellationToken)</a>
+      <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_SetRelationshipAsync__0_System_Object_System_Threading_CancellationToken_">IResourceWriteRepository&lt;TResource, TId&gt;.SetRelationshipAsync(TResource, object, CancellationToken)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_AddToToManyRelationshipAsync__0__1_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_">IResourceWriteRepository&lt;TResource, TId&gt;.AddToToManyRelationshipAsync(TResource, TId, ISet&lt;IIdentifiable&gt;, CancellationToken)</a>
@@ -108,12 +108,12 @@
       <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html#JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_RemoveFromToManyRelationshipAsync__0_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_">IResourceWriteRepository&lt;TResource, TId&gt;.RemoveFromToManyRelationshipAsync(TResource, ISet&lt;IIdentifiable&gt;, CancellationToken)</a>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Repositories.html">JsonApiDotNetCore.Repositories</a></h6>
+  <h6><strong>Namespace</strong>: <span class="xref">JsonApiDotNetCore</span>.<a class="xref" href="JsonApiDotNetCore.Repositories.html">Repositories</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Repositories_IResourceRepository_2_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[PublicAPI]
-public interface IResourceRepository&lt;TResource, in TId&gt; : IResourceReadRepository&lt;TResource, TId&gt;, IResourceWriteRepository&lt;TResource, TId&gt; where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
+public interface IResourceRepository&lt;TResource, in TId&gt; : IResourceReadRepository&lt;TResource, TId&gt;, IResourceWriteRepository&lt;TResource, TId&gt; where TResource : class, IIdentifiable&lt;in TId&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">

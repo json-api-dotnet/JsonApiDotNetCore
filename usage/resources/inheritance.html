@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Resource inheritance </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Resource inheritance ">
-  
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Resource inheritance </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Resource inheritance ">
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -107,7 +107,8 @@ public sealed class Woman : Human
     [HasOne]
     public Man? Husband { get; set; }
 }
-</code></pre><h2 id="reading-data">Reading data</h2>
+</code></pre>
+<h2 id="reading-data">Reading data</h2>
 <p>You can access them through base or derived endpoints.</p>
 <pre><code class="lang-http">GET /humans HTTP/1.1
 
@@ -201,16 +202,20 @@ public sealed class Woman : Human
     }
   ]
 }
-</code></pre><h3 id="spare-fieldsets">Spare fieldsets</h3>
+</code></pre>
+<h3 id="spare-fieldsets">Spare fieldsets</h3>
 <p>If you only want to retrieve the fields from the base type, you can use <a href="../reading/sparse-fieldset-selection.html">sparse fieldsets</a>.</p>
 <pre><code class="lang-http">GET /humans?fields[men]=name,children&amp;fields[women]=name,children HTTP/1.1
-</code></pre><h3 id="includes">Includes</h3>
+</code></pre>
+<h3 id="includes">Includes</h3>
 <p>Relationships on derived types can be included without special syntax.</p>
 <pre><code class="lang-http">GET /humans?include=husband,wife,children HTTP/1.1
-</code></pre><h3 id="sorting">Sorting</h3>
+</code></pre>
+<h3 id="sorting">Sorting</h3>
 <p>Just like includes, you can sort on derived attributes and relationships.</p>
 <pre><code class="lang-http">GET /humans?sort=maidenName,wife.name HTTP/1.1
-</code></pre><p>This returns all women sorted by their maiden names, followed by all men sorted by the name of their wife.</p>
+</code></pre>
+<p>This returns all women sorted by their maiden names, followed by all men sorted by the name of their wife.</p>
 <p>To accomplish the same from a <a href="../extensibility/resource-definitions.html">Resource Definition</a>, upcast to the derived type:</p>
 <pre><code class="lang-c#">public override SortExpression OnApplySort(SortExpression? existingSort)
 {
@@ -220,18 +225,23 @@ public sealed class Woman : Human
         (human =&gt; ((Man)human).Wife!.Name, ListSortDirection.Ascending)
     });
 }
-</code></pre><h3 id="filtering">Filtering</h3>
+</code></pre>
+<h3 id="filtering">Filtering</h3>
 <p>Use the <code>isType</code> filter function to perform a type check on a derived type. You can pass a nested filter, where the derived fields are accessible.</p>
 <p>Only return men:</p>
 <pre><code class="lang-http">GET /humans?filter=isType(,men) HTTP/1.1
-</code></pre><p>Only return men with beards:</p>
-<pre><code class="lang-http">GET /humans?filter=isType(,men,equals(hasBeard,&#39;true&#39;)) HTTP/1.1
-</code></pre><p>The first parameter of <code>isType</code> can be used to perform the type check on a to-one relationship path.</p>
+</code></pre>
+<p>Only return men with beards:</p>
+<pre><code class="lang-http">GET /humans?filter=isType(,men,equals(hasBeard,'true')) HTTP/1.1
+</code></pre>
+<p>The first parameter of <code>isType</code> can be used to perform the type check on a to-one relationship path.</p>
 <p>Only return people whose best friend is a man with children:</p>
 <pre><code class="lang-http">GET /humans?filter=isType(bestFriend,men,has(children)) HTTP/1.1
-</code></pre><p>Only return people who have at least one female married child:</p>
+</code></pre>
+<p>Only return people who have at least one female married child:</p>
 <pre><code class="lang-http">GET /humans?filter=has(children,isType(,woman,not(equals(husband,null)))) HTTP/1.1
-</code></pre><h2 id="writing-data">Writing data</h2>
+</code></pre>
+<h2 id="writing-data">Writing data</h2>
 <p>Just like reading data, you can use base or derived endpoints. When using relationships in request bodies, you can use base or derived types as well.
 The only exception is that you cannot use an abstract base type in the request body when creating or updating a resource.</p>
 <p>For example, updating an attribute and relationship can be done at an abstract endpoint, but its body requires non-abstract types:</p>
@@ -254,7 +264,8 @@ The only exception is that you cannot use an abstract base type in the request b
     }
   }
 }
-</code></pre><p>Updating a relationship does allow abstract types. For example:</p>
+</code></pre>
+<p>Updating a relationship does allow abstract types. For example:</p>
 <pre><code class="lang-http">PATCH /humans/1/relationships/children HTTP/1.1
 
 {
@@ -265,15 +276,17 @@ The only exception is that you cannot use an abstract base type in the request b
     }
   ]
 }
-</code></pre><h3 id="request-pipeline">Request pipeline</h3>
+</code></pre>
+<h3 id="request-pipeline">Request pipeline</h3>
 <p>The <code>TResource</code> type parameter used in controllers, resource services and resource repositories always matches the used endpoint.
 But when JsonApiDotNetCore sees usage of a type from a type hierarchy, it fetches the stored types and updates <code>IJsonApiRequest</code> accordingly.
 As a result, <code>TResource</code> can be different from what <code>IJsonApiRequest.PrimaryResourceType</code> returns.</p>
 <p>For example, on the request:</p>
 <pre><code class="lang-http"> GET /humans/1 HTTP/1.1
-</code></pre><p>JsonApiDotNetCore runs <code>IResourceService&lt;Human, long&gt;</code>, but <code>IJsonApiRequest.PrimaryResourceType</code> returns <code>Woman</code>
+</code></pre>
+<p>JsonApiDotNetCore runs <code>IResourceService&lt;Human, long&gt;</code>, but <code>IJsonApiRequest.PrimaryResourceType</code> returns <code>Woman</code>
 if human with ID 1 is stored as a woman in the underlying data store.</p>
-<p>Even with a simple type hierarchy as used here, lots of possible combinations quickly arise. For example, changing someone&#39;s best friend can be done using the following requests:</p>
+<p>Even with a simple type hierarchy as used here, lots of possible combinations quickly arise. For example, changing someone's best friend can be done using the following requests:</p>
 <ul>
 <li><code>PATCH /humans/1/ { &quot;data&quot;: { relationships: { bestFriend: { type: &quot;women&quot; ... } } } }</code></li>
 <li><code>PATCH /humans/1/ { &quot;data&quot;: { relationships: { bestFriend: { type: &quot;men&quot; ... } } } }</code></li>
@@ -296,7 +309,7 @@ Resource definitions provide a better solution, see below.</p>
 <h3 id="resource-definitions">Resource definitions</h3>
 <p>In contrast to the request pipeline, JsonApiDotNetCore always executes the resource definition that matches the <em>stored</em> type.
 This enables to implement business logic in a central place, irrespective of which endpoint was used or whether base types were used in relationships.</p>
-<p>To delegate logic for base types to their matching resource type, you can build a chain of resource definitions. And because you&#39;ll always get the
+<p>To delegate logic for base types to their matching resource type, you can build a chain of resource definitions. And because you'll always get the
 actually stored types (for relationships too), you can type-check left-side and right-side types in resources definitions.</p>
 <pre><code class="lang-c#">public sealed class HumanDefinition : JsonApiResourceDefinition&lt;Human, long&gt;
 {
@@ -362,7 +375,7 @@ public sealed class WomanDefinition : JsonApiResourceDefinition&lt;Woman, long&g
         if (hasOneRelationship.Property.Name == nameof(Woman.Husband) &amp;&amp;
             rightResourceId == null)
         {
-            throw new Exception(&quot;We don&#39;t accept unmarried women at this time.&quot;);
+            throw new Exception(&quot;We don't accept unmarried women at this time.&quot;);
         }
 
         return Task.FromResult(rightResourceId);
@@ -397,7 +410,7 @@ public sealed class ManDefinition : JsonApiResourceDefinition&lt;Man, long&gt;
         HasOneAttribute hasOneRelationship, IIdentifiable? rightResourceId,
         WriteOperationKind writeOperation, CancellationToken cancellationToken)
     {
-        // No man-specific logic, but we&#39;ll still need to delegate.
+        // No man-specific logic, but we'll still need to delegate.
         return _baseDefinition.OnSetToOneRelationshipAsync(leftResource, hasOneRelationship,
             rightResourceId, writeOperation, cancellationToken);
     }
@@ -405,11 +418,12 @@ public sealed class ManDefinition : JsonApiResourceDefinition&lt;Man, long&gt;
     public override Task OnWritingAsync(Man resource, WriteOperationKind writeOperation,
         CancellationToken cancellationToken)
     {
-        // No man-specific logic, but we&#39;ll still need to delegate.
+        // No man-specific logic, but we'll still need to delegate.
         return _baseDefinition.OnWritingAsync(resource, writeOperation, cancellationToken);
     }
 }
-</code></pre></article>
+</code></pre>
+</article>
           </div>
 
           <div class="hidden-sm col-md-2" role="complementary">

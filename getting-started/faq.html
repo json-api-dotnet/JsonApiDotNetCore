@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Frequently Asked Questions </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Frequently Asked Questions ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Frequently Asked Questions </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Frequently Asked Questions ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -71,16 +71,16 @@
 <h4 id="where-can-i-find-documentation-and-examples">Where can I find documentation and examples?</h4>
 <p>While the <a href="../usage/resources/index.html">documentation</a> covers basic features and a few runnable example projects are available <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples">here</a>,
 many more advanced use cases are available as integration tests <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests">here</a>, so be sure to check them out!</p>
-<h4 id="why-cant-i-use-openapi">Why can&#39;t I use OpenAPI?</h4>
+<h4 id="why-cant-i-use-openapi">Why can't I use OpenAPI?</h4>
 <p>Due to the mismatch between the JSON:API structure and the shape of ASP.NET controller methods, this does not work out of the box.
-This is high on our agenda and we&#39;re steadily making progress, but it&#39;s quite complex and far from complete.
+This is high on our agenda and we're steadily making progress, but it's quite complex and far from complete.
 See <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1046">here</a> for the current status, which includes instructions on trying out the latest build.</p>
-<h4 id="whats-available-to-implement-a-jsonapi-client">What&#39;s available to implement a JSON:API client?</h4>
-<p>It depends on the programming language used. There&#39;s an overwhelming list of client libraries at <a href="https://jsonapi.org/implementations/#client-libraries">https://jsonapi.org/implementations/#client-libraries</a>.</p>
+<h4 id="whats-available-to-implement-a-jsonapi-client">What's available to implement a JSON:API client?</h4>
+<p>It depends on the programming language used. There's an overwhelming list of client libraries at <a href="https://jsonapi.org/implementations/#client-libraries">https://jsonapi.org/implementations/#client-libraries</a>.</p>
 <p>The JSON object model inside JsonApiDotNetCore is tweaked for server-side handling (be tolerant at inputs and strict at outputs).
-While you technically <em>could</em> use our <code>JsonSerializer</code> converters from a .NET client application with some hacks, we don&#39;t recommend it.
-You&#39;ll need to build the resource graph on the client and rely on internal implementation details that are subject to change in future versions.</p>
-<p>In the long term, we&#39;d like to solve this through OpenAPI, which enables the generation of a (statically typed) client library in various languages.</p>
+While you technically <em>could</em> use our <code>JsonSerializer</code> converters from a .NET client application with some hacks, we don't recommend it.
+You'll need to build the resource graph on the client and rely on internal implementation details that are subject to change in future versions.</p>
+<p>In the long term, we'd like to solve this through OpenAPI, which enables the generation of a (statically typed) client library in various languages.</p>
 <h4 id="how-can-i-debug-my-api-project">How can I debug my API project?</h4>
 <p>Due to auto-generated controllers, you may find it hard to determine where to put your breakpoints.
 In Visual Studio, controllers are accessible below <strong>Solution Explorer &gt; Project &gt; Dependencies &gt; Analyzers &gt; JsonApiDotNetCore.SourceGenerators</strong>.</p>
@@ -107,7 +107,8 @@ builder.Services.AddJsonApi&lt;AppDbContext&gt;(options =&gt;
     options.IncludeRequestBodyInErrors = true;
     options.SerializerOptions.WriteIndented = true;
 });
-</code></pre></li>
+</code></pre>
+</li>
 <li><p>Turning on verbose logging and logging of executed SQL statements, by adding the following to your <code>appsettings.Development.json</code>:</p>
 <pre><code class="lang-json">{
   &quot;Logging&quot;: {
@@ -118,21 +119,23 @@ builder.Services.AddJsonApi&lt;AppDbContext&gt;(options =&gt;
     }
   }
 }
-</code></pre></li>
+</code></pre>
+</li>
 </ul>
 <h4 id="what-if-my-jsonapi-resources-do-not-exactly-match-the-shape-of-my-database-tables">What if my JSON:API resources do not exactly match the shape of my database tables?</h4>
 <p>We often find users trying to write custom code to solve that. They usually get it wrong or incomplete, and it may not perform well.
 Or it simply fails because it cannot be translated to SQL.
-The good news is that there&#39;s an easier solution most of the time: configure Entity Framework Core mappings to do the work.</p>
+The good news is that there's an easier solution most of the time: configure Entity Framework Core mappings to do the work.</p>
 <p>For example, if your primary key column is named &quot;CustomerId&quot; instead of &quot;Id&quot;:</p>
 <pre><code class="lang-c#">builder.Entity&lt;Customer&gt;().Property(x =&gt; x.Id).HasColumnName(&quot;CustomerId&quot;);
-</code></pre><p>It certainly pays off to read up on these capabilities at <a href="https://learn.microsoft.com/en-us/ef/core/modeling/">Creating and Configuring a Model</a>.
+</code></pre>
+<p>It certainly pays off to read up on these capabilities at <a href="https://learn.microsoft.com/en-us/ef/core/modeling/">Creating and Configuring a Model</a>.
 Another great resource is <a href="https://www.learnentityframeworkcore.com/configuration">Learn Entity Framework Core</a>.</p>
 <h4 id="can-i-share-my-resource-models-with-net-framework-projects">Can I share my resource models with .NET Framework projects?</h4>
 <p>Yes, you can. Put your model classes in a separate project that only references <a href="https://www.nuget.org/packages/JsonApiDotNetCore.Annotations/">JsonApiDotNetCore.Annotations</a>.
 This package contains just the JSON:API attributes and targets NetStandard 1.0, which makes it flexible to consume.
 At startup, use <a href="../usage/resource-graph.html#auto-discovery">Auto-discovery</a> and point it to your shared project.</p>
-<h4 id="whats-the-best-place-to-put-my-custom-businessvalidation-logic">What&#39;s the best place to put my custom business/validation logic?</h4>
+<h4 id="whats-the-best-place-to-put-my-custom-businessvalidation-logic">What's the best place to put my custom business/validation logic?</h4>
 <p>For basic input validation, use the attributes from <a href="https://learn.microsoft.com/en-us/aspnet/core/mvc/models/validation?source=recommendations&amp;view=aspnetcore-7.0#built-in-attributes">ASP.NET ModelState Validation</a> to get the best experience.
 JsonApiDotNetCore is aware of them and adjusts behavior accordingly. And it produces the best possible error responses.</p>
 <p>For non-trivial business rules that require custom code, the place to be is <a href="../usage/extensibility/resource-definitions.html">Resource Definitions</a>.
@@ -168,12 +171,12 @@ Ensure the right database indexes are in place for what you enable.</li>
 <li>Not included in JsonApiDotNetCore: Apply general practices such as rate limiting, load balancing, authentication/authorization, blocking very large URLs/request bodies, etc.</li>
 </ul>
 <h4 id="can-i-offload-requests-to-a-background-process">Can I offload requests to a background process?</h4>
-<p>Yes, that&#39;s possible. Override controller methods to return <code>HTTP 202 Accepted</code>, with a <code>Location</code> HTTP header where users can retrieve the result.
+<p>Yes, that's possible. Override controller methods to return <code>HTTP 202 Accepted</code>, with a <code>Location</code> HTTP header where users can retrieve the result.
 Your controller method needs to store the request state (URL, query string, and request body) in a queue, which your background process can read from.
 From within your background process job handler, reconstruct the request state, execute the appropriate <code>JsonApiResourceService</code> method and store the result.
-There&#39;s a basic example available at <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1144">https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1144</a>, which processes a captured query string.</p>
+There's a basic example available at <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1144">https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1144</a>, which processes a captured query string.</p>
 <h3 id="what-if-i-want-to-use-something-other-than-entity-framework-core">What if I want to use something other than Entity Framework Core?</h3>
-<p>This basically means you&#39;ll need to implement data access yourself. There are two approaches for interception: at the resource service level and at the repository level.
+<p>This basically means you'll need to implement data access yourself. There are two approaches for interception: at the resource service level and at the repository level.
 Either way, you can use the built-in query string and request body parsing, as well as routing, error handling, and rendering of responses.</p>
 <p>Here are some injectable request-scoped types to be aware of:</p>
 <ul>
@@ -185,26 +188,28 @@ Either way, you can use the built-in query string and request body parsing, as w
 </ul>
 <p>You may also want to inject the singletons <code>IJsonApiOptions</code> (which contains settings such as default page size) and <code>IResourceGraph</code> (the JSON:API model of resources and relationships).</p>
 <p>So, back to the topic of where to intercept. It helps to familiarize yourself with the <a href="../internals/queries.html">execution pipeline</a>.
-Replacing at the service level is the simplest. But it means you&#39;ll need to read the parsed query string parameters and invoke
-all resource definition callbacks yourself. And you won&#39;t get change detection (HTTP 203 Not Modified).
-Take a look at <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs">JsonApiResourceService</a> to see what you&#39;re missing out on.</p>
-<p>You&#39;ll get a lot more out of the box if replacing at the repository level instead. You don&#39;t need to apply options, analyze query strings or populate caches for the serializer.
+Replacing at the service level is the simplest. But it means you'll need to read the parsed query string parameters and invoke
+all resource definition callbacks yourself. And you won't get change detection (HTTP 203 Not Modified).
+Take a look at <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs">JsonApiResourceService</a> to see what you're missing out on.</p>
+<p>You'll get a lot more out of the box if replacing at the repository level instead. You don't need to apply options, analyze query strings or populate caches for the serializer.
 And most resource definition callbacks are handled.
-That&#39;s because the built-in resource service translates all JSON:API aspects of the request into a database-agnostic data structure called <code>QueryLayer</code>.
+That's because the built-in resource service translates all JSON:API aspects of the request into a database-agnostic data structure called <code>QueryLayer</code>.
 Now the hard part for you becomes reading that data structure and producing data access calls from that.
 If your data store provides a LINQ provider, you may reuse most of <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/QueryableBuilder.cs">QueryableBuilder</a>,
 which drives the translation into <a href="https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/">System.Linq.Expressions</a>.
-Note however, that it also produces calls to <code>.Include(&quot;&quot;)</code>, which is an Entity Framework Core-specific extension method, so you&#39;ll likely need to prevent that from happening.
+Note however, that it also produces calls to <code>.Include(&quot;&quot;)</code>, which is an Entity Framework Core-specific extension method, so you'll likely need to prevent that from happening.
 We use this for accessing <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore.MongoDb/blob/674889e037334e3f376550178ce12d0842d7560c/src/JsonApiDotNetCore.MongoDb/Queries/Internal/QueryableBuilding/MongoQueryableBuilder.cs">MongoDB</a>.</p>
-<div class="TIP"><h5>Tip</h5><p><a href="https://github.com/zspitz/ExpressionTreeVisualizer">ExpressionTreeVisualizer</a> is very helpful in trying to debug LINQ expression trees!</p>
+<div class="TIP">
+<h5>Tip</h5>
+<p><a href="https://github.com/zspitz/ExpressionTreeVisualizer">ExpressionTreeVisualizer</a> is very helpful in trying to debug LINQ expression trees!</p>
 </div>
 <h4 id="i-love-jsonapidotnetcore-how-can-i-support-the-team">I love JsonApiDotNetCore! How can I support the team?</h4>
 <p>The best way to express your gratitude is by starring our repository.
 This increases our leverage when asking for bug fixes in dependent projects, such as the .NET runtime and Entity Framework Core.
 Of course, a simple thank-you message in our <a href="https://gitter.im/json-api-dotnet-core/Lobby">Gitter channel</a> is appreciated too!
-We don&#39;t take monetary contributions at the moment.</p>
-<p>If you&#39;d like to do more: try things out, ask questions, create GitHub bug reports or feature requests, or upvote existing issues that are important to you.
-We welcome PRs, but keep in mind: The worst thing in the world is opening a PR that gets rejected after you&#39;ve put a lot of effort into it.
+We don't take monetary contributions at the moment.</p>
+<p>If you'd like to do more: try things out, ask questions, create GitHub bug reports or feature requests, or upvote existing issues that are important to you.
+We welcome PRs, but keep in mind: The worst thing in the world is opening a PR that gets rejected after you've put a lot of effort into it.
 So for any non-trivial changes, please open an issue first to discuss your approach and ensure it fits the product vision.</p>
 <h4 id="is-there-anything-else-i-should-be-aware-of">Is there anything else I should be aware of?</h4>
 <p>See <a href="../usage/common-pitfalls.html">Common Pitfalls</a>.</p>

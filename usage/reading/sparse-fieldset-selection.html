@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Sparse Fieldset Selection </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Sparse Fieldset Selection ">
-  
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Sparse Fieldset Selection </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Sparse Fieldset Selection ">
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -73,17 +73,24 @@ Put the resource type to apply the fieldset on between the brackets.
 This can be used on primary and secondary endpoints. The selection is applied on both primary and included resources.</p>
 <p>Primary endpoint example:</p>
 <pre><code class="lang-http">GET /articles?fields[articles]=title,body,comments HTTP/1.1
-</code></pre><p>Secondary endpoint example:</p>
+</code></pre>
+<p>Secondary endpoint example:</p>
 <pre><code class="lang-http">GET /api/blogs/1/articles?fields[articles]=title,body,comments HTTP/1.1
-</code></pre><p>When combined with the <code>include</code> query string parameter, a subset of related fields can be specified too.</p>
+</code></pre>
+<p>When combined with the <code>include</code> query string parameter, a subset of related fields can be specified too.</p>
 <p>Example for an included HasOne relationship:</p>
 <pre><code class="lang-http">GET /articles?include=author&amp;fields[authors]=name HTTP/1.1
-</code></pre><p>Example for an included HasMany relationship:</p>
+</code></pre>
+<p>Example for an included HasMany relationship:</p>
 <pre><code class="lang-http">GET /articles?include=revisions&amp;fields[revisions]=publishTime HTTP/1.1
-</code></pre><p>Example for both top-level and relationship:</p>
+</code></pre>
+<p>Example for both top-level and relationship:</p>
 <pre><code class="lang-http">GET /articles?include=author&amp;fields[articles]=title,body,author&amp;fields[authors]=name HTTP/1.1
-</code></pre><div class="NOTE"><h5>Note</h5><p>In the last example, the <code>author</code> relationship is also added to the <code>articles</code> fieldset, so that the relationship from article to author is returned.
-When omitted, you&#39;ll get the included resources returned, but without full resource linkage (as described <a href="https://jsonapi.org/examples/#sparse-fieldsets">here</a>).</p>
+</code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>In the last example, the <code>author</code> relationship is also added to the <code>articles</code> fieldset, so that the relationship from article to author is returned.
+When omitted, you'll get the included resources returned, but without full resource linkage (as described <a href="https://jsonapi.org/examples/#sparse-fieldsets">here</a>).</p>
 </div>
 <h2 id="overriding">Overriding</h2>
 <p>As a developer, you can force to include and/or exclude specific fields as described <a href="../extensibility/resource-definitions.html">here</a>.</p>

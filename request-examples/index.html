@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Example requests </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Example requests ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Example requests </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Example requests ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -63,7 +63,9 @@
 
 <p>These requests have been generated against the &quot;GettingStarted&quot; application and are updated on every deployment.</p>
 <p>All of these requests have been created using out-of-the-box features.</p>
-<div class="NOTE"><h5>Note</h5><p>curl requires &quot;[&quot; and &quot;]&quot; in URLs to be escaped.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>curl requires &quot;[&quot; and &quot;]&quot; in URLs to be escaped.</p>
 </div>
 <h1 id="reading-data">Reading data</h1>
 <h3 id="get-all">Get all</h3>
@@ -117,7 +119,7 @@
       &quot;type&quot;: &quot;books&quot;,
       &quot;id&quot;: &quot;3&quot;,
       &quot;attributes&quot;: {
-        &quot;title&quot;: &quot;Gulliver&#39;s Travels&quot;,
+        &quot;title&quot;: &quot;Gulliver's Travels&quot;,
         &quot;publishYear&quot;: 1726
       },
       &quot;relationships&quot;: {
@@ -221,7 +223,7 @@
       &quot;type&quot;: &quot;books&quot;,
       &quot;id&quot;: &quot;3&quot;,
       &quot;attributes&quot;: {
-        &quot;title&quot;: &quot;Gulliver&#39;s Travels&quot;,
+        &quot;title&quot;: &quot;Gulliver's Travels&quot;,
         &quot;publishYear&quot;: 1726
       },
       &quot;relationships&quot;: {
@@ -346,10 +348,10 @@
   }
 }
 </code></pre><h3 id="filter-on-partial-match">Filter on partial match</h3>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f &quot;http://localhost:14141/api/people?filter=contains(name,&#39;Shell&#39;)&quot;
+<pre><code class="lang-ps" name="REQUEST">curl -s -f &quot;http://localhost:14141/api/people?filter=contains(name,'Shell')&quot;
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
   &quot;links&quot;: {
-    &quot;self&quot;: &quot;/api/people?filter=contains(name,&#39;Shell&#39;)&quot;,
+    &quot;self&quot;: &quot;/api/people?filter=contains(name,'Shell')&quot;,
     &quot;first&quot;: &quot;/api/people?filter=contains(name,%27Shell%27)&quot;,
     &quot;last&quot;: &quot;/api/people?filter=contains(name,%27Shell%27)&quot;
   },
@@ -409,7 +411,7 @@
       &quot;type&quot;: &quot;books&quot;,
       &quot;id&quot;: &quot;3&quot;,
       &quot;attributes&quot;: {
-        &quot;title&quot;: &quot;Gulliver&#39;s Travels&quot;,
+        &quot;title&quot;: &quot;Gulliver's Travels&quot;,
         &quot;publishYear&quot;: 1726
       },
       &quot;relationships&quot;: {
@@ -487,14 +489,14 @@
 <h3 id="create-resource">Create resource</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/people        `
     -H &quot;Content-Type: application/vnd.api+json&quot;     `
-    -d &#39;{
+    -d '{
             \&quot;data\&quot;: {
                 \&quot;type\&quot;: \&quot;people\&quot;,
                 \&quot;attributes\&quot;: {
                     \&quot;name\&quot;: \&quot;Alice\&quot;
                 }
             }
-        }&#39;
+        }'
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/people&quot;
@@ -521,7 +523,7 @@
 </code></pre><h3 id="create-resource-with-relationship">Create resource with relationship</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books         `
     -H &quot;Content-Type: application/vnd.api+json&quot;     `
-    -d &#39;{
+    -d '{
             \&quot;data\&quot;: {
                 \&quot;type\&quot;: \&quot;books\&quot;,
                 \&quot;attributes\&quot;: {
@@ -537,7 +539,7 @@
                     }
                 }
             }
-        }&#39;
+        }'
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/books&quot;
@@ -566,7 +568,7 @@
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books/1       `
     -H &quot;Content-Type: application/vnd.api+json&quot;     `
     -X PATCH                                        `
-    -d &#39;{
+    -d '{
             \&quot;data\&quot;: {
                 \&quot;type\&quot;: \&quot;books\&quot;,
                 \&quot;id\&quot;: \&quot;1\&quot;,
@@ -574,7 +576,7 @@
                     \&quot;publishYear\&quot;: 1820
                 }
             }
-        }&#39;
+        }'
 </code></pre><pre><code class="lang-json" name="RESPONSE"></code></pre><h3 id="delete-resource">Delete resource</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books/1       `
     -X DELETE

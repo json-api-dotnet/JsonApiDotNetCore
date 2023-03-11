@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Updating resources </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Updating resources ">
-  
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Updating resources </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Updating resources ">
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -81,12 +81,15 @@
     }
   }
 }
-</code></pre><p>This preserves the values of all other unsent attributes and is called a <em>partial patch</em>.</p>
+</code></pre>
+<p>This preserves the values of all other unsent attributes and is called a <em>partial patch</em>.</p>
 <p>When only the attributes that were sent in the request have changed, the server returns <code>204 No Content</code>.
 But if additional attributes have changed (for example, by a database trigger or <a href="../extensibility/resource-definitions.html">resource definition</a> that refreshes the last-modified date) the server returns <code>200 OK</code>, along with all attributes of the updated resource.</p>
 <h2 id="updating-resource-relationships">Updating resource relationships</h2>
 <p>Besides its attributes, the relationships of a resource can be changed using a PATCH request too.</p>
-<div class="NOTE"><h5>Note</h5><p>All resources being assigned in a relationship must already exist.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>All resources being assigned in a relationship must already exist.</p>
 </div>
 <p>When updating a HasMany relationship, the existing set is replaced by the new set. See below on how to add/remove resources.</p>
 <p>The next example replaces both the owner and tags of an article.</p>
@@ -118,8 +121,11 @@ But if additional attributes have changed (for example, by a database trigger or
     }
   }
 }
-</code></pre><p>A HasOne relationship can be cleared by setting <code>data</code> to <code>null</code>, while a HasMany relationship can be cleared by setting it to an empty array.</p>
-<div class="TIP"><h5>Tip</h5><p>By combining the examples above, both attributes and relationships can be updated using a single PATCH request.</p>
+</code></pre>
+<p>A HasOne relationship can be cleared by setting <code>data</code> to <code>null</code>, while a HasMany relationship can be cleared by setting it to an empty array.</p>
+<div class="TIP">
+<h5>Tip</h5>
+<p>By combining the examples above, both attributes and relationships can be updated using a single PATCH request.</p>
 </div>
 <h2 id="response-body">Response body</h2>
 <p>PATCH requests can be combined with query string parameters that are normally used for reading data, such as <code>include</code> and <code>fields[]</code>. For example:</p>
@@ -128,7 +134,10 @@ But if additional attributes have changed (for example, by a database trigger or
 {
   ...
 }
-</code></pre><div class="NOTE"><h5>Note</h5><p>After the resource has been updated on the server, it is re-fetched from the database using the specified query string parameters and returned to the client.
+</code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>After the resource has been updated on the server, it is re-fetched from the database using the specified query string parameters and returned to the client.
 However, the used query string parameters only have an effect when <code>200 OK</code> is returned.</p>
 </div>
 <h1 id="updating-relationships">Updating relationships</h1>
@@ -143,7 +152,8 @@ The same rules for clearing the relationship apply. And similar to PATCH on a re
     &quot;id&quot;: &quot;101&quot;
   }
 }
-</code></pre><p>The server returns <code>204 No Content</code> when the update is successful.</p>
+</code></pre>
+<p>The server returns <code>204 No Content</code> when the update is successful.</p>
 <h2 id="changing-hasmany-relationships">Changing HasMany relationships</h2>
 <p>The POST and DELETE verbs can be used on HasMany relationship URLs to add or remove resources to/from an existing set without replacing it.</p>
 <p>The next example adds another tag to the existing set of tags of an article:</p>
@@ -157,7 +167,8 @@ The same rules for clearing the relationship apply. And similar to PATCH on a re
     }
   ]
 }
-</code></pre><p>Likewise, the next example removes a single tag from the set of tags of an article:</p>
+</code></pre>
+<p>Likewise, the next example removes a single tag from the set of tags of an article:</p>
 <pre><code class="lang-http">DELETE /articles/1/relationships/tags HTTP/1.1
 
 {
@@ -168,7 +179,8 @@ The same rules for clearing the relationship apply. And similar to PATCH on a re
     }
   ]
 }
-</code></pre></article>
+</code></pre>
+</article>
           </div>
 
           <div class="hidden-sm col-md-2" role="complementary">

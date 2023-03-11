@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Resource Repositories </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Resource Repositories ">
-  
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Resource Repositories </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Resource Repositories ">
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -74,11 +74,15 @@ If you only need minor changes you can override the methods defined in <code>Ent
 builder.Services.AddScoped&lt;IResourceRepository&lt;Article, int&gt;, ArticleRepository&gt;();
 builder.Services.AddScoped&lt;IResourceReadRepository&lt;Article, int&gt;, ArticleRepository&gt;();
 builder.Services.AddScoped&lt;IResourceWriteRepository&lt;Article, int&gt;, ArticleRepository&gt;();
-</code></pre><p>In v4.0 we introduced an extension method that you can use to register a resource repository on all of its JsonApiDotNetCore interfaces.
+</code></pre>
+<p>In v4.0 we introduced an extension method that you can use to register a resource repository on all of its JsonApiDotNetCore interfaces.
 This is helpful when you implement (a subset of) the resource interfaces and want to register them all in one go.</p>
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddResourceRepository&lt;ArticleRepository&gt;();
-</code></pre><div class="TIP"><h5>Tip</h5><p>If you&#39;re using <a href="../resource-graph.html#auto-discovery">auto-discovery</a>, then resource services, repositories and resource definitions will be automatically registered for you.</p>
+</code></pre>
+<div class="TIP">
+<h5>Tip</h5>
+<p>If you're using <a href="../resource-graph.html#auto-discovery">auto-discovery</a>, then resource services, repositories and resource definitions will be automatically registered for you.</p>
 </div>
 <p>A sample implementation that performs authorization might look like this.</p>
 <p>All of the methods in EntityFrameworkCoreRepository will use the <code>GetAll()</code> method to get the <code>DbSet&lt;TResource&gt;</code>, so this is a good method to apply filters such as user or tenant authorization.</p>
@@ -104,7 +108,8 @@ builder.Services.AddResourceRepository&lt;ArticleRepository&gt;();
             .Where(article =&gt; article.UserId == _authenticationService.UserId);
     }
 }
-</code></pre><h2 id="multiple-dbcontexts">Multiple DbContexts</h2>
+</code></pre>
+<h2 id="multiple-dbcontexts">Multiple DbContexts</h2>
 <p>If you need to use multiple Entity Framework Core DbContexts, first create a repository for each context and inject its typed resolver.
 This example shows a single <code>DbContextARepository</code> for all entities that are members of <code>DbContextA</code>.</p>
 <pre><code class="lang-c#">public class DbContextARepository&lt;TResource, TId&gt;
@@ -122,7 +127,8 @@ This example shows a single <code>DbContextARepository</code> for all entities t
     {
     }
 }
-</code></pre><p>Then register the added types and use the non-generic overload of <code>AddJsonApi</code> to add their resources to the graph.</p>
+</code></pre>
+<p>Then register the added types and use the non-generic overload of <code>AddJsonApi</code> to add their resources to the graph.</p>
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddDbContext&lt;DbContextA&gt;(options =&gt; options.UseSqlite(&quot;Data Source=A.db&quot;));
 builder.Services.AddDbContext&lt;DbContextB&gt;(options =&gt; options.UseSqlite(&quot;Data Source=B.db&quot;));
@@ -131,7 +137,8 @@ builder.Services.AddJsonApi(dbContextTypes: new[] { typeof(DbContextA), typeof(D
 
 builder.Services.AddScoped&lt;IResourceRepository&lt;ResourceA&gt;, DbContextARepository&lt;ResourceA&gt;&gt;();
 builder.Services.AddScoped&lt;IResourceRepository&lt;ResourceB&gt;, DbContextBRepository&lt;ResourceB&gt;&gt;();
-</code></pre></article>
+</code></pre>
+</article>
           </div>
 
           <div class="hidden-sm col-md-2" role="complementary">

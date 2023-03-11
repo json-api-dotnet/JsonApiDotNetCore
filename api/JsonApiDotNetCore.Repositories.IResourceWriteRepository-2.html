@@ -4,22 +4,22 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IResourceWriteRepository&lt;TResource, TId&gt;
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Interface IResourceWriteRepository&lt;TResource, TId&gt;
  </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IResourceWriteRepository&lt;TResource, TId&gt;
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Interface IResourceWriteRepository&lt;TResource, TId&gt;
  ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -75,13 +75,12 @@
   <div class="markdown level0 summary"><p>Groups write operations.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Repositories.html">JsonApiDotNetCore.Repositories</a></h6>
+  <h6><strong>Namespace</strong>: <span class="xref">JsonApiDotNetCore</span>.<a class="xref" href="JsonApiDotNetCore.Repositories.html">Repositories</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[PublicAPI]
-public interface IResourceWriteRepository&lt;TResource, in TId&gt;
-    where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
+public interface IResourceWriteRepository&lt;TResource, in TId&gt; where TResource : class, IIdentifiable&lt;in TId&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -114,13 +113,13 @@ public interface IResourceWriteRepository&lt;TResource, in TId&gt;
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/IResourceWriteRepository.cs/#L56">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_AddToToManyRelationshipAsync_" data-uid="JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.AddToToManyRelationshipAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_AddToToManyRelationshipAsync__0__1_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.AddToToManyRelationshipAsync(`0,`1,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">AddToToManyRelationshipAsync(TResource, TId, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
+  <h4 id="JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_AddToToManyRelationshipAsync__0__1_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.AddToToManyRelationshipAsync(`0,`1,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">AddToToManyRelationshipAsync(TResource?, TId, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Adds resources to a to-many relationship in the underlying data store.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task AddToToManyRelationshipAsync(TResource leftResource, TId leftId, ISet&lt;IIdentifiable&gt; rightResourceIds, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task AddToToManyRelationshipAsync(TResource? leftResource, TId leftId, ISet&lt;IIdentifiable&gt; rightResourceIds, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -143,7 +142,7 @@ public interface IResourceWriteRepository&lt;TResource, in TId&gt;
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.ISet&lt;T&gt;</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
         <td><span class="parametername">rightResourceIds</span></td>
         <td></td>
       </tr>
@@ -235,13 +234,13 @@ public interface IResourceWriteRepository&lt;TResource, in TId&gt;
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/IResourceWriteRepository.cs/#L46">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_DeleteAsync_" data-uid="JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.DeleteAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_DeleteAsync__0__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.DeleteAsync(`0,`1,System.Threading.CancellationToken)">DeleteAsync(TResource, TId, CancellationToken)</h4>
+  <h4 id="JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_DeleteAsync__0__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.DeleteAsync(`0,`1,System.Threading.CancellationToken)">DeleteAsync(TResource?, TId, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Deletes an existing resource from the underlying data store.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task DeleteAsync(TResource resourceFromDatabase, TId id, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task DeleteAsync(TResource? resourceFromDatabase, TId id, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -338,7 +337,7 @@ public interface IResourceWriteRepository&lt;TResource, in TId&gt;
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;TResource&gt;</td>
+        <td><span class="xref">System.Threading.Tasks.Task&lt;TResult&gt;</span>&lt;TResource&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -360,7 +359,7 @@ public interface IResourceWriteRepository&lt;TResource, in TId&gt;
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;TResource&gt; GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task&lt;TResource?&gt; GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -394,7 +393,7 @@ public interface IResourceWriteRepository&lt;TResource, in TId&gt;
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;TResource&gt;</td>
+        <td><span class="xref">System.Threading.Tasks.Task&lt;TResult&gt;</span>&lt;TResource&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -431,7 +430,7 @@ public interface IResourceWriteRepository&lt;TResource, in TId&gt;
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.ISet&lt;T&gt;</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
         <td><span class="parametername">rightResourceIds</span></td>
         <td></td>
       </tr>
@@ -465,13 +464,13 @@ public interface IResourceWriteRepository&lt;TResource, in TId&gt;
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/IResourceWriteRepository.cs/#L51">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_SetRelationshipAsync_" data-uid="JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.SetRelationshipAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_SetRelationshipAsync__0_System_Object_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.SetRelationshipAsync(`0,System.Object,System.Threading.CancellationToken)">SetRelationshipAsync(TResource, Object, CancellationToken)</h4>
+  <h4 id="JsonApiDotNetCore_Repositories_IResourceWriteRepository_2_SetRelationshipAsync__0_System_Object_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.IResourceWriteRepository`2.SetRelationshipAsync(`0,System.Object,System.Threading.CancellationToken)">SetRelationshipAsync(TResource, object?, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Performs a complete replacement of the relationship in the underlying data store.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task SetRelationshipAsync(TResource leftResource, object rightValue, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task SetRelationshipAsync(TResource leftResource, object? rightValue, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -489,7 +488,7 @@ public interface IResourceWriteRepository&lt;TResource, in TId&gt;
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Object</span></td>
+        <td><span class="xref">object</span></td>
         <td><span class="parametername">rightValue</span></td>
         <td></td>
       </tr>

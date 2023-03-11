@@ -4,22 +4,22 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class AtomicResultObject
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class AtomicResultObject
  </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class AtomicResultObject
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class AtomicResultObject
  ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -77,34 +77,31 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><span class="xref">object</span></div>
     <div class="level1"><span class="xref">AtomicResultObject</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
+      <span class="xref">object.Equals(object)</span>
     </div>
     <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+      <span class="xref">object.Equals(object, object)</span>
     </div>
     <div>
-      <span class="xref">System.Object.GetHashCode()</span>
+      <span class="xref">object.GetHashCode()</span>
     </div>
     <div>
-      <span class="xref">System.Object.GetType()</span>
+      <span class="xref">object.GetType()</span>
     </div>
     <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
+      <span class="xref">object.ReferenceEquals(object, object)</span>
     </div>
     <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
+      <span class="xref">object.ToString()</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.html">JsonApiDotNetCore.Serialization.Objects</a></h6>
+  <h6><strong>Namespace</strong>: <span class="xref">JsonApiDotNetCore</span>.<span class="xref">Serialization</span>.<a class="xref" href="JsonApiDotNetCore.Serialization.Objects.html">Objects</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_syntax">Syntax</h5>
   <div class="codewrapper">
@@ -122,8 +119,7 @@ public sealed class AtomicResultObject</code></pre>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_Data_" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Data*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_Data" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Data">Data</h4>
-  <div class="markdown level1 summary"><p>See <a href="https://jsonapi.org/ext/atomic/#result-objects">https://jsonapi.org/ext/atomic/#result-objects</a>.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
@@ -155,14 +151,13 @@ public SingleOrManyData&lt;ResourceObject&gt; Data { get; set; }</code></pre>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_Meta_" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Meta*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_Meta" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Meta">Meta</h4>
-  <div class="markdown level1 summary"><p>See <a href="https://jsonapi.org/ext/atomic/#result-objects">https://jsonapi.org/ext/atomic/#result-objects</a>.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;meta&quot;)]
 [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-public IDictionary&lt;string, object&gt; Meta { get; set; }</code></pre>
+public IDictionary&lt;string, object?&gt;? Meta { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -174,7 +169,7 @@ public IDictionary&lt;string, object&gt; Meta { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IDictionary&lt;TKey, TValue&gt;</span>&lt;<span class="xref">string</span>, <span class="xref">object</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>

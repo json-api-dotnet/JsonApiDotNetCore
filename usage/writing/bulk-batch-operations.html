@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Bulk/batch </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Bulk/batch ">
-  
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Bulk/batch </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Bulk/batch ">
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -85,9 +85,11 @@ operations will be processed in order and will either completely succeed or fail
     {
     }
 }
-</code></pre><p>You&#39;ll need to send the next Content-Type in a POST request for operations:</p>
+</code></pre>
+<p>You'll need to send the next Content-Type in a POST request for operations:</p>
 <pre><code>application/vnd.api+json; ext=&quot;https://jsonapi.org/ext/atomic&quot;
-</code></pre><h3 id="local-ids">Local IDs</h3>
+</code></pre>
+<h3 id="local-ids">Local IDs</h3>
 <p>Local IDs (lid) can be used to associate resources that have not yet been assigned an ID.
 The next example creates two resources and sets a relationship between them:</p>
 <pre><code class="lang-json">POST http://localhost/api/operations HTTP/1.1
@@ -131,12 +133,14 @@ Content-Type: application/vnd.api+json;ext=&quot;https://jsonapi.org/ext/atomic&
     }
   ]
 }
-</code></pre><p>For example requests, see our suite of tests in JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.</p>
+</code></pre>
+<p>For example requests, see our suite of tests in JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.</p>
 <h2 id="configuration">Configuration</h2>
 <p>The maximum number of operations per request defaults to 10, which you can change at startup:</p>
 <pre><code class="lang-c#">// Program.cs
 builder.Services.AddJsonApi(options =&gt; options.MaximumOperationsPerRequest = 250);
-</code></pre><p>Or, if you want to allow unconstrained, set it to <code>null</code> instead.</p>
+</code></pre>
+<p>Or, if you want to allow unconstrained, set it to <code>null</code> instead.</p>
 <h3 id="multiple-controllers">Multiple controllers</h3>
 <p>You can register multiple operations controllers using custom routes, for example:</p>
 <pre><code class="lang-c#">[DisableRoutingConvention, Route(&quot;/operations/musicTracks/create&quot;)]
@@ -150,13 +154,14 @@ public sealed class CreateMusicTrackOperationsController : JsonApiOperationsCont
         return await base.PostOperationsAsync(operations, cancellationToken);
     }
 }
-</code></pre><h2 id="limitations">Limitations</h2>
+</code></pre>
+<h2 id="limitations">Limitations</h2>
 <p>For our atomic:operations implementation, the next limitations apply:</p>
 <ul>
 <li>The <code>ref.href</code> field cannot be used. Use type/id or type/lid instead.</li>
 <li>You cannot both assign and reference the same local ID in a single operation.</li>
 <li>All repositories used in an operations request must implement <code>IRepositorySupportsTransaction</code> and participate in the same transaction.</li>
-<li>If you&#39;re not using Entity Framework Core, you&#39;ll need to implement and register <code>IOperationsTransactionFactory</code> yourself.</li>
+<li>If you're not using Entity Framework Core, you'll need to implement and register <code>IOperationsTransactionFactory</code> yourself.</li>
 </ul>
 </article>
           </div>

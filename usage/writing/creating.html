@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Creating resources </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Creating resources ">
-  
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Creating resources </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Creating resources ">
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -80,7 +80,8 @@
     }
   }
 }
-</code></pre><p>When using client-generated IDs and only attributes from the request have changed, the server returns <code>204 No Content</code>.
+</code></pre>
+<p>When using client-generated IDs and only attributes from the request have changed, the server returns <code>204 No Content</code>.
 Otherwise, the server returns <code>200 OK</code>, along with the updated resource and its newly assigned ID.</p>
 <p>In both cases, a <code>Location</code> header is returned that contains the URL to the new resource.</p>
 <h1 id="creating-resources-with-relationships">Creating resources with relationships</h1>
@@ -116,14 +117,18 @@ The example below creates an article and sets both its owner and tags.</p>
     }
   }
 }
-</code></pre><h1 id="response-body">Response body</h1>
+</code></pre>
+<h1 id="response-body">Response body</h1>
 <p>POST requests can be combined with query string parameters that are normally used for reading data, such as <code>include</code> and <code>fields[]</code>. For example:</p>
 <pre><code class="lang-http">POST /articles?include=owner&amp;fields[people]=firstName HTTP/1.1
 
 {
   ...
 }
-</code></pre><div class="NOTE"><h5>Note</h5><p>After the resource has been created on the server, it is re-fetched from the database using the specified query string parameters and returned to the client.
+</code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>After the resource has been created on the server, it is re-fetched from the database using the specified query string parameters and returned to the client.
 However, the used query string parameters only have an effect when <code>200 OK</code> is returned.</p>
 </div>
 </article>

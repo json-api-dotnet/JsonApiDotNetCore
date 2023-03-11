@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Controllers </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Controllers ">
-  
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Controllers </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Controllers ">
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -76,7 +76,8 @@ public class Article : Identifiable&lt;Guid&gt;
 {
     // ...
 }
-</code></pre><h2 id="resource-access-control">Resource Access Control</h2>
+</code></pre>
+<h2 id="resource-access-control">Resource Access Control</h2>
 <p>It is often desirable to limit which endpoints are exposed on your controller.
 A subset can be specified too:</p>
 <pre><code class="lang-c#">[Resource(GenerateControllerEndpoints =
@@ -85,10 +86,12 @@ public class Article : Identifiable&lt;Guid&gt;
 {
     // ...
 }
-</code></pre><p>Instead of passing a set of endpoints, you can use <code>JsonApiEndpoints.Query</code> to generate all read-only endpoints or <code>JsonApiEndpoints.Command</code> for all write-only endpoints.</p>
+</code></pre>
+<p>Instead of passing a set of endpoints, you can use <code>JsonApiEndpoints.Query</code> to generate all read-only endpoints or <code>JsonApiEndpoints.Command</code> for all write-only endpoints.</p>
 <p>When an endpoint is blocked, an HTTP 403 Forbidden response is returned.</p>
 <pre><code class="lang-http">DELETE http://localhost:14140/articles/1 HTTP/1.1
-</code></pre><pre><code class="lang-json">{
+</code></pre>
+<pre><code class="lang-json">{
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/articles/1&quot;
   },
@@ -97,11 +100,12 @@ public class Article : Identifiable&lt;Guid&gt;
       &quot;id&quot;: &quot;dde7f219-2274-4473-97ef-baac3e7c1487&quot;,
       &quot;status&quot;: &quot;403&quot;,
       &quot;title&quot;: &quot;The requested endpoint is not accessible.&quot;,
-      &quot;detail&quot;: &quot;Endpoint &#39;/articles/1&#39; is not accessible for DELETE requests.&quot;
+      &quot;detail&quot;: &quot;Endpoint '/articles/1' is not accessible for DELETE requests.&quot;
     }
   ]
 }
-</code></pre><h2 id="augmenting-controllers">Augmenting controllers</h2>
+</code></pre>
+<h2 id="augmenting-controllers">Augmenting controllers</h2>
 <p>Auto-generated controllers can easily be augmented because they are partial classes. For example:</p>
 <pre><code class="lang-c#">[DisableRoutingConvention]
 [Route(&quot;some/custom/route&quot;)]
@@ -114,7 +118,8 @@ partial class ArticlesController
         // ...
     }
 }
-</code></pre><p>If you need to inject extra dependencies, tell the IoC container with <code>[ActivatorUtilitiesConstructor]</code> to prefer your constructor:</p>
+</code></pre>
+<p>If you need to inject extra dependencies, tell the IoC container with <code>[ActivatorUtilitiesConstructor]</code> to prefer your constructor:</p>
 <pre><code class="lang-c#">partial class ArticlesController
 {
     private IAuthenticationService _authService;
@@ -128,7 +133,8 @@ partial class ArticlesController
         _authService = authService;
     }
 }
-</code></pre><p>In case you don&#39;t want to use auto-generated controllers and define them yourself (see below), remove
+</code></pre>
+<p>In case you don't want to use auto-generated controllers and define them yourself (see below), remove
 <code>[Resource]</code> from your models or use <code>[Resource(GenerateControllerEndpoints = JsonApiEndpoints.None)]</code>.</p>
 <h2 id="earlier-versions">Earlier versions</h2>
 <p>In earlier versions of JsonApiDotNetCore, you needed to create controllers that inherit from <code>JsonApiController&lt;TResource, TId&gt;</code>. For example:</p>
@@ -140,7 +146,8 @@ partial class ArticlesController
     {
     }
 }
-</code></pre><p>If you want to setup routes yourself, you can instead inherit from <code>BaseJsonApiController&lt;TResource, TId&gt;</code> and override its methods with your own <code>[HttpGet]</code>, <code>[HttpHead]</code>, <code>[HttpPost]</code>, <code>[HttpPatch]</code> and <code>[HttpDelete]</code> attributes added on them. Don&#39;t forget to add <code>[FromBody]</code> on parameters where needed.</p>
+</code></pre>
+<p>If you want to setup routes yourself, you can instead inherit from <code>BaseJsonApiController&lt;TResource, TId&gt;</code> and override its methods with your own <code>[HttpGet]</code>, <code>[HttpHead]</code>, <code>[HttpPost]</code>, <code>[HttpPatch]</code> and <code>[HttpDelete]</code> attributes added on them. Don't forget to add <code>[FromBody]</code> on parameters where needed.</p>
 <h3 id="resource-access-control-1">Resource Access Control</h3>
 <p>It is often desirable to limit which routes are exposed on your controller.</p>
 <p>To provide read-only access, inherit from <code>JsonApiQueryController</code> instead, which blocks all POST, PATCH and DELETE requests.
@@ -155,7 +162,8 @@ In some cases, resources may be an aggregation of entities or a view on top of t
     {
     }
 }
-</code></pre><p>For more information about resource service injection, see <a href="layer-overview.html#replacing-injected-services">Replacing injected services</a> and <a href="services.html">Resource Services</a>.</p>
+</code></pre>
+<p>For more information about resource service injection, see <a href="layer-overview.html#replacing-injected-services">Replacing injected services</a> and <a href="services.html">Resource Services</a>.</p>
 </article>
           </div>
 

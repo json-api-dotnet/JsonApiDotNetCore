@@ -4,22 +4,22 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Interface IResourceChangeTracker&lt;TResource&gt;
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Interface IResourceChangeTracker&lt;TResource&gt;
  </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Interface IResourceChangeTracker&lt;TResource&gt;
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Interface IResourceChangeTracker&lt;TResource&gt;
  ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -75,12 +75,11 @@
   <div class="markdown level0 summary"><p>Used to determine whether additional changes to a resource (side effects), not specified in a POST or PATCH request, have been applied.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Resources.html">JsonApiDotNetCore.Resources</a></h6>
+  <h6><strong>Namespace</strong>: <span class="xref">JsonApiDotNetCore</span>.<a class="xref" href="JsonApiDotNetCore.Resources.html">Resources</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Resources_IResourceChangeTracker_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IResourceChangeTracker&lt;in TResource&gt;
-    where TResource : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IResourceChangeTracker&lt;in TResource&gt; where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -126,7 +125,7 @@ request are stored without modification.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">bool</span></td>
         <td><p><code>true</code> if the attribute values from the POST or PATCH request were the only changes; <code>false</code>, otherwise.</p>
 </td>
       </tr>

@@ -4,22 +4,22 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class InvalidModelStateException
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class InvalidModelStateException
  </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class InvalidModelStateException
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class InvalidModelStateException
  ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -77,7 +77,7 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><span class="xref">object</span></div>
     <div class="level1"><span class="xref">System.Exception</span></div>
     <div class="level2"><a class="xref" href="JsonApiDotNetCore.Errors.JsonApiException.html">JsonApiException</a></div>
     <div class="level3"><span class="xref">InvalidModelStateException</span></div>
@@ -131,25 +131,19 @@
       <span class="xref">System.Exception.TargetSite</span>
     </div>
     <div>
-      <span class="xref">System.Exception.SerializeObjectState</span>
+      <span class="xref">object.Equals(object)</span>
     </div>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
+      <span class="xref">object.Equals(object, object)</span>
     </div>
     <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+      <span class="xref">object.GetHashCode()</span>
     </div>
     <div>
-      <span class="xref">System.Object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+      <span class="xref">object.ReferenceEquals(object, object)</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Errors.html">JsonApiDotNetCore.Errors</a></h6>
+  <h6><strong>Namespace</strong>: <span class="xref">JsonApiDotNetCore</span>.<a class="xref" href="JsonApiDotNetCore.Errors.html">Errors</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Errors_InvalidModelStateException_syntax">Syntax</h5>
   <div class="codewrapper">
@@ -166,13 +160,12 @@ public sealed class InvalidModelStateException : JsonApiException, ISerializable
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/InvalidModelStateException.cs/#L20">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_" data-uid="JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_System_Collections_Generic_IReadOnlyDictionary_System_String_Microsoft_AspNetCore_Mvc_ModelBinding_ModelStateEntry__System_Type_System_Boolean_JsonApiDotNetCore_Configuration_IResourceGraph_System_Func_System_Type_System_Int32_System_Type__" data-uid="JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(System.Collections.Generic.IReadOnlyDictionary{System.String,Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateEntry},System.Type,System.Boolean,JsonApiDotNetCore.Configuration.IResourceGraph,System.Func{System.Type,System.Int32,System.Type})">InvalidModelStateException(IReadOnlyDictionary&lt;String, ModelStateEntry&gt;, Type, Boolean, IResourceGraph, Func&lt;Type, Int32, Type&gt;)</h4>
-  <div class="markdown level1 summary"><p>The error that is thrown when ASP.NET ModelState validation fails.</p>
-</div>
+  <h4 id="JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_System_Collections_Generic_IReadOnlyDictionary_System_String_Microsoft_AspNetCore_Mvc_ModelBinding_ModelStateEntry__System_Type_System_Boolean_JsonApiDotNetCore_Configuration_IResourceGraph_System_Func_System_Type_System_Int32_System_Type__" data-uid="JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(System.Collections.Generic.IReadOnlyDictionary{System.String,Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateEntry},System.Type,System.Boolean,JsonApiDotNetCore.Configuration.IResourceGraph,System.Func{System.Type,System.Int32,System.Type})">InvalidModelStateException(IReadOnlyDictionary&lt;string, ModelStateEntry?&gt;, Type, bool, IResourceGraph, Func&lt;Type, int, Type?&gt;?)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public InvalidModelStateException(IReadOnlyDictionary&lt;string, ModelStateEntry&gt; modelState, Type modelType, bool includeExceptionStackTraceInErrors, IResourceGraph resourceGraph, Func&lt;Type, int, Type&gt; getCollectionElementTypeCallback = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public InvalidModelStateException(IReadOnlyDictionary&lt;string, ModelStateEntry?&gt; modelState, Type modelType, bool includeExceptionStackTraceInErrors, IResourceGraph resourceGraph, Func&lt;Type, int, Type?&gt;? getCollectionElementTypeCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -185,7 +178,7 @@ public sealed class InvalidModelStateException : JsonApiException, ISerializable
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IReadOnlyDictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateEntry</span>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IReadOnlyDictionary&lt;TKey, TValue&gt;</span>&lt;<span class="xref">string</span>, <span class="xref">ModelStateEntry</span>&gt;</td>
         <td><span class="parametername">modelState</span></td>
         <td></td>
       </tr>
@@ -195,7 +188,7 @@ public sealed class InvalidModelStateException : JsonApiException, ISerializable
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">bool</span></td>
         <td><span class="parametername">includeExceptionStackTraceInErrors</span></td>
         <td></td>
       </tr>
@@ -205,7 +198,7 @@ public sealed class InvalidModelStateException : JsonApiException, ISerializable
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Type</span>, <span class="xref">System.Int32</span>, <span class="xref">System.Type</span>&gt;</td>
+        <td><span class="xref">System.Func&lt;T1, T2, TResult&gt;</span>&lt;<span class="xref">System.Type</span>, <span class="xref">int</span>, <span class="xref">System.Type</span>&gt;</td>
         <td><span class="parametername">getCollectionElementTypeCallback</span></td>
         <td></td>
       </tr>

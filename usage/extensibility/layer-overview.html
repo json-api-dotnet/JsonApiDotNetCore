@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Layer Overview </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Layer Overview ">
-  
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Layer Overview </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Layer Overview ">
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -72,9 +72,11 @@
 <pre><code>JsonApiController (required)
   JsonApiResourceService : IResourceService
      EntityFrameworkCoreRepository : IResourceRepository
-</code></pre><p>Aside from these pluggable endpoint-oriented layers, we provide a resource-oriented extensibility point:</p>
+</code></pre>
+<p>Aside from these pluggable endpoint-oriented layers, we provide a resource-oriented extensibility point:</p>
 <pre><code>JsonApiResourceDefinition : IResourceDefinition
-</code></pre><p>Resource definition callbacks are invoked from the built-in resource service/repository layers, as well as from the serializer.
+</code></pre>
+<p>Resource definition callbacks are invoked from the built-in resource service/repository layers, as well as from the serializer.
 For example, <code>IResourceDefinition.OnSerialize</code> is invoked whenever a resource is sent back to the client, irrespective of the endpoint.
 Likewise, <code>IResourceDefinition.OnSetToOneRelationshipAsync</code> is called from a patch-resource-with-relationships endpoint, as well as from patch-relationship.</p>
 <p>Customization can be done at any of these extensibility points. It is usually sufficient to place your business logic in a resource definition, but depending
@@ -89,7 +91,10 @@ builder.Services.AddResourceDefinition&lt;ProductDefinition&gt;();
 
 builder.Services.AddScoped&lt;IResourceFactory, CustomResourceFactory&gt;();
 builder.Services.AddScoped&lt;IResponseModelAdapter, CustomResponseModelAdapter&gt;();
-</code></pre><div class="TIP"><h5>Tip</h5><p>If you&#39;re using <a href="../resource-graph.html#auto-discovery">auto-discovery</a>, then resource services, repositories and resource definitions will be automatically registered for you.</p>
+</code></pre>
+<div class="TIP">
+<h5>Tip</h5>
+<p>If you're using <a href="../resource-graph.html#auto-discovery">auto-discovery</a>, then resource services, repositories and resource definitions will be automatically registered for you.</p>
 </div>
 </article>
           </div>

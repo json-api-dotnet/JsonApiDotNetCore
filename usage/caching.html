@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Caching with ETags </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Caching with ETags ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Caching with ETags </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Caching with ETags ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -70,12 +70,13 @@
 
 <p><em>since v4.2</em></p>
 <p>GET requests return an <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag">ETag</a> HTTP header, which can be used by the client in subsequent requests to save network bandwidth.</p>
-<p>Be aware that the returned ETag represents the entire response body (a &#39;resource&#39; in HTTP terminology) for a request URL that includes the query string.
+<p>Be aware that the returned ETag represents the entire response body (a 'resource' in HTTP terminology) for a request URL that includes the query string.
 This is unrelated to JSON:API resources. Therefore, we do not use ETags for optimistic concurrency.</p>
 <p>Getting a list of resources returns an ETag:</p>
 <pre><code class="lang-http">GET /articles?sort=-lastModifiedAt HTTP/1.1
 Host: localhost:5000
-</code></pre><pre><code class="lang-http">HTTP/1.1 200 OK
+</code></pre>
+<pre><code class="lang-http">HTTP/1.1 200 OK
 Content-Type: application/vnd.api+json
 Server: Kestrel
 Transfer-Encoding: chunked
@@ -84,18 +85,22 @@ ETag: &quot;7FFF010786E2CE8FC901896E83870E00&quot;
 {
   &quot;data&quot;: [ ... ]
 }
-</code></pre><p>The request is later resent using the received ETag. The server data has not changed at this point.</p>
+</code></pre>
+<p>The request is later resent using the received ETag. The server data has not changed at this point.</p>
 <pre><code class="lang-http">GET /articles?sort=-lastModifiedAt HTTP/1.1
 Host: localhost:5000
 If-None-Match: &quot;7FFF010786E2CE8FC901896E83870E00&quot;
-</code></pre><pre><code class="lang-http">HTTP/1.1 304 Not Modified
+</code></pre>
+<pre><code class="lang-http">HTTP/1.1 304 Not Modified
 Server: Kestrel
 ETag: &quot;7FFF010786E2CE8FC901896E83870E00&quot;
-</code></pre><p>After some time, the server data has changed.</p>
+</code></pre>
+<p>After some time, the server data has changed.</p>
 <pre><code class="lang-http">GET /articles?sort=-lastModifiedAt HTTP/1.1
 Host: localhost:5000
 If-None-Match: &quot;7FFF010786E2CE8FC901896E83870E00&quot;
-</code></pre><pre><code class="lang-http">HTTP/1.1 200 OK
+</code></pre>
+<pre><code class="lang-http">HTTP/1.1 200 OK
 Content-Type: application/vnd.api+json
 Server: Kestrel
 Transfer-Encoding: chunked
@@ -104,15 +109,20 @@ ETag: &quot;356075D903B8FE8D9921201A7E7CD3F9&quot;
 {
   &quot;data&quot;: [ ... ]
 }
-</code></pre><div class="TIP"><h5>Tip</h5><p>To just poll for changes (without fetching them), send a HEAD request instead.</p>
+</code></pre>
+<div class="TIP">
+<h5>Tip</h5>
+<p>To just poll for changes (without fetching them), send a HEAD request instead.</p>
 </div>
 <pre><code class="lang-http">HEAD /articles?sort=-lastModifiedAt HTTP/1.1
 Host: localhost:5000
 If-None-Match: &quot;7FFF010786E2CE8FC901896E83870E00&quot;
-</code></pre><pre><code class="lang-http">HTTP/1.1 200 OK
+</code></pre>
+<pre><code class="lang-http">HTTP/1.1 200 OK
 Server: Kestrel
 ETag: &quot;356075D903B8FE8D9921201A7E7CD3F9&quot;
-</code></pre></article>
+</code></pre>
+</article>
           </div>
 
           <div class="hidden-sm col-md-2" role="complementary">

@@ -4,22 +4,22 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class IdentifiableComparer
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Class IdentifiableComparer
  </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class IdentifiableComparer
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Class IdentifiableComparer
  ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -78,38 +78,35 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><span class="xref">object</span></div>
     <div class="level1"><span class="xref">IdentifiableComparer</span></div>
   </div>
   <div class="implements">
     <h5>Implements</h5>
-    <div><span class="xref">System.Collections.Generic.IEqualityComparer</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</div>
+    <div><span class="xref">System.Collections.Generic.IEqualityComparer&lt;T&gt;</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
+      <span class="xref">object.Equals(object)</span>
     </div>
     <div>
-      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+      <span class="xref">object.Equals(object, object)</span>
     </div>
     <div>
-      <span class="xref">System.Object.GetHashCode()</span>
+      <span class="xref">object.GetHashCode()</span>
     </div>
     <div>
-      <span class="xref">System.Object.GetType()</span>
+      <span class="xref">object.GetType()</span>
     </div>
     <div>
-      <span class="xref">System.Object.MemberwiseClone()</span>
+      <span class="xref">object.ReferenceEquals(object, object)</span>
     </div>
     <div>
-      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.ToString()</span>
+      <span class="xref">object.ToString()</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Resources.html">JsonApiDotNetCore.Resources</a></h6>
+  <h6><strong>Namespace</strong>: <span class="xref">JsonApiDotNetCore</span>.<a class="xref" href="JsonApiDotNetCore.Resources.html">Resources</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Resources_IdentifiableComparer_syntax">Syntax</h5>
   <div class="codewrapper">
@@ -126,9 +123,7 @@ public sealed class IdentifiableComparer : IEqualityComparer&lt;IIdentifiable&gt
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IdentifiableComparer.cs/#L12">View Source</a>
   </span>
   <h4 id="JsonApiDotNetCore_Resources_IdentifiableComparer_Instance" data-uid="JsonApiDotNetCore.Resources.IdentifiableComparer.Instance">Instance</h4>
-  <div class="markdown level1 summary"><p>Compares <code>IIdentifiable</code> instances with each other based on their type and <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_StringId">StringId</a>, falling back to
-<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_LocalId">LocalId</a> when both StringIds are null.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
@@ -159,14 +154,12 @@ public sealed class IdentifiableComparer : IEqualityComparer&lt;IIdentifiable&gt
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IdentifiableComparer.cs/#L18">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IdentifiableComparer_Equals_" data-uid="JsonApiDotNetCore.Resources.IdentifiableComparer.Equals*"></a>
-  <h4 id="JsonApiDotNetCore_Resources_IdentifiableComparer_Equals_JsonApiDotNetCore_Resources_IIdentifiable_JsonApiDotNetCore_Resources_IIdentifiable_" data-uid="JsonApiDotNetCore.Resources.IdentifiableComparer.Equals(JsonApiDotNetCore.Resources.IIdentifiable,JsonApiDotNetCore.Resources.IIdentifiable)">Equals(IIdentifiable, IIdentifiable)</h4>
-  <div class="markdown level1 summary"><p>Compares <code>IIdentifiable</code> instances with each other based on their type and <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_StringId">StringId</a>, falling back to
-<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_LocalId">LocalId</a> when both StringIds are null.</p>
-</div>
+  <h4 id="JsonApiDotNetCore_Resources_IdentifiableComparer_Equals_JsonApiDotNetCore_Resources_IIdentifiable_JsonApiDotNetCore_Resources_IIdentifiable_" data-uid="JsonApiDotNetCore.Resources.IdentifiableComparer.Equals(JsonApiDotNetCore.Resources.IIdentifiable,JsonApiDotNetCore.Resources.IIdentifiable)">Equals(IIdentifiable?, IIdentifiable?)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Equals(IIdentifiable left, IIdentifiable right)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Equals(IIdentifiable? left, IIdentifiable? right)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -200,7 +193,7 @@ public sealed class IdentifiableComparer : IEqualityComparer&lt;IIdentifiable&gt
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="xref">bool</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -214,9 +207,7 @@ public sealed class IdentifiableComparer : IEqualityComparer&lt;IIdentifiable&gt
   </span>
   <a id="JsonApiDotNetCore_Resources_IdentifiableComparer_GetHashCode_" data-uid="JsonApiDotNetCore.Resources.IdentifiableComparer.GetHashCode*"></a>
   <h4 id="JsonApiDotNetCore_Resources_IdentifiableComparer_GetHashCode_JsonApiDotNetCore_Resources_IIdentifiable_" data-uid="JsonApiDotNetCore.Resources.IdentifiableComparer.GetHashCode(JsonApiDotNetCore.Resources.IIdentifiable)">GetHashCode(IIdentifiable)</h4>
-  <div class="markdown level1 summary"><p>Compares <code>IIdentifiable</code> instances with each other based on their type and <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_StringId">StringId</a>, falling back to
-<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_LocalId">LocalId</a> when both StringIds are null.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="declaration">Declaration</h5>
   <div class="codewrapper">
@@ -249,7 +240,7 @@ public sealed class IdentifiableComparer : IEqualityComparer&lt;IIdentifiable&gt
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Int32</span></td>
+        <td><span class="xref">int</span></td>
         <td></td>
       </tr>
     </tbody>

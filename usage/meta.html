@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Metadata </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Metadata ">
-  
-    <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../styles/docfx.css">
-    <link rel="stylesheet" href="../styles/main.css">
-    <meta property="docfx:navrel" content="../toc.html">
-    <meta property="docfx:tocrel" content="toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Metadata </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Metadata ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -89,7 +89,8 @@ public sealed class CopyrightResponseMeta : IResponseMeta
         };
     }
 }
-</code></pre><pre><code class="lang-json">{
+</code></pre>
+<pre><code class="lang-json">{
   &quot;meta&quot;: {
     &quot;copyright&quot;: &quot;Copyright (C) 2002 Umbrella Corporation.&quot;,
     &quot;authors&quot;: [
@@ -99,7 +100,8 @@ public sealed class CopyrightResponseMeta : IResponseMeta
   },
   &quot;data&quot;: []
 }
-</code></pre><h2 id="resource-meta">Resource Meta</h2>
+</code></pre>
+<h2 id="resource-meta">Resource Meta</h2>
 <p>Resource-specific metadata can be added by implementing <code>IResourceDefinition&lt;TResource, TId&gt;.GetMeta</code> (or overriding it on <code>JsonApiResourceDefinition&lt;TResource, TId&gt;</code>):</p>
 <pre><code class="lang-c#">#nullable enable
 
@@ -124,7 +126,8 @@ public class PersonDefinition : JsonApiResourceDefinition&lt;Person, int&gt;
         return null;
     }
 }
-</code></pre><pre><code class="lang-json">{
+</code></pre>
+<pre><code class="lang-json">{
   &quot;data&quot;: [
     {
       &quot;type&quot;: &quot;people&quot;,
@@ -138,7 +141,8 @@ public class PersonDefinition : JsonApiResourceDefinition&lt;Person, int&gt;
     }
   ]
 }
-</code></pre></article>
+</code></pre>
+</article>
           </div>
 
           <div class="hidden-sm col-md-2" role="complementary">

@@ -4,20 +4,20 @@
 
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Nullability in resources </title>
-    <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Nullability in resources ">
-  
-    <link rel="shortcut icon" href="../../favicon.ico">
-    <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-    <link rel="stylesheet" href="../../styles/docfx.css">
-    <link rel="stylesheet" href="../../styles/main.css">
-    <meta property="docfx:navrel" content="../../toc.html">
-    <meta property="docfx:tocrel" content="../toc.html">
-  
-  
-  
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Nullability in resources </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Nullability in resources ">
+    
+      <link rel="shortcut icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
+      <link rel="stylesheet" href="../../styles/docfx.css">
+      <link rel="stylesheet" href="../../styles/main.css">
+      <meta property="docfx:navrel" content="../../toc.html">
+      <meta property="docfx:tocrel" content="../toc.html">
+    
+    
+    
   </head>
   <body data-spy="scroll" data-target="#affix" data-offset="120">
     <div id="wrapper">
@@ -80,7 +80,8 @@ To make JsonApiDotNetCore return an error when such a property is missing on res
     [Required]
     public bool? IsAdministrator { get; set; }
 }
-</code></pre><p>This makes Entity Framework Core generate non-nullable columns. And model errors are returned when nullable fields are omitted.</p>
+</code></pre>
+<p>This makes Entity Framework Core generate non-nullable columns. And model errors are returned when nullable fields are omitted.</p>
 <h1 id="reference-types">Reference types</h1>
 <p>When the <a href="https://docs.microsoft.com/en-us/dotnet/csharp/nullable-references">nullable reference types</a> (NRT) compiler feature is enabled, it affects both ASP.NET ModelState validation and Entity Framework Core.</p>
 <h2 id="nrt-turned-off">NRT turned off</h2>
@@ -107,10 +108,11 @@ public sealed class Label : Identifiable&lt;int&gt;
     [HasMany]
     public ISet&lt;TodoItem&gt; TodoItems { get; set; }
 }
-</code></pre><h2 id="nrt-turned-on">NRT turned on</h2>
+</code></pre>
+<h2 id="nrt-turned-on">NRT turned on</h2>
 <p>When NRT is turned on, use nullability annotations (?) on attributes and relationships. This makes Entity Framework Core generate non-nullable columns. And model errors are returned when non-nullable fields are omitted.</p>
 <p>The <a href="https://docs.microsoft.com/en-us/ef/core/miscellaneous/nullable-reference-types">Entity Framework Core guide on NRT</a> recommends to use constructor binding to initialize non-nullable properties, but JsonApiDotNetCore does not support that. For required navigation properties, it suggests to use a non-nullable property with a nullable backing field. JsonApiDotNetCore does not support that either. In both cases, just use the null-forgiving operator (!).</p>
-<p>When ModelState validation is turned on, to-many relationships must be assigned an empty collection. Otherwise an error is returned when they don&#39;t occur in the request body.</p>
+<p>When ModelState validation is turned on, to-many relationships must be assigned an empty collection. Otherwise an error is returned when they don't occur in the request body.</p>
 <p>Example:</p>
 <pre><code class="lang-c#">#nullable enable
 
@@ -131,7 +133,8 @@ public sealed class Label : Identifiable&lt;int&gt;
     [HasMany]
     public ISet&lt;TodoItem&gt; TodoItems { get; set; } = new HashSet&lt;TodoItem&gt;();
 }
-</code></pre></article>
+</code></pre>
+</article>
           </div>
 
           <div class="hidden-sm col-md-2" role="complementary">
