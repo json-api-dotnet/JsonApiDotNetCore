@@ -8,13 +8,22 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 [PublicAPI]
 public class LiteralConstantExpression : IdentifierExpression
 {
-    public string Value { get; }
+    private readonly string _stringValue;
 
-    public LiteralConstantExpression(string text)
+    public object TypedValue { get; }
+
+    public LiteralConstantExpression(object typedValue)
+        : this(typedValue, typedValue.ToString()!)
     {
-        ArgumentGuard.NotNull(text);
+    }
 
-        Value = text;
+    public LiteralConstantExpression(object typedValue, string stringValue)
+    {
+        ArgumentGuard.NotNull(typedValue);
+        ArgumentGuard.NotNull(stringValue);
+
+        TypedValue = typedValue;
+        _stringValue = stringValue;
     }
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
@@ -24,8 +33,8 @@ public class LiteralConstantExpression : IdentifierExpression
 
     public override string ToString()
     {
-        string value = Value.Replace("\'", "\'\'");
-        return $"'{value}'";
+        string escapedValue = _stringValue.Replace("\'", "\'\'");
+        return $"'{escapedValue}'";
     }
 
     public override string ToFullString()
@@ -47,11 +56,11 @@ public class LiteralConstantExpression : IdentifierExpression
 
         var other = (LiteralConstantExpression)obj;
 
-        return Value == other.Value;
+        return Equals(TypedValue, other.TypedValue) && _stringValue == other._stringValue;
     }
 
     public override int GetHashCode()
     {
-        return Value.GetHashCode();
+        return HashCode.Combine(TypedValue, _stringValue);
     }
 }

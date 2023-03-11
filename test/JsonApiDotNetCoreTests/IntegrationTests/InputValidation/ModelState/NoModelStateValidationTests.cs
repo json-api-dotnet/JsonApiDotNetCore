@@ -128,8 +128,6 @@ public sealed class NoModelStateValidationTests : IClassFixture<IntegrationTestC
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("Failed to clear a required relationship.");
-
-        error.Detail.Should().Be($"The relationship 'rootDirectory' on resource type 'systemVolumes' with ID '{existingVolume.StringId}' " +
-            "cannot be cleared because it is a required relationship.");
+        error.Detail.Should().Be("The relationship 'rootDirectory' on resource type 'systemVolumes' cannot be cleared because it is a required relationship.");
     }
 }

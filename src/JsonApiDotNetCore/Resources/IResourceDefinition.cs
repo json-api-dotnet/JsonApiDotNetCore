@@ -60,7 +60,7 @@ public interface IResourceDefinition<TResource, in TId>
     /// An optional existing pagination, coming from query string. Can be <c>null</c>.
     /// </param>
     /// <returns>
-    /// The changed pagination, or <c>null</c> to use the first page with default size from options. To disable paging, set
+    /// The changed pagination, or <c>null</c> to use the first page with default size from options. To disable pagination, set
     /// <see cref="PaginationExpression.PageSize" /> to <c>null</c>.
     /// </returns>
     PaginationExpression? OnApplyPagination(PaginationExpression? existingPagination);
@@ -241,9 +241,9 @@ public interface IResourceDefinition<TResource, in TId>
     /// </para>
     /// </summary>
     /// <param name="leftResource">
-    /// The original resource as retrieved from the underlying data store. The indication "left" specifies that <paramref name="hasManyRelationship" /> is
-    /// declared on <typeparamref name="TResource" />. Be aware that for performance reasons, not the full relationship is populated, but only the subset of
-    /// resources to be removed.
+    /// Identifier of the left resource. The indication "left" specifies that <paramref name="hasManyRelationship" /> is declared on
+    /// <typeparamref name="TResource" />. In contrast to other relationship methods, only the left ID and only the subset of right resources to be removed
+    /// are retrieved from the underlying data store.
     /// </param>
     /// <param name="hasManyRelationship">
     /// The to-many relationship being removed from.
