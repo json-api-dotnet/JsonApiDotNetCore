@@ -30,7 +30,7 @@ internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object?>
 
     public override QueryExpression? VisitComparison(ComparisonExpression expression, object? argument)
     {
-        if (expression.Left is ResourceFieldChainExpression leftChain && expression.Right is LiteralConstantExpression rightConstant)
+        if (expression is { Left: ResourceFieldChainExpression leftChain, Right: LiteralConstantExpression rightConstant })
         {
             PropertyInfo leftProperty = leftChain.Fields[^1].Property;
 
