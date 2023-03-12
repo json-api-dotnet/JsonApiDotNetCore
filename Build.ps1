@@ -23,7 +23,7 @@ function RunInspectCode {
                         $issueType = $xml.report.IssueTypes.SelectSingleNode("IssueType[@Id='$($_.TypeId)']")
                         $severity = $_.Severity ?? $issueType.Severity
 
-                        Write-Output "[$severity] $($_.File):$($_.Line) $($_.Message)"
+                        Write-Output "[$severity] $($_.File):$($_.Line) $($_.TypeId): $($_.Message)"
                     })
                 })
             }
