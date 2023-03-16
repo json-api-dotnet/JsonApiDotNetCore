@@ -125,7 +125,7 @@ Your controller method needs to store the request state (URL, query string, and 
 From within your background process job handler, reconstruct the request state, execute the appropriate `JsonApiResourceService` method and store the result.
 There's a basic example available at https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1144, which processes a captured query string.
 
-### What if I want to use something other than Entity Framework Core?
+#### What if I want to use something other than Entity Framework Core?
 This basically means you'll need to implement data access yourself. There are two approaches for interception: at the resource service level and at the repository level.
 Either way, you can use the built-in query string and request body parsing, as well as routing, error handling, and rendering of responses.
 
