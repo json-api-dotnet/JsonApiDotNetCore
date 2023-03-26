@@ -244,7 +244,7 @@ public sealed class AtomicAddToToManyRelationshipTests : IClassFixture<Integrati
                 new
                 {
                     op = "add",
-                    href = "/api/v1/musicTracks/1/relationships/performers"
+                    href = "/api/musicTracks/1/relationships/performers"
                 }
             }
         };

@@ -10,7 +10,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 string? connectionString = GetConnectionString(builder.Configuration);
 builder.Services.AddNpgsql<AppDbContext>(connectionString);
 
-builder.Services.AddJsonApi(options => options.Namespace = "api/v1", resources: resourceGraphBuilder => resourceGraphBuilder.Add<WorkItem, int>());
+builder.Services.AddJsonApi(options => options.Namespace = "api", resources: resourceGraphBuilder => resourceGraphBuilder.Add<WorkItem, int>());
 
 builder.Services.AddResourceService<WorkItemService>();
 

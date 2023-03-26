@@ -45,7 +45,7 @@ public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicatio
             await dbContext.SaveChangesAsync();
         });
 
-        const string route = "/api/v1/workItems";
+        const string route = "/api/workItems";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
@@ -71,7 +71,7 @@ public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicatio
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/api/v1/workItems/{workItem.StringId}";
+        string route = $"/api/workItems/{workItem.StringId}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
@@ -110,7 +110,7 @@ public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicatio
             }
         };
 
-        const string route = "/api/v1/workItems/";
+        const string route = "/api/workItems/";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await ExecutePostAsync<Document>(route, requestBody);
@@ -140,7 +140,7 @@ public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicatio
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/api/v1/workItems/{workItem.StringId}";
+        string route = $"/api/workItems/{workItem.StringId}";
 
         // Act
         (HttpResponseMessage httpResponse, string responseDocument) = await ExecuteDeleteAsync<string>(route);
