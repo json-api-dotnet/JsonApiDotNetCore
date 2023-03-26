@@ -29,7 +29,7 @@ app.Run();
 static string? GetConnectionString(IConfiguration configuration)
 {
     string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
-    return configuration["Data:DefaultConnection"]?.Replace("###", postgresPassword);
+    return configuration.GetConnectionString("Default")?.Replace("###", postgresPassword);
 }
 
 static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)

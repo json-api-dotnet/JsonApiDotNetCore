@@ -16,7 +16,7 @@ public sealed class WorkItemService : IResourceService<WorkItem, int>
     public WorkItemService(IConfiguration configuration)
     {
         string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
-        _connectionString = configuration["Data:DefaultConnection"]?.Replace("###", postgresPassword);
+        _connectionString = configuration.GetConnectionString("Default")?.Replace("###", postgresPassword);
     }
 
     public async Task<IReadOnlyCollection<WorkItem>> GetAsync(CancellationToken cancellationToken)
