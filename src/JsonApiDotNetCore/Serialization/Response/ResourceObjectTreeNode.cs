@@ -181,13 +181,14 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
             VisitRelationshipChildrenInSubtree(child, visited);
         }
 
-        List<ResourceObject> includes = visited.Select(node => node.ResourceObject).ToList();
+        ISet<ResourceObject> primaryResourceObjectSet = GetDirectChildren().Select(node => node.ResourceObject).ToHashSet(ResourceObjectComparer.Instance);
+        List<ResourceObject> includes = new();
 
-        foreach (ResourceObject primaryResourceObject in GetDirectChildren().Select(node => node.ResourceObject))
+        foreach (ResourceObject include in visited.Select(node => node.ResourceObject))
         {
-            if (includes.Contains(primaryResourceObject, ResourceObjectComparer.Instance))
+            if (!primaryResourceObjectSet.Contains(include))
             {
-                includes.Remove(primaryResourceObject);
+                includes.Add(include);
             }
         }
 
