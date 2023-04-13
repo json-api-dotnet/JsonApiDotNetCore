@@ -347,21 +347,12 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     {
         EntityEntry<TResource> entityEntry = _dbContext.Entry(resource);
 
-        switch (relationship)
+        return relationship switch
         {
-            case HasOneAttribute hasOneRelationship:
-            {
-                return entityEntry.Reference(hasOneRelationship.Property.Name);
-            }
-            case HasManyAttribute hasManyRelationship:
-            {
-                return entityEntry.Collection(hasManyRelationship.Property.Name);
-            }
-            default:
-            {
-                throw new InvalidOperationException($"Unknown relationship type '{relationship.GetType().Name}'.");
-            }
-        }
+            HasOneAttribute hasOneRelationship => entityEntry.Reference(hasOneRelationship.Property.Name),
+            HasManyAttribute hasManyRelationship => entityEntry.Collection(hasManyRelationship.Property.Name),
+            _ => throw new InvalidOperationException($"Unknown relationship type '{relationship.GetType().Name}'.")
+        };
     }
 
     private bool RequiresLoadOfRelationshipForDeletion(RelationshipAttribute relationship)

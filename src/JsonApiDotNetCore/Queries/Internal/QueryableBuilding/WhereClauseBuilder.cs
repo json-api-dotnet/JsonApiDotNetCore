@@ -191,31 +191,15 @@ public class WhereClauseBuilder : QueryClauseBuilder<object?>
         Expression left = WrapInConvert(Visit(expression.Left, argument), commonType);
         Expression right = WrapInConvert(Visit(expression.Right, argument), commonType);
 
-        switch (expression.Operator)
+        return expression.Operator switch
         {
-            case ComparisonOperator.Equals:
-            {
-                return Expression.Equal(left, right);
-            }
-            case ComparisonOperator.LessThan:
-            {
-                return Expression.LessThan(left, right);
-            }
-            case ComparisonOperator.LessOrEqual:
-            {
-                return Expression.LessThanOrEqual(left, right);
-            }
-            case ComparisonOperator.GreaterThan:
-            {
-                return Expression.GreaterThan(left, right);
-            }
-            case ComparisonOperator.GreaterOrEqual:
-            {
-                return Expression.GreaterThanOrEqual(left, right);
-            }
-        }
-
-        throw new InvalidOperationException($"Unknown comparison operator '{expression.Operator}'.");
+            ComparisonOperator.Equals => Expression.Equal(left, right),
+            ComparisonOperator.LessThan => Expression.LessThan(left, right),
+            ComparisonOperator.LessOrEqual => Expression.LessThanOrEqual(left, right),
+            ComparisonOperator.GreaterThan => Expression.GreaterThan(left, right),
+            ComparisonOperator.GreaterOrEqual => Expression.GreaterThanOrEqual(left, right),
+            _ => throw new InvalidOperationException($"Unknown comparison operator '{expression.Operator}'.")
+        };
     }
 
     private Type ResolveCommonType(QueryExpression left, QueryExpression right)

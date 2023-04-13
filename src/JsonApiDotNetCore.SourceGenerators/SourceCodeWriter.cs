@@ -130,21 +130,12 @@ internal sealed class SourceCodeWriter
 
     private static string GetControllerBaseClassName(JsonApiEndpointsCopy endpointsToGenerate)
     {
-        switch (endpointsToGenerate)
+        return endpointsToGenerate switch
         {
-            case JsonApiEndpointsCopy.Query:
-            {
-                return "JsonApiQueryController";
-            }
-            case JsonApiEndpointsCopy.Command:
-            {
-                return "JsonApiCommandController";
-            }
-            default:
-            {
-                return "JsonApiController";
-            }
-        }
+            JsonApiEndpointsCopy.Query => "JsonApiQueryController",
+            JsonApiEndpointsCopy.Command => "JsonApiCommandController",
+            _ => "JsonApiController"
+        };
     }
 
     private void WriteConstructor(string controllerName, INamedTypeSymbol loggerFactoryInterface, JsonApiEndpointsCopy endpointsToGenerate,
