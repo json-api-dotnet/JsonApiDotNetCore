@@ -238,12 +238,12 @@ internal sealed class CascadingCodeTimer : ICodeTimer
             WriteIndent(builder, indent);
             builder.Append(Name);
             WritePadding(builder, indent, paddingLength);
-            builder.AppendFormat(CultureInfo.InvariantCulture, "{0,19:G}", timeElapsedInSelf);
+            builder.Append(CultureInfo.InvariantCulture, $"{timeElapsedInSelf,19:G}");
 
             if (!_excludeInRelativeCost)
             {
                 builder.Append(" ... ");
-                builder.AppendFormat(CultureInfo.InvariantCulture, "{0,7:#0.00%}", scaleElapsedInSelf);
+                builder.Append(CultureInfo.InvariantCulture, $"{scaleElapsedInSelf,7:#0.00%}");
             }
 
             if (_stoppedAt == null)
