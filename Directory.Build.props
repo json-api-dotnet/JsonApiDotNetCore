@@ -35,6 +35,6 @@
   <PropertyGroup>
     <CoverletVersion>3.2.*</CoverletVersion>
     <MoqVersion>4.18.*</MoqVersion>
-    <TestSdkVersion>17.4.*</TestSdkVersion>
+    <TestSdkVersion>17.5.*</TestSdkVersion>
   </PropertyGroup>
 </Project>

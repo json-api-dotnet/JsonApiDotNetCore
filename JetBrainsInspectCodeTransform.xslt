@@ -25,6 +25,7 @@
             <tr>
               <th>File</th>
               <th>Line Number</th>
+              <th>Type</th>
               <th>Message</th>
             </tr>
             <xsl:for-each select="key('ISSUETYPES',@Id)">
@@ -34,6 +35,9 @@
                 </td>
                 <td>
                   <xsl:value-of select="@Line"/>
+                </td>
+                <td>
+                  <xsl:value-of select="@TypeId"/>
                 </td>
                 <td>
                   <xsl:value-of select="@Message"/>

@@ -69,7 +69,7 @@ internal sealed class SortExpressionLambdaConverter
 
     private static (Expression? innerExpression, bool isCount) TryReadCount(Expression expression)
     {
-        if (expression is MethodCallExpression methodCallExpression && methodCallExpression.Method.Name == "Count")
+        if (expression is MethodCallExpression { Method.Name: "Count" } methodCallExpression)
         {
             if (methodCallExpression.Arguments.Count <= 1)
             {
@@ -81,7 +81,7 @@ internal sealed class SortExpressionLambdaConverter
 
         if (expression is MemberExpression memberExpression)
         {
-            if (memberExpression.Member.MemberType == MemberTypes.Property && memberExpression.Member.Name is "Count" or "Length")
+            if (memberExpression.Member is { MemberType: MemberTypes.Property, Name: "Count" or "Length" })
             {
                 if (memberExpression.Member.GetCustomAttribute<AttrAttribute>() == null)
                 {
@@ -114,7 +114,7 @@ internal sealed class SortExpressionLambdaConverter
 
     private Expression? ReadAttribute(Expression expression)
     {
-        if (expression is MemberExpression { Expression: { } } memberExpression)
+        if (expression is MemberExpression { Expression: not null } memberExpression)
         {
             ResourceType resourceType = _resourceGraph.GetResourceType(memberExpression.Expression.Type);
             AttrAttribute? attribute = resourceType.FindAttributeByPropertyName(memberExpression.Member.Name);

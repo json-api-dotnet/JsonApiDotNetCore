@@ -131,7 +131,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
 
     private static void AssertNoIdWithLid(ResourceIdentity identity, RequestAdapterState state)
     {
-        if (identity.Id != null && identity.Lid != null)
+        if (identity is { Id: not null, Lid: not null })
         {
             throw new ModelConversionException(state.Position, "The 'id' and 'lid' element are mutually exclusive.", null);
         }

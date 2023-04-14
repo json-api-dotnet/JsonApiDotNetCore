@@ -40,36 +40,15 @@ public class OperationProcessorAccessor : IOperationProcessorAccessor
 
     private static Type GetProcessorInterface(WriteOperationKind writeOperation)
     {
-        switch (writeOperation)
+        return writeOperation switch
         {
-            case WriteOperationKind.CreateResource:
-            {
-                return typeof(ICreateProcessor<,>);
-            }
-            case WriteOperationKind.UpdateResource:
-            {
-                return typeof(IUpdateProcessor<,>);
-            }
-            case WriteOperationKind.DeleteResource:
-            {
-                return typeof(IDeleteProcessor<,>);
-            }
-            case WriteOperationKind.SetRelationship:
-            {
-                return typeof(ISetRelationshipProcessor<,>);
-            }
-            case WriteOperationKind.AddToRelationship:
-            {
-                return typeof(IAddToRelationshipProcessor<,>);
-            }
-            case WriteOperationKind.RemoveFromRelationship:
-            {
-                return typeof(IRemoveFromRelationshipProcessor<,>);
-            }
-            default:
-            {
-                throw new NotSupportedException($"Unknown write operation kind '{writeOperation}'.");
-            }
-        }
+            WriteOperationKind.CreateResource => typeof(ICreateProcessor<,>),
+            WriteOperationKind.UpdateResource => typeof(IUpdateProcessor<,>),
+            WriteOperationKind.DeleteResource => typeof(IDeleteProcessor<,>),
+            WriteOperationKind.SetRelationship => typeof(ISetRelationshipProcessor<,>),
+            WriteOperationKind.AddToRelationship => typeof(IAddToRelationshipProcessor<,>),
+            WriteOperationKind.RemoveFromRelationship => typeof(IRemoveFromRelationshipProcessor<,>),
+            _ => throw new NotSupportedException($"Unknown write operation kind '{writeOperation}'.")
+        };
     }
 }

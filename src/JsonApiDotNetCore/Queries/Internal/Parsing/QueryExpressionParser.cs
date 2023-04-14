@@ -72,7 +72,7 @@ public abstract class QueryExpressionParser
 
     protected CountExpression? TryParseCount()
     {
-        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Text && nextToken.Value == Keywords.Count)
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text, Value: Keywords.Count })
         {
             TokenStack.Pop();
 

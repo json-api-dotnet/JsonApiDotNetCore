@@ -372,7 +372,7 @@ public class FilterParser : QueryExpressionParser
     {
         if (TokenStack.TryPeek(out Token? nextToken))
         {
-            if (nextToken.Kind == TokenKind.Text && nextToken.Value == Keywords.Null)
+            if (nextToken is { Kind: TokenKind.Text, Value: Keywords.Null })
             {
                 TokenStack.Pop();
                 return NullConstantExpression.Instance;
