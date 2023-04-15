@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -81,11 +83,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
             services.AddDbContext<TDbContext>(options =>
             {
                 options.UseNpgsql(dbConnectionString, builder => builder.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
-
-#if DEBUG
-                options.EnableSensitiveDataLogging();
-                options.EnableDetailedErrors();
-#endif
+                SetDbContextDebugOptions(options);
             });
         });
 
@@ -101,6 +99,14 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         dbContext.Database.EnsureCreated();
 
         return factoryWithConfiguredContentRoot;
+    }
+
+    [Conditional("DEBUG")]
+    private static void SetDbContextDebugOptions(DbContextOptionsBuilder options)
+    {
+        options.EnableDetailedErrors();
+        options.EnableSensitiveDataLogging();
+        options.ConfigureWarnings(builder => builder.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning));
     }
 
     public void ConfigureLogging(Action<ILoggingBuilder> loggingConfiguration)

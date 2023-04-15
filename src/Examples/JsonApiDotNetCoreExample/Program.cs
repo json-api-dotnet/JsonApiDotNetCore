@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;
@@ -5,6 +6,7 @@ using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 [assembly: ExcludeFromCodeCoverage]
@@ -50,10 +52,7 @@ static void ConfigureServices(WebApplicationBuilder builder)
         string? connectionString = GetConnectionString(builder.Configuration);
         options.UseNpgsql(connectionString);
 
-#if DEBUG
-        options.EnableSensitiveDataLogging();
-        options.EnableDetailedErrors();
-#endif
+        SetDbContextDebugOptions(options);
     });
 
     using (CodeTimingSessionManager.Current.Measure("AddJsonApi()"))
@@ -63,12 +62,12 @@ static void ConfigureServices(WebApplicationBuilder builder)
             options.Namespace = "api";
             options.UseRelativeLinks = true;
             options.IncludeTotalResourceCount = true;
-            options.SerializerOptions.WriteIndented = true;
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 
 #if DEBUG
             options.IncludeExceptionStackTraceInErrors = true;
             options.IncludeRequestBodyInErrors = true;
+            options.SerializerOptions.WriteIndented = true;
 #endif
         }, discovery => discovery.AddCurrentAssembly());
     }
@@ -78,6 +77,14 @@ static string? GetConnectionString(IConfiguration configuration)
 {
     string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
     return configuration.GetConnectionString("Default")?.Replace("###", postgresPassword);
+}
+
+[Conditional("DEBUG")]
+static void SetDbContextDebugOptions(DbContextOptionsBuilder options)
+{
+    options.EnableDetailedErrors();
+    options.EnableSensitiveDataLogging();
+    options.ConfigureWarnings(builder => builder.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning));
 }
 
 static void ConfigurePipeline(WebApplication webApplication)
@@ -99,8 +106,9 @@ static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
     await using AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
 
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await dbContext.Database.EnsureDeletedAsync();
-    await dbContext.Database.EnsureCreatedAsync();
 
-    await Seeder.CreateSampleDataAsync(dbContext);
+    if (await dbContext.Database.EnsureCreatedAsync())
+    {
+        await Seeder.CreateSampleDataAsync(dbContext);
+    }
 }

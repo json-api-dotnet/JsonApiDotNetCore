@@ -15,7 +15,12 @@ public abstract class TestableDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
-        // Writes SQL statements to the Output Window when debugging.
+        WriteSqlStatementsToOutputWindow(builder);
+    }
+
+    [Conditional("DEBUG")]
+    private static void WriteSqlStatementsToOutputWindow(DbContextOptionsBuilder builder)
+    {
         builder.LogTo(message => Debug.WriteLine(message), DbLoggerCategory.Database.Name.AsArray(), LogLevel.Information);
     }
 

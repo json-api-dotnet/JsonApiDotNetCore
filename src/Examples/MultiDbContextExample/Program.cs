@@ -1,4 +1,7 @@
+using System.Diagnostics;
 using JsonApiDotNetCore.Configuration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using MultiDbContextExample.Data;
 using MultiDbContextExample.Models;
 using MultiDbContextExample.Repositories;
@@ -7,13 +10,29 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddSqlite<DbContextA>("Data Source=A.db;Pooling=False");
-builder.Services.AddSqlite<DbContextB>("Data Source=B.db;Pooling=False");
+builder.Services.AddDbContext<DbContextA>(options =>
+{
+    options.UseSqlite("Data Source=SampleDbA.db;Pooling=False");
+    SetDbContextDebugOptions(options);
+});
+
+builder.Services.AddDbContext<DbContextB>(options =>
+{
+    options.UseSqlite("Data Source=SampleDbB.db;Pooling=False");
+    SetDbContextDebugOptions(options);
+});
 
 builder.Services.AddJsonApi(options =>
 {
+    options.Namespace = "api";
+    options.UseRelativeLinks = true;
+    options.IncludeTotalResourceCount = true;
+
+#if DEBUG
     options.IncludeExceptionStackTraceInErrors = true;
     options.IncludeRequestBodyInErrors = true;
+    options.SerializerOptions.WriteIndented = true;
+#endif
 }, dbContextTypes: new[]
 {
     typeof(DbContextA),
@@ -34,6 +53,14 @@ app.MapControllers();
 await CreateDatabaseAsync(app.Services);
 
 app.Run();
+
+[Conditional("DEBUG")]
+static void SetDbContextDebugOptions(DbContextOptionsBuilder options)
+{
+    options.EnableDetailedErrors();
+    options.EnableSensitiveDataLogging();
+    options.ConfigureWarnings(builder => builder.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning));
+}
 
 static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
 {

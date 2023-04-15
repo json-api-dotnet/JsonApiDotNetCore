@@ -33,7 +33,7 @@ public sealed class ResourceTests : IntegrationTest, IClassFixture<WebApplicatio
     public async Task Can_get_ResourceAs()
     {
         // Arrange
-        const string route = "/resourceAs";
+        const string route = "/api/resourceAs";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
@@ -49,7 +49,7 @@ public sealed class ResourceTests : IntegrationTest, IClassFixture<WebApplicatio
     public async Task Can_get_ResourceBs()
     {
         // Arrange
-        const string route = "/resourceBs";
+        const string route = "/api/resourceBs";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);

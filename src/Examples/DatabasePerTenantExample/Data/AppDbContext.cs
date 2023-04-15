@@ -16,7 +16,8 @@ public sealed class AppDbContext : DbContext
 
     public DbSet<Employee> Employees => Set<Employee>();
 
-    public AppDbContext(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+    public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+        : base(options)
     {
         _httpContextAccessor = httpContextAccessor;
         _configuration = configuration;
@@ -27,10 +28,10 @@ public sealed class AppDbContext : DbContext
         _forcedTenantName = tenantName;
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
         string connectionString = GetConnectionString();
-        optionsBuilder.UseNpgsql(connectionString);
+        builder.UseNpgsql(connectionString);
     }
 
     private string GetConnectionString()
