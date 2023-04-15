@@ -162,9 +162,9 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
 
     private static void IncludeFields(FieldSelectors fieldSelectors, Dictionary<PropertyInfo, PropertySelector> propertySelectors)
     {
-        foreach ((ResourceFieldAttribute resourceField, QueryLayer? queryLayer) in fieldSelectors)
+        foreach ((ResourceFieldAttribute resourceField, QueryLayer? nextLayer) in fieldSelectors)
         {
-            var propertySelector = new PropertySelector(resourceField.Property, queryLayer);
+            var propertySelector = new PropertySelector(resourceField.Property, nextLayer);
             IncludeWritableProperty(propertySelector, propertySelectors);
         }
     }

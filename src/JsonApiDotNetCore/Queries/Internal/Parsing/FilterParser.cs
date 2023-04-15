@@ -420,7 +420,7 @@ public class FilterParser : QueryExpressionParser
 
     private Converter<string, object> GetConstantValueConverterForAttribute(AttrAttribute attribute)
     {
-        return stringValue => attribute.Property.Name == nameof(IIdentifiable<object>.Id)
+        return stringValue => attribute.Property.Name == nameof(Identifiable<object>.Id)
             ? DeObfuscateStringId(attribute.Type.ClrType, stringValue)
             : ConvertStringToType(stringValue, attribute.Property.PropertyType);
     }
