@@ -52,9 +52,10 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
         }
     }
 
-    public void IncludeRelationship(RelationshipAttribute relationship, QueryLayer? queryLayer)
+    public void IncludeRelationship(RelationshipAttribute relationship, QueryLayer queryLayer)
     {
         ArgumentGuard.NotNull(relationship);
+        ArgumentGuard.NotNull(queryLayer);
 
         this[relationship] = queryLayer;
     }
