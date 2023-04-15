@@ -4,6 +4,7 @@ using BenchmarkDotNet.Attributes;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -142,7 +143,7 @@ public class ResourceSerializationBenchmarks : SerializationBenchmarkBase
             }.ToImmutableHashSet())
         }.ToImmutableHashSet());
 
-        var cache = new EvaluatedIncludeCache();
+        var cache = new EvaluatedIncludeCache(Array.Empty<IQueryConstraintProvider>());
         cache.Set(include);
         return cache;
     }
