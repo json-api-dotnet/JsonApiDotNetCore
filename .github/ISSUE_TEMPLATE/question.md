@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 <!--
-Remember that no-one is getting paid to answer your question. You're basically asking other people to give up their time to help you out of the goodness of their heart – it's up to you to do all you can to make that as simple as possible, so read https://codeblog.jonskeet.uk/2012/11/24/stack-overflow-question-checklist/ first.
+Remember that no-one is getting paid to answer your question. You're basically asking other people to give up their time to help you out of the goodness of their heart – it's up to you to do all you can to make that as simple as possible, so read http://tinyurl.com/stack-checklist first.
 -->
 
 #### SUMMARY
