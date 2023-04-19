@@ -3,7 +3,6 @@ using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using MultiDbContextExample.Models;
 using TestBuildingBlocks;
@@ -11,9 +10,9 @@ using Xunit;
 
 namespace MultiDbContextTests;
 
-public sealed class ResourceTests : IntegrationTest, IClassFixture<WebApplicationFactory<ResourceA>>
+public sealed class ResourceTests : IntegrationTest, IClassFixture<NoLoggingWebApplicationFactory<ResourceA>>
 {
-    private readonly WebApplicationFactory<ResourceA> _factory;
+    private readonly NoLoggingWebApplicationFactory<ResourceA> _factory;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -24,7 +23,7 @@ public sealed class ResourceTests : IntegrationTest, IClassFixture<WebApplicatio
         }
     }
 
-    public ResourceTests(WebApplicationFactory<ResourceA> factory)
+    public ResourceTests(NoLoggingWebApplicationFactory<ResourceA> factory)
     {
         _factory = factory;
     }

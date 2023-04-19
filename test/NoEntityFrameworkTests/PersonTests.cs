@@ -3,7 +3,6 @@ using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NoEntityFrameworkExample.Models;
 using TestBuildingBlocks;
@@ -11,9 +10,9 @@ using Xunit;
 
 namespace NoEntityFrameworkTests;
 
-public sealed class PersonTests : IntegrationTest, IClassFixture<WebApplicationFactory<Person>>
+public sealed class PersonTests : IntegrationTest, IClassFixture<NoLoggingWebApplicationFactory<Person>>
 {
-    private readonly WebApplicationFactory<Person> _factory;
+    private readonly NoLoggingWebApplicationFactory<Person> _factory;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -24,7 +23,7 @@ public sealed class PersonTests : IntegrationTest, IClassFixture<WebApplicationF
         }
     }
 
-    public PersonTests(WebApplicationFactory<Person> factory)
+    public PersonTests(NoLoggingWebApplicationFactory<Person> factory)
     {
         _factory = factory;
     }

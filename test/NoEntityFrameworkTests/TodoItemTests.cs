@@ -3,7 +3,6 @@ using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using NoEntityFrameworkExample.Models;
 using TestBuildingBlocks;
@@ -11,9 +10,9 @@ using Xunit;
 
 namespace NoEntityFrameworkTests;
 
-public sealed class TodoItemTests : IntegrationTest, IClassFixture<WebApplicationFactory<TodoItem>>
+public sealed class TodoItemTests : IntegrationTest, IClassFixture<NoLoggingWebApplicationFactory<TodoItem>>
 {
-    private readonly WebApplicationFactory<TodoItem> _factory;
+    private readonly NoLoggingWebApplicationFactory<TodoItem> _factory;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -24,7 +23,7 @@ public sealed class TodoItemTests : IntegrationTest, IClassFixture<WebApplicatio
         }
     }
 
-    public TodoItemTests(WebApplicationFactory<TodoItem> factory)
+    public TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> factory)
     {
         _factory = factory;
     }
