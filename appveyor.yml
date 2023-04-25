@@ -1,8 +1,6 @@
 image:
   - Ubuntu2004
-  # Downgrade to workaround error NETSDK1194 during 'dotnet pack': The "--output" option isn't supported when building a solution.
-  # https://stackoverflow.com/questions/75453953/how-to-fix-github-actions-dotnet-publish-workflow-error-the-output-option-i
-  - Previous Visual Studio 2022
+  - Visual Studio 2022
 
 version: '{build}'
 
@@ -34,7 +32,7 @@ for:
 -
   matrix:
     only:
-    - image: Previous Visual Studio 2022
+    - image: Visual Studio 2022
   services:
   - postgresql15
   install:
