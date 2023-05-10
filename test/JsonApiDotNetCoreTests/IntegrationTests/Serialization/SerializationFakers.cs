@@ -29,7 +29,14 @@ internal sealed class SerializationFakers : FakerContainer
     private readonly Lazy<Faker<MeetingAttendee>> _lazyMeetingAttendeeFaker = new(() =>
         new Faker<MeetingAttendee>()
             .UseSeed(GetFakerSeed())
-            .RuleFor(attendee => attendee.DisplayName, faker => faker.Random.Utf16String()));
+            .RuleFor(attendee => attendee.DisplayName, faker => faker.Random.Utf16String())
+            .RuleFor(attendee => attendee.HomeAddress, faker => new Address
+            {
+                Street = faker.Address.StreetAddress(),
+                ZipCode = faker.Address.ZipCode(),
+                City = faker.Address.City(),
+                Country = faker.Address.Country()
+            }));
 
     public Faker<Meeting> Meeting => _lazyMeetingFaker.Value;
     public Faker<MeetingAttendee> MeetingAttendee => _lazyMeetingAttendeeFaker.Value;

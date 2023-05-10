@@ -151,7 +151,24 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
     protected virtual IQueryable<TResource> GetAll()
     {
-        return _dbContext.Set<TResource>();
+        IQueryable<TResource> source = _dbContext.Set<TResource>();
+
+        return GetTrackingBehavior() switch
+        {
+            QueryTrackingBehavior.NoTrackingWithIdentityResolution => source.AsNoTrackingWithIdentityResolution(),
+            QueryTrackingBehavior.NoTracking => source.AsNoTracking(),
+            QueryTrackingBehavior.TrackAll => source.AsTracking(),
+            _ => source
+        };
+    }
+
+    protected virtual QueryTrackingBehavior? GetTrackingBehavior()
+    {
+        // EF Core rejects the way we project sparse fieldsets when owned entities are involved, unless the query is explicitly
+        // marked as non-tracked (see https://github.com/dotnet/EntityFramework.Docs/issues/2205#issuecomment-1542914439).
+#pragma warning disable CS0618
+        return _resourceDefinitionAccessor.IsReadOnlyRequest ? QueryTrackingBehavior.NoTrackingWithIdentityResolution : null;
+#pragma warning restore CS0618
     }
 
     /// <inheritdoc />
