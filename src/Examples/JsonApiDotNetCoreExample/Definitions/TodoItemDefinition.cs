@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authentication;
 namespace JsonApiDotNetCoreExample.Definitions;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem, int>
+public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem, long>
 {
     private readonly ISystemClock _systemClock;
 
@@ -29,7 +29,7 @@ public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem, int
     {
         return CreateSortExpressionFromLambda(new PropertySortOrder
         {
-            (todoItem => todoItem.Priority, ListSortDirection.Descending),
+            (todoItem => todoItem.Priority, ListSortDirection.Ascending),
             (todoItem => todoItem.LastModifiedAt, ListSortDirection.Descending)
         });
     }

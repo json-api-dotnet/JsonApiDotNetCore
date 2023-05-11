@@ -1,3 +1,4 @@
+using System.Globalization;
 using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions;
@@ -8,12 +9,13 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 [PublicAPI]
 public class LiteralConstantExpression : IdentifierExpression
 {
+    // Only used to show the original input, in case expression parse failed. Not part of the semantic expression value.
     private readonly string _stringValue;
 
     public object TypedValue { get; }
 
     public LiteralConstantExpression(object typedValue)
-        : this(typedValue, typedValue.ToString()!)
+        : this(typedValue, GetStringValue(typedValue)!)
     {
     }
 
@@ -24,6 +26,13 @@ public class LiteralConstantExpression : IdentifierExpression
 
         TypedValue = typedValue;
         _stringValue = stringValue;
+    }
+
+    private static string? GetStringValue(object typedValue)
+    {
+        ArgumentGuard.NotNull(typedValue);
+
+        return typedValue is IFormattable cultureAwareValue ? cultureAwareValue.ToString(null, CultureInfo.InvariantCulture) : typedValue.ToString();
     }
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
@@ -56,11 +65,11 @@ public class LiteralConstantExpression : IdentifierExpression
 
         var other = (LiteralConstantExpression)obj;
 
-        return Equals(TypedValue, other.TypedValue) && _stringValue == other._stringValue;
+        return TypedValue.Equals(other.TypedValue);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(TypedValue, _stringValue);
+        return TypedValue.GetHashCode();
     }
 }

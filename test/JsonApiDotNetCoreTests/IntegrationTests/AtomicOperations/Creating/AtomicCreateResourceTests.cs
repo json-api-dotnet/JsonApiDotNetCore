@@ -501,7 +501,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
                 new
                 {
                     op = "add",
-                    href = "/api/v1/musicTracks"
+                    href = "/api/musicTracks"
                 }
             }
         };

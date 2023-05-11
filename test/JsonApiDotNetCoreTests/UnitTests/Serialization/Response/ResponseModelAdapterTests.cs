@@ -569,7 +569,7 @@ public sealed class ResponseModelAdapterTests
             PrimaryId = primaryId
         };
 
-        var evaluatedIncludeCache = new EvaluatedIncludeCache();
+        var evaluatedIncludeCache = new EvaluatedIncludeCache(Array.Empty<IQueryConstraintProvider>());
         var linkBuilder = new FakeLinkBuilder();
         var metaBuilder = new FakeMetaBuilder();
         var resourceDefinitionAccessor = new FakeResourceDefinitionAccessor();

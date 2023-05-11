@@ -531,7 +531,7 @@ public sealed class AtomicUpdateToOneRelationshipTests : IClassFixture<Integrati
                 new
                 {
                     op = "update",
-                    href = "/api/v1/musicTracks/1/relationships/ownedBy"
+                    href = "/api/musicTracks/1/relationships/ownedBy"
                 }
             }
         };

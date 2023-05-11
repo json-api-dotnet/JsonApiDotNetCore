@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreExample.Models;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource]
-public sealed class Tag : Identifiable<int>
+public sealed class Tag : Identifiable<long>
 {
     [Attr]
     [MinLength(1)]

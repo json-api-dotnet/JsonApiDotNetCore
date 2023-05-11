@@ -15,7 +15,7 @@ public interface IJsonApiOptions
     /// </summary>
     /// <example>
     /// <code><![CDATA[
-    /// options.Namespace = "api/v1";
+    /// options.Namespace = "api/shopping";
     /// ]]></code>
     /// </example>
     string? Namespace { get; }
@@ -64,8 +64,8 @@ public interface IJsonApiOptions
     ///   "relationships": {
     ///      "author": {
     ///        "links": {
-    ///          "self": "/api/v1/articles/4309/relationships/author",
-    ///          "related": "/api/v1/articles/4309/author"
+    ///          "self": "/api/shopping/articles/4309/relationships/author",
+    ///          "related": "/api/shopping/articles/4309/author"
     ///        }
     ///      }
     ///   }
