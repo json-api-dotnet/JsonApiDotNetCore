@@ -1,4 +1,4 @@
-#Requires -Version 7.0
+#Requires -Version 7.3
 
 # This script generates response documents for ./request-examples
 

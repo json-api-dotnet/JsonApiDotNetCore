@@ -4,6 +4,7 @@ using BenchmarkDotNet.Attributes;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -121,12 +122,12 @@ public class ResourceSerializationBenchmarks : SerializationBenchmarkBase
 
     protected override IEvaluatedIncludeCache CreateEvaluatedIncludeCache(IResourceGraph resourceGraph)
     {
-        ResourceType resourceAType = resourceGraph.GetResourceType<OutgoingResource>();
+        ResourceType resourceType = resourceGraph.GetResourceType<OutgoingResource>();
 
-        RelationshipAttribute single2 = resourceAType.GetRelationshipByPropertyName(nameof(OutgoingResource.Single2));
-        RelationshipAttribute single3 = resourceAType.GetRelationshipByPropertyName(nameof(OutgoingResource.Single3));
-        RelationshipAttribute multi4 = resourceAType.GetRelationshipByPropertyName(nameof(OutgoingResource.Multi4));
-        RelationshipAttribute multi5 = resourceAType.GetRelationshipByPropertyName(nameof(OutgoingResource.Multi5));
+        RelationshipAttribute single2 = resourceType.GetRelationshipByPropertyName(nameof(OutgoingResource.Single2));
+        RelationshipAttribute single3 = resourceType.GetRelationshipByPropertyName(nameof(OutgoingResource.Single3));
+        RelationshipAttribute multi4 = resourceType.GetRelationshipByPropertyName(nameof(OutgoingResource.Multi4));
+        RelationshipAttribute multi5 = resourceType.GetRelationshipByPropertyName(nameof(OutgoingResource.Multi5));
 
         var include = new IncludeExpression(new HashSet<IncludeElementExpression>
         {
@@ -142,7 +143,7 @@ public class ResourceSerializationBenchmarks : SerializationBenchmarkBase
             }.ToImmutableHashSet())
         }.ToImmutableHashSet());
 
-        var cache = new EvaluatedIncludeCache();
+        var cache = new EvaluatedIncludeCache(Array.Empty<IQueryConstraintProvider>());
         cache.Set(include);
         return cache;
     }

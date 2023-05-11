@@ -11,10 +11,10 @@ You can add a namespace to all URLs by specifying it at startup.
 
 ```c#
 // Program.cs
-builder.Services.AddJsonApi<AppDbContext>(options => options.Namespace = "api/v1");
+builder.Services.AddJsonApi<AppDbContext>(options => options.Namespace = "api/shopping");
 ```
 
-Which results in URLs like: https://yourdomain.com/api/v1/people
+Which results in URLs like: https://yourdomain.com/api/shopping/articles
 
 ## Default routing convention
 
@@ -66,14 +66,14 @@ It is possible to override the default routing convention for an auto-generated 
 ```c#
 // Auto-generated
 [DisableRoutingConvention]
-[Route("v1/custom/route/summaries-for-orders")]
+[Route("custom/route/summaries-for-orders")]
 partial class OrderSummariesController
 {
 }
 
 // Hand-written
 [DisableRoutingConvention]
-[Route("v1/custom/route/lines-in-order")]
+[Route("custom/route/lines-in-order")]
 public class OrderLineController : JsonApiController<OrderLine, int>
 {
     public OrderLineController(IJsonApiOptions options, IResourceGraph resourceGraph,

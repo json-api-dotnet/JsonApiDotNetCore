@@ -55,8 +55,8 @@ options.UseRelativeLinks = true;
   "relationships": {
      "author": {
        "links": {
-         "self": "/api/v1/articles/4309/relationships/author",
-         "related": "/api/v1/articles/4309/author"
+         "self": "/articles/4309/relationships/author",
+         "related": "/articles/4309/author"
        }
      }
   }

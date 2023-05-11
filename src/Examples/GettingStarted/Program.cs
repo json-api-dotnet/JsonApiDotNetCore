@@ -1,19 +1,31 @@
+using System.Diagnostics;
 using GettingStarted.Data;
 using GettingStarted.Models;
 using JsonApiDotNetCore.Configuration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddSqlite<SampleDbContext>("Data Source=sample.db;Pooling=False");
+builder.Services.AddDbContext<SampleDbContext>(options =>
+{
+    options.UseSqlite("Data Source=SampleDb.db;Pooling=False");
+    SetDbContextDebugOptions(options);
+});
 
 builder.Services.AddJsonApi<SampleDbContext>(options =>
 {
     options.Namespace = "api";
     options.UseRelativeLinks = true;
     options.IncludeTotalResourceCount = true;
+
+#if DEBUG
+    options.IncludeExceptionStackTraceInErrors = true;
+    options.IncludeRequestBodyInErrors = true;
     options.SerializerOptions.WriteIndented = true;
+#endif
 });
 
 WebApplication app = builder.Build();
@@ -27,6 +39,14 @@ app.MapControllers();
 await CreateDatabaseAsync(app.Services);
 
 app.Run();
+
+[Conditional("DEBUG")]
+static void SetDbContextDebugOptions(DbContextOptionsBuilder options)
+{
+    options.EnableDetailedErrors();
+    options.EnableSensitiveDataLogging();
+    options.ConfigureWarnings(builder => builder.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning));
+}
 
 static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
 {

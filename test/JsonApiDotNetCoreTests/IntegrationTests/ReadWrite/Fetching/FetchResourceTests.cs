@@ -349,7 +349,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
-    public async Task Cannot_get_secondary_resource_for_unknown_secondary_type()
+    public async Task Cannot_get_secondary_resource_for_unknown_relationship()
     {
         // Arrange
         WorkItem workItem = _fakers.WorkItem.Generate();

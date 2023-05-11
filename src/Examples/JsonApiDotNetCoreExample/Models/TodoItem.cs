@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreExample.Models;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource]
-public sealed class TodoItem : Identifiable<int>
+public sealed class TodoItem : Identifiable<long>
 {
     [Attr]
     public string Description { get; set; } = null!;
@@ -15,6 +15,9 @@ public sealed class TodoItem : Identifiable<int>
     [Attr]
     [Required]
     public TodoItemPriority? Priority { get; set; }
+
+    [Attr]
+    public long? DurationInHours { get; set; }
 
     [Attr(Capabilities = AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort | AttrCapabilities.AllowView)]
     public DateTimeOffset CreatedAt { get; set; }
@@ -25,9 +28,9 @@ public sealed class TodoItem : Identifiable<int>
     [HasOne]
     public Person Owner { get; set; } = null!;
 
-    [HasOne(Capabilities = HasOneCapabilities.AllowView | HasOneCapabilities.AllowSet)]
+    [HasOne]
     public Person? Assignee { get; set; }
 
-    [HasMany(Capabilities = HasManyCapabilities.AllowView | HasManyCapabilities.AllowFilter)]
+    [HasMany]
     public ISet<Tag> Tags { get; set; } = new HashSet<Tag>();
 }
