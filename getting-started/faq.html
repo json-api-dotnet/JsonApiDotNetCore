@@ -183,22 +183,22 @@ Either way, you can use the built-in query string and request body parsing, as w
 <li><code>IJsonApiRequest</code>: This contains routing information, such as whether a primary, secondary, or relationship endpoint is being accessed.</li>
 <li><code>ITargetedFields</code>: Lists the attributes and relationships from an incoming POST/PATCH resource request. Any fields missing there should not be stored (partial updates).</li>
 <li><code>IEnumerable&lt;IQueryConstraintProvider&gt;</code>: Provides access to the parsed query string parameters.</li>
-<li><code>IEvaluatedIncludeCache</code>: This tells the response serializer which related resources to render, which you need to populate.</li>
-<li><code>ISparseFieldSetCache</code>: This tells the response serializer which fields to render in the attributes and relationship objects. You need to populate this as well.</li>
+<li><code>IEvaluatedIncludeCache</code>: This tells the response serializer which related resources to render.</li>
+<li><code>ISparseFieldSetCache</code>: This tells the response serializer which fields to render in the <code>attributes</code> and <code>relationships</code> objects.</li>
 </ul>
-<p>You may also want to inject the singletons <code>IJsonApiOptions</code> (which contains settings such as default page size) and <code>IResourceGraph</code> (the JSON:API model of resources and relationships).</p>
+<p>You may also want to inject the singletons <code>IJsonApiOptions</code> (which contains settings such as default page size) and <code>IResourceGraph</code> (the JSON:API model of resources, attributes and relationships).</p>
 <p>So, back to the topic of where to intercept. It helps to familiarize yourself with the <a href="../internals/queries.html">execution pipeline</a>.
 Replacing at the service level is the simplest. But it means you'll need to read the parsed query string parameters and invoke
 all resource definition callbacks yourself. And you won't get change detection (HTTP 203 Not Modified).
 Take a look at <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs">JsonApiResourceService</a> to see what you're missing out on.</p>
-<p>You'll get a lot more out of the box if replacing at the repository level instead. You don't need to apply options, analyze query strings or populate caches for the serializer.
+<p>You'll get a lot more out of the box if replacing at the repository level instead. You don't need to apply options or analyze query strings.
 And most resource definition callbacks are handled.
 That's because the built-in resource service translates all JSON:API aspects of the request into a database-agnostic data structure called <code>QueryLayer</code>.
 Now the hard part for you becomes reading that data structure and producing data access calls from that.
 If your data store provides a LINQ provider, you may reuse most of <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/QueryableBuilder.cs">QueryableBuilder</a>,
 which drives the translation into <a href="https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/">System.Linq.Expressions</a>.
-Note however, that it also produces calls to <code>.Include(&quot;&quot;)</code>, which is an Entity Framework Core-specific extension method, so you'll likely need to prevent that from happening.
-We use this for accessing <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore.MongoDb/blob/674889e037334e3f376550178ce12d0842d7560c/src/JsonApiDotNetCore.MongoDb/Queries/Internal/QueryableBuilding/MongoQueryableBuilder.cs">MongoDB</a>.</p>
+Note however, that it also produces calls to <code>.Include(&quot;&quot;)</code>, which is an Entity Framework Core-specific extension method, so you'll likely need to prevent that from happening. There's an example <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/Examples/NoEntityFrameworkExample/Repositories/InMemoryResourceRepository.cs">here</a>.
+We use a similar approach for accessing <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore.MongoDb/blob/674889e037334e3f376550178ce12d0842d7560c/src/JsonApiDotNetCore.MongoDb/Queries/Internal/QueryableBuilding/MongoQueryableBuilder.cs">MongoDB</a>.</p>
 <div class="TIP">
 <h5>Tip</h5>
 <p><a href="https://github.com/zspitz/ExpressionTreeVisualizer">ExpressionTreeVisualizer</a> is very helpful in trying to debug LINQ expression trees!</p>

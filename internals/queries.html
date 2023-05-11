@@ -98,7 +98,7 @@ The <code>IQueryable</code> expression trees are passed to Entity Framework Core
 </ul>
 <h1 id="example">Example</h1>
 <p>To get a sense of what this all looks like, let's look at an example query string:</p>
-<pre><code>/api/v1/blogs?
+<pre><code>/api/blogs?
   include=owner,posts.comments.author&amp;
   filter=has(posts)&amp;
   sort=count(posts)&amp;

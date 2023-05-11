@@ -69,7 +69,9 @@
 </div>
 <h1 id="reading-data">Reading data</h1>
 <h3 id="get-all">Get all</h3>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books
+<pre><code class="lang-ps" name="REQUEST">#Requires -Version 7.3
+
+curl -s -f http://localhost:14141/api/books
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/books&quot;,
@@ -140,7 +142,9 @@
   }
 }
 </code></pre><h3 id="get-by-id">Get by ID</h3>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/people/1
+<pre><code class="lang-ps" name="REQUEST">#Requires -Version 7.3
+
+curl -s -f http://localhost:14141/api/people/1
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/people/1&quot;
@@ -165,7 +169,9 @@
   }
 }
 </code></pre><h3 id="get-with-relationship">Get with relationship</h3>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?include=author
+<pre><code class="lang-ps" name="REQUEST">#Requires -Version 7.3
+
+curl -s -f http://localhost:14141/api/books?include=author
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/books?include=author&quot;,
@@ -304,7 +310,9 @@
   }
 }
 </code></pre><h3 id="get-sparse-fieldset">Get sparse fieldset</h3>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?fields%5Bbooks%5D=publishYear
+<pre><code class="lang-ps" name="REQUEST">#Requires -Version 7.3
+
+curl -s -f http://localhost:14141/api/books?fields%5Bbooks%5D=publishYear
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/books?fields%5Bbooks%5D=publishYear&quot;,
@@ -348,7 +356,9 @@
   }
 }
 </code></pre><h3 id="filter-on-partial-match">Filter on partial match</h3>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f &quot;http://localhost:14141/api/people?filter=contains(name,'Shell')&quot;
+<pre><code class="lang-ps" name="REQUEST">#Requires -Version 7.3
+
+curl -s -f &quot;http://localhost:14141/api/people?filter=contains(name,'Shell')&quot;
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/people?filter=contains(name,'Shell')&quot;,
@@ -380,7 +390,9 @@
   }
 }
 </code></pre><h3 id="sorting">Sorting</h3>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?sort=-publishYear
+<pre><code class="lang-ps" name="REQUEST">#Requires -Version 7.3
+
+curl -s -f http://localhost:14141/api/books?sort=-publishYear
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/books?sort=-publishYear&quot;,
@@ -451,7 +463,9 @@
   }
 }
 </code></pre><h3 id="pagination">Pagination</h3>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f &quot;http://localhost:14141/api/books?page%5Bsize%5D=1&amp;page%5Bnumber%5D=2&quot;
+<pre><code class="lang-ps" name="REQUEST">#Requires -Version 7.3
+
+curl -s -f &quot;http://localhost:14141/api/books?page%5Bsize%5D=1&amp;page%5Bnumber%5D=2&quot;
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/books?page%5Bsize%5D=1&amp;page%5Bnumber%5D=2&quot;,
@@ -487,13 +501,15 @@
 }
 </code></pre><h1 id="writing-data">Writing data</h1>
 <h3 id="create-resource">Create resource</h3>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/people        `
+<pre><code class="lang-ps" name="REQUEST">#Requires -Version 7.3
+
+curl -s -f http://localhost:14141/api/people        `
     -H &quot;Content-Type: application/vnd.api+json&quot;     `
     -d '{
-            \&quot;data\&quot;: {
-                \&quot;type\&quot;: \&quot;people\&quot;,
-                \&quot;attributes\&quot;: {
-                    \&quot;name\&quot;: \&quot;Alice\&quot;
+            &quot;data&quot;: {
+                &quot;type&quot;: &quot;people&quot;,
+                &quot;attributes&quot;: {
+                    &quot;name&quot;: &quot;Alice&quot;
                 }
             }
         }'
@@ -521,20 +537,22 @@
   }
 }
 </code></pre><h3 id="create-resource-with-relationship">Create resource with relationship</h3>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books         `
+<pre><code class="lang-ps" name="REQUEST">#Requires -Version 7.3
+
+curl -s -f http://localhost:14141/api/books         `
     -H &quot;Content-Type: application/vnd.api+json&quot;     `
     -d '{
-            \&quot;data\&quot;: {
-                \&quot;type\&quot;: \&quot;books\&quot;,
-                \&quot;attributes\&quot;: {
-                    \&quot;title\&quot;: \&quot;Valperga\&quot;,
-                    \&quot;publishYear\&quot;: 1823
+            &quot;data&quot;: {
+                &quot;type&quot;: &quot;books&quot;,
+                &quot;attributes&quot;: {
+                    &quot;title&quot;: &quot;Valperga&quot;,
+                    &quot;publishYear&quot;: 1823
                 },
-                \&quot;relationships\&quot;: {
-                    \&quot;author\&quot;: {
-                        \&quot;data\&quot;: {
-                            \&quot;type\&quot;: \&quot;people\&quot;,
-                            \&quot;id\&quot;: \&quot;1\&quot;
+                &quot;relationships&quot;: {
+                    &quot;author&quot;: {
+                        &quot;data&quot;: {
+                            &quot;type&quot;: &quot;people&quot;,
+                            &quot;id&quot;: &quot;1&quot;
                         }
                     }
                 }
@@ -565,20 +583,24 @@
   }
 }
 </code></pre><h3 id="update-resource">Update resource</h3>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books/1       `
+<pre><code class="lang-ps" name="REQUEST">#Requires -Version 7.3
+
+curl -s -f http://localhost:14141/api/books/1       `
     -H &quot;Content-Type: application/vnd.api+json&quot;     `
     -X PATCH                                        `
     -d '{
-            \&quot;data\&quot;: {
-                \&quot;type\&quot;: \&quot;books\&quot;,
-                \&quot;id\&quot;: \&quot;1\&quot;,
-                \&quot;attributes\&quot;: {
-                    \&quot;publishYear\&quot;: 1820
+            &quot;data&quot;: {
+                &quot;type&quot;: &quot;books&quot;,
+                &quot;id&quot;: &quot;1&quot;,
+                &quot;attributes&quot;: {
+                    &quot;publishYear&quot;: 1820
                 }
             }
         }'
 </code></pre><pre><code class="lang-json" name="RESPONSE"></code></pre><h3 id="delete-resource">Delete resource</h3>
-<pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books/1       `
+<pre><code class="lang-ps" name="REQUEST">#Requires -Version 7.3
+
+curl -s -f http://localhost:14141/api/books/1       `
     -X DELETE
 </code></pre><pre><code class="lang-json" name="RESPONSE"></code></pre></article>
           </div>
