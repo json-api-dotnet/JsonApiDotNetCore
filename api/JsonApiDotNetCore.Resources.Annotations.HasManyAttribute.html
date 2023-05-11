@@ -114,9 +114,6 @@
       <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_GetValue_System_Object_">ResourceFieldAttribute.GetValue(object)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_SetValue_System_Object_System_Object_">ResourceFieldAttribute.SetValue(object, object)</a>
-    </div>
-    <div>
       <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_ToString">ResourceFieldAttribute.ToString()</a>
     </div>
     <div>
@@ -256,7 +253,7 @@ public sealed class HasManyAttribute : RelationshipAttribute</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyAttribute__ctor.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.%23ctor%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L52">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L53">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute__ctor_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute__ctor" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.#ctor">HasManyAttribute()</h4>
@@ -280,7 +277,7 @@ public sealed class HasManyAttribute : RelationshipAttribute</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Capabilities.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Capabilities%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L46">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L47">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Capabilities_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Capabilities*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Capabilities" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Capabilities">Capabilities</h4>
@@ -320,7 +317,7 @@ public sealed class HasManyAttribute : RelationshipAttribute</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Equals_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Equals(System.Object)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L68">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L97">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Equals_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Equals*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Equals_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Equals(System.Object)">Equals(object?)</h4>
@@ -364,19 +361,12 @@ public sealed class HasManyAttribute : RelationshipAttribute</code></pre>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_Equals_System_Object_">RelationshipAttribute.Equals(object?)</a></div>
-  <h5 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Equals_System_Object__examples">Examples</h5>
-  <pre><code>public class Author : Identifiable
-{
-    [HasMany]
-    public ISet&lt;Article> Articles { get; set; }
-}</code></pre>
-
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_GetHashCode.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.GetHashCode%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L85">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L115">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_GetHashCode_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.GetHashCode*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_GetHashCode" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.GetHashCode">GetHashCode()</h4>
@@ -403,13 +393,47 @@ public sealed class HasManyAttribute : RelationshipAttribute</code></pre>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_GetHashCode">RelationshipAttribute.GetHashCode()</a></div>
-  <h5 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_GetHashCode_examples">Examples</h5>
-  <pre><code>public class Author : Identifiable
-{
-    [HasMany]
-    public ISet&lt;Article> Articles { get; set; }
-}</code></pre>
-
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_SetValue_System_Object_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.SetValue(System.Object%2CSystem.Object)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L70">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_SetValue_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.SetValue*"></a>
+  <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_SetValue_System_Object_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.SetValue(System.Object,System.Object)">SetValue(object, object?)</h4>
+  <div class="markdown level1 summary"><p>Sets the value of this field on the specified resource instance. Throws if the property is read-only or if the field does not belong to the specified
+resource instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="declaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void SetValue(object resource, object? newValue)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">object</span></td>
+        <td><span class="parametername">resource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">object</span></td>
+        <td><span class="parametername">newValue</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_SetValue_System_Object_System_Object_">ResourceFieldAttribute.SetValue(object, object?)</a></div>
 </article>
           </div>
 
@@ -421,7 +445,7 @@ public sealed class HasManyAttribute : RelationshipAttribute</code></pre>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyAttribute.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyAttribute%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L20" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L21" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

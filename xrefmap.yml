@@ -9064,14 +9064,11 @@ references:
   fullName: JsonApiDotNetCore.Queries.FieldSelectors.IncludeAttributes
   nameWithType: FieldSelectors.IncludeAttributes
 - uid: JsonApiDotNetCore.Queries.FieldSelectors.IncludeRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,JsonApiDotNetCore.Queries.QueryLayer)
-  name: IncludeRelationship(RelationshipAttribute, QueryLayer?)
+  name: IncludeRelationship(RelationshipAttribute, QueryLayer)
   href: api/JsonApiDotNetCore.Queries.FieldSelectors.html#JsonApiDotNetCore_Queries_FieldSelectors_IncludeRelationship_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_JsonApiDotNetCore_Queries_QueryLayer_
   commentId: M:JsonApiDotNetCore.Queries.FieldSelectors.IncludeRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,JsonApiDotNetCore.Queries.QueryLayer)
-  name.vb: IncludeRelationship(RelationshipAttribute, QueryLayer)
-  fullName: JsonApiDotNetCore.Queries.FieldSelectors.IncludeRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, JsonApiDotNetCore.Queries.QueryLayer?)
-  fullName.vb: JsonApiDotNetCore.Queries.FieldSelectors.IncludeRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, JsonApiDotNetCore.Queries.QueryLayer)
-  nameWithType: FieldSelectors.IncludeRelationship(RelationshipAttribute, QueryLayer?)
-  nameWithType.vb: FieldSelectors.IncludeRelationship(RelationshipAttribute, QueryLayer)
+  fullName: JsonApiDotNetCore.Queries.FieldSelectors.IncludeRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, JsonApiDotNetCore.Queries.QueryLayer)
+  nameWithType: FieldSelectors.IncludeRelationship(RelationshipAttribute, QueryLayer)
 - uid: JsonApiDotNetCore.Queries.FieldSelectors.IncludeRelationship*
   name: IncludeRelationship
   href: api/JsonApiDotNetCore.Queries.FieldSelectors.html#JsonApiDotNetCore_Queries_FieldSelectors_IncludeRelationship_
@@ -14120,6 +14117,22 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.GetHashCode
   nameWithType: HasManyAttribute.GetHashCode
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.SetValue(System.Object,System.Object)
+  name: SetValue(object, object?)
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_SetValue_System_Object_System_Object_
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.SetValue(System.Object,System.Object)
+  name.vb: SetValue(Object, Object)
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.SetValue(object, object?)
+  fullName.vb: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.SetValue(Object, Object)
+  nameWithType: HasManyAttribute.SetValue(object, object?)
+  nameWithType.vb: HasManyAttribute.SetValue(Object, Object)
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.SetValue*
+  name: SetValue
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_SetValue_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.SetValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.SetValue
+  nameWithType: HasManyAttribute.SetValue
 - uid: JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities
   name: HasManyCapabilities
   href: api/JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.html
@@ -14241,6 +14254,22 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.GetHashCode
   nameWithType: HasOneAttribute.GetHashCode
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.SetValue(System.Object,System.Object)
+  name: SetValue(object, object?)
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_SetValue_System_Object_System_Object_
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.SetValue(System.Object,System.Object)
+  name.vb: SetValue(Object, Object)
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.SetValue(object, object?)
+  fullName.vb: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.SetValue(Object, Object)
+  nameWithType: HasOneAttribute.SetValue(object, object?)
+  nameWithType.vb: HasOneAttribute.SetValue(Object, Object)
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.SetValue*
+  name: SetValue
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_SetValue_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.SetValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.SetValue
+  nameWithType: HasOneAttribute.SetValue
 - uid: JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities
   name: HasOneCapabilities
   href: api/JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.html
@@ -14476,6 +14505,22 @@ references:
   commentId: T:JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute
   fullName: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute
   nameWithType: ResourceFieldAttribute
+- uid: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.AssertIsIdentifiable(System.Object)
+  name: AssertIsIdentifiable(object?)
+  href: api/JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_AssertIsIdentifiable_System_Object_
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.AssertIsIdentifiable(System.Object)
+  name.vb: AssertIsIdentifiable(Object)
+  fullName: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.AssertIsIdentifiable(object?)
+  fullName.vb: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.AssertIsIdentifiable(Object)
+  nameWithType: ResourceFieldAttribute.AssertIsIdentifiable(object?)
+  nameWithType.vb: ResourceFieldAttribute.AssertIsIdentifiable(Object)
+- uid: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.AssertIsIdentifiable*
+  name: AssertIsIdentifiable
+  href: api/JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_AssertIsIdentifiable_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.AssertIsIdentifiable
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.AssertIsIdentifiable
+  nameWithType: ResourceFieldAttribute.AssertIsIdentifiable
 - uid: JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.Equals(System.Object)
   name: Equals(object?)
   href: api/JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_Equals_System_Object_
