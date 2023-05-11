@@ -31,6 +31,7 @@ public sealed class AttrAttribute : ResourceFieldAttribute
         set => _capabilities = value;
     }
 
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))
@@ -48,6 +49,7 @@ public sealed class AttrAttribute : ResourceFieldAttribute
         return Capabilities == other.Capabilities && base.Equals(other);
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Combine(Capabilities, base.GetHashCode());

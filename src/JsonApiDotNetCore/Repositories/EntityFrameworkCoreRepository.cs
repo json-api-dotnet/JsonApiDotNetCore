@@ -163,6 +163,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             id
         });
 
+        ArgumentGuard.NotNull(resourceClrType);
+
         var resource = (TResource)_resourceFactory.CreateInstance(resourceClrType);
         resource.Id = id;
 

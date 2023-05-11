@@ -64,6 +64,14 @@ public sealed class HasOneAttribute : RelationshipAttribute
         return false;
     }
 
+    /// <inheritdoc />
+    public override void SetValue(object resource, object? newValue)
+    {
+        AssertIsIdentifiable(newValue);
+        base.SetValue(resource, newValue);
+    }
+
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))
@@ -81,6 +89,7 @@ public sealed class HasOneAttribute : RelationshipAttribute
         return _capabilities == other._capabilities && base.Equals(other);
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Combine(_capabilities, base.GetHashCode());
