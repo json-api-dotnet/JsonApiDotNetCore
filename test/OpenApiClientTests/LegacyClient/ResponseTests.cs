@@ -10,7 +10,7 @@ namespace OpenApiClientTests.LegacyClient;
 
 public sealed class ResponseTests
 {
-    private const string HostPrefix = "http://localhost/api/v1/";
+    private const string HostPrefix = "http://localhost/api/";
 
     [Fact]
     public async Task Getting_resource_collection_translates_response()
