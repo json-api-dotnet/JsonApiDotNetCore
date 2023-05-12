@@ -150,12 +150,17 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
 
     private void IncludeAllScalarProperties(Type elementType, Dictionary<PropertyInfo, PropertySelector> propertySelectors)
     {
-        IEntityType entityModel = _entityModel.GetEntityTypes().Single(type => type.ClrType == elementType);
-        IEnumerable<IProperty> entityProperties = entityModel.GetProperties().Where(property => !property.IsShadowProperty()).ToArray();
+        IEntityType entityType = _entityModel.GetEntityTypes().Single(type => type.ClrType == elementType);
 
-        foreach (IProperty entityProperty in entityProperties)
+        foreach (IProperty property in entityType.GetProperties().Where(property => !property.IsShadowProperty()))
         {
-            var propertySelector = new PropertySelector(entityProperty.PropertyInfo!);
+            var propertySelector = new PropertySelector(property.PropertyInfo!);
+            IncludeWritableProperty(propertySelector, propertySelectors);
+        }
+
+        foreach (INavigation navigation in entityType.GetNavigations().Where(navigation => navigation.ForeignKey.IsOwnership && !navigation.IsShadowProperty()))
+        {
+            var propertySelector = new PropertySelector(navigation.PropertyInfo!);
             IncludeWritableProperty(propertySelector, propertySelectors);
         }
     }

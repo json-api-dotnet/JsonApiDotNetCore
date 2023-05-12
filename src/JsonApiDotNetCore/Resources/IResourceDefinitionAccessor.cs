@@ -12,6 +12,15 @@ namespace JsonApiDotNetCore.Resources;
 public interface IResourceDefinitionAccessor
 {
     /// <summary>
+    /// Indicates whether this request targets only fetching of data (resources and relationships), as opposed to applying changes.
+    /// </summary>
+    /// <remarks>
+    /// This property was added to reduce the impact of taking a breaking change. It will likely be removed in the next major version.
+    /// </remarks>
+    [Obsolete("Use IJsonApiRequest.IsReadOnly.")]
+    bool IsReadOnlyRequest { get; }
+
+    /// <summary>
     /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnApplyIncludes" /> for the specified resource type.
     /// </summary>
     IImmutableSet<IncludeElementExpression> OnApplyIncludes(ResourceType resourceType, IImmutableSet<IncludeElementExpression> existingIncludes);
