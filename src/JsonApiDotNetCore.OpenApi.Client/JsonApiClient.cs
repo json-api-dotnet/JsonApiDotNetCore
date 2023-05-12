@@ -122,9 +122,8 @@ public abstract class JsonApiClient : IJsonApiClient
 
             if (value != null)
             {
-                if (_alwaysIncludedAttributesPerRequestDocumentInstance.ContainsKey(value))
+                if (_alwaysIncludedAttributesPerRequestDocumentInstance.TryGetValue(value, out AttributeNamesContainer? attributeNamesContainer))
                 {
-                    AttributeNamesContainer attributeNamesContainer = _alwaysIncludedAttributesPerRequestDocumentInstance[value];
                     serializer.ContractResolver = new JsonApiDocumentContractResolver(attributeNamesContainer);
                 }
 
