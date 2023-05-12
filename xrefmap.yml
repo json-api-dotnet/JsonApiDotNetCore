@@ -13170,6 +13170,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).GetForUpdateAsync
   nameWithType: EntityFrameworkCoreRepository<TResource, TId>.GetForUpdateAsync
   nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).GetForUpdateAsync
+- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetTrackingBehavior
+  name: GetTrackingBehavior()
+  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetTrackingBehavior
+  commentId: M:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetTrackingBehavior
+  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.GetTrackingBehavior()
+  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).GetTrackingBehavior()
+  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.GetTrackingBehavior()
+  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).GetTrackingBehavior()
+- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetTrackingBehavior*
+  name: GetTrackingBehavior
+  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetTrackingBehavior_
+  commentId: Overload:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.GetTrackingBehavior
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.GetTrackingBehavior
+  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).GetTrackingBehavior
+  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.GetTrackingBehavior
+  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).GetTrackingBehavior
 - uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.RemoveFromToManyRelationshipAsync(`0,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)
   name: RemoveFromToManyRelationshipAsync(TResource, ISet<IIdentifiable>, CancellationToken)
   href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_RemoveFromToManyRelationshipAsync__0_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_
@@ -15329,6 +15346,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
   nameWithType: IResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.IsReadOnlyRequest
+  name: IsReadOnlyRequest
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_IsReadOnlyRequest
+  commentId: P:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.IsReadOnlyRequest
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.IsReadOnlyRequest
+  nameWithType: IResourceDefinitionAccessor.IsReadOnlyRequest
+- uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.IsReadOnlyRequest*
+  name: IsReadOnlyRequest
+  href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_IsReadOnlyRequest_
+  commentId: Overload:JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.IsReadOnlyRequest
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.IsReadOnlyRequest
+  nameWithType: IResourceDefinitionAccessor.IsReadOnlyRequest
 - uid: JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnAddToRelationshipAsync*
   name: OnAddToRelationshipAsync
   href: api/JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnAddToRelationshipAsync_
@@ -16267,6 +16297,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
   nameWithType: ResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.IsReadOnlyRequest
+  name: IsReadOnlyRequest
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_IsReadOnlyRequest
+  commentId: P:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.IsReadOnlyRequest
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.IsReadOnlyRequest
+  nameWithType: ResourceDefinitionAccessor.IsReadOnlyRequest
+- uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.IsReadOnlyRequest*
+  name: IsReadOnlyRequest
+  href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_IsReadOnlyRequest_
+  commentId: Overload:JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.IsReadOnlyRequest
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.IsReadOnlyRequest
+  nameWithType: ResourceDefinitionAccessor.IsReadOnlyRequest
 - uid: JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.OnAddToRelationshipAsync*
   name: OnAddToRelationshipAsync
   href: api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html#JsonApiDotNetCore_Resources_ResourceDefinitionAccessor_OnAddToRelationshipAsync_
