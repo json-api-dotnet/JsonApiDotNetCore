@@ -66,14 +66,17 @@ csharp_indent_case_contents_when_block = false
 csharp_preserve_single_line_statements = false
 
 # 'var' usage preferences
-csharp_style_var_for_built_in_types = false:suggestion
-csharp_style_var_when_type_is_apparent = true:suggestion
-csharp_style_var_elsewhere = false:suggestion
+csharp_style_var_for_built_in_types = false:none
+csharp_style_var_when_type_is_apparent = true:none
+csharp_style_var_elsewhere = false:none
 
 # Parentheses preferences
 dotnet_style_parentheses_in_arithmetic_binary_operators = never_if_unnecessary:suggestion
 dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:suggestion
 dotnet_style_parentheses_in_relational_binary_operators = never_if_unnecessary:suggestion
+
+# Expression value is never used
+dotnet_diagnostic.IDE0058.severity = none
 
 #### Naming Style ####
 

@@ -791,7 +791,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task Retrieves_all_properties_when_fieldset_contains_readonly_attribute()
+    public async Task Fetches_all_scalar_properties_when_fieldset_contains_readonly_attribute()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();

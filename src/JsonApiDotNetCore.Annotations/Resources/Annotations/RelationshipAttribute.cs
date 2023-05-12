@@ -86,6 +86,7 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
         set => _canInclude = value;
     }
 
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))
@@ -103,6 +104,7 @@ public abstract class RelationshipAttribute : ResourceFieldAttribute
         return _rightType?.ClrType == other._rightType?.ClrType && Links == other.Links && base.Equals(other);
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Combine(_rightType?.ClrType, Links, base.GetHashCode());

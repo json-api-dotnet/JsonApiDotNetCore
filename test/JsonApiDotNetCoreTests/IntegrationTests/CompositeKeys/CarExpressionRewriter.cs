@@ -30,7 +30,7 @@ internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object?>
 
     public override QueryExpression? VisitComparison(ComparisonExpression expression, object? argument)
     {
-        if (expression.Left is ResourceFieldChainExpression leftChain && expression.Right is LiteralConstantExpression rightConstant)
+        if (expression is { Left: ResourceFieldChainExpression leftChain, Right: LiteralConstantExpression rightConstant })
         {
             PropertyInfo leftProperty = leftChain.Fields[^1].Property;
 
@@ -41,7 +41,8 @@ internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object?>
                     throw new NotSupportedException("Only equality comparisons are possible on Car IDs.");
                 }
 
-                return RewriteFilterOnCarStringIds(leftChain, rightConstant.Value.AsEnumerable());
+                string carStringId = (string)rightConstant.TypedValue;
+                return RewriteFilterOnCarStringIds(leftChain, carStringId.AsEnumerable());
             }
         }
 
@@ -54,7 +55,7 @@ internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object?>
 
         if (IsCarId(property))
         {
-            string[] carStringIds = expression.Constants.Select(constant => constant.Value).ToArray();
+            string[] carStringIds = expression.Constants.Select(constant => (string)constant.TypedValue).ToArray();
             return RewriteFilterOnCarStringIds(expression.TargetAttribute, carStringIds);
         }
 
@@ -100,7 +101,7 @@ internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object?>
         string licensePlateValue)
     {
         ResourceFieldChainExpression regionIdChain = ReplaceLastAttributeInChain(existingCarIdChain, _regionIdAttribute);
-        var regionIdComparison = new ComparisonExpression(ComparisonOperator.Equals, regionIdChain, new LiteralConstantExpression(regionIdValue.ToString()));
+        var regionIdComparison = new ComparisonExpression(ComparisonOperator.Equals, regionIdChain, new LiteralConstantExpression(regionIdValue));
 
         ResourceFieldChainExpression licensePlateChain = ReplaceLastAttributeInChain(existingCarIdChain, _licensePlateAttribute);
         var licensePlateComparison = new ComparisonExpression(ComparisonOperator.Equals, licensePlateChain, new LiteralConstantExpression(licensePlateValue));

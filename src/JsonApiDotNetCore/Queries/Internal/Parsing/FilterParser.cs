@@ -1,11 +1,11 @@
 using System.Collections.Immutable;
-using System.Reflection;
 using Humanizer;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Resources.Internal;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 
@@ -141,28 +141,32 @@ public class FilterParser : QueryExpressionParser
             : FieldChainRequirements.EndsInAttribute;
 
         QueryExpression leftTerm = ParseCountOrField(leftChainRequirements);
+        Converter<string, object> rightConstantValueConverter;
+
+        if (leftTerm is CountExpression)
+        {
+            rightConstantValueConverter = GetConstantValueConverterForCount();
+        }
+        else if (leftTerm is ResourceFieldChainExpression fieldChain && fieldChain.Fields[^1] is AttrAttribute attribute)
+        {
+            rightConstantValueConverter = GetConstantValueConverterForAttribute(attribute);
+        }
+        else
+        {
+            // This temporary value never survives; it gets discarded during the second pass below.
+            rightConstantValueConverter = _ => 0;
+        }
 
         EatSingleCharacterToken(TokenKind.Comma);
 
-        QueryExpression rightTerm = ParseCountOrConstantOrNullOrField(FieldChainRequirements.EndsInAttribute);
+        QueryExpression rightTerm = ParseCountOrConstantOrNullOrField(FieldChainRequirements.EndsInAttribute, rightConstantValueConverter);
 
         EatSingleCharacterToken(TokenKind.CloseParen);
 
-        if (leftTerm is ResourceFieldChainExpression leftChain)
+        if (leftTerm is ResourceFieldChainExpression leftChain && leftChain.Fields[^1] is RelationshipAttribute && rightTerm is not NullConstantExpression)
         {
-            if (leftChainRequirements.HasFlag(FieldChainRequirements.EndsInToOne) && rightTerm is not NullConstantExpression)
-            {
-                // Run another pass over left chain to have it fail when chain ends in relationship.
-                OnResolveFieldChain(leftChain.ToString(), FieldChainRequirements.EndsInAttribute);
-            }
-
-            PropertyInfo leftProperty = leftChain.Fields[^1].Property;
-
-            if (leftProperty.Name == nameof(Identifiable<object>.Id) && rightTerm is LiteralConstantExpression rightConstant)
-            {
-                string id = DeObfuscateStringId(leftProperty.ReflectedType!, rightConstant.Value);
-                rightTerm = new LiteralConstantExpression(id);
-            }
+            // Run another pass over left chain to produce an error.
+            OnResolveFieldChain(leftChain.ToString(), FieldChainRequirements.EndsInAttribute);
         }
 
         return new ComparisonExpression(comparisonOperator, leftTerm, rightTerm);
@@ -173,16 +177,23 @@ public class FilterParser : QueryExpressionParser
         EatText(matchFunctionName);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        ResourceFieldChainExpression targetAttribute = ParseFieldChain(FieldChainRequirements.EndsInAttribute, null);
+        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, null);
+        Type targetAttributeType = ((AttrAttribute)targetAttributeChain.Fields[^1]).Property.PropertyType;
+
+        if (targetAttributeType != typeof(string))
+        {
+            throw new QueryParseException("Attribute of type 'String' expected.");
+        }
 
         EatSingleCharacterToken(TokenKind.Comma);
 
-        LiteralConstantExpression constant = ParseConstant();
+        Converter<string, object> constantValueConverter = stringValue => stringValue;
+        LiteralConstantExpression constant = ParseConstant(constantValueConverter);
 
         EatSingleCharacterToken(TokenKind.CloseParen);
 
         var matchKind = Enum.Parse<TextMatchKind>(matchFunctionName.Pascalize());
-        return new MatchTextExpression(targetAttribute, constant, matchKind);
+        return new MatchTextExpression(targetAttributeChain, constant, matchKind);
     }
 
     protected AnyExpression ParseAny()
@@ -191,19 +202,20 @@ public class FilterParser : QueryExpressionParser
         EatSingleCharacterToken(TokenKind.OpenParen);
 
         ResourceFieldChainExpression targetAttribute = ParseFieldChain(FieldChainRequirements.EndsInAttribute, null);
+        Converter<string, object> constantValueConverter = GetConstantValueConverterForAttribute((AttrAttribute)targetAttribute.Fields[^1]);
 
         EatSingleCharacterToken(TokenKind.Comma);
 
         ImmutableHashSet<LiteralConstantExpression>.Builder constantsBuilder = ImmutableHashSet.CreateBuilder<LiteralConstantExpression>();
 
-        LiteralConstantExpression constant = ParseConstant();
+        LiteralConstantExpression constant = ParseConstant(constantValueConverter);
         constantsBuilder.Add(constant);
 
         while (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Comma)
         {
             EatSingleCharacterToken(TokenKind.Comma);
 
-            constant = ParseConstant();
+            constant = ParseConstant(constantValueConverter);
             constantsBuilder.Add(constant);
         }
 
@@ -211,30 +223,7 @@ public class FilterParser : QueryExpressionParser
 
         IImmutableSet<LiteralConstantExpression> constantSet = constantsBuilder.ToImmutable();
 
-        PropertyInfo targetAttributeProperty = targetAttribute.Fields[^1].Property;
-
-        if (targetAttributeProperty.Name == nameof(Identifiable<object>.Id))
-        {
-            constantSet = DeObfuscateIdConstants(constantSet, targetAttributeProperty);
-        }
-
         return new AnyExpression(targetAttribute, constantSet);
-    }
-
-    private IImmutableSet<LiteralConstantExpression> DeObfuscateIdConstants(IImmutableSet<LiteralConstantExpression> constantSet,
-        PropertyInfo targetAttributeProperty)
-    {
-        ImmutableHashSet<LiteralConstantExpression>.Builder idConstantsBuilder = ImmutableHashSet.CreateBuilder<LiteralConstantExpression>();
-
-        foreach (LiteralConstantExpression idConstant in constantSet)
-        {
-            string stringId = idConstant.Value;
-            string id = DeObfuscateStringId(targetAttributeProperty.ReflectedType!, stringId);
-
-            idConstantsBuilder.Add(new LiteralConstantExpression(id));
-        }
-
-        return idConstantsBuilder.ToImmutable();
     }
 
     protected HasExpression ParseHas()
@@ -360,7 +349,7 @@ public class FilterParser : QueryExpressionParser
         return ParseFieldChain(chainRequirements, "Count function or field name expected.");
     }
 
-    protected QueryExpression ParseCountOrConstantOrNullOrField(FieldChainRequirements chainRequirements)
+    protected QueryExpression ParseCountOrConstantOrNullOrField(FieldChainRequirements chainRequirements, Converter<string, object> constantValueConverter)
     {
         CountExpression? count = TryParseCount();
 
@@ -369,7 +358,7 @@ public class FilterParser : QueryExpressionParser
             return count;
         }
 
-        IdentifierExpression? constantOrNull = TryParseConstantOrNull();
+        IdentifierExpression? constantOrNull = TryParseConstantOrNull(constantValueConverter);
 
         if (constantOrNull != null)
         {
@@ -379,11 +368,11 @@ public class FilterParser : QueryExpressionParser
         return ParseFieldChain(chainRequirements, "Count function, value between quotes, null or field name expected.");
     }
 
-    protected IdentifierExpression? TryParseConstantOrNull()
+    protected IdentifierExpression? TryParseConstantOrNull(Converter<string, object> constantValueConverter)
     {
         if (TokenStack.TryPeek(out Token? nextToken))
         {
-            if (nextToken.Kind == TokenKind.Text && nextToken.Value == Keywords.Null)
+            if (nextToken is { Kind: TokenKind.Text, Value: Keywords.Null })
             {
                 TokenStack.Pop();
                 return NullConstantExpression.Instance;
@@ -392,28 +381,55 @@ public class FilterParser : QueryExpressionParser
             if (nextToken.Kind == TokenKind.QuotedText)
             {
                 TokenStack.Pop();
-                return new LiteralConstantExpression(nextToken.Value!);
+
+                object constantValue = constantValueConverter(nextToken.Value!);
+                return new LiteralConstantExpression(constantValue, nextToken.Value!);
             }
         }
 
         return null;
     }
 
-    protected LiteralConstantExpression ParseConstant()
+    protected LiteralConstantExpression ParseConstant(Converter<string, object> constantValueConverter)
     {
         if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.QuotedText)
         {
-            return new LiteralConstantExpression(token.Value!);
+            object constantValue = constantValueConverter(token.Value!);
+            return new LiteralConstantExpression(constantValue, token.Value!);
         }
 
         throw new QueryParseException("Value between quotes expected.");
     }
 
-    private string DeObfuscateStringId(Type resourceClrType, string stringId)
+    private Converter<string, object> GetConstantValueConverterForCount()
+    {
+        return stringValue => ConvertStringToType(stringValue, typeof(int));
+    }
+
+    private object ConvertStringToType(string value, Type type)
+    {
+        try
+        {
+            return RuntimeTypeConverter.ConvertType(value, type)!;
+        }
+        catch (FormatException)
+        {
+            throw new QueryParseException($"Failed to convert '{value}' of type 'String' to type '{type.Name}'.");
+        }
+    }
+
+    private Converter<string, object> GetConstantValueConverterForAttribute(AttrAttribute attribute)
+    {
+        return stringValue => attribute.Property.Name == nameof(Identifiable<object>.Id)
+            ? DeObfuscateStringId(attribute.Type.ClrType, stringValue)
+            : ConvertStringToType(stringValue, attribute.Property.PropertyType);
+    }
+
+    private object DeObfuscateStringId(Type resourceClrType, string stringId)
     {
         IIdentifiable tempResource = _resourceFactory.CreateInstance(resourceClrType);
         tempResource.StringId = stringId;
-        return tempResource.GetTypedId().ToString()!;
+        return tempResource.GetTypedId();
     }
 
     protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)

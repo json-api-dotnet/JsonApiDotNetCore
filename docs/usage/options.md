@@ -22,7 +22,7 @@ options.AllowClientGeneratedIds = true;
 
 ## Pagination
 
-The default page size used for all resources can be overridden in options (10 by default). To disable paging, set it to `null`.
+The default page size used for all resources can be overridden in options (10 by default). To disable pagination, set it to `null`.
 The maximum page size and number allowed from client requests can be set too (unconstrained by default).
 
 You can also include the total number of resources in each response.
@@ -38,11 +38,11 @@ options.IncludeTotalResourceCount = true;
 ```
 
 To retrieve the total number of resources on secondary and relationship endpoints, the reverse of the relationship must to be available. For example, in `GET /customers/1/orders`, both the relationships `[HasMany] Customer.Orders` and `[HasOne] Order.Customer` must be defined.
-If `IncludeTotalResourceCount` is set to `false` (or the inverse relationship is unavailable on a non-primary endpoint), best-effort paging links are returned instead. This means no `last` link and the `next` link only occurs when the current page is full.
+If `IncludeTotalResourceCount` is set to `false` (or the inverse relationship is unavailable on a non-primary endpoint), best-effort pagination links are returned instead. This means no `last` link and the `next` link only occurs when the current page is full.
 
 ## Relative Links
 
-All links are absolute by default. However, you can configure relative links.
+All links are absolute by default. However, you can configure relative links:
 
 ```c#
 options.UseRelativeLinks = true;
@@ -55,8 +55,8 @@ options.UseRelativeLinks = true;
   "relationships": {
      "author": {
        "links": {
-         "self": "/api/v1/articles/4309/relationships/author",
-         "related": "/api/v1/articles/4309/author"
+         "self": "/articles/4309/relationships/author",
+         "related": "/articles/4309/author"
        }
      }
   }

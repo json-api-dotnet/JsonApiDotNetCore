@@ -243,7 +243,7 @@ public sealed class AtomicRemoveFromToManyRelationshipTests : IClassFixture<Inte
                 new
                 {
                     op = "remove",
-                    href = "/api/v1/musicTracks/1/relationships/performers"
+                    href = "/api/musicTracks/1/relationships/performers"
                 }
             }
         };

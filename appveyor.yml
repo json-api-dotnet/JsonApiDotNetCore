@@ -10,7 +10,7 @@ environment:
   PGUSER: postgres
   PGPASSWORD: Password12!
   GIT_ACCESS_TOKEN:
-    secure: vw2jhp7V38fTOqphzFgnXtLwHoHRW2zM2K5RJgDAnmkoaIKT6jXLDIfkFdyVz9nJ
+    secure: WPzhuEyDE7yuHeEgLi3RoGJ8we+AHU6nMksbFoWQ0AmI/HJLh4bjOR0Jnnzc6aaG
 
 branches:
   only:
@@ -82,14 +82,14 @@ for:
   - provider: NuGet
     skip_symbols: false
     api_key:
-      secure: S9fkLwmhi7w+DGouXYqYq/1PGocnYo8UBUKwv+BGpWHnzE6yHZEYth3j/XJ9Ydsa
+      secure: hlP/zkfkHzmutSXPYAiINmPdv+QEj3TpAjKewHEkCtQnHnA2tSo+Xey0g6FVM6S5
     on:
       branch: master
       appveyor_repo_tag: true
   - provider: NuGet
     skip_symbols: false
     api_key:
-      secure: S9fkLwmhi7w+DGouXYqYq/1PGocnYo8UBUKwv+BGpWHnzE6yHZEYth3j/XJ9Ydsa
+      secure: hlP/zkfkHzmutSXPYAiINmPdv+QEj3TpAjKewHEkCtQnHnA2tSo+Xey0g6FVM6S5
     on:
       branch: /release\/.+/
       appveyor_repo_tag: true
@@ -98,6 +98,9 @@ build_script:
 - pwsh: |
     Write-Output ".NET version:"
     dotnet --version
+
+    Write-Output "PowerShell version:"
+    pwsh --version
 
     Write-Output "PostgreSQL version:"
     if ($IsWindows) {

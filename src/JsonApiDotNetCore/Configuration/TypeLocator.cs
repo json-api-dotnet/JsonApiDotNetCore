@@ -89,7 +89,7 @@ internal sealed class TypeLocator
     private static (Type implementationType, Type serviceInterface)? GetContainerRegistrationFromType(Type nextType, Type unboundInterface,
         Type[] interfaceTypeArguments)
     {
-        if (!nextType.IsNested && !nextType.IsAbstract && !nextType.IsInterface)
+        if (nextType is { IsNested: false, IsAbstract: false, IsInterface: false })
         {
             foreach (Type nextConstructedInterface in nextType.GetInterfaces().Where(type => type.IsGenericType))
             {

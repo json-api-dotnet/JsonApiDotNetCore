@@ -80,12 +80,12 @@ public class LinkBuilder : ILinkBuilder
             links.Self = GetLinkForTopLevelSelf();
         }
 
-        if (_request.Kind == EndpointKind.Relationship && _request.Relationship != null && ShouldIncludeTopLevelLink(LinkTypes.Related, resourceType))
+        if (_request is { Kind: EndpointKind.Relationship, Relationship: not null } && ShouldIncludeTopLevelLink(LinkTypes.Related, resourceType))
         {
             links.Related = GetLinkForRelationshipRelated(_request.PrimaryId!, _request.Relationship);
         }
 
-        if (_request.IsCollection && _paginationContext.PageSize != null && ShouldIncludeTopLevelLink(LinkTypes.Paging, resourceType))
+        if (_request.IsCollection && _paginationContext.PageSize != null && ShouldIncludeTopLevelLink(LinkTypes.Pagination, resourceType))
         {
             SetPaginationInTopLevelLinks(resourceType!, links);
         }

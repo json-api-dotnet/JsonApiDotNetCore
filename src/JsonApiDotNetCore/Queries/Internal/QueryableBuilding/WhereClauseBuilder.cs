@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
 /// <see cref="Queryable.Where{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{System.Func{TSource,bool}})" /> calls.
 /// </summary>
 [PublicAPI]
-public class WhereClauseBuilder : QueryClauseBuilder<Type?>
+public class WhereClauseBuilder : QueryClauseBuilder<object?>
 {
     private static readonly CollectionConverter CollectionConverter = new();
     private static readonly ConstantExpression NullConstant = Expression.Constant(null);
@@ -53,7 +53,7 @@ public class WhereClauseBuilder : QueryClauseBuilder<Type?>
         return Expression.Call(_extensionType, "Where", LambdaScope.Parameter.Type.AsArray(), _source, predicate);
     }
 
-    public override Expression VisitHas(HasExpression expression, Type? argument)
+    public override Expression VisitHas(HasExpression expression, object? argument)
     {
         Expression property = Visit(expression.TargetCollection, argument);
 
@@ -85,7 +85,7 @@ public class WhereClauseBuilder : QueryClauseBuilder<Type?>
             : Expression.Call(typeof(Enumerable), "Any", elementType.AsArray(), source);
     }
 
-    public override Expression VisitIsType(IsTypeExpression expression, Type? argument)
+    public override Expression VisitIsType(IsTypeExpression expression, object? argument)
     {
         Expression property = expression.TargetToOneRelationship != null ? Visit(expression.TargetToOneRelationship, argument) : LambdaScope.Accessor;
         TypeBinaryExpression typeCheck = Expression.TypeIs(property, expression.DerivedType.ClrType);
@@ -101,7 +101,7 @@ public class WhereClauseBuilder : QueryClauseBuilder<Type?>
         return Expression.AndAlso(typeCheck, filter);
     }
 
-    public override Expression VisitMatchText(MatchTextExpression expression, Type? argument)
+    public override Expression VisitMatchText(MatchTextExpression expression, object? argument)
     {
         Expression property = Visit(expression.TargetAttribute, argument);
 
@@ -125,7 +125,7 @@ public class WhereClauseBuilder : QueryClauseBuilder<Type?>
         return Expression.Call(property, "Contains", null, text);
     }
 
-    public override Expression VisitAny(AnyExpression expression, Type? argument)
+    public override Expression VisitAny(AnyExpression expression, object? argument)
     {
         Expression property = Visit(expression.TargetAttribute, argument);
 
@@ -133,8 +133,7 @@ public class WhereClauseBuilder : QueryClauseBuilder<Type?>
 
         foreach (LiteralConstantExpression constant in expression.Constants)
         {
-            object? value = ConvertTextToTargetType(constant.Value, property.Type);
-            valueList.Add(value);
+            valueList.Add(constant.TypedValue);
         }
 
         ConstantExpression collection = Expression.Constant(valueList);
@@ -146,7 +145,7 @@ public class WhereClauseBuilder : QueryClauseBuilder<Type?>
         return Expression.Call(typeof(Enumerable), "Contains", value.Type.AsArray(), collection, value);
     }
 
-    public override Expression VisitLogical(LogicalExpression expression, Type? argument)
+    public override Expression VisitLogical(LogicalExpression expression, object? argument)
     {
         var termQueue = new Queue<Expression>(expression.Terms.Select(filter => Visit(filter, argument)));
 
@@ -179,44 +178,28 @@ public class WhereClauseBuilder : QueryClauseBuilder<Type?>
         return tempExpression;
     }
 
-    public override Expression VisitNot(NotExpression expression, Type? argument)
+    public override Expression VisitNot(NotExpression expression, object? argument)
     {
         Expression child = Visit(expression.Child, argument);
         return Expression.Not(child);
     }
 
-    public override Expression VisitComparison(ComparisonExpression expression, Type? argument)
+    public override Expression VisitComparison(ComparisonExpression expression, object? argument)
     {
         Type commonType = ResolveCommonType(expression.Left, expression.Right);
 
-        Expression left = WrapInConvert(Visit(expression.Left, commonType), commonType);
-        Expression right = WrapInConvert(Visit(expression.Right, commonType), commonType);
+        Expression left = WrapInConvert(Visit(expression.Left, argument), commonType);
+        Expression right = WrapInConvert(Visit(expression.Right, argument), commonType);
 
-        switch (expression.Operator)
+        return expression.Operator switch
         {
-            case ComparisonOperator.Equals:
-            {
-                return Expression.Equal(left, right);
-            }
-            case ComparisonOperator.LessThan:
-            {
-                return Expression.LessThan(left, right);
-            }
-            case ComparisonOperator.LessOrEqual:
-            {
-                return Expression.LessThanOrEqual(left, right);
-            }
-            case ComparisonOperator.GreaterThan:
-            {
-                return Expression.GreaterThan(left, right);
-            }
-            case ComparisonOperator.GreaterOrEqual:
-            {
-                return Expression.GreaterThanOrEqual(left, right);
-            }
-        }
-
-        throw new InvalidOperationException($"Unknown comparison operator '{expression.Operator}'.");
+            ComparisonOperator.Equals => Expression.Equal(left, right),
+            ComparisonOperator.LessThan => Expression.LessThan(left, right),
+            ComparisonOperator.LessOrEqual => Expression.LessThanOrEqual(left, right),
+            ComparisonOperator.GreaterThan => Expression.GreaterThan(left, right),
+            ComparisonOperator.GreaterOrEqual => Expression.GreaterThanOrEqual(left, right),
+            _ => throw new InvalidOperationException($"Unknown comparison operator '{expression.Operator}'.")
+        };
     }
 
     private Type ResolveCommonType(QueryExpression left, QueryExpression right)
@@ -277,27 +260,14 @@ public class WhereClauseBuilder : QueryClauseBuilder<Type?>
         }
     }
 
-    public override Expression VisitNullConstant(NullConstantExpression expression, Type? expressionType)
+    public override Expression VisitNullConstant(NullConstantExpression expression, object? argument)
     {
         return NullConstant;
     }
 
-    public override Expression VisitLiteralConstant(LiteralConstantExpression expression, Type? expressionType)
+    public override Expression VisitLiteralConstant(LiteralConstantExpression expression, object? argument)
     {
-        object? convertedValue = expressionType != null ? ConvertTextToTargetType(expression.Value, expressionType) : expression.Value;
-
-        return convertedValue.CreateTupleAccessExpressionForConstant(expressionType ?? typeof(string));
-    }
-
-    private static object? ConvertTextToTargetType(string text, Type targetType)
-    {
-        try
-        {
-            return RuntimeTypeConverter.ConvertType(text, targetType);
-        }
-        catch (FormatException exception)
-        {
-            throw new InvalidQueryException("Query creation failed due to incompatible types.", exception);
-        }
+        Type type = expression.TypedValue.GetType();
+        return expression.TypedValue.CreateTupleAccessExpressionForConstant(type);
     }
 }

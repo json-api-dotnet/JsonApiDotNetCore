@@ -11,6 +11,9 @@ public sealed class MeetingAttendee : Identifiable<Guid>
     [Attr]
     public string DisplayName { get; set; } = null!;
 
+    [Attr]
+    public Address HomeAddress { get; set; } = null!;
+
     [HasOne]
     public Meeting? Meeting { get; set; }
 }

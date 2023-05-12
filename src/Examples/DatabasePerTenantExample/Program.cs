@@ -1,20 +1,29 @@
+using System.Diagnostics;
 using DatabasePerTenantExample.Data;
 using DatabasePerTenantExample.Models;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql());
+
+builder.Services.AddDbContext<AppDbContext>(options => SetDbContextDebugOptions(options));
 
 builder.Services.AddJsonApi<AppDbContext>(options =>
 {
     options.Namespace = "api";
     options.UseRelativeLinks = true;
+    options.IncludeTotalResourceCount = true;
+
+#if DEBUG
+    options.IncludeExceptionStackTraceInErrors = true;
+    options.IncludeRequestBodyInErrors = true;
     options.SerializerOptions.WriteIndented = true;
+#endif
 });
 
 WebApplication app = builder.Build();
@@ -31,6 +40,14 @@ await CreateDatabaseAsync("Contoso", app.Services);
 
 app.Run();
 
+[Conditional("DEBUG")]
+static void SetDbContextDebugOptions(DbContextOptionsBuilder options)
+{
+    options.EnableDetailedErrors();
+    options.EnableSensitiveDataLogging();
+    options.ConfigureWarnings(builder => builder.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning));
+}
+
 static async Task CreateDatabaseAsync(string? tenantName, IServiceProvider serviceProvider)
 {
     await using AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
@@ -41,18 +58,18 @@ static async Task CreateDatabaseAsync(string? tenantName, IServiceProvider servi
         dbContext.SetTenantName(tenantName);
     }
 
-    await dbContext.Database.EnsureDeletedAsync();
-    await dbContext.Database.EnsureCreatedAsync();
-
-    if (tenantName != null)
+    if (await dbContext.Database.EnsureCreatedAsync())
     {
-        dbContext.Employees.Add(new Employee
+        if (tenantName != null)
         {
-            FirstName = "John",
-            LastName = "Doe",
-            CompanyName = tenantName
-        });
+            dbContext.Employees.Add(new Employee
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                CompanyName = tenantName
+            });
 
-        await dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
+        }
     }
 }

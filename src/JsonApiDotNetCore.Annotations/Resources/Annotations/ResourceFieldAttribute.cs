@@ -68,6 +68,7 @@ public abstract class ResourceFieldAttribute : Attribute
     public object? GetValue(object resource)
     {
         ArgumentGuard.NotNull(resource);
+        AssertIsIdentifiable(resource);
 
         if (Property.GetMethod == null)
         {
@@ -82,7 +83,7 @@ public abstract class ResourceFieldAttribute : Attribute
         {
             throw new InvalidOperationException(
                 $"Unable to get property value of '{Property.DeclaringType!.Name}.{Property.Name}' on instance of type '{resource.GetType().Name}'.",
-                exception);
+                exception.InnerException ?? exception);
         }
     }
 
@@ -90,9 +91,10 @@ public abstract class ResourceFieldAttribute : Attribute
     /// Sets the value of this field on the specified resource instance. Throws if the property is read-only or if the field does not belong to the specified
     /// resource instance.
     /// </summary>
-    public void SetValue(object resource, object? newValue)
+    public virtual void SetValue(object resource, object? newValue)
     {
         ArgumentGuard.NotNull(resource);
+        AssertIsIdentifiable(resource);
 
         if (Property.SetMethod == null)
         {
@@ -107,15 +109,25 @@ public abstract class ResourceFieldAttribute : Attribute
         {
             throw new InvalidOperationException(
                 $"Unable to set property value of '{Property.DeclaringType!.Name}.{Property.Name}' on instance of type '{resource.GetType().Name}'.",
-                exception);
+                exception.InnerException ?? exception);
         }
     }
 
+    protected void AssertIsIdentifiable(object? resource)
+    {
+        if (resource != null && resource is not IIdentifiable)
+        {
+            throw new InvalidOperationException($"Resource of type '{resource.GetType()}' does not implement {nameof(IIdentifiable)}.");
+        }
+    }
+
+    /// <inheritdoc />
     public override string? ToString()
     {
         return _publicName ?? (_property != null ? _property.Name : base.ToString());
     }
 
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))
@@ -133,6 +145,7 @@ public abstract class ResourceFieldAttribute : Attribute
         return _publicName == other._publicName && _property == other._property;
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Combine(_publicName, _property);

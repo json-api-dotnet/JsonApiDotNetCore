@@ -620,7 +620,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
                 new
                 {
                     op = "update",
-                    href = "/api/v1/musicTracks/1"
+                    href = "/api/musicTracks/1"
                 }
             }
         };
