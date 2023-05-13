@@ -1,18 +1,24 @@
 using JsonApiDotNetCore.Configuration;
-using NoEntityFrameworkExample.Data;
-using NoEntityFrameworkExample.Models;
-using NoEntityFrameworkExample.Services;
+using NoEntityFrameworkExample;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-string? connectionString = GetConnectionString(builder.Configuration);
-builder.Services.AddNpgsql<AppDbContext>(connectionString);
+builder.Services.AddJsonApi(options =>
+{
+    options.Namespace = "api";
+    options.UseRelativeLinks = true;
+    options.IncludeTotalResourceCount = true;
 
-builder.Services.AddJsonApi(options => options.Namespace = "api/v1", resources: resourceGraphBuilder => resourceGraphBuilder.Add<WorkItem, int>());
+#if DEBUG
+    options.IncludeExceptionStackTraceInErrors = true;
+    options.IncludeRequestBodyInErrors = true;
+    options.SerializerOptions.WriteIndented = true;
+#endif
+}, discovery => discovery.AddCurrentAssembly());
 
-builder.Services.AddResourceService<WorkItemService>();
+builder.Services.AddScoped<IInverseNavigationResolver, InMemoryInverseNavigationResolver>();
 
 WebApplication app = builder.Build();
 
@@ -22,20 +28,4 @@ app.UseRouting();
 app.UseJsonApi();
 app.MapControllers();
 
-await CreateDatabaseAsync(app.Services);
-
 app.Run();
-
-static string? GetConnectionString(IConfiguration configuration)
-{
-    string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
-    return configuration["Data:DefaultConnection"]?.Replace("###", postgresPassword);
-}
-
-static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
-{
-    await using AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
-
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await dbContext.Database.EnsureCreatedAsync();
-}

@@ -15,6 +15,16 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     private readonly IResourceGraph _resourceGraph;
     private readonly IServiceProvider _serviceProvider;
 
+    /// <inheritdoc />
+    public bool IsReadOnlyRequest
+    {
+        get
+        {
+            var request = _serviceProvider.GetRequiredService<IJsonApiRequest>();
+            return request.IsReadOnly;
+        }
+    }
+
     public ResourceDefinitionAccessor(IResourceGraph resourceGraph, IServiceProvider serviceProvider)
     {
         ArgumentGuard.NotNull(resourceGraph);

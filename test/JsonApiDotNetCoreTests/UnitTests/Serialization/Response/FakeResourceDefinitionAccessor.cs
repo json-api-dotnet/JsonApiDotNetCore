@@ -9,6 +9,8 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response;
 
 internal sealed class FakeResourceDefinitionAccessor : IResourceDefinitionAccessor
 {
+    bool IResourceDefinitionAccessor.IsReadOnlyRequest => throw new NotImplementedException();
+
     public IImmutableSet<IncludeElementExpression> OnApplyIncludes(ResourceType resourceType, IImmutableSet<IncludeElementExpression> existingIncludes)
     {
         return existingIncludes;

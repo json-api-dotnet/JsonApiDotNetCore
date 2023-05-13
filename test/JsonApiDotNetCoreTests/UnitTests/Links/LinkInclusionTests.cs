@@ -21,37 +21,37 @@ public sealed class LinkInclusionTests
     [InlineData(LinkTypes.NotConfigured, LinkTypes.None, LinkTypes.None)]
     [InlineData(LinkTypes.NotConfigured, LinkTypes.Self, LinkTypes.Self)]
     [InlineData(LinkTypes.NotConfigured, LinkTypes.Related, LinkTypes.Related)]
-    [InlineData(LinkTypes.NotConfigured, LinkTypes.Paging, LinkTypes.Paging)]
+    [InlineData(LinkTypes.NotConfigured, LinkTypes.Pagination, LinkTypes.Pagination)]
     [InlineData(LinkTypes.NotConfigured, LinkTypes.All, LinkTypes.All)]
     [InlineData(LinkTypes.None, LinkTypes.NotConfigured, LinkTypes.None)]
     [InlineData(LinkTypes.None, LinkTypes.None, LinkTypes.None)]
     [InlineData(LinkTypes.None, LinkTypes.Self, LinkTypes.None)]
     [InlineData(LinkTypes.None, LinkTypes.Related, LinkTypes.None)]
-    [InlineData(LinkTypes.None, LinkTypes.Paging, LinkTypes.None)]
+    [InlineData(LinkTypes.None, LinkTypes.Pagination, LinkTypes.None)]
     [InlineData(LinkTypes.None, LinkTypes.All, LinkTypes.None)]
     [InlineData(LinkTypes.Self, LinkTypes.NotConfigured, LinkTypes.Self)]
     [InlineData(LinkTypes.Self, LinkTypes.None, LinkTypes.Self)]
     [InlineData(LinkTypes.Self, LinkTypes.Self, LinkTypes.Self)]
     [InlineData(LinkTypes.Self, LinkTypes.Related, LinkTypes.Self)]
-    [InlineData(LinkTypes.Self, LinkTypes.Paging, LinkTypes.Self)]
+    [InlineData(LinkTypes.Self, LinkTypes.Pagination, LinkTypes.Self)]
     [InlineData(LinkTypes.Self, LinkTypes.All, LinkTypes.Self)]
     [InlineData(LinkTypes.Related, LinkTypes.NotConfigured, LinkTypes.Related)]
     [InlineData(LinkTypes.Related, LinkTypes.None, LinkTypes.Related)]
     [InlineData(LinkTypes.Related, LinkTypes.Self, LinkTypes.Related)]
     [InlineData(LinkTypes.Related, LinkTypes.Related, LinkTypes.Related)]
-    [InlineData(LinkTypes.Related, LinkTypes.Paging, LinkTypes.Related)]
+    [InlineData(LinkTypes.Related, LinkTypes.Pagination, LinkTypes.Related)]
     [InlineData(LinkTypes.Related, LinkTypes.All, LinkTypes.Related)]
-    [InlineData(LinkTypes.Paging, LinkTypes.NotConfigured, LinkTypes.Paging)]
-    [InlineData(LinkTypes.Paging, LinkTypes.None, LinkTypes.Paging)]
-    [InlineData(LinkTypes.Paging, LinkTypes.Self, LinkTypes.Paging)]
-    [InlineData(LinkTypes.Paging, LinkTypes.Related, LinkTypes.Paging)]
-    [InlineData(LinkTypes.Paging, LinkTypes.Paging, LinkTypes.Paging)]
-    [InlineData(LinkTypes.Paging, LinkTypes.All, LinkTypes.Paging)]
+    [InlineData(LinkTypes.Pagination, LinkTypes.NotConfigured, LinkTypes.Pagination)]
+    [InlineData(LinkTypes.Pagination, LinkTypes.None, LinkTypes.Pagination)]
+    [InlineData(LinkTypes.Pagination, LinkTypes.Self, LinkTypes.Pagination)]
+    [InlineData(LinkTypes.Pagination, LinkTypes.Related, LinkTypes.Pagination)]
+    [InlineData(LinkTypes.Pagination, LinkTypes.Pagination, LinkTypes.Pagination)]
+    [InlineData(LinkTypes.Pagination, LinkTypes.All, LinkTypes.Pagination)]
     [InlineData(LinkTypes.All, LinkTypes.NotConfigured, LinkTypes.All)]
     [InlineData(LinkTypes.All, LinkTypes.None, LinkTypes.All)]
     [InlineData(LinkTypes.All, LinkTypes.Self, LinkTypes.All)]
     [InlineData(LinkTypes.All, LinkTypes.Related, LinkTypes.All)]
-    [InlineData(LinkTypes.All, LinkTypes.Paging, LinkTypes.All)]
+    [InlineData(LinkTypes.All, LinkTypes.Pagination, LinkTypes.All)]
     [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.All)]
     public void Applies_cascading_settings_for_top_level_links(LinkTypes linksInResourceType, LinkTypes linksInOptions, LinkTypes expected)
     {
@@ -117,7 +117,7 @@ public sealed class LinkInclusionTests
                 topLevelLinks.Related.Should().BeNull();
             }
 
-            if (expected.HasFlag(LinkTypes.Paging))
+            if (expected.HasFlag(LinkTypes.Pagination))
             {
                 topLevelLinks.First.ShouldNotBeNull();
                 topLevelLinks.Last.ShouldNotBeNull();

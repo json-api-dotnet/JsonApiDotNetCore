@@ -159,7 +159,7 @@ public class ResourceGraphBuilder
 
     private static bool IsImplicitManyToManyJoinEntity(IEntityType entityType)
     {
-        return entityType.IsPropertyBag && entityType.HasSharedClrType;
+        return entityType is { IsPropertyBag: true, HasSharedClrType: true };
     }
 
     /// <summary>

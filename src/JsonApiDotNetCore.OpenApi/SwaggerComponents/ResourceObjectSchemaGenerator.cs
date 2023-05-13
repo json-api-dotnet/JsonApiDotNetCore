@@ -132,9 +132,9 @@ internal sealed class ResourceObjectSchemaGenerator
 
         foreach (string member in orderedMembers)
         {
-            if (fullSchemaForResourceObject.Properties.ContainsKey(member))
+            if (fullSchemaForResourceObject.Properties.TryGetValue(member, out OpenApiSchema? schema))
             {
-                reorderedMembers[member] = fullSchemaForResourceObject.Properties[member];
+                reorderedMembers[member] = schema;
             }
         }
 

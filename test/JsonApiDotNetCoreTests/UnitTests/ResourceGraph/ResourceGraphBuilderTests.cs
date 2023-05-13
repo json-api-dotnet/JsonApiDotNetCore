@@ -361,7 +361,7 @@ public sealed class ResourceGraphBuilderTests
         IResourceGraph resourceGraph = builder.Build();
         ResourceType resourceType = resourceGraph.GetResourceType<ResourceWithIdOverride>();
 
-        AttrAttribute idAttribute = resourceType.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable<object>.Id));
+        AttrAttribute idAttribute = resourceType.GetAttributeByPropertyName(nameof(Identifiable<object>.Id));
         idAttribute.Capabilities.Should().Be(AttrCapabilities.AllowFilter);
     }
 

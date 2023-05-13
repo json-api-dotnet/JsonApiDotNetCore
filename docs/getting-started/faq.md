@@ -125,7 +125,7 @@ Your controller method needs to store the request state (URL, query string, and 
 From within your background process job handler, reconstruct the request state, execute the appropriate `JsonApiResourceService` method and store the result.
 There's a basic example available at https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1144, which processes a captured query string.
 
-### What if I want to use something other than Entity Framework Core?
+#### What if I want to use something other than Entity Framework Core?
 This basically means you'll need to implement data access yourself. There are two approaches for interception: at the resource service level and at the repository level.
 Either way, you can use the built-in query string and request body parsing, as well as routing, error handling, and rendering of responses.
 
@@ -133,24 +133,24 @@ Here are some injectable request-scoped types to be aware of:
 - `IJsonApiRequest`: This contains routing information, such as whether a primary, secondary, or relationship endpoint is being accessed.
 - `ITargetedFields`: Lists the attributes and relationships from an incoming POST/PATCH resource request. Any fields missing there should not be stored (partial updates).
 - `IEnumerable<IQueryConstraintProvider>`: Provides access to the parsed query string parameters.
-- `IEvaluatedIncludeCache`: This tells the response serializer which related resources to render, which you need to populate.
-- `ISparseFieldSetCache`: This tells the response serializer which fields to render in the attributes and relationship objects. You need to populate this as well.
+- `IEvaluatedIncludeCache`: This tells the response serializer which related resources to render.
+- `ISparseFieldSetCache`: This tells the response serializer which fields to render in the `attributes` and `relationships` objects.
 
-You may also want to inject the singletons `IJsonApiOptions` (which contains settings such as default page size) and `IResourceGraph` (the JSON:API model of resources and relationships).
+You may also want to inject the singletons `IJsonApiOptions` (which contains settings such as default page size) and `IResourceGraph` (the JSON:API model of resources, attributes and relationships).
 
 So, back to the topic of where to intercept. It helps to familiarize yourself with the [execution pipeline](~/internals/queries.md).
 Replacing at the service level is the simplest. But it means you'll need to read the parsed query string parameters and invoke
 all resource definition callbacks yourself. And you won't get change detection (HTTP 203 Not Modified).
 Take a look at [JsonApiResourceService](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs) to see what you're missing out on.
 
-You'll get a lot more out of the box if replacing at the repository level instead. You don't need to apply options, analyze query strings or populate caches for the serializer.
+You'll get a lot more out of the box if replacing at the repository level instead. You don't need to apply options or analyze query strings.
 And most resource definition callbacks are handled.
 That's because the built-in resource service translates all JSON:API aspects of the request into a database-agnostic data structure called `QueryLayer`.
 Now the hard part for you becomes reading that data structure and producing data access calls from that.
 If your data store provides a LINQ provider, you may reuse most of [QueryableBuilder](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/QueryableBuilder.cs),
 which drives the translation into [System.Linq.Expressions](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/).
-Note however, that it also produces calls to `.Include("")`, which is an Entity Framework Core-specific extension method, so you'll likely need to prevent that from happening.
-We use this for accessing [MongoDB](https://github.com/json-api-dotnet/JsonApiDotNetCore.MongoDb/blob/674889e037334e3f376550178ce12d0842d7560c/src/JsonApiDotNetCore.MongoDb/Queries/Internal/QueryableBuilding/MongoQueryableBuilder.cs).
+Note however, that it also produces calls to `.Include("")`, which is an Entity Framework Core-specific extension method, so you'll likely need to prevent that from happening. There's an example [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/Examples/NoEntityFrameworkExample/Repositories/InMemoryResourceRepository.cs).
+We use a similar approach for accessing [MongoDB](https://github.com/json-api-dotnet/JsonApiDotNetCore.MongoDb/blob/674889e037334e3f376550178ce12d0842d7560c/src/JsonApiDotNetCore.MongoDb/Queries/Internal/QueryableBuilding/MongoQueryableBuilder.cs).
 
 > [!TIP]
 > [ExpressionTreeVisualizer](https://github.com/zspitz/ExpressionTreeVisualizer) is very helpful in trying to debug LINQ expression trees!

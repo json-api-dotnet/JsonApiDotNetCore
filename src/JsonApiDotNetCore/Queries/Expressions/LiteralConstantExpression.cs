@@ -1,3 +1,4 @@
+using System.Globalization;
 using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions;
@@ -8,13 +9,30 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 [PublicAPI]
 public class LiteralConstantExpression : IdentifierExpression
 {
-    public string Value { get; }
+    // Only used to show the original input, in case expression parse failed. Not part of the semantic expression value.
+    private readonly string _stringValue;
 
-    public LiteralConstantExpression(string text)
+    public object TypedValue { get; }
+
+    public LiteralConstantExpression(object typedValue)
+        : this(typedValue, GetStringValue(typedValue)!)
     {
-        ArgumentGuard.NotNull(text);
+    }
 
-        Value = text;
+    public LiteralConstantExpression(object typedValue, string stringValue)
+    {
+        ArgumentGuard.NotNull(typedValue);
+        ArgumentGuard.NotNull(stringValue);
+
+        TypedValue = typedValue;
+        _stringValue = stringValue;
+    }
+
+    private static string? GetStringValue(object typedValue)
+    {
+        ArgumentGuard.NotNull(typedValue);
+
+        return typedValue is IFormattable cultureAwareValue ? cultureAwareValue.ToString(null, CultureInfo.InvariantCulture) : typedValue.ToString();
     }
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
@@ -24,8 +42,8 @@ public class LiteralConstantExpression : IdentifierExpression
 
     public override string ToString()
     {
-        string value = Value.Replace("\'", "\'\'");
-        return $"'{value}'";
+        string escapedValue = _stringValue.Replace("\'", "\'\'");
+        return $"'{escapedValue}'";
     }
 
     public override string ToFullString()
@@ -47,11 +65,11 @@ public class LiteralConstantExpression : IdentifierExpression
 
         var other = (LiteralConstantExpression)obj;
 
-        return Value == other.Value;
+        return TypedValue.Equals(other.TypedValue);
     }
 
     public override int GetHashCode()
     {
-        return Value.GetHashCode();
+        return TypedValue.GetHashCode();
     }
 }

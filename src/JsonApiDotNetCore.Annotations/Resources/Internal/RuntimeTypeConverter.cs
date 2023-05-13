@@ -46,7 +46,7 @@ public static class RuntimeTypeConverter
             return value;
         }
 
-        string? stringValue = value.ToString();
+        string? stringValue = value is IFormattable cultureAwareValue ? cultureAwareValue.ToString(null, cultureInfo) : value.ToString();
 
         if (string.IsNullOrEmpty(stringValue))
         {

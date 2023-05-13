@@ -5,19 +5,19 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/v1/people": {
+    "/api/people": {
       "get": {
         "tags": [
           "people"
         ],
-        "operationId": "get person Collection",
+        "operationId": "getPersonCollection",
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-collection-response-document"
+                  "$ref": "#/components/schemas/personCollectionResponseDocument"
                 }
               }
             }
@@ -28,14 +28,14 @@
         "tags": [
           "people"
         ],
-        "operationId": "head person Collection",
+        "operationId": "headPersonCollection",
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-collection-response-document"
+                  "$ref": "#/components/schemas/personCollectionResponseDocument"
                 }
               }
             }
@@ -46,39 +46,39 @@
         "tags": [
           "people"
         ],
-        "operationId": "post person",
+        "operationId": "postPerson",
         "requestBody": {
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/person-post-request-document"
+                "$ref": "#/components/schemas/personPostRequestDocument"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Success",
+            "description": "Created",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-primary-response-document"
+                  "$ref": "#/components/schemas/personPrimaryResponseDocument"
                 }
               }
             }
           },
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
     },
-    "/api/v1/people/{id}": {
+    "/api/people/{id}": {
       "get": {
         "tags": [
           "people"
         ],
-        "operationId": "get person",
+        "operationId": "getPerson",
         "parameters": [
           {
             "name": "id",
@@ -86,7 +86,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -96,7 +96,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-primary-response-document"
+                  "$ref": "#/components/schemas/personPrimaryResponseDocument"
                 }
               }
             }
@@ -107,7 +107,7 @@
         "tags": [
           "people"
         ],
-        "operationId": "head person",
+        "operationId": "headPerson",
         "parameters": [
           {
             "name": "id",
@@ -115,7 +115,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -125,7 +125,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-primary-response-document"
+                  "$ref": "#/components/schemas/personPrimaryResponseDocument"
                 }
               }
             }
@@ -136,7 +136,7 @@
         "tags": [
           "people"
         ],
-        "operationId": "patch person",
+        "operationId": "patchPerson",
         "parameters": [
           {
             "name": "id",
@@ -144,7 +144,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -152,7 +152,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/person-patch-request-document"
+                "$ref": "#/components/schemas/personPatchRequestDocument"
               }
             }
           }
@@ -163,13 +163,13 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-primary-response-document"
+                  "$ref": "#/components/schemas/personPrimaryResponseDocument"
                 }
               }
             }
           },
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -177,7 +177,7 @@
         "tags": [
           "people"
         ],
-        "operationId": "delete person",
+        "operationId": "deletePerson",
         "parameters": [
           {
             "name": "id",
@@ -185,23 +185,23 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
     },
-    "/api/v1/people/{id}/assignedTodoItems": {
+    "/api/people/{id}/assignedTodoItems": {
       "get": {
         "tags": [
           "people"
         ],
-        "operationId": "get person assignedTodoItems",
+        "operationId": "getPersonAssignedTodoItems",
         "parameters": [
           {
             "name": "id",
@@ -209,7 +209,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -219,7 +219,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-collection-response-document"
+                  "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
                 }
               }
             }
@@ -230,7 +230,7 @@
         "tags": [
           "people"
         ],
-        "operationId": "head person assignedTodoItems",
+        "operationId": "headPersonAssignedTodoItems",
         "parameters": [
           {
             "name": "id",
@@ -238,7 +238,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -248,7 +248,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-collection-response-document"
+                  "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
                 }
               }
             }
@@ -256,12 +256,12 @@
         }
       }
     },
-    "/api/v1/people/{id}/relationships/assignedTodoItems": {
+    "/api/people/{id}/relationships/assignedTodoItems": {
       "get": {
         "tags": [
           "people"
         ],
-        "operationId": "get person assignedTodoItems Relationship",
+        "operationId": "getPersonAssignedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -269,7 +269,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -279,7 +279,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-identifier-collection-response-document"
+                  "$ref": "#/components/schemas/todoItemIdentifierCollectionResponseDocument"
                 }
               }
             }
@@ -290,7 +290,7 @@
         "tags": [
           "people"
         ],
-        "operationId": "head person assignedTodoItems Relationship",
+        "operationId": "headPersonAssignedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -298,7 +298,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -308,7 +308,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-identifier-collection-response-document"
+                  "$ref": "#/components/schemas/todoItemIdentifierCollectionResponseDocument"
                 }
               }
             }
@@ -319,7 +319,7 @@
         "tags": [
           "people"
         ],
-        "operationId": "post person assignedTodoItems Relationship",
+        "operationId": "postPersonAssignedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -327,7 +327,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -335,14 +335,14 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-todoItem-request-data"
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -350,7 +350,7 @@
         "tags": [
           "people"
         ],
-        "operationId": "patch person assignedTodoItems Relationship",
+        "operationId": "patchPersonAssignedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -358,7 +358,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -366,14 +366,14 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-todoItem-request-data"
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -381,7 +381,7 @@
         "tags": [
           "people"
         ],
-        "operationId": "delete person assignedTodoItems Relationship",
+        "operationId": "deletePersonAssignedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -389,7 +389,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -397,31 +397,244 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-todoItem-request-data"
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
     },
-    "/api/v1/tags": {
+    "/api/people/{id}/ownedTodoItems": {
       "get": {
         "tags": [
-          "tags"
+          "people"
         ],
-        "operationId": "get tag Collection",
+        "operationId": "getPersonOwnedTodoItems",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/tag-collection-response-document"
+                  "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "people"
+        ],
+        "operationId": "headPersonOwnedTodoItems",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/people/{id}/relationships/ownedTodoItems": {
+      "get": {
+        "tags": [
+          "people"
+        ],
+        "operationId": "getPersonOwnedTodoItemsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/todoItemIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "people"
+        ],
+        "operationId": "headPersonOwnedTodoItemsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/todoItemIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "people"
+        ],
+        "operationId": "postPersonOwnedTodoItemsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "people"
+        ],
+        "operationId": "patchPersonOwnedTodoItemsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "people"
+        ],
+        "operationId": "deletePersonOwnedTodoItemsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/tags": {
+      "get": {
+        "tags": [
+          "tags"
+        ],
+        "operationId": "getTagCollection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tagCollectionResponseDocument"
                 }
               }
             }
@@ -432,14 +645,14 @@
         "tags": [
           "tags"
         ],
-        "operationId": "head tag Collection",
+        "operationId": "headTagCollection",
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/tag-collection-response-document"
+                  "$ref": "#/components/schemas/tagCollectionResponseDocument"
                 }
               }
             }
@@ -450,39 +663,39 @@
         "tags": [
           "tags"
         ],
-        "operationId": "post tag",
+        "operationId": "postTag",
         "requestBody": {
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/tag-post-request-document"
+                "$ref": "#/components/schemas/tagPostRequestDocument"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Success",
+            "description": "Created",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/tag-primary-response-document"
+                  "$ref": "#/components/schemas/tagPrimaryResponseDocument"
                 }
               }
             }
           },
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
     },
-    "/api/v1/tags/{id}": {
+    "/api/tags/{id}": {
       "get": {
         "tags": [
           "tags"
         ],
-        "operationId": "get tag",
+        "operationId": "getTag",
         "parameters": [
           {
             "name": "id",
@@ -490,7 +703,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -500,7 +713,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/tag-primary-response-document"
+                  "$ref": "#/components/schemas/tagPrimaryResponseDocument"
                 }
               }
             }
@@ -511,7 +724,7 @@
         "tags": [
           "tags"
         ],
-        "operationId": "head tag",
+        "operationId": "headTag",
         "parameters": [
           {
             "name": "id",
@@ -519,7 +732,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -529,7 +742,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/tag-primary-response-document"
+                  "$ref": "#/components/schemas/tagPrimaryResponseDocument"
                 }
               }
             }
@@ -540,7 +753,7 @@
         "tags": [
           "tags"
         ],
-        "operationId": "patch tag",
+        "operationId": "patchTag",
         "parameters": [
           {
             "name": "id",
@@ -548,7 +761,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -556,7 +769,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/tag-patch-request-document"
+                "$ref": "#/components/schemas/tagPatchRequestDocument"
               }
             }
           }
@@ -567,13 +780,13 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/tag-primary-response-document"
+                  "$ref": "#/components/schemas/tagPrimaryResponseDocument"
                 }
               }
             }
           },
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -581,7 +794,7 @@
         "tags": [
           "tags"
         ],
-        "operationId": "delete tag",
+        "operationId": "deleteTag",
         "parameters": [
           {
             "name": "id",
@@ -589,23 +802,23 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
     },
-    "/api/v1/tags/{id}/todoItems": {
+    "/api/tags/{id}/todoItems": {
       "get": {
         "tags": [
           "tags"
         ],
-        "operationId": "get tag todoItems",
+        "operationId": "getTagTodoItems",
         "parameters": [
           {
             "name": "id",
@@ -613,7 +826,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -623,7 +836,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-collection-response-document"
+                  "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
                 }
               }
             }
@@ -634,7 +847,7 @@
         "tags": [
           "tags"
         ],
-        "operationId": "head tag todoItems",
+        "operationId": "headTagTodoItems",
         "parameters": [
           {
             "name": "id",
@@ -642,7 +855,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -652,7 +865,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-collection-response-document"
+                  "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
                 }
               }
             }
@@ -660,12 +873,12 @@
         }
       }
     },
-    "/api/v1/tags/{id}/relationships/todoItems": {
+    "/api/tags/{id}/relationships/todoItems": {
       "get": {
         "tags": [
           "tags"
         ],
-        "operationId": "get tag todoItems Relationship",
+        "operationId": "getTagTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -673,7 +886,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -683,7 +896,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-identifier-collection-response-document"
+                  "$ref": "#/components/schemas/todoItemIdentifierCollectionResponseDocument"
                 }
               }
             }
@@ -694,7 +907,7 @@
         "tags": [
           "tags"
         ],
-        "operationId": "head tag todoItems Relationship",
+        "operationId": "headTagTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -702,7 +915,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -712,7 +925,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-identifier-collection-response-document"
+                  "$ref": "#/components/schemas/todoItemIdentifierCollectionResponseDocument"
                 }
               }
             }
@@ -723,7 +936,7 @@
         "tags": [
           "tags"
         ],
-        "operationId": "post tag todoItems Relationship",
+        "operationId": "postTagTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -731,7 +944,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -739,14 +952,14 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-todoItem-request-data"
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -754,7 +967,7 @@
         "tags": [
           "tags"
         ],
-        "operationId": "patch tag todoItems Relationship",
+        "operationId": "patchTagTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -762,7 +975,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -770,14 +983,14 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-todoItem-request-data"
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -785,7 +998,7 @@
         "tags": [
           "tags"
         ],
-        "operationId": "delete tag todoItems Relationship",
+        "operationId": "deleteTagTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -793,7 +1006,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -801,31 +1014,31 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-todoItem-request-data"
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
     },
-    "/api/v1/todoItems": {
+    "/api/todoItems": {
       "get": {
         "tags": [
           "todoItems"
         ],
-        "operationId": "get todoItem Collection",
+        "operationId": "getTodoItemCollection",
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-collection-response-document"
+                  "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
                 }
               }
             }
@@ -836,14 +1049,14 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "head todoItem Collection",
+        "operationId": "headTodoItemCollection",
         "responses": {
           "200": {
             "description": "Success",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-collection-response-document"
+                  "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
                 }
               }
             }
@@ -854,39 +1067,39 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "post todoItem",
+        "operationId": "postTodoItem",
         "requestBody": {
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/todoItem-post-request-document"
+                "$ref": "#/components/schemas/todoItemPostRequestDocument"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Success",
+            "description": "Created",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-primary-response-document"
+                  "$ref": "#/components/schemas/todoItemPrimaryResponseDocument"
                 }
               }
             }
           },
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
     },
-    "/api/v1/todoItems/{id}": {
+    "/api/todoItems/{id}": {
       "get": {
         "tags": [
           "todoItems"
         ],
-        "operationId": "get todoItem",
+        "operationId": "getTodoItem",
         "parameters": [
           {
             "name": "id",
@@ -894,7 +1107,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -904,7 +1117,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-primary-response-document"
+                  "$ref": "#/components/schemas/todoItemPrimaryResponseDocument"
                 }
               }
             }
@@ -915,7 +1128,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "head todoItem",
+        "operationId": "headTodoItem",
         "parameters": [
           {
             "name": "id",
@@ -923,7 +1136,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -933,7 +1146,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-primary-response-document"
+                  "$ref": "#/components/schemas/todoItemPrimaryResponseDocument"
                 }
               }
             }
@@ -944,7 +1157,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "patch todoItem",
+        "operationId": "patchTodoItem",
         "parameters": [
           {
             "name": "id",
@@ -952,7 +1165,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -960,7 +1173,7 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/todoItem-patch-request-document"
+                "$ref": "#/components/schemas/todoItemPatchRequestDocument"
               }
             }
           }
@@ -971,13 +1184,13 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/todoItem-primary-response-document"
+                  "$ref": "#/components/schemas/todoItemPrimaryResponseDocument"
                 }
               }
             }
           },
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -985,7 +1198,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "delete todoItem",
+        "operationId": "deleteTodoItem",
         "parameters": [
           {
             "name": "id",
@@ -993,23 +1206,23 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
     },
-    "/api/v1/todoItems/{id}/assignee": {
+    "/api/todoItems/{id}/assignee": {
       "get": {
         "tags": [
           "todoItems"
         ],
-        "operationId": "get todoItem assignee",
+        "operationId": "getTodoItemAssignee",
         "parameters": [
           {
             "name": "id",
@@ -1017,7 +1230,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1027,7 +1240,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-secondary-response-document"
+                  "$ref": "#/components/schemas/nullablePersonSecondaryResponseDocument"
                 }
               }
             }
@@ -1038,7 +1251,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "head todoItem assignee",
+        "operationId": "headTodoItemAssignee",
         "parameters": [
           {
             "name": "id",
@@ -1046,7 +1259,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1056,7 +1269,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-secondary-response-document"
+                  "$ref": "#/components/schemas/nullablePersonSecondaryResponseDocument"
                 }
               }
             }
@@ -1064,12 +1277,12 @@
         }
       }
     },
-    "/api/v1/todoItems/{id}/relationships/assignee": {
+    "/api/todoItems/{id}/relationships/assignee": {
       "get": {
         "tags": [
           "todoItems"
         ],
-        "operationId": "get todoItem assignee Relationship",
+        "operationId": "getTodoItemAssigneeRelationship",
         "parameters": [
           {
             "name": "id",
@@ -1077,7 +1290,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1087,7 +1300,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-identifier-response-document"
+                  "$ref": "#/components/schemas/nullablePersonIdentifierResponseDocument"
                 }
               }
             }
@@ -1098,7 +1311,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "head todoItem assignee Relationship",
+        "operationId": "headTodoItemAssigneeRelationship",
         "parameters": [
           {
             "name": "id",
@@ -1106,7 +1319,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1116,7 +1329,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-identifier-response-document"
+                  "$ref": "#/components/schemas/nullablePersonIdentifierResponseDocument"
                 }
               }
             }
@@ -1127,7 +1340,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "patch todoItem assignee Relationship",
+        "operationId": "patchTodoItemAssigneeRelationship",
         "parameters": [
           {
             "name": "id",
@@ -1135,7 +1348,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1143,24 +1356,24 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-one-person-request-data"
+                "$ref": "#/components/schemas/nullableToOnePersonInRequest"
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
     },
-    "/api/v1/todoItems/{id}/owner": {
+    "/api/todoItems/{id}/owner": {
       "get": {
         "tags": [
           "todoItems"
         ],
-        "operationId": "get todoItem owner",
+        "operationId": "getTodoItemOwner",
         "parameters": [
           {
             "name": "id",
@@ -1168,7 +1381,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1178,7 +1391,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-secondary-response-document"
+                  "$ref": "#/components/schemas/personSecondaryResponseDocument"
                 }
               }
             }
@@ -1189,7 +1402,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "head todoItem owner",
+        "operationId": "headTodoItemOwner",
         "parameters": [
           {
             "name": "id",
@@ -1197,7 +1410,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1207,7 +1420,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-secondary-response-document"
+                  "$ref": "#/components/schemas/personSecondaryResponseDocument"
                 }
               }
             }
@@ -1215,12 +1428,12 @@
         }
       }
     },
-    "/api/v1/todoItems/{id}/relationships/owner": {
+    "/api/todoItems/{id}/relationships/owner": {
       "get": {
         "tags": [
           "todoItems"
         ],
-        "operationId": "get todoItem owner Relationship",
+        "operationId": "getTodoItemOwnerRelationship",
         "parameters": [
           {
             "name": "id",
@@ -1228,7 +1441,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1238,7 +1451,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-identifier-response-document"
+                  "$ref": "#/components/schemas/personIdentifierResponseDocument"
                 }
               }
             }
@@ -1249,7 +1462,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "head todoItem owner Relationship",
+        "operationId": "headTodoItemOwnerRelationship",
         "parameters": [
           {
             "name": "id",
@@ -1257,7 +1470,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1267,7 +1480,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/person-identifier-response-document"
+                  "$ref": "#/components/schemas/personIdentifierResponseDocument"
                 }
               }
             }
@@ -1278,7 +1491,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "patch todoItem owner Relationship",
+        "operationId": "patchTodoItemOwnerRelationship",
         "parameters": [
           {
             "name": "id",
@@ -1286,7 +1499,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1294,24 +1507,24 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-one-person-request-data"
+                "$ref": "#/components/schemas/toOnePersonInRequest"
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
     },
-    "/api/v1/todoItems/{id}/tags": {
+    "/api/todoItems/{id}/tags": {
       "get": {
         "tags": [
           "todoItems"
         ],
-        "operationId": "get todoItem tags",
+        "operationId": "getTodoItemTags",
         "parameters": [
           {
             "name": "id",
@@ -1319,7 +1532,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1329,7 +1542,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/tag-collection-response-document"
+                  "$ref": "#/components/schemas/tagCollectionResponseDocument"
                 }
               }
             }
@@ -1340,7 +1553,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "head todoItem tags",
+        "operationId": "headTodoItemTags",
         "parameters": [
           {
             "name": "id",
@@ -1348,7 +1561,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1358,7 +1571,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/tag-collection-response-document"
+                  "$ref": "#/components/schemas/tagCollectionResponseDocument"
                 }
               }
             }
@@ -1366,12 +1579,12 @@
         }
       }
     },
-    "/api/v1/todoItems/{id}/relationships/tags": {
+    "/api/todoItems/{id}/relationships/tags": {
       "get": {
         "tags": [
           "todoItems"
         ],
-        "operationId": "get todoItem tags Relationship",
+        "operationId": "getTodoItemTagsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -1379,7 +1592,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1389,7 +1602,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/tag-identifier-collection-response-document"
+                  "$ref": "#/components/schemas/tagIdentifierCollectionResponseDocument"
                 }
               }
             }
@@ -1400,7 +1613,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "head todoItem tags Relationship",
+        "operationId": "headTodoItemTagsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -1408,7 +1621,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1418,7 +1631,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/tag-identifier-collection-response-document"
+                  "$ref": "#/components/schemas/tagIdentifierCollectionResponseDocument"
                 }
               }
             }
@@ -1429,7 +1642,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "post todoItem tags Relationship",
+        "operationId": "postTodoItemTagsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -1437,7 +1650,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1445,14 +1658,14 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-tag-request-data"
+                "$ref": "#/components/schemas/toManyTagInRequest"
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -1460,7 +1673,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "patch todoItem tags Relationship",
+        "operationId": "patchTodoItemTagsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -1468,7 +1681,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1476,14 +1689,14 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-tag-request-data"
+                "$ref": "#/components/schemas/toManyTagInRequest"
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       },
@@ -1491,7 +1704,7 @@
         "tags": [
           "todoItems"
         ],
-        "operationId": "delete todoItem tags Relationship",
+        "operationId": "deleteTodoItemTagsRelationship",
         "parameters": [
           {
             "name": "id",
@@ -1499,7 +1712,7 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           }
         ],
@@ -1507,14 +1720,14 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/to-many-tag-request-data"
+                "$ref": "#/components/schemas/toManyTagInRequest"
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "No Content"
           }
         }
       }
@@ -1542,7 +1755,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
@@ -1555,9 +1768,11 @@
         "type": "object",
         "properties": {
           "self": {
+            "minLength": 1,
             "type": "string"
           },
           "related": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -1571,12 +1786,14 @@
         "type": "object",
         "properties": {
           "self": {
+            "minLength": 1,
             "type": "string"
           },
           "describedby": {
             "type": "string"
           },
           "first": {
+            "minLength": 1,
             "type": "string"
           },
           "last": {
@@ -1598,6 +1815,7 @@
         "type": "object",
         "properties": {
           "self": {
+            "minLength": 1,
             "type": "string"
           },
           "describedby": {
@@ -1615,15 +1833,18 @@
         "type": "object",
         "properties": {
           "self": {
+            "minLength": 1,
             "type": "string"
           },
           "describedby": {
             "type": "string"
           },
           "related": {
+            "minLength": 1,
             "type": "string"
           },
           "first": {
+            "minLength": 1,
             "type": "string"
           },
           "last": {
@@ -1646,12 +1867,14 @@
         "type": "object",
         "properties": {
           "self": {
+            "minLength": 1,
             "type": "string"
           },
           "describedby": {
             "type": "string"
           },
           "related": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -1664,12 +1887,13 @@
         "type": "object",
         "properties": {
           "self": {
+            "minLength": 1,
             "type": "string"
           }
         },
         "additionalProperties": false
       },
-      "null-value": {
+      "nullValue": {
         "not": {
           "anyOf": [
             {
@@ -1688,85 +1912,188 @@
               "type": "array"
             }
           ],
-          "items": {}
+          "items": { }
         },
         "nullable": true
       },
-      "people-resource-type": {
-        "enum": [
-          "people"
-        ],
-        "type": "string"
-      },
-      "person-attributes-in-patch-request": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastName": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "person-attributes-in-post-request": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastName": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "person-attributes-in-response": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastName": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "person-collection-response-document": {
+      "nullablePersonIdentifierResponseDocument": {
         "required": [
           "data",
           "links"
         ],
         "type": "object",
         "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/personIdentifier"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullablePersonSecondaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/personDataInResponse"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableToOnePersonInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/personIdentifier"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableToOnePersonInResponse": {
+        "required": [
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/personIdentifier"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInRelationshipObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "personAttributesInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "personAttributesInPostRequest": {
+        "required": [
+          "lastName"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "personAttributesInResponse": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "personCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/personDataInResponse"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
           },
           "links": {
             "$ref": "#/components/schemas/linksInResourceCollectionDocument"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/person-data-in-response"
-            }
           }
         },
         "additionalProperties": false
       },
-      "person-data-in-patch-request": {
+      "personDataInPatchRequest": {
         "required": [
           "id",
           "type"
@@ -1774,39 +2101,40 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/people-resource-type"
+            "$ref": "#/components/schemas/personResourceType"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/person-attributes-in-patch-request"
+            "$ref": "#/components/schemas/personAttributesInPatchRequest"
           },
           "relationships": {
-            "$ref": "#/components/schemas/person-relationships-in-patch-request"
+            "$ref": "#/components/schemas/personRelationshipsInPatchRequest"
           }
         },
         "additionalProperties": false
       },
-      "person-data-in-post-request": {
+      "personDataInPostRequest": {
         "required": [
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/people-resource-type"
+            "$ref": "#/components/schemas/personResourceType"
           },
           "attributes": {
-            "$ref": "#/components/schemas/person-attributes-in-post-request"
+            "$ref": "#/components/schemas/personAttributesInPostRequest"
           },
           "relationships": {
-            "$ref": "#/components/schemas/person-relationships-in-post-request"
+            "$ref": "#/components/schemas/personRelationshipsInPostRequest"
           }
         },
         "additionalProperties": false
       },
-      "person-data-in-response": {
+      "personDataInResponse": {
         "required": [
           "id",
           "links",
@@ -1815,28 +2143,29 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/people-resource-type"
+            "$ref": "#/components/schemas/personResourceType"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/person-attributes-in-response"
+            "$ref": "#/components/schemas/personAttributesInResponse"
           },
           "relationships": {
-            "$ref": "#/components/schemas/person-relationships-in-response"
+            "$ref": "#/components/schemas/personRelationshipsInResponse"
           },
           "links": {
             "$ref": "#/components/schemas/linksInResourceObject"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
       },
-      "person-identifier": {
+      "personIdentifier": {
         "required": [
           "id",
           "type"
@@ -1844,149 +2173,151 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/people-resource-type"
+            "$ref": "#/components/schemas/personResourceType"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           }
         },
         "additionalProperties": false
       },
-      "person-identifier-response-document": {
+      "personIdentifierResponseDocument": {
         "required": [
           "data",
           "links"
         ],
         "type": "object",
         "properties": {
+          "data": {
+            "$ref": "#/components/schemas/personIdentifier"
+          },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
           },
           "links": {
             "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
-          },
-          "data": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/person-identifier"
-              },
-              {
-                "$ref": "#/components/schemas/null-value"
-              }
-            ]
           }
         },
         "additionalProperties": false
       },
-      "person-patch-request-document": {
+      "personPatchRequestDocument": {
         "required": [
           "data"
         ],
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/person-data-in-patch-request"
+            "$ref": "#/components/schemas/personDataInPatchRequest"
           }
         },
         "additionalProperties": false
       },
-      "person-post-request-document": {
+      "personPostRequestDocument": {
         "required": [
           "data"
         ],
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/person-data-in-post-request"
+            "$ref": "#/components/schemas/personDataInPostRequest"
           }
         },
         "additionalProperties": false
       },
-      "person-primary-response-document": {
+      "personPrimaryResponseDocument": {
         "required": [
           "data",
           "links"
         ],
         "type": "object",
         "properties": {
+          "data": {
+            "$ref": "#/components/schemas/personDataInResponse"
+          },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
           },
           "links": {
             "$ref": "#/components/schemas/linksInResourceDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "personRelationshipsInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "ownedTodoItems": {
+            "$ref": "#/components/schemas/toManyTodoItemInRequest"
           },
-          "data": {
-            "$ref": "#/components/schemas/person-data-in-response"
+          "assignedTodoItems": {
+            "$ref": "#/components/schemas/toManyTodoItemInRequest"
           }
         },
         "additionalProperties": false
       },
-      "person-relationships-in-patch-request": {
+      "personRelationshipsInPostRequest": {
         "type": "object",
         "properties": {
+          "ownedTodoItems": {
+            "$ref": "#/components/schemas/toManyTodoItemInRequest"
+          },
           "assignedTodoItems": {
-            "$ref": "#/components/schemas/to-many-todoItem-request-data"
+            "$ref": "#/components/schemas/toManyTodoItemInRequest"
           }
         },
         "additionalProperties": false
       },
-      "person-relationships-in-post-request": {
+      "personRelationshipsInResponse": {
         "type": "object",
         "properties": {
+          "ownedTodoItems": {
+            "$ref": "#/components/schemas/toManyTodoItemInResponse"
+          },
           "assignedTodoItems": {
-            "$ref": "#/components/schemas/to-many-todoItem-request-data"
+            "$ref": "#/components/schemas/toManyTodoItemInResponse"
           }
         },
         "additionalProperties": false
       },
-      "person-relationships-in-response": {
-        "type": "object",
-        "properties": {
-          "assignedTodoItems": {
-            "$ref": "#/components/schemas/to-many-todoItem-response-data"
-          }
-        },
-        "additionalProperties": false
+      "personResourceType": {
+        "enum": [
+          "people"
+        ],
+        "type": "string"
       },
-      "person-secondary-response-document": {
+      "personSecondaryResponseDocument": {
         "required": [
           "data",
           "links"
         ],
         "type": "object",
         "properties": {
+          "data": {
+            "$ref": "#/components/schemas/personDataInResponse"
+          },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
           },
           "links": {
             "$ref": "#/components/schemas/linksInResourceDocument"
-          },
-          "data": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/person-data-in-response"
-              },
-              {
-                "$ref": "#/components/schemas/null-value"
-              }
-            ]
           }
         },
         "additionalProperties": false
       },
-      "tag-attributes-in-patch-request": {
+      "tagAttributesInPatchRequest": {
         "type": "object",
         "properties": {
           "name": {
@@ -1996,7 +2327,7 @@
         },
         "additionalProperties": false
       },
-      "tag-attributes-in-post-request": {
+      "tagAttributesInPostRequest": {
         "required": [
           "name"
         ],
@@ -2009,7 +2340,7 @@
         },
         "additionalProperties": false
       },
-      "tag-attributes-in-response": {
+      "tagAttributesInResponse": {
         "type": "object",
         "properties": {
           "name": {
@@ -2019,33 +2350,33 @@
         },
         "additionalProperties": false
       },
-      "tag-collection-response-document": {
+      "tagCollectionResponseDocument": {
         "required": [
           "data",
           "links"
         ],
         "type": "object",
         "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/tagDataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
           },
           "links": {
             "$ref": "#/components/schemas/linksInResourceCollectionDocument"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/tag-data-in-response"
-            }
           }
         },
         "additionalProperties": false
       },
-      "tag-data-in-patch-request": {
+      "tagDataInPatchRequest": {
         "required": [
           "id",
           "type"
@@ -2053,39 +2384,40 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/tags-resource-type"
+            "$ref": "#/components/schemas/tagResourceType"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/tag-attributes-in-patch-request"
+            "$ref": "#/components/schemas/tagAttributesInPatchRequest"
           },
           "relationships": {
-            "$ref": "#/components/schemas/tag-relationships-in-patch-request"
+            "$ref": "#/components/schemas/tagRelationshipsInPatchRequest"
           }
         },
         "additionalProperties": false
       },
-      "tag-data-in-post-request": {
+      "tagDataInPostRequest": {
         "required": [
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/tags-resource-type"
+            "$ref": "#/components/schemas/tagResourceType"
           },
           "attributes": {
-            "$ref": "#/components/schemas/tag-attributes-in-post-request"
+            "$ref": "#/components/schemas/tagAttributesInPostRequest"
           },
           "relationships": {
-            "$ref": "#/components/schemas/tag-relationships-in-post-request"
+            "$ref": "#/components/schemas/tagRelationshipsInPostRequest"
           }
         },
         "additionalProperties": false
       },
-      "tag-data-in-response": {
+      "tagDataInResponse": {
         "required": [
           "id",
           "links",
@@ -2094,28 +2426,29 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/tags-resource-type"
+            "$ref": "#/components/schemas/tagResourceType"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/tag-attributes-in-response"
+            "$ref": "#/components/schemas/tagAttributesInResponse"
           },
           "relationships": {
-            "$ref": "#/components/schemas/tag-relationships-in-response"
+            "$ref": "#/components/schemas/tagRelationshipsInResponse"
           },
           "links": {
             "$ref": "#/components/schemas/linksInResourceObject"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
       },
-      "tag-identifier": {
+      "tagIdentifier": {
         "required": [
           "id",
           "type"
@@ -2123,121 +2456,122 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/tags-resource-type"
+            "$ref": "#/components/schemas/tagResourceType"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           }
         },
         "additionalProperties": false
       },
-      "tag-identifier-collection-response-document": {
+      "tagIdentifierCollectionResponseDocument": {
         "required": [
           "data",
           "links"
         ],
         "type": "object",
         "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/tagIdentifier"
+            }
+          },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
           },
           "links": {
             "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/tag-identifier"
-            }
           }
         },
         "additionalProperties": false
       },
-      "tag-patch-request-document": {
+      "tagPatchRequestDocument": {
         "required": [
           "data"
         ],
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/tag-data-in-patch-request"
+            "$ref": "#/components/schemas/tagDataInPatchRequest"
           }
         },
         "additionalProperties": false
       },
-      "tag-post-request-document": {
+      "tagPostRequestDocument": {
         "required": [
           "data"
         ],
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/tag-data-in-post-request"
+            "$ref": "#/components/schemas/tagDataInPostRequest"
           }
         },
         "additionalProperties": false
       },
-      "tag-primary-response-document": {
+      "tagPrimaryResponseDocument": {
         "required": [
           "data",
           "links"
         ],
         "type": "object",
         "properties": {
+          "data": {
+            "$ref": "#/components/schemas/tagDataInResponse"
+          },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
           },
           "links": {
             "$ref": "#/components/schemas/linksInResourceDocument"
-          },
-          "data": {
-            "$ref": "#/components/schemas/tag-data-in-response"
           }
         },
         "additionalProperties": false
       },
-      "tag-relationships-in-patch-request": {
+      "tagRelationshipsInPatchRequest": {
         "type": "object",
         "properties": {
           "todoItems": {
-            "$ref": "#/components/schemas/to-many-todoItem-request-data"
+            "$ref": "#/components/schemas/toManyTodoItemInRequest"
           }
         },
         "additionalProperties": false
       },
-      "tag-relationships-in-post-request": {
+      "tagRelationshipsInPostRequest": {
         "type": "object",
         "properties": {
           "todoItems": {
-            "$ref": "#/components/schemas/to-many-todoItem-request-data"
+            "$ref": "#/components/schemas/toManyTodoItemInRequest"
           }
         },
         "additionalProperties": false
       },
-      "tag-relationships-in-response": {
+      "tagRelationshipsInResponse": {
         "type": "object",
         "properties": {
           "todoItems": {
-            "$ref": "#/components/schemas/to-many-todoItem-response-data"
+            "$ref": "#/components/schemas/toManyTodoItemInResponse"
           }
         },
         "additionalProperties": false
       },
-      "tags-resource-type": {
+      "tagResourceType": {
         "enum": [
           "tags"
         ],
         "type": "string"
       },
-      "to-many-tag-request-data": {
+      "toManyTagInRequest": {
         "required": [
           "data"
         ],
@@ -2246,35 +2580,35 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/tag-identifier"
+              "$ref": "#/components/schemas/tagIdentifier"
             }
           }
         },
         "additionalProperties": false
       },
-      "to-many-tag-response-data": {
+      "toManyTagInResponse": {
         "required": [
           "links"
         ],
         "type": "object",
         "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/tagIdentifier"
+            }
+          },
           "links": {
             "$ref": "#/components/schemas/linksInRelationshipObject"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/tag-identifier"
-            }
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
       },
-      "to-many-todoItem-request-data": {
+      "toManyTodoItemInRequest": {
         "required": [
           "data"
         ],
@@ -2283,114 +2617,116 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/todoItem-identifier"
+              "$ref": "#/components/schemas/todoItemIdentifier"
             }
           }
         },
         "additionalProperties": false
       },
-      "to-many-todoItem-response-data": {
+      "toManyTodoItemInResponse": {
         "required": [
           "links"
         ],
         "type": "object",
         "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/todoItemIdentifier"
+            }
+          },
           "links": {
             "$ref": "#/components/schemas/linksInRelationshipObject"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/todoItem-identifier"
-            }
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
       },
-      "to-one-person-request-data": {
+      "toOnePersonInRequest": {
         "required": [
           "data"
         ],
         "type": "object",
         "properties": {
           "data": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/person-identifier"
-              },
-              {
-                "$ref": "#/components/schemas/null-value"
-              }
-            ]
+            "$ref": "#/components/schemas/personIdentifier"
           }
         },
         "additionalProperties": false
       },
-      "to-one-person-response-data": {
+      "toOnePersonInResponse": {
         "required": [
           "links"
         ],
         "type": "object",
         "properties": {
+          "data": {
+            "$ref": "#/components/schemas/personIdentifier"
+          },
           "links": {
             "$ref": "#/components/schemas/linksInRelationshipObject"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
-          },
-          "data": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/person-identifier"
-              },
-              {
-                "$ref": "#/components/schemas/null-value"
-              }
-            ]
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
       },
-      "todoItem-attributes-in-patch-request": {
+      "todoItemAttributesInPatchRequest": {
         "type": "object",
         "properties": {
           "description": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "priority": {
             "$ref": "#/components/schemas/todoItemPriority"
+          },
+          "durationInHours": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "todoItem-attributes-in-post-request": {
+      "todoItemAttributesInPostRequest": {
+        "required": [
+          "description",
+          "priority"
+        ],
         "type": "object",
         "properties": {
           "description": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "priority": {
             "$ref": "#/components/schemas/todoItemPriority"
+          },
+          "durationInHours": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "todoItem-attributes-in-response": {
+      "todoItemAttributesInResponse": {
         "type": "object",
         "properties": {
           "description": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "priority": {
             "$ref": "#/components/schemas/todoItemPriority"
+          },
+          "durationInHours": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -2404,33 +2740,33 @@
         },
         "additionalProperties": false
       },
-      "todoItem-collection-response-document": {
+      "todoItemCollectionResponseDocument": {
         "required": [
           "data",
           "links"
         ],
         "type": "object",
         "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/todoItemDataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
           },
           "links": {
             "$ref": "#/components/schemas/linksInResourceCollectionDocument"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/todoItem-data-in-response"
-            }
           }
         },
         "additionalProperties": false
       },
-      "todoItem-data-in-patch-request": {
+      "todoItemDataInPatchRequest": {
         "required": [
           "id",
           "type"
@@ -2438,39 +2774,40 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/todoItems-resource-type"
+            "$ref": "#/components/schemas/todoItemResourceType"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/todoItem-attributes-in-patch-request"
+            "$ref": "#/components/schemas/todoItemAttributesInPatchRequest"
           },
           "relationships": {
-            "$ref": "#/components/schemas/todoItem-relationships-in-patch-request"
+            "$ref": "#/components/schemas/todoItemRelationshipsInPatchRequest"
           }
         },
         "additionalProperties": false
       },
-      "todoItem-data-in-post-request": {
+      "todoItemDataInPostRequest": {
         "required": [
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/todoItems-resource-type"
+            "$ref": "#/components/schemas/todoItemResourceType"
           },
           "attributes": {
-            "$ref": "#/components/schemas/todoItem-attributes-in-post-request"
+            "$ref": "#/components/schemas/todoItemAttributesInPostRequest"
           },
           "relationships": {
-            "$ref": "#/components/schemas/todoItem-relationships-in-post-request"
+            "$ref": "#/components/schemas/todoItemRelationshipsInPostRequest"
           }
         },
         "additionalProperties": false
       },
-      "todoItem-data-in-response": {
+      "todoItemDataInResponse": {
         "required": [
           "id",
           "links",
@@ -2479,28 +2816,29 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/todoItems-resource-type"
+            "$ref": "#/components/schemas/todoItemResourceType"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/todoItem-attributes-in-response"
+            "$ref": "#/components/schemas/todoItemAttributesInResponse"
           },
           "relationships": {
-            "$ref": "#/components/schemas/todoItem-relationships-in-response"
+            "$ref": "#/components/schemas/todoItemRelationshipsInResponse"
           },
           "links": {
             "$ref": "#/components/schemas/linksInResourceObject"
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
       },
-      "todoItem-identifier": {
+      "todoItemIdentifier": {
         "required": [
           "id",
           "type"
@@ -2508,141 +2846,145 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/todoItems-resource-type"
+            "$ref": "#/components/schemas/todoItemResourceType"
           },
           "id": {
+            "minLength": 1,
             "type": "string"
           }
         },
         "additionalProperties": false
       },
-      "todoItem-identifier-collection-response-document": {
+      "todoItemIdentifierCollectionResponseDocument": {
         "required": [
           "data",
           "links"
         ],
         "type": "object",
         "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/todoItemIdentifier"
+            }
+          },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
           },
           "links": {
             "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/todoItem-identifier"
-            }
           }
         },
         "additionalProperties": false
       },
-      "todoItem-patch-request-document": {
+      "todoItemPatchRequestDocument": {
         "required": [
           "data"
         ],
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/todoItem-data-in-patch-request"
+            "$ref": "#/components/schemas/todoItemDataInPatchRequest"
           }
         },
         "additionalProperties": false
       },
-      "todoItem-post-request-document": {
+      "todoItemPostRequestDocument": {
         "required": [
           "data"
         ],
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/todoItem-data-in-post-request"
+            "$ref": "#/components/schemas/todoItemDataInPostRequest"
           }
         },
         "additionalProperties": false
       },
-      "todoItem-primary-response-document": {
+      "todoItemPrimaryResponseDocument": {
         "required": [
           "data",
           "links"
         ],
         "type": "object",
         "properties": {
+          "data": {
+            "$ref": "#/components/schemas/todoItemDataInResponse"
+          },
           "meta": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": { }
           },
           "jsonapi": {
             "$ref": "#/components/schemas/jsonapiObject"
           },
           "links": {
             "$ref": "#/components/schemas/linksInResourceDocument"
-          },
-          "data": {
-            "$ref": "#/components/schemas/todoItem-data-in-response"
-          }
-        },
-        "additionalProperties": false
-      },
-      "todoItem-relationships-in-patch-request": {
-        "type": "object",
-        "properties": {
-          "owner": {
-            "$ref": "#/components/schemas/to-one-person-request-data"
-          },
-          "assignee": {
-            "$ref": "#/components/schemas/to-one-person-request-data"
-          },
-          "tags": {
-            "$ref": "#/components/schemas/to-many-tag-request-data"
-          }
-        },
-        "additionalProperties": false
-      },
-      "todoItem-relationships-in-post-request": {
-        "type": "object",
-        "properties": {
-          "owner": {
-            "$ref": "#/components/schemas/to-one-person-request-data"
-          },
-          "assignee": {
-            "$ref": "#/components/schemas/to-one-person-request-data"
-          },
-          "tags": {
-            "$ref": "#/components/schemas/to-many-tag-request-data"
-          }
-        },
-        "additionalProperties": false
-      },
-      "todoItem-relationships-in-response": {
-        "type": "object",
-        "properties": {
-          "owner": {
-            "$ref": "#/components/schemas/to-one-person-response-data"
-          },
-          "assignee": {
-            "$ref": "#/components/schemas/to-one-person-response-data"
-          },
-          "tags": {
-            "$ref": "#/components/schemas/to-many-tag-response-data"
           }
         },
         "additionalProperties": false
       },
       "todoItemPriority": {
         "enum": [
-          "Low",
+          "High",
           "Medium",
-          "High"
+          "Low"
         ],
         "type": "string"
       },
-      "todoItems-resource-type": {
+      "todoItemRelationshipsInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "$ref": "#/components/schemas/toOnePersonInRequest"
+          },
+          "assignee": {
+            "$ref": "#/components/schemas/nullableToOnePersonInRequest"
+          },
+          "tags": {
+            "$ref": "#/components/schemas/toManyTagInRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "todoItemRelationshipsInPostRequest": {
+        "required": [
+          "owner"
+        ],
+        "type": "object",
+        "properties": {
+          "owner": {
+            "$ref": "#/components/schemas/toOnePersonInRequest"
+          },
+          "assignee": {
+            "$ref": "#/components/schemas/nullableToOnePersonInRequest"
+          },
+          "tags": {
+            "$ref": "#/components/schemas/toManyTagInRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "todoItemRelationshipsInResponse": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "$ref": "#/components/schemas/toOnePersonInResponse"
+          },
+          "assignee": {
+            "$ref": "#/components/schemas/nullableToOnePersonInResponse"
+          },
+          "tags": {
+            "$ref": "#/components/schemas/toManyTagInResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "todoItemResourceType": {
         "enum": [
           "todoItems"
         ],

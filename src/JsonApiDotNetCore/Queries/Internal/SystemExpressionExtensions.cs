@@ -21,7 +21,7 @@ internal static class SystemExpressionExtensions
         //   Tuple.Create<T>(value).Item1;
 
         MethodInfo tupleCreateUnboundMethod = typeof(Tuple).GetMethods()
-            .Single(method => method.Name == "Create" && method.IsGenericMethod && method.GetGenericArguments().Length == 1);
+            .Single(method => method is { Name: "Create", IsGenericMethod: true } && method.GetGenericArguments().Length == 1);
 
         MethodInfo tupleCreateClosedMethod = tupleCreateUnboundMethod.MakeGenericMethod(type);
 

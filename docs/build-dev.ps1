@@ -1,4 +1,4 @@
-#Requires -Version 7.0
+#Requires -Version 7.3
 
 # This script builds the documentation website, starts a web server and opens the site in your browser. Intended for local development.
 

@@ -10,12 +10,11 @@ namespace JsonApiDotNetCore.Errors;
 [PublicAPI]
 public sealed class CannotClearRequiredRelationshipException : JsonApiException
 {
-    public CannotClearRequiredRelationshipException(string relationshipName, string resourceId, string resourceType)
+    public CannotClearRequiredRelationshipException(string relationshipName, string resourceType)
         : base(new ErrorObject(HttpStatusCode.BadRequest)
         {
             Title = "Failed to clear a required relationship.",
-            Detail = $"The relationship '{relationshipName}' on resource type '{resourceType}' " +
-                $"with ID '{resourceId}' cannot be cleared because it is a required relationship."
+            Detail = $"The relationship '{relationshipName}' on resource type '{resourceType}' cannot be cleared because it is a required relationship."
         })
     {
     }

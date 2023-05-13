@@ -136,10 +136,10 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
 
         if (fieldSelectors.ContainsReadOnlyAttribute || fieldSelectors.ContainsOnlyRelationships)
         {
-            // If a read-only attribute is selected, its calculated value likely depends on another property, so select all properties.
-            // And only selecting relationships implicitly means to select all attributes too.
+            // If a read-only attribute is selected, its calculated value likely depends on another property, so fetch all scalar properties.
+            // And only selecting relationships implicitly means to fetch all scalar properties as well.
 
-            IncludeAllAttributes(elementType, propertySelectors);
+            IncludeAllScalarProperties(elementType, propertySelectors);
         }
 
         IncludeFields(fieldSelectors, propertySelectors);
@@ -148,23 +148,28 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
         return propertySelectors.Values;
     }
 
-    private void IncludeAllAttributes(Type elementType, Dictionary<PropertyInfo, PropertySelector> propertySelectors)
+    private void IncludeAllScalarProperties(Type elementType, Dictionary<PropertyInfo, PropertySelector> propertySelectors)
     {
-        IEntityType entityModel = _entityModel.GetEntityTypes().Single(type => type.ClrType == elementType);
-        IEnumerable<IProperty> entityProperties = entityModel.GetProperties().Where(property => !property.IsShadowProperty()).ToArray();
+        IEntityType entityType = _entityModel.GetEntityTypes().Single(type => type.ClrType == elementType);
 
-        foreach (IProperty entityProperty in entityProperties)
+        foreach (IProperty property in entityType.GetProperties().Where(property => !property.IsShadowProperty()))
         {
-            var propertySelector = new PropertySelector(entityProperty.PropertyInfo!);
+            var propertySelector = new PropertySelector(property.PropertyInfo!);
+            IncludeWritableProperty(propertySelector, propertySelectors);
+        }
+
+        foreach (INavigation navigation in entityType.GetNavigations().Where(navigation => navigation.ForeignKey.IsOwnership && !navigation.IsShadowProperty()))
+        {
+            var propertySelector = new PropertySelector(navigation.PropertyInfo!);
             IncludeWritableProperty(propertySelector, propertySelectors);
         }
     }
 
     private static void IncludeFields(FieldSelectors fieldSelectors, Dictionary<PropertyInfo, PropertySelector> propertySelectors)
     {
-        foreach ((ResourceFieldAttribute resourceField, QueryLayer? queryLayer) in fieldSelectors)
+        foreach ((ResourceFieldAttribute resourceField, QueryLayer? nextLayer) in fieldSelectors)
         {
-            var propertySelector = new PropertySelector(resourceField.Property, queryLayer);
+            var propertySelector = new PropertySelector(resourceField.Property, nextLayer);
             IncludeWritableProperty(propertySelector, propertySelectors);
         }
     }
@@ -185,10 +190,7 @@ public class SelectClauseBuilder : QueryClauseBuilder<object>
 
             // When an entity navigation property is decorated with both EagerLoadAttribute and RelationshipAttribute,
             // it may already exist with a sub-layer. So do not overwrite in that case.
-            if (!propertySelectors.ContainsKey(propertySelector.Property))
-            {
-                propertySelectors[propertySelector.Property] = propertySelector;
-            }
+            propertySelectors.TryAdd(propertySelector.Property, propertySelector);
         }
     }
 

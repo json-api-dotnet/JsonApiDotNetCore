@@ -696,6 +696,28 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someString").With(value => value.Should().Be(resource.SomeString));
     }
 
+    [Fact]
+    public async Task Cannot_filter_text_match_on_non_string_value()
+    {
+        // Arrange
+        const string route = "/filterableResources?filter=contains(someInt32,'123')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be("Attribute of type 'String' expected.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("filter");
+    }
+
     [Theory]
     [InlineData("yes", "no", "'yes'")]
     [InlineData("two", "one two", "'one','two','three'")]
@@ -840,6 +862,28 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Id.Should().Be(resource.StringId);
+    }
+
+    [Fact]
+    public async Task Cannot_filter_on_count_with_incompatible_value()
+    {
+        // Arrange
+        const string route = "/filterableResources?filter=equals(count(children),'ABC')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be("Failed to convert 'ABC' of type 'String' to type 'Int32'.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("filter");
     }
 
     [Theory]

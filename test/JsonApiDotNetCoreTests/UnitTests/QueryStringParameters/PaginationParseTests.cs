@@ -82,7 +82,7 @@ public sealed class PaginationParseTests : BaseParseTests
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
+        error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be(errorMessage);
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
@@ -118,7 +118,7 @@ public sealed class PaginationParseTests : BaseParseTests
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
+        error.Title.Should().Be("The specified pagination is invalid.");
         error.Detail.Should().Be(errorMessage);
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[size]");

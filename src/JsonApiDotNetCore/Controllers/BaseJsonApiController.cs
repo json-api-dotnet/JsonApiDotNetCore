@@ -207,7 +207,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
         TResource? newResource = await _create.CreateAsync(resource, cancellationToken);
 
         string resourceId = (newResource ?? resource).StringId!;
-        string locationUrl = $"{HttpContext.Request.Path}/{resourceId}";
+        string locationUrl = HttpContext.Request.Path.Add($"/{resourceId}");
 
         if (newResource == null)
         {

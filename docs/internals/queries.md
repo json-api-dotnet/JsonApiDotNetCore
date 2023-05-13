@@ -29,7 +29,7 @@ Processing a request involves the following steps:
 To get a sense of what this all looks like, let's look at an example query string:
 
 ```
-/api/v1/blogs?
+/api/blogs?
   include=owner,posts.comments.author&
   filter=has(posts)&
   sort=count(posts)&
