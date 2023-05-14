@@ -1,12 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace NoEntityFrameworkExample.Models;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource]
+[Resource(GenerateControllerEndpoints = JsonApiEndpoints.Query)]
 public sealed class Tag : Identifiable<long>
 {
     [Attr]
