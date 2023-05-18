@@ -1,344 +1,335 @@
 ﻿<!DOCTYPE html>
-<!--[if IE]><![endif]-->
 <html>
-
   <head>
     <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <title>Class JsonApiResourceDefinition&lt;TResource, TId&gt;.PropertySortOrder
  </title>
-      <meta name="viewport" content="width=device-width">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class JsonApiResourceDefinition&lt;TResource, TId&gt;.PropertySortOrder
  ">
-    
-      <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
-      <link rel="stylesheet" href="../styles/docfx.css">
-      <link rel="stylesheet" href="../styles/main.css">
-      <meta property="docfx:navrel" content="../toc.html">
-      <meta property="docfx:tocrel" content="toc.html">
-    
-    
-    
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_PropertySortOrder.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.JsonApiResourceDefinition%602.PropertySortOrder%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
   </head>
-  <body data-spy="scroll" data-target="#affix" data-offset="120">
-    <div id="wrapper">
-      <header>
 
-        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
 
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
-              </a>
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
             </div>
-            <div class="collapse navbar-collapse" id="navbar">
-              <form class="navbar-form navbar-right" role="search" id="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
-                </div>
-              </form>
-            </div>
-          </div>
-        </nav>
-
-        <div class="subnav navbar navbar-default">
-          <div class="container hide-when-search" id="breadcrumb">
-            <ul class="breadcrumb">
-              <li></li>
-            </ul>
           </div>
         </div>
-      </header>
-      <div role="main" class="container body-content hide-when-search">
+      </nav>
+    </header>
 
-        <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
-          <div class="sidetoggle collapse" id="sidetoggle">
-            <div id="sidetoc"></div>
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
           </div>
-        </div>
-        <div class="article row grid-right">
-          <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.PropertySortOrder">
-
-
-  <h1 id="JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_PropertySortOrder" data-uid="JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.PropertySortOrder" class="text-break">Class JsonApiResourceDefinition&lt;TResource, TId&gt;.PropertySortOrder
-</h1>
-  <div class="markdown level0 summary"><p>This is an alias type intended to simplify the implementation's method signature. See <a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_CreateSortExpressionFromLambda_JsonApiDotNetCore_Resources_JsonApiResourceDefinition__0__1__PropertySortOrder_">CreateSortExpressionFromLambda(PropertySortOrder)</a> for usage
-details.</p>
-</div>
-  <div class="markdown level0 conceptual"></div>
-  <div class="inheritance">
-    <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">object</span></div>
-    <div class="level1"><span class="xref">System.Collections.Generic.List&lt;T&gt;</span>&lt;(<span class="xref">System.Linq.Expressions.Expression&lt;TDelegate&gt;</span>&lt;<span class="xref">Func</span>&lt;TResource, <span class="xref">object</span>&gt;&gt; <span class="xref">KeySelector</span>, <span class="xref">ListSortDirection</span> <span class="xref">SortDirection</span>)&gt;</div>
-    <div class="level2"><span class="xref">JsonApiResourceDefinition&lt;TResource, TId&gt;.PropertySortOrder</span></div>
-  </div>
-  <div class="implements">
-    <h5>Implements</h5>
-    <div><span class="xref">System.Collections.Generic.IList&lt;T&gt;</span>&lt;(<span class="xref">System.Linq.Expressions.Expression&lt;TDelegate&gt;</span>&lt;<span class="xref">Func</span>&lt;TResource, <span class="xref">object</span>&gt;&gt; <span class="xref">KeySelector</span>, <span class="xref">ListSortDirection</span> <span class="xref">SortDirection</span>)&gt;</div>
-    <div><span class="xref">System.Collections.Generic.ICollection&lt;T&gt;</span>&lt;(<span class="xref">System.Linq.Expressions.Expression&lt;TDelegate&gt;</span>&lt;<span class="xref">Func</span>&lt;TResource, <span class="xref">object</span>&gt;&gt; <span class="xref">KeySelector</span>, <span class="xref">ListSortDirection</span> <span class="xref">SortDirection</span>)&gt;</div>
-    <div><span class="xref">System.Collections.Generic.IReadOnlyList&lt;T&gt;</span>&lt;(<span class="xref">System.Linq.Expressions.Expression&lt;TDelegate&gt;</span>&lt;<span class="xref">Func</span>&lt;TResource, <span class="xref">object</span>&gt;&gt; <span class="xref">KeySelector</span>, <span class="xref">ListSortDirection</span> <span class="xref">SortDirection</span>)&gt;</div>
-    <div><span class="xref">System.Collections.Generic.IReadOnlyCollection&lt;T&gt;</span>&lt;(<span class="xref">System.Linq.Expressions.Expression&lt;TDelegate&gt;</span>&lt;<span class="xref">Func</span>&lt;TResource, <span class="xref">object</span>&gt;&gt; <span class="xref">KeySelector</span>, <span class="xref">ListSortDirection</span> <span class="xref">SortDirection</span>)&gt;</div>
-    <div><span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>&lt;(<span class="xref">System.Linq.Expressions.Expression&lt;TDelegate&gt;</span>&lt;<span class="xref">Func</span>&lt;TResource, <span class="xref">object</span>&gt;&gt; <span class="xref">KeySelector</span>, <span class="xref">ListSortDirection</span> <span class="xref">SortDirection</span>)&gt;</div>
-    <div><span class="xref">System.Collections.IList</span></div>
-    <div><span class="xref">System.Collections.ICollection</span></div>
-    <div><span class="xref">System.Collections.IEnumerable</span></div>
-  </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Add((System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection))</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.AddRange(System.Collections.Generic.IEnumerable&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.AsReadOnly()</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.BinarySearch(int, int, (System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection), System.Collections.Generic.IComparer&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.BinarySearch((System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection))</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.BinarySearch((System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection), System.Collections.Generic.IComparer&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Clear()</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Contains((System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection))</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.ConvertAll&lt;TOutput&gt;(System.Converter&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection), TOutput&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.CopyTo(int, (System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)[], int, int)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.CopyTo((System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)[])</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.CopyTo((System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)[], int)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.EnsureCapacity(int)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Exists(System.Predicate&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Find(System.Predicate&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.FindAll(System.Predicate&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.FindIndex(int, int, System.Predicate&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.FindIndex(int, System.Predicate&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.FindIndex(System.Predicate&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.FindLast(System.Predicate&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.FindLastIndex(int, int, System.Predicate&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.FindLastIndex(int, System.Predicate&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.FindLastIndex(System.Predicate&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.ForEach(System.Action&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.GetEnumerator()</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.GetRange(int, int)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.IndexOf((System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection))</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.IndexOf((System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection), int)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.IndexOf((System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection), int, int)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Insert(int, (System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection))</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.InsertRange(int, System.Collections.Generic.IEnumerable&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.LastIndexOf((System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection))</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.LastIndexOf((System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection), int)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.LastIndexOf((System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection), int, int)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Remove((System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection))</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.RemoveAll(System.Predicate&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.RemoveAt(int)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.RemoveRange(int, int)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Reverse()</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Reverse(int, int)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Sort()</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Sort(System.Collections.Generic.IComparer&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Sort(System.Comparison&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Sort(int, int, System.Collections.Generic.IComparer&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.ToArray()</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.TrimExcess()</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.TrueForAll(System.Predicate&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;)</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Capacity</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.Count</span>
-    </div>
-    <div>
-      <span class="xref">System.Collections.Generic.List&lt;(System.Linq.Expressions.Expression&lt;System.Func&lt;TResource, object&gt;&gt; KeySelector, System.ComponentModel.ListSortDirection SortDirection)&gt;.this[int]</span>
-    </div>
-    <div>
-      <span class="xref">object.Equals(object)</span>
-    </div>
-    <div>
-      <span class="xref">object.Equals(object, object)</span>
-    </div>
-    <div>
-      <span class="xref">object.GetHashCode()</span>
-    </div>
-    <div>
-      <span class="xref">object.GetType()</span>
-    </div>
-    <div>
-      <span class="xref">object.ReferenceEquals(object, object)</span>
-    </div>
-    <div>
-      <span class="xref">object.ToString()</span>
-    </div>
-  </div>
-  <h6><strong>Namespace</strong>: <span class="xref">JsonApiDotNetCore</span>.<a class="xref" href="JsonApiDotNetCore.Resources.html">Resources</a></h6>
-  <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_PropertySortOrder_syntax">Syntax</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class JsonApiResourceDefinition&lt;TResource, TId&gt;.PropertySortOrder : List&lt;(Expression&lt;Func&lt;TResource, object?&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;, IList&lt;(Expression&lt;Func&lt;TResource, object?&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;, ICollection&lt;(Expression&lt;Func&lt;TResource, object?&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;, IReadOnlyList&lt;(Expression&lt;Func&lt;TResource, object?&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;, IReadOnlyCollection&lt;(Expression&lt;Func&lt;TResource, object?&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;, IEnumerable&lt;(Expression&lt;Func&lt;TResource, object?&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;, IList, ICollection, IEnumerable</code></pre>
-  </div>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <span class="xref">System.Collections.Generic.IList&lt;T&gt;</span>
-  </div>
-  <div>
-      <span class="xref">System.Collections.Generic.ICollection&lt;T&gt;</span>
-  </div>
-  <div>
-      <span class="xref">System.Collections.Generic.IReadOnlyList&lt;T&gt;</span>
-  </div>
-  <div>
-      <span class="xref">System.Collections.Generic.IReadOnlyCollection&lt;T&gt;</span>
-  </div>
-  <div>
-      <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>
-  </div>
-  <div>
-      <span class="xref">System.Collections.IList</span>
-  </div>
-  <div>
-      <span class="xref">System.Collections.ICollection</span>
-  </div>
-  <div>
-      <span class="xref">System.Collections.IEnumerable</span>
-  </div>
-  <h3 id="extensionmethods">Extension Methods</h3>
-  <div>
-      <a class="xref" href="JsonApiDotNetCore.Services.AsyncCollectionExtensions.html#JsonApiDotNetCore_Services_AsyncCollectionExtensions_AddRangeAsync__1_System_Collections_Generic_ICollection___0__System_Collections_Generic_IAsyncEnumerable___0__System_Threading_CancellationToken_">AsyncCollectionExtensions.AddRangeAsync&lt;T&gt;(ICollection&lt;T&gt;, IAsyncEnumerable&lt;T&gt;, CancellationToken)</a>
-  </div>
-</article>
-          </div>
-
-          <div class="hidden-sm col-md-2" role="complementary">
-            <div class="sideaffix">
-              <div class="contribution">
-                <ul class="nav">
-                  <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_PropertySortOrder.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.JsonApiResourceDefinition%602.PropertySortOrder%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
-                  </li>
-                  <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/JsonApiResourceDefinition.cs/#L180" class="contribution-link">View Source</a>
-                  </li>
-                </ul>
-              </div>
-              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
-                <div></div>
-              </nav>
-            </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
           </div>
         </div>
       </div>
 
-      <footer>
-        <div class="grad-bottom"></div>
-        <div class="footer">
-          <div class="container">
-            <span class="pull-right">
-              <a href="#top">Back to top</a>
-            </span>
-      
-      <span>Generated by <strong>DocFX</strong></span>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.PropertySortOrder">
+
+
+
+  <h1 id="JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_PropertySortOrder" data-uid="JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2.PropertySortOrder" class="text-break">
+    Class JsonApiResourceDefinition&lt;TResource, TId&gt;.PropertySortOrder
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/JsonApiResourceDefinition.cs/#L180"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="JsonApiDotNetCore.html">JsonApiDotNetCore</a>.<a class="xref" href="JsonApiDotNetCore.Resources.html">Resources</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>This is an alias type intended to simplify the implementation's method signature. See <a class="xref" href="JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_CreateSortExpressionFromLambda_JsonApiDotNetCore_Resources_JsonApiResourceDefinition__0__1__PropertySortOrder_">CreateSortExpressionFromLambda(PropertySortOrder)</a> for usage
+details.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class JsonApiResourceDefinition&lt;TResource, TId&gt;.PropertySortOrder : List&lt;(Expression&lt;Func&lt;TResource, object?&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;, IList&lt;(Expression&lt;Func&lt;TResource, object?&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;, ICollection&lt;(Expression&lt;Func&lt;TResource, object?&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;, IReadOnlyList&lt;(Expression&lt;Func&lt;TResource, object?&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;, IReadOnlyCollection&lt;(Expression&lt;Func&lt;TResource, object?&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;, IEnumerable&lt;(Expression&lt;Func&lt;TResource, object?&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;, IList, ICollection, IEnumerable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TResource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>&gt;&gt; <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.linq.expressions.expression-system.func--0,system.object--,system.componentmodel.listsortdirection-.keyselector">KeySelector</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.listsortdirection">ListSortDirection</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.linq.expressions.expression-system.func--0,system.object--,system.componentmodel.listsortdirection-.sortdirection">SortDirection</a>)&gt;</div>
+      <div><span class="xref">JsonApiResourceDefinition&lt;TResource, TId&gt;.PropertySortOrder</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ilist-1">IList</a>&lt;(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TResource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>&gt;&gt; <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.linq.expressions.expression-system.func--0,system.object--,system.componentmodel.listsortdirection-.keyselector">KeySelector</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.listsortdirection">ListSortDirection</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.linq.expressions.expression-system.func--0,system.object--,system.componentmodel.listsortdirection-.sortdirection">SortDirection</a>)&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection</a>&lt;(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TResource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>&gt;&gt; <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.linq.expressions.expression-system.func--0,system.object--,system.componentmodel.listsortdirection-.keyselector">KeySelector</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.listsortdirection">ListSortDirection</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.linq.expressions.expression-system.func--0,system.object--,system.componentmodel.listsortdirection-.sortdirection">SortDirection</a>)&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TResource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>&gt;&gt; <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.linq.expressions.expression-system.func--0,system.object--,system.componentmodel.listsortdirection-.keyselector">KeySelector</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.listsortdirection">ListSortDirection</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.linq.expressions.expression-system.func--0,system.object--,system.componentmodel.listsortdirection-.sortdirection">SortDirection</a>)&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection</a>&lt;(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TResource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>&gt;&gt; <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.linq.expressions.expression-system.func--0,system.object--,system.componentmodel.listsortdirection-.keyselector">KeySelector</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.listsortdirection">ListSortDirection</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.linq.expressions.expression-system.func--0,system.object--,system.componentmodel.listsortdirection-.sortdirection">SortDirection</a>)&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TResource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a>&gt;&gt; <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.linq.expressions.expression-system.func--0,system.object--,system.componentmodel.listsortdirection-.keyselector">KeySelector</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.componentmodel.listsortdirection">ListSortDirection</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.linq.expressions.expression-system.func--0,system.object--,system.componentmodel.listsortdirection-.sortdirection">SortDirection</a>)&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ilist">IList</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.add">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Add((Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection))</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.addrange">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.AddRange(IEnumerable&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.asreadonly">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.AsReadOnly()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.binarysearch#system-collections-generic-list-1-binarysearch(system-int32-system-int32-0-system-collections-generic-icomparer((-0)))">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.BinarySearch(int, int, (Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection), IComparer&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.binarysearch#system-collections-generic-list-1-binarysearch(-0)">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.BinarySearch((Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection))</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.binarysearch#system-collections-generic-list-1-binarysearch(-0-system-collections-generic-icomparer((-0)))">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.BinarySearch((Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection), IComparer&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.clear">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Clear()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.contains">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Contains((Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection))</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.convertall">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.ConvertAll&lt;TOutput&gt;(Converter&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection), TOutput&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.copyto#system-collections-generic-list-1-copyto(system-int32-0()-system-int32-system-int32)">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.CopyTo(int, (Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)[], int, int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.copyto#system-collections-generic-list-1-copyto(-0())">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.CopyTo((Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)[])</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.copyto#system-collections-generic-list-1-copyto(-0()-system-int32)">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.CopyTo((Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)[], int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.ensurecapacity">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.EnsureCapacity(int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.exists">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Exists(Predicate&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.find">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Find(Predicate&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.findall">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.FindAll(Predicate&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.findindex#system-collections-generic-list-1-findindex(system-int32-system-int32-system-predicate((-0)))">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.FindIndex(int, int, Predicate&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.findindex#system-collections-generic-list-1-findindex(system-int32-system-predicate((-0)))">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.FindIndex(int, Predicate&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.findindex#system-collections-generic-list-1-findindex(system-predicate((-0)))">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.FindIndex(Predicate&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.findlast">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.FindLast(Predicate&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.findlastindex#system-collections-generic-list-1-findlastindex(system-int32-system-int32-system-predicate((-0)))">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.FindLastIndex(int, int, Predicate&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.findlastindex#system-collections-generic-list-1-findlastindex(system-int32-system-predicate((-0)))">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.FindLastIndex(int, Predicate&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.findlastindex#system-collections-generic-list-1-findlastindex(system-predicate((-0)))">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.FindLastIndex(Predicate&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.foreach">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.ForEach(Action&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.getenumerator">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.GetEnumerator()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.getrange">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.GetRange(int, int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.indexof#system-collections-generic-list-1-indexof(-0)">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.IndexOf((Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection))</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.indexof#system-collections-generic-list-1-indexof(-0-system-int32)">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.IndexOf((Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection), int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.indexof#system-collections-generic-list-1-indexof(-0-system-int32-system-int32)">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.IndexOf((Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection), int, int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.insert">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Insert(int, (Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection))</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.insertrange">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.InsertRange(int, IEnumerable&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.lastindexof#system-collections-generic-list-1-lastindexof(-0)">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.LastIndexOf((Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection))</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.lastindexof#system-collections-generic-list-1-lastindexof(-0-system-int32)">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.LastIndexOf((Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection), int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.lastindexof#system-collections-generic-list-1-lastindexof(-0-system-int32-system-int32)">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.LastIndexOf((Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection), int, int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.remove">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Remove((Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection))</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.removeall">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.RemoveAll(Predicate&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.removeat">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.RemoveAt(int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.removerange">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.RemoveRange(int, int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.reverse#system-collections-generic-list-1-reverse">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Reverse()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.reverse#system-collections-generic-list-1-reverse(system-int32-system-int32)">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Reverse(int, int)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.sort#system-collections-generic-list-1-sort">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Sort()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.sort#system-collections-generic-list-1-sort(system-collections-generic-icomparer((-0)))">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Sort(IComparer&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.sort#system-collections-generic-list-1-sort(system-comparison((-0)))">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Sort(Comparison&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.sort#system-collections-generic-list-1-sort(system-int32-system-int32-system-collections-generic-icomparer((-0)))">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Sort(int, int, IComparer&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.toarray">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.ToArray()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.trimexcess">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.TrimExcess()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.trueforall">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.TrueForAll(Predicate&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.capacity">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Capacity</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1.count">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.Count</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">List&lt;(Expression&lt;Func&lt;TResource, object&gt;&gt; KeySelector, ListSortDirection SortDirection)&gt;.this[int]</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Services.AsyncCollectionExtensions.html#JsonApiDotNetCore_Services_AsyncCollectionExtensions_AddRangeAsync__1_System_Collections_Generic_ICollection___0__System_Collections_Generic_IAsyncEnumerable___0__System_Threading_CancellationToken_">AsyncCollectionExtensions.AddRangeAsync&lt;T&gt;(ICollection&lt;T&gt;, IAsyncEnumerable&lt;T&gt;, CancellationToken)</a>
+  </div>
+  </dd></dl>
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/JsonApiResourceDefinition.cs/#L180" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

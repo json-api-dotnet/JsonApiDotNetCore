@@ -1,71 +1,77 @@
 ﻿<!DOCTYPE html>
-<!--[if IE]><![endif]-->
 <html>
-
   <head>
     <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <title>Resource Services </title>
-      <meta name="viewport" content="width=device-width">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Resource Services ">
-    
-      <link rel="shortcut icon" href="../../favicon.ico">
-      <link rel="stylesheet" href="../../styles/docfx.vendor.css">
-      <link rel="stylesheet" href="../../styles/docfx.css">
-      <link rel="stylesheet" href="../../styles/main.css">
-      <meta property="docfx:navrel" content="../../toc.html">
-      <meta property="docfx:tocrel" content="../toc.html">
-    
-    
-    
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/extensibility/services.md/#L1">
   </head>
-  <body data-spy="scroll" data-target="#affix" data-offset="120">
-    <div id="wrapper">
-      <header>
 
-        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
+  <script type="module">
+    import options from './../../public/main.js'
+    import { init } from './../../public/docfx.min.js'
+    init(options)
+  </script>
 
-              <a class="navbar-brand" href="../../index.html">
-                <img id="logo" class="svg" src="../../logo.svg" alt="">
-              </a>
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
             </div>
-            <div class="collapse navbar-collapse" id="navbar">
-              <form class="navbar-form navbar-right" role="search" id="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
-                </div>
-              </form>
-            </div>
-          </div>
-        </nav>
-
-        <div class="subnav navbar navbar-default">
-          <div class="container hide-when-search" id="breadcrumb">
-            <ul class="breadcrumb">
-              <li></li>
-            </ul>
           </div>
         </div>
-      </header>
-      <div role="main" class="container body-content hide-when-search">
+      </nav>
+    </header>
 
-        <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
-          <div class="sidetoggle collapse" id="sidetoggle">
-            <div id="sidetoc"></div>
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
           </div>
         </div>
-        <div class="article row grid-right">
-          <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="">
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
 <h1 id="resource-services">Resource Services</h1>
 
 <p>The <code>IResourceService</code> acts as a service layer between the controller and the data access layer.
@@ -136,41 +142,33 @@ public class ProductService : IResourceService&lt;Product, int&gt;
 <h2 id="limited-requirements">Limited Requirements</h2>
 <p>In some cases it may be necessary to only expose a few actions on a resource. For this reason, we have created a hierarchy of service interfaces that can be used to get the exact implementation you require.</p>
 <p>This interface hierarchy is defined by this tree structure.</p>
-<pre><code>IResourceService
-|
-+-- IResourceQueryService
-|   |
-|   +-- IGetAllService
-|   |   GET /
-|   |
-|   +-- IGetByIdService
-|   |   GET /{id}
-|   |
-|   +-- IGetSecondaryService
-|   |   GET /{id}/{relationship}
-|   |
-|   +-- IGetRelationshipService
-|       GET /{id}/relationships/{relationship}
-|
-+-- IResourceCommandService
-    |
-    +-- ICreateService
-    |   POST /
-    |
-    +-- IUpdateService
-    |   PATCH /{id}
-    |
-    +-- IDeleteService
-    |   DELETE /{id}
-    |
-    +-- IAddToRelationshipService
-    |   POST /{id}/relationships/{relationship}
-    |
-    +-- ISetRelationshipService
-    |   PATCH /{id}/relationships/{relationship}
-    |
-    +-- IRemoveFromRelationshipService
-        DELETE /{id}/relationships/{relationship}
+<pre><code class="lang-mermaid">classDiagram
+direction LR
+class IResourceService
+class IResourceQueryService
+class IGetAllService [&quot;IGetAllService\nGET /&quot;]
+class IGetByIdService [&quot;IGetByIdService\nGET /{id}&quot;]
+class IGetSecondaryService [&quot;IGetSecondaryService\nGET /{id}/{relationship}&quot;]
+class IGetRelationshipService [&quot;IGetRelationshipService\nGET /{id}/relationships/{relationship}&quot;]
+class IResourceCommandService
+class ICreateService [&quot;ICreateService\nPOST /&quot;]
+class IUpdateService [&quot;IUpdateService\nPATCH /{id}&quot;]
+class IDeleteService [&quot;IDeleteService\nDELETE /{id}&quot;]
+class IAddToRelationshipService [&quot;IAddToRelationshipService\nPOST /{id}/relationships/{relationship}&quot;]
+class ISetRelationshipService [&quot;ISetRelationshipService\nPATCH /{id}/relationships/{relationship}&quot;]
+class IRemoveFromRelationshipService [&quot;IRemoveFromRelationshipService\nDELETE /{id}/relationships/{relationship}&quot;]
+IResourceService &lt;|-- IResourceQueryService
+IResourceQueryService&lt;|-- IGetAllService
+IResourceQueryService&lt;|-- IGetByIdService
+IResourceQueryService&lt;|-- IGetSecondaryService
+IResourceQueryService&lt;|-- IGetRelationshipService
+IResourceService &lt;|-- IResourceCommandService
+IResourceCommandService &lt;|-- ICreateService
+IResourceCommandService &lt;|-- IUpdateService
+IResourceCommandService &lt;|-- IDeleteService
+IResourceCommandService &lt;|-- IAddToRelationshipService
+IResourceCommandService &lt;|-- ISetRelationshipService
+IResourceCommandService &lt;|-- IRemoveFromRelationshipService
 </code></pre>
 <p>In order to take advantage of these interfaces you first need to register the service for each implemented interface.</p>
 <pre><code class="lang-c#">public class ArticleService : ICreateService&lt;Article, int&gt;, IDeleteService&lt;Article, int&gt;
@@ -211,42 +209,27 @@ public class Article : Identifiable&lt;int&gt;
 }
 </code></pre>
 </article>
-          </div>
 
-          <div class="hidden-sm col-md-2" role="complementary">
-            <div class="sideaffix">
-              <div class="contribution">
-                <ul class="nav">
-                  <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/extensibility/services.md/#L1" class="contribution-link">Improve this Doc</a>
-                  </li>
-                </ul>
-              </div>
-              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
-                <div></div>
-              </nav>
-            </div>
-          </div>
+        <div class="contribution d-print-none">
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/extensibility/services.md/#L1" class="edit-link">Edit this page</a>
         </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+        
       </div>
 
-      <footer>
-        <div class="grad-bottom"></div>
-        <div class="footer">
-          <div class="container">
-            <span class="pull-right">
-              <a href="#top">Back to top</a>
-            </span>
-      
-      <span>Generated by <strong>DocFX</strong></span>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
 
-    <script type="text/javascript" src="../../styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="../../styles/docfx.js"></script>
-    <script type="text/javascript" src="../../styles/main.js"></script>
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

@@ -1,93 +1,136 @@
 ﻿<!DOCTYPE html>
-<!--[if IE]><![endif]-->
 <html>
-
   <head>
     <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <title>Class JsonApiController&lt;TResource, TId&gt;
  </title>
-      <meta name="viewport" content="width=device-width">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class JsonApiController&lt;TResource, TId&gt;
  ">
-    
-      <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
-      <link rel="stylesheet" href="../styles/docfx.css">
-      <link rel="stylesheet" href="../styles/main.css">
-      <meta property="docfx:navrel" content="../toc.html">
-      <meta property="docfx:tocrel" content="toc.html">
-    
-    
-    
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
   </head>
-  <body data-spy="scroll" data-target="#affix" data-offset="120">
-    <div id="wrapper">
-      <header>
 
-        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
 
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
-              </a>
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
             </div>
-            <div class="collapse navbar-collapse" id="navbar">
-              <form class="navbar-form navbar-right" role="search" id="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
-                </div>
-              </form>
-            </div>
-          </div>
-        </nav>
-
-        <div class="subnav navbar navbar-default">
-          <div class="container hide-when-search" id="breadcrumb">
-            <ul class="breadcrumb">
-              <li></li>
-            </ul>
           </div>
         </div>
-      </header>
-      <div role="main" class="container body-content hide-when-search">
+      </nav>
+    </header>
 
-        <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
-          <div class="sidetoggle collapse" id="sidetoggle">
-            <div id="sidetoc"></div>
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
           </div>
         </div>
-        <div class="article row grid-right">
-          <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2">
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2">
 
 
-  <h1 id="JsonApiDotNetCore_Controllers_JsonApiController_2" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2" class="text-break">Class JsonApiController&lt;TResource, TId&gt;
-</h1>
-  <div class="markdown level0 summary"><p>The base class to derive resource-specific controllers from. This class delegates all work to <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController&lt;TResource, TId&gt;</a>
+
+  <h1 id="JsonApiDotNetCore_Controllers_JsonApiController_2" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2" class="text-break">
+    Class JsonApiController&lt;TResource, TId&gt;
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L19"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="JsonApiDotNetCore.html">JsonApiDotNetCore</a>.<a class="xref" href="JsonApiDotNetCore.Controllers.html">Controllers</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>The base class to derive resource-specific controllers from. This class delegates all work to <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController&lt;TResource, TId&gt;</a>
 but adds attributes for routing templates. If you want to provide routing templates yourself, you should derive from BaseJsonApiController directly.</p>
 </div>
-  <div class="markdown level0 conceptual"></div>
-  <div class="inheritance">
-    <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">object</span></div>
-    <div class="level1"><span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase</span></div>
-    <div class="level2"><a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html">CoreJsonApiController</a></div>
-    <div class="level3"><a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController</a>&lt;TResource, TId&gt;</div>
-    <div class="level4"><span class="xref">JsonApiController&lt;TResource, TId&gt;</span></div>
-      <div class="level5"><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html">JsonApiCommandController&lt;TResource, TId&gt;</a></div>
-      <div class="level5"><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html">JsonApiQueryController&lt;TResource, TId&gt;</a></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class JsonApiController&lt;TResource, TId&gt; : BaseJsonApiController&lt;TResource, TId&gt; where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
+
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TResource</code></dt>
+    <dd><p>The resource type.</p>
+</dd>
+    <dt><code>TId</code></dt>
+    <dd><p>The resource identifier type.</p>
+</dd>
+  </dl>
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase">ControllerBase</a></div>
+      <div><a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html">CoreJsonApiController</a></div>
+      <div><a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController</a>&lt;TResource, TId&gt;</div>
+      <div><span class="xref">JsonApiController&lt;TResource, TId&gt;</span></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Derived</dt>
+    <dd>
+      <div><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html">JsonApiCommandController&lt;TResource, TId&gt;</a></div>
+      <div><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html">JsonApiQueryController&lt;TResource, TId&gt;</a></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_2_GetAsync_System_Threading_CancellationToken_">BaseJsonApiController&lt;TResource, TId&gt;.GetAsync(CancellationToken)</a>
     </div>
@@ -125,1372 +168,1108 @@ but adds attributes for routing templates. If you want to provide routing templa
       <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html#JsonApiDotNetCore_Controllers_CoreJsonApiController_Error_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Serialization_Objects_ErrorObject__">CoreJsonApiController.Error(IEnumerable&lt;ErrorObject&gt;)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(int)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.statuscode#microsoft-aspnetcore-mvc-controllerbase-statuscode(system-int32)">ControllerBase.StatusCode(int)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.StatusCode(int, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.statuscode#microsoft-aspnetcore-mvc-controllerbase-statuscode(system-int32-system-object)">ControllerBase.StatusCode(int, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Content(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.content#microsoft-aspnetcore-mvc-controllerbase-content(system-string)">ControllerBase.Content(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Content(string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.content#microsoft-aspnetcore-mvc-controllerbase-content(system-string-system-string)">ControllerBase.Content(string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Content(string, string, System.Text.Encoding)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.content#microsoft-aspnetcore-mvc-controllerbase-content(system-string-system-string-system-text-encoding)">ControllerBase.Content(string, string, Encoding)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Content(string, Microsoft.Net.Http.Headers.MediaTypeHeaderValue)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.content#microsoft-aspnetcore-mvc-controllerbase-content(system-string-microsoft-net-http-headers-mediatypeheadervalue)">ControllerBase.Content(string, MediaTypeHeaderValue)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.NoContent()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.nocontent">ControllerBase.NoContent()</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Ok()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.ok#microsoft-aspnetcore-mvc-controllerbase-ok">ControllerBase.Ok()</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Ok(object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.ok#microsoft-aspnetcore-mvc-controllerbase-ok(system-object)">ControllerBase.Ok(object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Redirect(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirect">ControllerBase.Redirect(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectPermanent(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirectpermanent">ControllerBase.RedirectPermanent(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectPreserveMethod(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirectpreservemethod">ControllerBase.RedirectPreserveMethod(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectPermanentPreserveMethod(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirectpermanentpreservemethod">ControllerBase.RedirectPermanentPreserveMethod(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.LocalRedirect(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.localredirect">ControllerBase.LocalRedirect(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.LocalRedirectPermanent(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.localredirectpermanent">ControllerBase.LocalRedirectPermanent(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.LocalRedirectPreserveMethod(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.localredirectpreservemethod">ControllerBase.LocalRedirectPreserveMethod(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.LocalRedirectPermanentPreserveMethod(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.localredirectpermanentpreservemethod">ControllerBase.LocalRedirectPermanentPreserveMethod(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoaction#microsoft-aspnetcore-mvc-controllerbase-redirecttoaction">ControllerBase.RedirectToAction()</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoaction#microsoft-aspnetcore-mvc-controllerbase-redirecttoaction(system-string)">ControllerBase.RedirectToAction(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction(string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoaction#microsoft-aspnetcore-mvc-controllerbase-redirecttoaction(system-string-system-object)">ControllerBase.RedirectToAction(string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction(string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoaction#microsoft-aspnetcore-mvc-controllerbase-redirecttoaction(system-string-system-string)">ControllerBase.RedirectToAction(string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction(string, string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoaction#microsoft-aspnetcore-mvc-controllerbase-redirecttoaction(system-string-system-string-system-object)">ControllerBase.RedirectToAction(string, string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction(string, string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoaction#microsoft-aspnetcore-mvc-controllerbase-redirecttoaction(system-string-system-string-system-string)">ControllerBase.RedirectToAction(string, string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToAction(string, string, object, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoaction#microsoft-aspnetcore-mvc-controllerbase-redirecttoaction(system-string-system-string-system-object-system-string)">ControllerBase.RedirectToAction(string, string, object, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPreserveMethod(string, string, object, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoactionpreservemethod">ControllerBase.RedirectToActionPreserveMethod(string, string, object, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanent(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoactionpermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttoactionpermanent(system-string)">ControllerBase.RedirectToActionPermanent(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanent(string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoactionpermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttoactionpermanent(system-string-system-object)">ControllerBase.RedirectToActionPermanent(string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanent(string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoactionpermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttoactionpermanent(system-string-system-string)">ControllerBase.RedirectToActionPermanent(string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanent(string, string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoactionpermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttoactionpermanent(system-string-system-string-system-string)">ControllerBase.RedirectToActionPermanent(string, string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanent(string, string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoactionpermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttoactionpermanent(system-string-system-string-system-object)">ControllerBase.RedirectToActionPermanent(string, string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanent(string, string, object, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoactionpermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttoactionpermanent(system-string-system-string-system-object-system-string)">ControllerBase.RedirectToActionPermanent(string, string, object, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToActionPermanentPreserveMethod(string, string, object, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoactionpermanentpreservemethod">ControllerBase.RedirectToActionPermanentPreserveMethod(string, string, object, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoute(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoroute#microsoft-aspnetcore-mvc-controllerbase-redirecttoroute(system-string)">ControllerBase.RedirectToRoute(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoute(object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoroute#microsoft-aspnetcore-mvc-controllerbase-redirecttoroute(system-object)">ControllerBase.RedirectToRoute(object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoute(string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoroute#microsoft-aspnetcore-mvc-controllerbase-redirecttoroute(system-string-system-object)">ControllerBase.RedirectToRoute(string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoute(string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoroute#microsoft-aspnetcore-mvc-controllerbase-redirecttoroute(system-string-system-string)">ControllerBase.RedirectToRoute(string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoute(string, object, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoroute#microsoft-aspnetcore-mvc-controllerbase-redirecttoroute(system-string-system-object-system-string)">ControllerBase.RedirectToRoute(string, object, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePreserveMethod(string, object, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoroutepreservemethod">ControllerBase.RedirectToRoutePreserveMethod(string, object, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePermanent(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoroutepermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttoroutepermanent(system-string)">ControllerBase.RedirectToRoutePermanent(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePermanent(object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoroutepermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttoroutepermanent(system-object)">ControllerBase.RedirectToRoutePermanent(object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePermanent(string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoroutepermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttoroutepermanent(system-string-system-object)">ControllerBase.RedirectToRoutePermanent(string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePermanent(string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoroutepermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttoroutepermanent(system-string-system-string)">ControllerBase.RedirectToRoutePermanent(string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePermanent(string, object, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoroutepermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttoroutepermanent(system-string-system-object-system-string)">ControllerBase.RedirectToRoutePermanent(string, object, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToRoutePermanentPreserveMethod(string, object, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttoroutepermanentpreservemethod">ControllerBase.RedirectToRoutePermanentPreserveMethod(string, object, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPage(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttopage#microsoft-aspnetcore-mvc-controllerbase-redirecttopage(system-string)">ControllerBase.RedirectToPage(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPage(string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttopage#microsoft-aspnetcore-mvc-controllerbase-redirecttopage(system-string-system-object)">ControllerBase.RedirectToPage(string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPage(string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttopage#microsoft-aspnetcore-mvc-controllerbase-redirecttopage(system-string-system-string)">ControllerBase.RedirectToPage(string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPage(string, string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttopage#microsoft-aspnetcore-mvc-controllerbase-redirecttopage(system-string-system-string-system-object)">ControllerBase.RedirectToPage(string, string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPage(string, string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttopage#microsoft-aspnetcore-mvc-controllerbase-redirecttopage(system-string-system-string-system-string)">ControllerBase.RedirectToPage(string, string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPage(string, string, object, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttopage#microsoft-aspnetcore-mvc-controllerbase-redirecttopage(system-string-system-string-system-object-system-string)">ControllerBase.RedirectToPage(string, string, object, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePermanent(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttopagepermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttopagepermanent(system-string)">ControllerBase.RedirectToPagePermanent(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePermanent(string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttopagepermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttopagepermanent(system-string-system-object)">ControllerBase.RedirectToPagePermanent(string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePermanent(string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttopagepermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttopagepermanent(system-string-system-string)">ControllerBase.RedirectToPagePermanent(string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePermanent(string, string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttopagepermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttopagepermanent(system-string-system-string-system-string)">ControllerBase.RedirectToPagePermanent(string, string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePermanent(string, string, object, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttopagepermanent#microsoft-aspnetcore-mvc-controllerbase-redirecttopagepermanent(system-string-system-string-system-object-system-string)">ControllerBase.RedirectToPagePermanent(string, string, object, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePreserveMethod(string, string, object, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttopagepreservemethod">ControllerBase.RedirectToPagePreserveMethod(string, string, object, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RedirectToPagePermanentPreserveMethod(string, string, object, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.redirecttopagepermanentpreservemethod">ControllerBase.RedirectToPagePermanentPreserveMethod(string, string, object, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(byte[], string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-byte()-system-string)">ControllerBase.File(byte[], string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(byte[], string, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-byte()-system-string-system-boolean)">ControllerBase.File(byte[], string, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(byte[], string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-byte()-system-string-system-string)">ControllerBase.File(byte[], string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(byte[], string, string, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-byte()-system-string-system-string-system-boolean)">ControllerBase.File(byte[], string, string, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(byte[], string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-byte()-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue)">ControllerBase.File(byte[], string, DateTimeOffset?, EntityTagHeaderValue)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(byte[], string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-byte()-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue-system-boolean)">ControllerBase.File(byte[], string, DateTimeOffset?, EntityTagHeaderValue, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(byte[], string, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-byte()-system-string-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue)">ControllerBase.File(byte[], string, string, DateTimeOffset?, EntityTagHeaderValue)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(byte[], string, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-byte()-system-string-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue-system-boolean)">ControllerBase.File(byte[], string, string, DateTimeOffset?, EntityTagHeaderValue, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-io-stream-system-string)">ControllerBase.File(Stream, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, string, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-io-stream-system-string-system-boolean)">ControllerBase.File(Stream, string, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-io-stream-system-string-system-string)">ControllerBase.File(Stream, string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, string, string, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-io-stream-system-string-system-string-system-boolean)">ControllerBase.File(Stream, string, string, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-io-stream-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue)">ControllerBase.File(Stream, string, DateTimeOffset?, EntityTagHeaderValue)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-io-stream-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue-system-boolean)">ControllerBase.File(Stream, string, DateTimeOffset?, EntityTagHeaderValue, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, string, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-io-stream-system-string-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue)">ControllerBase.File(Stream, string, string, DateTimeOffset?, EntityTagHeaderValue)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(System.IO.Stream, string, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-io-stream-system-string-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue-system-boolean)">ControllerBase.File(Stream, string, string, DateTimeOffset?, EntityTagHeaderValue, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-string-system-string)">ControllerBase.File(string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(string, string, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-string-system-string-system-boolean)">ControllerBase.File(string, string, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(string, string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-string-system-string-system-string)">ControllerBase.File(string, string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(string, string, string, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-string-system-string-system-string-system-boolean)">ControllerBase.File(string, string, string, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(string, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-string-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue)">ControllerBase.File(string, string, DateTimeOffset?, EntityTagHeaderValue)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(string, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-string-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue-system-boolean)">ControllerBase.File(string, string, DateTimeOffset?, EntityTagHeaderValue, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(string, string, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-string-system-string-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue)">ControllerBase.File(string, string, string, DateTimeOffset?, EntityTagHeaderValue)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.File(string, string, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.file#microsoft-aspnetcore-mvc-controllerbase-file(system-string-system-string-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue-system-boolean)">ControllerBase.File(string, string, string, DateTimeOffset?, EntityTagHeaderValue, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.physicalfile#microsoft-aspnetcore-mvc-controllerbase-physicalfile(system-string-system-string)">ControllerBase.PhysicalFile(string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(string, string, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.physicalfile#microsoft-aspnetcore-mvc-controllerbase-physicalfile(system-string-system-string-system-boolean)">ControllerBase.PhysicalFile(string, string, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(string, string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.physicalfile#microsoft-aspnetcore-mvc-controllerbase-physicalfile(system-string-system-string-system-string)">ControllerBase.PhysicalFile(string, string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(string, string, string, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.physicalfile#microsoft-aspnetcore-mvc-controllerbase-physicalfile(system-string-system-string-system-string-system-boolean)">ControllerBase.PhysicalFile(string, string, string, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(string, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.physicalfile#microsoft-aspnetcore-mvc-controllerbase-physicalfile(system-string-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue)">ControllerBase.PhysicalFile(string, string, DateTimeOffset?, EntityTagHeaderValue)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(string, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.physicalfile#microsoft-aspnetcore-mvc-controllerbase-physicalfile(system-string-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue-system-boolean)">ControllerBase.PhysicalFile(string, string, DateTimeOffset?, EntityTagHeaderValue, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(string, string, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.physicalfile#microsoft-aspnetcore-mvc-controllerbase-physicalfile(system-string-system-string-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue)">ControllerBase.PhysicalFile(string, string, string, DateTimeOffset?, EntityTagHeaderValue)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.PhysicalFile(string, string, string, System.DateTimeOffset?, Microsoft.Net.Http.Headers.EntityTagHeaderValue, bool)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.physicalfile#microsoft-aspnetcore-mvc-controllerbase-physicalfile(system-string-system-string-system-string-system-nullable((system-datetimeoffset))-microsoft-net-http-headers-entitytagheadervalue-system-boolean)">ControllerBase.PhysicalFile(string, string, string, DateTimeOffset?, EntityTagHeaderValue, bool)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Unauthorized()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.unauthorized#microsoft-aspnetcore-mvc-controllerbase-unauthorized">ControllerBase.Unauthorized()</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Unauthorized(object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.unauthorized#microsoft-aspnetcore-mvc-controllerbase-unauthorized(system-object)">ControllerBase.Unauthorized(object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.NotFound()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.notfound#microsoft-aspnetcore-mvc-controllerbase-notfound">ControllerBase.NotFound()</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.NotFound(object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.notfound#microsoft-aspnetcore-mvc-controllerbase-notfound(system-object)">ControllerBase.NotFound(object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.BadRequest()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.badrequest#microsoft-aspnetcore-mvc-controllerbase-badrequest">ControllerBase.BadRequest()</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.BadRequest(object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.badrequest#microsoft-aspnetcore-mvc-controllerbase-badrequest(system-object)">ControllerBase.BadRequest(object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.BadRequest(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.badrequest#microsoft-aspnetcore-mvc-controllerbase-badrequest(microsoft-aspnetcore-mvc-modelbinding-modelstatedictionary)">ControllerBase.BadRequest(ModelStateDictionary)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.UnprocessableEntity()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.unprocessableentity#microsoft-aspnetcore-mvc-controllerbase-unprocessableentity">ControllerBase.UnprocessableEntity()</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.UnprocessableEntity(object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.unprocessableentity#microsoft-aspnetcore-mvc-controllerbase-unprocessableentity(system-object)">ControllerBase.UnprocessableEntity(object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.UnprocessableEntity(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.unprocessableentity#microsoft-aspnetcore-mvc-controllerbase-unprocessableentity(microsoft-aspnetcore-mvc-modelbinding-modelstatedictionary)">ControllerBase.UnprocessableEntity(ModelStateDictionary)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Conflict()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.conflict#microsoft-aspnetcore-mvc-controllerbase-conflict">ControllerBase.Conflict()</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Conflict(object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.conflict#microsoft-aspnetcore-mvc-controllerbase-conflict(system-object)">ControllerBase.Conflict(object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Conflict(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.conflict#microsoft-aspnetcore-mvc-controllerbase-conflict(microsoft-aspnetcore-mvc-modelbinding-modelstatedictionary)">ControllerBase.Conflict(ModelStateDictionary)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Problem(string, string, int?, string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.problem">ControllerBase.Problem(string, string, int?, string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ValidationProblem(Microsoft.AspNetCore.Mvc.ValidationProblemDetails)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.validationproblem#microsoft-aspnetcore-mvc-controllerbase-validationproblem(microsoft-aspnetcore-mvc-validationproblemdetails)">ControllerBase.ValidationProblem(ValidationProblemDetails)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ValidationProblem(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.validationproblem#microsoft-aspnetcore-mvc-controllerbase-validationproblem(microsoft-aspnetcore-mvc-modelbinding-modelstatedictionary)">ControllerBase.ValidationProblem(ModelStateDictionary)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ValidationProblem()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.validationproblem#microsoft-aspnetcore-mvc-controllerbase-validationproblem">ControllerBase.ValidationProblem()</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ValidationProblem(string, string, int?, string, string, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.validationproblem#microsoft-aspnetcore-mvc-controllerbase-validationproblem(system-string-system-string-system-nullable((system-int32))-system-string-system-string-microsoft-aspnetcore-mvc-modelbinding-modelstatedictionary)">ControllerBase.ValidationProblem(string, string, int?, string, string, ModelStateDictionary)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Created(string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.created#microsoft-aspnetcore-mvc-controllerbase-created(system-string-system-object)">ControllerBase.Created(string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Created(System.Uri, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.created#microsoft-aspnetcore-mvc-controllerbase-created(system-uri-system-object)">ControllerBase.Created(Uri, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.CreatedAtAction(string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.createdataction#microsoft-aspnetcore-mvc-controllerbase-createdataction(system-string-system-object)">ControllerBase.CreatedAtAction(string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.CreatedAtAction(string, object, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.createdataction#microsoft-aspnetcore-mvc-controllerbase-createdataction(system-string-system-object-system-object)">ControllerBase.CreatedAtAction(string, object, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.CreatedAtAction(string, string, object, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.createdataction#microsoft-aspnetcore-mvc-controllerbase-createdataction(system-string-system-string-system-object-system-object)">ControllerBase.CreatedAtAction(string, string, object, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.CreatedAtRoute(string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.createdatroute#microsoft-aspnetcore-mvc-controllerbase-createdatroute(system-string-system-object)">ControllerBase.CreatedAtRoute(string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.CreatedAtRoute(object, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.createdatroute#microsoft-aspnetcore-mvc-controllerbase-createdatroute(system-object-system-object)">ControllerBase.CreatedAtRoute(object, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.CreatedAtRoute(string, object, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.createdatroute#microsoft-aspnetcore-mvc-controllerbase-createdatroute(system-string-system-object-system-object)">ControllerBase.CreatedAtRoute(string, object, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Accepted()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.accepted#microsoft-aspnetcore-mvc-controllerbase-accepted">ControllerBase.Accepted()</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Accepted(object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.accepted#microsoft-aspnetcore-mvc-controllerbase-accepted(system-object)">ControllerBase.Accepted(object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Accepted(System.Uri)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.accepted#microsoft-aspnetcore-mvc-controllerbase-accepted(system-uri)">ControllerBase.Accepted(Uri)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Accepted(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.accepted#microsoft-aspnetcore-mvc-controllerbase-accepted(system-string)">ControllerBase.Accepted(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Accepted(string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.accepted#microsoft-aspnetcore-mvc-controllerbase-accepted(system-string-system-object)">ControllerBase.Accepted(string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Accepted(System.Uri, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.accepted#microsoft-aspnetcore-mvc-controllerbase-accepted(system-uri-system-object)">ControllerBase.Accepted(Uri, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtAction(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.acceptedataction#microsoft-aspnetcore-mvc-controllerbase-acceptedataction(system-string)">ControllerBase.AcceptedAtAction(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtAction(string, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.acceptedataction#microsoft-aspnetcore-mvc-controllerbase-acceptedataction(system-string-system-string)">ControllerBase.AcceptedAtAction(string, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtAction(string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.acceptedataction#microsoft-aspnetcore-mvc-controllerbase-acceptedataction(system-string-system-object)">ControllerBase.AcceptedAtAction(string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtAction(string, string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.acceptedataction#microsoft-aspnetcore-mvc-controllerbase-acceptedataction(system-string-system-string-system-object)">ControllerBase.AcceptedAtAction(string, string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtAction(string, object, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.acceptedataction#microsoft-aspnetcore-mvc-controllerbase-acceptedataction(system-string-system-object-system-object)">ControllerBase.AcceptedAtAction(string, object, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtAction(string, string, object, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.acceptedataction#microsoft-aspnetcore-mvc-controllerbase-acceptedataction(system-string-system-string-system-object-system-object)">ControllerBase.AcceptedAtAction(string, string, object, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtRoute(object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.acceptedatroute#microsoft-aspnetcore-mvc-controllerbase-acceptedatroute(system-object)">ControllerBase.AcceptedAtRoute(object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtRoute(string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.acceptedatroute#microsoft-aspnetcore-mvc-controllerbase-acceptedatroute(system-string)">ControllerBase.AcceptedAtRoute(string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtRoute(string, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.acceptedatroute#microsoft-aspnetcore-mvc-controllerbase-acceptedatroute(system-string-system-object)">ControllerBase.AcceptedAtRoute(string, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtRoute(object, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.acceptedatroute#microsoft-aspnetcore-mvc-controllerbase-acceptedatroute(system-object-system-object)">ControllerBase.AcceptedAtRoute(object, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.AcceptedAtRoute(string, object, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.acceptedatroute#microsoft-aspnetcore-mvc-controllerbase-acceptedatroute(system-string-system-object-system-object)">ControllerBase.AcceptedAtRoute(string, object, object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Challenge()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.challenge#microsoft-aspnetcore-mvc-controllerbase-challenge">ControllerBase.Challenge()</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Challenge(params string[])</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.challenge#microsoft-aspnetcore-mvc-controllerbase-challenge(system-string())">ControllerBase.Challenge(params string[])</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Challenge(Microsoft.AspNetCore.Authentication.AuthenticationProperties)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.challenge#microsoft-aspnetcore-mvc-controllerbase-challenge(microsoft-aspnetcore-authentication-authenticationproperties)">ControllerBase.Challenge(AuthenticationProperties)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Challenge(Microsoft.AspNetCore.Authentication.AuthenticationProperties, params string[])</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.challenge#microsoft-aspnetcore-mvc-controllerbase-challenge(microsoft-aspnetcore-authentication-authenticationproperties-system-string())">ControllerBase.Challenge(AuthenticationProperties, params string[])</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Forbid()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.forbid#microsoft-aspnetcore-mvc-controllerbase-forbid">ControllerBase.Forbid()</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Forbid(params string[])</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.forbid#microsoft-aspnetcore-mvc-controllerbase-forbid(system-string())">ControllerBase.Forbid(params string[])</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Forbid(Microsoft.AspNetCore.Authentication.AuthenticationProperties)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.forbid#microsoft-aspnetcore-mvc-controllerbase-forbid(microsoft-aspnetcore-authentication-authenticationproperties)">ControllerBase.Forbid(AuthenticationProperties)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Forbid(Microsoft.AspNetCore.Authentication.AuthenticationProperties, params string[])</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.forbid#microsoft-aspnetcore-mvc-controllerbase-forbid(microsoft-aspnetcore-authentication-authenticationproperties-system-string())">ControllerBase.Forbid(AuthenticationProperties, params string[])</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.SignIn(System.Security.Claims.ClaimsPrincipal)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.signin#microsoft-aspnetcore-mvc-controllerbase-signin(system-security-claims-claimsprincipal)">ControllerBase.SignIn(ClaimsPrincipal)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.SignIn(System.Security.Claims.ClaimsPrincipal, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.signin#microsoft-aspnetcore-mvc-controllerbase-signin(system-security-claims-claimsprincipal-system-string)">ControllerBase.SignIn(ClaimsPrincipal, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.SignIn(System.Security.Claims.ClaimsPrincipal, Microsoft.AspNetCore.Authentication.AuthenticationProperties)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.signin#microsoft-aspnetcore-mvc-controllerbase-signin(system-security-claims-claimsprincipal-microsoft-aspnetcore-authentication-authenticationproperties)">ControllerBase.SignIn(ClaimsPrincipal, AuthenticationProperties)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.SignIn(System.Security.Claims.ClaimsPrincipal, Microsoft.AspNetCore.Authentication.AuthenticationProperties, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.signin#microsoft-aspnetcore-mvc-controllerbase-signin(system-security-claims-claimsprincipal-microsoft-aspnetcore-authentication-authenticationproperties-system-string)">ControllerBase.SignIn(ClaimsPrincipal, AuthenticationProperties, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.SignOut()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.signout#microsoft-aspnetcore-mvc-controllerbase-signout">ControllerBase.SignOut()</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.SignOut(Microsoft.AspNetCore.Authentication.AuthenticationProperties)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.signout#microsoft-aspnetcore-mvc-controllerbase-signout(microsoft-aspnetcore-authentication-authenticationproperties)">ControllerBase.SignOut(AuthenticationProperties)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.SignOut(params string[])</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.signout#microsoft-aspnetcore-mvc-controllerbase-signout(system-string())">ControllerBase.SignOut(params string[])</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.SignOut(Microsoft.AspNetCore.Authentication.AuthenticationProperties, params string[])</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.signout#microsoft-aspnetcore-mvc-controllerbase-signout(microsoft-aspnetcore-authentication-authenticationproperties-system-string())">ControllerBase.SignOut(AuthenticationProperties, params string[])</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.tryupdatemodelasync#microsoft-aspnetcore-mvc-controllerbase-tryupdatemodelasync-1(-0)">ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.tryupdatemodelasync#microsoft-aspnetcore-mvc-controllerbase-tryupdatemodelasync-1(-0-system-string)">ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, string, Microsoft.AspNetCore.Mvc.ModelBinding.IValueProvider)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.tryupdatemodelasync#microsoft-aspnetcore-mvc-controllerbase-tryupdatemodelasync-1(-0-system-string-microsoft-aspnetcore-mvc-modelbinding-ivalueprovider)">ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, string, IValueProvider)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, string, params System.Linq.Expressions.Expression&lt;System.Func&lt;TModel, object&gt;&gt;[])</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.tryupdatemodelasync#microsoft-aspnetcore-mvc-controllerbase-tryupdatemodelasync-1(-0-system-string-system-linq-expressions-expression((system-func((-0-system-object))))())">ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, string, params Expression&lt;Func&lt;TModel, object&gt;&gt;[])</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, string, System.Func&lt;Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata, bool&gt;)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.tryupdatemodelasync#microsoft-aspnetcore-mvc-controllerbase-tryupdatemodelasync-1(-0-system-string-system-func((microsoft-aspnetcore-mvc-modelbinding-modelmetadata-system-boolean)))">ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, string, Func&lt;ModelMetadata, bool&gt;)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, string, Microsoft.AspNetCore.Mvc.ModelBinding.IValueProvider, params System.Linq.Expressions.Expression&lt;System.Func&lt;TModel, object&gt;&gt;[])</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.tryupdatemodelasync#microsoft-aspnetcore-mvc-controllerbase-tryupdatemodelasync-1(-0-system-string-microsoft-aspnetcore-mvc-modelbinding-ivalueprovider-system-linq-expressions-expression((system-func((-0-system-object))))())">ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, string, IValueProvider, params Expression&lt;Func&lt;TModel, object&gt;&gt;[])</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, string, Microsoft.AspNetCore.Mvc.ModelBinding.IValueProvider, System.Func&lt;Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata, bool&gt;)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.tryupdatemodelasync#microsoft-aspnetcore-mvc-controllerbase-tryupdatemodelasync-1(-0-system-string-microsoft-aspnetcore-mvc-modelbinding-ivalueprovider-system-func((microsoft-aspnetcore-mvc-modelbinding-modelmetadata-system-boolean)))">ControllerBase.TryUpdateModelAsync&lt;TModel&gt;(TModel, string, IValueProvider, Func&lt;ModelMetadata, bool&gt;)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync(object, System.Type, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.tryupdatemodelasync#microsoft-aspnetcore-mvc-controllerbase-tryupdatemodelasync(system-object-system-type-system-string)">ControllerBase.TryUpdateModelAsync(object, Type, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryUpdateModelAsync(object, System.Type, string, Microsoft.AspNetCore.Mvc.ModelBinding.IValueProvider, System.Func&lt;Microsoft.AspNetCore.Mvc.ModelBinding.ModelMetadata, bool&gt;)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.tryupdatemodelasync#microsoft-aspnetcore-mvc-controllerbase-tryupdatemodelasync(system-object-system-type-system-string-microsoft-aspnetcore-mvc-modelbinding-ivalueprovider-system-func((microsoft-aspnetcore-mvc-modelbinding-modelmetadata-system-boolean)))">ControllerBase.TryUpdateModelAsync(object, Type, string, IValueProvider, Func&lt;ModelMetadata, bool&gt;)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryValidateModel(object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.tryvalidatemodel#microsoft-aspnetcore-mvc-controllerbase-tryvalidatemodel(system-object)">ControllerBase.TryValidateModel(object)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.TryValidateModel(object, string)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.tryvalidatemodel#microsoft-aspnetcore-mvc-controllerbase-tryvalidatemodel(system-object-system-string)">ControllerBase.TryValidateModel(object, string)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.HttpContext</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.httpcontext">ControllerBase.HttpContext</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Request</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.request">ControllerBase.Request</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Response</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.response">ControllerBase.Response</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.RouteData</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.routedata">ControllerBase.RouteData</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ModelState</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.modelstate">ControllerBase.ModelState</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ControllerContext</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.controllercontext">ControllerBase.ControllerContext</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.MetadataProvider</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.metadataprovider">ControllerBase.MetadataProvider</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ModelBinderFactory</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.modelbinderfactory">ControllerBase.ModelBinderFactory</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.Url</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.url">ControllerBase.Url</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ObjectValidator</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.objectvalidator">ControllerBase.ObjectValidator</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.ProblemDetailsFactory</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.problemdetailsfactory">ControllerBase.ProblemDetailsFactory</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.ControllerBase.User</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.controllerbase.user">ControllerBase.User</a>
     </div>
     <div>
-      <span class="xref">object.Equals(object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
     </div>
     <div>
-      <span class="xref">object.Equals(object, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
     </div>
     <div>
-      <span class="xref">object.GetHashCode()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
     </div>
     <div>
-      <span class="xref">object.GetType()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
     </div>
     <div>
-      <span class="xref">object.MemberwiseClone()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
-      <span class="xref">object.ReferenceEquals(object, object)</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
     <div>
-      <span class="xref">object.ToString()</span>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
     </div>
-  </div>
-  <h6><strong>Namespace</strong>: <span class="xref">JsonApiDotNetCore</span>.<a class="xref" href="JsonApiDotNetCore.Controllers.html">Controllers</a></h6>
-  <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Controllers_JsonApiController_2_syntax">Syntax</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class JsonApiController&lt;TResource, TId&gt; : BaseJsonApiController&lt;TResource, TId&gt; where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
-  </div>
-  <h5 class="typeParameters">Type Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="parametername">TResource</span></td>
-        <td><p>The resource type.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="parametername">TId</span></td>
-        <td><p>The resource identifier type.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="constructors">Constructors
-</h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Configuration_IResourceGraph_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IGetAllService__0__1__JsonApiDotNetCore_Services_IGetByIdService__0__1__JsonApiDotNetCore_Services_IGetSecondaryService__0__1__JsonApiDotNetCore_Services_IGetRelationshipService__0__1__JsonApiDotNetCore_Services_ICreateService__0__1__JsonApiDotNetCore_Services_IAddToRelationshipService__0__1__JsonApiDotNetCore_Services_IUpdateService__0__1__JsonApiDotNetCore_Services_ISetRelationshipService__0__1__JsonApiDotNetCore_Services_IDeleteService__0__1__JsonApiDotNetCore_Services_IRemoveFromRelationshipService__0__1__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CJsonApiDotNetCore.Configuration.IResourceGraph%2CMicrosoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.Services.IGetAllService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IGetByIdService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IGetSecondaryService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IGetRelationshipService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.ICreateService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IAddToRelationshipService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IUpdateService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.ISetRelationshipService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IDeleteService%7B%600%2C%601%7D%2CJsonApiDotNetCore.Services.IRemoveFromRelationshipService%7B%600%2C%601%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L30">View Source</a>
-  </span>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Configuration_IResourceGraph_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IGetAllService__0__1__JsonApiDotNetCore_Services_IGetByIdService__0__1__JsonApiDotNetCore_Services_IGetSecondaryService__0__1__JsonApiDotNetCore_Services_IGetRelationshipService__0__1__JsonApiDotNetCore_Services_ICreateService__0__1__JsonApiDotNetCore_Services_IAddToRelationshipService__0__1__JsonApiDotNetCore_Services_IUpdateService__0__1__JsonApiDotNetCore_Services_ISetRelationshipService__0__1__JsonApiDotNetCore_Services_IDeleteService__0__1__JsonApiDotNetCore_Services_IRemoveFromRelationshipService__0__1__" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Configuration.IResourceGraph,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IGetAllService{`0,`1},JsonApiDotNetCore.Services.IGetByIdService{`0,`1},JsonApiDotNetCore.Services.IGetSecondaryService{`0,`1},JsonApiDotNetCore.Services.IGetRelationshipService{`0,`1},JsonApiDotNetCore.Services.ICreateService{`0,`1},JsonApiDotNetCore.Services.IAddToRelationshipService{`0,`1},JsonApiDotNetCore.Services.IUpdateService{`0,`1},JsonApiDotNetCore.Services.ISetRelationshipService{`0,`1},JsonApiDotNetCore.Services.IDeleteService{`0,`1},JsonApiDotNetCore.Services.IRemoveFromRelationshipService{`0,`1})">JsonApiController(IJsonApiOptions, IResourceGraph, ILoggerFactory, IGetAllService&lt;TResource, TId&gt;?, IGetByIdService&lt;TResource, TId&gt;?, IGetSecondaryService&lt;TResource, TId&gt;?, IGetRelationshipService&lt;TResource, TId&gt;?, ICreateService&lt;TResource, TId&gt;?, IAddToRelationshipService&lt;TResource, TId&gt;?, IUpdateService&lt;TResource, TId&gt;?, ISetRelationshipService&lt;TResource, TId&gt;?, IDeleteService&lt;TResource, TId&gt;?, IRemoveFromRelationshipService&lt;TResource, TId&gt;?)</h4>
-  <div class="markdown level1 summary"></div>
+
+  <h3 id="JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Configuration_IResourceGraph_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IGetAllService__0__1__JsonApiDotNetCore_Services_IGetByIdService__0__1__JsonApiDotNetCore_Services_IGetSecondaryService__0__1__JsonApiDotNetCore_Services_IGetRelationshipService__0__1__JsonApiDotNetCore_Services_ICreateService__0__1__JsonApiDotNetCore_Services_IAddToRelationshipService__0__1__JsonApiDotNetCore_Services_IUpdateService__0__1__JsonApiDotNetCore_Services_ISetRelationshipService__0__1__JsonApiDotNetCore_Services_IDeleteService__0__1__JsonApiDotNetCore_Services_IRemoveFromRelationshipService__0__1__" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Configuration.IResourceGraph,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IGetAllService{`0,`1},JsonApiDotNetCore.Services.IGetByIdService{`0,`1},JsonApiDotNetCore.Services.IGetSecondaryService{`0,`1},JsonApiDotNetCore.Services.IGetRelationshipService{`0,`1},JsonApiDotNetCore.Services.ICreateService{`0,`1},JsonApiDotNetCore.Services.IAddToRelationshipService{`0,`1},JsonApiDotNetCore.Services.IUpdateService{`0,`1},JsonApiDotNetCore.Services.ISetRelationshipService{`0,`1},JsonApiDotNetCore.Services.IDeleteService{`0,`1},JsonApiDotNetCore.Services.IRemoveFromRelationshipService{`0,`1})">
+  JsonApiController(IJsonApiOptions, IResourceGraph, ILoggerFactory, IGetAllService&lt;TResource, TId&gt;?, IGetByIdService&lt;TResource, TId&gt;?, IGetSecondaryService&lt;TResource, TId&gt;?, IGetRelationshipService&lt;TResource, TId&gt;?, ICreateService&lt;TResource, TId&gt;?, IAddToRelationshipService&lt;TResource, TId&gt;?, IUpdateService&lt;TResource, TId&gt;?, ISetRelationshipService&lt;TResource, TId&gt;?, IDeleteService&lt;TResource, TId&gt;?, IRemoveFromRelationshipService&lt;TResource, TId&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates an instance from separate services for the various individual read and write methods.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected JsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IGetAllService&lt;TResource, TId&gt;? getAll = null, IGetByIdService&lt;TResource, TId&gt;? getById = null, IGetSecondaryService&lt;TResource, TId&gt;? getSecondary = null, IGetRelationshipService&lt;TResource, TId&gt;? getRelationship = null, ICreateService&lt;TResource, TId&gt;? create = null, IAddToRelationshipService&lt;TResource, TId&gt;? addToRelationship = null, IUpdateService&lt;TResource, TId&gt;? update = null, ISetRelationshipService&lt;TResource, TId&gt;? setRelationship = null, IDeleteService&lt;TResource, TId&gt;? delete = null, IRemoveFromRelationshipService&lt;TResource, TId&gt;? removeFromRelationship = null)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></td>
-        <td><span class="parametername">options</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraph.html">IResourceGraph</a></td>
-        <td><span class="parametername">resourceGraph</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">Microsoft.Extensions.Logging.ILoggerFactory</span></td>
-        <td><span class="parametername">loggerFactory</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IGetAllService-2.html">IGetAllService</a>&lt;TResource, TId&gt;</td>
-        <td><span class="parametername">getAll</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IGetByIdService-2.html">IGetByIdService</a>&lt;TResource, TId&gt;</td>
-        <td><span class="parametername">getById</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IGetSecondaryService-2.html">IGetSecondaryService</a>&lt;TResource, TId&gt;</td>
-        <td><span class="parametername">getSecondary</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipService-2.html">IGetRelationshipService</a>&lt;TResource, TId&gt;</td>
-        <td><span class="parametername">getRelationship</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html">ICreateService</a>&lt;TResource, TId&gt;</td>
-        <td><span class="parametername">create</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IAddToRelationshipService-2.html">IAddToRelationshipService</a>&lt;TResource, TId&gt;</td>
-        <td><span class="parametername">addToRelationship</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-2.html">IUpdateService</a>&lt;TResource, TId&gt;</td>
-        <td><span class="parametername">update</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.ISetRelationshipService-2.html">ISetRelationshipService</a>&lt;TResource, TId&gt;</td>
-        <td><span class="parametername">setRelationship</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-2.html">IDeleteService</a>&lt;TResource, TId&gt;</td>
-        <td><span class="parametername">delete</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IRemoveFromRelationshipService-2.html">IRemoveFromRelationshipService</a>&lt;TResource, TId&gt;</td>
-        <td><span class="parametername">removeFromRelationship</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Configuration_IResourceGraph_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IResourceService__0__1__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CJsonApiDotNetCore.Configuration.IResourceGraph%2CMicrosoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.Services.IResourceService%7B%600%2C%601%7D)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L23">View Source</a>
-  </span>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>options</code> <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></dt>
+    <dd></dd>
+    <dt><code>resourceGraph</code> <a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraph.html">IResourceGraph</a></dt>
+    <dd></dd>
+    <dt><code>loggerFactory</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.iloggerfactory">ILoggerFactory</a></dt>
+    <dd></dd>
+    <dt><code>getAll</code> <a class="xref" href="JsonApiDotNetCore.Services.IGetAllService-2.html">IGetAllService</a>&lt;TResource, TId&gt;</dt>
+    <dd></dd>
+    <dt><code>getById</code> <a class="xref" href="JsonApiDotNetCore.Services.IGetByIdService-2.html">IGetByIdService</a>&lt;TResource, TId&gt;</dt>
+    <dd></dd>
+    <dt><code>getSecondary</code> <a class="xref" href="JsonApiDotNetCore.Services.IGetSecondaryService-2.html">IGetSecondaryService</a>&lt;TResource, TId&gt;</dt>
+    <dd></dd>
+    <dt><code>getRelationship</code> <a class="xref" href="JsonApiDotNetCore.Services.IGetRelationshipService-2.html">IGetRelationshipService</a>&lt;TResource, TId&gt;</dt>
+    <dd></dd>
+    <dt><code>create</code> <a class="xref" href="JsonApiDotNetCore.Services.ICreateService-2.html">ICreateService</a>&lt;TResource, TId&gt;</dt>
+    <dd></dd>
+    <dt><code>addToRelationship</code> <a class="xref" href="JsonApiDotNetCore.Services.IAddToRelationshipService-2.html">IAddToRelationshipService</a>&lt;TResource, TId&gt;</dt>
+    <dd></dd>
+    <dt><code>update</code> <a class="xref" href="JsonApiDotNetCore.Services.IUpdateService-2.html">IUpdateService</a>&lt;TResource, TId&gt;</dt>
+    <dd></dd>
+    <dt><code>setRelationship</code> <a class="xref" href="JsonApiDotNetCore.Services.ISetRelationshipService-2.html">ISetRelationshipService</a>&lt;TResource, TId&gt;</dt>
+    <dd></dd>
+    <dt><code>delete</code> <a class="xref" href="JsonApiDotNetCore.Services.IDeleteService-2.html">IDeleteService</a>&lt;TResource, TId&gt;</dt>
+    <dd></dd>
+    <dt><code>removeFromRelationship</code> <a class="xref" href="JsonApiDotNetCore.Services.IRemoveFromRelationshipService-2.html">IRemoveFromRelationshipService</a>&lt;TResource, TId&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Configuration_IResourceGraph_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IResourceService__0__1__" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Configuration.IResourceGraph,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceService{`0,`1})">JsonApiController(IJsonApiOptions, IResourceGraph, ILoggerFactory, IResourceService&lt;TResource, TId&gt;)</h4>
-  <div class="markdown level1 summary"></div>
+
+  <h3 id="JsonApiDotNetCore_Controllers_JsonApiController_2__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Configuration_IResourceGraph_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IResourceService__0__1__" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Configuration.IResourceGraph,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceService{`0,`1})">
+  JsonApiController(IJsonApiOptions, IResourceGraph, ILoggerFactory, IResourceService&lt;TResource, TId&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates an instance from a read/write service.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">protected JsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService&lt;TResource, TId&gt; resourceService)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></td>
-        <td><span class="parametername">options</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraph.html">IResourceGraph</a></td>
-        <td><span class="parametername">resourceGraph</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">Microsoft.Extensions.Logging.ILoggerFactory</span></td>
-        <td><span class="parametername">loggerFactory</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Services.IResourceService-2.html">IResourceService</a>&lt;TResource, TId&gt;</td>
-        <td><span class="parametername">resourceService</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="methods">Methods
-</h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteAsync__1_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.DeleteAsync(%601%2CSystem.Threading.CancellationToken)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L104">View Source</a>
-  </span>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>options</code> <a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></dt>
+    <dd></dd>
+    <dt><code>resourceGraph</code> <a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraph.html">IResourceGraph</a></dt>
+    <dd></dd>
+    <dt><code>loggerFactory</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.iloggerfactory">ILoggerFactory</a></dt>
+    <dd></dd>
+    <dt><code>resourceService</code> <a class="xref" href="JsonApiDotNetCore.Services.IResourceService-2.html">IResourceService</a>&lt;TResource, TId&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteAsync(`1,System.Threading.CancellationToken)">DeleteAsync(TId, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Deletes an existing resource. Example: <pre><code>DELETE /articles/1 HTTP/1.1</code></pre>
+
+  <h3 id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteAsync(`1,System.Threading.CancellationToken)">
+  DeleteAsync(TId, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L104"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Deletes an existing resource. Example: <pre><code class="lang-csharp">DELETE /articles/1 HTTP/1.1</code></pre>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[HttpDelete(&quot;{id}&quot;)]
 public override Task&lt;IActionResult&gt; DeleteAsync(TId id, CancellationToken cancellationToken)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TId</span></td>
-        <td><span class="parametername">id</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Threading.CancellationToken</span></td>
-        <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task&lt;TResult&gt;</span>&lt;<span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.DeleteAsync(TId, System.Threading.CancellationToken)</span></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.DeleteRelationshipAsync(%601%2CSystem.String%2CSystem.Collections.Generic.ISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L111">View Source</a>
-  </span>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <span class="xref">TId</span></dt>
+    <dd></dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.iactionresult">IActionResult</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteRelationshipAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">DeleteRelationshipAsync(TId, string, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Removes resources from a to-many relationship. Example: <pre><code>DELETE /articles/1/relationships/revisions HTTP/1.1</code></pre>
+
+  <h3 id="JsonApiDotNetCore_Controllers_JsonApiController_2_DeleteRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.DeleteRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">
+  DeleteRelationshipAsync(TId, string, ISet&lt;IIdentifiable&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L111"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes resources from a to-many relationship. Example: <pre><code class="lang-csharp">DELETE /articles/1/relationships/revisions HTTP/1.1</code></pre>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[HttpDelete(&quot;{id}/relationships/{relationshipName}&quot;)]
 public override Task&lt;IActionResult&gt; DeleteRelationshipAsync(TId id, string relationshipName, ISet&lt;IIdentifiable&gt; rightResourceIds, CancellationToken cancellationToken)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TId</span></td>
-        <td><span class="parametername">id</span></td>
-        <td><p>Identifies the left side of the relationship.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">string</span></td>
-        <td><span class="parametername">relationshipName</span></td>
-        <td><p>The relationship to remove resources from.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.ISet&lt;T&gt;</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
-        <td><span class="parametername">rightResourceIds</span></td>
-        <td><p>The set of resources to remove from the relationship.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Threading.CancellationToken</span></td>
-        <td><span class="parametername">cancellationToken</span></td>
-        <td><p>Propagates notification that request handling should be canceled.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task&lt;TResult&gt;</span>&lt;<span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.DeleteRelationshipAsync(TId, string, System.Collections.Generic.ISet&lt;JsonApiDotNetCore.Resources.IIdentifiable&gt;, System.Threading.CancellationToken)</span></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync__1_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.GetAsync(%601%2CSystem.Threading.CancellationToken)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L50">View Source</a>
-  </span>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <span class="xref">TId</span></dt>
+    <dd><p>Identifies the left side of the relationship.</p>
+</dd>
+    <dt><code>relationshipName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The relationship to remove resources from.</p>
+</dd>
+    <dt><code>rightResourceIds</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iset-1">ISet</a>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</dt>
+    <dd><p>The set of resources to remove from the relationship.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Propagates notification that request handling should be canceled.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.iactionresult">IActionResult</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync(`1,System.Threading.CancellationToken)">GetAsync(TId, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Gets a single primary resource by ID. Example: <pre><code>GET /articles/1 HTTP/1.1</code></pre>
+
+  <h3 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync(System.Threading.CancellationToken)">
+  GetAsync(CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a collection of primary resources. Example: <pre><code class="lang-csharp">GET /articles HTTP/1.1</code></pre>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[HttpGet(&quot;{id}&quot;)]
-[HttpHead(&quot;{id}&quot;)]
-public override Task&lt;IActionResult&gt; GetAsync(TId id, CancellationToken cancellationToken)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TId</span></td>
-        <td><span class="parametername">id</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Threading.CancellationToken</span></td>
-        <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task&lt;TResult&gt;</span>&lt;<span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.GetAsync(TId, System.Threading.CancellationToken)</span></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.GetAsync(System.Threading.CancellationToken)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L42">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync(System.Threading.CancellationToken)">GetAsync(CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Gets a collection of primary resources. Example: <pre><code>GET /articles HTTP/1.1</code></pre>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[HttpGet]
 [HttpHead]
 public override Task&lt;IActionResult&gt; GetAsync(CancellationToken cancellationToken)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.CancellationToken</span></td>
-        <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task&lt;TResult&gt;</span>&lt;<span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.GetAsync(System.Threading.CancellationToken)</span></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_GetRelationshipAsync__1_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.GetRelationshipAsync(%601%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L66">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetRelationshipAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetRelationshipAsync__1_System_String_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetRelationshipAsync(`1,System.String,System.Threading.CancellationToken)">GetRelationshipAsync(TId, string, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Gets a relationship value, which can be a <code>null</code>, a single object or a collection. Example:</p>
-<pre><code>GET /articles/1/relationships/author HTTP/1.1</code></pre> Example:
-<pre><code>GET /articles/1/relationships/revisions HTTP/1.1</code></pre>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.iactionresult">IActionResult</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync*"></a>
+
+  <h3 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetAsync(`1,System.Threading.CancellationToken)">
+  GetAsync(TId, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a single primary resource by ID. Example: <pre><code class="lang-csharp">GET /articles/1 HTTP/1.1</code></pre>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[HttpGet(&quot;{id}&quot;)]
+[HttpHead(&quot;{id}&quot;)]
+public override Task&lt;IActionResult&gt; GetAsync(TId id, CancellationToken cancellationToken)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <span class="xref">TId</span></dt>
+    <dd></dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.iactionresult">IActionResult</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetRelationshipAsync*"></a>
+
+  <h3 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetRelationshipAsync__1_System_String_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetRelationshipAsync(`1,System.String,System.Threading.CancellationToken)">
+  GetRelationshipAsync(TId, string, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a relationship value, which can be a <code>null</code>, a single object or a collection. Example:</p>
+<pre><code class="lang-csharp">GET /articles/1/relationships/author HTTP/1.1</code></pre> Example:
+<pre><code class="lang-csharp">GET /articles/1/relationships/revisions HTTP/1.1</code></pre>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[HttpGet(&quot;{id}/relationships/{relationshipName}&quot;)]
 [HttpHead(&quot;{id}/relationships/{relationshipName}&quot;)]
 public override Task&lt;IActionResult&gt; GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TId</span></td>
-        <td><span class="parametername">id</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">string</span></td>
-        <td><span class="parametername">relationshipName</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Threading.CancellationToken</span></td>
-        <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task&lt;TResult&gt;</span>&lt;<span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.GetRelationshipAsync(TId, string, System.Threading.CancellationToken)</span></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_GetSecondaryAsync__1_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.GetSecondaryAsync(%601%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L58">View Source</a>
-  </span>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <span class="xref">TId</span></dt>
+    <dd></dd>
+    <dt><code>relationshipName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.iactionresult">IActionResult</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetSecondaryAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetSecondaryAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetSecondaryAsync__1_System_String_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetSecondaryAsync(`1,System.String,System.Threading.CancellationToken)">GetSecondaryAsync(TId, string, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Gets a secondary resource or collection of secondary resources. Example: <pre><code>GET /articles/1/author HTTP/1.1</code></pre> Example:
-<pre><code>GET /articles/1/revisions HTTP/1.1</code></pre>
+
+  <h3 id="JsonApiDotNetCore_Controllers_JsonApiController_2_GetSecondaryAsync__1_System_String_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.GetSecondaryAsync(`1,System.String,System.Threading.CancellationToken)">
+  GetSecondaryAsync(TId, string, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a secondary resource or collection of secondary resources. Example: <pre><code class="lang-csharp">GET /articles/1/author HTTP/1.1</code></pre> Example:
+<pre><code class="lang-csharp">GET /articles/1/revisions HTTP/1.1</code></pre>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[HttpGet(&quot;{id}/{relationshipName}&quot;)]
 [HttpHead(&quot;{id}/{relationshipName}&quot;)]
 public override Task&lt;IActionResult&gt; GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TId</span></td>
-        <td><span class="parametername">id</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">string</span></td>
-        <td><span class="parametername">relationshipName</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Threading.CancellationToken</span></td>
-        <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task&lt;TResult&gt;</span>&lt;<span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.GetSecondaryAsync(TId, string, System.Threading.CancellationToken)</span></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_PatchAsync__1__0_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.PatchAsync(%601%2C%600%2CSystem.Threading.CancellationToken)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L89">View Source</a>
-  </span>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <span class="xref">TId</span></dt>
+    <dd></dd>
+    <dt><code>relationshipName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.iactionresult">IActionResult</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchAsync__1__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchAsync(`1,`0,System.Threading.CancellationToken)">PatchAsync(TId, TResource, CancellationToken)</h4>
+
+  <h3 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchAsync__1__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchAsync(`1,`0,System.Threading.CancellationToken)">
+  PatchAsync(TId, TResource, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L89"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
   <div class="markdown level1 summary"><p>Updates the attributes and/or relationships of an existing resource. Only the values of sent attributes are replaced. And only the values of sent
-relationships are replaced. Example: <pre><code>PATCH /articles/1 HTTP/1.1</code></pre>
+relationships are replaced. Example: <pre><code class="lang-csharp">PATCH /articles/1 HTTP/1.1</code></pre>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[HttpPatch(&quot;{id}&quot;)]
 public override Task&lt;IActionResult&gt; PatchAsync(TId id, TResource resource, CancellationToken cancellationToken)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TId</span></td>
-        <td><span class="parametername">id</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">TResource</span></td>
-        <td><span class="parametername">resource</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Threading.CancellationToken</span></td>
-        <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task&lt;TResult&gt;</span>&lt;<span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.PatchAsync(TId, TResource, System.Threading.CancellationToken)</span></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_PatchRelationshipAsync__1_System_String_System_Object_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.PatchRelationshipAsync(%601%2CSystem.String%2CSystem.Object%2CSystem.Threading.CancellationToken)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L96">View Source</a>
-  </span>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <span class="xref">TId</span></dt>
+    <dd></dd>
+    <dt><code>resource</code> <span class="xref">TResource</span></dt>
+    <dd></dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.iactionresult">IActionResult</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchRelationshipAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchRelationshipAsync__1_System_String_System_Object_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchRelationshipAsync(`1,System.String,System.Object,System.Threading.CancellationToken)">PatchRelationshipAsync(TId, string, object?, CancellationToken)</h4>
+
+  <h3 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PatchRelationshipAsync__1_System_String_System_Object_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PatchRelationshipAsync(`1,System.String,System.Object,System.Threading.CancellationToken)">
+  PatchRelationshipAsync(TId, string, object?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
   <div class="markdown level1 summary"><p>Performs a complete replacement of a relationship on an existing resource. Example:</p>
-<pre><code>PATCH /articles/1/relationships/author HTTP/1.1</code></pre> Example:
-<pre><code>PATCH /articles/1/relationships/revisions HTTP/1.1</code></pre>
+<pre><code class="lang-csharp">PATCH /articles/1/relationships/author HTTP/1.1</code></pre> Example:
+<pre><code class="lang-csharp">PATCH /articles/1/relationships/revisions HTTP/1.1</code></pre>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[HttpPatch(&quot;{id}/relationships/{relationshipName}&quot;)]
 public override Task&lt;IActionResult&gt; PatchRelationshipAsync(TId id, string relationshipName, object? rightValue, CancellationToken cancellationToken)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TId</span></td>
-        <td><span class="parametername">id</span></td>
-        <td><p>Identifies the left side of the relationship.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">string</span></td>
-        <td><span class="parametername">relationshipName</span></td>
-        <td><p>The relationship for which to perform a complete replacement.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">object</span></td>
-        <td><span class="parametername">rightValue</span></td>
-        <td><p>The resource or set of resources to assign to the relationship.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Threading.CancellationToken</span></td>
-        <td><span class="parametername">cancellationToken</span></td>
-        <td><p>Propagates notification that request handling should be canceled.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task&lt;TResult&gt;</span>&lt;<span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.PatchRelationshipAsync(TId, string, object, System.Threading.CancellationToken)</span></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_PostAsync__0_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.PostAsync(%600%2CSystem.Threading.CancellationToken)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L74">View Source</a>
-  </span>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <span class="xref">TId</span></dt>
+    <dd><p>Identifies the left side of the relationship.</p>
+</dd>
+    <dt><code>relationshipName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The relationship for which to perform a complete replacement.</p>
+</dd>
+    <dt><code>rightValue</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd><p>The resource or set of resources to assign to the relationship.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Propagates notification that request handling should be canceled.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.iactionresult">IActionResult</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostAsync__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostAsync(`0,System.Threading.CancellationToken)">PostAsync(TResource, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Creates a new resource with attributes, relationships or both. Example: <pre><code>POST /articles HTTP/1.1</code></pre>
+
+  <h3 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostAsync__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostAsync(`0,System.Threading.CancellationToken)">
+  PostAsync(TResource, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a new resource with attributes, relationships or both. Example: <pre><code class="lang-csharp">POST /articles HTTP/1.1</code></pre>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[HttpPost]
 public override Task&lt;IActionResult&gt; PostAsync(TResource resource, CancellationToken cancellationToken)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TResource</span></td>
-        <td><span class="parametername">resource</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Threading.CancellationToken</span></td>
-        <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task&lt;TResult&gt;</span>&lt;<span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.PostAsync(TResource, System.Threading.CancellationToken)</span></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2_PostRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602.PostRelationshipAsync(%601%2CSystem.String%2CSystem.Collections.Generic.ISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L81">View Source</a>
-  </span>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>resource</code> <span class="xref">TResource</span></dt>
+    <dd></dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.iactionresult">IActionResult</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostRelationshipAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostRelationshipAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">PostRelationshipAsync(TId, string, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Adds resources to a to-many relationship. Example: <pre><code>POST /articles/1/revisions HTTP/1.1</code></pre>
+
+  <h3 id="JsonApiDotNetCore_Controllers_JsonApiController_2_PostRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiController`2.PostRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">
+  PostRelationshipAsync(TId, string, ISet&lt;IIdentifiable&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds resources to a to-many relationship. Example: <pre><code class="lang-csharp">POST /articles/1/revisions HTTP/1.1</code></pre>
 </div>
   <div class="markdown level1 conceptual"></div>
-  <h5 class="declaration">Declaration</h5>
+
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[HttpPost(&quot;{id}/relationships/{relationshipName}&quot;)]
 public override Task&lt;IActionResult&gt; PostRelationshipAsync(TId id, string relationshipName, ISet&lt;IIdentifiable&gt; rightResourceIds, CancellationToken cancellationToken)</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TId</span></td>
-        <td><span class="parametername">id</span></td>
-        <td><p>Identifies the left side of the relationship.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">string</span></td>
-        <td><span class="parametername">relationshipName</span></td>
-        <td><p>The relationship to add resources to.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.ISet&lt;T&gt;</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
-        <td><span class="parametername">rightResourceIds</span></td>
-        <td><p>The set of resources to add to the relationship.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Threading.CancellationToken</span></td>
-        <td><span class="parametername">cancellationToken</span></td>
-        <td><p>Propagates notification that request handling should be canceled.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Threading.Tasks.Task&lt;TResult&gt;</span>&lt;<span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">JsonApiDotNetCore.Controllers.BaseJsonApiController&lt;TResource, TId&gt;.PostRelationshipAsync(TId, string, System.Collections.Generic.ISet&lt;JsonApiDotNetCore.Resources.IIdentifiable&gt;, System.Threading.CancellationToken)</span></div>
-</article>
-          </div>
 
-          <div class="hidden-sm col-md-2" role="complementary">
-            <div class="sideaffix">
-              <div class="contribution">
-                <ul class="nav">
-                  <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiController_2.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiController%602%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
-                  </li>
-                  <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L19" class="contribution-link">View Source</a>
-                  </li>
-                </ul>
-              </div>
-              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
-                <div></div>
-              </nav>
-            </div>
-          </div>
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>id</code> <span class="xref">TId</span></dt>
+    <dd><p>Identifies the left side of the relationship.</p>
+</dd>
+    <dt><code>relationshipName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The relationship to add resources to.</p>
+</dd>
+    <dt><code>rightResourceIds</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iset-1">ISet</a>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</dt>
+    <dd><p>The set of resources to add to the relationship.</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>Propagates notification that request handling should be canceled.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.iactionresult">IActionResult</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiController.cs/#L19" class="edit-link">Edit this page</a>
         </div>
+
+        
       </div>
 
-      <footer>
-        <div class="grad-bottom"></div>
-        <div class="footer">
-          <div class="container">
-            <span class="pull-right">
-              <a href="#top">Back to top</a>
-            </span>
-      
-      <span>Generated by <strong>DocFX</strong></span>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

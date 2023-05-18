@@ -1,195 +1,225 @@
 ﻿<!DOCTYPE html>
-<!--[if IE]><![endif]-->
 <html>
-
   <head>
     <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <title>Namespace JsonApiDotNetCore.Middleware
  </title>
-      <meta name="viewport" content="width=device-width">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Namespace JsonApiDotNetCore.Middleware
  ">
-    
-      <link rel="shortcut icon" href="../favicon.ico">
-      <link rel="stylesheet" href="../styles/docfx.vendor.css">
-      <link rel="stylesheet" href="../styles/docfx.css">
-      <link rel="stylesheet" href="../styles/main.css">
-      <meta property="docfx:navrel" content="../toc.html">
-      <meta property="docfx:tocrel" content="toc.html">
-    
-    
-    
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
   </head>
-  <body data-spy="scroll" data-target="#affix" data-offset="120">
-    <div id="wrapper">
-      <header>
 
-        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
 
-              <a class="navbar-brand" href="../index.html">
-                <img id="logo" class="svg" src="../logo.svg" alt="">
-              </a>
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
             </div>
-            <div class="collapse navbar-collapse" id="navbar">
-              <form class="navbar-form navbar-right" role="search" id="search">
-                <div class="form-group">
-                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
-                </div>
-              </form>
-            </div>
-          </div>
-        </nav>
-
-        <div class="subnav navbar navbar-default">
-          <div class="container hide-when-search" id="breadcrumb">
-            <ul class="breadcrumb">
-              <li></li>
-            </ul>
           </div>
         </div>
-      </header>
-      <div role="main" class="container body-content hide-when-search">
+      </nav>
+    </header>
 
-        <div class="sidenav hide-when-search">
-          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
-          <div class="sidetoggle collapse" id="sidetoggle">
-            <div id="sidetoc"></div>
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
           </div>
         </div>
-        <div class="article row grid-right">
-          <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Middleware">
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="JsonApiDotNetCore.Middleware">
 
   <h1 id="JsonApiDotNetCore_Middleware" data-uid="JsonApiDotNetCore.Middleware" class="text-break">Namespace JsonApiDotNetCore.Middleware
 </h1>
   <div class="markdown level0 summary"></div>
   <div class="markdown level0 conceptual"></div>
   <div class="markdown level0 remarks"></div>
-    <h3 id="classes">Classes
-</h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncConvertEmptyActionResultFilter.html">AsyncConvertEmptyActionResultFilter</a></h4>
-      <section><p>Converts action result without parameters into action result with null parameter.
-<example></example></p>
-<pre><code>return NotFound() -> return NotFound(null)</code></pre>
 
-This ensures our formatter is invoked, where we&apos;ll build a JSON:API compliant response. For details, see:
-https://github.com/dotnet/aspnetcore/issues/16969
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncJsonApiExceptionFilter.html">AsyncJsonApiExceptionFilter</a></h4>
-      <section><p>Application-wide exception filter that invokes <a class="xref" href="JsonApiDotNetCore.Middleware.IExceptionHandler.html">IExceptionHandler</a> for JSON:API requests.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncQueryStringActionFilter.html">AsyncQueryStringActionFilter</a></h4>
-      <section><p>Application-wide entry point for processing JSON:API request query strings.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.ExceptionHandler.html">ExceptionHandler</a></h4>
-      <section><p>Central place to handle all exceptions, such as log them and translate into error response.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.HeaderConstants.html">HeaderConstants</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.HttpContextExtensions.html">HttpContextExtensions</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiInputFormatter.html">JsonApiInputFormatter</a></h4>
-      <section><p>Application-wide entry point for reading JSON:API request bodies.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiMiddleware.html">JsonApiMiddleware</a></h4>
-      <section><p>Intercepts HTTP requests to populate injected <a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiRequest.html">IJsonApiRequest</a> instance for JSON:API requests.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiOutputFormatter.html">JsonApiOutputFormatter</a></h4>
-      <section><p>Application-wide entry point for writing JSON:API response bodies.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiRequest.html">JsonApiRequest</a></h4>
-      <section><p>Metadata associated with the JSON:API request that is currently being processed.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html">JsonApiRoutingConvention</a></h4>
-      <section><p>The default routing convention registers the name of the resource as the route using the serializer naming convention. The default for this is a
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncConvertEmptyActionResultFilter.html">AsyncConvertEmptyActionResultFilter</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncJsonApiExceptionFilter.html">AsyncJsonApiExceptionFilter</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncQueryStringActionFilter.html">AsyncQueryStringActionFilter</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.ExceptionHandler.html">ExceptionHandler</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.HeaderConstants.html">HeaderConstants</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.HttpContextExtensions.html">HttpContextExtensions</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiInputFormatter.html">JsonApiInputFormatter</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiMiddleware.html">JsonApiMiddleware</a></dt>
+      <dd><p>Intercepts HTTP requests to populate injected <a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiRequest.html">IJsonApiRequest</a> instance for JSON:API requests.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiOutputFormatter.html">JsonApiOutputFormatter</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiRequest.html">JsonApiRequest</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html">JsonApiRoutingConvention</a></dt>
+      <dd><p>The default routing convention registers the name of the resource as the route using the serializer naming convention. The default for this is a
 camel case formatter. If the controller directly inherits from <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html">CoreJsonApiController</a> and there is no resource directly associated, it
 uses the name of the controller instead of the name of the type.</p>
-</section>
-    <h3 id="interfaces">Interfaces
+</dd>
+    </dl>
+    <h3 id="interfaces">
+Interfaces
 </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncConvertEmptyActionResultFilter.html">IAsyncConvertEmptyActionResultFilter</a></h4>
-      <section><p>Converts action result without parameters into action result with null parameter.
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncConvertEmptyActionResultFilter.html">IAsyncConvertEmptyActionResultFilter</a></dt>
+      <dd><p>Converts action result without parameters into action result with null parameter.
 <example></example></p>
-<pre><code>return NotFound() -> return NotFound(null)</code></pre>
+<pre><code class="lang-csharp">return NotFound() -&gt; return NotFound(null)</code></pre>
 
-This ensures our formatter is invoked, where we&apos;ll build a JSON:API compliant response. For details, see:
+This ensures our formatter is invoked, where we'll build a JSON:API compliant response. For details, see:
 https://github.com/dotnet/aspnetcore/issues/16969
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncJsonApiExceptionFilter.html">IAsyncJsonApiExceptionFilter</a></h4>
-      <section><p>Application-wide exception filter that invokes <a class="xref" href="JsonApiDotNetCore.Middleware.IExceptionHandler.html">IExceptionHandler</a> for JSON:API requests.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncQueryStringActionFilter.html">IAsyncQueryStringActionFilter</a></h4>
-      <section><p>Application-wide entry point for processing JSON:API request query strings.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IControllerResourceMapping.html">IControllerResourceMapping</a></h4>
-      <section><p>Registry of which resource type is associated with which controller.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IExceptionHandler.html">IExceptionHandler</a></h4>
-      <section><p>Central place to handle all exceptions, such as log them and translate into error response.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiInputFormatter.html">IJsonApiInputFormatter</a></h4>
-      <section><p>Application-wide entry point for reading JSON:API request bodies.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiOutputFormatter.html">IJsonApiOutputFormatter</a></h4>
-      <section><p>Application-wide entry point for writing JSON:API response bodies.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiRequest.html">IJsonApiRequest</a></h4>
-      <section><p>Metadata associated with the JSON:API request that is currently being processed.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiRoutingConvention.html">IJsonApiRoutingConvention</a></h4>
-      <section><p>Service for specifying which routing convention to use. This can be overridden to customize the relation between controllers and mapped routes.</p>
-</section>
-    <h3 id="enums">Enums
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncJsonApiExceptionFilter.html">IAsyncJsonApiExceptionFilter</a></dt>
+      <dd><p>Application-wide exception filter that invokes <a class="xref" href="JsonApiDotNetCore.Middleware.IExceptionHandler.html">IExceptionHandler</a> for JSON:API requests.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncQueryStringActionFilter.html">IAsyncQueryStringActionFilter</a></dt>
+      <dd><p>Application-wide entry point for processing JSON:API request query strings.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.IControllerResourceMapping.html">IControllerResourceMapping</a></dt>
+      <dd><p>Registry of which resource type is associated with which controller.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.IExceptionHandler.html">IExceptionHandler</a></dt>
+      <dd><p>Central place to handle all exceptions, such as log them and translate into error response.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiInputFormatter.html">IJsonApiInputFormatter</a></dt>
+      <dd><p>Application-wide entry point for reading JSON:API request bodies.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiOutputFormatter.html">IJsonApiOutputFormatter</a></dt>
+      <dd><p>Application-wide entry point for writing JSON:API response bodies.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiRequest.html">IJsonApiRequest</a></dt>
+      <dd><p>Metadata associated with the JSON:API request that is currently being processed.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiRoutingConvention.html">IJsonApiRoutingConvention</a></dt>
+      <dd><p>Service for specifying which routing convention to use. This can be overridden to customize the relation between controllers and mapped routes.</p>
+</dd>
+    </dl>
+    <h3 id="enums">
+Enums
 </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.EndpointKind.html">EndpointKind</a></h4>
-      <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html">WriteOperationKind</a></h4>
-      <section><p>Lists the functional write operations, originating from a POST/PATCH/DELETE request against a single resource/relationship or a POST request against
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.EndpointKind.html">EndpointKind</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html">WriteOperationKind</a></dt>
+      <dd><p>Lists the functional write operations, originating from a POST/PATCH/DELETE request against a single resource/relationship or a POST request against
 a list of operations.</p>
-</section>
-</article>
-          </div>
+</dd>
+    </dl>
 
-          <div class="hidden-sm col-md-2" role="complementary">
-            <div class="sideaffix">
-              <div class="contribution">
-                <ul class="nav">
-                </ul>
-              </div>
-              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
-                <h5>In This Article</h5>
-                <div></div>
-              </nav>
-            </div>
-          </div>
+
+</article>
+
+        <div class="contribution d-print-none">
         </div>
+
+        
       </div>
 
-      <footer>
-        <div class="grad-bottom"></div>
-        <div class="footer">
-          <div class="container">
-            <span class="pull-right">
-              <a href="#top">Back to top</a>
-            </span>
-      
-      <span>Generated by <strong>DocFX</strong></span>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
 
-    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
-    <script type="text/javascript" src="../styles/docfx.js"></script>
-    <script type="text/javascript" src="../styles/main.js"></script>
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
