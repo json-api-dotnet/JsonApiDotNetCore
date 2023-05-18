@@ -37,6 +37,9 @@ if (-Not $NoBuild -Or -Not (Test-Path -Path _site)) {
     Invoke-Expression ./generate-examples.ps1
 }
 
+dotnet tool restore
+VerifySuccessExitCode
+
 dotnet docfx ./docfx.json
 VerifySuccessExitCode
 
