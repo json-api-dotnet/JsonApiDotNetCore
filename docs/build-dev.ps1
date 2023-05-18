@@ -45,6 +45,7 @@ VerifySuccessExitCode
 
 Copy-Item -Force home/*.html _site/
 Copy-Item -Force home/*.ico _site/
+New-Item -Force _site/styles -ItemType Directory | Out-Null
 Copy-Item -Force -Recurse home/assets/* _site/styles/
 
 cd _site

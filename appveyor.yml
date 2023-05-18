@@ -66,6 +66,7 @@ for:
         Copy-Item CNAME _site/CNAME
         Copy-Item home/*.html _site/
         Copy-Item home/*.ico _site/
+        New-Item -Force _site/styles -ItemType Directory | Out-Null
         Copy-Item -Recurse home/assets/* _site/styles/
         CD _site
         git add -A 2>&1
