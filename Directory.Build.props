@@ -15,26 +15,26 @@
 
   <PropertyGroup>
     <!-- Published dependencies (only update on major version change) -->
-    <TargetFrameworkName>net7.0</TargetFrameworkName>
+    <TargetFrameworkName>net8.0</TargetFrameworkName>
     <CodeAnalysisFrozenVersion>4.1.0</CodeAnalysisFrozenVersion>
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
-    <EntityFrameworkCoreFrozenVersion>7.0.0</EntityFrameworkCoreFrozenVersion>
+    <EntityFrameworkCoreFrozenVersion>8.0.0-rc.1.*</EntityFrameworkCoreFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
-    <AspNetCoreVersion>7.0.*</AspNetCoreVersion>
+    <AspNetCoreVersion>8.0.0-rc.1.*</AspNetCoreVersion>
     <BenchmarkDotNetVersion>0.13.*</BenchmarkDotNetVersion>
     <BogusVersion>34.0.*</BogusVersion>
     <CSharpGuidelinesAnalyzerVersion>3.8.*</CSharpGuidelinesAnalyzerVersion>
     <CodeAnalysisVersion>4.7.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
     <DateOnlyTimeOnlyVersion>2.1.*</DateOnlyTimeOnlyVersion>
-    <EntityFrameworkCoreVersion>7.0.*</EntityFrameworkCoreVersion>
+    <EntityFrameworkCoreVersion>8.0.0-rc.1.*</EntityFrameworkCoreVersion>
     <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>2.3.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>1.3.*</InheritDocVersion>
     <JetBrainsAnnotationsVersion>2023.2.*</JetBrainsAnnotationsVersion>
-    <NpgsqlVersion>7.0.*</NpgsqlVersion>
+    <NpgsqlVersion>8.0.0-rc.1</NpgsqlVersion>
     <SourceLinkVersion>1.1.*</SourceLinkVersion>
     <SystemTextJsonVersion>$(AspNetCoreVersion)</SystemTextJsonVersion>
     <TestSdkVersion>17.7.*</TestSdkVersion>
@@ -53,6 +53,9 @@
     <IsPackable>false</IsPackable>
     <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
-    <JsonApiDotNetCoreVersionPrefix>5.4.1</JsonApiDotNetCoreVersionPrefix>
+
+    <!-- workaround for "NU5104: A stable release of a package should not have a prerelease dependency." -->
+    <JsonApiDotNetCoreVersionPrefix>5.4.1-net80</JsonApiDotNetCoreVersionPrefix>
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
 </Project>

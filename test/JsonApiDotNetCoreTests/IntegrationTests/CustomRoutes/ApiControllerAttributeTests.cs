@@ -33,7 +33,7 @@ public sealed class ApiControllerAttributeTests : IClassFixture<IntegrationTestC
 
         ErrorObject error = responseDocument.Errors[0];
         error.Links.ShouldNotBeNull();
-        error.Links.About.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.4");
+        error.Links.About.Should().Be("https://tools.ietf.org/html/rfc9110#section-15.5.5");
     }
 
     [Fact]
@@ -66,7 +66,7 @@ public sealed class ApiControllerAttributeTests : IClassFixture<IntegrationTestC
         ErrorObject error1 = responseDocument.Errors[0];
         error1.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error1.Links.ShouldNotBeNull();
-        error1.Links.About.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.1");
+        error1.Links.About.Should().Be("https://tools.ietf.org/html/rfc9110#section-15.5.1");
         error1.Title.Should().Be("One or more validation errors occurred.");
         error1.Detail.Should().Be("The Name field is required.");
         error1.Source.Should().BeNull();
@@ -74,7 +74,7 @@ public sealed class ApiControllerAttributeTests : IClassFixture<IntegrationTestC
         ErrorObject error2 = responseDocument.Errors[1];
         error2.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error2.Links.ShouldNotBeNull();
-        error2.Links.About.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.1");
+        error2.Links.About.Should().Be("https://tools.ietf.org/html/rfc9110#section-15.5.1");
         error2.Title.Should().Be("One or more validation errors occurred.");
         error2.Detail.Should().Be("The field YearOfBirth must be between 1900 and 2050.");
         error2.Source.Should().BeNull();
