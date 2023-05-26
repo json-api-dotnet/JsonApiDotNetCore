@@ -5,7 +5,7 @@
 To modify the attributes of a single resource, send a PATCH request. The next example changes the article caption:
 
 ```http
-POST /articles HTTP/1.1
+PATCH /articles HTTP/1.1
 
 {
   "data": {
