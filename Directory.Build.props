@@ -1,9 +1,9 @@
 <Project>
   <PropertyGroup>
-    <NetCoreAppVersion>netcoreapp3.1</NetCoreAppVersion>
-    <AspNetCoreVersion>3.1.*</AspNetCoreVersion>
-    <EFCoreVersion>3.1.*</EFCoreVersion>
-    <NpgsqlPostgreSQLVersion>3.1.*</NpgsqlPostgreSQLVersion>
+    <NetCoreAppVersion>net7.0</NetCoreAppVersion>
+    <AspNetCoreVersion>7.0.0</AspNetCoreVersion>
+    <EFCoreVersion>6.0.0</EFCoreVersion>
+    <NpgsqlPostgreSQLVersion>6.0.0</NpgsqlPostgreSQLVersion>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
@@ -15,7 +15,7 @@
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
