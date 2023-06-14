@@ -98,7 +98,7 @@ internal sealed class SourceCodeWriter
 
     private void WriteNamespaceImports(INamedTypeSymbol loggerFactoryInterface, INamedTypeSymbol resourceType, string? controllerNamespace)
     {
-        _sourceBuilder.AppendLine($@"using {loggerFactoryInterface.ContainingNamespace};");
+        _sourceBuilder.AppendLine($"using {loggerFactoryInterface.ContainingNamespace};");
 
         _sourceBuilder.AppendLine("using JsonApiDotNetCore.Configuration;");
         _sourceBuilder.AppendLine("using JsonApiDotNetCore.Controllers;");
@@ -123,7 +123,7 @@ internal sealed class SourceCodeWriter
         string baseClassName = GetControllerBaseClassName(endpointsToGenerate);
 
         WriteIndent();
-        _sourceBuilder.AppendLine($@"public sealed partial class {controllerName} : {baseClassName}<{resourceType.Name}, {idType}>");
+        _sourceBuilder.AppendLine($"public sealed partial class {controllerName} : {baseClassName}<{resourceType.Name}, {idType}>");
 
         WriteOpenCurly();
     }
