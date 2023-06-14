@@ -137,7 +137,7 @@ public sealed class JsonApiWriter : IJsonApiWriter
             string url = request.GetEncodedUrl();
             EntityTagHeaderValue responseETag = _eTagGenerator.Generate(url, responseContent);
 
-            response.Headers.Add(HeaderNames.ETag, responseETag.ToString());
+            response.Headers.Append(HeaderNames.ETag, responseETag.ToString());
 
             return RequestContainsMatchingETag(request.Headers, responseETag);
         }
