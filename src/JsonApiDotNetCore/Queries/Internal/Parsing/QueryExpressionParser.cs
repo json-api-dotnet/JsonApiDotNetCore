@@ -49,7 +49,7 @@ public abstract class QueryExpressionParser
     {
         while (true)
         {
-            if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text)
+            if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text && token.Value != Keywords.Null)
             {
                 pathBuilder.Append(token.Value);
 
