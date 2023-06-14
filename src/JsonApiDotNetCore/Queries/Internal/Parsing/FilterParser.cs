@@ -135,39 +135,33 @@ public class FilterParser : QueryExpressionParser
         EatText(operatorName);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        // Allow equality comparison of a HasOne relationship with null.
+        // Allow equality comparison of a to-one relationship with null.
         FieldChainRequirements leftChainRequirements = comparisonOperator == ComparisonOperator.Equals
             ? FieldChainRequirements.EndsInAttribute | FieldChainRequirements.EndsInToOne
             : FieldChainRequirements.EndsInAttribute;
 
         QueryExpression leftTerm = ParseCountOrField(leftChainRequirements);
-        Converter<string, object> rightConstantValueConverter;
-
-        if (leftTerm is CountExpression)
-        {
-            rightConstantValueConverter = GetConstantValueConverterForCount();
-        }
-        else if (leftTerm is ResourceFieldChainExpression fieldChain && fieldChain.Fields[^1] is AttrAttribute attribute)
-        {
-            rightConstantValueConverter = GetConstantValueConverterForAttribute(attribute);
-        }
-        else
-        {
-            // This temporary value never survives; it gets discarded during the second pass below.
-            rightConstantValueConverter = _ => 0;
-        }
 
         EatSingleCharacterToken(TokenKind.Comma);
 
-        QueryExpression rightTerm = ParseCountOrConstantOrNullOrField(FieldChainRequirements.EndsInAttribute, rightConstantValueConverter);
+        QueryExpression rightTerm;
+
+        if (leftTerm is CountExpression)
+        {
+            Converter<string, object> rightConstantValueConverter = GetConstantValueConverterForCount();
+            rightTerm = ParseCountOrConstantOrField(FieldChainRequirements.EndsInAttribute, rightConstantValueConverter);
+        }
+        else if (leftTerm is ResourceFieldChainExpression fieldChain && fieldChain.Fields[^1] is AttrAttribute attribute)
+        {
+            Converter<string, object> rightConstantValueConverter = GetConstantValueConverterForAttribute(attribute);
+            rightTerm = ParseCountOrConstantOrNullOrField(FieldChainRequirements.EndsInAttribute, rightConstantValueConverter);
+        }
+        else
+        {
+            rightTerm = ParseNull();
+        }
 
         EatSingleCharacterToken(TokenKind.CloseParen);
-
-        if (leftTerm is ResourceFieldChainExpression leftChain && leftChain.Fields[^1] is RelationshipAttribute && rightTerm is not NullConstantExpression)
-        {
-            // Run another pass over left chain to produce an error.
-            OnResolveFieldChain(leftChain.ToString(), FieldChainRequirements.EndsInAttribute);
-        }
 
         return new ComparisonExpression(comparisonOperator, leftTerm, rightTerm);
     }
@@ -201,8 +195,9 @@ public class FilterParser : QueryExpressionParser
         EatText(Keywords.Any);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        ResourceFieldChainExpression targetAttribute = ParseFieldChain(FieldChainRequirements.EndsInAttribute, null);
-        Converter<string, object> constantValueConverter = GetConstantValueConverterForAttribute((AttrAttribute)targetAttribute.Fields[^1]);
+        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, null);
+        var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
+        Converter<string, object> constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute);
 
         EatSingleCharacterToken(TokenKind.Comma);
 
@@ -223,7 +218,7 @@ public class FilterParser : QueryExpressionParser
 
         IImmutableSet<LiteralConstantExpression> constantSet = constantsBuilder.ToImmutable();
 
-        return new AnyExpression(targetAttribute, constantSet);
+        return new AnyExpression(targetAttributeChain, constantSet);
     }
 
     protected HasExpression ParseHas()
@@ -349,6 +344,25 @@ public class FilterParser : QueryExpressionParser
         return ParseFieldChain(chainRequirements, "Count function or field name expected.");
     }
 
+    protected QueryExpression ParseCountOrConstantOrField(FieldChainRequirements chainRequirements, Converter<string, object> constantValueConverter)
+    {
+        CountExpression? count = TryParseCount();
+
+        if (count != null)
+        {
+            return count;
+        }
+
+        LiteralConstantExpression? constant = TryParseConstant(constantValueConverter);
+
+        if (constant != null)
+        {
+            return constant;
+        }
+
+        return ParseFieldChain(chainRequirements, "Count function, value between quotes or field name expected.");
+    }
+
     protected QueryExpression ParseCountOrConstantOrNullOrField(FieldChainRequirements chainRequirements, Converter<string, object> constantValueConverter)
     {
         CountExpression? count = TryParseCount();
@@ -366,6 +380,19 @@ public class FilterParser : QueryExpressionParser
         }
 
         return ParseFieldChain(chainRequirements, "Count function, value between quotes, null or field name expected.");
+    }
+
+    protected LiteralConstantExpression? TryParseConstant(Converter<string, object> constantValueConverter)
+    {
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.QuotedText)
+        {
+            TokenStack.Pop();
+
+            object constantValue = constantValueConverter(nextToken.Value!);
+            return new LiteralConstantExpression(constantValue, nextToken.Value!);
+        }
+
+        return null;
     }
 
     protected IdentifierExpression? TryParseConstantOrNull(Converter<string, object> constantValueConverter)
@@ -392,13 +419,24 @@ public class FilterParser : QueryExpressionParser
 
     protected LiteralConstantExpression ParseConstant(Converter<string, object> constantValueConverter)
     {
-        if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.QuotedText)
+        LiteralConstantExpression? constant = TryParseConstant(constantValueConverter);
+
+        if (constant == null)
         {
-            object constantValue = constantValueConverter(token.Value!);
-            return new LiteralConstantExpression(constantValue, token.Value!);
+            throw new QueryParseException("Value between quotes expected.");
         }
 
-        throw new QueryParseException("Value between quotes expected.");
+        return constant;
+    }
+
+    protected NullConstantExpression ParseNull()
+    {
+        if (TokenStack.TryPop(out Token? token) && token is { Kind: TokenKind.Text, Value: Keywords.Null })
+        {
+            return NullConstantExpression.Instance;
+        }
+
+        throw new QueryParseException("null expected.");
     }
 
     private Converter<string, object> GetConstantValueConverterForCount()

@@ -32,12 +32,12 @@ public sealed class LegacyFilterParseTests : BaseParseTests
     [InlineData("filter[", "some", "Expected field name between brackets in filter parameter name.")]
     [InlineData("filter[]", "some", "Expected field name between brackets in filter parameter name.")]
     [InlineData("filter[some]", "other", "Field 'some' does not exist on resource type 'blogPosts'.")]
-    [InlineData("filter[author]", "some", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter[author]", "some", "null expected.")]
     [InlineData("filter[author.posts]", "some",
         "Field 'posts' in 'author.posts' must be an attribute or a to-one relationship on resource type 'webAccounts'.")]
     [InlineData("filter[unknown.id]", "some", "Relationship 'unknown' in 'unknown.id' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter", "expr:equals(some,'other')", "Field 'some' does not exist on resource type 'blogPosts'.")]
-    [InlineData("filter", "expr:equals(author,'Joe')", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter", "expr:equals(author,'Joe')", "null expected.")]
     [InlineData("filter", "expr:has(author)", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
     [InlineData("filter", "expr:equals(count(author),'1')", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
