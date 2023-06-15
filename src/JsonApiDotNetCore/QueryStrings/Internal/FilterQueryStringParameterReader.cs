@@ -28,14 +28,16 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
 
     public bool AllowEmptyValue => false;
 
-    public FilterQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IResourceFactory resourceFactory, IJsonApiOptions options)
+    public FilterQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IResourceFactory resourceFactory, IJsonApiOptions options,
+        IEnumerable<IFilterValueConverter> filterValueConverters)
         : base(request, resourceGraph)
     {
         ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(filterValueConverters);
 
         _options = options;
         _scopeParser = new QueryStringParameterScopeParser(FieldChainRequirements.EndsInToMany);
-        _filterParser = new FilterParser(resourceFactory, ValidateSingleField);
+        _filterParser = new FilterParser(resourceFactory, filterValueConverters, ValidateSingleField);
     }
 
     protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)

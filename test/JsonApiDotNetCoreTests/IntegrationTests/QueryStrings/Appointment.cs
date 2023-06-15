@@ -19,4 +19,7 @@ public sealed class Appointment : Identifiable<int>
 
     [Attr]
     public DateTimeOffset EndTime { get; set; }
+
+    [HasMany]
+    public IList<Reminder> Reminders { get; set; } = new List<Reminder>();
 }

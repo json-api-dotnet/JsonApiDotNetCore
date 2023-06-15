@@ -23,7 +23,7 @@ public sealed class FilterParseTests : BaseParseTests
         Options.EnableLegacyFilterNotation = false;
 
         var resourceFactory = new ResourceFactory(new ServiceContainer());
-        _reader = new FilterQueryStringParameterReader(Request, ResourceGraph, resourceFactory, Options);
+        _reader = new FilterQueryStringParameterReader(Request, ResourceGraph, resourceFactory, Options, Enumerable.Empty<IFilterValueConverter>());
     }
 
     [Theory]

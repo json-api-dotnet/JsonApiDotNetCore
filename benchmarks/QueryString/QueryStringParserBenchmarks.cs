@@ -38,7 +38,7 @@ public class QueryStringParserBenchmarks
         var resourceFactory = new ResourceFactory(new ServiceContainer());
 
         var includeReader = new IncludeQueryStringParameterReader(request, resourceGraph, options);
-        var filterReader = new FilterQueryStringParameterReader(request, resourceGraph, resourceFactory, options);
+        var filterReader = new FilterQueryStringParameterReader(request, resourceGraph, resourceFactory, options, Enumerable.Empty<IFilterValueConverter>());
         var sortReader = new SortQueryStringParameterReader(request, resourceGraph);
         var sparseFieldSetReader = new SparseFieldSetQueryStringParameterReader(request, resourceGraph);
         var paginationReader = new PaginationQueryStringParameterReader(request, resourceGraph, options);

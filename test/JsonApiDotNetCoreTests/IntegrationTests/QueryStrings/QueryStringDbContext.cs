@@ -21,6 +21,7 @@ public sealed class QueryStringDbContext : TestableDbContext
     public DbSet<LoginAttempt> LoginAttempts => Set<LoginAttempt>();
     public DbSet<Calendar> Calendars => Set<Calendar>();
     public DbSet<Appointment> Appointments => Set<Appointment>();
+    public DbSet<Reminder> Reminders => Set<Reminder>();
 
     public QueryStringDbContext(DbContextOptions<QueryStringDbContext> options)
         : base(options)

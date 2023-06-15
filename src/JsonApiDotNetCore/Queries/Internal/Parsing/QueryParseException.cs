@@ -9,4 +9,9 @@ public sealed class QueryParseException : Exception
         : base(message)
     {
     }
+
+    public QueryParseException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
 }

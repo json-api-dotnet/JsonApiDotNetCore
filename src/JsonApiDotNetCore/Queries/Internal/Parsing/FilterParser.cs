@@ -3,6 +3,7 @@ using Humanizer;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Resources.Internal;
@@ -13,14 +14,18 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 public class FilterParser : QueryExpressionParser
 {
     private readonly IResourceFactory _resourceFactory;
+    private readonly IEnumerable<IFilterValueConverter> _filterValueConverters;
     private readonly Action<ResourceFieldAttribute, ResourceType, string>? _validateSingleFieldCallback;
     private ResourceType? _resourceTypeInScope;
 
-    public FilterParser(IResourceFactory resourceFactory, Action<ResourceFieldAttribute, ResourceType, string>? validateSingleFieldCallback = null)
+    public FilterParser(IResourceFactory resourceFactory, IEnumerable<IFilterValueConverter> filterValueConverters,
+        Action<ResourceFieldAttribute, ResourceType, string>? validateSingleFieldCallback = null)
     {
         ArgumentGuard.NotNull(resourceFactory);
+        ArgumentGuard.NotNull(filterValueConverters);
 
         _resourceFactory = resourceFactory;
+        _filterValueConverters = filterValueConverters;
         _validateSingleFieldCallback = validateSingleFieldCallback;
     }
 
@@ -153,7 +158,7 @@ public class FilterParser : QueryExpressionParser
         }
         else if (leftTerm is ResourceFieldChainExpression fieldChain && fieldChain.Fields[^1] is AttrAttribute attribute)
         {
-            Converter<string, object> rightConstantValueConverter = GetConstantValueConverterForAttribute(attribute);
+            Converter<string, object> rightConstantValueConverter = GetConstantValueConverterForAttribute(attribute, typeof(ComparisonExpression));
             rightTerm = ParseCountOrConstantOrNullOrField(FieldChainRequirements.EndsInAttribute, rightConstantValueConverter);
         }
         else
@@ -172,16 +177,11 @@ public class FilterParser : QueryExpressionParser
         EatSingleCharacterToken(TokenKind.OpenParen);
 
         ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, null);
-        Type targetAttributeType = ((AttrAttribute)targetAttributeChain.Fields[^1]).Property.PropertyType;
-
-        if (targetAttributeType != typeof(string))
-        {
-            throw new QueryParseException("Attribute of type 'String' expected.");
-        }
+        var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
 
         EatSingleCharacterToken(TokenKind.Comma);
 
-        Converter<string, object> constantValueConverter = stringValue => stringValue;
+        Converter<string, object> constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute, typeof(MatchTextExpression));
         LiteralConstantExpression constant = ParseConstant(constantValueConverter);
 
         EatSingleCharacterToken(TokenKind.CloseParen);
@@ -197,12 +197,12 @@ public class FilterParser : QueryExpressionParser
 
         ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, null);
         var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
-        Converter<string, object> constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute);
 
         EatSingleCharacterToken(TokenKind.Comma);
 
         ImmutableHashSet<LiteralConstantExpression>.Builder constantsBuilder = ImmutableHashSet.CreateBuilder<LiteralConstantExpression>();
 
+        Converter<string, object> constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute, typeof(AnyExpression));
         LiteralConstantExpression constant = ParseConstant(constantValueConverter);
         constantsBuilder.Add(constant);
 
@@ -444,23 +444,68 @@ public class FilterParser : QueryExpressionParser
         return stringValue => ConvertStringToType(stringValue, typeof(int));
     }
 
-    private object ConvertStringToType(string value, Type type)
+    private static object ConvertStringToType(string value, Type type)
     {
         try
         {
             return RuntimeTypeConverter.ConvertType(value, type)!;
         }
-        catch (FormatException)
+        catch (FormatException exception)
         {
-            throw new QueryParseException($"Failed to convert '{value}' of type 'String' to type '{type.Name}'.");
+            throw new QueryParseException($"Failed to convert '{value}' of type 'String' to type '{type.Name}'.", exception);
         }
     }
 
-    private Converter<string, object> GetConstantValueConverterForAttribute(AttrAttribute attribute)
+    private Converter<string, object> GetConstantValueConverterForAttribute(AttrAttribute attribute, Type outerExpressionType)
     {
-        return stringValue => attribute.Property.Name == nameof(Identifiable<object>.Id)
-            ? DeObfuscateStringId(attribute.Type.ClrType, stringValue)
-            : ConvertStringToType(stringValue, attribute.Property.PropertyType);
+        return stringValue =>
+        {
+            object? value = TryConvertFromStringUsingFilterValueConverters(attribute, stringValue, outerExpressionType);
+
+            if (value != null)
+            {
+                return value;
+            }
+
+            if (outerExpressionType == typeof(MatchTextExpression))
+            {
+                if (attribute.Property.PropertyType != typeof(string))
+                {
+                    throw new QueryParseException("Attribute of type 'String' expected.");
+                }
+            }
+            else
+            {
+                // Partial text matching on an obfuscated ID usually fails.
+                if (attribute.Property.Name == nameof(Identifiable<object>.Id))
+                {
+                    return DeObfuscateStringId(attribute.Type.ClrType, stringValue);
+                }
+            }
+
+            return ConvertStringToType(stringValue, attribute.Property.PropertyType);
+        };
+    }
+
+    private object? TryConvertFromStringUsingFilterValueConverters(AttrAttribute attribute, string stringValue, Type outerExpressionType)
+    {
+        foreach (IFilterValueConverter converter in _filterValueConverters)
+        {
+            if (converter.CanConvert(attribute))
+            {
+                object result = converter.Convert(attribute, stringValue, outerExpressionType);
+
+                if (result == null)
+                {
+                    throw new InvalidOperationException(
+                        $"Converter '{converter.GetType().Name}' returned null for '{stringValue}' on attribute '{attribute.PublicName}'. Return a sentinel value instead.");
+                }
+
+                return result;
+            }
+        }
+
+        return null;
     }
 
     private object DeObfuscateStringId(Type resourceClrType, string stringId)
