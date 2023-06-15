@@ -70,6 +70,12 @@ internal sealed class QueryStringFakers : FakerContainer
                 .TruncateToWholeMilliseconds())
             .RuleFor(appointment => appointment.EndTime, (faker, appointment) => appointment.StartTime.AddHours(faker.Random.Double(1, 4))));
 
+    private readonly Lazy<Faker<Reminder>> _lazyReminderFaker = new(() =>
+        new Faker<Reminder>()
+            .UseSeed(GetFakerSeed())
+            .RuleFor(reminder => reminder.RemindsAt, faker => faker.Date.Future()
+                .TruncateToWholeMilliseconds()));
+
     public Faker<Blog> Blog => _lazyBlogFaker.Value;
     public Faker<BlogPost> BlogPost => _lazyBlogPostFaker.Value;
     public Faker<Label> Label => _lazyLabelFaker.Value;
@@ -79,4 +85,5 @@ internal sealed class QueryStringFakers : FakerContainer
     public Faker<AccountPreferences> AccountPreferences => _lazyAccountPreferencesFaker.Value;
     public Faker<Calendar> Calendar => _lazyCalendarFaker.Value;
     public Faker<Appointment> Appointment => _lazyAppointmentFaker.Value;
+    public Faker<Reminder> Reminder => _lazyReminderFaker.Value;
 }
