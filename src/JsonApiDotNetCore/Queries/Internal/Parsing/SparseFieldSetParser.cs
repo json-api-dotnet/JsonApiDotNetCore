@@ -9,13 +9,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 [PublicAPI]
 public class SparseFieldSetParser : QueryExpressionParser
 {
-    private readonly Action<ResourceFieldAttribute, ResourceType, string>? _validateSingleFieldCallback;
     private ResourceType? _resourceType;
-
-    public SparseFieldSetParser(Action<ResourceFieldAttribute, ResourceType, string>? validateSingleFieldCallback = null)
-    {
-        _validateSingleFieldCallback = validateSingleFieldCallback;
-    }
 
     public SparseFieldSetExpression? Parse(string source, ResourceType resourceType)
     {
@@ -55,8 +49,17 @@ public class SparseFieldSetParser : QueryExpressionParser
     {
         ResourceFieldAttribute field = ChainResolver.GetField(path, _resourceType!, path);
 
-        _validateSingleFieldCallback?.Invoke(field, _resourceType!, path);
+        ValidateSingleField(field, _resourceType!, path);
 
         return ImmutableArray.Create(field);
+    }
+
+    protected override void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
+    {
+        if (field.IsViewBlocked())
+        {
+            string kind = field is AttrAttribute ? "attribute" : "relationship";
+            throw new QueryParseException($"Retrieving the {kind} '{field.PublicName}' is not allowed.");
+        }
     }
 }

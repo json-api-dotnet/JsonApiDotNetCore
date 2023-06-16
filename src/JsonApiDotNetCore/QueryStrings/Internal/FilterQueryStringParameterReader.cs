@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal;
@@ -24,8 +23,6 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     private readonly ImmutableArray<FilterExpression>.Builder _filtersInGlobalScope = ImmutableArray.CreateBuilder<FilterExpression>();
     private readonly Dictionary<ResourceFieldChainExpression, ImmutableArray<FilterExpression>.Builder> _filtersPerScope = new();
 
-    private string? _lastParameterName;
-
     public bool AllowEmptyValue => false;
 
     public FilterQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IResourceFactory resourceFactory, IJsonApiOptions options,
@@ -37,18 +34,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
 
         _options = options;
         _scopeParser = new QueryStringParameterScopeParser(FieldChainRequirements.EndsInToMany);
-        _filterParser = new FilterParser(resourceFactory, filterValueConverters, ValidateSingleField);
-    }
-
-    protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
-    {
-        if (field.IsFilterBlocked())
-        {
-            string kind = field is AttrAttribute ? "attribute" : "relationship";
-
-            throw new InvalidQueryStringParameterException(_lastParameterName!, $"Filtering on the requested {kind} is not allowed.",
-                $"Filtering on {kind} '{field.PublicName}' is not allowed.");
-        }
+        _filterParser = new FilterParser(resourceFactory, filterValueConverters);
     }
 
     /// <inheritdoc />
@@ -71,8 +57,6 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     /// <inheritdoc />
     public virtual void Read(string parameterName, StringValues parameterValue)
     {
-        _lastParameterName = parameterName;
-
         foreach (string value in parameterValue.SelectMany(ExtractParameterValue))
         {
             ReadSingleValue(parameterName, value);
@@ -116,7 +100,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
         }
         catch (QueryParseException exception)
         {
-            throw new InvalidQueryStringParameterException(_lastParameterName!, "The specified filter is invalid.", exception.Message, exception);
+            throw new InvalidQueryStringParameterException(parameterName, "The specified filter is invalid.", exception.Message, exception);
         }
     }
 

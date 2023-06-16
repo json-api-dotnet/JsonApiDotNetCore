@@ -9,13 +9,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 [PublicAPI]
 public class PaginationParser : QueryExpressionParser
 {
-    private readonly Action<ResourceFieldAttribute, ResourceType, string>? _validateSingleFieldCallback;
     private ResourceType? _resourceTypeInScope;
-
-    public PaginationParser(Action<ResourceFieldAttribute, ResourceType, string>? validateSingleFieldCallback = null)
-    {
-        _validateSingleFieldCallback = validateSingleFieldCallback;
-    }
 
     public PaginationQueryStringValueExpression Parse(string source, ResourceType resourceTypeInScope)
     {
@@ -104,6 +98,6 @@ public class PaginationParser : QueryExpressionParser
 
     protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
     {
-        return ChainResolver.ResolveToManyChain(_resourceTypeInScope!, path, _validateSingleFieldCallback);
+        return ChainResolver.ResolveToManyChain(_resourceTypeInScope!, path);
     }
 }

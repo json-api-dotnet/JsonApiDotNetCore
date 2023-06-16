@@ -84,7 +84,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Filtering on the requested attribute is not allowed.");
+        error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be("Filtering on attribute 'dateOfBirth' is not allowed.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
@@ -106,7 +106,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Filtering on the requested relationship is not allowed.");
+        error.Title.Should().Be("The specified filter is invalid.");
         error.Detail.Should().Be("Filtering on relationship 'appointments' is not allowed.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");

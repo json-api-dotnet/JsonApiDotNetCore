@@ -909,7 +909,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Including the requested relationship is not allowed.");
+        error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be("Including the relationship 'parent' on 'blogPosts' is not allowed.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("include");
@@ -931,7 +931,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Including the requested relationship is not allowed.");
+        error.Title.Should().Be("The specified include is invalid.");
         error.Detail.Should().Be("Including the relationship 'parent' in 'posts.parent' on 'blogPosts' is not allowed.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("include");

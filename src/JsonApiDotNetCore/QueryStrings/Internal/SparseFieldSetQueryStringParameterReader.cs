@@ -22,8 +22,6 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
     private readonly ImmutableDictionary<ResourceType, SparseFieldSetExpression>.Builder _sparseFieldTableBuilder =
         ImmutableDictionary.CreateBuilder<ResourceType, SparseFieldSetExpression>();
 
-    private string? _lastParameterName;
-
     /// <inheritdoc />
     bool IQueryStringParameterReader.AllowEmptyValue => true;
 
@@ -31,18 +29,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
         : base(request, resourceGraph)
     {
         _sparseFieldTypeParser = new SparseFieldTypeParser(resourceGraph);
-        _sparseFieldSetParser = new SparseFieldSetParser(ValidateSingleField);
-    }
-
-    protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
-    {
-        if (field.IsViewBlocked())
-        {
-            string kind = field is AttrAttribute ? "attribute" : "relationship";
-
-            throw new InvalidQueryStringParameterException(_lastParameterName!, $"Retrieving the requested {kind} is not allowed.",
-                $"Retrieving the {kind} '{field.PublicName}' is not allowed.");
-        }
+        _sparseFieldSetParser = new SparseFieldSetParser();
     }
 
     /// <inheritdoc />
@@ -64,8 +51,6 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
     /// <inheritdoc />
     public virtual void Read(string parameterName, StringValues parameterValue)
     {
-        _lastParameterName = parameterName;
-
         try
         {
             ResourceType targetResourceType = GetSparseFieldType(parameterName);
