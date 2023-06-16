@@ -15,18 +15,15 @@ public class FilterParser : QueryExpressionParser
 {
     private readonly IResourceFactory _resourceFactory;
     private readonly IEnumerable<IFilterValueConverter> _filterValueConverters;
-    private readonly Action<ResourceFieldAttribute, ResourceType, string>? _validateSingleFieldCallback;
     private ResourceType? _resourceTypeInScope;
 
-    public FilterParser(IResourceFactory resourceFactory, IEnumerable<IFilterValueConverter> filterValueConverters,
-        Action<ResourceFieldAttribute, ResourceType, string>? validateSingleFieldCallback = null)
+    public FilterParser(IResourceFactory resourceFactory, IEnumerable<IFilterValueConverter> filterValueConverters)
     {
         ArgumentGuard.NotNull(resourceFactory);
         ArgumentGuard.NotNull(filterValueConverters);
 
         _resourceFactory = resourceFactory;
         _filterValueConverters = filterValueConverters;
-        _validateSingleFieldCallback = validateSingleFieldCallback;
     }
 
     public FilterExpression Parse(string source, ResourceType resourceTypeInScope)
@@ -519,27 +516,35 @@ public class FilterParser : QueryExpressionParser
     {
         if (chainRequirements == FieldChainRequirements.EndsInToMany)
         {
-            return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path, FieldChainInheritanceRequirement.Disabled,
-                _validateSingleFieldCallback);
+            return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path, FieldChainInheritanceRequirement.Disabled, ValidateSingleField);
         }
 
         if (chainRequirements == FieldChainRequirements.EndsInAttribute)
         {
             return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, FieldChainInheritanceRequirement.Disabled,
-                _validateSingleFieldCallback);
+                ValidateSingleField);
         }
 
         if (chainRequirements == FieldChainRequirements.EndsInToOne)
         {
-            return ChainResolver.ResolveToOneChain(_resourceTypeInScope!, path, _validateSingleFieldCallback);
+            return ChainResolver.ResolveToOneChain(_resourceTypeInScope!, path, ValidateSingleField);
         }
 
         if (chainRequirements.HasFlag(FieldChainRequirements.EndsInAttribute) && chainRequirements.HasFlag(FieldChainRequirements.EndsInToOne))
         {
-            return ChainResolver.ResolveToOneChainEndingInAttributeOrToOne(_resourceTypeInScope!, path, _validateSingleFieldCallback);
+            return ChainResolver.ResolveToOneChainEndingInAttributeOrToOne(_resourceTypeInScope!, path, ValidateSingleField);
         }
 
         throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");
+    }
+
+    protected override void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
+    {
+        if (field.IsFilterBlocked())
+        {
+            string kind = field is AttrAttribute ? "attribute" : "relationship";
+            throw new QueryParseException($"Filtering on {kind} '{field.PublicName}' is not allowed.");
+        }
     }
 
     private TResult InScopeOfResourceType<TResult>(ResourceType resourceType, Func<TResult> action)

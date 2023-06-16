@@ -10,14 +10,11 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 public class QueryStringParameterScopeParser : QueryExpressionParser
 {
     private readonly FieldChainRequirements _chainRequirements;
-    private readonly Action<ResourceFieldAttribute, ResourceType, string>? _validateSingleFieldCallback;
     private ResourceType? _resourceTypeInScope;
 
-    public QueryStringParameterScopeParser(FieldChainRequirements chainRequirements,
-        Action<ResourceFieldAttribute, ResourceType, string>? validateSingleFieldCallback = null)
+    public QueryStringParameterScopeParser(FieldChainRequirements chainRequirements)
     {
         _chainRequirements = chainRequirements;
-        _validateSingleFieldCallback = validateSingleFieldCallback;
     }
 
     public QueryStringParameterScopeExpression Parse(string source, ResourceType resourceTypeInScope)
@@ -63,12 +60,12 @@ public class QueryStringParameterScopeParser : QueryExpressionParser
         if (chainRequirements == FieldChainRequirements.EndsInToMany)
         {
             // The mismatch here (ends-in-to-many being interpreted as entire-chain-must-be-to-many) is intentional.
-            return ChainResolver.ResolveToManyChain(_resourceTypeInScope!, path, _validateSingleFieldCallback);
+            return ChainResolver.ResolveToManyChain(_resourceTypeInScope!, path);
         }
 
         if (chainRequirements == FieldChainRequirements.IsRelationship)
         {
-            return ChainResolver.ResolveRelationshipChain(_resourceTypeInScope!, path, _validateSingleFieldCallback);
+            return ChainResolver.ResolveRelationshipChain(_resourceTypeInScope!, path);
         }
 
         throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");

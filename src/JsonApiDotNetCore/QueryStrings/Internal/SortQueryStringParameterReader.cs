@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
-using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal;
@@ -17,7 +16,6 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
     private readonly QueryStringParameterScopeParser _scopeParser;
     private readonly SortParser _sortParser;
     private readonly List<ExpressionInScope> _constraints = new();
-    private string? _lastParameterName;
 
     public bool AllowEmptyValue => false;
 
@@ -25,16 +23,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
         : base(request, resourceGraph)
     {
         _scopeParser = new QueryStringParameterScopeParser(FieldChainRequirements.EndsInToMany);
-        _sortParser = new SortParser(ValidateSingleField);
-    }
-
-    protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
-    {
-        if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
-        {
-            throw new InvalidQueryStringParameterException(_lastParameterName!, "Sorting on the requested attribute is not allowed.",
-                $"Sorting on attribute '{attribute.PublicName}' is not allowed.");
-        }
+        _sortParser = new SortParser();
     }
 
     /// <inheritdoc />
@@ -57,8 +46,6 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
     /// <inheritdoc />
     public virtual void Read(string parameterName, StringValues parameterValue)
     {
-        _lastParameterName = parameterName;
-
         try
         {
             ResourceFieldChainExpression? scope = GetScope(parameterName);

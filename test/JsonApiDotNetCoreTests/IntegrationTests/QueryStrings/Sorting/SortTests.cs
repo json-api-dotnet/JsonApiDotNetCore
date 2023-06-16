@@ -508,7 +508,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Sorting on the requested attribute is not allowed.");
+        error.Title.Should().Be("The specified sort is invalid.");
         error.Detail.Should().Be("Sorting on attribute 'dateOfBirth' is not allowed.");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("sort");

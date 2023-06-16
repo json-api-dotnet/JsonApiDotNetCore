@@ -154,7 +154,7 @@ public class IncludeParser : QueryExpressionParser
                 ? $"Including the relationship '{relationshipName}' on '{resourceType}' is not allowed."
                 : $"Including the relationship '{relationshipName}' in '{parentPath}.{relationshipName}' on '{resourceType}' is not allowed.";
 
-            throw new InvalidQueryStringParameterException("include", "Including the requested relationship is not allowed.", message);
+            throw new InvalidQueryStringParameterException("include", "The specified include is invalid.", message);
         }
     }
 

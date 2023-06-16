@@ -9,13 +9,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 [PublicAPI]
 public class SortParser : QueryExpressionParser
 {
-    private readonly Action<ResourceFieldAttribute, ResourceType, string>? _validateSingleFieldCallback;
     private ResourceType? _resourceTypeInScope;
-
-    public SortParser(Action<ResourceFieldAttribute, ResourceType, string>? validateSingleFieldCallback = null)
-    {
-        _validateSingleFieldCallback = validateSingleFieldCallback;
-    }
 
     public SortExpression Parse(string source, ResourceType resourceTypeInScope)
     {
@@ -107,9 +101,17 @@ public class SortParser : QueryExpressionParser
         if (chainRequirements == FieldChainRequirements.EndsInAttribute)
         {
             return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, FieldChainInheritanceRequirement.RequireSingleMatch,
-                _validateSingleFieldCallback);
+                ValidateSingleField);
         }
 
         throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");
+    }
+
+    protected override void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
+    {
+        if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
+        {
+            throw new QueryParseException($"Sorting on attribute '{attribute.PublicName}' is not allowed.");
+        }
     }
 }

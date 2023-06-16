@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Text;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -23,6 +24,10 @@ public abstract class QueryExpressionParser
     /// Takes a dotted path and walks the resource graph to produce a chain of fields.
     /// </summary>
     protected abstract IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements);
+
+    protected virtual void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
+    {
+    }
 
     protected virtual void Tokenize(string source)
     {
