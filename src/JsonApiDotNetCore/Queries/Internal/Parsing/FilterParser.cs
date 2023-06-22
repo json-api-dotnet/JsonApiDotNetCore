@@ -13,6 +13,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 [PublicAPI]
 public class FilterParser : QueryExpressionParser
 {
+    private const string PlaceholderMessageForAttributeNotString = "JsonApiDotNetCore:Placeholder_for_attribute_not_string";
+
     private readonly IResourceFactory _resourceFactory;
     private readonly IEnumerable<IFilterValueConverter> _filterValueConverters;
     private ResourceType? _resourceTypeInScope;
@@ -44,6 +46,8 @@ public class FilterParser : QueryExpressionParser
 
     protected FilterExpression ParseFilter()
     {
+        int position = GetNextTokenPositionOrEnd();
+
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Text)
         {
             switch (nextToken.Value)
@@ -86,7 +90,7 @@ public class FilterParser : QueryExpressionParser
             }
         }
 
-        throw new QueryParseException("Filter function expected.");
+        throw new QueryParseException("Filter function expected.", position);
     }
 
     protected NotExpression ParseNot()
@@ -150,12 +154,12 @@ public class FilterParser : QueryExpressionParser
 
         if (leftTerm is CountExpression)
         {
-            Converter<string, object> rightConstantValueConverter = GetConstantValueConverterForCount();
+            Func<string, int, object> rightConstantValueConverter = GetConstantValueConverterForCount();
             rightTerm = ParseCountOrConstantOrField(FieldChainRequirements.EndsInAttribute, rightConstantValueConverter);
         }
         else if (leftTerm is ResourceFieldChainExpression fieldChain && fieldChain.Fields[^1] is AttrAttribute attribute)
         {
-            Converter<string, object> rightConstantValueConverter = GetConstantValueConverterForAttribute(attribute, typeof(ComparisonExpression));
+            Func<string, int, object> rightConstantValueConverter = GetConstantValueConverterForAttribute(attribute, typeof(ComparisonExpression));
             rightTerm = ParseCountOrConstantOrNullOrField(FieldChainRequirements.EndsInAttribute, rightConstantValueConverter);
         }
         else
@@ -173,18 +177,42 @@ public class FilterParser : QueryExpressionParser
         EatText(matchFunctionName);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
+        int fieldChainStartPosition = GetNextTokenPositionOrEnd();
+
         ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, null);
         var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
 
         EatSingleCharacterToken(TokenKind.Comma);
 
-        Converter<string, object> constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute, typeof(MatchTextExpression));
-        LiteralConstantExpression constant = ParseConstant(constantValueConverter);
+        Func<string, int, object> constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute, typeof(MatchTextExpression));
+        LiteralConstantExpression constant;
+
+        try
+        {
+            constant = ParseConstant(constantValueConverter);
+        }
+        catch (QueryParseException exception) when (exception.Message == PlaceholderMessageForAttributeNotString)
+        {
+            int attributePosition = GetPositionOfLastField(targetAttributeChain, fieldChainStartPosition);
+            throw new QueryParseException("Attribute of type 'String' expected.", attributePosition);
+        }
 
         EatSingleCharacterToken(TokenKind.CloseParen);
 
         var matchKind = Enum.Parse<TextMatchKind>(matchFunctionName.Pascalize());
         return new MatchTextExpression(targetAttributeChain, constant, matchKind);
+    }
+
+    private static int GetPositionOfLastField(ResourceFieldChainExpression fieldChain, int startPosition)
+    {
+        int position = 0;
+
+        for (int index = 0; index < fieldChain.Fields.Count - 1; index++)
+        {
+            position += fieldChain.Fields[index].PublicName.Length + 1;
+        }
+
+        return startPosition + position;
     }
 
     protected AnyExpression ParseAny()
@@ -199,7 +227,7 @@ public class FilterParser : QueryExpressionParser
 
         ImmutableHashSet<LiteralConstantExpression>.Builder constantsBuilder = ImmutableHashSet.CreateBuilder<LiteralConstantExpression>();
 
-        Converter<string, object> constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute, typeof(AnyExpression));
+        Func<string, int, object> constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute, typeof(AnyExpression));
         LiteralConstantExpression constant = ParseConstant(constantValueConverter);
         constantsBuilder.Add(constant);
 
@@ -274,22 +302,24 @@ public class FilterParser : QueryExpressionParser
 
     private ResourceType ParseDerivedType(ResourceType baseType)
     {
+        int position = GetNextTokenPositionOrEnd();
+
         if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text)
         {
             string derivedTypeName = token.Value!;
-            return ResolveDerivedType(baseType, derivedTypeName);
+            return ResolveDerivedType(baseType, derivedTypeName, token.Position);
         }
 
-        throw new QueryParseException("Resource type expected.");
+        throw new QueryParseException("Resource type expected.", position);
     }
 
-    private ResourceType ResolveDerivedType(ResourceType baseType, string derivedTypeName)
+    private ResourceType ResolveDerivedType(ResourceType baseType, string derivedTypeName, int position)
     {
         ResourceType? derivedType = GetDerivedType(baseType, derivedTypeName);
 
         if (derivedType == null)
         {
-            throw new QueryParseException($"Resource type '{derivedTypeName}' does not exist or does not derive from '{baseType.PublicName}'.");
+            throw new QueryParseException($"Resource type '{derivedTypeName}' does not exist or does not derive from '{baseType.PublicName}'.", position);
         }
 
         return derivedType;
@@ -341,7 +371,7 @@ public class FilterParser : QueryExpressionParser
         return ParseFieldChain(chainRequirements, "Count function or field name expected.");
     }
 
-    protected QueryExpression ParseCountOrConstantOrField(FieldChainRequirements chainRequirements, Converter<string, object> constantValueConverter)
+    protected QueryExpression ParseCountOrConstantOrField(FieldChainRequirements chainRequirements, Func<string, int, object> constantValueConverter)
     {
         CountExpression? count = TryParseCount();
 
@@ -360,7 +390,7 @@ public class FilterParser : QueryExpressionParser
         return ParseFieldChain(chainRequirements, "Count function, value between quotes or field name expected.");
     }
 
-    protected QueryExpression ParseCountOrConstantOrNullOrField(FieldChainRequirements chainRequirements, Converter<string, object> constantValueConverter)
+    protected QueryExpression ParseCountOrConstantOrNullOrField(FieldChainRequirements chainRequirements, Func<string, int, object> constantValueConverter)
     {
         CountExpression? count = TryParseCount();
 
@@ -379,20 +409,20 @@ public class FilterParser : QueryExpressionParser
         return ParseFieldChain(chainRequirements, "Count function, value between quotes, null or field name expected.");
     }
 
-    protected LiteralConstantExpression? TryParseConstant(Converter<string, object> constantValueConverter)
+    protected LiteralConstantExpression? TryParseConstant(Func<string, int, object> constantValueConverter)
     {
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.QuotedText)
         {
             TokenStack.Pop();
 
-            object constantValue = constantValueConverter(nextToken.Value!);
+            object constantValue = constantValueConverter(nextToken.Value!, nextToken.Position);
             return new LiteralConstantExpression(constantValue, nextToken.Value!);
         }
 
         return null;
     }
 
-    protected IdentifierExpression? TryParseConstantOrNull(Converter<string, object> constantValueConverter)
+    protected IdentifierExpression? TryParseConstantOrNull(Func<string, int, object> constantValueConverter)
     {
         if (TokenStack.TryPeek(out Token? nextToken))
         {
@@ -406,7 +436,7 @@ public class FilterParser : QueryExpressionParser
             {
                 TokenStack.Pop();
 
-                object constantValue = constantValueConverter(nextToken.Value!);
+                object constantValue = constantValueConverter(nextToken.Value!, nextToken.Position);
                 return new LiteralConstantExpression(constantValue, nextToken.Value!);
             }
         }
@@ -414,13 +444,14 @@ public class FilterParser : QueryExpressionParser
         return null;
     }
 
-    protected LiteralConstantExpression ParseConstant(Converter<string, object> constantValueConverter)
+    protected LiteralConstantExpression ParseConstant(Func<string, int, object> constantValueConverter)
     {
         LiteralConstantExpression? constant = TryParseConstant(constantValueConverter);
 
         if (constant == null)
         {
-            throw new QueryParseException("Value between quotes expected.");
+            int position = GetNextTokenPositionOrEnd();
+            throw new QueryParseException("Value between quotes expected.", position);
         }
 
         return constant;
@@ -428,20 +459,22 @@ public class FilterParser : QueryExpressionParser
 
     protected NullConstantExpression ParseNull()
     {
+        int position = GetNextTokenPositionOrEnd();
+
         if (TokenStack.TryPop(out Token? token) && token is { Kind: TokenKind.Text, Value: Keywords.Null })
         {
             return NullConstantExpression.Instance;
         }
 
-        throw new QueryParseException("null expected.");
+        throw new QueryParseException("null expected.", position);
     }
 
-    private Converter<string, object> GetConstantValueConverterForCount()
+    private Func<string, int, object> GetConstantValueConverterForCount()
     {
-        return stringValue => ConvertStringToType(stringValue, typeof(int));
+        return (stringValue, position) => ConvertStringToType(stringValue, position, typeof(int));
     }
 
-    private static object ConvertStringToType(string value, Type type)
+    private static object ConvertStringToType(string value, int position, Type type)
     {
         try
         {
@@ -449,15 +482,15 @@ public class FilterParser : QueryExpressionParser
         }
         catch (FormatException exception)
         {
-            throw new QueryParseException($"Failed to convert '{value}' of type 'String' to type '{type.Name}'.", exception);
+            throw new QueryParseException($"Failed to convert '{value}' of type 'String' to type '{type.Name}'.", position, exception);
         }
     }
 
-    private Converter<string, object> GetConstantValueConverterForAttribute(AttrAttribute attribute, Type outerExpressionType)
+    private Func<string, int, object> GetConstantValueConverterForAttribute(AttrAttribute attribute, Type outerExpressionType)
     {
-        return stringValue =>
+        return (stringValue, position) =>
         {
-            object? value = TryConvertFromStringUsingFilterValueConverters(attribute, stringValue, outerExpressionType);
+            object? value = TryConvertFromStringUsingFilterValueConverters(attribute, stringValue, position, outerExpressionType);
 
             if (value != null)
             {
@@ -468,7 +501,8 @@ public class FilterParser : QueryExpressionParser
             {
                 if (attribute.Property.PropertyType != typeof(string))
                 {
-                    throw new QueryParseException("Attribute of type 'String' expected.");
+                    // Use placeholder message, so we can correct the position to the attribute instead of its value.
+                    throw new QueryParseException(PlaceholderMessageForAttributeNotString, -1);
                 }
             }
             else
@@ -480,17 +514,17 @@ public class FilterParser : QueryExpressionParser
                 }
             }
 
-            return ConvertStringToType(stringValue, attribute.Property.PropertyType);
+            return ConvertStringToType(stringValue, position, attribute.Property.PropertyType);
         };
     }
 
-    private object? TryConvertFromStringUsingFilterValueConverters(AttrAttribute attribute, string stringValue, Type outerExpressionType)
+    private object? TryConvertFromStringUsingFilterValueConverters(AttrAttribute attribute, string stringValue, int position, Type outerExpressionType)
     {
         foreach (IFilterValueConverter converter in _filterValueConverters)
         {
             if (converter.CanConvert(attribute))
             {
-                object result = converter.Convert(attribute, stringValue, outerExpressionType);
+                object result = converter.Convert(attribute, stringValue, position, outerExpressionType);
 
                 if (result == null)
                 {
@@ -512,38 +546,39 @@ public class FilterParser : QueryExpressionParser
         return tempResource.GetTypedId();
     }
 
-    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements)
     {
         if (chainRequirements == FieldChainRequirements.EndsInToMany)
         {
-            return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path, FieldChainInheritanceRequirement.Disabled, ValidateSingleField);
+            return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path, position, FieldChainInheritanceRequirement.Disabled,
+                ValidateSingleField);
         }
 
         if (chainRequirements == FieldChainRequirements.EndsInAttribute)
         {
-            return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, FieldChainInheritanceRequirement.Disabled,
+            return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, position, FieldChainInheritanceRequirement.Disabled,
                 ValidateSingleField);
         }
 
         if (chainRequirements == FieldChainRequirements.EndsInToOne)
         {
-            return ChainResolver.ResolveToOneChain(_resourceTypeInScope!, path, ValidateSingleField);
+            return ChainResolver.ResolveToOneChain(_resourceTypeInScope!, path, position, ValidateSingleField);
         }
 
         if (chainRequirements.HasFlag(FieldChainRequirements.EndsInAttribute) && chainRequirements.HasFlag(FieldChainRequirements.EndsInToOne))
         {
-            return ChainResolver.ResolveToOneChainEndingInAttributeOrToOne(_resourceTypeInScope!, path, ValidateSingleField);
+            return ChainResolver.ResolveToOneChainEndingInAttributeOrToOne(_resourceTypeInScope!, path, position, ValidateSingleField);
         }
 
         throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");
     }
 
-    protected override void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
+    protected override void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, int position)
     {
         if (field.IsFilterBlocked())
         {
             string kind = field is AttrAttribute ? "attribute" : "relationship";
-            throw new QueryParseException($"Filtering on {kind} '{field.PublicName}' is not allowed.");
+            throw new QueryParseException($"Filtering on {kind} '{field.PublicName}' is not allowed.", position);
         }
     }
 

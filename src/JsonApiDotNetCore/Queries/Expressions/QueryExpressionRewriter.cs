@@ -240,7 +240,7 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
     {
         ResourceFieldChainExpression? newScope = expression.Scope != null ? Visit(expression.Scope, argument) as ResourceFieldChainExpression : null;
 
-        var newExpression = new PaginationElementQueryStringValueExpression(newScope, expression.Value);
+        var newExpression = new PaginationElementQueryStringValueExpression(newScope, expression.Value, expression.Position);
         return newExpression.Equals(expression) ? expression : newExpression;
     }
 

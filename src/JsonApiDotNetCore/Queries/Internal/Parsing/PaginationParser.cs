@@ -47,25 +47,27 @@ public class PaginationParser : QueryExpressionParser
 
     protected PaginationElementQueryStringValueExpression ParsePaginationElement()
     {
+        int position = GetNextTokenPositionOrEnd();
         int? number = TryParseNumber();
 
         if (number != null)
         {
-            return new PaginationElementQueryStringValueExpression(null, number.Value);
+            return new PaginationElementQueryStringValueExpression(null, number.Value, position);
         }
 
         ResourceFieldChainExpression scope = ParseFieldChain(FieldChainRequirements.EndsInToMany, "Number or relationship name expected.");
 
         EatSingleCharacterToken(TokenKind.Colon);
 
+        position = GetNextTokenPositionOrEnd();
         number = TryParseNumber();
 
         if (number == null)
         {
-            throw new QueryParseException("Number expected.");
+            throw new QueryParseException("Number expected.", position);
         }
 
-        return new PaginationElementQueryStringValueExpression(scope, number.Value);
+        return new PaginationElementQueryStringValueExpression(scope, number.Value, position);
     }
 
     protected int? TryParseNumber()
@@ -77,13 +79,14 @@ public class PaginationParser : QueryExpressionParser
             if (nextToken.Kind == TokenKind.Minus)
             {
                 TokenStack.Pop();
+                int position = GetNextTokenPositionOrEnd();
 
                 if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text && int.TryParse(token.Value, out number))
                 {
                     return -number;
                 }
 
-                throw new QueryParseException("Digits expected.");
+                throw new QueryParseException("Digits expected.", position);
             }
 
             if (nextToken.Kind == TokenKind.Text && int.TryParse(nextToken.Value, out number))
@@ -96,8 +99,8 @@ public class PaginationParser : QueryExpressionParser
         return null;
     }
 
-    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements)
     {
-        return ChainResolver.ResolveToManyChain(_resourceTypeInScope!, path);
+        return ChainResolver.ResolveToManyChain(_resourceTypeInScope!, path, position);
     }
 }

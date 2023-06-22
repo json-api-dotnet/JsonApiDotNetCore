@@ -11,6 +11,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering;
 
 public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
 {
+    private const string CollectionErrorMessage = "This query string parameter can only be used on a collection of resources (not on a single resource).";
+
     private readonly IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly QueryStringFakers _fakers = new();
 
@@ -77,7 +79,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+        error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^filter");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
@@ -134,7 +136,7 @@ public sealed class FilterDepthTests : IClassFixture<IntegrationTestContext<Test
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+        error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^filter");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }

@@ -12,6 +12,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 {
     private const string HostPrefix = "http://localhost";
     private const int DefaultPageSize = 5;
+    private const string CollectionErrorMessage = "This query string parameter can only be used on a collection of resources (not on a single resource).";
 
     private readonly IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly QueryStringFakers _fakers = new();
@@ -89,7 +90,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
-        error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+        error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^page[number]");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
@@ -186,7 +187,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
-        error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+        error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^page[size]");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }
@@ -451,7 +452,8 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Cannot_paginate_in_unknown_scope()
     {
         // Arrange
-        const string route = $"/webAccounts?page[number]={Unknown.Relationship}:1";
+        var parameterValue = new MarkedText($"^{Unknown.Relationship}:1", '^');
+        string route = $"/webAccounts?page[number]={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -464,7 +466,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
-        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'.");
+        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
@@ -473,7 +475,8 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     public async Task Cannot_paginate_in_unknown_nested_scope()
     {
         // Arrange
-        const string route = $"/webAccounts?page[size]=posts.{Unknown.Relationship}:1";
+        var parameterValue = new MarkedText($"posts.^{Unknown.Relationship}:1", '^');
+        string route = $"/webAccounts?page[size]={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -486,7 +489,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
-        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource type 'blogPosts'.");
+        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }

@@ -47,7 +47,7 @@ public abstract class QueryStringParameterReader
     {
         if (!_isCollectionRequest)
         {
-            throw new QueryParseException("This query string parameter can only be used on a collection of resources (not on a single resource).");
+            throw new QueryParseException("This query string parameter can only be used on a collection of resources (not on a single resource).", 0);
         }
     }
 }

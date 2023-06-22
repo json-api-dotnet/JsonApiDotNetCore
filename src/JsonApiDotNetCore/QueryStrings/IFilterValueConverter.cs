@@ -29,6 +29,9 @@ public interface IFilterValueConverter
     /// <param name="value">
     /// The literal text (without the surrounding single quotes) from the query string.
     /// </param>
+    /// <param name="position">
+    /// The zero-based position of this value in the query string parameter.
+    /// </param>
     /// <param name="outerExpressionType">
     /// The filter function this conversion applies to, which can be <see cref="ComparisonExpression" />, <see cref="AnyExpression" /> or
     /// <see cref="MatchTextExpression" />.
@@ -40,5 +43,5 @@ public interface IFilterValueConverter
     /// <exception cref="QueryParseException">
     /// The conversion failed because <paramref name="value" /> is invalid.
     /// </exception>
-    object Convert(AttrAttribute attribute, string value, Type outerExpressionType);
+    object Convert(AttrAttribute attribute, string value, int position, Type outerExpressionType);
 }

@@ -52,23 +52,49 @@ public sealed class SparseFieldSetParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("fields", "", "[ expected.")]
-    [InlineData("fields]", "", "[ expected.")]
-    [InlineData("fields[", "", "Resource type expected.")]
-    [InlineData("fields[]", "", "Resource type expected.")]
-    [InlineData("fields[ ]", "", "Unexpected whitespace.")]
-    [InlineData("fields[owner]", "", "Resource type 'owner' does not exist.")]
-    [InlineData("fields[owner.posts]", "id", "Resource type 'owner' does not exist.")]
-    [InlineData("fields[blogPosts]", " ", "Unexpected whitespace.")]
-    [InlineData("fields[blogPosts]", "some", "Field 'some' does not exist on resource type 'blogPosts'.")]
-    [InlineData("fields[blogPosts]", "id,owner.name", "Field 'owner.name' does not exist on resource type 'blogPosts'.")]
-    [InlineData("fields[blogPosts]", "id(", ", expected.")]
-    [InlineData("fields[blogPosts]", "id,", "Field name expected.")]
-    [InlineData("fields[blogPosts]", "author.id,", "Field 'author.id' does not exist on resource type 'blogPosts'.")]
-    public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
+    [InlineData("fields^", "[ expected.")]
+    [InlineData("fields^]", "[ expected.")]
+    [InlineData("fields[^", "Resource type expected.")]
+    [InlineData("fields[^]", "Resource type expected.")]
+    [InlineData("fields[^ ]", "Unexpected whitespace.")]
+    [InlineData("fields[^owner]", "Resource type 'owner' does not exist.")]
+    [InlineData("fields[^owner.posts]", "Resource type 'owner' does not exist.")]
+    public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
     {
+        // Arrange
+        var parameterNameSource = new MarkedText(parameterName, '^');
+
         // Act
-        Action action = () => _reader.Read(parameterName, parameterValue);
+        Action action = () => _reader.Read(parameterNameSource.Text, " ");
+
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+
+        exception.ParameterName.Should().Be(parameterNameSource.Text);
+        exception.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified fieldset is invalid.");
+        error.Detail.Should().Be($"{errorMessage} {parameterNameSource}");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be(parameterNameSource.Text);
+    }
+
+    [Theory]
+    [InlineData("fields[blogPosts]", "^ ", "Unexpected whitespace.")]
+    [InlineData("fields[blogPosts]", "^some", "Field 'some' does not exist on resource type 'blogPosts'.")]
+    [InlineData("fields[blogPosts]", "id,^owner.name", "Field 'owner.name' does not exist on resource type 'blogPosts'.")]
+    [InlineData("fields[blogPosts]", "id^(", ", expected.")]
+    [InlineData("fields[blogPosts]", "id,^", "Field name expected.")]
+    [InlineData("fields[blogPosts]", "^author.id,", "Field 'author.id' does not exist on resource type 'blogPosts'.")]
+    public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
+    {
+        // Arrange
+        var parameterValueSource = new MarkedText(parameterValue, '^');
+
+        // Act
+        Action action = () => _reader.Read(parameterName, parameterValueSource.Text);
 
         // Assert
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
@@ -79,7 +105,7 @@ public sealed class SparseFieldSetParseTests : BaseParseTests
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified fieldset is invalid.");
-        error.Detail.Should().Be(errorMessage);
+        error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be(parameterName);
     }

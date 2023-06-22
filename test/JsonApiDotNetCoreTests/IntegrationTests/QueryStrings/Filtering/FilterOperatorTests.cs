@@ -700,7 +700,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_filter_text_match_on_non_string_value()
     {
         // Arrange
-        const string route = "/filterableResources?filter=contains(someInt32,'123')";
+        var parameterValue = new MarkedText("contains(^someInt32,'123')", '^');
+        string route = $"/filterableResources?filter={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -713,7 +714,30 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be("Attribute of type 'String' expected.");
+        error.Detail.Should().Be($"Attribute of type 'String' expected. {parameterValue}");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("filter");
+    }
+
+    [Fact]
+    public async Task Cannot_filter_text_match_on_nested_non_string_value()
+    {
+        // Arrange
+        var parameterValue = new MarkedText("contains(parent.parent.^someInt32,'123')", '^');
+        string route = $"/filterableResources?filter={parameterValue.Text}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be($"Attribute of type 'String' expected. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
@@ -868,7 +892,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_filter_on_count_with_incompatible_value()
     {
         // Arrange
-        const string route = "/filterableResources?filter=equals(count(children),'ABC')";
+        var parameterValue = new MarkedText("equals(count(children),^'ABC')", '^');
+        string route = $"/filterableResources?filter={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -881,7 +906,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be("Failed to convert 'ABC' of type 'String' to type 'Int32'.");
+        error.Detail.Should().Be($"Failed to convert 'ABC' of type 'String' to type 'Int32'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }

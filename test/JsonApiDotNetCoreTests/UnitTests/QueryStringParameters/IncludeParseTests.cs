@@ -50,24 +50,23 @@ public sealed class IncludeParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("includes", " ", "Unexpected whitespace.")]
-    [InlineData("includes", ",", "Relationship name expected.")]
-    [InlineData("includes", "posts,", "Relationship name expected.")]
-    [InlineData("includes", "posts.", "Relationship name expected.")]
-    [InlineData("includes", "posts[", ", expected.")]
-    [InlineData("includes", "title", "Relationship 'title' does not exist on resource type 'blogs'.")]
-    [InlineData("includes", "posts.comments.publishTime,",
-        "Relationship 'publishTime' in 'posts.comments.publishTime' does not exist on resource type 'comments'.")]
-    [InlineData("includes", "owner.person.children.unknown",
-        "Relationship 'unknown' in 'owner.person.children.unknown' does not exist on resource type 'humans' or any of its derived types.")]
-    [InlineData("includes", "owner.person.friends.unknown",
-        "Relationship 'unknown' in 'owner.person.friends.unknown' does not exist on resource type 'humans' or any of its derived types.")]
-    [InlineData("includes", "owner.person.sameGenderFriends.unknown",
-        "Relationship 'unknown' in 'owner.person.sameGenderFriends.unknown' does not exist on any of the resource types 'men', 'women'.")]
+    [InlineData("includes", "^ ", "Unexpected whitespace.")]
+    [InlineData("includes", "^,", "Relationship name expected.")]
+    [InlineData("includes", "posts,^", "Relationship name expected.")]
+    [InlineData("includes", "posts.^", "Relationship name expected.")]
+    [InlineData("includes", "posts^[", ", expected.")]
+    [InlineData("includes", "^title", "Relationship 'title' does not exist on resource type 'blogs'.")]
+    [InlineData("includes", "posts.comments.^publishTime,", "Relationship 'publishTime' does not exist on resource type 'comments'.")]
+    [InlineData("includes", "owner.person.children.^unknown", "Relationship 'unknown' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("includes", "owner.person.friends.^unknown", "Relationship 'unknown' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("includes", "owner.person.sameGenderFriends.^unknown", "Relationship 'unknown' does not exist on any of the resource types 'men', 'women'.")]
     public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
     {
+        // Arrange
+        var parameterValueSource = new MarkedText(parameterValue, '^');
+
         // Act
-        Action action = () => _reader.Read(parameterName, parameterValue);
+        Action action = () => _reader.Read(parameterName, parameterValueSource.Text);
 
         // Assert
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
@@ -78,7 +77,7 @@ public sealed class IncludeParseTests : BaseParseTests
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
-        error.Detail.Should().Be(errorMessage);
+        error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be(parameterName);
     }

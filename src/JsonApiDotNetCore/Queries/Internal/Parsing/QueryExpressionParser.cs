@@ -17,15 +17,17 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 [PublicAPI]
 public abstract class QueryExpressionParser
 {
+    private int _endOfSourcePosition;
+
     protected Stack<Token> TokenStack { get; private set; } = null!;
     private protected ResourceFieldChainResolver ChainResolver { get; } = new();
 
     /// <summary>
     /// Takes a dotted path and walks the resource graph to produce a chain of fields.
     /// </summary>
-    protected abstract IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements);
+    protected abstract IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements);
 
-    protected virtual void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
+    protected virtual void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, int position)
     {
     }
 
@@ -33,27 +35,32 @@ public abstract class QueryExpressionParser
     {
         var tokenizer = new QueryTokenizer(source);
         TokenStack = new Stack<Token>(tokenizer.EnumerateTokens().Reverse());
+        _endOfSourcePosition = source.Length;
     }
 
     protected ResourceFieldChainExpression ParseFieldChain(FieldChainRequirements chainRequirements, string? alternativeErrorMessage)
     {
+        int position = GetNextTokenPositionOrEnd();
+
         var pathBuilder = new StringBuilder();
         EatFieldChain(pathBuilder, alternativeErrorMessage);
 
-        IImmutableList<ResourceFieldAttribute> chain = OnResolveFieldChain(pathBuilder.ToString(), chainRequirements);
+        IImmutableList<ResourceFieldAttribute> chain = OnResolveFieldChain(pathBuilder.ToString(), position, chainRequirements);
 
         if (chain.Any())
         {
             return new ResourceFieldChainExpression(chain);
         }
 
-        throw new QueryParseException(alternativeErrorMessage ?? "Field name expected.");
+        throw new QueryParseException(alternativeErrorMessage ?? "Field name expected.", position);
     }
 
     private void EatFieldChain(StringBuilder pathBuilder, string? alternativeErrorMessage)
     {
         while (true)
         {
+            int position = GetNextTokenPositionOrEnd();
+
             if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text && token.Value != Keywords.Null)
             {
                 pathBuilder.Append(token.Value);
@@ -70,7 +77,7 @@ public abstract class QueryExpressionParser
             }
             else
             {
-                throw new QueryParseException(alternativeErrorMessage ?? "Field name expected.");
+                throw new QueryParseException(alternativeErrorMessage ?? "Field name expected.", position);
             }
         }
     }
@@ -97,7 +104,8 @@ public abstract class QueryExpressionParser
     {
         if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text || token.Value != text)
         {
-            throw new QueryParseException($"{text} expected.");
+            int position = token?.Position ?? GetNextTokenPositionOrEnd();
+            throw new QueryParseException($"{text} expected.", position);
         }
     }
 
@@ -106,15 +114,27 @@ public abstract class QueryExpressionParser
         if (!TokenStack.TryPop(out Token? token) || token.Kind != kind)
         {
             char ch = QueryTokenizer.SingleCharacterToTokenKinds.Single(pair => pair.Value == kind).Key;
-            throw new QueryParseException($"{ch} expected.");
+            int position = token?.Position ?? GetNextTokenPositionOrEnd();
+            throw new QueryParseException($"{ch} expected.", position);
         }
+    }
+
+    protected int GetNextTokenPositionOrEnd()
+    {
+        if (TokenStack.TryPeek(out Token? nextToken))
+        {
+            return nextToken.Position;
+        }
+
+        return _endOfSourcePosition;
     }
 
     protected void AssertTokenStackIsEmpty()
     {
         if (TokenStack.Any())
         {
-            throw new QueryParseException("End of expression expected.");
+            int position = GetNextTokenPositionOrEnd();
+            throw new QueryParseException("End of expression expected.", position);
         }
     }
 }

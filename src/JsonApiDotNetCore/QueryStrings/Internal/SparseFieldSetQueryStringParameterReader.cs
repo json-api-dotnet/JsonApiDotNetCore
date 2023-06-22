@@ -51,16 +51,20 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
     /// <inheritdoc />
     public virtual void Read(string parameterName, StringValues parameterValue)
     {
+        bool parameterNameIsValid = false;
+
         try
         {
             ResourceType targetResourceType = GetSparseFieldType(parameterName);
-            SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue.ToString(), targetResourceType);
+            parameterNameIsValid = true;
 
+            SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue.ToString(), targetResourceType);
             _sparseFieldTableBuilder[targetResourceType] = sparseFieldSet;
         }
         catch (QueryParseException exception)
         {
-            throw new InvalidQueryStringParameterException(parameterName, "The specified fieldset is invalid.", exception.Message, exception);
+            string specificMessage = exception.GetMessageWithPosition(parameterNameIsValid ? parameterValue : parameterName);
+            throw new InvalidQueryStringParameterException(parameterName, "The specified fieldset is invalid.", specificMessage, exception);
         }
     }
 

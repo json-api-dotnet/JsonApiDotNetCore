@@ -29,19 +29,38 @@ public sealed class LegacyFilterParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("filter", "some", "Expected field name between brackets in filter parameter name.")]
-    [InlineData("filter[", "some", "Expected field name between brackets in filter parameter name.")]
-    [InlineData("filter[]", "some", "Expected field name between brackets in filter parameter name.")]
-    [InlineData("filter[some]", "other", "Field 'some' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter", "Expected field name between brackets in filter parameter name.")]
+    [InlineData("filter[", "Expected field name between brackets in filter parameter name.")]
+    [InlineData("filter[]", "Expected field name between brackets in filter parameter name.")]
+    [InlineData("filter[some]", "Field 'some' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter[author.posts]", "Field 'posts' must be an attribute or a to-one relationship on resource type 'webAccounts'.")]
+    [InlineData("filter[unknown.id]", "Relationship 'unknown' does not exist on resource type 'blogPosts'.")]
+    public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
+    {
+        // Act
+        Action action = () => _reader.Read(parameterName, " ");
+
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+
+        exception.ParameterName.Should().Be(parameterName);
+        exception.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be(errorMessage);
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be(parameterName);
+    }
+
+    [Theory]
     [InlineData("filter[author]", "some", "null expected.")]
-    [InlineData("filter[author.posts]", "some",
-        "Field 'posts' in 'author.posts' must be an attribute or a to-one relationship on resource type 'webAccounts'.")]
-    [InlineData("filter[unknown.id]", "some", "Relationship 'unknown' in 'unknown.id' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter", "expr:equals(some,'other')", "Field 'some' does not exist on resource type 'blogPosts'.")]
     [InlineData("filter", "expr:equals(author,'Joe')", "null expected.")]
     [InlineData("filter", "expr:has(author)", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
     [InlineData("filter", "expr:equals(count(author),'1')", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
-    public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
+    public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Act
         Action action = () => _reader.Read(parameterName, parameterValue);

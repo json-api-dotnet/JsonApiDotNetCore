@@ -56,62 +56,86 @@ public sealed class FilterParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("filter[", "equals(caption,'some')", "Field name expected.")]
-    [InlineData("filter[caption]", "equals(url,'some')", "Relationship 'caption' does not exist on resource type 'blogs'.")]
-    [InlineData("filter[posts.caption]", "equals(firstName,'some')", "Relationship 'caption' in 'posts.caption' does not exist on resource type 'blogPosts'.")]
-    [InlineData("filter[posts.author]", "equals(firstName,'some')",
-        "Relationship 'author' in 'posts.author' must be a to-many relationship on resource type 'blogPosts'.")]
-    [InlineData("filter[posts.comments.author]", "equals(firstName,'some')",
-        "Relationship 'author' in 'posts.comments.author' must be a to-many relationship on resource type 'comments'.")]
-    [InlineData("filter[posts]", "equals(author,'some')", "null expected.")]
-    [InlineData("filter[posts]", "lessThan(author,null)", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
-    [InlineData("filter", " ", "Unexpected whitespace.")]
-    [InlineData("filter", "contains(owner.displayName ,)", "Unexpected whitespace.")]
-    [InlineData("filter", "contains(owner.displayName, )", "Unexpected whitespace.")]
-    [InlineData("filter", "some", "Filter function expected.")]
-    [InlineData("filter", "equals", "( expected.")]
-    [InlineData("filter", "equals'", "Unexpected ' outside text.")]
-    [InlineData("filter", "equals(", "Count function or field name expected.")]
-    [InlineData("filter", "equals('1'", "Count function or field name expected.")]
-    [InlineData("filter", "equals(count(posts),", "Count function, value between quotes or field name expected.")]
-    [InlineData("filter", "equals(count(posts),null)", "Count function, value between quotes or field name expected.")]
-    [InlineData("filter", "equals(owner..displayName,'')", "Count function or field name expected.")]
-    [InlineData("filter", "equals(owner.displayName.,'')", "Count function or field name expected.")]
-    [InlineData("filter", "equals(title,')", "' expected.")]
-    [InlineData("filter", "equals(title,null", ") expected.")]
-    [InlineData("filter", "equals(null", "Count function or field name expected.")]
-    [InlineData("filter", "equals(title,(", "Count function, value between quotes, null or field name expected.")]
-    [InlineData("filter", "equals(has(posts),'true')", "Field 'has' does not exist on resource type 'blogs'.")]
-    [InlineData("filter", "has(posts,", "Filter function expected.")]
-    [InlineData("filter", "contains)", "( expected.")]
-    [InlineData("filter", "contains(title,'a','b')", ") expected.")]
-    [InlineData("filter", "contains(title,null)", "Value between quotes expected.")]
-    [InlineData("filter[posts]", "contains(author,null)", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
-    [InlineData("filter", "any(null,'a','b')", "Field name expected.")]
-    [InlineData("filter", "any('a','b','c')", "Field name expected.")]
-    [InlineData("filter", "any(title,'b','c',)", "Value between quotes expected.")]
-    [InlineData("filter", "any(title)", ", expected.")]
-    [InlineData("filter[posts]", "any(author,'a','b')", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
-    [InlineData("filter", "and(", "Filter function expected.")]
-    [InlineData("filter", "or(equals(title,'some'),equals(title,'other')", ") expected.")]
-    [InlineData("filter", "or(equals(title,'some'),equals(title,'other')))", "End of expression expected.")]
-    [InlineData("filter", "and(equals(title,'some')", ", expected.")]
-    [InlineData("filter", "and(null", "Filter function expected.")]
-    [InlineData("filter", "expr:equals(caption,'some')", "Filter function expected.")]
-    [InlineData("filter", "expr:Equals(caption,'some')", "Filter function expected.")]
-    [InlineData("filter", "isType(", "Relationship name or , expected.")]
-    [InlineData("filter", "isType(,", "Resource type expected.")]
-    [InlineData("filter[posts.contributors]", "isType(,some)", "Resource type 'some' does not exist or does not derive from 'humans'.")]
-    [InlineData("filter[posts.contributors]", "isType(,humans)", "Resource type 'humans' does not exist or does not derive from 'humans'.")]
-    [InlineData("filter[posts.contributors]", "isType(some,men)", "Relationship 'some' does not exist on resource type 'humans'.")]
-    [InlineData("filter[posts.contributors]", "isType(father.some,women)", "Relationship 'some' in 'father.some' does not exist on resource type 'men'.")]
-    [InlineData("filter[posts.contributors]", "isType(children,men)", "Relationship 'children' must be a to-one relationship on resource type 'humans'.")]
-    [InlineData("filter[posts.contributors]", "isType(mother.children,men)",
-        "Relationship 'children' in 'mother.children' must be a to-one relationship on resource type 'women'.")]
-    public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
+    [InlineData("filter[^", "Field name expected.")]
+    [InlineData("filter[^caption]", "Relationship 'caption' does not exist on resource type 'blogs'.")]
+    [InlineData("filter[posts.^caption]", "Relationship 'caption' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter[posts.^author]", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
+    [InlineData("filter[posts.comments.^author]", "Relationship 'author' must be a to-many relationship on resource type 'comments'.")]
+    public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
     {
+        // Arrange
+        var parameterNameSource = new MarkedText(parameterName, '^');
+
         // Act
-        Action action = () => _reader.Read(parameterName, parameterValue);
+        Action action = () => _reader.Read(parameterNameSource.Text, " ");
+
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+
+        exception.ParameterName.Should().Be(parameterNameSource.Text);
+        exception.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be($"{errorMessage} {parameterNameSource}");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be(parameterNameSource.Text);
+    }
+
+    [Theory]
+    [InlineData("filter[posts]", "equals(author,^'some')", "null expected.")]
+    [InlineData("filter[posts]", "lessThan(^author,null)", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter", "^ ", "Unexpected whitespace.")]
+    [InlineData("filter", "contains(owner.displayName^ ,)", "Unexpected whitespace.")]
+    [InlineData("filter", "contains(owner.displayName,^ )", "Unexpected whitespace.")]
+    [InlineData("filter", "^some", "Filter function expected.")]
+    [InlineData("filter", "equals^", "( expected.")]
+    [InlineData("filter", "equals^'", "Unexpected ' outside text.")]
+    [InlineData("filter", "equals(^", "Count function or field name expected.")]
+    [InlineData("filter", "equals(^'1'", "Count function or field name expected.")]
+    [InlineData("filter", "equals(count(posts),^", "Count function, value between quotes or field name expected.")]
+    [InlineData("filter", "equals(count(posts),^null)", "Count function, value between quotes or field name expected.")]
+    [InlineData("filter", "equals(owner.^.displayName,'')", "Count function or field name expected.")]
+    [InlineData("filter", "equals(owner.displayName.^,'')", "Count function or field name expected.")]
+    [InlineData("filter", "equals(title,'^)", "' expected.")]
+    [InlineData("filter", "equals(title,null^", ") expected.")]
+    [InlineData("filter", "equals(^null", "Count function or field name expected.")]
+    [InlineData("filter", "equals(title,^(", "Count function, value between quotes, null or field name expected.")]
+    [InlineData("filter", "equals(^has(posts),'true')", "Field 'has' does not exist on resource type 'blogs'.")]
+    [InlineData("filter", "has(posts,^", "Filter function expected.")]
+    [InlineData("filter", "contains^)", "( expected.")]
+    [InlineData("filter", "contains(title,'a'^,'b')", ") expected.")]
+    [InlineData("filter", "contains(title,^null)", "Value between quotes expected.")]
+    [InlineData("filter[posts]", "contains(^author,null)", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter", "any(^null,'a','b')", "Field name expected.")]
+    [InlineData("filter", "any(^'a','b','c')", "Field name expected.")]
+    [InlineData("filter", "any(title,'b','c',^)", "Value between quotes expected.")]
+    [InlineData("filter", "any(title^)", ", expected.")]
+    [InlineData("filter[posts]", "any(^author,'a','b')", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter", "and(^", "Filter function expected.")]
+    [InlineData("filter", "or(equals(title,'some'),equals(title,'other')^", ") expected.")]
+    [InlineData("filter", "or(equals(title,'some'),equals(title,'other'))^)", "End of expression expected.")]
+    [InlineData("filter", "and(equals(title,'some')^", ", expected.")]
+    [InlineData("filter", "and(^null", "Filter function expected.")]
+    [InlineData("filter", "^expr:equals(caption,'some')", "Filter function expected.")]
+    [InlineData("filter", "^expr:Equals(caption,'some')", "Filter function expected.")]
+    [InlineData("filter", "isType(^", "Relationship name or , expected.")]
+    [InlineData("filter", "isType(,^", "Resource type expected.")]
+    [InlineData("filter[posts.contributors]", "isType(,^some)", "Resource type 'some' does not exist or does not derive from 'humans'.")]
+    [InlineData("filter[posts.contributors]", "isType(,^humans)", "Resource type 'humans' does not exist or does not derive from 'humans'.")]
+    [InlineData("filter[posts.contributors]", "isType(^some,men)", "Relationship 'some' does not exist on resource type 'humans'.")]
+    [InlineData("filter[posts.contributors]", "isType(father.^some,women)", "Relationship 'some' does not exist on resource type 'men'.")]
+    [InlineData("filter[posts.contributors]", "isType(^children,men)", "Relationship 'children' must be a to-one relationship on resource type 'humans'.")]
+    [InlineData("filter[posts.contributors]", "isType(mother.^children,men)",
+        "Relationship 'children' must be a to-one relationship on resource type 'women'.")]
+    public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
+    {
+        // Arrange
+        var parameterValueSource = new MarkedText(parameterValue, '^');
+
+        // Act
+        Action action = () => _reader.Read(parameterName, parameterValueSource.Text);
 
         // Assert
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
@@ -122,7 +146,7 @@ public sealed class FilterParseTests : BaseParseTests
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be(errorMessage);
+        error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be(parameterName);
     }

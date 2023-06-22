@@ -22,7 +22,8 @@ public sealed class QueryTokenizer
 
     private readonly string _source;
     private readonly StringBuilder _textBuffer = new();
-    private int _offset;
+    private int _sourceOffset;
+    private int? _tokenStartOffset;
     private bool _isInQuotedSection;
 
     public QueryTokenizer(string source)
@@ -36,11 +37,14 @@ public sealed class QueryTokenizer
     {
         _textBuffer.Clear();
         _isInQuotedSection = false;
-        _offset = 0;
+        _sourceOffset = 0;
+        _tokenStartOffset = null;
 
-        while (_offset < _source.Length)
+        while (_sourceOffset < _source.Length)
         {
-            char ch = _source[_offset];
+            _tokenStartOffset ??= _sourceOffset;
+
+            char ch = _source[_sourceOffset];
 
             if (ch == '\'')
             {
@@ -51,7 +55,7 @@ public sealed class QueryTokenizer
                     if (peeked == '\'')
                     {
                         _textBuffer.Append(ch);
-                        _offset += 2;
+                        _sourceOffset += 2;
                         continue;
                     }
 
@@ -64,7 +68,7 @@ public sealed class QueryTokenizer
                 {
                     if (_textBuffer.Length > 0)
                     {
-                        throw new QueryParseException("Unexpected ' outside text.");
+                        throw new QueryParseException("Unexpected ' outside text.", _sourceOffset);
                     }
 
                     _isInQuotedSection = true;
@@ -83,25 +87,26 @@ public sealed class QueryTokenizer
                         yield return identifierToken;
                     }
 
-                    yield return new Token(singleCharacterTokenKind.Value);
+                    yield return new Token(singleCharacterTokenKind.Value, _sourceOffset);
+                    _tokenStartOffset = null;
                 }
                 else
                 {
                     if (ch == ' ' && !_isInQuotedSection)
                     {
-                        throw new QueryParseException("Unexpected whitespace.");
+                        throw new QueryParseException("Unexpected whitespace.", _sourceOffset);
                     }
 
                     _textBuffer.Append(ch);
                 }
             }
 
-            _offset++;
+            _sourceOffset++;
         }
 
         if (_isInQuotedSection)
         {
-            throw new QueryParseException("' expected.");
+            throw new QueryParseException("' expected.", _sourceOffset - 1);
         }
 
         Token? lastToken = ProduceTokenFromTextBuffer(false);
@@ -119,7 +124,7 @@ public sealed class QueryTokenizer
 
     private char? PeekChar()
     {
-        return _offset + 1 < _source.Length ? _source[_offset + 1] : null;
+        return _sourceOffset + 1 < _source.Length ? _source[_sourceOffset + 1] : null;
     }
 
     private static TokenKind? TryGetSingleCharacterTokenKind(char ch)
@@ -131,9 +136,13 @@ public sealed class QueryTokenizer
     {
         if (isQuotedText || _textBuffer.Length > 0)
         {
+            int tokenStartOffset = _tokenStartOffset!.Value;
             string text = _textBuffer.ToString();
+
             _textBuffer.Clear();
-            return new Token(isQuotedText ? TokenKind.QuotedText : TokenKind.Text, text);
+            _tokenStartOffset = null;
+
+            return new Token(isQuotedText ? TokenKind.QuotedText : TokenKind.Text, text, tokenStartOffset);
         }
 
         return null;

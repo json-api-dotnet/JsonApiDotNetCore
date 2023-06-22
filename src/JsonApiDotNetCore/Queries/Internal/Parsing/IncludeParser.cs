@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -19,15 +18,15 @@ public class IncludeParser : QueryExpressionParser
 
         Tokenize(source);
 
-        IncludeExpression expression = ParseInclude(resourceTypeInScope, maximumDepth);
+        IncludeExpression expression = ParseInclude(source, resourceTypeInScope, maximumDepth);
 
         AssertTokenStackIsEmpty();
-        ValidateMaximumIncludeDepth(maximumDepth, expression);
+        ValidateMaximumIncludeDepth(maximumDepth, expression, 0);
 
         return expression;
     }
 
-    protected IncludeExpression ParseInclude(ResourceType resourceTypeInScope, int? maximumDepth)
+    protected IncludeExpression ParseInclude(string source, ResourceType resourceTypeInScope, int? maximumDepth)
     {
         var treeRoot = IncludeTreeNode.CreateRoot(resourceTypeInScope);
         bool isAtStart = true;
@@ -43,13 +42,13 @@ public class IncludeParser : QueryExpressionParser
                 isAtStart = false;
             }
 
-            ParseRelationshipChain(treeRoot);
+            ParseRelationshipChain(source, treeRoot);
         }
 
         return treeRoot.ToExpression();
     }
 
-    private void ParseRelationshipChain(IncludeTreeNode treeRoot)
+    private void ParseRelationshipChain(string source, IncludeTreeNode treeRoot)
     {
         // A relationship name usually matches a single relationship, even when overridden in derived types.
         // But in the following case, two relationships are matched on GET /shoppingBaskets?include=items:
@@ -77,27 +76,29 @@ public class IncludeParser : QueryExpressionParser
         // that there's currently no way to include Products without Articles. We could add such optional upcast syntax
         // in the future, if desired.
 
-        ICollection<IncludeTreeNode> children = ParseRelationshipName(treeRoot.AsList());
+        ICollection<IncludeTreeNode> children = ParseRelationshipName(source, treeRoot.AsList());
 
         while (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Period)
         {
             EatSingleCharacterToken(TokenKind.Period);
 
-            children = ParseRelationshipName(children);
+            children = ParseRelationshipName(source, children);
         }
     }
 
-    private ICollection<IncludeTreeNode> ParseRelationshipName(ICollection<IncludeTreeNode> parents)
+    private ICollection<IncludeTreeNode> ParseRelationshipName(string source, ICollection<IncludeTreeNode> parents)
     {
+        int position = GetNextTokenPositionOrEnd();
+
         if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text)
         {
-            return LookupRelationshipName(token.Value!, parents);
+            return LookupRelationshipName(token.Value!, parents, source, position);
         }
 
-        throw new QueryParseException("Relationship name expected.");
+        throw new QueryParseException("Relationship name expected.", position);
     }
 
-    private ICollection<IncludeTreeNode> LookupRelationshipName(string relationshipName, ICollection<IncludeTreeNode> parents)
+    private ICollection<IncludeTreeNode> LookupRelationshipName(string relationshipName, ICollection<IncludeTreeNode> parents, string source, int position)
     {
         List<IncludeTreeNode> children = new();
         HashSet<RelationshipAttribute> relationshipsFound = new();
@@ -118,47 +119,43 @@ public class IncludeParser : QueryExpressionParser
             }
         }
 
-        AssertRelationshipsFound(relationshipsFound, relationshipName, parents);
-        AssertAtLeastOneCanBeIncluded(relationshipsFound, relationshipName, parents);
+        AssertRelationshipsFound(relationshipsFound, relationshipName, parents, position);
+        AssertAtLeastOneCanBeIncluded(relationshipsFound, relationshipName, source, position);
 
         return children;
     }
 
-    private static void AssertRelationshipsFound(ISet<RelationshipAttribute> relationshipsFound, string relationshipName, ICollection<IncludeTreeNode> parents)
+    private static void AssertRelationshipsFound(ISet<RelationshipAttribute> relationshipsFound, string relationshipName, ICollection<IncludeTreeNode> parents,
+        int position)
     {
         if (relationshipsFound.Any())
         {
             return;
         }
 
-        string[] parentPaths = parents.Select(parent => parent.Path).Distinct().Where(path => path != string.Empty).ToArray();
-        string path = parentPaths.Length > 0 ? $"{parentPaths[0]}.{relationshipName}" : relationshipName;
-
         ResourceType[] parentResourceTypes = parents.Select(parent => parent.Relationship.RightType).Distinct().ToArray();
 
         bool hasDerivedTypes = parents.Any(parent => parent.Relationship.RightType.DirectlyDerivedTypes.Count > 0);
 
-        string message = ErrorFormatter.GetForNoneFound(ResourceFieldCategory.Relationship, relationshipName, path, parentResourceTypes, hasDerivedTypes);
-        throw new QueryParseException(message);
+        string message = ErrorFormatter.GetForNoneFound(ResourceFieldCategory.Relationship, relationshipName, parentResourceTypes, hasDerivedTypes);
+        throw new QueryParseException(message, position);
     }
 
-    private static void AssertAtLeastOneCanBeIncluded(ISet<RelationshipAttribute> relationshipsFound, string relationshipName,
-        ICollection<IncludeTreeNode> parents)
+    private static void AssertAtLeastOneCanBeIncluded(ISet<RelationshipAttribute> relationshipsFound, string relationshipName, string source, int position)
     {
         if (relationshipsFound.All(relationship => relationship.IsIncludeBlocked()))
         {
-            string parentPath = parents.First().Path;
             ResourceType resourceType = relationshipsFound.First().LeftType;
+            string message = $"Including the relationship '{relationshipName}' on '{resourceType}' is not allowed.";
 
-            string message = parentPath == string.Empty
-                ? $"Including the relationship '{relationshipName}' on '{resourceType}' is not allowed."
-                : $"Including the relationship '{relationshipName}' in '{parentPath}.{relationshipName}' on '{resourceType}' is not allowed.";
+            var exception = new QueryParseException(message, position);
+            string specificMessage = exception.GetMessageWithPosition(source);
 
-            throw new InvalidQueryStringParameterException("include", "The specified include is invalid.", message);
+            throw new InvalidQueryStringParameterException("include", "The specified include is invalid.", specificMessage);
         }
     }
 
-    private static void ValidateMaximumIncludeDepth(int? maximumDepth, IncludeExpression include)
+    private static void ValidateMaximumIncludeDepth(int? maximumDepth, IncludeExpression include, int position)
     {
         if (maximumDepth != null)
         {
@@ -166,68 +163,50 @@ public class IncludeParser : QueryExpressionParser
 
             foreach (IncludeElementExpression element in include.Elements)
             {
-                ThrowIfMaximumDepthExceeded(element, parentChain, maximumDepth.Value);
+                ThrowIfMaximumDepthExceeded(element, parentChain, maximumDepth.Value, position);
             }
         }
     }
 
-    private static void ThrowIfMaximumDepthExceeded(IncludeElementExpression includeElement, Stack<RelationshipAttribute> parentChain, int maximumDepth)
+    private static void ThrowIfMaximumDepthExceeded(IncludeElementExpression includeElement, Stack<RelationshipAttribute> parentChain, int maximumDepth,
+        int position)
     {
         parentChain.Push(includeElement.Relationship);
 
         if (parentChain.Count > maximumDepth)
         {
             string path = string.Join('.', parentChain.Reverse().Select(relationship => relationship.PublicName));
-            throw new QueryParseException($"Including '{path}' exceeds the maximum inclusion depth of {maximumDepth}.");
+            throw new QueryParseException($"Including '{path}' exceeds the maximum inclusion depth of {maximumDepth}.", position);
         }
 
         foreach (IncludeElementExpression child in includeElement.Children)
         {
-            ThrowIfMaximumDepthExceeded(child, parentChain, maximumDepth);
+            ThrowIfMaximumDepthExceeded(child, parentChain, maximumDepth, position);
         }
 
         parentChain.Pop();
     }
 
-    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements)
     {
         throw new NotSupportedException();
     }
 
     private sealed class IncludeTreeNode
     {
-        private readonly IncludeTreeNode? _parent;
         private readonly IDictionary<RelationshipAttribute, IncludeTreeNode> _children = new Dictionary<RelationshipAttribute, IncludeTreeNode>();
 
         public RelationshipAttribute Relationship { get; }
 
-        public string Path
-        {
-            get
-            {
-                var pathBuilder = new StringBuilder();
-                IncludeTreeNode? parent = this;
-
-                while (parent is { Relationship: not HiddenRootRelationshipAttribute })
-                {
-                    pathBuilder.Insert(0, pathBuilder.Length > 0 ? $"{parent.Relationship.PublicName}." : parent.Relationship.PublicName);
-                    parent = parent._parent;
-                }
-
-                return pathBuilder.ToString();
-            }
-        }
-
-        private IncludeTreeNode(RelationshipAttribute relationship, IncludeTreeNode? parent)
+        private IncludeTreeNode(RelationshipAttribute relationship)
         {
             Relationship = relationship;
-            _parent = parent;
         }
 
         public static IncludeTreeNode CreateRoot(ResourceType resourceType)
         {
             var relationship = new HiddenRootRelationshipAttribute(resourceType);
-            return new IncludeTreeNode(relationship, null);
+            return new IncludeTreeNode(relationship);
         }
 
         public ICollection<IncludeTreeNode> EnsureChildren(ICollection<RelationshipAttribute> relationships)
@@ -236,7 +215,7 @@ public class IncludeParser : QueryExpressionParser
             {
                 if (!_children.ContainsKey(relationship))
                 {
-                    var newChild = new IncludeTreeNode(relationship, this);
+                    var newChild = new IncludeTreeNode(relationship);
                     _children.Add(relationship, newChild);
                 }
             }

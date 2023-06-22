@@ -34,9 +34,11 @@ public class QueryStringParameterScopeParser : QueryExpressionParser
 
     protected QueryStringParameterScopeExpression ParseQueryStringParameterScope()
     {
+        int position = GetNextTokenPositionOrEnd();
+
         if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text)
         {
-            throw new QueryParseException("Parameter name expected.");
+            throw new QueryParseException("Parameter name expected.", position);
         }
 
         var name = new LiteralConstantExpression(token.Value!);
@@ -55,17 +57,17 @@ public class QueryStringParameterScopeParser : QueryExpressionParser
         return new QueryStringParameterScopeExpression(name, scope);
     }
 
-    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements)
     {
         if (chainRequirements == FieldChainRequirements.EndsInToMany)
         {
             // The mismatch here (ends-in-to-many being interpreted as entire-chain-must-be-to-many) is intentional.
-            return ChainResolver.ResolveToManyChain(_resourceTypeInScope!, path);
+            return ChainResolver.ResolveToManyChain(_resourceTypeInScope!, path, position);
         }
 
         if (chainRequirements == FieldChainRequirements.IsRelationship)
         {
-            return ChainResolver.ResolveRelationshipChain(_resourceTypeInScope!, path);
+            return ChainResolver.ResolveRelationshipChain(_resourceTypeInScope!, path, position);
         }
 
         throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");

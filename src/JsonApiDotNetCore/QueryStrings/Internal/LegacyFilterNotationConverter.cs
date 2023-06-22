@@ -10,27 +10,23 @@ public sealed class LegacyFilterNotationConverter
     private const string ParameterNameSuffix = "]";
     private const string OutputParameterName = "filter";
 
-    private const string ExpressionPrefix = "expr:";
-    private const string NotEqualsPrefix = "ne:";
-    private const string InPrefix = "in:";
-    private const string NotInPrefix = "nin:";
-
     private static readonly Dictionary<string, string> PrefixConversionTable = new()
     {
-        ["eq:"] = Keywords.Equals,
-        ["lt:"] = Keywords.LessThan,
-        ["le:"] = Keywords.LessOrEqual,
-        ["gt:"] = Keywords.GreaterThan,
-        ["ge:"] = Keywords.GreaterOrEqual,
-        ["like:"] = Keywords.Contains
+        [ParameterValuePrefix.Equal] = Keywords.Equals,
+        [ParameterValuePrefix.LessThan] = Keywords.LessThan,
+        [ParameterValuePrefix.LessOrEqual] = Keywords.LessOrEqual,
+        [ParameterValuePrefix.GreaterThan] = Keywords.GreaterThan,
+        [ParameterValuePrefix.GreaterEqual] = Keywords.GreaterOrEqual,
+        [ParameterValuePrefix.Like] = Keywords.Contains
     };
 
     public IEnumerable<string> ExtractConditions(string parameterValue)
     {
         ArgumentGuard.NotNullNorEmpty(parameterValue);
 
-        if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal) || parameterValue.StartsWith(InPrefix, StringComparison.Ordinal) ||
-            parameterValue.StartsWith(NotInPrefix, StringComparison.Ordinal))
+        if (parameterValue.StartsWith(ParameterValuePrefix.Expression, StringComparison.Ordinal) ||
+            parameterValue.StartsWith(ParameterValuePrefix.In, StringComparison.Ordinal) ||
+            parameterValue.StartsWith(ParameterValuePrefix.NotIn, StringComparison.Ordinal))
         {
             yield return parameterValue;
         }
@@ -48,9 +44,9 @@ public sealed class LegacyFilterNotationConverter
         ArgumentGuard.NotNullNorEmpty(parameterName);
         ArgumentGuard.NotNullNorEmpty(parameterValue);
 
-        if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal))
+        if (parameterValue.StartsWith(ParameterValuePrefix.Expression, StringComparison.Ordinal))
         {
-            string expression = parameterValue[ExpressionPrefix.Length..];
+            string expression = parameterValue[ParameterValuePrefix.Expression.Length..];
             return (parameterName, expression);
         }
 
@@ -68,40 +64,40 @@ public sealed class LegacyFilterNotationConverter
             }
         }
 
-        if (parameterValue.StartsWith(NotEqualsPrefix, StringComparison.Ordinal))
+        if (parameterValue.StartsWith(ParameterValuePrefix.NotEqual, StringComparison.Ordinal))
         {
-            string value = parameterValue[NotEqualsPrefix.Length..];
+            string value = parameterValue[ParameterValuePrefix.NotEqual.Length..];
             string escapedValue = EscapeQuotes(value);
             string expression = $"{Keywords.Not}({Keywords.Equals}({attributeName},'{escapedValue}'))";
 
             return (OutputParameterName, expression);
         }
 
-        if (parameterValue.StartsWith(InPrefix, StringComparison.Ordinal))
+        if (parameterValue.StartsWith(ParameterValuePrefix.In, StringComparison.Ordinal))
         {
-            string[] valueParts = parameterValue[InPrefix.Length..].Split(",");
+            string[] valueParts = parameterValue[ParameterValuePrefix.In.Length..].Split(",");
             string valueList = $"'{string.Join("','", valueParts)}'";
             string expression = $"{Keywords.Any}({attributeName},{valueList})";
 
             return (OutputParameterName, expression);
         }
 
-        if (parameterValue.StartsWith(NotInPrefix, StringComparison.Ordinal))
+        if (parameterValue.StartsWith(ParameterValuePrefix.NotIn, StringComparison.Ordinal))
         {
-            string[] valueParts = parameterValue[NotInPrefix.Length..].Split(",");
+            string[] valueParts = parameterValue[ParameterValuePrefix.NotIn.Length..].Split(",");
             string valueList = $"'{string.Join("','", valueParts)}'";
             string expression = $"{Keywords.Not}({Keywords.Any}({attributeName},{valueList}))";
 
             return (OutputParameterName, expression);
         }
 
-        if (parameterValue == "isnull:")
+        if (parameterValue == ParameterValuePrefix.IsNull)
         {
             string expression = $"{Keywords.Equals}({attributeName},null)";
             return (OutputParameterName, expression);
         }
 
-        if (parameterValue == "isnotnull:")
+        if (parameterValue == ParameterValuePrefix.IsNotNull)
         {
             string expression = $"{Keywords.Not}({Keywords.Equals}({attributeName},null))";
             return (OutputParameterName, expression);
@@ -128,11 +124,27 @@ public sealed class LegacyFilterNotationConverter
             }
         }
 
-        throw new QueryParseException("Expected field name between brackets in filter parameter name.");
+        throw new QueryParseException("Expected field name between brackets in filter parameter name.", -1);
     }
 
     private static string EscapeQuotes(string text)
     {
         return text.Replace("'", "''");
+    }
+
+    private sealed class ParameterValuePrefix
+    {
+        public const string Equal = "eq:";
+        public const string NotEqual = "ne:";
+        public const string LessThan = "lt:";
+        public const string LessOrEqual = "le:";
+        public const string GreaterThan = "gt:";
+        public const string GreaterEqual = "ge:";
+        public const string Like = "like:";
+        public const string In = "in:";
+        public const string NotIn = "nin:";
+        public const string IsNull = "isnull:";
+        public const string IsNotNull = "isnotnull:";
+        public const string Expression = "expr:";
     }
 }

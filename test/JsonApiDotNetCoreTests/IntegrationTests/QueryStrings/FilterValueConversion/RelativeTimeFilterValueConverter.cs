@@ -21,7 +21,7 @@ internal sealed class RelativeTimeFilterValueConverter : IFilterValueConverter
         return attribute.Type.ClrType == typeof(Reminder) && attribute.Property.PropertyType == typeof(DateTime);
     }
 
-    public object Convert(AttrAttribute attribute, string value, Type outerExpressionType)
+    public object Convert(AttrAttribute attribute, string value, int position, Type outerExpressionType)
     {
         // A leading +/- indicates a relative value, based on the current time.
 
@@ -29,18 +29,18 @@ internal sealed class RelativeTimeFilterValueConverter : IFilterValueConverter
         {
             if (outerExpressionType != typeof(ComparisonExpression))
             {
-                throw new QueryParseException("A relative time can only be used in a comparison function.");
+                throw new QueryParseException("A relative time can only be used in a comparison function.", position);
             }
 
-            var timeSpan = ConvertStringValueTo<TimeSpan>(value[1..]);
+            var timeSpan = ConvertStringValueTo<TimeSpan>(value[1..], position);
             TimeSpan offset = value[0] == '-' ? -timeSpan : timeSpan;
             return new TimeRange(_systemClock.UtcNow.UtcDateTime, offset);
         }
 
-        return ConvertStringValueTo<DateTime>(value);
+        return ConvertStringValueTo<DateTime>(value, position);
     }
 
-    private static T ConvertStringValueTo<T>(string value)
+    private static T ConvertStringValueTo<T>(string value, int position)
     {
         try
         {
@@ -48,7 +48,7 @@ internal sealed class RelativeTimeFilterValueConverter : IFilterValueConverter
         }
         catch (FormatException exception)
         {
-            throw new QueryParseException($"Failed to convert '{value}' of type 'String' to type '{typeof(T).Name}'.", exception);
+            throw new QueryParseException($"Failed to convert '{value}' of type 'String' to type '{typeof(T).Name}'.", position, exception);
         }
     }
 }

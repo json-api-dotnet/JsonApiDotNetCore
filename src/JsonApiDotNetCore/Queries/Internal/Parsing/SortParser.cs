@@ -66,7 +66,7 @@ public class SortParser : QueryExpressionParser
         return new SortElementExpression(targetAttribute, isAscending);
     }
 
-    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements)
     {
         // An attribute or relationship name usually matches a single field, even when overridden in derived types.
         // But in the following case, two attributes are matched on GET /shoppingBaskets?sort=bonusPoints:
@@ -90,28 +90,28 @@ public class SortParser : QueryExpressionParser
         // In this case there are two distinct BonusPoints fields (with different data types). And the sort order depends
         // on which attribute is used.
         //
-        // Because there is no syntax to pick one, we fail with an error. We could add such optional upcast syntax
+        // Because there is no syntax to pick one, we fail with an error. We could add optional upcast syntax
         // (which would be required in this case) in the future to make it work, if desired.
 
         if (chainRequirements == FieldChainRequirements.EndsInToMany)
         {
-            return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path, FieldChainInheritanceRequirement.RequireSingleMatch);
+            return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path, position, FieldChainInheritanceRequirement.RequireSingleMatch);
         }
 
         if (chainRequirements == FieldChainRequirements.EndsInAttribute)
         {
-            return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, FieldChainInheritanceRequirement.RequireSingleMatch,
+            return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, position, FieldChainInheritanceRequirement.RequireSingleMatch,
                 ValidateSingleField);
         }
 
         throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");
     }
 
-    protected override void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
+    protected override void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, int position)
     {
         if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
         {
-            throw new QueryParseException($"Sorting on attribute '{attribute.PublicName}' is not allowed.");
+            throw new QueryParseException($"Sorting on attribute '{attribute.PublicName}' is not allowed.", position);
         }
     }
 }

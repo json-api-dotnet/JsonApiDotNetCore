@@ -86,7 +86,8 @@ public sealed class RelativeTimeTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_filter_comparison_on_invalid_relative_time()
     {
         // Arrange
-        const string route = "/reminders?filter=equals(remindsAt,'-*')";
+        var parameterValue = new MarkedText("equals(remindsAt,^'-*')", '^');
+        string route = $"/reminders?filter={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -99,7 +100,7 @@ public sealed class RelativeTimeTests : IClassFixture<IntegrationTestContext<Tes
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be("Failed to convert '*' of type 'String' to type 'TimeSpan'.");
+        error.Detail.Should().Be($"Failed to convert '*' of type 'String' to type 'TimeSpan'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
@@ -108,7 +109,8 @@ public sealed class RelativeTimeTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_filter_any_on_relative_time()
     {
         // Arrange
-        const string route = "/reminders?filter=any(remindsAt,'-0:10:00')";
+        var parameterValue = new MarkedText("any(remindsAt,^'-0:10:00')", '^');
+        string route = $"/reminders?filter={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -121,7 +123,7 @@ public sealed class RelativeTimeTests : IClassFixture<IntegrationTestContext<Tes
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be("A relative time can only be used in a comparison function.");
+        error.Detail.Should().Be($"A relative time can only be used in a comparison function. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
@@ -130,7 +132,8 @@ public sealed class RelativeTimeTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Cannot_filter_text_match_on_relative_time()
     {
         // Arrange
-        const string route = "/reminders?filter=startsWith(remindsAt,'-0:10:00')";
+        var parameterValue = new MarkedText("startsWith(remindsAt,^'-0:10:00')", '^');
+        string route = $"/reminders?filter={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -143,7 +146,7 @@ public sealed class RelativeTimeTests : IClassFixture<IntegrationTestContext<Tes
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be("A relative time can only be used in a comparison function.");
+        error.Detail.Should().Be($"A relative time can only be used in a comparison function. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }

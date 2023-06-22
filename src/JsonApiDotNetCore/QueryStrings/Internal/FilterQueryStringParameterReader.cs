@@ -83,6 +83,8 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
 
     private void ReadSingleValue(string parameterName, string parameterValue)
     {
+        bool parameterNameIsValid = false;
+
         try
         {
             string name = parameterName;
@@ -94,13 +96,18 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
             }
 
             ResourceFieldChainExpression? scope = GetScope(name);
-            FilterExpression filter = GetFilter(value, scope);
+            parameterNameIsValid = true;
 
+            FilterExpression filter = GetFilter(value, scope);
             StoreFilterInScope(filter, scope);
         }
         catch (QueryParseException exception)
         {
-            throw new InvalidQueryStringParameterException(parameterName, "The specified filter is invalid.", exception.Message, exception);
+            string specificMessage = _options.EnableLegacyFilterNotation
+                ? exception.Message
+                : exception.GetMessageWithPosition(parameterNameIsValid ? parameterValue : parameterName);
+
+            throw new InvalidQueryStringParameterException(parameterName, "The specified filter is invalid.", specificMessage, exception);
         }
     }
 

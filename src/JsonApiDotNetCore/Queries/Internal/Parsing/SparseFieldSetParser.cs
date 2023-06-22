@@ -45,21 +45,21 @@ public class SparseFieldSetParser : QueryExpressionParser
         return fieldSetBuilder.Any() ? new SparseFieldSetExpression(fieldSetBuilder.ToImmutable()) : null;
     }
 
-    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements)
     {
-        ResourceFieldAttribute field = ChainResolver.GetField(path, _resourceType!, path);
+        ResourceFieldAttribute field = ChainResolver.GetField(path, _resourceType!, position);
 
-        ValidateSingleField(field, _resourceType!, path);
+        ValidateSingleField(field, _resourceType!, position);
 
         return ImmutableArray.Create(field);
     }
 
-    protected override void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
+    protected override void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, int position)
     {
         if (field.IsViewBlocked())
         {
             string kind = field is AttrAttribute ? "attribute" : "relationship";
-            throw new QueryParseException($"Retrieving the {kind} '{field.PublicName}' is not allowed.");
+            throw new QueryParseException($"Retrieving the {kind} '{field.PublicName}' is not allowed.", position);
         }
     }
 }

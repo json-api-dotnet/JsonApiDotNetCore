@@ -46,17 +46,21 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
     /// <inheritdoc />
     public virtual void Read(string parameterName, StringValues parameterValue)
     {
+        bool parameterNameIsValid = false;
+
         try
         {
             ResourceFieldChainExpression? scope = GetScope(parameterName);
-            SortExpression sort = GetSort(parameterValue.ToString(), scope);
+            parameterNameIsValid = true;
 
+            SortExpression sort = GetSort(parameterValue.ToString(), scope);
             var expressionInScope = new ExpressionInScope(scope, sort);
             _constraints.Add(expressionInScope);
         }
         catch (QueryParseException exception)
         {
-            throw new InvalidQueryStringParameterException(parameterName, "The specified sort is invalid.", exception.Message, exception);
+            string specificMessage = exception.GetMessageWithPosition(parameterNameIsValid ? parameterValue : parameterName);
+            throw new InvalidQueryStringParameterException(parameterName, "The specified sort is invalid.", specificMessage, exception);
         }
     }
 

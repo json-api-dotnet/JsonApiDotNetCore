@@ -52,36 +52,62 @@ public sealed class SortParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("sort[", "id", "Field name expected.")]
-    [InlineData("sort[abc.def]", "id", "Relationship 'abc' in 'abc.def' does not exist on resource type 'blogs'.")]
-    [InlineData("sort[posts.author]", "id", "Relationship 'author' in 'posts.author' must be a to-many relationship on resource type 'blogPosts'.")]
-    [InlineData("sort", "", "-, count function or field name expected.")]
-    [InlineData("sort", " ", "Unexpected whitespace.")]
-    [InlineData("sort", "-", "Count function or field name expected.")]
-    [InlineData("sort", "abc", "Attribute 'abc' does not exist on resource type 'blogs'.")]
-    [InlineData("sort[posts]", "author", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
-    [InlineData("sort[posts]", "author.livingAddress", "Attribute 'livingAddress' in 'author.livingAddress' does not exist on resource type 'webAccounts'.")]
-    [InlineData("sort", "-count", "( expected.")]
-    [InlineData("sort", "count", "( expected.")]
-    [InlineData("sort", "count(posts", ") expected.")]
-    [InlineData("sort", "count(", "Field name expected.")]
-    [InlineData("sort", "count(-abc)", "Field name expected.")]
-    [InlineData("sort", "count(abc)", "Relationship 'abc' does not exist on resource type 'blogs'.")]
-    [InlineData("sort", "count(id)", "Relationship 'id' does not exist on resource type 'blogs'.")]
-    [InlineData("sort[posts]", "count(author)", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
-    [InlineData("sort[posts]", "caption,", "-, count function or field name expected.")]
-    [InlineData("sort[posts]", "caption:", ", expected.")]
-    [InlineData("sort[posts]", "caption,-", "Count function or field name expected.")]
-    [InlineData("sort[posts.contributors]", "some", "Attribute 'some' does not exist on resource type 'humans' or any of its derived types.")]
-    [InlineData("sort[posts.contributors]", "wife.father.some", "Attribute 'some' in 'wife.father.some' does not exist on resource type 'men'.")]
-    [InlineData("sort[posts.contributors]", "count(some)", "Relationship 'some' does not exist on resource type 'humans' or any of its derived types.")]
-    [InlineData("sort[posts.contributors]", "count(wife.some)", "Relationship 'some' in 'wife.some' does not exist on resource type 'women'.")]
-    [InlineData("sort[posts.contributors]", "age", "Attribute 'age' is defined on multiple derived types.")]
-    [InlineData("sort[posts.contributors]", "count(friends)", "Relationship 'friends' is defined on multiple derived types.")]
-    public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
+    [InlineData("sort[^", "Field name expected.")]
+    [InlineData("sort[^abc.def]", "Relationship 'abc' does not exist on resource type 'blogs'.")]
+    [InlineData("sort[posts.^author]", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
+    public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
     {
+        // Arrange
+        var parameterNameSource = new MarkedText(parameterName, '^');
+
         // Act
-        Action action = () => _reader.Read(parameterName, parameterValue);
+        Action action = () => _reader.Read(parameterNameSource.Text, " ");
+
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+
+        exception.ParameterName.Should().Be(parameterNameSource.Text);
+        exception.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified sort is invalid.");
+        error.Detail.Should().Be($"{errorMessage} {parameterNameSource}");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be(parameterNameSource.Text);
+    }
+
+    [Theory]
+    [InlineData("sort", "^", "-, count function or field name expected.")]
+    [InlineData("sort", "^ ", "Unexpected whitespace.")]
+    [InlineData("sort", "-^", "Count function or field name expected.")]
+    [InlineData("sort", "^abc", "Attribute 'abc' does not exist on resource type 'blogs'.")]
+    [InlineData("sort[posts]", "^author", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
+    [InlineData("sort[posts]", "author.^livingAddress", "Attribute 'livingAddress' does not exist on resource type 'webAccounts'.")]
+    [InlineData("sort", "-count^", "( expected.")]
+    [InlineData("sort", "count^", "( expected.")]
+    [InlineData("sort", "count(posts^", ") expected.")]
+    [InlineData("sort", "count(^", "Field name expected.")]
+    [InlineData("sort", "count(^-abc)", "Field name expected.")]
+    [InlineData("sort", "count(^abc)", "Relationship 'abc' does not exist on resource type 'blogs'.")]
+    [InlineData("sort", "count(^id)", "Relationship 'id' does not exist on resource type 'blogs'.")]
+    [InlineData("sort[posts]", "count(^author)", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
+    [InlineData("sort[posts]", "caption,^", "-, count function or field name expected.")]
+    [InlineData("sort[posts]", "caption^:", ", expected.")]
+    [InlineData("sort[posts]", "caption,-^", "Count function or field name expected.")]
+    [InlineData("sort[posts.contributors]", "^some", "Attribute 'some' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("sort[posts.contributors]", "wife.father.^some", "Attribute 'some' does not exist on resource type 'men'.")]
+    [InlineData("sort[posts.contributors]", "count(^some)", "Relationship 'some' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("sort[posts.contributors]", "count(wife.^some)", "Relationship 'some' does not exist on resource type 'women'.")]
+    [InlineData("sort[posts.contributors]", "^age", "Attribute 'age' is defined on multiple derived types.")]
+    [InlineData("sort[posts.contributors]", "count(^friends)", "Relationship 'friends' is defined on multiple derived types.")]
+    public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
+    {
+        // Arrange
+        var parameterValueSource = new MarkedText(parameterValue, '^');
+
+        // Act
+        Action action = () => _reader.Read(parameterName, parameterValueSource.Text);
 
         // Assert
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
@@ -92,7 +118,7 @@ public sealed class SortParseTests : BaseParseTests
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Be(errorMessage);
+        error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be(parameterName);
     }

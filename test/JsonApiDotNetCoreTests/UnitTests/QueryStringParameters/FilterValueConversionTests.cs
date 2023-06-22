@@ -42,8 +42,10 @@ public sealed class FilterValueConversionTests : BaseParseTests
         var resourceFactory = new ResourceFactory(new ServiceContainer());
         var reader = new FilterQueryStringParameterReader(Request, ResourceGraph, resourceFactory, Options, converter.AsEnumerable());
 
+        var parameterValue = new MarkedText("equals(title,^'some')", '^');
+
         // Act
-        Action action = () => reader.Read("filter", "equals(title,'some')");
+        Action action = () => reader.Read("filter", parameterValue.Text);
 
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().Which;
@@ -52,7 +54,7 @@ public sealed class FilterValueConversionTests : BaseParseTests
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be("Unable to parse 'some'.");
+        error.Detail.Should().Be($"Unable to parse 'some'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
@@ -64,7 +66,7 @@ public sealed class FilterValueConversionTests : BaseParseTests
             return true;
         }
 
-        public object Convert(AttrAttribute attribute, string value, Type outerExpressionType)
+        public object Convert(AttrAttribute attribute, string value, int position, Type outerExpressionType)
         {
             return null!;
         }
@@ -77,9 +79,9 @@ public sealed class FilterValueConversionTests : BaseParseTests
             return true;
         }
 
-        public object Convert(AttrAttribute attribute, string value, Type outerExpressionType)
+        public object Convert(AttrAttribute attribute, string value, int position, Type outerExpressionType)
         {
-            throw new QueryParseException($"Unable to parse '{value}'.");
+            throw new QueryParseException($"Unable to parse '{value}'.", position);
         }
     }
 }

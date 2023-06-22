@@ -51,13 +51,17 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
     /// <inheritdoc />
     public virtual void Read(string parameterName, StringValues parameterValue)
     {
+        bool isParameterNameValid = true;
+
         try
         {
             PaginationQueryStringValueExpression constraint = GetPageConstraint(parameterValue.ToString());
 
             if (constraint.Elements.Any(element => element.Scope == null))
             {
+                isParameterNameValid = false;
                 AssertIsCollectionRequest();
+                isParameterNameValid = true;
             }
 
             if (parameterName == PageSizeParameterName)
@@ -73,7 +77,8 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
         }
         catch (QueryParseException exception)
         {
-            throw new InvalidQueryStringParameterException(parameterName, "The specified pagination is invalid.", exception.Message, exception);
+            string specificMessage = exception.GetMessageWithPosition(isParameterNameValid ? parameterValue : parameterName);
+            throw new InvalidQueryStringParameterException(parameterName, "The specified pagination is invalid.", specificMessage, exception);
         }
     }
 
@@ -84,36 +89,45 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
 
     protected virtual void ValidatePageSize(PaginationQueryStringValueExpression constraint)
     {
-        if (_options.MaximumPageSize != null)
+        foreach (PaginationElementQueryStringValueExpression element in constraint.Elements)
         {
-            if (constraint.Elements.Any(element => element.Value > _options.MaximumPageSize.Value))
+            if (_options.MaximumPageSize != null)
             {
-                throw new QueryParseException($"Page size cannot be higher than {_options.MaximumPageSize}.");
+                if (element.Value > _options.MaximumPageSize.Value)
+                {
+                    throw new QueryParseException($"Page size cannot be higher than {_options.MaximumPageSize}.", element.Position);
+                }
+
+                if (element.Value == 0)
+                {
+                    throw new QueryParseException("Page size cannot be unconstrained.", element.Position);
+                }
             }
 
-            if (constraint.Elements.Any(element => element.Value == 0))
+            if (element.Value < 0)
             {
-                throw new QueryParseException("Page size cannot be unconstrained.");
+                throw new QueryParseException("Page size cannot be negative.", element.Position);
             }
-        }
-
-        if (constraint.Elements.Any(element => element.Value < 0))
-        {
-            throw new QueryParseException("Page size cannot be negative.");
         }
     }
 
     [AssertionMethod]
     protected virtual void ValidatePageNumber(PaginationQueryStringValueExpression constraint)
     {
-        if (_options.MaximumPageNumber != null && constraint.Elements.Any(element => element.Value > _options.MaximumPageNumber.OneBasedValue))
+        foreach (PaginationElementQueryStringValueExpression element in constraint.Elements)
         {
-            throw new QueryParseException($"Page number cannot be higher than {_options.MaximumPageNumber}.");
-        }
+            if (_options.MaximumPageNumber != null)
+            {
+                if (element.Value > _options.MaximumPageNumber.OneBasedValue)
+                {
+                    throw new QueryParseException($"Page number cannot be higher than {_options.MaximumPageNumber}.", element.Position);
+                }
+            }
 
-        if (constraint.Elements.Any(element => element.Value < 1))
-        {
-            throw new QueryParseException("Page number cannot be negative or zero.");
+            if (element.Value < 1)
+            {
+                throw new QueryParseException("Page number cannot be negative or zero.", element.Position);
+            }
         }
     }
 

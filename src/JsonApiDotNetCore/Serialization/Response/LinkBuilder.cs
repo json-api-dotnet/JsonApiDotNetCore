@@ -153,7 +153,7 @@ public class LinkBuilder : ILinkBuilder
 
         if (topPageSize != null)
         {
-            var topPageSizeElement = new PaginationElementQueryStringValueExpression(null, topPageSize.Value);
+            var topPageSizeElement = new PaginationElementQueryStringValueExpression(null, topPageSize.Value, -1);
 
             elements = elementInTopScopeIndex != -1 ? elements.SetItem(elementInTopScopeIndex, topPageSizeElement) : elements.Insert(0, topPageSizeElement);
         }

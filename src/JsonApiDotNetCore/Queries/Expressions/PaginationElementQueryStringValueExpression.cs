@@ -10,11 +10,13 @@ public class PaginationElementQueryStringValueExpression : QueryExpression
 {
     public ResourceFieldChainExpression? Scope { get; }
     public int Value { get; }
+    public int Position { get; }
 
-    public PaginationElementQueryStringValueExpression(ResourceFieldChainExpression? scope, int value)
+    public PaginationElementQueryStringValueExpression(ResourceFieldChainExpression? scope, int value, int position)
     {
         Scope = scope;
         Value = value;
+        Position = position;
     }
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
@@ -24,12 +26,12 @@ public class PaginationElementQueryStringValueExpression : QueryExpression
 
     public override string ToString()
     {
-        return Scope == null ? Value.ToString() : $"{Scope}: {Value}";
+        return Scope == null ? $"{Value} at {Position}" : $"{Scope}: {Value} at {Position}";
     }
 
     public override string ToFullString()
     {
-        return Scope == null ? Value.ToString() : $"{Scope.ToFullString()}: {Value}";
+        return Scope == null ? $"{Value} at {Position}" : $"{Scope.ToFullString()}: {Value} at {Position}";
     }
 
     public override bool Equals(object? obj)
@@ -46,11 +48,11 @@ public class PaginationElementQueryStringValueExpression : QueryExpression
 
         var other = (PaginationElementQueryStringValueExpression)obj;
 
-        return Equals(Scope, other.Scope) && Value == other.Value;
+        return Equals(Scope, other.Scope) && Value == other.Value && Position == other.Position;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Scope, Value);
+        return HashCode.Combine(Scope, Value, Position);
     }
 }
