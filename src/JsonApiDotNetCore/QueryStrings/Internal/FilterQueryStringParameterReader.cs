@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Primitives;
 
@@ -33,7 +34,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
         ArgumentGuard.NotNull(filterValueConverters);
 
         _options = options;
-        _scopeParser = new QueryStringParameterScopeParser(FieldChainRequirements.EndsInToMany);
+        _scopeParser = new QueryStringParameterScopeParser();
         _filterParser = new FilterParser(resourceFactory, filterValueConverters);
     }
 
@@ -113,7 +114,8 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
 
     private ResourceFieldChainExpression? GetScope(string parameterName)
     {
-        QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResourceType);
+        QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResourceType,
+            BuiltInPatterns.RelationshipChainEndingInToMany, FieldChainPatternMatchOptions.None);
 
         if (parameterScope.Scope == null)
         {

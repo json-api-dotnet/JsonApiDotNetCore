@@ -468,7 +468,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterName}");
+        error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterName}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be(parameterName.Text);
     }
@@ -491,7 +491,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterName}");
+        error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterName}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be(parameterName.Text);
     }

@@ -4,12 +4,16 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings;
+using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Resources.Internal;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 
+/// <summary>
+/// Parses the JSON:API 'filter' query string parameter value.
+/// </summary>
 [PublicAPI]
 public class FilterParser : QueryExpressionParser
 {
@@ -17,7 +21,7 @@ public class FilterParser : QueryExpressionParser
 
     private readonly IResourceFactory _resourceFactory;
     private readonly IEnumerable<IFilterValueConverter> _filterValueConverters;
-    private ResourceType? _resourceTypeInScope;
+    private ResourceType _resourceTypeInScope = null!;
 
     public FilterParser(IResourceFactory resourceFactory, IEnumerable<IFilterValueConverter> filterValueConverters)
     {
@@ -28,11 +32,11 @@ public class FilterParser : QueryExpressionParser
         _filterValueConverters = filterValueConverters;
     }
 
-    public FilterExpression Parse(string source, ResourceType resourceTypeInScope)
+    public FilterExpression Parse(string source, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceTypeInScope);
+        ArgumentGuard.NotNull(resourceType);
 
-        return InScopeOfResourceType(resourceTypeInScope, () =>
+        return InScopeOfResourceType(resourceType, () =>
         {
             Tokenize(source);
 
@@ -142,11 +146,11 @@ public class FilterParser : QueryExpressionParser
         EatSingleCharacterToken(TokenKind.OpenParen);
 
         // Allow equality comparison of a to-one relationship with null.
-        FieldChainRequirements leftChainRequirements = comparisonOperator == ComparisonOperator.Equals
-            ? FieldChainRequirements.EndsInAttribute | FieldChainRequirements.EndsInToOne
-            : FieldChainRequirements.EndsInAttribute;
+        FieldChainPattern leftChainPattern = comparisonOperator == ComparisonOperator.Equals
+            ? BuiltInPatterns.ToOneChainEndingInAttributeOrToOne
+            : BuiltInPatterns.ToOneChainEndingInAttribute;
 
-        QueryExpression leftTerm = ParseCountOrField(leftChainRequirements);
+        QueryExpression leftTerm = ParseCountOrField(leftChainPattern);
 
         EatSingleCharacterToken(TokenKind.Comma);
 
@@ -155,12 +159,12 @@ public class FilterParser : QueryExpressionParser
         if (leftTerm is CountExpression)
         {
             Func<string, int, object> rightConstantValueConverter = GetConstantValueConverterForCount();
-            rightTerm = ParseCountOrConstantOrField(FieldChainRequirements.EndsInAttribute, rightConstantValueConverter);
+            rightTerm = ParseCountOrConstantOrField(rightConstantValueConverter);
         }
         else if (leftTerm is ResourceFieldChainExpression fieldChain && fieldChain.Fields[^1] is AttrAttribute attribute)
         {
             Func<string, int, object> rightConstantValueConverter = GetConstantValueConverterForAttribute(attribute, typeof(ComparisonExpression));
-            rightTerm = ParseCountOrConstantOrNullOrField(FieldChainRequirements.EndsInAttribute, rightConstantValueConverter);
+            rightTerm = ParseCountOrConstantOrNullOrField(rightConstantValueConverter);
         }
         else
         {
@@ -179,7 +183,9 @@ public class FilterParser : QueryExpressionParser
 
         int fieldChainStartPosition = GetNextTokenPositionOrEnd();
 
-        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, null);
+        ResourceFieldChainExpression targetAttributeChain =
+            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None, _resourceTypeInScope, null);
+
         var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
 
         EatSingleCharacterToken(TokenKind.Comma);
@@ -193,7 +199,7 @@ public class FilterParser : QueryExpressionParser
         }
         catch (QueryParseException exception) when (exception.Message == PlaceholderMessageForAttributeNotString)
         {
-            int attributePosition = GetPositionOfLastField(targetAttributeChain, fieldChainStartPosition);
+            int attributePosition = fieldChainStartPosition + GetRelativePositionOfLastFieldInChain(targetAttributeChain);
             throw new QueryParseException("Attribute of type 'String' expected.", attributePosition);
         }
 
@@ -203,24 +209,14 @@ public class FilterParser : QueryExpressionParser
         return new MatchTextExpression(targetAttributeChain, constant, matchKind);
     }
 
-    private static int GetPositionOfLastField(ResourceFieldChainExpression fieldChain, int startPosition)
-    {
-        int position = 0;
-
-        for (int index = 0; index < fieldChain.Fields.Count - 1; index++)
-        {
-            position += fieldChain.Fields[index].PublicName.Length + 1;
-        }
-
-        return startPosition + position;
-    }
-
     protected AnyExpression ParseAny()
     {
         EatText(Keywords.Any);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        ResourceFieldChainExpression targetAttributeChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, null);
+        ResourceFieldChainExpression targetAttributeChain =
+            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None, _resourceTypeInScope, null);
+
         var targetAttribute = (AttrAttribute)targetAttributeChain.Fields[^1];
 
         EatSingleCharacterToken(TokenKind.Comma);
@@ -251,7 +247,9 @@ public class FilterParser : QueryExpressionParser
         EatText(Keywords.Has);
         EatSingleCharacterToken(TokenKind.OpenParen);
 
-        ResourceFieldChainExpression targetCollection = ParseFieldChain(FieldChainRequirements.EndsInToMany, null);
+        ResourceFieldChainExpression targetCollection =
+            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInToMany, FieldChainPatternMatchOptions.None, _resourceTypeInScope, null);
+
         FilterExpression? filter = null;
 
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Comma)
@@ -280,7 +278,7 @@ public class FilterParser : QueryExpressionParser
 
         EatSingleCharacterToken(TokenKind.Comma);
 
-        ResourceType baseType = targetToOneRelationship != null ? ((RelationshipAttribute)targetToOneRelationship.Fields[^1]).RightType : _resourceTypeInScope!;
+        ResourceType baseType = targetToOneRelationship != null ? ((RelationshipAttribute)targetToOneRelationship.Fields[^1]).RightType : _resourceTypeInScope;
         ResourceType derivedType = ParseDerivedType(baseType);
 
         FilterExpression? child = TryParseFilterInIsType(derivedType);
@@ -297,7 +295,7 @@ public class FilterParser : QueryExpressionParser
             return null;
         }
 
-        return ParseFieldChain(FieldChainRequirements.EndsInToOne, "Relationship name or , expected.");
+        return ParseFieldChain(BuiltInPatterns.ToOneChain, FieldChainPatternMatchOptions.None, _resourceTypeInScope, "Relationship name or , expected.");
     }
 
     private ResourceType ParseDerivedType(ResourceType baseType)
@@ -359,21 +357,21 @@ public class FilterParser : QueryExpressionParser
         return filter;
     }
 
-    protected QueryExpression ParseCountOrField(FieldChainRequirements chainRequirements)
+    protected QueryExpression ParseCountOrField(FieldChainPattern pattern)
     {
-        CountExpression? count = TryParseCount();
+        CountExpression? count = TryParseCount(FieldChainPatternMatchOptions.None, _resourceTypeInScope);
 
         if (count != null)
         {
             return count;
         }
 
-        return ParseFieldChain(chainRequirements, "Count function or field name expected.");
+        return ParseFieldChain(pattern, FieldChainPatternMatchOptions.None, _resourceTypeInScope, "Count function or field name expected.");
     }
 
-    protected QueryExpression ParseCountOrConstantOrField(FieldChainRequirements chainRequirements, Func<string, int, object> constantValueConverter)
+    protected QueryExpression ParseCountOrConstantOrField(Func<string, int, object> constantValueConverter)
     {
-        CountExpression? count = TryParseCount();
+        CountExpression? count = TryParseCount(FieldChainPatternMatchOptions.None, _resourceTypeInScope);
 
         if (count != null)
         {
@@ -387,12 +385,13 @@ public class FilterParser : QueryExpressionParser
             return constant;
         }
 
-        return ParseFieldChain(chainRequirements, "Count function, value between quotes or field name expected.");
+        return ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None, _resourceTypeInScope,
+            "Count function, value between quotes or field name expected.");
     }
 
-    protected QueryExpression ParseCountOrConstantOrNullOrField(FieldChainRequirements chainRequirements, Func<string, int, object> constantValueConverter)
+    protected QueryExpression ParseCountOrConstantOrNullOrField(Func<string, int, object> constantValueConverter)
     {
-        CountExpression? count = TryParseCount();
+        CountExpression? count = TryParseCount(FieldChainPatternMatchOptions.None, _resourceTypeInScope);
 
         if (count != null)
         {
@@ -406,7 +405,8 @@ public class FilterParser : QueryExpressionParser
             return constantOrNull;
         }
 
-        return ParseFieldChain(chainRequirements, "Count function, value between quotes, null or field name expected.");
+        return ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.None, _resourceTypeInScope,
+            "Count function, value between quotes, null or field name expected.");
     }
 
     protected LiteralConstantExpression? TryParseConstant(Func<string, int, object> constantValueConverter)
@@ -546,34 +546,7 @@ public class FilterParser : QueryExpressionParser
         return tempResource.GetTypedId();
     }
 
-    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements)
-    {
-        if (chainRequirements == FieldChainRequirements.EndsInToMany)
-        {
-            return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path, position, FieldChainInheritanceRequirement.Disabled,
-                ValidateSingleField);
-        }
-
-        if (chainRequirements == FieldChainRequirements.EndsInAttribute)
-        {
-            return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, position, FieldChainInheritanceRequirement.Disabled,
-                ValidateSingleField);
-        }
-
-        if (chainRequirements == FieldChainRequirements.EndsInToOne)
-        {
-            return ChainResolver.ResolveToOneChain(_resourceTypeInScope!, path, position, ValidateSingleField);
-        }
-
-        if (chainRequirements.HasFlag(FieldChainRequirements.EndsInAttribute) && chainRequirements.HasFlag(FieldChainRequirements.EndsInToOne))
-        {
-            return ChainResolver.ResolveToOneChainEndingInAttributeOrToOne(_resourceTypeInScope!, path, position, ValidateSingleField);
-        }
-
-        throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");
-    }
-
-    protected override void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, int position)
+    protected override void ValidateField(ResourceFieldAttribute field, int position)
     {
         if (field.IsFilterBlocked())
         {
@@ -584,7 +557,7 @@ public class FilterParser : QueryExpressionParser
 
     private TResult InScopeOfResourceType<TResult>(ResourceType resourceType, Func<TResult> action)
     {
-        ResourceType? backupType = _resourceTypeInScope;
+        ResourceType backupType = _resourceTypeInScope;
 
         try
         {

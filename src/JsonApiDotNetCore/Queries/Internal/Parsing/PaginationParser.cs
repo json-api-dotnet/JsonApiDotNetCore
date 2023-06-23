@@ -2,50 +2,49 @@ using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.QueryStrings.FieldChains;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 
+/// <summary>
+/// Parses the JSON:API 'page' query string parameter value.
+/// </summary>
 [PublicAPI]
 public class PaginationParser : QueryExpressionParser
 {
-    private ResourceType? _resourceTypeInScope;
-
-    public PaginationQueryStringValueExpression Parse(string source, ResourceType resourceTypeInScope)
+    public PaginationQueryStringValueExpression Parse(string source, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceTypeInScope);
-
-        _resourceTypeInScope = resourceTypeInScope;
+        ArgumentGuard.NotNull(resourceType);
 
         Tokenize(source);
 
-        PaginationQueryStringValueExpression expression = ParsePagination();
+        PaginationQueryStringValueExpression expression = ParsePagination(resourceType);
 
         AssertTokenStackIsEmpty();
 
         return expression;
     }
 
-    protected PaginationQueryStringValueExpression ParsePagination()
+    protected PaginationQueryStringValueExpression ParsePagination(ResourceType resourceType)
     {
         ImmutableArray<PaginationElementQueryStringValueExpression>.Builder elementsBuilder =
             ImmutableArray.CreateBuilder<PaginationElementQueryStringValueExpression>();
 
-        PaginationElementQueryStringValueExpression element = ParsePaginationElement();
+        PaginationElementQueryStringValueExpression element = ParsePaginationElement(resourceType);
         elementsBuilder.Add(element);
 
         while (TokenStack.Any())
         {
             EatSingleCharacterToken(TokenKind.Comma);
 
-            element = ParsePaginationElement();
+            element = ParsePaginationElement(resourceType);
             elementsBuilder.Add(element);
         }
 
         return new PaginationQueryStringValueExpression(elementsBuilder.ToImmutable());
     }
 
-    protected PaginationElementQueryStringValueExpression ParsePaginationElement()
+    protected PaginationElementQueryStringValueExpression ParsePaginationElement(ResourceType resourceType)
     {
         int position = GetNextTokenPositionOrEnd();
         int? number = TryParseNumber();
@@ -55,7 +54,8 @@ public class PaginationParser : QueryExpressionParser
             return new PaginationElementQueryStringValueExpression(null, number.Value, position);
         }
 
-        ResourceFieldChainExpression scope = ParseFieldChain(FieldChainRequirements.EndsInToMany, "Number or relationship name expected.");
+        ResourceFieldChainExpression scope = ParseFieldChain(BuiltInPatterns.RelationshipChainEndingInToMany, FieldChainPatternMatchOptions.None, resourceType,
+            "Number or relationship name expected.");
 
         EatSingleCharacterToken(TokenKind.Colon);
 
@@ -97,10 +97,5 @@ public class PaginationParser : QueryExpressionParser
         }
 
         return null;
-    }
-
-    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements)
-    {
-        return ChainResolver.ResolveToManyChain(_resourceTypeInScope!, path, position);
     }
 }

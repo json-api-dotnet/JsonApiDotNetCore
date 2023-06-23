@@ -2,33 +2,33 @@ using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 
+/// <summary>
+/// Parses the JSON:API 'sort' query string parameter value.
+/// </summary>
 [PublicAPI]
 public class SortParser : QueryExpressionParser
 {
-    private ResourceType? _resourceTypeInScope;
-
-    public SortExpression Parse(string source, ResourceType resourceTypeInScope)
+    public SortExpression Parse(string source, ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceTypeInScope);
-
-        _resourceTypeInScope = resourceTypeInScope;
+        ArgumentGuard.NotNull(resourceType);
 
         Tokenize(source);
 
-        SortExpression expression = ParseSort();
+        SortExpression expression = ParseSort(resourceType);
 
         AssertTokenStackIsEmpty();
 
         return expression;
     }
 
-    protected SortExpression ParseSort()
+    protected SortExpression ParseSort(ResourceType resourceType)
     {
-        SortElementExpression firstElement = ParseSortElement();
+        SortElementExpression firstElement = ParseSortElement(resourceType);
 
         ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>();
         elementsBuilder.Add(firstElement);
@@ -37,14 +37,14 @@ public class SortParser : QueryExpressionParser
         {
             EatSingleCharacterToken(TokenKind.Comma);
 
-            SortElementExpression nextElement = ParseSortElement();
+            SortElementExpression nextElement = ParseSortElement(resourceType);
             elementsBuilder.Add(nextElement);
         }
 
         return new SortExpression(elementsBuilder.ToImmutable());
     }
 
-    protected SortElementExpression ParseSortElement()
+    protected SortElementExpression ParseSortElement(ResourceType resourceType)
     {
         bool isAscending = true;
 
@@ -54,20 +54,6 @@ public class SortParser : QueryExpressionParser
             isAscending = false;
         }
 
-        CountExpression? count = TryParseCount();
-
-        if (count != null)
-        {
-            return new SortElementExpression(count, isAscending);
-        }
-
-        string errorMessage = isAscending ? "-, count function or field name expected." : "Count function or field name expected.";
-        ResourceFieldChainExpression targetAttribute = ParseFieldChain(FieldChainRequirements.EndsInAttribute, errorMessage);
-        return new SortElementExpression(targetAttribute, isAscending);
-    }
-
-    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements)
-    {
         // An attribute or relationship name usually matches a single field, even when overridden in derived types.
         // But in the following case, two attributes are matched on GET /shoppingBaskets?sort=bonusPoints:
         //
@@ -93,21 +79,22 @@ public class SortParser : QueryExpressionParser
         // Because there is no syntax to pick one, we fail with an error. We could add optional upcast syntax
         // (which would be required in this case) in the future to make it work, if desired.
 
-        if (chainRequirements == FieldChainRequirements.EndsInToMany)
+        CountExpression? count = TryParseCount(FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType);
+
+        if (count != null)
         {
-            return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path, position, FieldChainInheritanceRequirement.RequireSingleMatch);
+            return new SortElementExpression(count, isAscending);
         }
 
-        if (chainRequirements == FieldChainRequirements.EndsInAttribute)
-        {
-            return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, position, FieldChainInheritanceRequirement.RequireSingleMatch,
-                ValidateSingleField);
-        }
+        string errorMessage = isAscending ? "-, count function or field name expected." : "Count function or field name expected.";
 
-        throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");
+        ResourceFieldChainExpression targetAttribute = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute,
+            FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType, errorMessage);
+
+        return new SortElementExpression(targetAttribute, isAscending);
     }
 
-    protected override void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, int position)
+    protected override void ValidateField(ResourceFieldAttribute field, int position)
     {
         if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
         {

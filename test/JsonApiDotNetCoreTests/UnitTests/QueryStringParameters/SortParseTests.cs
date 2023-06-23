@@ -53,8 +53,13 @@ public sealed class SortParseTests : BaseParseTests
 
     [Theory]
     [InlineData("sort[^", "Field name expected.")]
-    [InlineData("sort[^abc.def]", "Relationship 'abc' does not exist on resource type 'blogs'.")]
-    [InlineData("sort[posts.^author]", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
+    [InlineData("sort[^abc.def]", "Field 'abc' does not exist on resource type 'blogs'.")]
+    [InlineData("sort[posts.^caption]",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'blogPosts' expected.")]
+    [InlineData("sort[posts.author^]",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'webAccounts' expected.")]
     public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
     {
         // Arrange
@@ -81,26 +86,32 @@ public sealed class SortParseTests : BaseParseTests
     [InlineData("sort", "^", "-, count function or field name expected.")]
     [InlineData("sort", "^ ", "Unexpected whitespace.")]
     [InlineData("sort", "-^", "Count function or field name expected.")]
-    [InlineData("sort", "^abc", "Attribute 'abc' does not exist on resource type 'blogs'.")]
-    [InlineData("sort[posts]", "^author", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
-    [InlineData("sort[posts]", "author.^livingAddress", "Attribute 'livingAddress' does not exist on resource type 'webAccounts'.")]
+    [InlineData("sort", "^abc", "Field 'abc' does not exist on resource type 'blogs'.")]
+    [InlineData("sort[posts]", "author^",
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by an attribute. " +
+        "To-one relationship or attribute on resource type 'webAccounts' expected.")]
+    [InlineData("sort[posts]", "author.^livingAddress", "Field 'livingAddress' does not exist on resource type 'webAccounts'.")]
     [InlineData("sort", "-count^", "( expected.")]
     [InlineData("sort", "count^", "( expected.")]
     [InlineData("sort", "count(posts^", ") expected.")]
     [InlineData("sort", "count(^", "Field name expected.")]
     [InlineData("sort", "count(^-abc)", "Field name expected.")]
-    [InlineData("sort", "count(^abc)", "Relationship 'abc' does not exist on resource type 'blogs'.")]
-    [InlineData("sort", "count(^id)", "Relationship 'id' does not exist on resource type 'blogs'.")]
-    [InlineData("sort[posts]", "count(^author)", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
+    [InlineData("sort", "count(^abc)", "Field 'abc' does not exist on resource type 'blogs'.")]
+    [InlineData("sort", "count(^id)",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more to-one relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'blogs' expected.")]
+    [InlineData("sort[posts]", "count(author^)",
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'webAccounts' expected.")]
     [InlineData("sort[posts]", "caption,^", "-, count function or field name expected.")]
     [InlineData("sort[posts]", "caption^:", ", expected.")]
     [InlineData("sort[posts]", "caption,-^", "Count function or field name expected.")]
-    [InlineData("sort[posts.contributors]", "^some", "Attribute 'some' does not exist on resource type 'humans' or any of its derived types.")]
-    [InlineData("sort[posts.contributors]", "wife.father.^some", "Attribute 'some' does not exist on resource type 'men'.")]
-    [InlineData("sort[posts.contributors]", "count(^some)", "Relationship 'some' does not exist on resource type 'humans' or any of its derived types.")]
-    [InlineData("sort[posts.contributors]", "count(wife.^some)", "Relationship 'some' does not exist on resource type 'women'.")]
-    [InlineData("sort[posts.contributors]", "^age", "Attribute 'age' is defined on multiple derived types.")]
-    [InlineData("sort[posts.contributors]", "count(^friends)", "Relationship 'friends' is defined on multiple derived types.")]
+    [InlineData("sort[posts.contributors]", "^some", "Field 'some' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("sort[posts.contributors]", "wife.father.^some", "Field 'some' does not exist on resource type 'men'.")]
+    [InlineData("sort[posts.contributors]", "count(^some)", "Field 'some' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("sort[posts.contributors]", "count(wife.^some)", "Field 'some' does not exist on resource type 'women'.")]
+    [InlineData("sort[posts.contributors]", "^age", "Field 'age' is defined on multiple types that derive from resource type 'humans'.")]
+    [InlineData("sort[posts.contributors]", "count(^friends)", "Field 'friends' is defined on multiple types that derive from resource type 'humans'.")]
     public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Arrange

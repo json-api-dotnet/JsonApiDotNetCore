@@ -2364,7 +2364,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Be($"Attribute 'serialCode' is defined on multiple derived types. {parameterValue}");
+        error.Detail.Should().Be($"Field 'serialCode' is defined on multiple types that derive from resource type 'engines'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
@@ -2387,7 +2387,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Be($"Relationship 'features' is defined on multiple derived types. {parameterValue}");
+        error.Detail.Should().Be($"Field 'features' is defined on multiple types that derive from resource type 'vehicles'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }

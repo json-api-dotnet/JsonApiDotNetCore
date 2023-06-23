@@ -466,7 +466,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
-        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterValue}");
+        error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
@@ -489,7 +489,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
-        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterValue}");
+        error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }

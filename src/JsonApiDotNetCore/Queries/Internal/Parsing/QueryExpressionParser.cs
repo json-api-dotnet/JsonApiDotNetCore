@@ -3,6 +3,7 @@ using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing;
@@ -20,14 +21,11 @@ public abstract class QueryExpressionParser
     private int _endOfSourcePosition;
 
     protected Stack<Token> TokenStack { get; private set; } = null!;
-    private protected ResourceFieldChainResolver ChainResolver { get; } = new();
 
     /// <summary>
-    /// Takes a dotted path and walks the resource graph to produce a chain of fields.
+    /// Enables derived types to throw a <see cref="QueryParseException" /> when a field in a resource field chain is not permitted.
     /// </summary>
-    protected abstract IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements);
-
-    protected virtual void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, int position)
+    protected virtual void ValidateField(ResourceFieldAttribute field, int position)
     {
     }
 
@@ -38,25 +36,45 @@ public abstract class QueryExpressionParser
         _endOfSourcePosition = source.Length;
     }
 
-    protected ResourceFieldChainExpression ParseFieldChain(FieldChainRequirements chainRequirements, string? alternativeErrorMessage)
+    /// <summary>
+    /// Parses a dot-separated path of field names into a chain of fields, while matching it against the specified pattern.
+    /// </summary>
+    protected ResourceFieldChainExpression ParseFieldChain(FieldChainPattern pattern, FieldChainPatternMatchOptions options, ResourceType resourceType,
+        string? alternativeErrorMessage)
     {
-        int position = GetNextTokenPositionOrEnd();
+        ArgumentGuard.NotNull(pattern);
+        ArgumentGuard.NotNull(resourceType);
 
-        var pathBuilder = new StringBuilder();
-        EatFieldChain(pathBuilder, alternativeErrorMessage);
+        int startPosition = GetNextTokenPositionOrEnd();
 
-        IImmutableList<ResourceFieldAttribute> chain = OnResolveFieldChain(pathBuilder.ToString(), position, chainRequirements);
+        string path = EatFieldChain(alternativeErrorMessage);
+        PatternMatchResult result = pattern.Match(path, resourceType, options);
 
-        if (chain.Any())
+        if (!result.IsSuccess)
         {
-            return new ResourceFieldChainExpression(chain);
+            string message = result.IsFieldChainError
+                ? result.FailureMessage
+                : $"Field chain on resource type '{resourceType}' failed to match the pattern: {pattern.GetDescription()}. {result.FailureMessage}";
+
+            throw new QueryParseException(message, startPosition + result.FailurePosition);
         }
 
-        throw new QueryParseException(alternativeErrorMessage ?? "Field name expected.", position);
+        int chainPosition = 0;
+
+        foreach (ResourceFieldAttribute field in result.FieldChain)
+        {
+            ValidateField(field, startPosition + chainPosition);
+
+            chainPosition += field.PublicName.Length + 1;
+        }
+
+        return new ResourceFieldChainExpression(result.FieldChain.ToImmutableArray());
     }
 
-    private void EatFieldChain(StringBuilder pathBuilder, string? alternativeErrorMessage)
+    private string EatFieldChain(string? alternativeErrorMessage)
     {
+        var pathBuilder = new StringBuilder();
+
         while (true)
         {
             int position = GetNextTokenPositionOrEnd();
@@ -72,7 +90,7 @@ public abstract class QueryExpressionParser
                 }
                 else
                 {
-                    return;
+                    return pathBuilder.ToString();
                 }
             }
             else
@@ -82,7 +100,7 @@ public abstract class QueryExpressionParser
         }
     }
 
-    protected CountExpression? TryParseCount()
+    protected CountExpression? TryParseCount(FieldChainPatternMatchOptions options, ResourceType resourceType)
     {
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text, Value: Keywords.Count })
         {
@@ -90,7 +108,7 @@ public abstract class QueryExpressionParser
 
             EatSingleCharacterToken(TokenKind.OpenParen);
 
-            ResourceFieldChainExpression targetCollection = ParseFieldChain(FieldChainRequirements.EndsInToMany, null);
+            ResourceFieldChainExpression targetCollection = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInToMany, options, resourceType, null);
 
             EatSingleCharacterToken(TokenKind.CloseParen);
 
@@ -127,6 +145,20 @@ public abstract class QueryExpressionParser
         }
 
         return _endOfSourcePosition;
+    }
+
+    protected int GetRelativePositionOfLastFieldInChain(ResourceFieldChainExpression fieldChain)
+    {
+        ArgumentGuard.NotNull(fieldChain);
+
+        int position = 0;
+
+        for (int index = 0; index < fieldChain.Fields.Count - 1; index++)
+        {
+            position += fieldChain.Fields[index].PublicName.Length + 1;
+        }
+
+        return position;
     }
 
     protected void AssertTokenStackIsEmpty()

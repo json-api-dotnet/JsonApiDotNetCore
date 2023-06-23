@@ -88,6 +88,7 @@ public sealed class QueryTokenizer
                     }
 
                     yield return new Token(singleCharacterTokenKind.Value, _sourceOffset);
+
                     _tokenStartOffset = null;
                 }
                 else

@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 using JsonApiDotNetCore.QueryStrings;
+using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -194,10 +195,12 @@ public sealed class QueryExpressionRewriterTests
     public void VisitParameterScope(string expressionText, string expectedTypes)
     {
         // Arrange
-        var parser = new QueryStringParameterScopeParser(FieldChainRequirements.EndsInToMany);
+        var parser = new QueryStringParameterScopeParser();
         ResourceType blogType = ResourceGraph.GetResourceType<Blog>();
 
-        QueryExpression expression = parser.Parse(expressionText, blogType);
+        QueryExpression expression =
+            parser.Parse(expressionText, blogType, BuiltInPatterns.RelationshipChainEndingInToMany, FieldChainPatternMatchOptions.None);
+
         var rewriter = new TestableQueryExpressionRewriter();
 
         // Act

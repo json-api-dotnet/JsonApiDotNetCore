@@ -57,10 +57,16 @@ public sealed class FilterParseTests : BaseParseTests
 
     [Theory]
     [InlineData("filter[^", "Field name expected.")]
-    [InlineData("filter[^caption]", "Relationship 'caption' does not exist on resource type 'blogs'.")]
-    [InlineData("filter[posts.^caption]", "Relationship 'caption' does not exist on resource type 'blogPosts'.")]
-    [InlineData("filter[posts.^author]", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
-    [InlineData("filter[posts.comments.^author]", "Relationship 'author' must be a to-many relationship on resource type 'comments'.")]
+    [InlineData("filter[^caption]", "Field 'caption' does not exist on resource type 'blogs'.")]
+    [InlineData("filter[posts.^caption]",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'blogPosts' expected.")]
+    [InlineData("filter[posts.author^]",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'webAccounts' expected.")]
+    [InlineData("filter[posts.comments.^text]",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'comments' expected.")]
     public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
     {
         // Arrange
@@ -85,7 +91,10 @@ public sealed class FilterParseTests : BaseParseTests
 
     [Theory]
     [InlineData("filter[posts]", "equals(author,^'some')", "null expected.")]
-    [InlineData("filter[posts]", "lessThan(^author,null)", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter[posts]", "lessThan(^some,null)", "Field 'some' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter[posts]", "lessThan(author^,null)",
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by an attribute. " +
+        "To-one relationship or attribute on resource type 'webAccounts' expected.")]
     [InlineData("filter", "^ ", "Unexpected whitespace.")]
     [InlineData("filter", "contains(owner.displayName^ ,)", "Unexpected whitespace.")]
     [InlineData("filter", "contains(owner.displayName,^ )", "Unexpected whitespace.")]
@@ -107,12 +116,16 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "contains^)", "( expected.")]
     [InlineData("filter", "contains(title,'a'^,'b')", ") expected.")]
     [InlineData("filter", "contains(title,^null)", "Value between quotes expected.")]
-    [InlineData("filter[posts]", "contains(^author,null)", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter[posts]", "contains(author^,null)",
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by an attribute. " +
+        "To-one relationship or attribute on resource type 'webAccounts' expected.")]
     [InlineData("filter", "any(^null,'a','b')", "Field name expected.")]
     [InlineData("filter", "any(^'a','b','c')", "Field name expected.")]
     [InlineData("filter", "any(title,'b','c',^)", "Value between quotes expected.")]
     [InlineData("filter", "any(title^)", ", expected.")]
-    [InlineData("filter[posts]", "any(^author,'a','b')", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter[posts]", "any(author^,'a','b')",
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by an attribute. " +
+        "To-one relationship or attribute on resource type 'webAccounts' expected.")]
     [InlineData("filter", "and(^", "Filter function expected.")]
     [InlineData("filter", "or(equals(title,'some'),equals(title,'other')^", ") expected.")]
     [InlineData("filter", "or(equals(title,'some'),equals(title,'other'))^)", "End of expression expected.")]
@@ -124,11 +137,14 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "isType(,^", "Resource type expected.")]
     [InlineData("filter[posts.contributors]", "isType(,^some)", "Resource type 'some' does not exist or does not derive from 'humans'.")]
     [InlineData("filter[posts.contributors]", "isType(,^humans)", "Resource type 'humans' does not exist or does not derive from 'humans'.")]
-    [InlineData("filter[posts.contributors]", "isType(^some,men)", "Relationship 'some' does not exist on resource type 'humans'.")]
-    [InlineData("filter[posts.contributors]", "isType(father.^some,women)", "Relationship 'some' does not exist on resource type 'men'.")]
-    [InlineData("filter[posts.contributors]", "isType(^children,men)", "Relationship 'children' must be a to-one relationship on resource type 'humans'.")]
+    [InlineData("filter[posts.contributors]", "isType(^some,men)", "Field 'some' does not exist on resource type 'humans'.")]
+    [InlineData("filter[posts.contributors]", "isType(father.^some,women)", "Field 'some' does not exist on resource type 'men'.")]
+    [InlineData("filter[posts.contributors]", "isType(^children,men)",
+        "Field chain on resource type 'humans' failed to match the pattern: one or more to-one relationships. " +
+        "To-one relationship on resource type 'humans' expected.")]
     [InlineData("filter[posts.contributors]", "isType(mother.^children,men)",
-        "Relationship 'children' must be a to-one relationship on resource type 'women'.")]
+        "Field chain on resource type 'humans' failed to match the pattern: one or more to-one relationships. " +
+        "End of field chain or to-one relationship on resource type 'women' expected.")]
     public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Arrange

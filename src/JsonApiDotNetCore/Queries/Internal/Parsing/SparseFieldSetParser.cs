@@ -2,31 +2,31 @@ using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 
+/// <summary>
+/// Parses the JSON:API 'fields' query string parameter value.
+/// </summary>
 [PublicAPI]
 public class SparseFieldSetParser : QueryExpressionParser
 {
-    private ResourceType? _resourceType;
-
     public SparseFieldSetExpression? Parse(string source, ResourceType resourceType)
     {
         ArgumentGuard.NotNull(resourceType);
 
-        _resourceType = resourceType;
-
         Tokenize(source);
 
-        SparseFieldSetExpression? expression = ParseSparseFieldSet();
+        SparseFieldSetExpression? expression = ParseSparseFieldSet(resourceType);
 
         AssertTokenStackIsEmpty();
 
         return expression;
     }
 
-    protected SparseFieldSetExpression? ParseSparseFieldSet()
+    protected SparseFieldSetExpression? ParseSparseFieldSet(ResourceType resourceType)
     {
         ImmutableHashSet<ResourceFieldAttribute>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
 
@@ -37,7 +37,9 @@ public class SparseFieldSetParser : QueryExpressionParser
                 EatSingleCharacterToken(TokenKind.Comma);
             }
 
-            ResourceFieldChainExpression nextChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, "Field name expected.");
+            ResourceFieldChainExpression nextChain =
+                ParseFieldChain(BuiltInPatterns.SingleField, FieldChainPatternMatchOptions.None, resourceType, "Field name expected.");
+
             ResourceFieldAttribute nextField = nextChain.Fields.Single();
             fieldSetBuilder.Add(nextField);
         }
@@ -45,16 +47,7 @@ public class SparseFieldSetParser : QueryExpressionParser
         return fieldSetBuilder.Any() ? new SparseFieldSetExpression(fieldSetBuilder.ToImmutable()) : null;
     }
 
-    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements)
-    {
-        ResourceFieldAttribute field = ChainResolver.GetField(path, _resourceType!, position);
-
-        ValidateSingleField(field, _resourceType!, position);
-
-        return ImmutableArray.Create(field);
-    }
-
-    protected override void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, int position)
+    protected override void ValidateField(ResourceFieldAttribute field, int position)
     {
         if (field.IsViewBlocked())
         {

@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -7,18 +8,19 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 
+/// <summary>
+/// Parses the JSON:API 'include' query string parameter value.
+/// </summary>
 [PublicAPI]
 public class IncludeParser : QueryExpressionParser
 {
-    private static readonly ResourceFieldChainErrorFormatter ErrorFormatter = new();
-
-    public IncludeExpression Parse(string source, ResourceType resourceTypeInScope, int? maximumDepth)
+    public IncludeExpression Parse(string source, ResourceType resourceType, int? maximumDepth)
     {
-        ArgumentGuard.NotNull(resourceTypeInScope);
+        ArgumentGuard.NotNull(resourceType);
 
         Tokenize(source);
 
-        IncludeExpression expression = ParseInclude(source, resourceTypeInScope, maximumDepth);
+        IncludeExpression expression = ParseInclude(source, resourceType, maximumDepth);
 
         AssertTokenStackIsEmpty();
         ValidateMaximumIncludeDepth(maximumDepth, expression, 0);
@@ -26,9 +28,9 @@ public class IncludeParser : QueryExpressionParser
         return expression;
     }
 
-    protected IncludeExpression ParseInclude(string source, ResourceType resourceTypeInScope, int? maximumDepth)
+    protected IncludeExpression ParseInclude(string source, ResourceType resourceType, int? maximumDepth)
     {
-        var treeRoot = IncludeTreeNode.CreateRoot(resourceTypeInScope);
+        var treeRoot = IncludeTreeNode.CreateRoot(resourceType);
         bool isAtStart = true;
 
         while (TokenStack.Any())
@@ -137,8 +139,27 @@ public class IncludeParser : QueryExpressionParser
 
         bool hasDerivedTypes = parents.Any(parent => parent.Relationship.RightType.DirectlyDerivedTypes.Count > 0);
 
-        string message = ErrorFormatter.GetForNoneFound(ResourceFieldCategory.Relationship, relationshipName, parentResourceTypes, hasDerivedTypes);
+        string message = GetErrorMessageForNoneFound(relationshipName, parentResourceTypes, hasDerivedTypes);
         throw new QueryParseException(message, position);
+    }
+
+    private static string GetErrorMessageForNoneFound(string relationshipName, ICollection<ResourceType> parentResourceTypes, bool hasDerivedTypes)
+    {
+        var builder = new StringBuilder($"Relationship '{relationshipName}'");
+
+        if (parentResourceTypes.Count == 1)
+        {
+            builder.Append($" does not exist on resource type '{parentResourceTypes.First().PublicName}'");
+        }
+        else
+        {
+            string typeNames = string.Join(", ", parentResourceTypes.Select(type => $"'{type.PublicName}'"));
+            builder.Append($" does not exist on any of the resource types {typeNames}");
+        }
+
+        builder.Append(hasDerivedTypes ? " or any of its derived types." : ".");
+
+        return builder.ToString();
     }
 
     private static void AssertAtLeastOneCanBeIncluded(ISet<RelationshipAttribute> relationshipsFound, string relationshipName, string source, int position)
@@ -185,11 +206,6 @@ public class IncludeParser : QueryExpressionParser
         }
 
         parentChain.Pop();
-    }
-
-    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements)
-    {
-        throw new NotSupportedException();
     }
 
     private sealed class IncludeTreeNode

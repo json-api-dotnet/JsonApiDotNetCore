@@ -65,10 +65,17 @@ public sealed class PaginationParseTests : BaseParseTests
     [InlineData("1^(", ", expected.")]
     [InlineData("posts:-^abc", "Digits expected.")]
     [InlineData("posts:^-1", "Page number cannot be negative or zero.")]
-    [InlineData("posts.^id", "Relationship 'id' does not exist on resource type 'blogPosts'.")]
-    [InlineData("posts.comments.^id", "Relationship 'id' does not exist on resource type 'comments'.")]
-    [InlineData("posts.^author", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
-    [InlineData("^something", "Relationship 'something' does not exist on resource type 'blogs'.")]
+    [InlineData("posts.^some", "Field 'some' does not exist on resource type 'blogPosts'.")]
+    [InlineData("posts.^id",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'blogPosts' expected.")]
+    [InlineData("posts.comments.^id",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'comments' expected.")]
+    [InlineData("posts.author^",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'webAccounts' expected.")]
+    [InlineData("^some", "Field 'some' does not exist on resource type 'blogs'.")]
     public void Reader_Read_Page_Number_Fails(string parameterValue, string errorMessage)
     {
         // Arrange
@@ -104,10 +111,16 @@ public sealed class PaginationParseTests : BaseParseTests
     [InlineData("1^(", ", expected.")]
     [InlineData("posts:-^abc", "Digits expected.")]
     [InlineData("posts:^-1", "Page size cannot be negative.")]
-    [InlineData("posts.^id", "Relationship 'id' does not exist on resource type 'blogPosts'.")]
-    [InlineData("posts.comments.^id", "Relationship 'id' does not exist on resource type 'comments'.")]
-    [InlineData("posts.^author", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
-    [InlineData("^something", "Relationship 'something' does not exist on resource type 'blogs'.")]
+    [InlineData("posts.^id",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'blogPosts' expected.")]
+    [InlineData("posts.comments.^id",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'comments' expected.")]
+    [InlineData("posts.author^",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'webAccounts' expected.")]
+    [InlineData("^some", "Field 'some' does not exist on resource type 'blogs'.")]
     public void Reader_Read_Page_Size_Fails(string parameterValue, string errorMessage)
     {
         // Arrange

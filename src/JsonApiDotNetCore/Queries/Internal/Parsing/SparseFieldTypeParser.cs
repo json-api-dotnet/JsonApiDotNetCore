@@ -1,10 +1,11 @@
-using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing;
 
+/// <summary>
+/// Parses the JSON:API 'fields' query string parameter name.
+/// </summary>
 [PublicAPI]
 public class SparseFieldTypeParser : QueryExpressionParser
 {
@@ -68,10 +69,5 @@ public class SparseFieldTypeParser : QueryExpressionParser
         }
 
         return resourceType;
-    }
-
-    protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, int position, FieldChainRequirements chainRequirements)
-    {
-        throw new NotSupportedException();
     }
 }
