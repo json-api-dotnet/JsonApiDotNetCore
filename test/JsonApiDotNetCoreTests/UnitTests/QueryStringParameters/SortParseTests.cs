@@ -124,23 +124,22 @@ public sealed class SortParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("sort", "id", null, "id")]
-    [InlineData("sort", "count(posts),-id", null, "count(posts),-id")]
-    [InlineData("sort", "-count(posts),id", null, "-count(posts),id")]
-    [InlineData("sort[posts]", "count(comments),-id", "posts", "count(comments),-id")]
-    [InlineData("sort[owner.posts]", "-caption", "owner.posts", "-caption")]
-    [InlineData("sort[posts]", "author.userName", "posts", "author.userName")]
-    [InlineData("sort[posts]", "-caption,-author.userName", "posts", "-caption,-author.userName")]
-    [InlineData("sort[posts]", "caption,author.userName,-id", "posts", "caption,author.userName,-id")]
-    [InlineData("sort[posts.labels]", "id,name", "posts.labels", "id,name")]
-    [InlineData("sort[posts.comments]", "-createdAt,author.displayName,author.preferences.useDarkTheme", "posts.comments",
-        "-createdAt,author.displayName,author.preferences.useDarkTheme")]
-    [InlineData("sort[posts.contributors]", "name,-maidenName,hasBeard", "posts.contributors", "name,-maidenName,hasBeard")]
-    [InlineData("sort[posts.contributors]", "husband.hasBeard,wife.maidenName", "posts.contributors", "husband.hasBeard,wife.maidenName")]
-    [InlineData("sort[posts.contributors]", "count(wife.husband.drinkingBuddies)", "posts.contributors", "count(wife.husband.drinkingBuddies)")]
-    [InlineData("sort[posts.contributors]", "wife.age", "posts.contributors", "wife.age")]
-    [InlineData("sort[posts.contributors]", "count(father.friends)", "posts.contributors", "count(father.friends)")]
-    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected, string valueExpected)
+    [InlineData("sort", "id", null)]
+    [InlineData("sort", "count(posts),-id", null)]
+    [InlineData("sort", "-count(posts),id", null)]
+    [InlineData("sort[posts]", "count(comments),-id", "posts")]
+    [InlineData("sort[owner.posts]", "-caption", "owner.posts")]
+    [InlineData("sort[posts]", "author.userName", "posts")]
+    [InlineData("sort[posts]", "-caption,-author.userName", "posts")]
+    [InlineData("sort[posts]", "caption,author.userName,-id", "posts")]
+    [InlineData("sort[posts.labels]", "id,name", "posts.labels")]
+    [InlineData("sort[posts.comments]", "-createdAt,author.displayName,author.preferences.useDarkTheme", "posts.comments")]
+    [InlineData("sort[posts.contributors]", "name,-maidenName,hasBeard", "posts.contributors")]
+    [InlineData("sort[posts.contributors]", "husband.hasBeard,wife.maidenName", "posts.contributors")]
+    [InlineData("sort[posts.contributors]", "count(wife.husband.drinkingBuddies)", "posts.contributors")]
+    [InlineData("sort[posts.contributors]", "wife.age", "posts.contributors")]
+    [InlineData("sort[posts.contributors]", "count(father.friends)", "posts.contributors")]
+    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);
@@ -152,6 +151,6 @@ public sealed class SortParseTests : BaseParseTests
         scope?.ToString().Should().Be(scopeExpected);
 
         QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
-        value.ToString().Should().Be(valueExpected);
+        value.ToString().Should().Be(parameterValue);
     }
 }

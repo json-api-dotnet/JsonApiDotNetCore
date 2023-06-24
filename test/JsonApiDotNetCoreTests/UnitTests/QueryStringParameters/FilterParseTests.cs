@@ -152,40 +152,39 @@ public sealed class FilterParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("filter", "equals(title,'Brian O''Quote')", null, "equals(title,'Brian O''Quote')")]
-    [InlineData("filter", "equals(title,'!@#$%^&*()-_=+\"''[]{}<>()/|\\:;.,`~')", null, "equals(title,'!@#$%^&*()-_=+\"''[]{}<>()/|\\:;.,`~')")]
-    [InlineData("filter", "equals(title,'')", null, "equals(title,'')")]
-    [InlineData("filter", "startsWith(owner.displayName,'GivenName ')", null, "startsWith(owner.displayName,'GivenName ')")]
-    [InlineData("filter", "endsWith(owner.displayName,' Surname')", null, "endsWith(owner.displayName,' Surname')")]
-    [InlineData("filter", "contains(owner.displayName,' ')", null, "contains(owner.displayName,' ')")]
-    [InlineData("filter[posts]", "equals(caption,'this, that & more')", "posts", "equals(caption,'this, that & more')")]
-    [InlineData("filter[owner.posts]", "equals(caption,'some')", "owner.posts", "equals(caption,'some')")]
-    [InlineData("filter[posts.comments]", "equals(createdAt,'2000-01-01')", "posts.comments", "equals(createdAt,'2000-01-01')")]
-    [InlineData("filter", "equals(count(posts),'1')", null, "equals(count(posts),'1')")]
-    [InlineData("filter", "equals(count(posts),count(owner.posts))", null, "equals(count(posts),count(owner.posts))")]
-    [InlineData("filter[posts]", "equals(caption,null)", "posts", "equals(caption,null)")]
-    [InlineData("filter[posts]", "equals(author,null)", "posts", "equals(author,null)")]
-    [InlineData("filter[posts]", "equals(author.userName,author.displayName)", "posts", "equals(author.userName,author.displayName)")]
-    [InlineData("filter[posts.comments]", "lessThan(createdAt,'2000-01-01')", "posts.comments", "lessThan(createdAt,'2000-01-01')")]
-    [InlineData("filter[posts.comments]", "lessOrEqual(createdAt,'2000-01-01')", "posts.comments", "lessOrEqual(createdAt,'2000-01-01')")]
-    [InlineData("filter[posts.comments]", "greaterThan(createdAt,'2000-01-01')", "posts.comments", "greaterThan(createdAt,'2000-01-01')")]
-    [InlineData("filter[posts.comments]", "greaterOrEqual(createdAt,'2000-01-01')", "posts.comments", "greaterOrEqual(createdAt,'2000-01-01')")]
-    [InlineData("filter", "has(posts)", null, "has(posts)")]
-    [InlineData("filter", "has(posts,not(equals(url,null)))", null, "has(posts,not(equals(url,null)))")]
-    [InlineData("filter", "contains(title,'this')", null, "contains(title,'this')")]
-    [InlineData("filter", "startsWith(title,'this')", null, "startsWith(title,'this')")]
-    [InlineData("filter", "endsWith(title,'this')", null, "endsWith(title,'this')")]
-    [InlineData("filter", "any(title,'this')", null, "any(title,'this')")]
-    [InlineData("filter", "any(title,'this','that','there')", null, "any(title,'that','there','this')")]
-    [InlineData("filter", "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))", null,
-        "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))")]
+    [InlineData("filter", "equals(title,'Brian O''Quote')", null)]
+    [InlineData("filter", "equals(title,'!@#$%^&*()-_=+\"''[]{}<>()/|\\:;.,`~')", null)]
+    [InlineData("filter", "equals(title,'')", null)]
+    [InlineData("filter", "startsWith(owner.displayName,'GivenName ')", null)]
+    [InlineData("filter", "endsWith(owner.displayName,' Surname')", null)]
+    [InlineData("filter", "contains(owner.displayName,' ')", null)]
+    [InlineData("filter[posts]", "equals(caption,'this, that & more')", "posts")]
+    [InlineData("filter[owner.posts]", "equals(caption,'some')", "owner.posts")]
+    [InlineData("filter[posts.comments]", "equals(createdAt,'2000-01-01')", "posts.comments")]
+    [InlineData("filter", "equals(count(posts),'1')", null)]
+    [InlineData("filter", "equals(count(posts),count(owner.posts))", null)]
+    [InlineData("filter[posts]", "equals(caption,null)", "posts")]
+    [InlineData("filter[posts]", "equals(author,null)", "posts")]
+    [InlineData("filter[posts]", "equals(author.userName,author.displayName)", "posts")]
+    [InlineData("filter[posts.comments]", "lessThan(createdAt,'2000-01-01')", "posts.comments")]
+    [InlineData("filter[posts.comments]", "lessOrEqual(createdAt,'2000-01-01')", "posts.comments")]
+    [InlineData("filter[posts.comments]", "greaterThan(createdAt,'2000-01-01')", "posts.comments")]
+    [InlineData("filter[posts.comments]", "greaterOrEqual(createdAt,'2000-01-01')", "posts.comments")]
+    [InlineData("filter", "has(posts)", null)]
+    [InlineData("filter", "has(posts,not(equals(url,null)))", null)]
+    [InlineData("filter", "contains(title,'this')", null)]
+    [InlineData("filter", "startsWith(title,'this')", null)]
+    [InlineData("filter", "endsWith(title,'this')", null)]
+    [InlineData("filter", "any(title,'this')", null)]
+    [InlineData("filter", "any(title,'that','there','this')", null)]
+    [InlineData("filter", "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))", null)]
     [InlineData("filter[posts]", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments,startsWith(text,'A'))))",
-        "posts", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments,startsWith(text,'A'))))")]
-    [InlineData("filter", "isType(owner.person,men)", null, "isType(owner.person,men)")]
-    [InlineData("filter", "isType(owner.person,men,equals(hasBeard,'true'))", null, "isType(owner.person,men,equals(hasBeard,'true'))")]
-    [InlineData("filter[posts.contributors]", "isType(,women)", "posts.contributors", "isType(,women)")]
-    [InlineData("filter[posts.contributors]", "isType(,women,equals(maidenName,'Austen'))", "posts.contributors", "isType(,women,equals(maidenName,'Austen'))")]
-    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected, string valueExpected)
+        "posts")]
+    [InlineData("filter", "isType(owner.person,men)", null)]
+    [InlineData("filter", "isType(owner.person,men,equals(hasBeard,'true'))", null)]
+    [InlineData("filter[posts.contributors]", "isType(,women)", "posts.contributors")]
+    [InlineData("filter[posts.contributors]", "isType(,women,equals(maidenName,'Austen'))", "posts.contributors")]
+    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);
@@ -197,6 +196,6 @@ public sealed class FilterParseTests : BaseParseTests
         scope?.ToString().Should().Be(scopeExpected);
 
         QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
-        value.ToString().Should().Be(valueExpected);
+        value.ToString().Should().Be(parameterValue);
     }
 }
