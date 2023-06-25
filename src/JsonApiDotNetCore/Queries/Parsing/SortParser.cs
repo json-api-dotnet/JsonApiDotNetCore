@@ -5,14 +5,13 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Internal.Parsing;
+namespace JsonApiDotNetCore.Queries.Parsing;
 
-/// <summary>
-/// Parses the JSON:API 'sort' query string parameter value.
-/// </summary>
+/// <inheritdoc cref="ISortParser" />
 [PublicAPI]
-public class SortParser : QueryExpressionParser
+public class SortParser : QueryExpressionParser, ISortParser
 {
+    /// <inheritdoc />
     public SortExpression Parse(string source, ResourceType resourceType)
     {
         ArgumentGuard.NotNull(resourceType);
@@ -26,7 +25,7 @@ public class SortParser : QueryExpressionParser
         return expression;
     }
 
-    protected SortExpression ParseSort(ResourceType resourceType)
+    protected virtual SortExpression ParseSort(ResourceType resourceType)
     {
         SortElementExpression firstElement = ParseSortElement(resourceType);
 
@@ -44,7 +43,7 @@ public class SortParser : QueryExpressionParser
         return new SortExpression(elementsBuilder.ToImmutable());
     }
 
-    protected SortElementExpression ParseSortElement(ResourceType resourceType)
+    protected virtual SortElementExpression ParseSortElement(ResourceType resourceType)
     {
         bool isAscending = true;
 

@@ -3,7 +3,7 @@ using System.ComponentModel.Design;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources;
@@ -42,10 +42,11 @@ public sealed class QueryExpressionRewriterTests
     public void VisitInclude(string expressionText, string expectedTypes)
     {
         // Arrange
-        var parser = new IncludeParser();
+        var options = new JsonApiOptions();
+        var parser = new IncludeParser(options);
         ResourceType blogType = ResourceGraph.GetResourceType<Blog>();
 
-        QueryExpression expression = parser.Parse(expressionText, blogType, null);
+        QueryExpression expression = parser.Parse(expressionText, blogType);
         var rewriter = new TestableQueryExpressionRewriter();
 
         // Act

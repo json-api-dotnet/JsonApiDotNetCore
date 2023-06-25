@@ -1,4 +1,4 @@
-namespace JsonApiDotNetCore.Queries.Internal.Parsing;
+namespace JsonApiDotNetCore.Queries.Parsing;
 
 public enum TokenKind
 {

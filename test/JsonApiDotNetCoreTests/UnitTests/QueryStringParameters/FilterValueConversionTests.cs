@@ -3,7 +3,7 @@ using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Errors;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
@@ -23,7 +23,9 @@ public sealed class FilterValueConversionTests : BaseParseTests
         var converter = new NullConverter();
 
         var resourceFactory = new ResourceFactory(new ServiceContainer());
-        var reader = new FilterQueryStringParameterReader(Request, ResourceGraph, resourceFactory, Options, converter.AsEnumerable());
+        var scopeParser = new QueryStringParameterScopeParser();
+        var valueParser = new FilterParser(resourceFactory, converter.AsEnumerable());
+        var reader = new FilterQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph, Options);
 
         // Act
         Action action = () => reader.Read("filter", "equals(title,'some')");
@@ -40,7 +42,9 @@ public sealed class FilterValueConversionTests : BaseParseTests
         var converter = new ThrowingConverter();
 
         var resourceFactory = new ResourceFactory(new ServiceContainer());
-        var reader = new FilterQueryStringParameterReader(Request, ResourceGraph, resourceFactory, Options, converter.AsEnumerable());
+        var scopeParser = new QueryStringParameterScopeParser();
+        var valueParser = new FilterParser(resourceFactory, converter.AsEnumerable());
+        var reader = new FilterQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph, Options);
 
         var parameterValue = new MarkedText("equals(title,^'some')", '^');
 

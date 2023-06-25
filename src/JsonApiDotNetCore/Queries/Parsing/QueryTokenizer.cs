@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Internal.Parsing;
+namespace JsonApiDotNetCore.Queries.Parsing;
 
 [PublicAPI]
 public sealed class QueryTokenizer

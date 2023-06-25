@@ -1,7 +1,7 @@
 using System.Text;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Internal.Parsing;
+namespace JsonApiDotNetCore.Queries.Parsing;
 
 /// <summary>
 /// The error that is thrown when parsing a query string parameter fails.

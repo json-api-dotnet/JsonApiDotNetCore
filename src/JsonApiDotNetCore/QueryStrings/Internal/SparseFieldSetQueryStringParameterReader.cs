@@ -6,18 +6,19 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal;
 
+/// <inheritdoc cref="ISparseFieldSetQueryStringParameterReader" />
 [PublicAPI]
 public class SparseFieldSetQueryStringParameterReader : QueryStringParameterReader, ISparseFieldSetQueryStringParameterReader
 {
-    private readonly SparseFieldTypeParser _sparseFieldTypeParser;
-    private readonly SparseFieldSetParser _sparseFieldSetParser;
+    private readonly ISparseFieldTypeParser _scopeParser;
+    private readonly ISparseFieldSetParser _sparseFieldSetParser;
 
     private readonly ImmutableDictionary<ResourceType, SparseFieldSetExpression>.Builder _sparseFieldTableBuilder =
         ImmutableDictionary.CreateBuilder<ResourceType, SparseFieldSetExpression>();
@@ -25,11 +26,15 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
     /// <inheritdoc />
     bool IQueryStringParameterReader.AllowEmptyValue => true;
 
-    public SparseFieldSetQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
+    public SparseFieldSetQueryStringParameterReader(ISparseFieldTypeParser scopeParser, ISparseFieldSetParser sparseFieldSetParser, IJsonApiRequest request,
+        IResourceGraph resourceGraph)
         : base(request, resourceGraph)
     {
-        _sparseFieldTypeParser = new SparseFieldTypeParser(resourceGraph);
-        _sparseFieldSetParser = new SparseFieldSetParser();
+        ArgumentGuard.NotNull(scopeParser);
+        ArgumentGuard.NotNull(sparseFieldSetParser);
+
+        _scopeParser = scopeParser;
+        _sparseFieldSetParser = sparseFieldSetParser;
     }
 
     /// <inheritdoc />
@@ -55,11 +60,11 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
 
         try
         {
-            ResourceType targetResourceType = GetSparseFieldType(parameterName);
+            ResourceType resourceType = GetScope(parameterName);
             parameterNameIsValid = true;
 
-            SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue.ToString(), targetResourceType);
-            _sparseFieldTableBuilder[targetResourceType] = sparseFieldSet;
+            SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue.ToString(), resourceType);
+            _sparseFieldTableBuilder[resourceType] = sparseFieldSet;
         }
         catch (QueryParseException exception)
         {
@@ -68,9 +73,9 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
         }
     }
 
-    private ResourceType GetSparseFieldType(string parameterName)
+    private ResourceType GetScope(string parameterName)
     {
-        return _sparseFieldTypeParser.Parse(parameterName);
+        return _scopeParser.Parse(parameterName);
     }
 
     private SparseFieldSetExpression GetSparseFieldSet(string parameterValue, ResourceType resourceType)
@@ -79,7 +84,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
 
         if (sparseFieldSet == null)
         {
-            // We add ID on an incoming empty fieldset, so that callers can distinguish between no fieldset and an empty one.
+            // We add ID to an incoming empty fieldset, so that callers can distinguish between no fieldset and an empty one.
             AttrAttribute idAttribute = resourceType.GetAttributeByPropertyName(nameof(Identifiable<object>.Id));
             return new SparseFieldSetExpression(ImmutableHashSet.Create<ResourceFieldAttribute>(idAttribute));
         }

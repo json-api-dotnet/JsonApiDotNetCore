@@ -5,28 +5,27 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal;
 
+/// <inheritdoc cref="IIncludeQueryStringParameterReader" />
 [PublicAPI]
 public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIncludeQueryStringParameterReader
 {
-    private readonly IJsonApiOptions _options;
-    private readonly IncludeParser _includeParser;
+    private readonly IIncludeParser _includeParser;
 
     private IncludeExpression? _includeExpression;
 
     public bool AllowEmptyValue => true;
 
-    public IncludeQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
+    public IncludeQueryStringParameterReader(IIncludeParser includeParser, IJsonApiRequest request, IResourceGraph resourceGraph)
         : base(request, resourceGraph)
     {
-        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(includeParser);
 
-        _options = options;
-        _includeParser = new IncludeParser();
+        _includeParser = includeParser;
     }
 
     /// <inheritdoc />
@@ -59,7 +58,7 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
 
     private IncludeExpression GetInclude(string parameterValue)
     {
-        return _includeParser.Parse(parameterValue, RequestResourceType, _options.MaximumIncludeDepth);
+        return _includeParser.Parse(parameterValue, RequestResourceType);
     }
 
     /// <inheritdoc />

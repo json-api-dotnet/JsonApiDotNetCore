@@ -6,29 +6,37 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Internal.Parsing;
+namespace JsonApiDotNetCore.Queries.Parsing;
 
-/// <summary>
-/// Parses the JSON:API 'include' query string parameter value.
-/// </summary>
+/// <inheritdoc cref="IIncludeParser" />
 [PublicAPI]
-public class IncludeParser : QueryExpressionParser
+public class IncludeParser : QueryExpressionParser, IIncludeParser
 {
-    public IncludeExpression Parse(string source, ResourceType resourceType, int? maximumDepth)
+    private readonly IJsonApiOptions _options;
+
+    public IncludeParser(IJsonApiOptions options)
+    {
+        ArgumentGuard.NotNull(options);
+
+        _options = options;
+    }
+
+    /// <inheritdoc />
+    public IncludeExpression Parse(string source, ResourceType resourceType)
     {
         ArgumentGuard.NotNull(resourceType);
 
         Tokenize(source);
 
-        IncludeExpression expression = ParseInclude(source, resourceType, maximumDepth);
+        IncludeExpression expression = ParseInclude(source, resourceType);
 
         AssertTokenStackIsEmpty();
-        ValidateMaximumIncludeDepth(maximumDepth, expression, 0);
+        ValidateMaximumIncludeDepth(expression, 0);
 
         return expression;
     }
 
-    protected IncludeExpression ParseInclude(string source, ResourceType resourceType, int? maximumDepth)
+    protected virtual IncludeExpression ParseInclude(string source, ResourceType resourceType)
     {
         var treeRoot = IncludeTreeNode.CreateRoot(resourceType);
         bool isAtStart = true;
@@ -100,7 +108,8 @@ public class IncludeParser : QueryExpressionParser
         throw new QueryParseException("Relationship name expected.", position);
     }
 
-    private ICollection<IncludeTreeNode> LookupRelationshipName(string relationshipName, ICollection<IncludeTreeNode> parents, string source, int position)
+    private static ICollection<IncludeTreeNode> LookupRelationshipName(string relationshipName, ICollection<IncludeTreeNode> parents, string source,
+        int position)
     {
         List<IncludeTreeNode> children = new();
         HashSet<RelationshipAttribute> relationshipsFound = new();
@@ -176,15 +185,16 @@ public class IncludeParser : QueryExpressionParser
         }
     }
 
-    private static void ValidateMaximumIncludeDepth(int? maximumDepth, IncludeExpression include, int position)
+    private void ValidateMaximumIncludeDepth(IncludeExpression include, int position)
     {
-        if (maximumDepth != null)
+        if (_options.MaximumIncludeDepth != null)
         {
+            int maximumDepth = _options.MaximumIncludeDepth.Value;
             Stack<RelationshipAttribute> parentChain = new();
 
             foreach (IncludeElementExpression element in include.Elements)
             {
-                ThrowIfMaximumDepthExceeded(element, parentChain, maximumDepth.Value, position);
+                ThrowIfMaximumDepthExceeded(element, parentChain, maximumDepth, position);
             }
         }
     }

@@ -3,6 +3,7 @@ using JsonApiDotNetCore.AtomicOperations.Processors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Internal;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Repositories;
@@ -210,6 +211,14 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
 
     private void AddQueryStringLayer()
     {
+        _services.TryAddTransient<IQueryStringParameterScopeParser, QueryStringParameterScopeParser>();
+        _services.TryAddTransient<IIncludeParser, IncludeParser>();
+        _services.TryAddTransient<IFilterParser, FilterParser>();
+        _services.TryAddTransient<ISortParser, SortParser>();
+        _services.TryAddTransient<ISparseFieldTypeParser, SparseFieldTypeParser>();
+        _services.TryAddTransient<ISparseFieldSetParser, SparseFieldSetParser>();
+        _services.TryAddTransient<IPaginationParser, PaginationParser>();
+
         _services.AddScoped<IIncludeQueryStringParameterReader, IncludeQueryStringParameterReader>();
         _services.AddScoped<IFilterQueryStringParameterReader, FilterQueryStringParameterReader>();
         _services.AddScoped<ISortQueryStringParameterReader, SortQueryStringParameterReader>();

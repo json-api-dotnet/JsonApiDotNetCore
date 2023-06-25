@@ -5,14 +5,13 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Internal.Parsing;
+namespace JsonApiDotNetCore.Queries.Parsing;
 
-/// <summary>
-/// Parses the JSON:API 'fields' query string parameter value.
-/// </summary>
+/// <inheritdoc cref="ISparseFieldSetParser" />
 [PublicAPI]
-public class SparseFieldSetParser : QueryExpressionParser
+public class SparseFieldSetParser : QueryExpressionParser, ISparseFieldSetParser
 {
+    /// <inheritdoc />
     public SparseFieldSetExpression? Parse(string source, ResourceType resourceType)
     {
         ArgumentGuard.NotNull(resourceType);
@@ -26,7 +25,7 @@ public class SparseFieldSetParser : QueryExpressionParser
         return expression;
     }
 
-    protected SparseFieldSetExpression? ParseSparseFieldSet(ResourceType resourceType)
+    protected virtual SparseFieldSetExpression? ParseSparseFieldSet(ResourceType resourceType)
     {
         ImmutableHashSet<ResourceFieldAttribute>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
 

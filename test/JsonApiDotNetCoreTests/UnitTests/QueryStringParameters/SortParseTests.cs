@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -18,7 +19,9 @@ public sealed class SortParseTests : BaseParseTests
 
     public SortParseTests()
     {
-        _reader = new SortQueryStringParameterReader(Request, ResourceGraph);
+        var scopeParser = new QueryStringParameterScopeParser();
+        var valueParser = new SortParser();
+        _reader = new SortQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph);
     }
 
     [Theory]

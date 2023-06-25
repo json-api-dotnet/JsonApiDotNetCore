@@ -4,6 +4,7 @@ using Benchmarks.Tools;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
@@ -37,11 +38,23 @@ public class QueryStringParserBenchmarks
 
         var resourceFactory = new ResourceFactory(new ServiceContainer());
 
-        var includeReader = new IncludeQueryStringParameterReader(request, resourceGraph, options);
-        var filterReader = new FilterQueryStringParameterReader(request, resourceGraph, resourceFactory, options, Enumerable.Empty<IFilterValueConverter>());
-        var sortReader = new SortQueryStringParameterReader(request, resourceGraph);
-        var sparseFieldSetReader = new SparseFieldSetQueryStringParameterReader(request, resourceGraph);
-        var paginationReader = new PaginationQueryStringParameterReader(request, resourceGraph, options);
+        var includeParser = new IncludeParser(options);
+        var includeReader = new IncludeQueryStringParameterReader(includeParser, request, resourceGraph);
+
+        var filterScopeParser = new QueryStringParameterScopeParser();
+        var filterValueParser = new FilterParser(resourceFactory, Enumerable.Empty<IFilterValueConverter>());
+        var filterReader = new FilterQueryStringParameterReader(filterScopeParser, filterValueParser, request, resourceGraph, options);
+
+        var sortScopeParser = new QueryStringParameterScopeParser();
+        var sortValueParser = new SortParser();
+        var sortReader = new SortQueryStringParameterReader(sortScopeParser, sortValueParser, request, resourceGraph);
+
+        var sparseFieldSetScopeParser = new SparseFieldTypeParser(resourceGraph);
+        var sparseFieldSetValueParser = new SparseFieldSetParser();
+        var sparseFieldSetReader = new SparseFieldSetQueryStringParameterReader(sparseFieldSetScopeParser, sparseFieldSetValueParser, request, resourceGraph);
+
+        var paginationParser = new PaginationParser();
+        var paginationReader = new PaginationQueryStringParameterReader(paginationParser, request, resourceGraph, options);
 
         IQueryStringParameterReader[] readers = ArrayFactory.Create<IQueryStringParameterReader>(includeReader, filterReader, sortReader,
             sparseFieldSetReader, paginationReader);

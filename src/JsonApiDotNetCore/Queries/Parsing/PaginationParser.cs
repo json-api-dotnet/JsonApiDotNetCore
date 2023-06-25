@@ -4,14 +4,13 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 
-namespace JsonApiDotNetCore.Queries.Internal.Parsing;
+namespace JsonApiDotNetCore.Queries.Parsing;
 
-/// <summary>
-/// Parses the JSON:API 'page' query string parameter value.
-/// </summary>
+/// <inheritdoc cref="IPaginationParser" />
 [PublicAPI]
-public class PaginationParser : QueryExpressionParser
+public class PaginationParser : QueryExpressionParser, IPaginationParser
 {
+    /// <inheritdoc />
     public PaginationQueryStringValueExpression Parse(string source, ResourceType resourceType)
     {
         ArgumentGuard.NotNull(resourceType);
@@ -25,7 +24,7 @@ public class PaginationParser : QueryExpressionParser
         return expression;
     }
 
-    protected PaginationQueryStringValueExpression ParsePagination(ResourceType resourceType)
+    protected virtual PaginationQueryStringValueExpression ParsePagination(ResourceType resourceType)
     {
         ImmutableArray<PaginationElementQueryStringValueExpression>.Builder elementsBuilder =
             ImmutableArray.CreateBuilder<PaginationElementQueryStringValueExpression>();
@@ -44,7 +43,7 @@ public class PaginationParser : QueryExpressionParser
         return new PaginationQueryStringValueExpression(elementsBuilder.ToImmutable());
     }
 
-    protected PaginationElementQueryStringValueExpression ParsePaginationElement(ResourceType resourceType)
+    protected virtual PaginationElementQueryStringValueExpression ParsePaginationElement(ResourceType resourceType)
     {
         int position = GetNextTokenPositionOrEnd();
         int? number = TryParseNumber();
@@ -70,7 +69,7 @@ public class PaginationParser : QueryExpressionParser
         return new PaginationElementQueryStringValueExpression(scope, number.Value, position);
     }
 
-    protected int? TryParseNumber()
+    private int? TryParseNumber()
     {
         if (TokenStack.TryPeek(out Token? nextToken))
         {

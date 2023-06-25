@@ -4,6 +4,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
@@ -25,7 +26,9 @@ public sealed class LegacyFilterParseTests : BaseParseTests
         Request.PrimaryResourceType = ResourceGraph.GetResourceType<BlogPost>();
 
         var resourceFactory = new ResourceFactory(new ServiceContainer());
-        _reader = new FilterQueryStringParameterReader(Request, ResourceGraph, resourceFactory, Options, Enumerable.Empty<IFilterValueConverter>());
+        var scopeParser = new QueryStringParameterScopeParser();
+        var valueParser = new FilterParser(resourceFactory, Enumerable.Empty<IFilterValueConverter>());
+        _reader = new FilterQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph, Options);
     }
 
     [Theory]

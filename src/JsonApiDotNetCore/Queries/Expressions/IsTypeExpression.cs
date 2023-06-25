@@ -1,7 +1,7 @@
 using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions;
 

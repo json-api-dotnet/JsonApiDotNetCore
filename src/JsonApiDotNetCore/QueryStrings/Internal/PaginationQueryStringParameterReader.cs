@@ -6,11 +6,12 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal;
 
+/// <inheritdoc cref="IPaginationQueryStringParameterReader" />
 [PublicAPI]
 public class PaginationQueryStringParameterReader : QueryStringParameterReader, IPaginationQueryStringParameterReader
 {
@@ -18,20 +19,22 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
     private const string PageNumberParameterName = "page[number]";
 
     private readonly IJsonApiOptions _options;
-    private readonly PaginationParser _paginationParser;
+    private readonly IPaginationParser _paginationParser;
 
     private PaginationQueryStringValueExpression? _pageSizeConstraint;
     private PaginationQueryStringValueExpression? _pageNumberConstraint;
 
     public bool AllowEmptyValue => false;
 
-    public PaginationQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
+    public PaginationQueryStringParameterReader(IPaginationParser paginationParser, IJsonApiRequest request, IResourceGraph resourceGraph,
+        IJsonApiOptions options)
         : base(request, resourceGraph)
     {
+        ArgumentGuard.NotNull(paginationParser);
         ArgumentGuard.NotNull(options);
 
         _options = options;
-        _paginationParser = new PaginationParser();
+        _paginationParser = paginationParser;
     }
 
     /// <inheritdoc />

@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -33,6 +33,7 @@ public class LinkBuilder : ILinkBuilder
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly LinkGenerator _linkGenerator;
     private readonly IControllerResourceMapping _controllerResourceMapping;
+    private readonly IPaginationParser _paginationParser;
 
     private HttpContext HttpContext
     {
@@ -48,13 +49,14 @@ public class LinkBuilder : ILinkBuilder
     }
 
     public LinkBuilder(IJsonApiOptions options, IJsonApiRequest request, IPaginationContext paginationContext, IHttpContextAccessor httpContextAccessor,
-        LinkGenerator linkGenerator, IControllerResourceMapping controllerResourceMapping)
+        LinkGenerator linkGenerator, IControllerResourceMapping controllerResourceMapping, IPaginationParser paginationParser)
     {
         ArgumentGuard.NotNull(options);
         ArgumentGuard.NotNull(request);
         ArgumentGuard.NotNull(paginationContext);
         ArgumentGuard.NotNull(linkGenerator);
         ArgumentGuard.NotNull(controllerResourceMapping);
+        ArgumentGuard.NotNull(paginationParser);
 
         _options = options;
         _request = request;
@@ -62,6 +64,7 @@ public class LinkBuilder : ILinkBuilder
         _httpContextAccessor = httpContextAccessor;
         _linkGenerator = linkGenerator;
         _controllerResourceMapping = controllerResourceMapping;
+        _paginationParser = paginationParser;
     }
 
     private static string NoAsyncSuffix(string actionName)
@@ -178,10 +181,9 @@ public class LinkBuilder : ILinkBuilder
             return ImmutableArray<PaginationElementQueryStringValueExpression>.Empty;
         }
 
-        var parser = new PaginationParser();
-        PaginationQueryStringValueExpression paginationExpression = parser.Parse(pageSizeParameterValue, resourceType);
+        PaginationQueryStringValueExpression pagination = _paginationParser.Parse(pageSizeParameterValue, resourceType);
 
-        return paginationExpression.Elements;
+        return pagination.Elements;
     }
 
     private string GetLinkForPagination(int pageOffset, string? pageSizeValue)

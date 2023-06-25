@@ -6,36 +6,37 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
-using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal;
 
+/// <inheritdoc cref="IFilterQueryStringParameterReader" />
 [PublicAPI]
 public class FilterQueryStringParameterReader : QueryStringParameterReader, IFilterQueryStringParameterReader
 {
     private static readonly LegacyFilterNotationConverter LegacyConverter = new();
 
     private readonly IJsonApiOptions _options;
-    private readonly QueryStringParameterScopeParser _scopeParser;
-    private readonly FilterParser _filterParser;
+    private readonly IQueryStringParameterScopeParser _scopeParser;
+    private readonly IFilterParser _filterParser;
     private readonly ImmutableArray<FilterExpression>.Builder _filtersInGlobalScope = ImmutableArray.CreateBuilder<FilterExpression>();
     private readonly Dictionary<ResourceFieldChainExpression, ImmutableArray<FilterExpression>.Builder> _filtersPerScope = new();
 
     public bool AllowEmptyValue => false;
 
-    public FilterQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IResourceFactory resourceFactory, IJsonApiOptions options,
-        IEnumerable<IFilterValueConverter> filterValueConverters)
+    public FilterQueryStringParameterReader(IQueryStringParameterScopeParser scopeParser, IFilterParser filterParser, IJsonApiRequest request,
+        IResourceGraph resourceGraph, IJsonApiOptions options)
         : base(request, resourceGraph)
     {
+        ArgumentGuard.NotNull(scopeParser);
+        ArgumentGuard.NotNull(filterParser);
         ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(filterValueConverters);
 
         _options = options;
-        _scopeParser = new QueryStringParameterScopeParser();
-        _filterParser = new FilterParser(resourceFactory, filterValueConverters);
+        _scopeParser = scopeParser;
+        _filterParser = filterParser;
     }
 
     /// <inheritdoc />

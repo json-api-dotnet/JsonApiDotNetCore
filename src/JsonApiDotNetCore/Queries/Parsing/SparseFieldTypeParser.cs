@@ -1,13 +1,11 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 
-namespace JsonApiDotNetCore.Queries.Internal.Parsing;
+namespace JsonApiDotNetCore.Queries.Parsing;
 
-/// <summary>
-/// Parses the JSON:API 'fields' query string parameter name.
-/// </summary>
+/// <inheritdoc cref="ISparseFieldTypeParser" />
 [PublicAPI]
-public class SparseFieldTypeParser : QueryExpressionParser
+public class SparseFieldTypeParser : QueryExpressionParser, ISparseFieldTypeParser
 {
     private readonly IResourceGraph _resourceGraph;
 
@@ -18,18 +16,19 @@ public class SparseFieldTypeParser : QueryExpressionParser
         _resourceGraph = resourceGraph;
     }
 
+    /// <inheritdoc />
     public ResourceType Parse(string source)
     {
         Tokenize(source);
 
-        ResourceType resourceType = ParseSparseFieldTarget();
+        ResourceType resourceType = ParseSparseFieldType();
 
         AssertTokenStackIsEmpty();
 
         return resourceType;
     }
 
-    private ResourceType ParseSparseFieldTarget()
+    protected virtual ResourceType ParseSparseFieldType()
     {
         int position = GetNextTokenPositionOrEnd();
 

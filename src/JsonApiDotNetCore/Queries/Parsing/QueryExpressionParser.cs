@@ -6,29 +6,41 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Internal.Parsing;
+namespace JsonApiDotNetCore.Queries.Parsing;
 
 /// <summary>
 /// The base class for parsing query string parameters, using the Recursive Descent algorithm.
 /// </summary>
 /// <remarks>
-/// Uses a tokenizer to populate a stack of tokens, which is then manipulated from the various parsing routines for subexpressions. Implementations
-/// should throw <see cref="QueryParseException" /> on invalid input.
+/// A tokenizer populates a stack of tokens from the source text, which is then recursively popped by various parsing routines. A
+/// <see cref="QueryParseException" /> is expected to be thrown on invalid input.
 /// </remarks>
 [PublicAPI]
 public abstract class QueryExpressionParser
 {
     private int _endOfSourcePosition;
 
-    protected Stack<Token> TokenStack { get; private set; } = null!;
+    /// <summary>
+    /// Contains the tokens produced from the source text, after <see cref="Tokenize" /> has been called.
+    /// </summary>
+    /// <remarks>
+    /// The various parsing methods typically pop tokens while producing <see cref="QueryExpression" />s.
+    /// </remarks>
+    protected Stack<Token> TokenStack { get; private set; } = new();
 
     /// <summary>
-    /// Enables derived types to throw a <see cref="QueryParseException" /> when a field in a resource field chain is not permitted.
+    /// Enables derived types to throw a <see cref="QueryParseException" /> when usage of a JSON:API field inside a field chain is not permitted.
     /// </summary>
     protected virtual void ValidateField(ResourceFieldAttribute field, int position)
     {
     }
 
+    /// <summary>
+    /// Populates <see cref="TokenStack" /> from the source text using <see cref="QueryTokenizer" />.
+    /// </summary>
+    /// <remarks>
+    /// To use a custom tokenizer, override this method and consider overriding <see cref="EatSingleCharacterToken" />.
+    /// </remarks>
     protected virtual void Tokenize(string source)
     {
         var tokenizer = new QueryTokenizer(source);
@@ -37,7 +49,7 @@ public abstract class QueryExpressionParser
     }
 
     /// <summary>
-    /// Parses a dot-separated path of field names into a chain of fields, while matching it against the specified pattern.
+    /// Parses a dot-separated path of field names into a chain of resource fields, while matching it against the specified pattern.
     /// </summary>
     protected ResourceFieldChainExpression ParseFieldChain(FieldChainPattern pattern, FieldChainPatternMatchOptions options, ResourceType resourceType,
         string? alternativeErrorMessage)
@@ -100,7 +112,7 @@ public abstract class QueryExpressionParser
         }
     }
 
-    protected CountExpression? TryParseCount(FieldChainPatternMatchOptions options, ResourceType resourceType)
+    private protected CountExpression? TryParseCount(FieldChainPatternMatchOptions options, ResourceType resourceType)
     {
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text, Value: Keywords.Count })
         {
@@ -118,6 +130,10 @@ public abstract class QueryExpressionParser
         return null;
     }
 
+    /// <summary>
+    /// Consumes a token containing the expected text from the top of <see cref="TokenStack" />. Throws a <see cref="QueryParseException" /> if a different
+    /// token kind is at the top, it contains a different text, or if there are no more tokens available.
+    /// </summary>
     protected void EatText(string text)
     {
         if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text || token.Value != text)
@@ -127,7 +143,11 @@ public abstract class QueryExpressionParser
         }
     }
 
-    protected void EatSingleCharacterToken(TokenKind kind)
+    /// <summary>
+    /// Consumes the expected token kind from the top of <see cref="TokenStack" />. Throws a <see cref="QueryParseException" /> if a different token kind is
+    /// at the top, or if there are no more tokens available.
+    /// </summary>
+    protected virtual void EatSingleCharacterToken(TokenKind kind)
     {
         if (!TokenStack.TryPop(out Token? token) || token.Kind != kind)
         {
@@ -137,6 +157,10 @@ public abstract class QueryExpressionParser
         }
     }
 
+    /// <summary>
+    /// Gets the zero-based position of the token at the top of <see cref="TokenStack" />, or the position at the end of the source text if there are no more
+    /// tokens available.
+    /// </summary>
     protected int GetNextTokenPositionOrEnd()
     {
         if (TokenStack.TryPeek(out Token? nextToken))
@@ -147,6 +171,9 @@ public abstract class QueryExpressionParser
         return _endOfSourcePosition;
     }
 
+    /// <summary>
+    /// Gets the zero-based position of the last field in the specified resource field chain.
+    /// </summary>
     protected int GetRelativePositionOfLastFieldInChain(ResourceFieldChainExpression fieldChain)
     {
         ArgumentGuard.NotNull(fieldChain);
@@ -161,6 +188,10 @@ public abstract class QueryExpressionParser
         return position;
     }
 
+    /// <summary>
+    /// Throws a <see cref="QueryParseException" /> when <see cref="TokenStack" /> isn't empty. Derived types should call this when parsing has completed, to
+    /// ensure all input has been processed.
+    /// </summary>
     protected void AssertTokenStackIsEmpty()
     {
         if (TokenStack.Any())

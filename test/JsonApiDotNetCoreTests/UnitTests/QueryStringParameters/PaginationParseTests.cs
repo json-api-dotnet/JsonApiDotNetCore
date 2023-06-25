@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -20,7 +21,8 @@ public sealed class PaginationParseTests : BaseParseTests
     public PaginationParseTests()
     {
         Options.DefaultPageSize = new PageSize(25);
-        _reader = new PaginationQueryStringParameterReader(Request, ResourceGraph, Options);
+        var parser = new PaginationParser();
+        _reader = new PaginationQueryStringParameterReader(parser, Request, ResourceGraph, Options);
     }
 
     [Theory]

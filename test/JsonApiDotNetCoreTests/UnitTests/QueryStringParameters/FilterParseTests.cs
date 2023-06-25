@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
@@ -23,7 +24,9 @@ public sealed class FilterParseTests : BaseParseTests
         Options.EnableLegacyFilterNotation = false;
 
         var resourceFactory = new ResourceFactory(new ServiceContainer());
-        _reader = new FilterQueryStringParameterReader(Request, ResourceGraph, resourceFactory, Options, Enumerable.Empty<IFilterValueConverter>());
+        var scopeParser = new QueryStringParameterScopeParser();
+        var valueParser = new FilterParser(resourceFactory, Enumerable.Empty<IFilterValueConverter>());
+        _reader = new FilterQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph, Options);
     }
 
     [Theory]
@@ -213,5 +216,66 @@ public sealed class FilterParseTests : BaseParseTests
 
         QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
         value.ToString().Should().Be(parameterValue);
+    }
+
+    [Fact]
+    public void Throws_When_ResourceType_Scope_Not_Disposed()
+    {
+        // Arrange
+        var resourceFactory = new ResourceFactory(new ServiceContainer());
+        var parser = new NotDisposingFilterParser(resourceFactory, Enumerable.Empty<IFilterValueConverter>());
+
+        // Act
+        Action action = () => parser.Parse("equals(title,'some')", Request.PrimaryResourceType!);
+
+        // Assert
+        action.Should().ThrowExactly<InvalidOperationException>().WithMessage("There is still a resource type in scope after parsing has completed. " +
+            "Verify that Dispose() is called on all return values of InScopeOfResourceType().");
+    }
+
+    [Fact]
+    public void Throws_When_No_ResourceType_In_Scope()
+    {
+        // Arrange
+        var resourceFactory = new ResourceFactory(new ServiceContainer());
+        var parser = new ResourceTypeAccessingFilterParser(resourceFactory, Enumerable.Empty<IFilterValueConverter>());
+
+        // Act
+        Action action = () => parser.Parse("equals(title,'some')", Request.PrimaryResourceType!);
+
+        // Assert
+        action.Should().ThrowExactly<InvalidOperationException>().WithMessage("No resource type is currently in scope. Call Parse() first.");
+    }
+
+    private sealed class NotDisposingFilterParser : FilterParser
+    {
+        public NotDisposingFilterParser(IResourceFactory resourceFactory, IEnumerable<IFilterValueConverter> filterValueConverters)
+            : base(resourceFactory, filterValueConverters)
+        {
+        }
+
+        protected override FilterExpression ParseFilter()
+        {
+            // Forgot to dispose the return value.
+            _ = InScopeOfResourceType(ResourceTypeInScope);
+
+            return base.ParseFilter();
+        }
+    }
+
+    private sealed class ResourceTypeAccessingFilterParser : FilterParser
+    {
+        public ResourceTypeAccessingFilterParser(IResourceFactory resourceFactory, IEnumerable<IFilterValueConverter> filterValueConverters)
+            : base(resourceFactory, filterValueConverters)
+        {
+        }
+
+        protected override void Tokenize(string source)
+        {
+            // There is no resource type in scope yet.
+            _ = ResourceTypeInScope;
+
+            base.Tokenize(source);
+        }
     }
 }

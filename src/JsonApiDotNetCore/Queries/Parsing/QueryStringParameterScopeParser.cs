@@ -3,15 +3,13 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 
-namespace JsonApiDotNetCore.Queries.Internal.Parsing;
+namespace JsonApiDotNetCore.Queries.Parsing;
 
-/// <summary>
-/// Parses a JSON:API query string parameter name, containing a resource field chain that indicates the scope its query string parameter value applies
-/// to.
-/// </summary>
+/// <inheritdoc cref="IQueryStringParameterScopeParser" />
 [PublicAPI]
-public class QueryStringParameterScopeParser : QueryExpressionParser
+public class QueryStringParameterScopeParser : QueryExpressionParser, IQueryStringParameterScopeParser
 {
+    /// <inheritdoc />
     public QueryStringParameterScopeExpression Parse(string source, ResourceType resourceType, FieldChainPattern pattern, FieldChainPatternMatchOptions options)
     {
         ArgumentGuard.NotNull(resourceType);
@@ -26,7 +24,7 @@ public class QueryStringParameterScopeParser : QueryExpressionParser
         return expression;
     }
 
-    protected QueryStringParameterScopeExpression ParseQueryStringParameterScope(ResourceType resourceType, FieldChainPattern pattern,
+    protected virtual QueryStringParameterScopeExpression ParseQueryStringParameterScope(ResourceType resourceType, FieldChainPattern pattern,
         FieldChainPatternMatchOptions options)
     {
         int position = GetNextTokenPositionOrEnd();

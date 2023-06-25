@@ -5,26 +5,31 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal;
 
+/// <inheritdoc cref="ISortQueryStringParameterReader" />
 [PublicAPI]
 public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQueryStringParameterReader
 {
-    private readonly QueryStringParameterScopeParser _scopeParser;
-    private readonly SortParser _sortParser;
+    private readonly IQueryStringParameterScopeParser _scopeParser;
+    private readonly ISortParser _sortParser;
     private readonly List<ExpressionInScope> _constraints = new();
 
     public bool AllowEmptyValue => false;
 
-    public SortQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
+    public SortQueryStringParameterReader(IQueryStringParameterScopeParser scopeParser, ISortParser sortParser, IJsonApiRequest request,
+        IResourceGraph resourceGraph)
         : base(request, resourceGraph)
     {
-        _scopeParser = new QueryStringParameterScopeParser();
-        _sortParser = new SortParser();
+        ArgumentGuard.NotNull(scopeParser);
+        ArgumentGuard.NotNull(sortParser);
+
+        _scopeParser = scopeParser;
+        _sortParser = sortParser;
     }
 
     /// <inheritdoc />
