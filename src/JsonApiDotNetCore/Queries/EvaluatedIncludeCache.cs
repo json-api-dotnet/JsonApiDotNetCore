@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Queries.Expressions;
 
-namespace JsonApiDotNetCore.Queries.Internal;
+namespace JsonApiDotNetCore.Queries;
 
 /// <inheritdoc />
 internal sealed class EvaluatedIncludeCache : IEvaluatedIncludeCache

@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Internal;
+namespace JsonApiDotNetCore.Queries;
 
 /// <inheritdoc />
 [PublicAPI]

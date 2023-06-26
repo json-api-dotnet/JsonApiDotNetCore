@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Internal;
+namespace JsonApiDotNetCore.Queries;
 
 /// <summary>
 /// Takes sparse fieldsets from <see cref="IQueryConstraintProvider" />s and invokes

@@ -4,7 +4,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Response;

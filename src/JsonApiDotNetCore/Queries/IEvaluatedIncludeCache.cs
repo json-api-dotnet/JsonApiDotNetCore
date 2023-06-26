@@ -1,7 +1,7 @@
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCore.Queries.Internal;
+namespace JsonApiDotNetCore.Queries;
 
 /// <summary>
 /// Provides in-memory storage for the evaluated inclusion tree within a request. This tree is produced from query string and resource definition

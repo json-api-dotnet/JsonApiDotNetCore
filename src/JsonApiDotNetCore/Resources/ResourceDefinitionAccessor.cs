@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,6 +25,9 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
             return request.IsReadOnly;
         }
     }
+
+    /// <inheritdoc />
+    public IQueryableBuilder QueryableBuilder => _serviceProvider.GetRequiredService<IQueryableBuilder>();
 
     public ResourceDefinitionAccessor(IResourceGraph resourceGraph, IServiceProvider serviceProvider)
     {

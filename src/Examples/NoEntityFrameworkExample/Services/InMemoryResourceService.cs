@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
+using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Services;
@@ -42,7 +42,7 @@ public abstract class InMemoryResourceService<TResource, TId> : IResourceQuerySe
     private readonly QueryLayerToLinqConverter _queryLayerToLinqConverter;
 
     protected InMemoryResourceService(IJsonApiOptions options, IResourceGraph resourceGraph, IQueryLayerComposer queryLayerComposer,
-        IResourceFactory resourceFactory, IPaginationContext paginationContext, IEnumerable<IQueryConstraintProvider> constraintProviders,
+        IPaginationContext paginationContext, IEnumerable<IQueryConstraintProvider> constraintProviders, IQueryableBuilder queryableBuilder,
         ILoggerFactory loggerFactory)
     {
         _options = options;
@@ -54,7 +54,7 @@ public abstract class InMemoryResourceService<TResource, TId> : IResourceQuerySe
         _resourceType = resourceGraph.GetResourceType<TResource>();
 
         var model = new InMemoryModel(resourceGraph);
-        _queryLayerToLinqConverter = new QueryLayerToLinqConverter(resourceFactory, model);
+        _queryLayerToLinqConverter = new QueryLayerToLinqConverter(model, queryableBuilder);
     }
 
     /// <inheritdoc />

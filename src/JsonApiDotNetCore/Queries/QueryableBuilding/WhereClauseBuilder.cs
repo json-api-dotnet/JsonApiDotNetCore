@@ -1,61 +1,44 @@
 using System.Collections;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Resources.Internal;
 
-namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
+namespace JsonApiDotNetCore.Queries.QueryableBuilding;
 
-/// <summary>
-/// Transforms <see cref="FilterExpression" /> into
-/// <see cref="Queryable.Where{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{System.Func{TSource,bool}})" /> calls.
-/// </summary>
+/// <inheritdoc cref="IWhereClauseBuilder" />
 [PublicAPI]
-public class WhereClauseBuilder : QueryClauseBuilder<object?>
+public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 {
     private static readonly CollectionConverter CollectionConverter = new();
     private static readonly ConstantExpression NullConstant = Expression.Constant(null);
 
-    private readonly Expression _source;
-    private readonly Type _extensionType;
-    private readonly LambdaParameterNameFactory _nameFactory;
-
-    public WhereClauseBuilder(Expression source, LambdaScope lambdaScope, Type extensionType, LambdaParameterNameFactory nameFactory)
-        : base(lambdaScope)
-    {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(extensionType);
-        ArgumentGuard.NotNull(nameFactory);
-
-        _source = source;
-        _extensionType = extensionType;
-        _nameFactory = nameFactory;
-    }
-
-    public Expression ApplyWhere(FilterExpression filter)
+    public virtual Expression ApplyWhere(FilterExpression filter, QueryClauseBuilderContext context)
     {
         ArgumentGuard.NotNull(filter);
 
-        LambdaExpression lambda = GetPredicateLambda(filter);
+        LambdaExpression lambda = GetPredicateLambda(filter, context);
 
-        return WhereExtensionMethodCall(lambda);
+        return WhereExtensionMethodCall(lambda, context);
     }
 
-    private LambdaExpression GetPredicateLambda(FilterExpression filter)
+    private LambdaExpression GetPredicateLambda(FilterExpression filter, QueryClauseBuilderContext context)
     {
-        Expression body = Visit(filter, null);
-        return Expression.Lambda(body, LambdaScope.Parameter);
+        Expression body = Visit(filter, context);
+        return Expression.Lambda(body, context.LambdaScope.Parameter);
     }
 
-    private Expression WhereExtensionMethodCall(LambdaExpression predicate)
+    private static Expression WhereExtensionMethodCall(LambdaExpression predicate, QueryClauseBuilderContext context)
     {
-        return Expression.Call(_extensionType, "Where", LambdaScope.Parameter.Type.AsArray(), _source, predicate);
+        return Expression.Call(context.ExtensionType, "Where", context.LambdaScope.Parameter.Type.AsArray(), context.Source, predicate);
     }
 
-    public override Expression VisitHas(HasExpression expression, object? argument)
+    public override Expression VisitHas(HasExpression expression, QueryClauseBuilderContext context)
     {
-        Expression property = Visit(expression.TargetCollection, argument);
+        Expression property = Visit(expression.TargetCollection, context);
 
         Type? elementType = CollectionConverter.FindCollectionElementType(property.Type);
 
@@ -68,11 +51,14 @@ public class WhereClauseBuilder : QueryClauseBuilder<object?>
 
         if (expression.Filter != null)
         {
-            var lambdaScopeFactory = new LambdaScopeFactory(_nameFactory);
-            using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(elementType);
+            ResourceType resourceType = ((HasManyAttribute)expression.TargetCollection.Fields[^1]).RightType;
 
-            var builder = new WhereClauseBuilder(property, lambdaScope, typeof(Enumerable), _nameFactory);
-            predicate = builder.GetPredicateLambda(expression.Filter);
+            using LambdaScope lambdaScope = context.LambdaScopeFactory.CreateScope(elementType);
+
+            var nestedContext = new QueryClauseBuilderContext(property, resourceType, typeof(Enumerable), context.EntityModel, context.LambdaScopeFactory,
+                lambdaScope, context.QueryableBuilder, context.State);
+
+            predicate = GetPredicateLambda(expression.Filter, nestedContext);
         }
 
         return AnyExtensionMethodCall(elementType, property, predicate);
@@ -85,9 +71,9 @@ public class WhereClauseBuilder : QueryClauseBuilder<object?>
             : Expression.Call(typeof(Enumerable), "Any", elementType.AsArray(), source);
     }
 
-    public override Expression VisitIsType(IsTypeExpression expression, object? argument)
+    public override Expression VisitIsType(IsTypeExpression expression, QueryClauseBuilderContext context)
     {
-        Expression property = expression.TargetToOneRelationship != null ? Visit(expression.TargetToOneRelationship, argument) : LambdaScope.Accessor;
+        Expression property = expression.TargetToOneRelationship != null ? Visit(expression.TargetToOneRelationship, context) : context.LambdaScope.Accessor;
         TypeBinaryExpression typeCheck = Expression.TypeIs(property, expression.DerivedType.ClrType);
 
         if (expression.Child == null)
@@ -96,21 +82,23 @@ public class WhereClauseBuilder : QueryClauseBuilder<object?>
         }
 
         UnaryExpression derivedAccessor = Expression.Convert(property, expression.DerivedType.ClrType);
-        Expression filter = WithLambdaScopeAccessor(derivedAccessor, () => Visit(expression.Child, argument));
+
+        QueryClauseBuilderContext derivedContext = context.WithLambdaScope(context.LambdaScope.WithAccessor(derivedAccessor));
+        Expression filter = Visit(expression.Child, derivedContext);
 
         return Expression.AndAlso(typeCheck, filter);
     }
 
-    public override Expression VisitMatchText(MatchTextExpression expression, object? argument)
+    public override Expression VisitMatchText(MatchTextExpression expression, QueryClauseBuilderContext context)
     {
-        Expression property = Visit(expression.TargetAttribute, argument);
+        Expression property = Visit(expression.TargetAttribute, context);
 
         if (property.Type != typeof(string))
         {
             throw new InvalidOperationException("Expression must be a string.");
         }
 
-        Expression text = Visit(expression.TextValue, property.Type);
+        Expression text = Visit(expression.TextValue, context);
 
         if (expression.MatchKind == TextMatchKind.StartsWith)
         {
@@ -125,9 +113,9 @@ public class WhereClauseBuilder : QueryClauseBuilder<object?>
         return Expression.Call(property, "Contains", null, text);
     }
 
-    public override Expression VisitAny(AnyExpression expression, object? argument)
+    public override Expression VisitAny(AnyExpression expression, QueryClauseBuilderContext context)
     {
-        Expression property = Visit(expression.TargetAttribute, argument);
+        Expression property = Visit(expression.TargetAttribute, context);
 
         var valueList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(property.Type))!;
 
@@ -145,9 +133,9 @@ public class WhereClauseBuilder : QueryClauseBuilder<object?>
         return Expression.Call(typeof(Enumerable), "Contains", value.Type.AsArray(), collection, value);
     }
 
-    public override Expression VisitLogical(LogicalExpression expression, object? argument)
+    public override Expression VisitLogical(LogicalExpression expression, QueryClauseBuilderContext context)
     {
-        var termQueue = new Queue<Expression>(expression.Terms.Select(filter => Visit(filter, argument)));
+        var termQueue = new Queue<Expression>(expression.Terms.Select(filter => Visit(filter, context)));
 
         if (expression.Operator == LogicalOperator.And)
         {
@@ -178,18 +166,18 @@ public class WhereClauseBuilder : QueryClauseBuilder<object?>
         return tempExpression;
     }
 
-    public override Expression VisitNot(NotExpression expression, object? argument)
+    public override Expression VisitNot(NotExpression expression, QueryClauseBuilderContext context)
     {
-        Expression child = Visit(expression.Child, argument);
+        Expression child = Visit(expression.Child, context);
         return Expression.Not(child);
     }
 
-    public override Expression VisitComparison(ComparisonExpression expression, object? argument)
+    public override Expression VisitComparison(ComparisonExpression expression, QueryClauseBuilderContext context)
     {
-        Type commonType = ResolveCommonType(expression.Left, expression.Right);
+        Type commonType = ResolveCommonType(expression.Left, expression.Right, context);
 
-        Expression left = WrapInConvert(Visit(expression.Left, argument), commonType);
-        Expression right = WrapInConvert(Visit(expression.Right, argument), commonType);
+        Expression left = WrapInConvert(Visit(expression.Left, context), commonType);
+        Expression right = WrapInConvert(Visit(expression.Right, context), commonType);
 
         return expression.Operator switch
         {
@@ -202,9 +190,9 @@ public class WhereClauseBuilder : QueryClauseBuilder<object?>
         };
     }
 
-    private Type ResolveCommonType(QueryExpression left, QueryExpression right)
+    private Type ResolveCommonType(QueryExpression left, QueryExpression right, QueryClauseBuilderContext context)
     {
-        Type leftType = ResolveFixedType(left);
+        Type leftType = ResolveFixedType(left, context);
 
         if (RuntimeTypeConverter.CanContainNull(leftType))
         {
@@ -216,7 +204,7 @@ public class WhereClauseBuilder : QueryClauseBuilder<object?>
             return typeof(Nullable<>).MakeGenericType(leftType);
         }
 
-        Type? rightType = TryResolveFixedType(right);
+        Type? rightType = TryResolveFixedType(right, context);
 
         if (rightType != null && RuntimeTypeConverter.CanContainNull(rightType))
         {
@@ -226,13 +214,13 @@ public class WhereClauseBuilder : QueryClauseBuilder<object?>
         return leftType;
     }
 
-    private Type ResolveFixedType(QueryExpression expression)
+    private Type ResolveFixedType(QueryExpression expression, QueryClauseBuilderContext context)
     {
-        Expression result = Visit(expression, null);
+        Expression result = Visit(expression, context);
         return result.Type;
     }
 
-    private Type? TryResolveFixedType(QueryExpression expression)
+    private Type? TryResolveFixedType(QueryExpression expression, QueryClauseBuilderContext context)
     {
         if (expression is CountExpression)
         {
@@ -241,18 +229,18 @@ public class WhereClauseBuilder : QueryClauseBuilder<object?>
 
         if (expression is ResourceFieldChainExpression chain)
         {
-            Expression child = Visit(chain, null);
+            Expression child = Visit(chain, context);
             return child.Type;
         }
 
         return null;
     }
 
-    private static Expression WrapInConvert(Expression expression, Type? targetType)
+    private static Expression WrapInConvert(Expression expression, Type targetType)
     {
         try
         {
-            return targetType != null && expression.Type != targetType ? Expression.Convert(expression, targetType) : expression;
+            return expression.Type != targetType ? Expression.Convert(expression, targetType) : expression;
         }
         catch (InvalidOperationException exception)
         {
@@ -260,12 +248,12 @@ public class WhereClauseBuilder : QueryClauseBuilder<object?>
         }
     }
 
-    public override Expression VisitNullConstant(NullConstantExpression expression, object? argument)
+    public override Expression VisitNullConstant(NullConstantExpression expression, QueryClauseBuilderContext context)
     {
         return NullConstant;
     }
 
-    public override Expression VisitLiteralConstant(LiteralConstantExpression expression, object? argument)
+    public override Expression VisitLiteralConstant(LiteralConstantExpression expression, QueryClauseBuilderContext context)
     {
         Type type = expression.TypedValue.GetType();
         return expression.TypedValue.CreateTupleAccessExpressionForConstant(type);

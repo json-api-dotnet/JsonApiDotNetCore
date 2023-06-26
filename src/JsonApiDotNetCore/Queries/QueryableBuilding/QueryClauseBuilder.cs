@@ -3,25 +3,21 @@ using System.Reflection;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
+namespace JsonApiDotNetCore.Queries.QueryableBuilding;
 
 /// <summary>
 /// Base class for transforming <see cref="QueryExpression" /> trees into system <see cref="Expression" /> trees.
 /// </summary>
-public abstract class QueryClauseBuilder<TArgument> : QueryExpressionVisitor<TArgument, Expression>
+public abstract class QueryClauseBuilder : QueryExpressionVisitor<QueryClauseBuilderContext, Expression>
 {
-    protected LambdaScope LambdaScope { get; private set; }
-
-    protected QueryClauseBuilder(LambdaScope lambdaScope)
+    public override Expression DefaultVisit(QueryExpression expression, QueryClauseBuilderContext argument)
     {
-        ArgumentGuard.NotNull(lambdaScope);
-
-        LambdaScope = lambdaScope;
+        throw new NotSupportedException($"Unknown expression of type '{expression.GetType()}'.");
     }
 
-    public override Expression VisitCount(CountExpression expression, TArgument argument)
+    public override Expression VisitCount(CountExpression expression, QueryClauseBuilderContext context)
     {
-        Expression collectionExpression = Visit(expression.TargetCollection, argument);
+        Expression collectionExpression = Visit(expression.TargetCollection, context);
 
         Expression? propertyExpression = GetCollectionCount(collectionExpression);
 
@@ -59,13 +55,13 @@ public abstract class QueryClauseBuilder<TArgument> : QueryExpressionVisitor<TAr
         return null;
     }
 
-    public override Expression VisitResourceFieldChain(ResourceFieldChainExpression expression, TArgument argument)
+    public override Expression VisitResourceFieldChain(ResourceFieldChainExpression expression, QueryClauseBuilderContext context)
     {
         MemberExpression? property = null;
 
         foreach (ResourceFieldAttribute field in expression.Fields)
         {
-            Expression parentAccessor = property ?? LambdaScope.Accessor;
+            Expression parentAccessor = property ?? context.LambdaScope.Accessor;
             Type propertyType = field.Property.DeclaringType!;
             string propertyName = field.Property.Name;
 
@@ -83,25 +79,5 @@ public abstract class QueryClauseBuilder<TArgument> : QueryExpressionVisitor<TAr
         }
 
         return property!;
-    }
-
-    protected TResult WithLambdaScopeAccessor<TResult>(Expression accessorExpression, Func<TResult> action)
-    {
-        ArgumentGuard.NotNull(accessorExpression);
-        ArgumentGuard.NotNull(action);
-
-        LambdaScope backupScope = LambdaScope;
-
-        try
-        {
-            using (LambdaScope = LambdaScope.WithAccessor(accessorExpression))
-            {
-                return action();
-            }
-        }
-        finally
-        {
-            LambdaScope = backupScope;
-        }
     }
 }

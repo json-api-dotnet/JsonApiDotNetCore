@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace JsonApiDotNetCore.Queries.Internal;
+namespace JsonApiDotNetCore.Queries;
 
 internal static class SystemExpressionExtensions
 {
