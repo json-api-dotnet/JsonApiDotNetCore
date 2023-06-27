@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.QueryStrings.Internal;
+using JsonApiDotNetCore.QueryStrings;
 
 namespace JsonApiDotNetCore.Queries.Parsing;
 

@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Diagnostics;
@@ -6,11 +5,10 @@ using JsonApiDotNetCore.Errors;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 
-namespace JsonApiDotNetCore.QueryStrings.Internal;
+namespace JsonApiDotNetCore.QueryStrings;
 
 /// <inheritdoc />
-[PublicAPI]
-public class QueryStringReader : IQueryStringReader
+public sealed class QueryStringReader : IQueryStringReader
 {
     private readonly IJsonApiOptions _options;
     private readonly IRequestQueryStringAccessor _queryStringAccessor;
@@ -32,7 +30,7 @@ public class QueryStringReader : IQueryStringReader
     }
 
     /// <inheritdoc />
-    public virtual void ReadAll(DisableQueryStringAttribute? disableQueryStringAttribute)
+    public void ReadAll(DisableQueryStringAttribute? disableQueryStringAttribute)
     {
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Parse query string");
 

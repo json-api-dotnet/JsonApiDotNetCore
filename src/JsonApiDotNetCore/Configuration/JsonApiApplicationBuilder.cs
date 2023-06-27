@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.QueryStrings;
-using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.JsonConverters;

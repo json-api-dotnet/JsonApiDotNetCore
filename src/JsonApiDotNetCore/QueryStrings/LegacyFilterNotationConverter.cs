@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Parsing;
 
-namespace JsonApiDotNetCore.QueryStrings.Internal;
+namespace JsonApiDotNetCore.QueryStrings;
 
 [PublicAPI]
 public sealed class LegacyFilterNotationConverter

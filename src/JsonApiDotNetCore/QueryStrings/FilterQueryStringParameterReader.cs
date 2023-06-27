@@ -10,7 +10,7 @@ using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using Microsoft.Extensions.Primitives;
 
-namespace JsonApiDotNetCore.QueryStrings.Internal;
+namespace JsonApiDotNetCore.QueryStrings;
 
 /// <inheritdoc cref="IFilterQueryStringParameterReader" />
 [PublicAPI]

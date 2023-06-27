@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Primitives;
 
-namespace JsonApiDotNetCore.QueryStrings.Internal;
+namespace JsonApiDotNetCore.QueryStrings;
 
 /// <inheritdoc />
 [PublicAPI]

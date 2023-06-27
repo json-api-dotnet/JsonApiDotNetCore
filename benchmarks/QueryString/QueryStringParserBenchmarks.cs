@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
-using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Logging.Abstractions;
 

@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
 using Microsoft.Extensions.Primitives;
 
-namespace JsonApiDotNetCore.QueryStrings.Internal;
+namespace JsonApiDotNetCore.QueryStrings;
 
 /// <inheritdoc cref="IIncludeQueryStringParameterReader" />
 [PublicAPI]

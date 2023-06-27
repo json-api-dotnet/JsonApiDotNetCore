@@ -9,7 +9,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
 using Microsoft.Extensions.Primitives;
 
-namespace JsonApiDotNetCore.QueryStrings.Internal;
+namespace JsonApiDotNetCore.QueryStrings;
 
 /// <inheritdoc cref="IPaginationQueryStringParameterReader" />
 [PublicAPI]
@@ -114,7 +114,6 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
         }
     }
 
-    [AssertionMethod]
     protected virtual void ValidatePageNumber(PaginationQueryStringValueExpression constraint)
     {
         foreach (PaginationElementQueryStringValueExpression element in constraint.Elements)
