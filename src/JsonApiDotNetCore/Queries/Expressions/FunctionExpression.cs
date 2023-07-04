@@ -5,4 +5,5 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 /// </summary>
 public abstract class FunctionExpression : QueryExpression
 {
+    public abstract Type ReturnType { get; }
 }

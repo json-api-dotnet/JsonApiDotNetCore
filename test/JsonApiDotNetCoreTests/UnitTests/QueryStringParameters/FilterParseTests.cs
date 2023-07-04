@@ -24,7 +24,7 @@ public sealed class FilterParseTests : BaseParseTests
 
         var resourceFactory = new ResourceFactory(new ServiceContainer());
         var scopeParser = new QueryStringParameterScopeParser();
-        var valueParser = new FilterParser(resourceFactory, Enumerable.Empty<IFilterValueConverter>());
+        var valueParser = new FilterParser(resourceFactory);
         _reader = new FilterQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph, Options);
     }
 
@@ -103,17 +103,16 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "^some", "Filter function expected.")]
     [InlineData("filter", "equals^", "( expected.")]
     [InlineData("filter", "equals^'", "Unexpected ' outside text.")]
-    [InlineData("filter", "equals(^", "Count function or field name expected.")]
-    [InlineData("filter", "equals(^'1'", "Count function or field name expected.")]
-    [InlineData("filter", "equals(count(posts),^", "Count function, value between quotes or field name expected.")]
-    [InlineData("filter", "equals(count(posts),^null)", "Count function, value between quotes or field name expected.")]
-    [InlineData("filter", "equals(owner.^.displayName,'')", "Count function or field name expected.")]
-    [InlineData("filter", "equals(owner.displayName.^,'')", "Count function or field name expected.")]
+    [InlineData("filter", "equals(^", "Function or field name expected.")]
+    [InlineData("filter", "equals(^'1'", "Function or field name expected.")]
+    [InlineData("filter", "equals(count(posts),^", "Function, field name or value between quotes expected.")]
+    [InlineData("filter", "equals(count(posts),^null)", "Function, field name or value between quotes expected.")]
+    [InlineData("filter", "equals(owner.^.displayName,'')", "Function or field name expected.")]
+    [InlineData("filter", "equals(owner.displayName.^,'')", "Function or field name expected.")]
     [InlineData("filter", "equals(title,'^)", "' expected.")]
     [InlineData("filter", "equals(title,null^", ") expected.")]
-    [InlineData("filter", "equals(^null", "Count function or field name expected.")]
-    [InlineData("filter", "equals(title,^(", "Count function, value between quotes, null or field name expected.")]
-    [InlineData("filter", "equals(^has(posts),'true')", "Field 'has' does not exist on resource type 'blogs'.")]
+    [InlineData("filter", "equals(^null", "Function or field name expected.")]
+    [InlineData("filter", "equals(title,^(", "Function, field name, value between quotes or null expected.")]
     [InlineData("filter", "has(posts,^", "Filter function expected.")]
     [InlineData("filter", "contains^)", "( expected.")]
     [InlineData("filter", "contains(title,'a'^,'b')", ") expected.")]
@@ -181,6 +180,7 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter[posts.comments]", "equals(createdAt,'2000-01-01')", "posts.comments")]
     [InlineData("filter", "equals(count(posts),'1')", null)]
     [InlineData("filter", "equals(count(posts),count(owner.posts))", null)]
+    [InlineData("filter", "equals(has(posts),'true')", null)]
     [InlineData("filter[posts]", "equals(caption,null)", "posts")]
     [InlineData("filter[posts]", "equals(author,null)", "posts")]
     [InlineData("filter[posts]", "equals(author.userName,author.displayName)", "posts")]
@@ -222,7 +222,7 @@ public sealed class FilterParseTests : BaseParseTests
     {
         // Arrange
         var resourceFactory = new ResourceFactory(new ServiceContainer());
-        var parser = new NotDisposingFilterParser(resourceFactory, Enumerable.Empty<IFilterValueConverter>());
+        var parser = new NotDisposingFilterParser(resourceFactory);
 
         // Act
         Action action = () => parser.Parse("equals(title,'some')", Request.PrimaryResourceType!);
@@ -237,7 +237,7 @@ public sealed class FilterParseTests : BaseParseTests
     {
         // Arrange
         var resourceFactory = new ResourceFactory(new ServiceContainer());
-        var parser = new ResourceTypeAccessingFilterParser(resourceFactory, Enumerable.Empty<IFilterValueConverter>());
+        var parser = new ResourceTypeAccessingFilterParser(resourceFactory);
 
         // Act
         Action action = () => parser.Parse("equals(title,'some')", Request.PrimaryResourceType!);
@@ -248,8 +248,8 @@ public sealed class FilterParseTests : BaseParseTests
 
     private sealed class NotDisposingFilterParser : FilterParser
     {
-        public NotDisposingFilterParser(IResourceFactory resourceFactory, IEnumerable<IFilterValueConverter> filterValueConverters)
-            : base(resourceFactory, filterValueConverters)
+        public NotDisposingFilterParser(IResourceFactory resourceFactory)
+            : base(resourceFactory)
         {
         }
 
@@ -264,8 +264,8 @@ public sealed class FilterParseTests : BaseParseTests
 
     private sealed class ResourceTypeAccessingFilterParser : FilterParser
     {
-        public ResourceTypeAccessingFilterParser(IResourceFactory resourceFactory, IEnumerable<IFilterValueConverter> filterValueConverters)
-            : base(resourceFactory, filterValueConverters)
+        public ResourceTypeAccessingFilterParser(IResourceFactory resourceFactory)
+            : base(resourceFactory)
         {
         }
 

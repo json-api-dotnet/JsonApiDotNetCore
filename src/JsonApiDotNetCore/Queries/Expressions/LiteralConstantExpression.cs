@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 [PublicAPI]
 public class LiteralConstantExpression : IdentifierExpression
 {
-    // Only used to show the original input, in case expression parse failed. Not part of the semantic expression value.
+    // Only used to show the original input in errors and diagnostics. Not part of the semantic expression value.
     private readonly string _stringValue;
 
     public object TypedValue { get; }

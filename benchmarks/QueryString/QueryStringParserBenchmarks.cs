@@ -41,7 +41,7 @@ public class QueryStringParserBenchmarks
         var includeReader = new IncludeQueryStringParameterReader(includeParser, request, resourceGraph);
 
         var filterScopeParser = new QueryStringParameterScopeParser();
-        var filterValueParser = new FilterParser(resourceFactory, Enumerable.Empty<IFilterValueConverter>());
+        var filterValueParser = new FilterParser(resourceFactory);
         var filterReader = new FilterQueryStringParameterReader(filterScopeParser, filterValueParser, request, resourceGraph, options);
 
         var sortScopeParser = new QueryStringParameterScopeParser();

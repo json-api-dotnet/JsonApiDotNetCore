@@ -4,7 +4,6 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
-using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
@@ -126,7 +125,7 @@ public sealed class QueryExpressionRewriterTests
     public void VisitFilter(string expressionText, string expectedTypes)
     {
         // Arrange
-        var parser = new FilterParser(ResourceFactory, Enumerable.Empty<IFilterValueConverter>());
+        var parser = new FilterParser(ResourceFactory);
         ResourceType webAccountType = ResourceGraph.GetResourceType<WebAccount>();
 
         QueryExpression expression = parser.Parse(expressionText, webAccountType);

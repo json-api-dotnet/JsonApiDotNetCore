@@ -26,7 +26,7 @@ public sealed class LegacyFilterParseTests : BaseParseTests
 
         var resourceFactory = new ResourceFactory(new ServiceContainer());
         var scopeParser = new QueryStringParameterScopeParser();
-        var valueParser = new FilterParser(resourceFactory, Enumerable.Empty<IFilterValueConverter>());
+        var valueParser = new FilterParser(resourceFactory);
         _reader = new FilterQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph, Options);
     }
 

@@ -1,6 +1,5 @@
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Parsing;
-using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -9,8 +8,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.I
 
 internal sealed class IsUpperCaseFilterParser : FilterParser
 {
-    public IsUpperCaseFilterParser(IResourceFactory resourceFactory, IEnumerable<IFilterValueConverter> filterValueConverters)
-        : base(resourceFactory, filterValueConverters)
+    public IsUpperCaseFilterParser(IResourceFactory resourceFactory)
+        : base(resourceFactory)
     {
     }
 

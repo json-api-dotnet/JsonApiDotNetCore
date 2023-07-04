@@ -11,6 +11,8 @@ public class CountExpression : FunctionExpression
 {
     public ResourceFieldChainExpression TargetCollection { get; }
 
+    public override Type ReturnType { get; } = typeof(int);
+
     public CountExpression(ResourceFieldChainExpression targetCollection)
     {
         ArgumentGuard.NotNull(targetCollection);

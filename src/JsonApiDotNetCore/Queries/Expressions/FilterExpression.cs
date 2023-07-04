@@ -5,4 +5,5 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 /// </summary>
 public abstract class FilterExpression : FunctionExpression
 {
+    public override Type ReturnType { get; } = typeof(bool);
 }
