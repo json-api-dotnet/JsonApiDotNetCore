@@ -31,7 +31,8 @@ internal sealed class QueryStringFakers : FakerContainer
             .UseSeed(GetFakerSeed())
             .RuleFor(comment => comment.Text, faker => faker.Lorem.Paragraph())
             .RuleFor(comment => comment.CreatedAt, faker => faker.Date.Past()
-                .TruncateToWholeMilliseconds()));
+                .TruncateToWholeMilliseconds())
+            .RuleFor(comment => comment.NumStars, faker => faker.Random.Int(0, 10)));
 
     private readonly Lazy<Faker<WebAccount>> _lazyWebAccountFaker = new(() =>
         new Faker<WebAccount>()
@@ -53,6 +54,20 @@ internal sealed class QueryStringFakers : FakerContainer
         new Faker<AccountPreferences>()
             .UseSeed(GetFakerSeed())
             .RuleFor(accountPreferences => accountPreferences.UseDarkTheme, faker => faker.Random.Bool()));
+
+    private readonly Lazy<Faker<Man>> _lazyManFaker = new(() =>
+        new Faker<Man>()
+            .UseSeed(GetFakerSeed())
+            .RuleFor(man => man.Name, faker => faker.Name.FullName())
+            .RuleFor(man => man.HasBeard, faker => faker.Random.Bool())
+            .RuleFor(man => man.Age, faker => faker.Random.Int(10, 90)));
+
+    private readonly Lazy<Faker<Woman>> _lazyWomanFaker = new(() =>
+        new Faker<Woman>()
+            .UseSeed(GetFakerSeed())
+            .RuleFor(woman => woman.Name, faker => faker.Name.FullName())
+            .RuleFor(woman => woman.MaidenName, faker => faker.Name.LastName())
+            .RuleFor(woman => woman.Age, faker => faker.Random.Int(10, 90)));
 
     private readonly Lazy<Faker<Calendar>> _lazyCalendarFaker = new(() =>
         new Faker<Calendar>()
@@ -83,6 +98,8 @@ internal sealed class QueryStringFakers : FakerContainer
     public Faker<WebAccount> WebAccount => _lazyWebAccountFaker.Value;
     public Faker<LoginAttempt> LoginAttempt => _lazyLoginAttemptFaker.Value;
     public Faker<AccountPreferences> AccountPreferences => _lazyAccountPreferencesFaker.Value;
+    public Faker<Man> Man => _lazyManFaker.Value;
+    public Faker<Woman> Woman => _lazyWomanFaker.Value;
     public Faker<Calendar> Calendar => _lazyCalendarFaker.Value;
     public Faker<Appointment> Appointment => _lazyAppointmentFaker.Value;
     public Faker<Reminder> Reminder => _lazyReminderFaker.Value;
