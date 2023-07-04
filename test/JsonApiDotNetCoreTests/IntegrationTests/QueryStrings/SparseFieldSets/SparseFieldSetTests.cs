@@ -371,7 +371,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task Can_select_fields_of_OneToMany_relationship_on_secondary_endpoint()
+    public async Task Can_select_fields_of_OneToMany_relationship_at_secondary_endpoint()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();

@@ -54,7 +54,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     }
 
     [Fact]
-    public async Task Cannot_sort_in_single_primary_resource()
+    public async Task Cannot_sort_in_primary_resource()
     {
         // Arrange
         BlogPost post = _fakers.BlogPost.Generate();
@@ -114,7 +114,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     }
 
     [Fact]
-    public async Task Cannot_sort_in_single_secondary_resource()
+    public async Task Cannot_sort_in_secondary_resource()
     {
         // Arrange
         BlogPost post = _fakers.BlogPost.Generate();
@@ -233,7 +233,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     }
 
     [Fact]
-    public async Task Can_sort_in_scope_of_OneToMany_relationship_on_secondary_endpoint()
+    public async Task Can_sort_in_scope_of_OneToMany_relationship_at_secondary_endpoint()
     {
         // Arrange
         Blog blog = _fakers.Blog.Generate();

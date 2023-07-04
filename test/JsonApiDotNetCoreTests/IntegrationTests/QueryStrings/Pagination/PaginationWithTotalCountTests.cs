@@ -66,7 +66,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     }
 
     [Fact]
-    public async Task Cannot_paginate_in_single_primary_endpoint()
+    public async Task Cannot_paginate_in_primary_resource()
     {
         // Arrange
         BlogPost post = _fakers.BlogPost.Generate();
@@ -163,7 +163,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     }
 
     [Fact]
-    public async Task Cannot_paginate_in_single_secondary_endpoint()
+    public async Task Cannot_paginate_in_secondary_resource()
     {
         // Arrange
         BlogPost post = _fakers.BlogPost.Generate();
@@ -230,7 +230,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     }
 
     [Fact]
-    public async Task Can_paginate_in_scope_of_OneToMany_relationship_on_secondary_endpoint()
+    public async Task Can_paginate_in_scope_of_OneToMany_relationship_at_secondary_endpoint()
     {
         // Arrange
         Blog blog = _fakers.Blog.Generate();
@@ -264,7 +264,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     }
 
     [Fact]
-    public async Task Can_paginate_OneToMany_relationship_on_relationship_endpoint()
+    public async Task Can_paginate_OneToMany_relationship_at_relationship_endpoint()
     {
         // Arrange
         Blog blog = _fakers.Blog.Generate();
@@ -296,7 +296,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     }
 
     [Fact]
-    public async Task Can_paginate_OneToMany_relationship_on_relationship_endpoint_without_inverse_relationship()
+    public async Task Can_paginate_OneToMany_relationship_at_relationship_endpoint_without_inverse_relationship()
     {
         // Arrange
         WebAccount? account = _fakers.WebAccount.Generate();
@@ -367,7 +367,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
     }
 
     [Fact]
-    public async Task Can_paginate_ManyToMany_relationship_on_relationship_endpoint()
+    public async Task Can_paginate_ManyToMany_relationship_at_relationship_endpoint()
     {
         // Arrange
         BlogPost post = _fakers.BlogPost.Generate();

@@ -170,7 +170,7 @@ public sealed class PaginationWithoutTotalCountTests : IClassFixture<Integration
     }
 
     [Fact]
-    public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_full_page_on_secondary_endpoint()
+    public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_full_page_at_secondary_endpoint()
     {
         // Arrange
         WebAccount account = _fakers.WebAccount.Generate();

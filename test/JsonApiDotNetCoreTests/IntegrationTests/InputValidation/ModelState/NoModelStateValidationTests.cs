@@ -87,7 +87,7 @@ public sealed class NoModelStateValidationTests : IClassFixture<IntegrationTestC
     }
 
     [Fact]
-    public async Task Cannot_clear_required_OneToOne_relationship_through_primary_endpoint()
+    public async Task Cannot_clear_required_OneToOne_relationship_at_primary_endpoint()
     {
         // Arrange
         SystemVolume existingVolume = _fakers.SystemVolume.Generate();

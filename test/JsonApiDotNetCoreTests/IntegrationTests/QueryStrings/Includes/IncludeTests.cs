@@ -256,7 +256,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     }
 
     [Fact]
-    public async Task Can_include_ManyToMany_relationship_on_secondary_endpoint()
+    public async Task Can_include_ManyToMany_relationship_at_secondary_endpoint()
     {
         // Arrange
         BlogPost post = _fakers.BlogPost.Generate();
