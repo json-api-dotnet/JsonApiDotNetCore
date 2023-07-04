@@ -75,22 +75,61 @@ public class SortParser : QueryExpressionParser, ISortParser
         // In this case there are two distinct BonusPoints fields (with different data types). And the sort order depends
         // on which attribute is used.
         //
-        // Because there is no syntax to pick one, we fail with an error. We could add optional upcast syntax
+        // Because there is no syntax to pick one, ParseFieldChain() fails with an error. We could add optional upcast syntax
         // (which would be required in this case) in the future to make it work, if desired.
 
-        CountExpression? count = TryParseCount(FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType);
+        QueryExpression target;
 
-        if (count != null)
+        if (TokenStack.TryPeek(out nextToken) && nextToken is { Kind: TokenKind.Text } && IsFunction(nextToken.Value!))
         {
-            return new SortElementExpression(count, isAscending);
+            target = ParseFunction(resourceType);
+        }
+        else
+        {
+            string errorMessage = !isAscending ? "Count function or field name expected." : "-, count function or field name expected.";
+            target = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute, FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType, errorMessage);
         }
 
-        string errorMessage = isAscending ? "-, count function or field name expected." : "Count function or field name expected.";
+        return new SortElementExpression(target, isAscending);
+    }
 
-        ResourceFieldChainExpression targetAttribute = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInAttribute,
-            FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType, errorMessage);
+    protected virtual bool IsFunction(string name)
+    {
+        ArgumentGuard.NotNullNorEmpty(name);
 
-        return new SortElementExpression(targetAttribute, isAscending);
+        return name == Keywords.Count;
+    }
+
+    protected virtual FunctionExpression ParseFunction(ResourceType resourceType)
+    {
+        ArgumentGuard.NotNull(resourceType);
+
+        if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Text)
+        {
+            switch (nextToken.Value)
+            {
+                case Keywords.Count:
+                {
+                    return ParseCount(resourceType);
+                }
+            }
+        }
+
+        int position = GetNextTokenPositionOrEnd();
+        throw new QueryParseException("Count function expected.", position);
+    }
+
+    private CountExpression ParseCount(ResourceType resourceType)
+    {
+        EatText(Keywords.Count);
+        EatSingleCharacterToken(TokenKind.OpenParen);
+
+        ResourceFieldChainExpression targetCollection =
+            ParseFieldChain(BuiltInPatterns.ToOneChainEndingInToMany, FieldChainPatternMatchOptions.AllowDerivedTypes, resourceType, null);
+
+        EatSingleCharacterToken(TokenKind.CloseParen);
+
+        return new CountExpression(targetCollection);
     }
 
     protected override void ValidateField(ResourceFieldAttribute field, int position)

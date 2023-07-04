@@ -63,7 +63,7 @@ public class JsonApiResourceDefinition<TResource, TId> : IResourceDefinition<TRe
     /// });
     /// ]]></code>
     /// </example>
-    protected SortExpression CreateSortExpressionFromLambda(PropertySortOrder keySelectors)
+    protected virtual SortExpression CreateSortExpressionFromLambda(PropertySortOrder keySelectors)
     {
         ArgumentGuard.NotNullNorEmpty(keySelectors);
 

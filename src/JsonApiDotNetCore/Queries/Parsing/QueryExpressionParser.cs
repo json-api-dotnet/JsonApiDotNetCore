@@ -112,24 +112,6 @@ public abstract class QueryExpressionParser
         }
     }
 
-    private protected CountExpression? TryParseCount(FieldChainPatternMatchOptions options, ResourceType resourceType)
-    {
-        if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text, Value: Keywords.Count })
-        {
-            TokenStack.Pop();
-
-            EatSingleCharacterToken(TokenKind.OpenParen);
-
-            ResourceFieldChainExpression targetCollection = ParseFieldChain(BuiltInPatterns.ToOneChainEndingInToMany, options, resourceType, null);
-
-            EatSingleCharacterToken(TokenKind.CloseParen);
-
-            return new CountExpression(targetCollection);
-        }
-
-        return null;
-    }
-
     /// <summary>
     /// Consumes a token containing the expected text from the top of <see cref="TokenStack" />. Throws a <see cref="QueryParseException" /> if a different
     /// token kind is at the top, it contains a different text, or if there are no more tokens available.

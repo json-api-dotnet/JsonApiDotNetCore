@@ -30,10 +30,8 @@ public class OrderClauseBuilder : QueryClauseBuilder, IOrderClauseBuilder
 
     public override Expression VisitSortElement(SortElementExpression expression, QueryClauseBuilderContext context)
     {
-        Expression body = expression.Count != null ? Visit(expression.Count, context) : Visit(expression.TargetAttribute!, context);
-
+        Expression body = Visit(expression.Target, context);
         LambdaExpression lambda = Expression.Lambda(body, context.LambdaScope.Parameter);
-
         string operationName = GetOperationName(expression.IsAscending, context);
 
         return ExtensionMethodCall(context.Source, operationName, body.Type, lambda, context);

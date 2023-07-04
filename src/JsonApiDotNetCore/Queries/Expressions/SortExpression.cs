@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents a sorting, resulting from text such as: lastName,-lastModifiedAt
+/// Represents a sorting, resulting from text such as: lastName,-lastModifiedAt,count(children)
 /// </summary>
 [PublicAPI]
 public class SortExpression : QueryExpression

@@ -105,25 +105,11 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
 
     public override QueryExpression? VisitSortElement(SortElementExpression expression, TArgument argument)
     {
-        SortElementExpression? newExpression = null;
+        QueryExpression? newTarget = Visit(expression.Target, argument);
 
-        if (expression.Count != null)
+        if (newTarget != null)
         {
-            if (Visit(expression.Count, argument) is CountExpression newCount)
-            {
-                newExpression = new SortElementExpression(newCount, expression.IsAscending);
-            }
-        }
-        else if (expression.TargetAttribute != null)
-        {
-            if (Visit(expression.TargetAttribute, argument) is ResourceFieldChainExpression newTargetAttribute)
-            {
-                newExpression = new SortElementExpression(newTargetAttribute, expression.IsAscending);
-            }
-        }
-
-        if (newExpression != null)
-        {
+            var newExpression = new SortElementExpression(newTarget, expression.IsAscending);
             return newExpression.Equals(expression) ? expression : newExpression;
         }
 

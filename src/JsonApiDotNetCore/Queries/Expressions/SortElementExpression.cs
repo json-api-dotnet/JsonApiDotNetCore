@@ -9,23 +9,14 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 [PublicAPI]
 public class SortElementExpression : QueryExpression
 {
-    public ResourceFieldChainExpression? TargetAttribute { get; }
-    public CountExpression? Count { get; }
+    public QueryExpression Target { get; }
     public bool IsAscending { get; }
 
-    public SortElementExpression(ResourceFieldChainExpression targetAttribute, bool isAscending)
+    public SortElementExpression(QueryExpression target, bool isAscending)
     {
-        ArgumentGuard.NotNull(targetAttribute);
+        ArgumentGuard.NotNull(target);
 
-        TargetAttribute = targetAttribute;
-        IsAscending = isAscending;
-    }
-
-    public SortElementExpression(CountExpression count, bool isAscending)
-    {
-        ArgumentGuard.NotNull(count);
-
-        Count = count;
+        Target = target;
         IsAscending = isAscending;
     }
 
@@ -53,14 +44,7 @@ public class SortElementExpression : QueryExpression
             builder.Append('-');
         }
 
-        if (TargetAttribute != null)
-        {
-            builder.Append(toFullString ? TargetAttribute.ToFullString() : TargetAttribute);
-        }
-        else if (Count != null)
-        {
-            builder.Append(toFullString ? Count.ToFullString() : Count);
-        }
+        builder.Append(toFullString ? Target.ToFullString() : Target);
 
         return builder.ToString();
     }
@@ -79,11 +63,11 @@ public class SortElementExpression : QueryExpression
 
         var other = (SortElementExpression)obj;
 
-        return Equals(TargetAttribute, other.TargetAttribute) && Equals(Count, other.Count) && IsAscending == other.IsAscending;
+        return Equals(Target, other.Target) && IsAscending == other.IsAscending;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(TargetAttribute, Count, IsAscending);
+        return HashCode.Combine(Target, IsAscending);
     }
 }
