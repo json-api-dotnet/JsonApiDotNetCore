@@ -3,13 +3,31 @@ using JetBrains.Annotations;
 
 #pragma warning disable AV1008 // Class should not be static
 
-namespace JsonApiDotNetCore.Resources.Internal;
+namespace JsonApiDotNetCore.Resources;
 
+/// <summary>
+/// Provides utilities regarding runtime types.
+/// </summary>
 [PublicAPI]
 public static class RuntimeTypeConverter
 {
     private const string ParseQueryStringsUsingCurrentCultureSwitchName = "JsonApiDotNetCore.ParseQueryStringsUsingCurrentCulture";
 
+    /// <summary>
+    /// Converts the specified value to the specified type.
+    /// </summary>
+    /// <param name="value">
+    /// The value to convert from.
+    /// </param>
+    /// <param name="type">
+    /// The type to convert to.
+    /// </param>
+    /// <returns>
+    /// The converted type, or <c>null</c> if <paramref name="value" /> is <c>null</c> and <paramref name="type" /> is a nullable type.
+    /// </returns>
+    /// <exception cref="FormatException">
+    /// <paramref name="value" /> is not compatible with <paramref name="type" />.
+    /// </exception>
     public static object? ConvertType(object? value, Type type)
     {
         ArgumentGuard.NotNull(type);
@@ -114,11 +132,20 @@ public static class RuntimeTypeConverter
         }
     }
 
+    /// <summary>
+    /// Indicates whether the specified type is a nullable value type or a reference type.
+    /// </summary>
     public static bool CanContainNull(Type type)
     {
         return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
     }
 
+    /// <summary>
+    /// Gets the default value for the specified type.
+    /// </summary>
+    /// <returns>
+    /// The default value, or <c>null</c> for nullable value types and reference types.
+    /// </returns>
     public static object? GetDefaultValue(Type type)
     {
         return type.IsValueType ? Activator.CreateInstance(type) : null;

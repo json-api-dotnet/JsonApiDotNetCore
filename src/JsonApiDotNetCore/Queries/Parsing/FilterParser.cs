@@ -7,7 +7,6 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Resources.Internal;
 
 namespace JsonApiDotNetCore.Queries.Parsing;
 
