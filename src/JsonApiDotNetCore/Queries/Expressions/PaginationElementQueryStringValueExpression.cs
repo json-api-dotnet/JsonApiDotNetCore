@@ -3,13 +3,28 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents an element in <see cref="PaginationQueryStringValueExpression" />.
+/// Represents an element in <see cref="PaginationQueryStringValueExpression" />, resulting from text such as: <c>1</c>, or:
+/// <c>
+/// articles:2
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class PaginationElementQueryStringValueExpression : QueryExpression
 {
+    /// <summary>
+    /// The relationship this pagination applies to. Chain format: zero or more relationships, followed by a to-many relationship.
+    /// </summary>
     public ResourceFieldChainExpression? Scope { get; }
+
+    /// <summary>
+    /// The numeric pagination value.
+    /// </summary>
     public int Value { get; }
+
+    /// <summary>
+    /// The zero-based position in the text of the query string parameter value.
+    /// </summary>
     public int Position { get; }
 
     public PaginationElementQueryStringValueExpression(ResourceFieldChainExpression? scope, int value, int position)

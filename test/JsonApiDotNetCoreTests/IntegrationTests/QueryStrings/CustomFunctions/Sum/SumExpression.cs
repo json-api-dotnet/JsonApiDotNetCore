@@ -5,15 +5,35 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.Sum;
 
 /// <summary>
-/// Represents the "sum" function, resulting from text such as: sum(orderLines,quantity) or sum(friends,count(children))
+/// This expression allows to determine the sum of values in the related resources of a to-many relationship. It represents the "sum" function, resulting
+/// from text such as:
+/// <c>
+/// sum(orderLines,quantity)
+/// </c>
+/// , or:
+/// <c>
+/// sum(friends,count(children))
+/// </c>
+/// .
 /// </summary>
 internal sealed class SumExpression : FunctionExpression
 {
     public const string Keyword = "sum";
 
+    /// <summary>
+    /// The to-many relationship whose related resources are summed over.
+    /// </summary>
     public ResourceFieldChainExpression TargetToManyRelationship { get; }
+
+    /// <summary>
+    /// The selector to apply on related resources, which can be a function or a field chain. Chain format: an optional list of to-one relationships,
+    /// followed by an attribute. The selector must return a numeric type.
+    /// </summary>
     public QueryExpression Selector { get; }
 
+    /// <summary>
+    /// The CLR type this function returns, which is always <see cref="ulong" />.
+    /// </summary>
     public override Type ReturnType { get; } = typeof(ulong);
 
     public SumExpression(ResourceFieldChainExpression targetToManyRelationship, QueryExpression selector)

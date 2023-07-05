@@ -4,12 +4,27 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents an element in <see cref="SortExpression" />.
+/// Represents an element in <see cref="SortExpression" />, resulting from text such as: <c>lastName</c>,
+/// <c>
+/// -lastModifiedAt
+/// </c>
+/// , or:
+/// <c>
+/// count(children)
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class SortElementExpression : QueryExpression
 {
+    /// <summary>
+    /// The target to sort on, which can be a function or a field chain. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// </summary>
     public QueryExpression Target { get; }
+
+    /// <summary>
+    /// Indicates the sort direction.
+    /// </summary>
     public bool IsAscending { get; }
 
     public SortElementExpression(QueryExpression target, bool isAscending)

@@ -5,14 +5,28 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.StringLength;
 
 /// <summary>
-/// Represents the "length" function, resulting from text such as: length(title)
+/// This expression allows to determine the string length of a JSON:API attribute. It represents the "length" function, resulting from text such as:
+/// <c>
+/// length(title)
+/// </c>
+/// , or:
+/// <c>
+/// length(owner.lastName)
+/// </c>
+/// .
 /// </summary>
 internal sealed class LengthExpression : FunctionExpression
 {
     public const string Keyword = "length";
 
+    /// <summary>
+    /// The string attribute whose length to determine. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// </summary>
     public ResourceFieldChainExpression TargetAttribute { get; }
 
+    /// <summary>
+    /// The CLR type this function returns, which is always <see cref="int" />.
+    /// </summary>
     public override Type ReturnType { get; } = typeof(int);
 
     public LengthExpression(ResourceFieldChainExpression targetAttribute)

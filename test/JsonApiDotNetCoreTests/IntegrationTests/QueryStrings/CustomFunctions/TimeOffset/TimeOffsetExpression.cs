@@ -5,7 +5,15 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.TimeOffset;
 
 /// <summary>
-/// Represents the "timeOffset" function, resulting from text such as: timeOffset('-0:10:00')
+/// This expression wraps a time duration. It represents the "timeOffset" function, resulting from text such as:
+/// <c>
+/// timeOffset('+0:10:00')
+/// </c>
+/// , or:
+/// <c>
+/// timeOffset('-0:10:00')
+/// </c>
+/// .
 /// </summary>
 internal sealed class TimeOffsetExpression : FunctionExpression
 {
@@ -14,8 +22,14 @@ internal sealed class TimeOffsetExpression : FunctionExpression
     // Only used to show the original input in errors and diagnostics. Not part of the semantic expression value.
     private readonly LiteralConstantExpression _timeSpanConstant;
 
+    /// <summary>
+    /// The time offset, which can be negative.
+    /// </summary>
     public TimeSpan Value { get; }
 
+    /// <summary>
+    /// The CLR type this function returns, which is always <see cref="TimeSpan" />.
+    /// </summary>
     public override Type ReturnType { get; } = typeof(TimeSpan);
 
     public TimeOffsetExpression(LiteralConstantExpression timeSpanConstant)

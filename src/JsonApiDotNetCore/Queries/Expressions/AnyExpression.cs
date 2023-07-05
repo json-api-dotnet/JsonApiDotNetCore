@@ -6,12 +6,24 @@ using JsonApiDotNetCore.Queries.Parsing;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents the "any" filter function, resulting from text such as: any(name,'Jack','Joe')
+/// This expression allows to test if an attribute value equals any of the specified constants. It represents the "any" filter function, resulting from
+/// text such as:
+/// <c>
+/// any(owner.name,'Jack','Joe','John')
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class AnyExpression : FilterExpression
 {
+    /// <summary>
+    /// The attribute whose value to compare. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// </summary>
     public ResourceFieldChainExpression TargetAttribute { get; }
+
+    /// <summary>
+    /// One or more constants to compare the attribute's value against.
+    /// </summary>
     public IImmutableSet<LiteralConstantExpression> Constants { get; }
 
     public AnyExpression(ResourceFieldChainExpression targetAttribute, IImmutableSet<LiteralConstantExpression> constants)

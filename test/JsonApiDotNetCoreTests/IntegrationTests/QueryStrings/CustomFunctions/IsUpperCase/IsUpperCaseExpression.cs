@@ -5,12 +5,24 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.IsUpperCase;
 
 /// <summary>
-/// Represents the "isUpperCase" filter function, resulting from text such as: isUpperCase(title)
+/// This expression allows to test if the value of a JSON:API attribute is upper case. It represents the "isUpperCase" filter function, resulting from
+/// text such as:
+/// <c>
+/// isUpperCase(title)
+/// </c>
+/// , or:
+/// <c>
+/// isUpperCase(owner.lastName)
+/// </c>
+/// .
 /// </summary>
 internal sealed class IsUpperCaseExpression : FilterExpression
 {
     public const string Keyword = "isUpperCase";
 
+    /// <summary>
+    /// The string attribute whose value to inspect. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// </summary>
     public ResourceFieldChainExpression TargetAttribute { get; }
 
     public IsUpperCaseExpression(ResourceFieldChainExpression targetAttribute)

@@ -6,14 +6,37 @@ using JsonApiDotNetCore.Queries.Parsing;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents the "isType" filter function, resulting from text such as: isType(,men), isType(creator,men) or
+/// This expression allows to test if a resource in an inheritance hierarchy can be upcast to a derived type, optionally with a condition where the
+/// derived type is accessible. It represents the "isType" filter function, resulting from text such as:
+/// <c>
+/// isType(,men)
+/// </c>
+/// ,
+/// <c>
+/// isType(creator,men)
+/// </c>
+/// , or:
+/// <c>
 /// isType(creator,men,equals(hasBeard,'true'))
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class IsTypeExpression : FilterExpression
 {
+    /// <summary>
+    /// An optional to-one relationship to start from. Chain format: one or more to-one relationships.
+    /// </summary>
     public ResourceFieldChainExpression? TargetToOneRelationship { get; }
+
+    /// <summary>
+    /// The derived resource type to upcast to.
+    /// </summary>
     public ResourceType DerivedType { get; }
+
+    /// <summary>
+    /// An optional filter that the derived resource must match.
+    /// </summary>
     public FilterExpression? Child { get; }
 
     public IsTypeExpression(ResourceFieldChainExpression? targetToOneRelationship, ResourceType derivedType, FilterExpression? child)

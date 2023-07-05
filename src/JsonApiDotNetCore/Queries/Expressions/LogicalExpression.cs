@@ -6,12 +6,28 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents a logical filter function, resulting from text such as: and(equals(title,'Work'),has(articles))
+/// This expression allows to test whether one or all of its boolean operands are true. It represents the logical AND/OR filter functions, resulting from
+/// text such as:
+/// <c>
+/// and(equals(title,'Work'),has(articles))
+/// </c>
+/// , or:
+/// <c>
+/// or(equals(title,'Work'),has(articles))
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class LogicalExpression : FilterExpression
 {
+    /// <summary>
+    /// The operator used to compare <see cref="Terms" />.
+    /// </summary>
     public LogicalOperator Operator { get; }
+
+    /// <summary>
+    /// The list of one or more boolean operands.
+    /// </summary>
     public IImmutableList<FilterExpression> Terms { get; }
 
     public LogicalExpression(LogicalOperator @operator, params FilterExpression[] terms)
