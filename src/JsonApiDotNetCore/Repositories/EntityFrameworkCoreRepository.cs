@@ -619,7 +619,18 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     private bool RequireLoadOfInverseRelationship(RelationshipAttribute relationship, [NotNullWhen(true)] object? trackedValueToAssign)
     {
         // See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
-        return trackedValueToAssign != null && relationship is HasOneAttribute { IsOneToOne: true };
+        if (trackedValueToAssign != null && relationship is HasOneAttribute { IsOneToOne: true })
+        {
+            IEntityType? leftEntityType = _dbContext.Model.FindEntityType(relationship.LeftType.ClrType);
+            INavigation? navigation = leftEntityType?.FindNavigation(relationship.Property.Name);
+
+            if (navigation != null && navigation.ForeignKey.DeclaringEntityType.ClrType == relationship.LeftType.ClrType)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected virtual async Task SaveChangesAsync(CancellationToken cancellationToken)
