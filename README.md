@@ -130,3 +130,8 @@ Alternatively, to build and validate the code, run all tests, generate code cove
 ```bash
 pwsh Build.ps1
 ```
+
+## Sponsors
+
+<a href="https://jb.gg/OpenSourceSupport"><img align="middle" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains Logo" style="width:150px"></a> &nbsp;
+<a href="https://www.araxis.com/buy/open-source"><img align="middle" src="https://www.araxis.com/theme/37/img/araxis-logo-lg.svg" alt="Araxis Logo" style="width:150px"></a>
