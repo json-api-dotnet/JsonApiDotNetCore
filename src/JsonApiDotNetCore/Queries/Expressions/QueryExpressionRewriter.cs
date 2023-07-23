@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Configuration;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Building block for rewriting <see cref="QueryExpression" /> trees. It walks through nested expressions and updates parent on changes.
+/// Building block for rewriting <see cref="QueryExpression" /> trees. It walks through nested expressions and updates the parent on changes.
 /// </summary>
 [PublicAPI]
 public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgument, QueryExpression?>
@@ -105,25 +105,11 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
 
     public override QueryExpression? VisitSortElement(SortElementExpression expression, TArgument argument)
     {
-        SortElementExpression? newExpression = null;
+        QueryExpression? newTarget = Visit(expression.Target, argument);
 
-        if (expression.Count != null)
+        if (newTarget != null)
         {
-            if (Visit(expression.Count, argument) is CountExpression newCount)
-            {
-                newExpression = new SortElementExpression(newCount, expression.IsAscending);
-            }
-        }
-        else if (expression.TargetAttribute != null)
-        {
-            if (Visit(expression.TargetAttribute, argument) is ResourceFieldChainExpression newTargetAttribute)
-            {
-                newExpression = new SortElementExpression(newTargetAttribute, expression.IsAscending);
-            }
-        }
-
-        if (newExpression != null)
-        {
+            var newExpression = new SortElementExpression(newTarget, expression.IsAscending);
             return newExpression.Equals(expression) ? expression : newExpression;
         }
 
@@ -240,7 +226,7 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
     {
         ResourceFieldChainExpression? newScope = expression.Scope != null ? Visit(expression.Scope, argument) as ResourceFieldChainExpression : null;
 
-        var newExpression = new PaginationElementQueryStringValueExpression(newScope, expression.Value);
+        var newExpression = new PaginationElementQueryStringValueExpression(newScope, expression.Value, expression.Position);
         return newExpression.Equals(expression) ? expression : newExpression;
     }
 

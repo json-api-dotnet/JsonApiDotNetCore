@@ -4,13 +4,38 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents a comparison filter function, resulting from text such as: equals(name,'Joe')
+/// This expression allows to compare two operands using a comparison operator. It represents comparison filter functions, resulting from text such as:
+/// <c>
+/// equals(name,'Joe')
+/// </c>
+/// ,
+/// <c>
+/// equals(owner,null)
+/// </c>
+/// , or:
+/// <c>
+/// greaterOrEqual(count(upVotes),count(downVotes),'1')
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class ComparisonExpression : FilterExpression
 {
+    /// <summary>
+    /// The operator used to compare <see cref="Left" /> and <see cref="Right" />.
+    /// </summary>
     public ComparisonOperator Operator { get; }
+
+    /// <summary>
+    /// The left-hand operand, which can be a function or a field chain. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// When comparing equality with null, the chain may also end in a to-one relationship.
+    /// </summary>
     public QueryExpression Left { get; }
+
+    /// <summary>
+    /// The right-hand operand, which can be a function, a field chain, a constant, or null (if the type of <see cref="Left" /> is nullable). Chain format:
+    /// an optional list of to-one relationships, followed by an attribute.
+    /// </summary>
     public QueryExpression Right { get; }
 
     public ComparisonExpression(ComparisonOperator @operator, QueryExpression left, QueryExpression right)

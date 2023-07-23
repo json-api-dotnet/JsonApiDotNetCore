@@ -4,14 +4,17 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents a non-null constant value, resulting from text such as: equals(firstName,'Jack')
+/// Represents a non-null constant value, resulting from text such as: <c>'Jack'</c>, <c>'123'</c>, or: <c>'true'</c>.
 /// </summary>
 [PublicAPI]
 public class LiteralConstantExpression : IdentifierExpression
 {
-    // Only used to show the original input, in case expression parse failed. Not part of the semantic expression value.
+    // Only used to show the original input in errors and diagnostics. Not part of the semantic expression value.
     private readonly string _stringValue;
 
+    /// <summary>
+    /// The constant value. Call <see cref="object.GetType()" /> to determine the .NET runtime type.
+    /// </summary>
     public object TypedValue { get; }
 
     public LiteralConstantExpression(object typedValue)

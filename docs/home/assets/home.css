@@ -95,7 +95,6 @@ h1, h2, h3, h4, h5, h6, .font-primary {
   margin-top: 72px;
 }
 
-
 /*--------------------------------------------------------------
 # Hero Section
 --------------------------------------------------------------*/
@@ -300,12 +299,6 @@ section {
   .breadcrumbs ol li {
     display: inline-block;
   }
-
-
-}
-
-div[feature]:hover {
-  cursor: pointer;
 }
 
 /*--------------------------------------------------------------
@@ -401,6 +394,34 @@ div[feature]:hover {
   margin-bottom: 0;
 }
 
+div[feature]:hover {
+  cursor: pointer;
+}
+
+/*--------------------------------------------------------------
+# Sponsors
+--------------------------------------------------------------*/
+.sponsors .icon-box {
+  padding: 30px;
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 40px 0;
+  background: #fff;
+  box-shadow: 0 10px 29px 0 rgba(68, 88, 144, 0.1);
+  transition: all 0.3s ease-in-out;
+  border-radius: 15px;
+  text-align: center;
+  border-bottom: 3px solid #fff;
+}
+
+.sponsors .icon-box:hover {
+  transform: translateY(-5px);
+  border-color: #ef7f4d;
+}
+
+div[sponsor]:hover {
+  cursor: pointer;
+}
 
 /*--------------------------------------------------------------
 # Footer

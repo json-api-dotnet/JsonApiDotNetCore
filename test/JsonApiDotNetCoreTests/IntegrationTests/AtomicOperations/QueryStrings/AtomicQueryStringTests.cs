@@ -29,7 +29,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Cannot_include_on_operations_endpoint()
+    public async Task Cannot_include_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -69,7 +69,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Cannot_filter_on_operations_endpoint()
+    public async Task Cannot_filter_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -109,7 +109,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Cannot_sort_on_operations_endpoint()
+    public async Task Cannot_sort_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -149,7 +149,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Cannot_use_pagination_number_on_operations_endpoint()
+    public async Task Cannot_use_pagination_number_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -189,7 +189,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Cannot_use_pagination_size_on_operations_endpoint()
+    public async Task Cannot_use_pagination_size_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -229,7 +229,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Cannot_use_sparse_fieldset_on_operations_endpoint()
+    public async Task Cannot_use_sparse_fieldset_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -269,7 +269,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Can_use_Queryable_handler_on_resource_endpoint()
+    public async Task Can_use_Queryable_handler_at_resource_endpoint()
     {
         // Arrange
         var clock = _testContext.Factory.Services.GetRequiredService<ISystemClock>();
@@ -299,7 +299,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Cannot_use_Queryable_handler_on_operations_endpoint()
+    public async Task Cannot_use_Queryable_handler_at_operations_endpoint()
     {
         // Arrange
         string newTrackTitle = _fakers.MusicTrack.Generate().Title;

@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -10,6 +11,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response;
 internal sealed class FakeResourceDefinitionAccessor : IResourceDefinitionAccessor
 {
     bool IResourceDefinitionAccessor.IsReadOnlyRequest => throw new NotImplementedException();
+    public IQueryableBuilder QueryableBuilder => throw new NotImplementedException();
 
     public IImmutableSet<IncludeElementExpression> OnApplyIncludes(ResourceType resourceType, IImmutableSet<IncludeElementExpression> existingIncludes)
     {

@@ -46,6 +46,29 @@ public sealed class IdObfuscationTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
+    public async Task Cannot_filter_equality_for_invalid_ID()
+    {
+        // Arrange
+        var parameterValue = new MarkedText("equals(id,^'not-a-hex-value')", '^');
+        string route = $"/bankAccounts?filter={parameterValue.Text}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be($"The value 'not-a-hex-value' is not a valid hexadecimal value. {parameterValue}");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("filter");
+    }
+
+    [Fact]
     public async Task Can_filter_any_in_primary_resources()
     {
         // Arrange

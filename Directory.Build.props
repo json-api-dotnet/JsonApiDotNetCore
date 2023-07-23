@@ -4,13 +4,13 @@
     <AspNetVersion>6.0.*</AspNetVersion>
     <EFCoreVersion>7.0.*</EFCoreVersion>
     <EFCorePostgresVersion>7.0.*</EFCorePostgresVersion>
-    <MicrosoftCodeAnalysisVersion>4.5.*</MicrosoftCodeAnalysisVersion>
+    <MicrosoftCodeAnalysisVersion>4.6.*</MicrosoftCodeAnalysisVersion>
     <HumanizerVersion>2.14.1</HumanizerVersion>
     <SwashbuckleVersion>6.4.*</SwashbuckleVersion>
     <NSwagApiClientVersion>13.16.*</NSwagApiClientVersion>
     <MicrosoftApiClientVersion>6.0.*</MicrosoftApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
-    <JsonApiDotNetCoreVersionPrefix>5.2.1</JsonApiDotNetCoreVersionPrefix>
+    <JsonApiDotNetCoreVersionPrefix>5.3.1</JsonApiDotNetCoreVersionPrefix>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>9999</WarningLevel>
     <Nullable>enable</Nullable>
@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" PrivateAssets="All" />
+    <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" PrivateAssets="All" />
     <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.8.3" PrivateAssets="All" />
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)CSharpGuidelinesAnalyzer.config" Visible="False" />
   </ItemGroup>
@@ -37,8 +37,8 @@
 
   <!-- Test Project Dependencies -->
   <PropertyGroup>
-    <CoverletVersion>3.2.*</CoverletVersion>
+    <CoverletVersion>6.0.*</CoverletVersion>
     <MoqVersion>4.18.*</MoqVersion>
-    <TestSdkVersion>17.5.*</TestSdkVersion>
+    <TestSdkVersion>17.6.*</TestSdkVersion>
   </PropertyGroup>
 </Project>

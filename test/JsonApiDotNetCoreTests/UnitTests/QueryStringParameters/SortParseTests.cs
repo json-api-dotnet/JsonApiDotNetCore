@@ -4,8 +4,8 @@ using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
-using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
@@ -18,7 +18,9 @@ public sealed class SortParseTests : BaseParseTests
 
     public SortParseTests()
     {
-        _reader = new SortQueryStringParameterReader(Request, ResourceGraph);
+        var scopeParser = new QueryStringParameterScopeParser();
+        var valueParser = new SortParser();
+        _reader = new SortQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph);
     }
 
     [Theory]
@@ -52,36 +54,73 @@ public sealed class SortParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("sort[", "id", "Field name expected.")]
-    [InlineData("sort[abc.def]", "id", "Relationship 'abc' in 'abc.def' does not exist on resource type 'blogs'.")]
-    [InlineData("sort[posts.author]", "id", "Relationship 'author' in 'posts.author' must be a to-many relationship on resource type 'blogPosts'.")]
-    [InlineData("sort", "", "-, count function or field name expected.")]
-    [InlineData("sort", " ", "Unexpected whitespace.")]
-    [InlineData("sort", "-", "Count function or field name expected.")]
-    [InlineData("sort", "abc", "Attribute 'abc' does not exist on resource type 'blogs'.")]
-    [InlineData("sort[posts]", "author", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
-    [InlineData("sort[posts]", "author.livingAddress", "Attribute 'livingAddress' in 'author.livingAddress' does not exist on resource type 'webAccounts'.")]
-    [InlineData("sort", "-count", "( expected.")]
-    [InlineData("sort", "count", "( expected.")]
-    [InlineData("sort", "count(posts", ") expected.")]
-    [InlineData("sort", "count(", "Field name expected.")]
-    [InlineData("sort", "count(-abc)", "Field name expected.")]
-    [InlineData("sort", "count(abc)", "Relationship 'abc' does not exist on resource type 'blogs'.")]
-    [InlineData("sort", "count(id)", "Relationship 'id' does not exist on resource type 'blogs'.")]
-    [InlineData("sort[posts]", "count(author)", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
-    [InlineData("sort[posts]", "caption,", "-, count function or field name expected.")]
-    [InlineData("sort[posts]", "caption:", ", expected.")]
-    [InlineData("sort[posts]", "caption,-", "Count function or field name expected.")]
-    [InlineData("sort[posts.contributors]", "some", "Attribute 'some' does not exist on resource type 'humans' or any of its derived types.")]
-    [InlineData("sort[posts.contributors]", "wife.father.some", "Attribute 'some' in 'wife.father.some' does not exist on resource type 'men'.")]
-    [InlineData("sort[posts.contributors]", "count(some)", "Relationship 'some' does not exist on resource type 'humans' or any of its derived types.")]
-    [InlineData("sort[posts.contributors]", "count(wife.some)", "Relationship 'some' in 'wife.some' does not exist on resource type 'women'.")]
-    [InlineData("sort[posts.contributors]", "age", "Attribute 'age' is defined on multiple derived types.")]
-    [InlineData("sort[posts.contributors]", "count(friends)", "Relationship 'friends' is defined on multiple derived types.")]
-    public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
+    [InlineData("sort[^", "Field name expected.")]
+    [InlineData("sort[^abc.def]", "Field 'abc' does not exist on resource type 'blogs'.")]
+    [InlineData("sort[posts.^caption]",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'blogPosts' expected.")]
+    [InlineData("sort[posts.author^]",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'webAccounts' expected.")]
+    public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
     {
+        // Arrange
+        var parameterNameSource = new MarkedText(parameterName, '^');
+
         // Act
-        Action action = () => _reader.Read(parameterName, parameterValue);
+        Action action = () => _reader.Read(parameterNameSource.Text, " ");
+
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+
+        exception.ParameterName.Should().Be(parameterNameSource.Text);
+        exception.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified sort is invalid.");
+        error.Detail.Should().Be($"{errorMessage} {parameterNameSource}");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be(parameterNameSource.Text);
+    }
+
+    [Theory]
+    [InlineData("sort", "^", "-, count function or field name expected.")]
+    [InlineData("sort", "^ ", "Unexpected whitespace.")]
+    [InlineData("sort", "-^", "Count function or field name expected.")]
+    [InlineData("sort", "^abc", "Field 'abc' does not exist on resource type 'blogs'.")]
+    [InlineData("sort[posts]", "author^",
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by an attribute. " +
+        "To-one relationship or attribute on resource type 'webAccounts' expected.")]
+    [InlineData("sort[posts]", "author.^livingAddress", "Field 'livingAddress' does not exist on resource type 'webAccounts'.")]
+    [InlineData("sort", "-count^", "( expected.")]
+    [InlineData("sort", "count^", "( expected.")]
+    [InlineData("sort", "count(posts^", ") expected.")]
+    [InlineData("sort", "count(^", "Field name expected.")]
+    [InlineData("sort", "count(^-abc)", "Field name expected.")]
+    [InlineData("sort", "count(^abc)", "Field 'abc' does not exist on resource type 'blogs'.")]
+    [InlineData("sort", "count(^id)",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more to-one relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'blogs' expected.")]
+    [InlineData("sort[posts]", "count(author^)",
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'webAccounts' expected.")]
+    [InlineData("sort[posts]", "caption,^", "-, count function or field name expected.")]
+    [InlineData("sort[posts]", "caption^:", ", expected.")]
+    [InlineData("sort[posts]", "caption,-^", "Count function or field name expected.")]
+    [InlineData("sort[posts.contributors]", "^some", "Field 'some' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("sort[posts.contributors]", "wife.father.^some", "Field 'some' does not exist on resource type 'men'.")]
+    [InlineData("sort[posts.contributors]", "count(^some)", "Field 'some' does not exist on resource type 'humans' or any of its derived types.")]
+    [InlineData("sort[posts.contributors]", "count(wife.^some)", "Field 'some' does not exist on resource type 'women'.")]
+    [InlineData("sort[posts.contributors]", "^age", "Field 'age' is defined on multiple types that derive from resource type 'humans'.")]
+    [InlineData("sort[posts.contributors]", "count(^friends)", "Field 'friends' is defined on multiple types that derive from resource type 'humans'.")]
+    public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
+    {
+        // Arrange
+        var parameterValueSource = new MarkedText(parameterValue, '^');
+
+        // Act
+        Action action = () => _reader.Read(parameterName, parameterValueSource.Text);
 
         // Assert
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
@@ -92,29 +131,28 @@ public sealed class SortParseTests : BaseParseTests
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Be(errorMessage);
+        error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be(parameterName);
     }
 
     [Theory]
-    [InlineData("sort", "id", null, "id")]
-    [InlineData("sort", "count(posts),-id", null, "count(posts),-id")]
-    [InlineData("sort", "-count(posts),id", null, "-count(posts),id")]
-    [InlineData("sort[posts]", "count(comments),-id", "posts", "count(comments),-id")]
-    [InlineData("sort[owner.posts]", "-caption", "owner.posts", "-caption")]
-    [InlineData("sort[posts]", "author.userName", "posts", "author.userName")]
-    [InlineData("sort[posts]", "-caption,-author.userName", "posts", "-caption,-author.userName")]
-    [InlineData("sort[posts]", "caption,author.userName,-id", "posts", "caption,author.userName,-id")]
-    [InlineData("sort[posts.labels]", "id,name", "posts.labels", "id,name")]
-    [InlineData("sort[posts.comments]", "-createdAt,author.displayName,author.preferences.useDarkTheme", "posts.comments",
-        "-createdAt,author.displayName,author.preferences.useDarkTheme")]
-    [InlineData("sort[posts.contributors]", "name,-maidenName,hasBeard", "posts.contributors", "name,-maidenName,hasBeard")]
-    [InlineData("sort[posts.contributors]", "husband.hasBeard,wife.maidenName", "posts.contributors", "husband.hasBeard,wife.maidenName")]
-    [InlineData("sort[posts.contributors]", "count(wife.husband.drinkingBuddies)", "posts.contributors", "count(wife.husband.drinkingBuddies)")]
-    [InlineData("sort[posts.contributors]", "wife.age", "posts.contributors", "wife.age")]
-    [InlineData("sort[posts.contributors]", "count(father.friends)", "posts.contributors", "count(father.friends)")]
-    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected, string valueExpected)
+    [InlineData("sort", "id", null)]
+    [InlineData("sort", "count(posts),-id", null)]
+    [InlineData("sort", "-count(posts),id", null)]
+    [InlineData("sort[posts]", "count(comments),-id", "posts")]
+    [InlineData("sort[owner.posts]", "-caption", "owner.posts")]
+    [InlineData("sort[posts]", "author.userName", "posts")]
+    [InlineData("sort[posts]", "-caption,-author.userName", "posts")]
+    [InlineData("sort[posts]", "caption,author.userName,-id", "posts")]
+    [InlineData("sort[posts.labels]", "id,name", "posts.labels")]
+    [InlineData("sort[posts.comments]", "-createdAt,author.displayName,author.preferences.useDarkTheme", "posts.comments")]
+    [InlineData("sort[posts.contributors]", "name,-maidenName,hasBeard", "posts.contributors")]
+    [InlineData("sort[posts.contributors]", "husband.hasBeard,wife.maidenName", "posts.contributors")]
+    [InlineData("sort[posts.contributors]", "count(wife.husband.drinkingBuddies)", "posts.contributors")]
+    [InlineData("sort[posts.contributors]", "wife.age", "posts.contributors")]
+    [InlineData("sort[posts.contributors]", "count(father.friends)", "posts.contributors")]
+    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);
@@ -126,6 +164,6 @@ public sealed class SortParseTests : BaseParseTests
         scope?.ToString().Should().Be(scopeExpected);
 
         QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
-        value.ToString().Should().Be(valueExpected);
+        value.ToString().Should().Be(parameterValue);
     }
 }

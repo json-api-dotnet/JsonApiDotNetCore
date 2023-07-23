@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using JsonApiDotNetCore.Resources.Internal;
 
 namespace JsonApiDotNetCore.Resources;
 

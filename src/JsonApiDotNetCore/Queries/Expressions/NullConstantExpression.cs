@@ -1,14 +1,17 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents the constant <c>null</c>, resulting from text such as: equals(lastName,null)
+/// Represents the constant <c>null</c>, resulting from the text: <c>null</c>.
 /// </summary>
 [PublicAPI]
 public class NullConstantExpression : IdentifierExpression
 {
+    /// <summary>
+    /// Provides access to the singleton instance.
+    /// </summary>
     public static readonly NullConstantExpression Instance = new();
 
     private NullConstantExpression()

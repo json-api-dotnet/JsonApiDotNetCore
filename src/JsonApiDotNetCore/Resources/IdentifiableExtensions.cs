@@ -1,5 +1,4 @@
 using System.Reflection;
-using JsonApiDotNetCore.Resources.Internal;
 
 namespace JsonApiDotNetCore.Resources;
 

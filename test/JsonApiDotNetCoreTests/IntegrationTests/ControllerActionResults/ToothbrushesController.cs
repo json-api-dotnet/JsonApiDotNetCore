@@ -4,11 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults;
 
-// Workaround for https://youtrack.jetbrains.com/issue/RSRP-487028
-public partial class ToothbrushesController
-{
-}
-
 partial class ToothbrushesController
 {
     internal const int EmptyActionResultId = 11111111;

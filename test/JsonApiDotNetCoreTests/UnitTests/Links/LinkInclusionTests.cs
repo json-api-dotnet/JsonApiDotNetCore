@@ -3,6 +3,7 @@ using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -85,7 +86,8 @@ public sealed class LinkInclusionTests
         var httpContextAccessor = new FakeHttpContextAccessor();
         var linkGenerator = new FakeLinkGenerator();
         var controllerResourceMapping = new FakeControllerResourceMapping();
-        var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping);
+        var paginationParser = new PaginationParser();
+        var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping, paginationParser);
 
         // Act
         TopLevelLinks? topLevelLinks = linkBuilder.GetTopLevelLinks();
@@ -166,7 +168,8 @@ public sealed class LinkInclusionTests
         var httpContextAccessor = new FakeHttpContextAccessor();
         var linkGenerator = new FakeLinkGenerator();
         var controllerResourceMapping = new FakeControllerResourceMapping();
-        var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping);
+        var paginationParser = new PaginationParser();
+        var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping, paginationParser);
 
         // Act
         ResourceLinks? resourceLinks = linkBuilder.GetResourceLinks(exampleResourceType, new ExampleResource());
@@ -325,7 +328,8 @@ public sealed class LinkInclusionTests
         var httpContextAccessor = new FakeHttpContextAccessor();
         var linkGenerator = new FakeLinkGenerator();
         var controllerResourceMapping = new FakeControllerResourceMapping();
-        var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping);
+        var paginationParser = new PaginationParser();
+        var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping, paginationParser);
 
         var relationship = new HasOneAttribute
         {

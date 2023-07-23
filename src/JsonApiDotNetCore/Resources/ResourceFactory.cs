@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Queries.Internal;
+using JsonApiDotNetCore.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources;

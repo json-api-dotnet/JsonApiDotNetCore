@@ -4,8 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Response;
 using JsonApiDotNetCoreTests.UnitTests.Serialization.Response.Models;
@@ -576,8 +575,8 @@ public sealed class ResponseModelAdapterTests
         var sparseFieldSetCache = new SparseFieldSetCache(Array.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor);
         var requestQueryStringAccessor = new FakeRequestQueryStringAccessor();
 
-        var parser = new IncludeParser();
-        IncludeExpression include = parser.Parse(includeChains, request.PrimaryResourceType, null);
+        var includeParser = new IncludeParser(options);
+        IncludeExpression include = includeParser.Parse(includeChains, request.PrimaryResourceType);
         evaluatedIncludeCache.Set(include);
 
         return new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, evaluatedIncludeCache, sparseFieldSetCache,

@@ -4,11 +4,18 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents pagination in a query string, resulting from text such as: 1,articles:2
+/// Represents pagination in a query string, resulting from text such as:
+/// <c>
+/// 1,articles:2
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class PaginationQueryStringValueExpression : QueryExpression
 {
+    /// <summary>
+    /// The list of one or more pagination elements.
+    /// </summary>
     public IImmutableList<PaginationElementQueryStringValueExpression> Elements { get; }
 
     public PaginationQueryStringValueExpression(IImmutableList<PaginationElementQueryStringValueExpression> elements)

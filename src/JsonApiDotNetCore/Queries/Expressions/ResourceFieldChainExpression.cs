@@ -1,15 +1,27 @@
 using System.Collections.Immutable;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents a chain of fields (relationships and attributes), resulting from text such as: articles.revisions.author
+/// Represents a chain of JSON:API fields (relationships and attributes), resulting from text such as:
+/// <c>
+/// articles.revisions.author
+/// </c>
+/// , or:
+/// <c>
+/// owner.LastName
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class ResourceFieldChainExpression : IdentifierExpression
 {
+    /// <summary>
+    /// A list of one or more JSON:API fields. Use <see cref="FieldChainPattern.Match" /> to convert from text.
+    /// </summary>
     public IImmutableList<ResourceFieldAttribute> Fields { get; }
 
     public ResourceFieldChainExpression(ResourceFieldAttribute field)

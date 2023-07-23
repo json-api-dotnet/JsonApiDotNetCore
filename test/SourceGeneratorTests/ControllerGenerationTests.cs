@@ -538,7 +538,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
 
-        runResult.Should().HaveProducedSourceCodeContaining(@"#nullable enable");
+        runResult.Should().HaveProducedSourceCodeContaining("#nullable enable");
     }
 
     [Fact]

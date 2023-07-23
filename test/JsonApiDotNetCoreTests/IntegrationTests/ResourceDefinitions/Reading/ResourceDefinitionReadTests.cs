@@ -308,7 +308,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     }
 
     [Fact]
-    public async Task Filter_from_resource_definition_is_applied_on_secondary_endpoint()
+    public async Task Filter_from_resource_definition_is_applied_at_secondary_endpoint()
     {
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
@@ -360,7 +360,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
     }
 
     [Fact]
-    public async Task Filter_from_resource_definition_is_applied_on_relationship_endpoint()
+    public async Task Filter_from_resource_definition_is_applied_at_relationship_endpoint()
     {
         // Arrange
         var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
