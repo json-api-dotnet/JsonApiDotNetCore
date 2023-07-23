@@ -6,7 +6,7 @@
     <EFCorePostgresVersion>7.0.*</EFCorePostgresVersion>
     <MicrosoftCodeAnalysisVersion>4.6.*</MicrosoftCodeAnalysisVersion>
     <HumanizerVersion>2.14.1</HumanizerVersion>
-    <JsonApiDotNetCoreVersionPrefix>5.2.1</JsonApiDotNetCoreVersionPrefix>
+    <JsonApiDotNetCoreVersionPrefix>5.3.0</JsonApiDotNetCoreVersionPrefix>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>9999</WarningLevel>
     <Nullable>enable</Nullable>
