@@ -79,7 +79,7 @@
 
   <h1 id="JsonApiDotNetCore_Queries_Expressions_ComparisonExpression" data-uid="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression" class="text-break">
     Class ComparisonExpression
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L9"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -87,7 +87,19 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a comparison filter function, resulting from text such as: equals(name,'Joe')</p>
+  <div class="markdown summary"><p>This expression allows to compare two operands using a comparison operator. It represents comparison filter functions, resulting from text such as:
+<code>
+equals(name,'Joe')
+</code>
+,
+<code>
+equals(owner,null)
+</code>
+, or:
+<code>
+greaterOrEqual(count(upVotes),count(downVotes),'1')
+</code>
+.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -116,6 +128,9 @@ public class ComparisonExpression : FilterExpression</code></pre>
     <dt>Inherited Members</dt>
     <dd>
     <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html#JsonApiDotNetCore_Queries_Expressions_FilterExpression_ReturnType">FilterExpression.ReturnType</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
     </div>
     <div>
@@ -142,7 +157,7 @@ public class ComparisonExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ComparisonExpression__ctor_JsonApiDotNetCore_Queries_Expressions_ComparisonOperator_JsonApiDotNetCore_Queries_Expressions_QueryExpression_JsonApiDotNetCore_Queries_Expressions_QueryExpression_" data-uid="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ComparisonOperator,JsonApiDotNetCore.Queries.Expressions.QueryExpression,JsonApiDotNetCore.Queries.Expressions.QueryExpression)">
   ComparisonExpression(ComparisonOperator, QueryExpression, QueryExpression)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L41"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -181,10 +196,12 @@ public class ComparisonExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_Left" data-uid="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.Left">
   Left
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L13"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The left-hand operand, which can be a function or a field chain. Chain format: an optional list of to-one relationships, followed by an attribute.
+When comparing equality with null, the chain may also end in a to-one relationship.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -212,10 +229,11 @@ public class ComparisonExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_Operator" data-uid="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.Operator">
   Operator
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L12"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L27"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The operator used to compare <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.html#JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_Left">Left</a> and <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.html#JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_Right">Right</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -243,10 +261,12 @@ public class ComparisonExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_Right" data-uid="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.Right">
   Right
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L39"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The right-hand operand, which can be a function, a field chain, a constant, or null (if the type of <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.html#JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_Left">Left</a> is nullable). Chain format:
+an optional list of to-one relationships, followed by an attribute.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -278,7 +298,7 @@ public class ComparisonExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_" data-uid="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)">
   Accept&lt;TArgument, TResult&gt;(QueryExpressionVisitor&lt;TArgument, TResult&gt;, TArgument)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -323,7 +343,7 @@ public class ComparisonExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_Equals_System_Object_" data-uid="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L66"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -359,7 +379,7 @@ public class ComparisonExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_GetHashCode" data-uid="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L83"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -390,7 +410,7 @@ public class ComparisonExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_ToFullString" data-uid="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.ToFullString">
   ToFullString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L61"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -421,7 +441,7 @@ public class ComparisonExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ComparisonExpression_ToString" data-uid="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -452,7 +472,7 @@ public class ComparisonExpression : FilterExpression</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L9" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ComparisonExpression.cs/#L21" class="edit-link">Edit this page</a>
         </div>
 
         

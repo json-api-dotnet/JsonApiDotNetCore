@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace JsonApiDotNetCore.Queries.QueryableBuilding
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace JsonApiDotNetCore.Queries.QueryableBuilding
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="JsonApiDotNetCore.Queries.QueryableBuilding">
+
+  <h1 id="JsonApiDotNetCore_Queries_QueryableBuilding" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding" class="text-break">Namespace JsonApiDotNetCore.Queries.QueryableBuilding
+</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IncludeClauseBuilder.html">IncludeClauseBuilder</a></dt>
+      <dd><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a> into <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.entityframeworkqueryableextensions.include#microsoft-entityframeworkcore-entityframeworkqueryableextensions-include-2(system-linq-iqueryable((-0))-system-linq-expressions-expression((system-func((-0-1)))))">Include&lt;TEntity, TProperty&gt;(IQueryable&lt;TEntity&gt;, Expression&lt;Func&lt;TEntity, TProperty&gt;&gt;)</a> calls.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScope.html">LambdaScope</a></dt>
+      <dd><p>A scoped lambda expression with a unique name. Disposing the instance releases the claimed name, so it can be reused.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory.html">LambdaScopeFactory</a></dt>
+      <dd><p>Produces lambda parameters with unique names.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.OrderClauseBuilder.html">OrderClauseBuilder</a></dt>
+      <dd><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SortExpression.html">SortExpression</a> into
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.queryable.orderby#system-linq-queryable-orderby-2(system-linq-iqueryable((-0))-system-linq-expressions-expression((system-func((-0-1)))))">OrderBy&lt;TSource, TKey&gt;(IQueryable&lt;TSource&gt;, Expression&lt;Func&lt;TSource, TKey&gt;&gt;)</a> calls.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilder.html">QueryClauseBuilder</a></dt>
+      <dd><p>Base class for transforming <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a> trees into system <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a> trees.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.html">QueryClauseBuilderContext</a></dt>
+      <dd><p>Immutable contextual state for *ClauseBuilder types.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.html">QueryableBuilder</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html">QueryableBuilderContext</a></dt>
+      <dd><p>Immutable contextual state for <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder.html">IQueryableBuilder</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.SelectClauseBuilder.html">SelectClauseBuilder</a></dt>
+      <dd><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html">SparseFieldSetExpression</a> into
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.queryable.select#system-linq-queryable-select-2(system-linq-iqueryable((-0))-system-linq-expressions-expression((system-func((-0-1)))))">Select&lt;TSource, TResult&gt;(IQueryable&lt;TSource&gt;, Expression&lt;Func&lt;TSource, TResult&gt;&gt;)</a> calls.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.SkipTakeClauseBuilder.html">SkipTakeClauseBuilder</a></dt>
+      <dd><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html">PaginationExpression</a> into <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.queryable.skip">Skip&lt;TSource&gt;(IQueryable&lt;TSource&gt;, int)</a> and
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.queryable.take#system-linq-queryable-take-1(system-linq-iqueryable((-0))-system-int32)">Take&lt;TSource&gt;(IQueryable&lt;TSource&gt;, int)</a> calls.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.WhereClauseBuilder.html">WhereClauseBuilder</a></dt>
+      <dd><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a> into
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.queryable.where#system-linq-queryable-where-1(system-linq-iqueryable((-0))-system-linq-expressions-expression((system-func((-0-system-boolean)))))">Where&lt;TSource&gt;(IQueryable&lt;TSource&gt;, Expression&lt;Func&lt;TSource, bool&gt;&gt;)</a> calls.</p>
+</dd>
+    </dl>
+    <h3 id="interfaces">
+Interfaces
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IIncludeClauseBuilder.html">IIncludeClauseBuilder</a></dt>
+      <dd><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a> into <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.entityframeworkqueryableextensions.include#microsoft-entityframeworkcore-entityframeworkqueryableextensions-include-2(system-linq-iqueryable((-0))-system-linq-expressions-expression((system-func((-0-1)))))">Include&lt;TEntity, TProperty&gt;(IQueryable&lt;TEntity&gt;, Expression&lt;Func&lt;TEntity, TProperty&gt;&gt;)</a> calls.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IOrderClauseBuilder.html">IOrderClauseBuilder</a></dt>
+      <dd><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SortExpression.html">SortExpression</a> into
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.queryable.orderby#system-linq-queryable-orderby-2(system-linq-iqueryable((-0))-system-linq-expressions-expression((system-func((-0-1)))))">OrderBy&lt;TSource, TKey&gt;(IQueryable&lt;TSource&gt;, Expression&lt;Func&lt;TSource, TKey&gt;&gt;)</a> calls.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder.html">IQueryableBuilder</a></dt>
+      <dd><p>Drives conversion from <a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a> into system <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a> trees.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.ISelectClauseBuilder.html">ISelectClauseBuilder</a></dt>
+      <dd><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html">SparseFieldSetExpression</a> into
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.queryable.select#system-linq-queryable-select-2(system-linq-iqueryable((-0))-system-linq-expressions-expression((system-func((-0-1)))))">Select&lt;TSource, TResult&gt;(IQueryable&lt;TSource&gt;, Expression&lt;Func&lt;TSource, TResult&gt;&gt;)</a> calls.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.ISkipTakeClauseBuilder.html">ISkipTakeClauseBuilder</a></dt>
+      <dd><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html">PaginationExpression</a> into <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.queryable.skip">Skip&lt;TSource&gt;(IQueryable&lt;TSource&gt;, int)</a> and
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.queryable.take#system-linq-queryable-take-1(system-linq-iqueryable((-0))-system-int32)">Take&lt;TSource&gt;(IQueryable&lt;TSource&gt;, int)</a> calls.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IWhereClauseBuilder.html">IWhereClauseBuilder</a></dt>
+      <dd><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a> into
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.queryable.where#system-linq-queryable-where-1(system-linq-iqueryable((-0))-system-linq-expressions-expression((system-func((-0-system-boolean)))))">Where&lt;TSource&gt;(IQueryable&lt;TSource&gt;, Expression&lt;Func&lt;TSource, bool&gt;&gt;)</a> calls.</p>
+</dd>
+    </dl>
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

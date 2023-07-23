@@ -79,7 +79,7 @@
 
   <h1 id="JsonApiDotNetCore_Queries_Expressions_AnyExpression" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression" class="text-break">
     Class AnyExpression
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L11"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -87,7 +87,12 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents the &quot;any&quot; filter function, resulting from text such as: any(name,'Jack','Joe')</p>
+  <div class="markdown summary"><p>This expression allows to test if an attribute value equals any of the specified constants. It represents the &quot;any&quot; filter function, resulting from
+text such as:
+<code>
+any(owner.name,'Jack','Joe','John')
+</code>
+.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -116,6 +121,9 @@ public class AnyExpression : FilterExpression</code></pre>
     <dt>Inherited Members</dt>
     <dd>
     <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html#JsonApiDotNetCore_Queries_Expressions_FilterExpression_ReturnType">FilterExpression.ReturnType</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
     </div>
     <div>
@@ -142,7 +150,7 @@ public class AnyExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_AnyExpression__ctor_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_System_Collections_Immutable_IImmutableSet_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression__" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,System.Collections.Immutable.IImmutableSet{JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression})">
   AnyExpression(ResourceFieldChainExpression, IImmutableSet&lt;LiteralConstantExpression&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -179,10 +187,11 @@ public class AnyExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_AnyExpression_Constants" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.Constants">
   Constants
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L27"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>One or more constants to compare the attribute's value against.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -210,10 +219,11 @@ public class AnyExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_AnyExpression_TargetAttribute" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.TargetAttribute">
   TargetAttribute
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The attribute whose value to compare. Chain format: an optional list of to-one relationships, followed by an attribute.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -245,7 +255,7 @@ public class AnyExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_AnyExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)">
   Accept&lt;TArgument, TResult&gt;(QueryExpressionVisitor&lt;TArgument, TResult&gt;, TArgument)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L38"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -290,7 +300,7 @@ public class AnyExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_AnyExpression_Equals_System_Object_" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L67"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -326,7 +336,7 @@ public class AnyExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_AnyExpression_GetHashCode" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -357,7 +367,7 @@ public class AnyExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_AnyExpression_ToFullString" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.ToFullString">
   ToFullString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -388,7 +398,7 @@ public class AnyExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_AnyExpression_ToString" data-uid="JsonApiDotNetCore.Queries.Expressions.AnyExpression.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -419,7 +429,7 @@ public class AnyExpression : FilterExpression</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L11" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/AnyExpression.cs/#L16" class="edit-link">Edit this page</a>
         </div>
 
         

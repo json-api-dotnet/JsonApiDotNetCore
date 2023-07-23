@@ -1,0 +1,467 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class QueryableBuilder
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class QueryableBuilder
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder">
+
+
+
+  <h1 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder" class="text-break">
+    Class QueryableBuilder
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilder.cs/#L9"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="JsonApiDotNetCore.html">JsonApiDotNetCore</a>.<a class="xref" href="JsonApiDotNetCore.Queries.html">Queries</a>.<a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.html">QueryableBuilding</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"></div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public class QueryableBuilder : IQueryableBuilder</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">QueryableBuilder</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder.html">IQueryableBuilder</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder__ctor_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.#ctor*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder__ctor_JsonApiDotNetCore_Queries_QueryableBuilding_IIncludeClauseBuilder_JsonApiDotNetCore_Queries_QueryableBuilding_IWhereClauseBuilder_JsonApiDotNetCore_Queries_QueryableBuilding_IOrderClauseBuilder_JsonApiDotNetCore_Queries_QueryableBuilding_ISkipTakeClauseBuilder_JsonApiDotNetCore_Queries_QueryableBuilding_ISelectClauseBuilder_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.#ctor(JsonApiDotNetCore.Queries.QueryableBuilding.IIncludeClauseBuilder,JsonApiDotNetCore.Queries.QueryableBuilding.IWhereClauseBuilder,JsonApiDotNetCore.Queries.QueryableBuilding.IOrderClauseBuilder,JsonApiDotNetCore.Queries.QueryableBuilding.ISkipTakeClauseBuilder,JsonApiDotNetCore.Queries.QueryableBuilding.ISelectClauseBuilder)">
+  QueryableBuilder(IIncludeClauseBuilder, IWhereClauseBuilder, IOrderClauseBuilder, ISkipTakeClauseBuilder, ISelectClauseBuilder)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilder.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public QueryableBuilder(IIncludeClauseBuilder includeClauseBuilder, IWhereClauseBuilder whereClauseBuilder, IOrderClauseBuilder orderClauseBuilder, ISkipTakeClauseBuilder skipTakeClauseBuilder, ISelectClauseBuilder selectClauseBuilder)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>includeClauseBuilder</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IIncludeClauseBuilder.html">IIncludeClauseBuilder</a></dt>
+    <dd></dd>
+    <dt><code>whereClauseBuilder</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IWhereClauseBuilder.html">IWhereClauseBuilder</a></dt>
+    <dd></dd>
+    <dt><code>orderClauseBuilder</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IOrderClauseBuilder.html">IOrderClauseBuilder</a></dt>
+    <dd></dd>
+    <dt><code>skipTakeClauseBuilder</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.ISkipTakeClauseBuilder.html">ISkipTakeClauseBuilder</a></dt>
+    <dd></dd>
+    <dt><code>selectClauseBuilder</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.ISelectClauseBuilder.html">ISelectClauseBuilder</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder_ApplyFilter_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.ApplyFilter*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder_ApplyFilter_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_FilterExpression_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.ApplyFilter(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.FilterExpression,JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext)">
+  ApplyFilter(Expression, FilterExpression, ResourceType, QueryableBuilderContext)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilder.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Expression ApplyFilter(Expression source, FilterExpression filter, ResourceType resourceType, QueryableBuilderContext context)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>source</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></dt>
+    <dd></dd>
+    <dt><code>filter</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></dt>
+    <dd></dd>
+    <dt><code>resourceType</code> <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></dt>
+    <dd></dd>
+    <dt><code>context</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html">QueryableBuilderContext</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder_ApplyInclude_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.ApplyInclude*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder_ApplyInclude_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_IncludeExpression_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.ApplyInclude(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.IncludeExpression,JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext)">
+  ApplyInclude(Expression, IncludeExpression, ResourceType, QueryableBuilderContext)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilder.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Expression ApplyInclude(Expression source, IncludeExpression include, ResourceType resourceType, QueryableBuilderContext context)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>source</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></dt>
+    <dd></dd>
+    <dt><code>include</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a></dt>
+    <dd></dd>
+    <dt><code>resourceType</code> <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></dt>
+    <dd></dd>
+    <dt><code>context</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html">QueryableBuilderContext</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder_ApplyPagination_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.ApplyPagination*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder_ApplyPagination_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.ApplyPagination(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.PaginationExpression,JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext)">
+  ApplyPagination(Expression, PaginationExpression, ResourceType, QueryableBuilderContext)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilder.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Expression ApplyPagination(Expression source, PaginationExpression pagination, ResourceType resourceType, QueryableBuilderContext context)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>source</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></dt>
+    <dd></dd>
+    <dt><code>pagination</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html">PaginationExpression</a></dt>
+    <dd></dd>
+    <dt><code>resourceType</code> <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></dt>
+    <dd></dd>
+    <dt><code>context</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html">QueryableBuilderContext</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder_ApplyQuery_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.ApplyQuery*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder_ApplyQuery_JsonApiDotNetCore_Queries_QueryLayer_JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.ApplyQuery(JsonApiDotNetCore.Queries.QueryLayer,JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext)">
+  ApplyQuery(QueryLayer, QueryableBuilderContext)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilder.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Expression ApplyQuery(QueryLayer layer, QueryableBuilderContext context)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>layer</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a></dt>
+    <dd></dd>
+    <dt><code>context</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html">QueryableBuilderContext</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder_ApplySelection_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.ApplySelection*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder_ApplySelection_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_FieldSelection_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.ApplySelection(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.FieldSelection,JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext)">
+  ApplySelection(Expression, FieldSelection, ResourceType, QueryableBuilderContext)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilder.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Expression ApplySelection(Expression source, FieldSelection selection, ResourceType resourceType, QueryableBuilderContext context)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>source</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></dt>
+    <dd></dd>
+    <dt><code>selection</code> <a class="xref" href="JsonApiDotNetCore.Queries.FieldSelection.html">FieldSelection</a></dt>
+    <dd></dd>
+    <dt><code>resourceType</code> <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></dt>
+    <dd></dd>
+    <dt><code>context</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html">QueryableBuilderContext</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder_ApplySort_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.ApplySort*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder_ApplySort_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Expressions_SortExpression_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.ApplySort(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Expressions.SortExpression,JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext)">
+  ApplySort(Expression, SortExpression, ResourceType, QueryableBuilderContext)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilder.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Expression ApplySort(Expression source, SortExpression sort, ResourceType resourceType, QueryableBuilderContext context)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>source</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></dt>
+    <dd></dd>
+    <dt><code>sort</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SortExpression.html">SortExpression</a></dt>
+    <dd></dd>
+    <dt><code>resourceType</code> <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></dt>
+    <dd></dd>
+    <dt><code>context</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html">QueryableBuilderContext</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilder.cs/#L9" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

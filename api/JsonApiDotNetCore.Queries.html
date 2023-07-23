@@ -106,9 +106,24 @@ contains the nested query constraints.</p>
       <dd><p>A nested data structure that contains <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a> constraints per resource type.</p>
 </dd>
     </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayerComposer.html">QueryLayerComposer</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.SparseFieldSetCache.html">SparseFieldSetCache</a></dt>
+      <dd></dd>
+    </dl>
     <h3 id="interfaces">
 Interfaces
 </h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.html">IEvaluatedIncludeCache</a></dt>
+      <dd><p>Provides in-memory storage for the evaluated inclusion tree within a request. This tree is produced from query string and resource definition
+callbacks. The cache enables the serialization layer to take changes from <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_System_Collections_Immutable_IImmutableSet_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__">OnApplyIncludes(IImmutableSet&lt;IncludeElementExpression&gt;)</a> into
+account.</p>
+</dd>
+    </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.IPaginationContext.html">IPaginationContext</a></dt>
       <dd><p>Tracks values used for top-level pagination, which is a combined effort from options, query string parsing, resource definition callbacks and
@@ -123,6 +138,12 @@ fetching the total number of rows.</p>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.IQueryLayerComposer.html">IQueryLayerComposer</a></dt>
       <dd><p>Takes scoped expressions from <a class="xref" href="JsonApiDotNetCore.Queries.IQueryConstraintProvider.html">IQueryConstraintProvider</a>s and transforms them.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="JsonApiDotNetCore.Queries.ISparseFieldSetCache.html">ISparseFieldSetCache</a></dt>
+      <dd><p>Takes sparse fieldsets from <a class="xref" href="JsonApiDotNetCore.Queries.IQueryConstraintProvider.html">IQueryConstraintProvider</a>s and invokes
+<a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplySparseFieldSet_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_">OnApplySparseFieldSet(SparseFieldSetExpression?)</a> on them.</p>
 </dd>
     </dl>
     <h3 id="enums">

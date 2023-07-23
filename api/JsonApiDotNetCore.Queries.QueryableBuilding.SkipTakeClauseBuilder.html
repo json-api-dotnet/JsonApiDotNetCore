@@ -1,0 +1,343 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class SkipTakeClauseBuilder
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class SkipTakeClauseBuilder
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_QueryableBuilding_SkipTakeClauseBuilder.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.QueryableBuilding.SkipTakeClauseBuilder%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.SkipTakeClauseBuilder">
+
+
+
+  <h1 id="JsonApiDotNetCore_Queries_QueryableBuilding_SkipTakeClauseBuilder" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.SkipTakeClauseBuilder" class="text-break">
+    Class SkipTakeClauseBuilder
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/SkipTakeClauseBuilder.cs/#L8"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="JsonApiDotNetCore.html">JsonApiDotNetCore</a>.<a class="xref" href="JsonApiDotNetCore.Queries.html">Queries</a>.<a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.html">QueryableBuilding</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Transforms <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html">PaginationExpression</a> into <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.queryable.skip">Skip&lt;TSource&gt;(IQueryable&lt;TSource&gt;, int)</a> and
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.queryable.take#system-linq-queryable-take-1(system-linq-iqueryable((-0))-system-int32)">Take&lt;TSource&gt;(IQueryable&lt;TSource&gt;, int)</a> calls.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public class SkipTakeClauseBuilder : QueryClauseBuilder, ISkipTakeClauseBuilder</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html">QueryExpressionVisitor</a>&lt;<a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.html">QueryClauseBuilderContext</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a>&gt;</div>
+      <div><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilder.html">QueryClauseBuilder</a></div>
+      <div><span class="xref">SkipTakeClauseBuilder</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.ISkipTakeClauseBuilder.html">ISkipTakeClauseBuilder</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilder.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilder_DefaultVisit_JsonApiDotNetCore_Queries_Expressions_QueryExpression_JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilderContext_">QueryClauseBuilder.DefaultVisit(QueryExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilder.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilder_VisitCount_JsonApiDotNetCore_Queries_Expressions_CountExpression_JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilderContext_">QueryClauseBuilder.VisitCount(CountExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilder.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilder_VisitResourceFieldChain_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilderContext_">QueryClauseBuilder.VisitResourceFieldChain(ResourceFieldChainExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_Visit_JsonApiDotNetCore_Queries_Expressions_QueryExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.Visit(QueryExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_DefaultVisit_JsonApiDotNetCore_Queries_Expressions_QueryExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.DefaultVisit(QueryExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitComparison_JsonApiDotNetCore_Queries_Expressions_ComparisonExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitComparison(ComparisonExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitResourceFieldChain_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitResourceFieldChain(ResourceFieldChainExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitLiteralConstant_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitLiteralConstant(LiteralConstantExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitNullConstant_JsonApiDotNetCore_Queries_Expressions_NullConstantExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitNullConstant(NullConstantExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitLogical_JsonApiDotNetCore_Queries_Expressions_LogicalExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitLogical(LogicalExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitNot_JsonApiDotNetCore_Queries_Expressions_NotExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitNot(NotExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitHas_JsonApiDotNetCore_Queries_Expressions_HasExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitHas(HasExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitIsType_JsonApiDotNetCore_Queries_Expressions_IsTypeExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitIsType(IsTypeExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitSortElement_JsonApiDotNetCore_Queries_Expressions_SortElementExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitSortElement(SortElementExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitSort_JsonApiDotNetCore_Queries_Expressions_SortExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitSort(SortExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitPagination_JsonApiDotNetCore_Queries_Expressions_PaginationExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitPagination(PaginationExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitCount_JsonApiDotNetCore_Queries_Expressions_CountExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitCount(CountExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitMatchText_JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitMatchText(MatchTextExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitAny_JsonApiDotNetCore_Queries_Expressions_AnyExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitAny(AnyExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitSparseFieldTable_JsonApiDotNetCore_Queries_Expressions_SparseFieldTableExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitSparseFieldTable(SparseFieldTableExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitSparseFieldSet_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitSparseFieldSet(SparseFieldSetExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitQueryStringParameterScope_JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitQueryStringParameterScope(QueryStringParameterScopeExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_PaginationQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationQueryStringValueExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.PaginationQueryStringValue(PaginationQueryStringValueExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_PaginationElementQueryStringValue_JsonApiDotNetCore_Queries_Expressions_PaginationElementQueryStringValueExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitInclude_JsonApiDotNetCore_Queries_Expressions_IncludeExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitInclude(IncludeExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitIncludeElement_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitIncludeElement(IncludeElementExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor-2.html#JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor_2_VisitQueryableHandler_JsonApiDotNetCore_Queries_Expressions_QueryableHandlerExpression__0_">QueryExpressionVisitor&lt;QueryClauseBuilderContext, Expression&gt;.VisitQueryableHandler(QueryableHandlerExpression, QueryClauseBuilderContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="JsonApiDotNetCore_Queries_QueryableBuilding_SkipTakeClauseBuilder_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Types that implement this interface are stateless by design. Existing instances are reused recursively (perhaps this one not today, but that may
+change), so don't store mutable state in private fields when implementing this interface or deriving from the built-in implementations. To pass
+custom state, use the <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilderContext_State">State</a> property. The only private field allowed is a stack where you push/pop state, so
+it works recursively.</p>
+</div>
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="JsonApiDotNetCore_Queries_QueryableBuilding_SkipTakeClauseBuilder_ApplySkipTake_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.SkipTakeClauseBuilder.ApplySkipTake*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_SkipTakeClauseBuilder_ApplySkipTake_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilderContext_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.SkipTakeClauseBuilder.ApplySkipTake(JsonApiDotNetCore.Queries.Expressions.PaginationExpression,JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext)">
+  ApplySkipTake(PaginationExpression, QueryClauseBuilderContext)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/SkipTakeClauseBuilder.cs/#L11"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Expression ApplySkipTake(PaginationExpression expression, QueryClauseBuilderContext context)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>expression</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html">PaginationExpression</a></dt>
+    <dd></dd>
+    <dt><code>context</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.html">QueryClauseBuilderContext</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_QueryableBuilding_SkipTakeClauseBuilder_VisitPagination_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.SkipTakeClauseBuilder.VisitPagination*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_SkipTakeClauseBuilder_VisitPagination_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilderContext_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.SkipTakeClauseBuilder.VisitPagination(JsonApiDotNetCore.Queries.Expressions.PaginationExpression,JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext)">
+  VisitPagination(PaginationExpression, QueryClauseBuilderContext)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/SkipTakeClauseBuilder.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Expression VisitPagination(PaginationExpression expression, QueryClauseBuilderContext context)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>expression</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationExpression.html">PaginationExpression</a></dt>
+    <dd></dd>
+    <dt><code>context</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.html">QueryClauseBuilderContext</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/SkipTakeClauseBuilder.cs/#L8" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

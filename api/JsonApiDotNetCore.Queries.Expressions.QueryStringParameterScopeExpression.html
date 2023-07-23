@@ -79,7 +79,7 @@
 
   <h1 id="JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression" data-uid="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression" class="text-break">
     Class QueryStringParameterScopeExpression
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L8"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -87,7 +87,15 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents the scope of a query string parameter, resulting from text such as: ?filter[articles]=...</p>
+  <div class="markdown summary"><p>Represents the relationship scope of a query string parameter, resulting from text such as:
+<code>
+?sort[articles]
+</code>
+, or:
+<code>
+?filter[author.articles.comments]
+</code>
+.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -140,7 +148,7 @@ public class QueryStringParameterScopeExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression__ctor_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_" data-uid="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression)">
   QueryStringParameterScopeExpression(LiteralConstantExpression, ResourceFieldChainExpression?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -177,10 +185,11 @@ public class QueryStringParameterScopeExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression_ParameterName" data-uid="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.ParameterName">
   ParameterName
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L11"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The name of the query string parameter, without its surrounding brackets.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -208,10 +217,12 @@ public class QueryStringParameterScopeExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression_Scope" data-uid="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.Scope">
   Scope
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L12"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The scope this parameter value applies to, or <code>null</code> for the URL endpoint scope. Chain format for the filter/sort parameters: an optional list
+of relationships, followed by a to-many relationship.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -243,7 +254,7 @@ public class QueryStringParameterScopeExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_" data-uid="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)">
   Accept&lt;TArgument, TResult&gt;(QueryExpressionVisitor&lt;TArgument, TResult&gt;, TArgument)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L38"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -288,7 +299,7 @@ public class QueryStringParameterScopeExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression_Equals_System_Object_" data-uid="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -324,7 +335,7 @@ public class QueryStringParameterScopeExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression_GetHashCode" data-uid="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L70"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -355,7 +366,7 @@ public class QueryStringParameterScopeExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression_ToFullString" data-uid="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.ToFullString">
   ToFullString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -386,7 +397,7 @@ public class QueryStringParameterScopeExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_QueryStringParameterScopeExpression_ToString" data-uid="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -417,7 +428,7 @@ public class QueryStringParameterScopeExpression : QueryExpression</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L8" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/QueryStringParameterScopeExpression.cs/#L16" class="edit-link">Edit this page</a>
         </div>
 
         

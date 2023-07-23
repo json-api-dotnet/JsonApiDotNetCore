@@ -79,7 +79,7 @@
 
   <h1 id="JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression" data-uid="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression" class="text-break">
     Class IncludeElementExpression
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L11"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L15"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -87,7 +87,11 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents an element in <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a>.</p>
+  <div class="markdown summary"><p>Represents an element in an <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a> tree, resulting from text such as:
+<code>
+articles.revisions
+</code>
+.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -140,7 +144,7 @@ public class IncludeElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__ctor_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_" data-uid="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.#ctor(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)">
   IncludeElementExpression(RelationshipAttribute)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -171,7 +175,7 @@ public class IncludeElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__ctor_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Immutable_IImmutableSet_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__" data-uid="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.#ctor(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Immutable.IImmutableSet{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})">
   IncludeElementExpression(RelationshipAttribute, IImmutableSet&lt;IncludeElementExpression&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -208,10 +212,11 @@ public class IncludeElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression_Children" data-uid="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.Children">
   Children
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The direct children of this subtree. Can be empty.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -239,10 +244,11 @@ public class IncludeElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression_Relationship" data-uid="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.Relationship">
   Relationship
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The JSON:API relationship to include.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -274,7 +280,7 @@ public class IncludeElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_" data-uid="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)">
   Accept&lt;TArgument, TResult&gt;(QueryExpressionVisitor&lt;TArgument, TResult&gt;, TArgument)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -319,7 +325,7 @@ public class IncludeElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression_Equals_System_Object_" data-uid="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L72"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -355,7 +361,7 @@ public class IncludeElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression_GetHashCode" data-uid="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L89"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -386,7 +392,7 @@ public class IncludeElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression_ToFullString" data-uid="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.ToFullString">
   ToFullString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L52"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -417,7 +423,7 @@ public class IncludeElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression_ToString" data-uid="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -448,7 +454,7 @@ public class IncludeElementExpression : QueryExpression</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L11" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/IncludeElementExpression.cs/#L15" class="edit-link">Edit this page</a>
         </div>
 
         

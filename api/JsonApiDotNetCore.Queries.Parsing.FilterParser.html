@@ -1,0 +1,715 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class FilterParser
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class FilterParser
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Parsing_FilterParser.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Parsing.FilterParser%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser">
+
+
+
+  <h1 id="JsonApiDotNetCore_Queries_Parsing_FilterParser" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser" class="text-break">
+    Class FilterParser
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="JsonApiDotNetCore.html">JsonApiDotNetCore</a>.<a class="xref" href="JsonApiDotNetCore.Queries.html">Queries</a>.<a class="xref" href="JsonApiDotNetCore.Queries.Parsing.html">Parsing</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Parses the JSON:API 'filter' query string parameter value.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public class FilterParser : QueryExpressionParser, IFilterParser</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html">QueryExpressionParser</a></div>
+      <div><span class="xref">FilterParser</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="JsonApiDotNetCore.Queries.Parsing.IFilterParser.html">IFilterParser</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_TokenStack">QueryExpressionParser.TokenStack</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_Tokenize_System_String_">QueryExpressionParser.Tokenize(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_ParseFieldChain_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPatternMatchOptions_JsonApiDotNetCore_Configuration_ResourceType_System_String_">QueryExpressionParser.ParseFieldChain(FieldChainPattern, FieldChainPatternMatchOptions, ResourceType, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_EatText_System_String_">QueryExpressionParser.EatText(string)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_EatSingleCharacterToken_JsonApiDotNetCore_Queries_Parsing_TokenKind_">QueryExpressionParser.EatSingleCharacterToken(TokenKind)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_GetNextTokenPositionOrEnd">QueryExpressionParser.GetNextTokenPositionOrEnd()</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_GetRelativePositionOfLastFieldInChain_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_">QueryExpressionParser.GetRelativePositionOfLastFieldInChain(ResourceFieldChainExpression)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html#JsonApiDotNetCore_Queries_Parsing_QueryExpressionParser_AssertTokenStackIsEmpty">QueryExpressionParser.AssertTokenStackIsEmpty()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser__ctor_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.#ctor*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser__ctor_JsonApiDotNetCore_Resources_IResourceFactory_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.#ctor(JsonApiDotNetCore.Resources.IResourceFactory)">
+  FilterParser(IResourceFactory)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FilterParser(IResourceFactory resourceFactory)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>resourceFactory</code> <a class="xref" href="JsonApiDotNetCore.Resources.IResourceFactory.html">IResourceFactory</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ResourceTypeInScope_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ResourceTypeInScope*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ResourceTypeInScope" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ResourceTypeInScope">
+  ResourceTypeInScope
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the resource type currently in scope. Call <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.FilterParser.html#JsonApiDotNetCore_Queries_Parsing_FilterParser_InScopeOfResourceType_JsonApiDotNetCore_Configuration_ResourceType_">InScopeOfResourceType(ResourceType)</a> to temporarily change the current resource type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected ResourceType ResourceTypeInScope { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_InScopeOfResourceType_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.InScopeOfResourceType*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_InScopeOfResourceType_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.InScopeOfResourceType(JsonApiDotNetCore.Configuration.ResourceType)">
+  InScopeOfResourceType(ResourceType)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L571"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Changes the resource type currently in scope and restores the original resource type when the return value is disposed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected IDisposable InScopeOfResourceType(ResourceType resourceType)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>resourceType</code> <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_IsFunction_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.IsFunction*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_IsFunction_System_String_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.IsFunction(System.String)">
+  IsFunction(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual bool IsFunction(string name)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>name</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_Parse_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.Parse*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_Parse_System_String_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.Parse(System.String,JsonApiDotNetCore.Configuration.ResourceType)">
+  Parse(string, ResourceType)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Parses the specified source into a <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a>. Throws a <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryParseException.html">QueryParseException</a> if the input is invalid.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FilterExpression Parse(string source, ResourceType resourceType)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>source</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The source text to read from.</p>
+</dd>
+    <dt><code>resourceType</code> <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></dt>
+    <dd><p>The resource type used to lookup JSON:API fields that are referenced in <code class="paramref">source</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseAny_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseAny*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseAny" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseAny">
+  ParseAny()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L341"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual AnyExpression ParseAny()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.AnyExpression.html">AnyExpression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseComparison_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseComparison*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseComparison_System_String_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseComparison(System.String)">
+  ParseComparison(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L209"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual ComparisonExpression ParseComparison(string operatorName)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>operatorName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.html">ComparisonExpression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseFilter_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseFilter*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseFilter" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseFilter">
+  ParseFilter()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L120"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual FilterExpression ParseFilter()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html">FilterExpression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseFunction_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseFunction*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseFunction" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseFunction">
+  ParseFunction()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual FunctionExpression ParseFunction()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FunctionExpression.html">FunctionExpression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseHas_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseHas*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseHas" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseHas">
+  ParseHas()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L374"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual HasExpression ParseHas()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.HasExpression.html">HasExpression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseIsType_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseIsType*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseIsType" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseIsType">
+  ParseIsType()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L401"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual IsTypeExpression ParseIsType()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IsTypeExpression.html">IsTypeExpression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseLogical_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseLogical*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseLogical_System_String_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseLogical(System.String)">
+  ParseLogical(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L180"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual LogicalExpression ParseLogical(string operatorName)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>operatorName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html">LogicalExpression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseNot_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseNot*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseNot" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseNot">
+  ParseNot()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L168"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual NotExpression ParseNot()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.NotExpression.html">NotExpression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseTextMatch_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseTextMatch*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ParseTextMatch_System_String_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ParseTextMatch(System.String)">
+  ParseTextMatch(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L312"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual MatchTextExpression ParseTextMatch(string operatorName)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>operatorName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html">MatchTextExpression</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ValidateField_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ValidateField*"></a>
+
+  <h3 id="JsonApiDotNetCore_Queries_Parsing_FilterParser_ValidateField_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_System_Int32_" data-uid="JsonApiDotNetCore.Queries.Parsing.FilterParser.ValidateField(JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute,System.Int32)">
+  ValidateField(ResourceFieldAttribute, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L559"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Enables derived types to throw a <a class="xref" href="JsonApiDotNetCore.Queries.Parsing.QueryParseException.html">QueryParseException</a> when usage of a JSON:API field inside a field chain is not permitted.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void ValidateField(ResourceFieldAttribute field, int position)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>field</code> <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html">ResourceFieldAttribute</a></dt>
+    <dd></dd>
+    <dt><code>position</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Parsing/FilterParser.cs/#L14" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

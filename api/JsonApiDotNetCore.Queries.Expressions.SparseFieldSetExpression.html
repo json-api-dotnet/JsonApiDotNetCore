@@ -79,7 +79,7 @@
 
   <h1 id="JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression" data-uid="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression" class="text-break">
     Class SparseFieldSetExpression
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L10"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L14"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -87,7 +87,11 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a sparse fieldset, resulting from text such as: firstName,lastName,articles</p>
+  <div class="markdown summary"><p>Represents a sparse fieldset, resulting from text such as:
+<code>
+firstName,lastName,articles
+</code>
+.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -150,7 +154,7 @@ public class SparseFieldSetExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression__ctor_System_Collections_Immutable_IImmutableSet_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute__" data-uid="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.#ctor(System.Collections.Immutable.IImmutableSet{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute})">
   SparseFieldSetExpression(IImmutableSet&lt;ResourceFieldAttribute&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -185,10 +189,11 @@ public class SparseFieldSetExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_Fields" data-uid="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Fields">
   Fields
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L13"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The set of JSON:API fields to include. Chain format: a single field.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -220,7 +225,7 @@ public class SparseFieldSetExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_" data-uid="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)">
   Accept&lt;TArgument, TResult&gt;(QueryExpressionVisitor&lt;TArgument, TResult&gt;, TArgument)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -265,7 +270,7 @@ public class SparseFieldSetExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_Equals_System_Object_" data-uid="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L44"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -301,7 +306,7 @@ public class SparseFieldSetExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_GetHashCode" data-uid="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L61"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -332,7 +337,7 @@ public class SparseFieldSetExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_ToFullString" data-uid="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.ToFullString">
   ToFullString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L39"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -363,7 +368,7 @@ public class SparseFieldSetExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_ToString" data-uid="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -394,7 +399,7 @@ public class SparseFieldSetExpression : QueryExpression</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L10" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SparseFieldSetExpression.cs/#L14" class="edit-link">Edit this page</a>
         </div>
 
         

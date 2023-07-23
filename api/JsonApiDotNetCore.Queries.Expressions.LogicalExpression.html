@@ -79,7 +79,7 @@
 
   <h1 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression" class="text-break">
     Class LogicalExpression
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L11"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -87,7 +87,16 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a logical filter function, resulting from text such as: and(equals(title,'Work'),has(articles))</p>
+  <div class="markdown summary"><p>This expression allows to test whether one or all of its boolean operands are true. It represents the logical AND/OR filter functions, resulting from
+text such as:
+<code>
+and(equals(title,'Work'),has(articles))
+</code>
+, or:
+<code>
+or(equals(title,'Work'),has(articles))
+</code>
+.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -116,6 +125,9 @@ public class LogicalExpression : FilterExpression</code></pre>
     <dt>Inherited Members</dt>
     <dd>
     <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html#JsonApiDotNetCore_Queries_Expressions_FilterExpression_ReturnType">FilterExpression.ReturnType</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
     </div>
     <div>
@@ -142,7 +154,7 @@ public class LogicalExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression__ctor_JsonApiDotNetCore_Queries_Expressions_LogicalOperator_JsonApiDotNetCore_Queries_Expressions_FilterExpression___" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.LogicalOperator,JsonApiDotNetCore.Queries.Expressions.FilterExpression[])">
   LogicalExpression(LogicalOperator, params FilterExpression[])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -175,7 +187,7 @@ public class LogicalExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression__ctor_JsonApiDotNetCore_Queries_Expressions_LogicalOperator_System_Collections_Immutable_IImmutableList_JsonApiDotNetCore_Queries_Expressions_FilterExpression__" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.LogicalOperator,System.Collections.Immutable.IImmutableList{JsonApiDotNetCore.Queries.Expressions.FilterExpression})">
   LogicalExpression(LogicalOperator, IImmutableList&lt;FilterExpression&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L38"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -212,10 +224,11 @@ public class LogicalExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Operator" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Operator">
   Operator
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The operator used to compare <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html#JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Terms">Terms</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -243,10 +256,11 @@ public class LogicalExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Terms" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Terms">
   Terms
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L31"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The list of one or more boolean operands.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -278,7 +292,7 @@ public class LogicalExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)">
   Accept&lt;TArgument, TResult&gt;(QueryExpressionVisitor&lt;TArgument, TResult&gt;, TArgument)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L60"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -323,7 +337,7 @@ public class LogicalExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Compose_JsonApiDotNetCore_Queries_Expressions_LogicalOperator_JsonApiDotNetCore_Queries_Expressions_FilterExpression___" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Compose(JsonApiDotNetCore.Queries.Expressions.LogicalOperator,JsonApiDotNetCore.Queries.Expressions.FilterExpression[])">
   Compose(LogicalOperator, params FilterExpression?[])
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -361,7 +375,7 @@ public class LogicalExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_Equals_System_Object_" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L87"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -397,7 +411,7 @@ public class LogicalExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_GetHashCode" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L88"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L104"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -428,7 +442,7 @@ public class LogicalExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_ToFullString" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.ToFullString">
   ToFullString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L70"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -459,7 +473,7 @@ public class LogicalExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LogicalExpression_ToString" data-uid="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L65"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -490,7 +504,7 @@ public class LogicalExpression : FilterExpression</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L11" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LogicalExpression.cs/#L20" class="edit-link">Edit this page</a>
         </div>
 
         

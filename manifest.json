@@ -1415,6 +1415,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.IEvaluatedIncludeCache.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Queries.IPaginationContext.yml",
       "output": {
         ".html": {
@@ -1445,320 +1455,220 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.IEvaluatedIncludeCache.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.IEvaluatedIncludeCache.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.ISparseFieldSetCache.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.ISparseFieldSetCache.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.FilterParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.ISparseFieldSetCache.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.FilterParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.FieldChainRequirements.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.IFilterParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.FieldChainRequirements.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.IFilterParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.FilterParser.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.IIncludeParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.FilterParser.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.IIncludeParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.IncludeParser.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.IPaginationParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.IncludeParser.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.IPaginationParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.Keywords.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.Keywords.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.IQueryStringParameterScopeParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.PaginationParser.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.ISortParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.PaginationParser.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.ISortParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryExpressionParser.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.ISparseFieldSetParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryExpressionParser.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.ISparseFieldSetParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryParseException.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.ISparseFieldTypeParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryParseException.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.ISparseFieldTypeParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryStringParameterScopeParser.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.IncludeParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryStringParameterScopeParser.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.IncludeParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryTokenizer.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.Keywords.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryTokenizer.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.Keywords.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.SortParser.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.PaginationParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.SortParser.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.PaginationParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldSetParser.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.QueryExpressionParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.QueryParseException.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.SparseFieldTypeParser.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.QueryParseException.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.Token.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.Token.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.QueryStringParameterScopeParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.TokenKind.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.QueryTokenizer.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.TokenKind.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.QueryTokenizer.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.SortParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.SortParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.SparseFieldSetParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.SparseFieldSetParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.IncludeClauseBuilder.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.SparseFieldTypeParser.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.IncludeClauseBuilder.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.SparseFieldTypeParser.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.Token.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.Token.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameScope.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.TokenKind.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameScope.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.TokenKind.html"
         }
       },
       "version": ""
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SkipTakeClauseBuilder.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Queries.Internal.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Queries.Internal.html"
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.html"
         }
       },
       "version": ""
@@ -1769,6 +1679,206 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.QueryLayer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryLayerComposer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryLayerComposer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.IIncludeClauseBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.IIncludeClauseBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.IOrderClauseBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.IOrderClauseBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.ISelectClauseBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.ISelectClauseBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.ISkipTakeClauseBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.ISkipTakeClauseBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.IWhereClauseBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.IWhereClauseBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.IncludeClauseBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.IncludeClauseBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScope.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScope.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.OrderClauseBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.OrderClauseBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.SelectClauseBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.SelectClauseBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.SkipTakeClauseBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.SkipTakeClauseBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.WhereClauseBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.WhereClauseBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.SparseFieldSetCache.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.SparseFieldSetCache.html"
         }
       },
       "version": ""
@@ -1789,6 +1899,76 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.FieldChains.BuiltInPatterns.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPatternMatchOptions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.FieldChains.PatternFormatException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.FieldChains.PatternFormatException.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.FieldChains.PatternMatchResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.FieldChains.PatternMatchResult.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.FieldChains.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.FieldChains.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.FilterQueryStringParameterReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.FilterQueryStringParameterReader.html"
         }
       },
       "version": ""
@@ -1885,100 +2065,10 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.IncludeQueryStringParameterReader.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.FilterQueryStringParameterReader.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.PaginationQueryStringParameterReader.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.QueryStringReader.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.QueryStringReader.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.ResourceDefinitionQueryableParameterReader.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.SortQueryStringParameterReader.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.SortQueryStringParameterReader.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.html"
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.IncludeQueryStringParameterReader.html"
         }
       },
       "version": ""
@@ -1989,6 +2079,76 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.QueryStrings.JsonApiQueryStringParameters.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.LegacyFilterNotationConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.LegacyFilterNotationConverter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.PaginationQueryStringParameterReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.PaginationQueryStringParameterReader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.QueryStringParameterReader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.QueryStringReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.QueryStringReader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.ResourceDefinitionQueryableParameterReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.ResourceDefinitionQueryableParameterReader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.SortQueryStringParameterReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.SortQueryStringParameterReader.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.QueryStrings.SparseFieldSetQueryStringParameterReader.html"
         }
       },
       "version": ""
@@ -2355,26 +2515,6 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Resources.Internal.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Resources.Internal.html"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.PropertySortOrder.yml",
       "output": {
         ".html": {
@@ -2429,6 +2569,16 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Resources.RuntimeTypeConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Resources.RuntimeTypeConverter.html"
         }
       },
       "version": ""

@@ -79,7 +79,7 @@
 
   <h1 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor" class="text-break">
     Interface IResourceDefinitionAccessor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L12"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L13"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -115,7 +115,7 @@
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_IsReadOnlyRequest" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.IsReadOnlyRequest">
   IsReadOnlyRequest
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether this request targets only fetching of data (resources and relationships), as opposed to applying changes.</p>
@@ -147,6 +147,42 @@ bool IsReadOnlyRequest { get; }</code></pre>
 
 
 
+  <a id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_QueryableBuilder_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.QueryableBuilder*"></a>
+
+  <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_QueryableBuilder" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.QueryableBuilder">
+  QueryableBuilder
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets an <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder.html">IQueryableBuilder</a> instance from the service container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use injected IQueryableBuilder instead.&quot;)]
+IQueryableBuilder QueryableBuilder { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder.html">IQueryableBuilder</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_QueryableBuilder_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This property was added to reduce the impact of taking a breaking change. It will likely be removed in the next major version.</p>
+</div>
+
+
+
+
   <h2 class="section" id="methods">Methods
 </h2>
 
@@ -155,7 +191,7 @@ bool IsReadOnlyRequest { get; }</code></pre>
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_GetMeta_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Resources_IIdentifiable_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetMeta(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Resources.IIdentifiable)">
   GetMeta(ResourceType, IIdentifiable)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L68"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_GetMeta__0_">GetMeta(TResource)</a> for the specified resource.</p>
@@ -194,7 +230,7 @@ bool IsReadOnlyRequest { get; }</code></pre>
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_GetQueryableHandlerForQueryStringParameter_System_Type_System_String_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(System.Type,System.String)">
   GetQueryableHandlerForQueryStringParameter(Type, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L52"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L62"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnRegisterQueryableHandlersForQueryStringParameters">OnRegisterQueryableHandlersForQueryStringParameters()</a> for the specified resource type, then
@@ -234,7 +270,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnAddToRelationshipAsync__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnAddToRelationshipAsync``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">
   OnAddToRelationshipAsync&lt;TResource&gt;(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L94"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnAddToRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_">OnAddToRelationshipAsync(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, CancellationToken)</a> for the specified resource.</p>
@@ -282,7 +318,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplyFilter_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Queries_Expressions_FilterExpression_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyFilter(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.Expressions.FilterExpression)">
   OnApplyFilter(ResourceType, FilterExpression?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L41"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyFilter_JsonApiDotNetCore_Queries_Expressions_FilterExpression_">OnApplyFilter(FilterExpression?)</a> for the specified resource type.</p>
@@ -321,7 +357,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplyIncludes_JsonApiDotNetCore_Configuration_ResourceType_System_Collections_Immutable_IImmutableSet_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyIncludes(JsonApiDotNetCore.Configuration.ResourceType,System.Collections.Immutable.IImmutableSet{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})">
   OnApplyIncludes(ResourceType, IImmutableSet&lt;IncludeElementExpression&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_System_Collections_Immutable_IImmutableSet_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__">OnApplyIncludes(IImmutableSet&lt;IncludeElementExpression&gt;)</a> for the specified resource type.</p>
@@ -360,7 +396,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplyPagination_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplyPagination(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.Expressions.PaginationExpression)">
   OnApplyPagination(ResourceType, PaginationExpression?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyPagination_JsonApiDotNetCore_Queries_Expressions_PaginationExpression_">OnApplyPagination(PaginationExpression?)</a> for the specified resource type.</p>
@@ -399,7 +435,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplySort_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Queries_Expressions_SortExpression_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySort(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.Expressions.SortExpression)">
   OnApplySort(ResourceType, SortExpression?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L46"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplySort_JsonApiDotNetCore_Queries_Expressions_SortExpression_">OnApplySort(SortExpression?)</a> for the specified resource type.</p>
@@ -438,7 +474,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnApplySparseFieldSet_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnApplySparseFieldSet(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression)">
   OnApplySparseFieldSet(ResourceType, SparseFieldSetExpression?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplySparseFieldSet_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_">OnApplySparseFieldSet(SparseFieldSetExpression?)</a> for the specified resource type.</p>
@@ -477,7 +513,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnDeserialize_JsonApiDotNetCore_Resources_IIdentifiable_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnDeserialize(JsonApiDotNetCore.Resources.IIdentifiable)">
   OnDeserialize(IIdentifiable)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnDeserialize__0_">OnDeserialize(TResource)</a> for the specified resource.</p>
@@ -509,7 +545,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnPrepareWriteAsync__1___0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnPrepareWriteAsync``1(``0,JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">
   OnPrepareWriteAsync&lt;TResource&gt;(TResource, WriteOperationKind, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L74"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnPrepareWriteAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_">OnPrepareWriteAsync(TResource, WriteOperationKind, CancellationToken)</a> for the specified resource.</p>
@@ -555,7 +591,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnRemoveFromRelationshipAsync__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnRemoveFromRelationshipAsync``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">
   OnRemoveFromRelationshipAsync&lt;TResource&gt;(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L101"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnRemoveFromRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_">OnRemoveFromRelationshipAsync(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, CancellationToken)</a> for the specified resource.</p>
@@ -603,7 +639,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnSerialize_JsonApiDotNetCore_Resources_IIdentifiable_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnSerialize(JsonApiDotNetCore.Resources.IIdentifiable)">
   OnSerialize(IIdentifiable)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L115"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L125"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSerialize__0_">OnSerialize(TResource)</a> for the specified resource.</p>
@@ -635,7 +671,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnSetToManyRelationshipAsync__1___0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnSetToManyRelationshipAsync``1(``0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">
   OnSetToManyRelationshipAsync&lt;TResource&gt;(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, WriteOperationKind, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L87"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSetToManyRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_">OnSetToManyRelationshipAsync(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, WriteOperationKind, CancellationToken)</a> for the specified resource.</p>
@@ -685,7 +721,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnSetToOneRelationshipAsync__1___0_JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_JsonApiDotNetCore_Resources_IIdentifiable_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnSetToOneRelationshipAsync``1(``0,JsonApiDotNetCore.Resources.Annotations.HasOneAttribute,JsonApiDotNetCore.Resources.IIdentifiable,JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">
   OnSetToOneRelationshipAsync&lt;TResource&gt;(TResource, HasOneAttribute, IIdentifiable?, WriteOperationKind, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L70"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L80"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSetToOneRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_JsonApiDotNetCore_Resources_IIdentifiable_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_">OnSetToOneRelationshipAsync(TResource, HasOneAttribute, IIdentifiable?, WriteOperationKind, CancellationToken)</a> for the specified resource.</p>
@@ -735,7 +771,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnWriteSucceededAsync__1___0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnWriteSucceededAsync``1(``0,JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">
   OnWriteSucceededAsync&lt;TResource&gt;(TResource, WriteOperationKind, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L104"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWriteSucceededAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_">OnWriteSucceededAsync(TResource, WriteOperationKind, CancellationToken)</a> for the specified resource.</p>
@@ -781,7 +817,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_OnWritingAsync__1___0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinitionAccessor.OnWritingAsync``1(``0,JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">
   OnWritingAsync&lt;TResource&gt;(TResource, WriteOperationKind, CancellationToken)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L108"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Invokes <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWritingAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_">OnWritingAsync(TResource, WriteOperationKind, CancellationToken)</a> for the specified resource.</p>
@@ -827,7 +863,7 @@ returns the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L12" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinitionAccessor.cs/#L13" class="edit-link">Edit this page</a>
         </div>
 
         

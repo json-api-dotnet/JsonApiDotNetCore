@@ -79,7 +79,7 @@
 
   <h1 id="JsonApiDotNetCore_Queries_Expressions_HasExpression" data-uid="JsonApiDotNetCore.Queries.Expressions.HasExpression" class="text-break">
     Class HasExpression
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L10"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L19"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -87,7 +87,16 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents the &quot;has&quot; filter function, resulting from text such as: has(articles) or has(articles,equals(isHidden,'false'))</p>
+  <div class="markdown summary"><p>This expression allows to test if a to-many relationship has related resources, optionally with a condition. It represents the &quot;has&quot; filter function,
+resulting from text such as:
+<code>
+has(articles)
+</code>
+, or:
+<code>
+has(articles,equals(isHidden,'false'))
+</code>
+.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -116,6 +125,9 @@ public class HasExpression : FilterExpression</code></pre>
     <dt>Inherited Members</dt>
     <dd>
     <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html#JsonApiDotNetCore_Queries_Expressions_FilterExpression_ReturnType">FilterExpression.ReturnType</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
     </div>
     <div>
@@ -142,7 +154,7 @@ public class HasExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_HasExpression__ctor_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_JsonApiDotNetCore_Queries_Expressions_FilterExpression_" data-uid="JsonApiDotNetCore.Queries.Expressions.HasExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,JsonApiDotNetCore.Queries.Expressions.FilterExpression)">
   HasExpression(ResourceFieldChainExpression, FilterExpression?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -179,10 +191,11 @@ public class HasExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_HasExpression_Filter" data-uid="JsonApiDotNetCore.Queries.Expressions.HasExpression.Filter">
   Filter
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L31"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>An optional filter that is applied on the related resources. Any related resources that do not match the filter are ignored.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -210,10 +223,12 @@ public class HasExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_HasExpression_TargetCollection" data-uid="JsonApiDotNetCore.Queries.Expressions.HasExpression.TargetCollection">
   TargetCollection
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L13"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The to-many relationship to determine related resources for. Chain format: an optional list of to-one relationships, followed by a to-many
+relationship.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -245,7 +260,7 @@ public class HasExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_HasExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_" data-uid="JsonApiDotNetCore.Queries.Expressions.HasExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)">
   Accept&lt;TArgument, TResult&gt;(QueryExpressionVisitor&lt;TArgument, TResult&gt;, TArgument)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L41"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -290,7 +305,7 @@ public class HasExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_HasExpression_Equals_System_Object_" data-uid="JsonApiDotNetCore.Queries.Expressions.HasExpression.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L74"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -326,7 +341,7 @@ public class HasExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_HasExpression_GetHashCode" data-uid="JsonApiDotNetCore.Queries.Expressions.HasExpression.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L91"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -357,7 +372,7 @@ public class HasExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_HasExpression_ToFullString" data-uid="JsonApiDotNetCore.Queries.Expressions.HasExpression.ToFullString">
   ToFullString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -388,7 +403,7 @@ public class HasExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_HasExpression_ToString" data-uid="JsonApiDotNetCore.Queries.Expressions.HasExpression.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L29"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L46"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -419,7 +434,7 @@ public class HasExpression : FilterExpression</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L10" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/HasExpression.cs/#L19" class="edit-link">Edit this page</a>
         </div>
 
         

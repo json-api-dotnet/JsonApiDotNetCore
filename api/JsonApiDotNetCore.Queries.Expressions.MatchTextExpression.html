@@ -79,7 +79,7 @@
 
   <h1 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression" class="text-break">
     Class MatchTextExpression
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L10"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L23"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -87,7 +87,20 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a text-matching filter function, resulting from text such as: startsWith(name,'A')</p>
+  <div class="markdown summary"><p>This expression allows partial matching on the value of a JSON:API attribute. It represents text-matching filter functions, resulting from text such
+as:
+<code>
+startsWith(name,'The')
+</code>
+,
+<code>
+endsWith(name,'end.')
+</code>
+, or:
+<code>
+contains(name,'middle')
+</code>
+.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -116,6 +129,9 @@ public class MatchTextExpression : FilterExpression</code></pre>
     <dt>Inherited Members</dt>
     <dd>
     <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.FilterExpression.html#JsonApiDotNetCore_Queries_Expressions_FilterExpression_ReturnType">FilterExpression.ReturnType</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
     </div>
     <div>
@@ -142,7 +158,7 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression__ctor_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_JsonApiDotNetCore_Queries_Expressions_TextMatchKind_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression,JsonApiDotNetCore.Queries.Expressions.TextMatchKind)">
   MatchTextExpression(ResourceFieldChainExpression, LiteralConstantExpression, TextMatchKind)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L41"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -181,10 +197,11 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_MatchKind" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.MatchKind">
   MatchKind
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L39"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The kind of matching to perform.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -212,10 +229,11 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_TargetAttribute" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TargetAttribute">
   TargetAttribute
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L13"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The attribute whose value to match. Chain format: an optional list of to-one relationships, followed by an attribute.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -243,10 +261,11 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_TextValue" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.TextValue">
   TextValue
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The text to match the attribute's value against.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -278,7 +297,7 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)">
   Accept&lt;TArgument, TResult&gt;(QueryExpressionVisitor&lt;TArgument, TResult&gt;, TArgument)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -323,7 +342,7 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_Equals_System_Object_" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L82"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -359,7 +378,7 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_GetHashCode" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L99"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -390,7 +409,7 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_ToFullString" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.ToFullString">
   ToFullString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L61"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -421,7 +440,7 @@ public class MatchTextExpression : FilterExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_MatchTextExpression_ToString" data-uid="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -452,7 +471,7 @@ public class MatchTextExpression : FilterExpression</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L10" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/MatchTextExpression.cs/#L23" class="edit-link">Edit this page</a>
         </div>
 
         

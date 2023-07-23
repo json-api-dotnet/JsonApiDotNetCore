@@ -79,7 +79,7 @@
 
   <h1 id="JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression" data-uid="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression" class="text-break">
     Class ResourceFieldChainExpression
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L10"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L19"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -87,7 +87,15 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a chain of fields (relationships and attributes), resulting from text such as: articles.revisions.author</p>
+  <div class="markdown summary"><p>Represents a chain of JSON:API fields (relationships and attributes), resulting from text such as:
+<code>
+articles.revisions.author
+</code>
+, or:
+<code>
+owner.LastName
+</code>
+.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -141,7 +149,7 @@ public class ResourceFieldChainExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression__ctor_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute_" data-uid="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.#ctor(JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute)">
   ResourceFieldChainExpression(ResourceFieldAttribute)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L27"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -172,7 +180,7 @@ public class ResourceFieldChainExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression__ctor_System_Collections_Immutable_IImmutableList_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute__" data-uid="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.#ctor(System.Collections.Immutable.IImmutableList{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute})">
   ResourceFieldChainExpression(IImmutableList&lt;ResourceFieldAttribute&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -207,10 +215,11 @@ public class ResourceFieldChainExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_Fields" data-uid="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.Fields">
   Fields
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L13"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>A list of one or more JSON:API fields. Use <a class="xref" href="JsonApiDotNetCore.QueryStrings.FieldChains.FieldChainPattern.html#JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPattern_Match_System_String_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_QueryStrings_FieldChains_FieldChainPatternMatchOptions_Microsoft_Extensions_Logging_ILoggerFactory_">Match(string, ResourceType, FieldChainPatternMatchOptions, ILoggerFactory?)</a> to convert from text.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -242,7 +251,7 @@ public class ResourceFieldChainExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_" data-uid="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)">
   Accept&lt;TArgument, TResult&gt;(QueryExpressionVisitor&lt;TArgument, TResult&gt;, TArgument)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L29"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L41"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -287,7 +296,7 @@ public class ResourceFieldChainExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_Equals_System_Object_" data-uid="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -323,7 +332,7 @@ public class ResourceFieldChainExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_GetHashCode" data-uid="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L73"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -354,7 +363,7 @@ public class ResourceFieldChainExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_ToFullString" data-uid="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.ToFullString">
   ToFullString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -385,7 +394,7 @@ public class ResourceFieldChainExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_ToString" data-uid="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L46"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -416,7 +425,7 @@ public class ResourceFieldChainExpression : IdentifierExpression</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L10" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/ResourceFieldChainExpression.cs/#L19" class="edit-link">Edit this page</a>
         </div>
 
         

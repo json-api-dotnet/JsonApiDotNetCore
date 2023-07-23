@@ -86,17 +86,39 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.AnyExpression.html">AnyExpression</a></dt>
-      <dd><p>Represents the &quot;any&quot; filter function, resulting from text such as: any(name,'Jack','Joe')</p>
+      <dd><p>This expression allows to test if an attribute value equals any of the specified constants. It represents the &quot;any&quot; filter function, resulting from
+text such as:
+<code>
+any(owner.name,'Jack','Joe','John')
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ComparisonExpression.html">ComparisonExpression</a></dt>
-      <dd><p>Represents a comparison filter function, resulting from text such as: equals(name,'Joe')</p>
+      <dd><p>This expression allows to compare two operands using a comparison operator. It represents comparison filter functions, resulting from text such as:
+<code>
+equals(name,'Joe')
+</code>
+,
+<code>
+equals(owner,null)
+</code>
+, or:
+<code>
+greaterOrEqual(count(upVotes),count(downVotes),'1')
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.CountExpression.html">CountExpression</a></dt>
-      <dd><p>Represents the &quot;count&quot; function, resulting from text such as: count(articles)</p>
+      <dd><p>This expression allows to determine the number of related resources in a to-many relationship. It represents the &quot;count&quot; function, resulting from
+text such as:
+<code>
+count(articles)
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -111,58 +133,117 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.HasExpression.html">HasExpression</a></dt>
-      <dd><p>Represents the &quot;has&quot; filter function, resulting from text such as: has(articles) or has(articles,equals(isHidden,'false'))</p>
+      <dd><p>This expression allows to test if a to-many relationship has related resources, optionally with a condition. It represents the &quot;has&quot; filter function,
+resulting from text such as:
+<code>
+has(articles)
+</code>
+, or:
+<code>
+has(articles,equals(isHidden,'false'))
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IdentifierExpression.html">IdentifierExpression</a></dt>
-      <dd><p>Represents the base type for an identifier, such as a field/relationship name, a constant between quotes or <code>null</code>.</p>
+      <dd><p>Represents the base type for an identifier, such as a JSON:API attribute/relationship name, a constant value between quotes, or <code>null</code>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html">IncludeElementExpression</a></dt>
-      <dd><p>Represents an element in <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a>.</p>
+      <dd><p>Represents an element in an <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a> tree, resulting from text such as:
+<code>
+articles.revisions
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeExpression.html">IncludeExpression</a></dt>
-      <dd><p>Represents an inclusion tree, resulting from text such as: owner,articles.revisions</p>
+      <dd><p>Represents an inclusion tree, resulting from text such as:
+<code>
+owner,articles.revisions
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IsTypeExpression.html">IsTypeExpression</a></dt>
-      <dd><p>Represents the &quot;isType&quot; filter function, resulting from text such as: isType(,men), isType(creator,men) or
-isType(creator,men,equals(hasBeard,'true'))</p>
+      <dd><p>This expression allows to test if a resource in an inheritance hierarchy can be upcast to a derived type, optionally with a condition where the
+derived type is accessible. It represents the &quot;isType&quot; filter function, resulting from text such as:
+<code>
+isType(,men)
+</code>
+,
+<code>
+isType(creator,men)
+</code>
+, or:
+<code>
+isType(creator,men,equals(hasBeard,'true'))
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.html">LiteralConstantExpression</a></dt>
-      <dd><p>Represents a non-null constant value, resulting from text such as: equals(firstName,'Jack')</p>
+      <dd><p>Represents a non-null constant value, resulting from text such as: <code>'Jack'</code>, <code>'123'</code>, or: <code>'true'</code>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html">LogicalExpression</a></dt>
-      <dd><p>Represents a logical filter function, resulting from text such as: and(equals(title,'Work'),has(articles))</p>
+      <dd><p>This expression allows to test whether one or all of its boolean operands are true. It represents the logical AND/OR filter functions, resulting from
+text such as:
+<code>
+and(equals(title,'Work'),has(articles))
+</code>
+, or:
+<code>
+or(equals(title,'Work'),has(articles))
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.MatchTextExpression.html">MatchTextExpression</a></dt>
-      <dd><p>Represents a text-matching filter function, resulting from text such as: startsWith(name,'A')</p>
+      <dd><p>This expression allows partial matching on the value of a JSON:API attribute. It represents text-matching filter functions, resulting from text such
+as:
+<code>
+startsWith(name,'The')
+</code>
+,
+<code>
+endsWith(name,'end.')
+</code>
+, or:
+<code>
+contains(name,'middle')
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.NotExpression.html">NotExpression</a></dt>
-      <dd><p>Represents the &quot;not&quot; filter function, resulting from text such as: not(equals(title,'Work'))</p>
+      <dd><p>This expression allows to test for the logical negation of its operand. It represents the &quot;not&quot; filter function, resulting from text such as:
+<code>
+not(equals(title,'Work'))
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.html">NullConstantExpression</a></dt>
-      <dd><p>Represents the constant <code>null</code>, resulting from text such as: equals(lastName,null)</p>
+      <dd><p>Represents the constant <code>null</code>, resulting from the text: <code>null</code>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationElementQueryStringValueExpression.html">PaginationElementQueryStringValueExpression</a></dt>
-      <dd><p>Represents an element in <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.html">PaginationQueryStringValueExpression</a>.</p>
+      <dd><p>Represents an element in <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.html">PaginationQueryStringValueExpression</a>, resulting from text such as: <code>1</code>, or:
+<code>
+articles:2
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -172,18 +253,22 @@ isType(creator,men,equals(hasBeard,'true'))</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.PaginationQueryStringValueExpression.html">PaginationQueryStringValueExpression</a></dt>
-      <dd><p>Represents pagination in a query string, resulting from text such as: 1,articles:2</p>
+      <dd><p>Represents pagination in a query string, resulting from text such as:
+<code>
+1,articles:2
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a></dt>
       <dd><p>Represents the base data structure for immutable types that query string parameters are converted into. This intermediate structure is later
-transformed into system <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a> trees that are handled by Entity Framework Core.</p>
+transformed into System.Linq <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a> trees that are handled by Entity Framework Core.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html">QueryExpressionRewriter&lt;TArgument&gt;</a></dt>
-      <dd><p>Building block for rewriting <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a> trees. It walks through nested expressions and updates parent on changes.</p>
+      <dd><p>Building block for rewriting <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a> trees. It walks through nested expressions and updates the parent on changes.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -193,7 +278,15 @@ transformed into system <a class="xref" href="https://learn.microsoft.com/dotnet
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryStringParameterScopeExpression.html">QueryStringParameterScopeExpression</a></dt>
-      <dd><p>Represents the scope of a query string parameter, resulting from text such as: ?filter[articles]=...</p>
+      <dd><p>Represents the relationship scope of a query string parameter, resulting from text such as:
+<code>
+?sort[articles]
+</code>
+, or:
+<code>
+?filter[author.articles.comments]
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -203,22 +296,46 @@ transformed into system <a class="xref" href="https://learn.microsoft.com/dotnet
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.html">ResourceFieldChainExpression</a></dt>
-      <dd><p>Represents a chain of fields (relationships and attributes), resulting from text such as: articles.revisions.author</p>
+      <dd><p>Represents a chain of JSON:API fields (relationships and attributes), resulting from text such as:
+<code>
+articles.revisions.author
+</code>
+, or:
+<code>
+owner.LastName
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.html">SortElementExpression</a></dt>
-      <dd><p>Represents an element in <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SortExpression.html">SortExpression</a>.</p>
+      <dd><p>Represents an element in <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SortExpression.html">SortExpression</a>, resulting from text such as: <code>lastName</code>,
+<code>
+-lastModifiedAt
+</code>
+, or:
+<code>
+count(children)
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SortExpression.html">SortExpression</a></dt>
-      <dd><p>Represents a sorting, resulting from text such as: lastName,-lastModifiedAt</p>
+      <dd><p>Represents a sorting, resulting from text such as:
+<code>
+lastName,-lastModifiedAt,count(children)
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SparseFieldSetExpression.html">SparseFieldSetExpression</a></dt>
-      <dd><p>Represents a sparse fieldset, resulting from text such as: firstName,lastName,articles</p>
+      <dd><p>Represents a sparse fieldset, resulting from text such as:
+<code>
+firstName,lastName,articles
+</code>
+.</p>
 </dd>
     </dl>
     <dl class="jumplist">

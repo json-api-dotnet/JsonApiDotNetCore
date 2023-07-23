@@ -87,7 +87,7 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a non-null constant value, resulting from text such as: equals(firstName,'Jack')</p>
+  <div class="markdown summary"><p>Represents a non-null constant value, resulting from text such as: <code>'Jack'</code>, <code>'123'</code>, or: <code>'true'</code>.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -141,7 +141,7 @@ public class LiteralConstantExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression__ctor_System_Object_" data-uid="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.#ctor(System.Object)">
   LiteralConstantExpression(object)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -172,7 +172,7 @@ public class LiteralConstantExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression__ctor_System_Object_System_String_" data-uid="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.#ctor(System.Object,System.String)">
   LiteralConstantExpression(object, string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -209,10 +209,11 @@ public class LiteralConstantExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_TypedValue" data-uid="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.TypedValue">
   TypedValue
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The constant value. Call <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">GetType()</a> to determine the .NET runtime type.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -244,7 +245,7 @@ public class LiteralConstantExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_" data-uid="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)">
   Accept&lt;TArgument, TResult&gt;(QueryExpressionVisitor&lt;TArgument, TResult&gt;, TArgument)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L41"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -289,7 +290,7 @@ public class LiteralConstantExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_Equals_System_Object_" data-uid="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -325,7 +326,7 @@ public class LiteralConstantExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_GetHashCode" data-uid="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L74"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -356,7 +357,7 @@ public class LiteralConstantExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_ToFullString" data-uid="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.ToFullString">
   ToFullString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L52"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -387,7 +388,7 @@ public class LiteralConstantExpression : IdentifierExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_LiteralConstantExpression_ToString" data-uid="JsonApiDotNetCore.Queries.Expressions.LiteralConstantExpression.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/LiteralConstantExpression.cs/#L46"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>

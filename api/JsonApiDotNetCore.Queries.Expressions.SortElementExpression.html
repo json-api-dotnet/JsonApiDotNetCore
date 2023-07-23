@@ -79,7 +79,7 @@
 
   <h1 id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression" class="text-break">
     Class SortElementExpression
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L9"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -87,7 +87,15 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents an element in <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SortExpression.html">SortExpression</a>.</p>
+  <div class="markdown summary"><p>Represents an element in <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.SortExpression.html">SortExpression</a>, resulting from text such as: <code>lastName</code>,
+<code>
+-lastModifiedAt
+</code>
+, or:
+<code>
+count(children)
+</code>
+.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -138,54 +146,21 @@ public class SortElementExpression : QueryExpression</code></pre>
 
   <a id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression__ctor_" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression__ctor_JsonApiDotNetCore_Queries_Expressions_CountExpression_System_Boolean_" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.CountExpression,System.Boolean)">
-  SortElementExpression(CountExpression, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <h3 id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression__ctor_JsonApiDotNetCore_Queries_Expressions_QueryExpression_System_Boolean_" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression,System.Boolean)">
+  SortElementExpression(QueryExpression, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SortElementExpression(CountExpression count, bool isAscending)</code></pre>
+    <pre><code class="lang-csharp hljs">public SortElementExpression(QueryExpression target, bool isAscending)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>count</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.CountExpression.html">CountExpression</a></dt>
-    <dd></dd>
-    <dt><code>isAscending</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-  <a id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression__ctor_" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.#ctor*"></a>
-
-  <h3 id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression__ctor_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_System_Boolean_" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,System.Boolean)">
-  SortElementExpression(ResourceFieldChainExpression, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L16"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SortElementExpression(ResourceFieldChainExpression targetAttribute, bool isAscending)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>targetAttribute</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.html">ResourceFieldChainExpression</a></dt>
+    <dt><code>target</code> <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a></dt>
     <dd></dd>
     <dt><code>isAscending</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
     <dd></dd>
@@ -206,45 +181,15 @@ public class SortElementExpression : QueryExpression</code></pre>
 </h2>
 
 
-  <a id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression_Count_" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.Count*"></a>
-
-  <h3 id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression_Count" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.Count">
-  Count
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L13"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CountExpression? Count { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.CountExpression.html">CountExpression</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression_IsAscending_" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.IsAscending*"></a>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression_IsAscending" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.IsAscending">
   IsAscending
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Indicates the sort direction.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -268,18 +213,19 @@ public class SortElementExpression : QueryExpression</code></pre>
 
 
 
-  <a id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression_TargetAttribute_" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.TargetAttribute*"></a>
+  <a id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression_Target_" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.Target*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression_TargetAttribute" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.TargetAttribute">
-  TargetAttribute
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L12"><i class="bi bi-code-slash"></i></a>
+  <h3 id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression_Target" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.Target">
+  Target
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L23"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>The target to sort on, which can be a function or a field chain. Chain format: an optional list of to-one relationships, followed by an attribute.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceFieldChainExpression? TargetAttribute { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public QueryExpression Target { get; }</code></pre>
   </div>
 
 
@@ -288,7 +234,7 @@ public class SortElementExpression : QueryExpression</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression.html">ResourceFieldChainExpression</a></dt>
+    <dt><a class="xref" href="JsonApiDotNetCore.Queries.Expressions.QueryExpression.html">QueryExpression</a></dt>
     <dd></dd>
   </dl>
 
@@ -307,7 +253,7 @@ public class SortElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression_Accept__2_JsonApiDotNetCore_Queries_Expressions_QueryExpressionVisitor___0___1____0_" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.Accept``2(JsonApiDotNetCore.Queries.Expressions.QueryExpressionVisitor{``0,``1},``0)">
   Accept&lt;TArgument, TResult&gt;(QueryExpressionVisitor&lt;TArgument, TResult&gt;, TArgument)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L38"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -352,7 +298,7 @@ public class SortElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression_Equals_System_Object_" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L67"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -388,7 +334,7 @@ public class SortElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression_GetHashCode" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -419,7 +365,7 @@ public class SortElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression_ToFullString" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.ToFullString">
   ToFullString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -450,7 +396,7 @@ public class SortElementExpression : QueryExpression</code></pre>
 
   <h3 id="JsonApiDotNetCore_Queries_Expressions_SortElementExpression_ToString" data-uid="JsonApiDotNetCore.Queries.Expressions.SortElementExpression.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -481,7 +427,7 @@ public class SortElementExpression : QueryExpression</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L9" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Expressions/SortElementExpression.cs/#L17" class="edit-link">Edit this page</a>
         </div>
 
         
