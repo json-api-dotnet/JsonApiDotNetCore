@@ -23,6 +23,10 @@
     <RepositoryUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore</RepositoryUrl>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(APPVEYOR)' != ''">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="..\..\logo.png" Visible="false" Pack="True" PackagePath="" />
     <None Include="..\..\PackageReadme.md" Visible="false" Pack="True" PackagePath="" />
