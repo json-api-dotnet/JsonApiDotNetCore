@@ -41,14 +41,13 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
     public async Task Post_skips_middleware_and_formatters()
     {
         // Arrange
-        using var request = new HttpRequestMessage(HttpMethod.Post, "/NonJsonApi")
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/NonJsonApi");
+
+        request.Content = new StringContent("Jack")
         {
-            Content = new StringContent("Jack")
+            Headers =
             {
-                Headers =
-                {
-                    ContentType = new MediaTypeHeaderValue("text/plain")
-                }
+                ContentType = new MediaTypeHeaderValue("text/plain")
             }
         };
 
@@ -90,14 +89,13 @@ public sealed class NonJsonApiControllerTests : IClassFixture<IntegrationTestCon
     public async Task Put_skips_middleware_and_formatters()
     {
         // Arrange
-        using var request = new HttpRequestMessage(HttpMethod.Put, "/NonJsonApi")
+        using var request = new HttpRequestMessage(HttpMethod.Put, "/NonJsonApi");
+
+        request.Content = new StringContent("\"Jane\"")
         {
-            Content = new StringContent("\"Jane\"")
+            Headers =
             {
-                Headers =
-                {
-                    ContentType = new MediaTypeHeaderValue("application/json")
-                }
+                ContentType = new MediaTypeHeaderValue("application/json")
             }
         };
 

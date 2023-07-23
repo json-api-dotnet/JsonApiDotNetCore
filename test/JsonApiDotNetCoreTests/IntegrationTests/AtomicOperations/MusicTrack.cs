@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations")]
 public sealed class MusicTrack : Identifiable<Guid>
 {
-    [RegularExpression(@"(?im)^[{(]?[0-9A-F]{8}[-]?(?:[0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?$")]
+    [RegularExpression("(?im)^[{(]?[0-9A-F]{8}[-]?(?:[0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?$")]
     public override Guid Id { get; set; }
 
     [Attr]
