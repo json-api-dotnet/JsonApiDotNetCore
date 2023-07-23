@@ -625,7 +625,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             IEntityType? leftEntityType = _dbContext.Model.FindEntityType(relationship.LeftType.ClrType);
             INavigation? navigation = leftEntityType?.FindNavigation(relationship.Property.Name);
 
-            if (navigation != null && navigation.ForeignKey.DeclaringEntityType.ClrType == relationship.LeftType.ClrType)
+            if (HasForeignKeyAtLeftSide(relationship, navigation))
             {
                 return true;
             }
