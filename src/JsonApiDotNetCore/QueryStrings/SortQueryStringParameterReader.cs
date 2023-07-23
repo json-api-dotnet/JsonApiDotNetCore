@@ -65,7 +65,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
         }
         catch (QueryParseException exception)
         {
-            string specificMessage = exception.GetMessageWithPosition(parameterNameIsValid ? parameterValue : parameterName);
+            string specificMessage = exception.GetMessageWithPosition(parameterNameIsValid ? parameterValue.ToString() : parameterName);
             throw new InvalidQueryStringParameterException(parameterName, "The specified sort is invalid.", specificMessage, exception);
         }
     }

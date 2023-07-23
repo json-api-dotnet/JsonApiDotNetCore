@@ -68,7 +68,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
         }
         catch (QueryParseException exception)
         {
-            string specificMessage = exception.GetMessageWithPosition(parameterNameIsValid ? parameterValue : parameterName);
+            string specificMessage = exception.GetMessageWithPosition(parameterNameIsValid ? parameterValue.ToString() : parameterName);
             throw new InvalidQueryStringParameterException(parameterName, "The specified fieldset is invalid.", specificMessage, exception);
         }
     }

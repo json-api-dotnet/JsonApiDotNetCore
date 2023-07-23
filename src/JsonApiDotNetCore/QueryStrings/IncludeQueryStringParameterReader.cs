@@ -51,7 +51,7 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
         }
         catch (QueryParseException exception)
         {
-            string specificMessage = exception.GetMessageWithPosition(parameterValue);
+            string specificMessage = exception.GetMessageWithPosition(parameterValue.ToString());
             throw new InvalidQueryStringParameterException(parameterName, "The specified include is invalid.", specificMessage, exception);
         }
     }
