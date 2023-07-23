@@ -128,7 +128,7 @@ public sealed class AtomicSerializationTests : IClassFixture<IntegrationTestCont
     }
 
     [Fact]
-    public async Task Includes_version_with_ext_on_error_in_operations_endpoint()
+    public async Task Includes_version_with_ext_on_error_at_operations_endpoint()
     {
         // Arrange
         string musicTrackId = Unknown.StringId.For<MusicTrack, Guid>();

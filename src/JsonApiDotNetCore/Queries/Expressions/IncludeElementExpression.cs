@@ -6,12 +6,23 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents an element in <see cref="IncludeExpression" />.
+/// Represents an element in an <see cref="IncludeExpression" /> tree, resulting from text such as:
+/// <c>
+/// articles.revisions
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class IncludeElementExpression : QueryExpression
 {
+    /// <summary>
+    /// The JSON:API relationship to include.
+    /// </summary>
     public RelationshipAttribute Relationship { get; }
+
+    /// <summary>
+    /// The direct children of this subtree. Can be empty.
+    /// </summary>
     public IImmutableSet<IncludeElementExpression> Children { get; }
 
     public IncludeElementExpression(RelationshipAttribute relationship)

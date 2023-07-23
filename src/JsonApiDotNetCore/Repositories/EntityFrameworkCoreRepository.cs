@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
+using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
@@ -136,11 +136,12 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
                 source = queryableHandler.Apply(source);
             }
 
-            var nameFactory = new LambdaParameterNameFactory();
+#pragma warning disable CS0618
+            IQueryableBuilder builder = _resourceDefinitionAccessor.QueryableBuilder;
+#pragma warning restore CS0618
 
-            var builder = new QueryableBuilder(source.Expression, source.ElementType, typeof(Queryable), nameFactory, _resourceFactory, _dbContext.Model);
-
-            Expression expression = builder.ApplyQuery(queryLayer);
+            var context = QueryableBuilderContext.CreateRoot(source, typeof(Queryable), _dbContext.Model, null);
+            Expression expression = builder.ApplyQuery(queryLayer, context);
 
             using (CodeTimingSessionManager.Current.Measure("Convert System.Expression to IQueryable"))
             {

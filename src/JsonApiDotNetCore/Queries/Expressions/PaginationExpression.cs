@@ -9,7 +9,14 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 [PublicAPI]
 public class PaginationExpression : QueryExpression
 {
+    /// <summary>
+    /// The one-based page number.
+    /// </summary>
     public PageNumber PageNumber { get; }
+
+    /// <summary>
+    /// The optional page size.
+    /// </summary>
     public PageSize? PageSize { get; }
 
     public PaginationExpression(PageNumber pageNumber, PageSize? pageSize)

@@ -4,7 +4,8 @@ using FluentAssertions;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.QueryStrings.Internal;
+using JsonApiDotNetCore.Queries.Parsing;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
@@ -24,23 +25,50 @@ public sealed class LegacyFilterParseTests : BaseParseTests
         Request.PrimaryResourceType = ResourceGraph.GetResourceType<BlogPost>();
 
         var resourceFactory = new ResourceFactory(new ServiceContainer());
-        _reader = new FilterQueryStringParameterReader(Request, ResourceGraph, resourceFactory, Options);
+        var scopeParser = new QueryStringParameterScopeParser();
+        var valueParser = new FilterParser(resourceFactory);
+        _reader = new FilterQueryStringParameterReader(scopeParser, valueParser, Request, ResourceGraph, Options);
     }
 
     [Theory]
-    [InlineData("filter", "some", "Expected field name between brackets in filter parameter name.")]
-    [InlineData("filter[", "some", "Expected field name between brackets in filter parameter name.")]
-    [InlineData("filter[]", "some", "Expected field name between brackets in filter parameter name.")]
-    [InlineData("filter[some]", "other", "Field 'some' does not exist on resource type 'blogPosts'.")]
-    [InlineData("filter[author]", "some", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
-    [InlineData("filter[author.posts]", "some",
-        "Field 'posts' in 'author.posts' must be an attribute or a to-one relationship on resource type 'webAccounts'.")]
-    [InlineData("filter[unknown.id]", "some", "Relationship 'unknown' in 'unknown.id' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter", "Expected field name between brackets in filter parameter name.")]
+    [InlineData("filter[", "Expected field name between brackets in filter parameter name.")]
+    [InlineData("filter[]", "Expected field name between brackets in filter parameter name.")]
+    [InlineData("filter[some]", "Field 'some' does not exist on resource type 'blogPosts'.")]
+    [InlineData("filter[author.posts]",
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by a to-one relationship or an attribute. " +
+        "To-one relationship or attribute on resource type 'webAccounts' expected.")]
+    [InlineData("filter[some.id]", "Field 'some' does not exist on resource type 'blogPosts'.")]
+    public void Reader_Read_ParameterName_Fails(string parameterName, string errorMessage)
+    {
+        // Act
+        Action action = () => _reader.Read(parameterName, " ");
+
+        // Assert
+        InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+
+        exception.ParameterName.Should().Be(parameterName);
+        exception.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be(errorMessage);
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be(parameterName);
+    }
+
+    [Theory]
+    [InlineData("filter[author]", "some", "null expected.")]
     [InlineData("filter", "expr:equals(some,'other')", "Field 'some' does not exist on resource type 'blogPosts'.")]
-    [InlineData("filter", "expr:equals(author,'Joe')", "Attribute 'author' does not exist on resource type 'blogPosts'.")]
-    [InlineData("filter", "expr:has(author)", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
-    [InlineData("filter", "expr:equals(count(author),'1')", "Relationship 'author' must be a to-many relationship on resource type 'blogPosts'.")]
-    public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
+    [InlineData("filter", "expr:equals(author,'Joe')", "null expected.")]
+    [InlineData("filter", "expr:has(author)",
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'webAccounts' expected.")]
+    [InlineData("filter", "expr:equals(count(author),'1')",
+        "Field chain on resource type 'blogPosts' failed to match the pattern: zero or more to-one relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'webAccounts' expected.")]
+    public void Reader_Read_ParameterValue_Fails(string parameterName, string parameterValue, string errorMessage)
     {
         // Act
         Action action = () => _reader.Read(parameterName, parameterValue);

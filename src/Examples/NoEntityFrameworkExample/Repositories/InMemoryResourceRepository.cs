@@ -1,7 +1,7 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
+using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using NoEntityFrameworkExample.Data;
@@ -25,12 +25,12 @@ public abstract class InMemoryResourceRepository<TResource, TId> : IResourceRead
     private readonly ResourceType _resourceType;
     private readonly QueryLayerToLinqConverter _queryLayerToLinqConverter;
 
-    protected InMemoryResourceRepository(IResourceGraph resourceGraph, IResourceFactory resourceFactory)
+    protected InMemoryResourceRepository(IResourceGraph resourceGraph, IQueryableBuilder queryableBuilder)
     {
         _resourceType = resourceGraph.GetResourceType<TResource>();
 
         var model = new InMemoryModel(resourceGraph);
-        _queryLayerToLinqConverter = new QueryLayerToLinqConverter(resourceFactory, model);
+        _queryLayerToLinqConverter = new QueryLayerToLinqConverter(model, queryableBuilder);
     }
 
     /// <inheritdoc />

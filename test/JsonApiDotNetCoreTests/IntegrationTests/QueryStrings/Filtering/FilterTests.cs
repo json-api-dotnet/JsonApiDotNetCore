@@ -28,7 +28,8 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
     public async Task Cannot_filter_in_unknown_scope()
     {
         // Arrange
-        const string route = $"/webAccounts?filter[{Unknown.Relationship}]=equals(title,null)";
+        var parameterName = new MarkedText($"filter[^{Unknown.Relationship}]", '^');
+        string route = $"/webAccounts?{parameterName.Text}=equals(title,null)";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -41,16 +42,17 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'.");
+        error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterName}");
         error.Source.ShouldNotBeNull();
-        error.Source.Parameter.Should().Be($"filter[{Unknown.Relationship}]");
+        error.Source.Parameter.Should().Be(parameterName.Text);
     }
 
     [Fact]
     public async Task Cannot_filter_in_unknown_nested_scope()
     {
         // Arrange
-        const string route = $"/webAccounts?filter[posts.{Unknown.Relationship}]=equals(title,null)";
+        var parameterName = new MarkedText($"filter[posts.^{Unknown.Relationship}]", '^');
+        string route = $"/webAccounts?{parameterName.Text}=equals(title,null)";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -63,16 +65,17 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource type 'blogPosts'.");
+        error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterName}");
         error.Source.ShouldNotBeNull();
-        error.Source.Parameter.Should().Be($"filter[posts.{Unknown.Relationship}]");
+        error.Source.Parameter.Should().Be(parameterName.Text);
     }
 
     [Fact]
     public async Task Cannot_filter_on_attribute_with_blocked_capability()
     {
         // Arrange
-        const string route = "/webAccounts?filter=equals(dateOfBirth,null)";
+        var parameterValue = new MarkedText("equals(^dateOfBirth,null)", '^');
+        string route = $"/webAccounts?filter={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -84,8 +87,8 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Filtering on the requested attribute is not allowed.");
-        error.Detail.Should().Be("Filtering on attribute 'dateOfBirth' is not allowed.");
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be($"Filtering on attribute 'dateOfBirth' is not allowed. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
@@ -94,7 +97,8 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
     public async Task Cannot_filter_on_ToMany_relationship_with_blocked_capability()
     {
         // Arrange
-        const string route = "/calendars?filter=has(appointments)";
+        var parameterValue = new MarkedText("has(^appointments)", '^');
+        string route = $"/calendars?filter={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -106,8 +110,8 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<TestableS
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Filtering on the requested relationship is not allowed.");
-        error.Detail.Should().Be("Filtering on relationship 'appointments' is not allowed.");
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be($"Filtering on relationship 'appointments' is not allowed. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
