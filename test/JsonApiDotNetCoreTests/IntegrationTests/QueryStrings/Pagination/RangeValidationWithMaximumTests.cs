@@ -59,7 +59,8 @@ public sealed class RangeValidationWithMaximumTests : IClassFixture<IntegrationT
     {
         // Arrange
         const int pageNumber = MaximumPageNumber + 1;
-        string route = $"/blogs?page[number]={pageNumber}";
+        var parameterValue = new MarkedText($"^{pageNumber}", '^');
+        string route = $"/blogs?page[number]={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -72,7 +73,7 @@ public sealed class RangeValidationWithMaximumTests : IClassFixture<IntegrationT
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
-        error.Detail.Should().Be($"Page number cannot be higher than {MaximumPageNumber}.");
+        error.Detail.Should().Be($"Page number cannot be higher than {MaximumPageNumber}. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
@@ -81,7 +82,8 @@ public sealed class RangeValidationWithMaximumTests : IClassFixture<IntegrationT
     public async Task Cannot_use_zero_page_size()
     {
         // Arrange
-        const string route = "/blogs?page[size]=0";
+        var parameterValue = new MarkedText("^0", '^');
+        string route = $"/blogs?page[size]={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -94,7 +96,7 @@ public sealed class RangeValidationWithMaximumTests : IClassFixture<IntegrationT
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
-        error.Detail.Should().Be("Page size cannot be unconstrained.");
+        error.Detail.Should().Be($"Page size cannot be unconstrained. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }
@@ -132,7 +134,8 @@ public sealed class RangeValidationWithMaximumTests : IClassFixture<IntegrationT
     {
         // Arrange
         const int pageSize = MaximumPageSize + 1;
-        string route = $"/blogs?page[size]={pageSize}";
+        var parameterValue = new MarkedText($"^{pageSize}", '^');
+        string route = $"/blogs?page[size]={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -145,7 +148,7 @@ public sealed class RangeValidationWithMaximumTests : IClassFixture<IntegrationT
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified pagination is invalid.");
-        error.Detail.Should().Be($"Page size cannot be higher than {MaximumPageSize}.");
+        error.Detail.Should().Be($"Page size cannot be higher than {MaximumPageSize}. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }

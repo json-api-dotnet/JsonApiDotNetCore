@@ -4,11 +4,18 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents a sorting, resulting from text such as: lastName,-lastModifiedAt
+/// Represents a sorting, resulting from text such as:
+/// <c>
+/// lastName,-lastModifiedAt,count(children)
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class SortExpression : QueryExpression
 {
+    /// <summary>
+    /// One or more elements to sort on.
+    /// </summary>
     public IImmutableList<SortElementExpression> Elements { get; }
 
     public SortExpression(IImmutableList<SortElementExpression> elements)

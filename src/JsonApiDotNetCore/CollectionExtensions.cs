@@ -32,6 +32,18 @@ internal static class CollectionExtensions
         return -1;
     }
 
+    public static IEnumerable<T> ToEnumerable<T>(this LinkedListNode<T>? startNode)
+    {
+        LinkedListNode<T>? current = startNode;
+
+        while (current != null)
+        {
+            yield return current.Value;
+
+            current = current.Next;
+        }
+    }
+
     public static bool DictionaryEqual<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue>? first, IReadOnlyDictionary<TKey, TValue>? second,
         IEqualityComparer<TValue>? valueComparer = null)
     {

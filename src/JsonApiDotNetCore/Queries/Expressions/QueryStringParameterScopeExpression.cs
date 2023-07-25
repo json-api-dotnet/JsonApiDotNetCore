@@ -3,12 +3,28 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents the scope of a query string parameter, resulting from text such as: ?filter[articles]=...
+/// Represents the relationship scope of a query string parameter, resulting from text such as:
+/// <c>
+/// ?sort[articles]
+/// </c>
+/// , or:
+/// <c>
+/// ?filter[author.articles.comments]
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class QueryStringParameterScopeExpression : QueryExpression
 {
+    /// <summary>
+    /// The name of the query string parameter, without its surrounding brackets.
+    /// </summary>
     public LiteralConstantExpression ParameterName { get; }
+
+    /// <summary>
+    /// The scope this parameter value applies to, or <c>null</c> for the URL endpoint scope. Chain format for the filter/sort parameters: an optional list
+    /// of relationships, followed by a to-many relationship.
+    /// </summary>
     public ResourceFieldChainExpression? Scope { get; }
 
     public QueryStringParameterScopeExpression(LiteralConstantExpression parameterName, ResourceFieldChainExpression? scope)

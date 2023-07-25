@@ -5,11 +5,18 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents a sparse fieldset, resulting from text such as: firstName,lastName,articles
+/// Represents a sparse fieldset, resulting from text such as:
+/// <c>
+/// firstName,lastName,articles
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class SparseFieldSetExpression : QueryExpression
 {
+    /// <summary>
+    /// The set of JSON:API fields to include. Chain format: a single field.
+    /// </summary>
     public IImmutableSet<ResourceFieldAttribute> Fields { get; }
 
     public SparseFieldSetExpression(IImmutableSet<ResourceFieldAttribute> fields)

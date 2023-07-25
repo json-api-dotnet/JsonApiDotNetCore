@@ -9,6 +9,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting;
 
 public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
 {
+    private const string CollectionErrorMessage = "This query string parameter can only be used on a collection of resources (not on a single resource).";
+
     private readonly IntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly QueryStringFakers _fakers = new();
 
@@ -52,7 +54,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     }
 
     [Fact]
-    public async Task Cannot_sort_in_single_primary_resource()
+    public async Task Cannot_sort_in_primary_resource()
     {
         // Arrange
         BlogPost post = _fakers.BlogPost.Generate();
@@ -76,7 +78,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+        error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^sort");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
@@ -112,7 +114,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     }
 
     [Fact]
-    public async Task Cannot_sort_in_single_secondary_resource()
+    public async Task Cannot_sort_in_secondary_resource()
     {
         // Arrange
         BlogPost post = _fakers.BlogPost.Generate();
@@ -136,7 +138,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+        error.Detail.Should().Be($"{CollectionErrorMessage} Failed at position 1: ^sort");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
@@ -231,7 +233,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     }
 
     [Fact]
-    public async Task Can_sort_in_scope_of_OneToMany_relationship_on_secondary_endpoint()
+    public async Task Can_sort_in_scope_of_OneToMany_relationship_at_secondary_endpoint()
     {
         // Arrange
         Blog blog = _fakers.Blog.Generate();
@@ -452,7 +454,8 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Cannot_sort_in_unknown_scope()
     {
         // Arrange
-        const string route = $"/webAccounts?sort[{Unknown.Relationship}]=id";
+        var parameterName = new MarkedText($"sort[^{Unknown.Relationship}]", '^');
+        string route = $"/webAccounts?{parameterName.Text}=id";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -465,16 +468,17 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'.");
+        error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterName}");
         error.Source.ShouldNotBeNull();
-        error.Source.Parameter.Should().Be($"sort[{Unknown.Relationship}]");
+        error.Source.Parameter.Should().Be(parameterName.Text);
     }
 
     [Fact]
     public async Task Cannot_sort_in_unknown_nested_scope()
     {
         // Arrange
-        const string route = $"/webAccounts?sort[posts.{Unknown.Relationship}]=id";
+        var parameterName = new MarkedText($"sort[posts.^{Unknown.Relationship}]", '^');
+        string route = $"/webAccounts?{parameterName.Text}=id";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -487,16 +491,17 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource type 'blogPosts'.");
+        error.Detail.Should().Be($"Field '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterName}");
         error.Source.ShouldNotBeNull();
-        error.Source.Parameter.Should().Be($"sort[posts.{Unknown.Relationship}]");
+        error.Source.Parameter.Should().Be(parameterName.Text);
     }
 
     [Fact]
     public async Task Cannot_sort_on_attribute_with_blocked_capability()
     {
         // Arrange
-        const string route = "/webAccounts?sort=dateOfBirth";
+        var parameterValue = new MarkedText("^dateOfBirth", '^');
+        string route = $"/webAccounts?sort={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -508,8 +513,8 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<TestableSta
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Sorting on the requested attribute is not allowed.");
-        error.Detail.Should().Be("Sorting on attribute 'dateOfBirth' is not allowed.");
+        error.Title.Should().Be("The specified sort is invalid.");
+        error.Detail.Should().Be($"Sorting on attribute 'dateOfBirth' is not allowed. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }

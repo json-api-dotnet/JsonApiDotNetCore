@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace OpenApiTests.NamingConventions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+[Resource(ControllerNamespace = "OpenApiTests.NamingConventions")]
 public sealed class StaffMember : Identifiable<int>
 {
     [Attr]

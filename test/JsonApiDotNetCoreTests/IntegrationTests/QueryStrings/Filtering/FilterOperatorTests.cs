@@ -700,7 +700,8 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_filter_text_match_on_non_string_value()
     {
         // Arrange
-        const string route = "/filterableResources?filter=contains(someInt32,'123')";
+        var parameterValue = new MarkedText("contains(^someInt32,'123')", '^');
+        string route = $"/filterableResources?filter={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -713,7 +714,30 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be("Attribute of type 'String' expected.");
+        error.Detail.Should().Be($"Attribute of type 'String' expected. {parameterValue}");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("filter");
+    }
+
+    [Fact]
+    public async Task Cannot_filter_text_match_on_nested_non_string_value()
+    {
+        // Arrange
+        var parameterValue = new MarkedText("contains(parent.parent.^someInt32,'123')", '^');
+        string route = $"/filterableResources?filter={parameterValue.Text}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.BadRequest);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be($"Attribute of type 'String' expected. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
@@ -833,7 +857,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task Can_filter_on_count()
+    public async Task Can_filter_equality_on_count_at_left_side()
     {
         // Arrange
         var resource = new FilterableResource
@@ -865,10 +889,48 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
+    public async Task Can_filter_equality_on_count_at_both_sides()
+    {
+        // Arrange
+        var resource = new FilterableResource
+        {
+            Children = new List<FilterableResource>
+            {
+                new()
+                {
+                    Children = new List<FilterableResource>
+                    {
+                        new()
+                    }
+                }
+            }
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.Add(resource);
+            await dbContext.SaveChangesAsync();
+        });
+
+        const string route = "/filterableResources?filter=equals(count(children),count(parent.children))";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(resource.Children.ElementAt(0).StringId);
+    }
+
+    [Fact]
     public async Task Cannot_filter_on_count_with_incompatible_value()
     {
         // Arrange
-        const string route = "/filterableResources?filter=equals(count(children),'ABC')";
+        var parameterValue = new MarkedText("equals(count(children),^'ABC')", '^');
+        string route = $"/filterableResources?filter={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -881,7 +943,7 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be("Failed to convert 'ABC' of type 'String' to type 'Int32'.");
+        error.Detail.Should().Be($"Failed to convert 'ABC' of type 'String' to type 'Int32'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }
@@ -892,6 +954,46 @@ public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<T
     [InlineData("or(equals(someString,'---'),lessThan(someInt32,'33'))")]
     [InlineData("not(equals(someEnum,'Saturday'))")]
     public async Task Can_filter_on_logical_functions(string filterExpression)
+    {
+        // Arrange
+        var resource1 = new FilterableResource
+        {
+            SomeString = "ABC",
+            SomeInt32 = 11,
+            SomeEnum = DayOfWeek.Tuesday
+        };
+
+        var resource2 = new FilterableResource
+        {
+            SomeString = "XYZ",
+            SomeInt32 = 99,
+            SomeEnum = DayOfWeek.Saturday
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resource1, resource2);
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter={filterExpression}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Id.Should().Be(resource1.StringId);
+    }
+
+    [Theory]
+    [InlineData("equals(and(equals(someString,'ABC'),equals(someInt32,'11')),'true')")]
+    [InlineData("equals(or(greaterThan(someInt32,'150'),equals(someEnum,'Tuesday')),'true')")]
+    [InlineData("equals(equals(someString,'ABC'),not(lessThan(someInt32,'10')))")]
+    public async Task Can_filter_nested_on_comparisons(string filterExpression)
     {
         // Arrange
         var resource1 = new FilterableResource

@@ -792,7 +792,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
-    public async Task Includes_version_on_resource_endpoint()
+    public async Task Includes_version_at_resource_endpoint()
     {
         // Arrange
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
@@ -826,7 +826,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
-    public async Task Includes_version_on_error_in_resource_endpoint()
+    public async Task Includes_version_on_error_at_resource_endpoint()
     {
         // Arrange
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

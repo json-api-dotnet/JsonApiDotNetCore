@@ -31,7 +31,7 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
-    public async Task Renders_resource_count_for_primary_resources_endpoint_with_filter()
+    public async Task Renders_resource_count_at_primary_resources_endpoint_with_filter()
     {
         // Arrange
         List<SupportTicket> tickets = _fakers.SupportTicket.Generate(2);
@@ -57,7 +57,7 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
-    public async Task Renders_resource_count_for_secondary_resources_endpoint_with_filter()
+    public async Task Renders_resource_count_at_secondary_resources_endpoint_with_filter()
     {
         // Arrange
         ProductFamily family = _fakers.ProductFamily.Generate();

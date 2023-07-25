@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
+using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Resources;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -9,13 +9,13 @@ namespace NoEntityFrameworkExample;
 
 internal sealed class QueryLayerToLinqConverter
 {
-    private readonly IResourceFactory _resourceFactory;
     private readonly IModel _model;
+    private readonly IQueryableBuilder _queryableBuilder;
 
-    public QueryLayerToLinqConverter(IResourceFactory resourceFactory, IModel model)
+    public QueryLayerToLinqConverter(IModel model, IQueryableBuilder queryableBuilder)
     {
-        _resourceFactory = resourceFactory;
         _model = model;
+        _queryableBuilder = queryableBuilder;
     }
 
     public IEnumerable<TResource> ApplyQueryLayer<TResource>(QueryLayer queryLayer, IEnumerable<TResource> resources)
@@ -26,10 +26,9 @@ internal sealed class QueryLayerToLinqConverter
         converter.ConvertIncludesToSelections();
 
         // Convert QueryLayer into LINQ expression.
-        Expression source = ((IEnumerable)resources).AsQueryable().Expression;
-        var nameFactory = new LambdaParameterNameFactory();
-        var queryableBuilder = new QueryableBuilder(source, queryLayer.ResourceType.ClrType, typeof(Enumerable), nameFactory, _resourceFactory, _model);
-        Expression expression = queryableBuilder.ApplyQuery(queryLayer);
+        IQueryable source = ((IEnumerable)resources).AsQueryable();
+        var context = QueryableBuilderContext.CreateRoot(source, typeof(Enumerable), _model, null);
+        Expression expression = _queryableBuilder.ApplyQuery(queryLayer, context);
 
         // Insert null checks to prevent a NullReferenceException during execution of expressions such as:
         // 'todoItems => todoItems.Where(todoItem => todoItem.Assignee.Id == 1)' when a TodoItem doesn't have an assignee.

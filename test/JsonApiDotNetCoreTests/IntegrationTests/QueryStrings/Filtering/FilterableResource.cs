@@ -95,6 +95,9 @@ public sealed class FilterableResource : Identifiable<int>
     [Attr]
     public DayOfWeek? SomeNullableEnum { get; set; }
 
+    [HasOne]
+    public FilterableResource? Parent { get; set; }
+
     [HasMany]
     public ICollection<FilterableResource> Children { get; set; } = new List<FilterableResource>();
 }

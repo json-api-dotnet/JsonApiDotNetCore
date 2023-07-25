@@ -117,10 +117,12 @@ internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object?>
         {
             if (IsSortOnCarId(sortElement))
             {
-                ResourceFieldChainExpression regionIdSort = ReplaceLastAttributeInChain(sortElement.TargetAttribute!, _regionIdAttribute);
+                var fieldChain = (ResourceFieldChainExpression)sortElement.Target;
+
+                ResourceFieldChainExpression regionIdSort = ReplaceLastAttributeInChain(fieldChain, _regionIdAttribute);
                 elementsBuilder.Add(new SortElementExpression(regionIdSort, sortElement.IsAscending));
 
-                ResourceFieldChainExpression licensePlateSort = ReplaceLastAttributeInChain(sortElement.TargetAttribute!, _licensePlateAttribute);
+                ResourceFieldChainExpression licensePlateSort = ReplaceLastAttributeInChain(fieldChain, _licensePlateAttribute);
                 elementsBuilder.Add(new SortElementExpression(licensePlateSort, sortElement.IsAscending));
             }
             else
@@ -134,9 +136,9 @@ internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object?>
 
     private static bool IsSortOnCarId(SortElementExpression sortElement)
     {
-        if (sortElement.TargetAttribute != null)
+        if (sortElement.Target is ResourceFieldChainExpression fieldChain && fieldChain.Fields[^1] is AttrAttribute attribute)
         {
-            PropertyInfo property = sortElement.TargetAttribute.Fields[^1].Property;
+            PropertyInfo property = attribute.Property;
 
             if (IsCarId(property))
             {

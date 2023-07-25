@@ -17,16 +17,19 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>See https://github.com/json-api-dotnet/JsonApiDotNetCore/releases.</PackageReleaseNotes>
     <PackageIcon>logo.png</PackageIcon>
+    <PackageReadmeFile>PackageReadme.md</PackageReadmeFile>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(APPVEYOR)' != ''">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
   <ItemGroup>
-    <None Include="..\..\logo.png" Visible="false">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Include="..\..\logo.png" Visible="false" Pack="True" PackagePath="" />
+    <None Include="..\..\PackageReadme.md" Visible="false" Pack="True" PackagePath="" />
   </ItemGroup>
 
   <!-- We multi-target against NetStandard solely to enable consumers to share their models project with .NET Framework code. -->

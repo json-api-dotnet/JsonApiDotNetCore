@@ -319,7 +319,8 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        const string route = "/filterableResources?filter=equals(someInt32,'ABC')";
+        var parameterValue = new MarkedText("equals(someInt32,^'ABC')", '^');
+        string route = $"/filterableResources?filter={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -332,7 +333,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified filter is invalid.");
-        error.Detail.Should().Be("Failed to convert 'ABC' of type 'String' to type 'Int32'.");
+        error.Detail.Should().Be($"Failed to convert 'ABC' of type 'String' to type 'Int32'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("filter");
     }

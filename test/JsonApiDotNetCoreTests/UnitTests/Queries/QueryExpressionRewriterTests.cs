@@ -3,7 +3,8 @@ using System.ComponentModel.Design;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
+using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -40,10 +41,11 @@ public sealed class QueryExpressionRewriterTests
     public void VisitInclude(string expressionText, string expectedTypes)
     {
         // Arrange
-        var parser = new IncludeParser();
+        var options = new JsonApiOptions();
+        var parser = new IncludeParser(options);
         ResourceType blogType = ResourceGraph.GetResourceType<Blog>();
 
-        QueryExpression expression = parser.Parse(expressionText, blogType, null);
+        QueryExpression expression = parser.Parse(expressionText, blogType);
         var rewriter = new TestableQueryExpressionRewriter();
 
         // Act
@@ -193,10 +195,12 @@ public sealed class QueryExpressionRewriterTests
     public void VisitParameterScope(string expressionText, string expectedTypes)
     {
         // Arrange
-        var parser = new QueryStringParameterScopeParser(FieldChainRequirements.EndsInToMany);
+        var parser = new QueryStringParameterScopeParser();
         ResourceType blogType = ResourceGraph.GetResourceType<Blog>();
 
-        QueryExpression expression = parser.Parse(expressionText, blogType);
+        QueryExpression expression =
+            parser.Parse(expressionText, blogType, BuiltInPatterns.RelationshipChainEndingInToMany, FieldChainPatternMatchOptions.None);
+
         var rewriter = new TestableQueryExpressionRewriter();
 
         // Act

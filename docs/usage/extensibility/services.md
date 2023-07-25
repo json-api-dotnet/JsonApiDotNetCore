@@ -81,42 +81,34 @@ In some cases it may be necessary to only expose a few actions on a resource. Fo
 
 This interface hierarchy is defined by this tree structure.
 
-```
-IResourceService
-|
-+-- IResourceQueryService
-|   |
-|   +-- IGetAllService
-|   |   GET /
-|   |
-|   +-- IGetByIdService
-|   |   GET /{id}
-|   |
-|   +-- IGetSecondaryService
-|   |   GET /{id}/{relationship}
-|   |
-|   +-- IGetRelationshipService
-|       GET /{id}/relationships/{relationship}
-|
-+-- IResourceCommandService
-    |
-    +-- ICreateService
-    |   POST /
-    |
-    +-- IUpdateService
-    |   PATCH /{id}
-    |
-    +-- IDeleteService
-    |   DELETE /{id}
-    |
-    +-- IAddToRelationshipService
-    |   POST /{id}/relationships/{relationship}
-    |
-    +-- ISetRelationshipService
-    |   PATCH /{id}/relationships/{relationship}
-    |
-    +-- IRemoveFromRelationshipService
-        DELETE /{id}/relationships/{relationship}
+```mermaid
+classDiagram
+direction LR
+class IResourceService
+class IResourceQueryService
+class IGetAllService ["IGetAllService\nGET /"]
+class IGetByIdService ["IGetByIdService\nGET /{id}"]
+class IGetSecondaryService ["IGetSecondaryService\nGET /{id}/{relationship}"]
+class IGetRelationshipService ["IGetRelationshipService\nGET /{id}/relationships/{relationship}"]
+class IResourceCommandService
+class ICreateService ["ICreateService\nPOST /"]
+class IUpdateService ["IUpdateService\nPATCH /{id}"]
+class IDeleteService ["IDeleteService\nDELETE /{id}"]
+class IAddToRelationshipService ["IAddToRelationshipService\nPOST /{id}/relationships/{relationship}"]
+class ISetRelationshipService ["ISetRelationshipService\nPATCH /{id}/relationships/{relationship}"]
+class IRemoveFromRelationshipService ["IRemoveFromRelationshipService\nDELETE /{id}/relationships/{relationship}"]
+IResourceService <|-- IResourceQueryService
+IResourceQueryService<|-- IGetAllService
+IResourceQueryService<|-- IGetByIdService
+IResourceQueryService<|-- IGetSecondaryService
+IResourceQueryService<|-- IGetRelationshipService
+IResourceService <|-- IResourceCommandService
+IResourceCommandService <|-- ICreateService
+IResourceCommandService <|-- IUpdateService
+IResourceCommandService <|-- IDeleteService
+IResourceCommandService <|-- IAddToRelationshipService
+IResourceCommandService <|-- ISetRelationshipService
+IResourceCommandService <|-- IRemoveFromRelationshipService
 ```
 
 In order to take advantage of these interfaces you first need to register the service for each implemented interface.

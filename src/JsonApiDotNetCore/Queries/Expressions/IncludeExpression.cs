@@ -4,7 +4,11 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents an inclusion tree, resulting from text such as: owner,articles.revisions
+/// Represents an inclusion tree, resulting from text such as:
+/// <c>
+/// owner,articles.revisions
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class IncludeExpression : QueryExpression
@@ -13,6 +17,9 @@ public class IncludeExpression : QueryExpression
 
     public static readonly IncludeExpression Empty = new();
 
+    /// <summary>
+    /// The direct children of this tree. Use <see cref="Empty" /> if there are no children.
+    /// </summary>
     public IImmutableSet<IncludeElementExpression> Elements { get; }
 
     public IncludeExpression(IImmutableSet<IncludeElementExpression> elements)

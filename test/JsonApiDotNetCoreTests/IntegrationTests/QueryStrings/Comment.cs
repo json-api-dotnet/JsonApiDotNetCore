@@ -14,6 +14,9 @@ public sealed class Comment : Identifiable<int>
     [Attr]
     public DateTime CreatedAt { get; set; }
 
+    [Attr]
+    public int NumStars { get; set; }
+
     [HasOne]
     public WebAccount? Author { get; set; }
 

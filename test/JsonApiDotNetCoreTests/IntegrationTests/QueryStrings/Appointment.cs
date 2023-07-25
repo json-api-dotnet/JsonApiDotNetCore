@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.QueryStrings")]
 public sealed class Appointment : Identifiable<int>
 {
     [Attr]
@@ -18,4 +19,7 @@ public sealed class Appointment : Identifiable<int>
 
     [Attr]
     public DateTimeOffset EndTime { get; set; }
+
+    [HasMany]
+    public IList<Reminder> Reminders { get; set; } = new List<Reminder>();
 }

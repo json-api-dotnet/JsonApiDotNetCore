@@ -38,7 +38,6 @@
     }
   });
 
-
   // Feature panels linking
   $('div[feature]#filter').on('click', () => navigateTo('usage/reading/filtering.html'));
   $('div[feature]#sort').on('click', () => navigateTo('usage/reading/sorting.html'));
@@ -49,13 +48,19 @@
   $('div[feature]#validation').on('click', () => navigateTo('usage/options.html#enable-modelstate-validation'));
   $('div[feature]#customizable').on('click', () => navigateTo('usage/extensibility/resource-definitions.html'));
 
-
   const navigateTo = (url) => {
-    if (!window.getSelection().toString()){
+    if (!window.getSelection().toString()) {
       window.location = url;
     }
   }
 
+  // Sponsor panels linking
+  $('div[sponsor]#jetbrains').on('click', () => navigateExternalTo('https://jb.gg/OpenSourceSupport'));
+  $('div[sponsor]#araxis').on('click', () => navigateExternalTo('https://www.araxis.com/buy/open-source'));
+
+  const navigateExternalTo = (url) => {
+    window.open(url, "_blank");
+  }
 
   hljs.initHighlightingOnLoad()
 

@@ -1,14 +1,21 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents the "not" filter function, resulting from text such as: not(equals(title,'Work'))
+/// This expression allows to test for the logical negation of its operand. It represents the "not" filter function, resulting from text such as:
+/// <c>
+/// not(equals(title,'Work'))
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class NotExpression : FilterExpression
 {
+    /// <summary>
+    /// The filter whose value to negate.
+    /// </summary>
     public FilterExpression Child { get; }
 
     public NotExpression(FilterExpression child)

@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources;
@@ -19,6 +20,15 @@ public interface IResourceDefinitionAccessor
     /// </remarks>
     [Obsolete("Use IJsonApiRequest.IsReadOnly.")]
     bool IsReadOnlyRequest { get; }
+
+    /// <summary>
+    /// Gets an <see cref="IQueryableBuilder" /> instance from the service container.
+    /// </summary>
+    /// <remarks>
+    /// This property was added to reduce the impact of taking a breaking change. It will likely be removed in the next major version.
+    /// </remarks>
+    [Obsolete("Use injected IQueryableBuilder instead.")]
+    public IQueryableBuilder QueryableBuilder { get; }
 
     /// <summary>
     /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnApplyIncludes" /> for the specified resource type.
