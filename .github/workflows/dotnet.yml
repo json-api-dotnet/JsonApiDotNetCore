@@ -51,7 +51,11 @@ jobs:
 # TODO: Push to NuGet on new release
 
   inspect-code:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    #runs-on: windows-latest
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
@@ -92,8 +96,12 @@ jobs:
             }
         }
   cleanup-code:
-    if: github.event_name == 'pull_request'  
-    runs-on: windows-latest
+    if: github.event_name == 'pull_request'
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    #runs-on: windows-latest
     steps:
     - uses: actions/checkout@v3
       with:
