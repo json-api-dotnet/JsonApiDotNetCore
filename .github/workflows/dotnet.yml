@@ -21,7 +21,17 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: ankane/setup-postgres@v1
+    - uses: ikalnytskyi/action-setup-postgres@v4
+      with:
+        host: localhost
+        username: postgres
+        password: postgres
+        database: JsonApiDotNetCore
+    - name: Print connection string
+      env:
+        CONNECTION_STR: ${{ steps.postgres.outputs.connection-uri }}
+      shell: pwsh
+      run: echo "Connection string = $Env:CONNECTION_STR"
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
