@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Configuration;
 [PublicAPI]
 public sealed class JsonApiOptions : IJsonApiOptions
 {
-    private readonly Lazy<JsonSerializerOptions> _lazySerializerWriteOptions;
+    private Lazy<JsonSerializerOptions> _lazySerializerWriteOptions;
     private readonly Lazy<JsonSerializerOptions> _lazySerializerReadOptions;
 
     /// <inheritdoc />

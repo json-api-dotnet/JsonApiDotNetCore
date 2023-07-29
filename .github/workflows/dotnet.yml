@@ -104,7 +104,7 @@ jobs:
       shell: pwsh
       run: |
         $headCommitHash = git rev-parse HEAD
-        $baseCommitHash = git rev-parse "$env:GITHUB_BASE_REF"
+        $baseCommitHash = git rev-parse "origin/$env:GITHUB_BASE_REF"
 
         if ($baseCommitHash -ne $headCommitHash) {
             Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
