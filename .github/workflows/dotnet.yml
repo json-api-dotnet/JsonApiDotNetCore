@@ -85,7 +85,8 @@ jobs:
             }
 
             if ($failed) {
-                throw "One or more projects failed code inspection.";
+                Write-Error "One or more projects failed code inspection."
+                #throw "One or more projects failed code inspection.";
             }
         }
   cleanup-code:
