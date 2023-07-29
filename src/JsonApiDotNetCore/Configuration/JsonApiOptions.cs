@@ -35,6 +35,8 @@ public sealed class JsonApiOptions : IJsonApiOptions
     /// <inheritdoc />
     public bool IncludeJsonApiVersion { get; set; }
 
+    public bool EnablePreviewFeatures { get; set; }
+
     /// <inheritdoc />
     public bool IncludeExceptionStackTraceInErrors { get; set; }
 
