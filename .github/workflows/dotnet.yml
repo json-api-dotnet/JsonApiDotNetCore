@@ -12,7 +12,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  build-and-test:
     # TODO: Add build matrix
     runs-on: ubuntu-latest
     services:
@@ -58,7 +58,36 @@ jobs:
     - name: Restore tools
       run: dotnet tool restore
     - name: InspectCode
-      run: dotnet jb inspectcode JsonApiDotNetCore.sln --build --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+      shell: pwsh
+      run: |
+        $inspectCodeOutputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
+        echo "INSPECT_CODE_OUTPUT_PATH=$inspectCodeOutputPath" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        dotnet jb inspectcode JsonApiDotNetCore.sln --build --output="$inspectCodeOutputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+    - name: Verify result
+      shell: pwsh
+      run: |
+        [xml]$xml = Get-Content $Env:INSPECT_CODE_OUTPUT_PATH
+        if ($xml.report.Issues -and $xml.report.Issues.Project) {
+            foreach ($project in $xml.report.Issues.Project) {
+                if ($project.Issue.Count -gt 0) {
+                    $project.ForEach({
+                        Write-Output "`nProject $($project.Name)"
+                        $failed = $true
+
+                        $_.Issue.ForEach({
+                            $issueType = $xml.report.IssueTypes.SelectSingleNode("IssueType[@Id='$($_.TypeId)']")
+                            $severity = $_.Severity ?? $issueType.Severity
+
+                            Write-Output "[$severity] $($_.File):$($_.Line) $($_.TypeId): $($_.Message)"
+                        })
+                    })
+                }
+            }
+
+            if ($failed) {
+                throw "One or more projects failed code inspection.";
+            }
+        }
   cleanup-code:
     runs-on: windows-latest
     steps:
