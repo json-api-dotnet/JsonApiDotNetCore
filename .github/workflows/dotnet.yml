@@ -27,11 +27,12 @@ jobs:
         password: postgres
         database: JsonApiDotNetCore
         port: 5432
+      id: postgres
     - name: Print connection string
       env:
-        CONNECTION_URI: ${{ steps.postgres.outputs.connection-uri }}
+        CONNECTION_STR: ${{ steps.postgres.outputs.connection-uri }}
       shell: pwsh
-      run: echo "Connection string = $Env:CONNECTION_URI"
+      run: echo "Connection string = $Env:CONNECTION_STR"
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
