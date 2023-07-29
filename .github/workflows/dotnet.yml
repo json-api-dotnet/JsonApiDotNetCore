@@ -6,10 +6,9 @@ name: .NET
 
 on:
   push:
-    # TODO: Include release/* as target
-    branches: [ "master" ]
+    branches: [ 'master', 'release/**' ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ 'master', 'release/**' ]
 
 jobs:
   build-and-test:
@@ -42,9 +41,9 @@ jobs:
       run: dotnet build --no-restore --configuration Release
     - name: Test
       run: dotnet test --no-build --configuration Release --verbosity normal
-# TODO: Determine unique version of built NuGet package
-# TODO: Upload pre-release NuGet package
+# TODO: Determine unique version of built NuGet package - https://stackoverflow.com/questions/54310050/how-to-version-build-artifacts-using-github-actions
 # TODO: Build documentation website and publish
+# TODO: Upload pre-release NuGet package - https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
 # TODO: Push to NuGet on new release
 
   inspect-code:
@@ -61,9 +60,9 @@ jobs:
       shell: pwsh
       run: |
         $inspectCodeOutputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
-        echo "INSPECT_CODE_OUTPUT_PATH=$inspectCodeOutputPath" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        Write-Output "INSPECT_CODE_OUTPUT_PATH=$inspectCodeOutputPath" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
         dotnet jb inspectcode JsonApiDotNetCore.sln --build --output="$inspectCodeOutputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
-    - name: Verify result
+    - name: Verify
       shell: pwsh
       run: |
         [xml]$xml = Get-Content $Env:INSPECT_CODE_OUTPUT_PATH
@@ -86,10 +85,10 @@ jobs:
 
             if ($failed) {
                 Write-Error "One or more projects failed code inspection."
-                #throw "One or more projects failed code inspection.";
             }
         }
   cleanup-code:
+    if: github.event_name == 'pull_request'  
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v3
@@ -101,5 +100,15 @@ jobs:
       run: dotnet tool restore
     - name: Restore packages
       run: dotnet restore
-    - name: CleanupCode
-      run: dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN
+    - name: CleanupCode (PR diff)
+      shell: pwsh
+      run: |
+        $headCommitHash = git rev-parse HEAD
+        $baseCommitHash = git rev-parse "$env:GITHUB_BASE_REF"
+
+        if ($baseCommitHash -ne $headCommitHash) {
+            Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
+            dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
+        } else {
+            Write-Output "No changed files in pull request."
+        }
