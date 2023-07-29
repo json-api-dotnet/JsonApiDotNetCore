@@ -105,6 +105,8 @@ jobs:
     - name: CleanupCode (PR diff)
       shell: pwsh
       run: |
+        # Not using the environment variables for SHAs, because they may be outdated. This happens on force-push after the build is queued, but before it starts.
+        # The below works because HEAD is at the merge commit, so HEAD~1 is at the base branch.
         $headCommitHash = git rev-parse HEAD
         $baseCommitHash = git rev-parse HEAD~1
 
