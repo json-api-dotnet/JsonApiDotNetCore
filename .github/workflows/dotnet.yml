@@ -1,19 +1,23 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
+# TODO: Adapt name
 name: .NET
 
 on:
   push:
+    # TODO: Include release/* as target
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
 jobs:
   build:
+    # TODO: Add build matrix
     runs-on: ubuntu-latest
     services:
       postgres:
+        # TODO: Can we specify the PostgreSQL version?
         image: postgres
         env:
           POSTGRES_PASSWORD: postgres
@@ -38,3 +42,34 @@ jobs:
       run: dotnet build --no-restore --configuration Release
     - name: Test
       run: dotnet test --no-build --configuration Release --verbosity normal
+# TODO: Determine unique version of built NuGet package
+# TODO: Upload pre-release NuGet package
+# TODO: Build documentation website and publish
+# TODO: Push to NuGet on new release
+
+  inspect-code:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore tools
+      run: dotnet tool restore
+    - name: InspectCode
+      run: dotnet jb inspectcode JsonApiDotNetCore.sln --build --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+  cleanup-code:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore tools
+      run: dotnet tool restore
+    - name: Restore packages
+      run: dotnet restore
+    - name: CleanupCode
+      run: dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN
