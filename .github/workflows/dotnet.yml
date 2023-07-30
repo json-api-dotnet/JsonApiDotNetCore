@@ -59,7 +59,7 @@ jobs:
       run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --verbosity normal
     - name: Create packages
       shell: pwsh
-      run: dotnet pack --no-build --configuration Release --output $(env:GITHUB_WORKSPACE)/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
+      run: dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Upload packages
       if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v3
