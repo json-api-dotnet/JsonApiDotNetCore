@@ -20,7 +20,7 @@ jobs:
   build-and-test:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: ikalnytskyi/action-setup-postgres@v4
@@ -59,7 +59,11 @@ jobs:
 # TODO: Push to NuGet on new release
 
   inspect-code:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    #runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
@@ -104,7 +108,11 @@ jobs:
         }
   cleanup-code:
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    #runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
       with:
