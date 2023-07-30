@@ -33,8 +33,9 @@ jobs:
       if: matrix.os == 'windows-latest'
       shell: pwsh
       run: |
-        echo "Path=$env:PGBIN"
-        "$env:PGBIN\\psql" -c "select 1"
+        echo "Path = $env:PGBIN"
+        $exePath = $env:PGBIN + '\psql'
+        $exePath -c "select 1"
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
