@@ -24,22 +24,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: ikalnytskyi/action-setup-postgres@v4
-      #with:
-      #  username: postgres
-      #  password: postgres
-      #  database: JsonApiDotNetCore
-      #  port: 5432
-      #id: postgres
-    #- name: Test PostgreSQL
-    #  env:
-    #    CONNECTION_STR: ${{ steps.postgres.outputs.connection-uri }}
-    #  shell: pwsh
-    #  run: |
-    #    psql -d $env:CONNECTION_STR -c 'select 1;'
-    #    psql -d $env:CONNECTION_STR -c 'create database "mydb";'
-    #    psql -d $env:CONNECTION_STR -c 'create table "mytable" ("name" text not null);'
-    #    psql -d $env:CONNECTION_STR -c 'insert into "mytable" ("name") values (''me'');'
-    #    psql -d $env:CONNECTION_STR -c 'select * from "mytable";'
+      with:
+        username: postgres
+        password: postgres
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -52,7 +39,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release
     - name: Test
-      run: dotnet test --no-build --configuration Release --verbosity normal
+      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --verbosity normal
 # TODO: Determine unique version of built NuGet package - https://stackoverflow.com/questions/54310050/how-to-version-build-artifacts-using-github-actions
 # TODO: Build documentation website and publish
 # TODO: Upload pre-release NuGet package - https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
@@ -133,6 +120,7 @@ jobs:
         $headCommitHash = git rev-parse HEAD
         $baseCommitHash = git rev-parse HEAD~1
 
+        # TODO: What happens when PR is empty?
         if ($baseCommitHash -ne $headCommitHash) {
             Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
             dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
