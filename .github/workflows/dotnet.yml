@@ -35,7 +35,7 @@ jobs:
       #if: matrix.os == 'windows-latest'
       shell: pwsh
       run: |
-        psql $env:CONNECTION_STR -c "select 1"
+        psql -d $env:CONNECTION_STR -c "select 1"
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
