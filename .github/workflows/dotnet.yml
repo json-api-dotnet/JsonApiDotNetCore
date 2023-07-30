@@ -37,7 +37,7 @@ jobs:
         psql -d $env:CONNECTION_STR -c 'select 1;'
         psql -d $env:CONNECTION_STR -c 'create database "mydb";'
         psql -d $env:CONNECTION_STR -c 'create table "mytable" ("name" text not null);'
-        psql -d $env:CONNECTION_STR -c 'insert into "mytable" ("name") values ('me');'
+        psql -d $env:CONNECTION_STR -c 'insert into "mytable" ("name") values (''me'');'
         psql -d $env:CONNECTION_STR -c 'select * from "mytable";'
     - uses: actions/checkout@v3
     - name: Setup .NET
