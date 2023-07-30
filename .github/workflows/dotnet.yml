@@ -11,6 +11,7 @@ on:
   pull_request:
     branches: [ 'master', 'release/**' ]
 
+# TODO: Find a way to cancel previous workflow run, without affecting matrix build
 #concurrency:
 #  group: ${{ github.workflow }}-${{ github.ref }}
 #  cancel-in-progress: true
@@ -23,22 +24,22 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: ikalnytskyi/action-setup-postgres@v4
-      with:
-        username: postgres
-        password: postgres
-        database: JsonApiDotNetCore
-        port: 5432
-      id: postgres
-    - name: Test PostgreSQL
-      env:
-        CONNECTION_STR: ${{ steps.postgres.outputs.connection-uri }}
-      shell: pwsh
-      run: |
-        psql -d $env:CONNECTION_STR -c 'select 1;'
-        psql -d $env:CONNECTION_STR -c 'create database "mydb";'
-        psql -d $env:CONNECTION_STR -c 'create table "mytable" ("name" text not null);'
-        psql -d $env:CONNECTION_STR -c 'insert into "mytable" ("name") values (''me'');'
-        psql -d $env:CONNECTION_STR -c 'select * from "mytable";'
+      #with:
+      #  username: postgres
+      #  password: postgres
+      #  database: JsonApiDotNetCore
+      #  port: 5432
+      #id: postgres
+    #- name: Test PostgreSQL
+    #  env:
+    #    CONNECTION_STR: ${{ steps.postgres.outputs.connection-uri }}
+    #  shell: pwsh
+    #  run: |
+    #    psql -d $env:CONNECTION_STR -c 'select 1;'
+    #    psql -d $env:CONNECTION_STR -c 'create database "mydb";'
+    #    psql -d $env:CONNECTION_STR -c 'create table "mytable" ("name" text not null);'
+    #    psql -d $env:CONNECTION_STR -c 'insert into "mytable" ("name") values (''me'');'
+    #    psql -d $env:CONNECTION_STR -c 'select * from "mytable";'
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -57,74 +58,77 @@ jobs:
 # TODO: Upload pre-release NuGet package - https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
 # TODO: Push to NuGet on new release
 
-  #inspect-code:
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #  - uses: actions/checkout@v3
-  #  - name: Setup .NET
-  #    uses: actions/setup-dotnet@v3
-  #    with:
-  #      dotnet-version: 6.0.x
-  #  - name: Restore tools
-  #    run: dotnet tool restore
-  #  - name: InspectCode
-  #    shell: pwsh
-  #    run: |
-  #      $inspectCodeOutputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
-  #      Write-Output "INSPECT_CODE_OUTPUT_PATH=$inspectCodeOutputPath" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-  #      dotnet jb inspectcode JsonApiDotNetCore.sln --build --output="$inspectCodeOutputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
-  #  - name: Verify
-  #    shell: pwsh
-  #    run: |
-  #      [xml]$xml = Get-Content $Env:INSPECT_CODE_OUTPUT_PATH
-  #      if ($xml.report.Issues -and $xml.report.Issues.Project) {
-  #          foreach ($project in $xml.report.Issues.Project) {
-  #              if ($project.Issue.Count -gt 0) {
-  #                  $project.ForEach({
-  #                      Write-Output "`nProject $($project.Name)"
-  #                      $failed = $true
+  inspect-code:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore tools
+      run: dotnet tool restore
+    - name: InspectCode
+      shell: pwsh
+      run: |
+        $inspectCodeOutputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
+        Write-Output "INSPECT_CODE_OUTPUT_PATH=$inspectCodeOutputPath" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        dotnet jb inspectcode JsonApiDotNetCore.sln --build --output="$inspectCodeOutputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+    - name: Verify outcome
+      shell: pwsh
+      run: |
+        [xml]$xml = Get-Content $Env:INSPECT_CODE_OUTPUT_PATH
+        if ($xml.report.Issues -and $xml.report.Issues.Project) {
+            foreach ($project in $xml.report.Issues.Project) {
+                if ($project.Issue.Count -gt 0) {
+                    $project.ForEach({
+                        Write-Output "`nProject $($project.Name)"
+                        $failed = $true
 
-  #                      $_.Issue.ForEach({
-  #                          $issueType = $xml.report.IssueTypes.SelectSingleNode("IssueType[@Id='$($_.TypeId)']")
-  #                          $severity = $_.Severity ?? $issueType.Severity
+                        $_.Issue.ForEach({
+                            $issueType = $xml.report.IssueTypes.SelectSingleNode("IssueType[@Id='$($_.TypeId)']")
+                            $severity = $_.Severity ?? $issueType.Severity
 
-  #                          Write-Output "[$severity] $($_.File):$($_.Line) $($_.TypeId): $($_.Message)"
-  #                      })
-  #                  })
-  #              }
-  #          }
+                            Write-Output "[$severity] $($_.File):$($_.Line) $($_.TypeId): $($_.Message)"
+                        })
+                    })
+                }
+            }
 
-  #          if ($failed) {
-  #              Write-Error "One or more projects failed code inspection."
-  #          }
-  #      }
-  #cleanup-code:
-  #  if: github.event_name == 'pull_request'
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #  - uses: actions/checkout@v3
-  #    with:
-  #      fetch-depth: 2
-  #  - name: Setup .NET
-  #    uses: actions/setup-dotnet@v3
-  #    with:
-  #      dotnet-version: 6.0.x
-  #  - name: Restore tools
-  #    run: dotnet tool restore
-  #  - name: Restore packages
-  #    run: dotnet restore
-  #  - name: CleanupCode (PR diff)
-  #    shell: pwsh
-  #    run: |
-  #      # Not using the environment variables for SHAs, because they may be outdated. This happens on force-push after the build is queued, but before it starts.
-  #      # The below works because HEAD is at the merge commit, so HEAD~1 is at the base branch.
-  #      $headCommitHash = git rev-parse HEAD
-  #      $baseCommitHash = git rev-parse HEAD~1
+            if ($failed) {
+                Write-Error "One or more projects failed code inspection."
+            }
+            else {
+                Write-Output "No issues found."
+            }
+        }
+  cleanup-code:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore tools
+      run: dotnet tool restore
+    - name: Restore packages
+      run: dotnet restore
+    - name: CleanupCode (PR diff)
+      shell: pwsh
+      run: |
+        # Not using the environment variables for SHAs, because they may be outdated. This happens on force-push after the build is queued, but before it starts.
+        # The below works because HEAD is at the merge commit, so HEAD~1 is at the base branch.
+        $headCommitHash = git rev-parse HEAD
+        $baseCommitHash = git rev-parse HEAD~1
 
-  #      if ($baseCommitHash -ne $headCommitHash) {
-  #          Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
-  #          dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
-  #      }
-  #      else {
-  #          Write-Output "No changed files in pull request."
-  #      }
+        if ($baseCommitHash -ne $headCommitHash) {
+            Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
+            dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
+        }
+        else {
+            Write-Output "No changed files in pull request."
+        }
