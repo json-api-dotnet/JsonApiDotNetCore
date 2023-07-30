@@ -32,10 +32,9 @@ jobs:
     - name: Test PostgreSQL
       env:
         CONNECTION_STR: ${{ steps.postgres.outputs.connection-uri }}
-      #if: matrix.os == 'windows-latest'
       shell: pwsh
       run: |
-        psql -d $env:CONNECTION_STR -c "select 1"
+        psql -d $env:CONNECTION_STR -c 'select 1; create database "mydb"; create table "mytable" ("name" text not null); insert into "mytable" ("name") values 'me'); select * from "mytable";'
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
