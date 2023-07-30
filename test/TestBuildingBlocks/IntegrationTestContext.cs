@@ -65,8 +65,10 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
 
     private WebApplicationFactory<TStartup> CreateFactory()
     {
+        string postgresPassword = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? "postgres";
+
         string dbConnectionString =
-            $"Host=localhost;Database=JsonApiTest-{Guid.NewGuid():N};User ID=postgres;Password=postgres;Include Error Detail=true";
+            $"Host=localhost;Database=JsonApiTest-{Guid.NewGuid():N};User ID=postgres;Password={postgresPassword};Include Error Detail=true";
 
         var factory = new IntegrationTestWebApplicationFactory();
 
