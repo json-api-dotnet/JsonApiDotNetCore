@@ -31,7 +31,9 @@ jobs:
       id: postgres
     - name: Test PostgreSQL
       shell: pwsh
-      run: $env:PGBIN\psql postgresql://postgres:postgres@localhost -c "select 1"
+      run: |
+        echo "Path=$env:PGBIN"
+        $env:PGBIN\psql postgresql://postgres:postgres@localhost -c "select 1"
     - uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
