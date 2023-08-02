@@ -3,7 +3,7 @@ using JsonApiDotNetCoreTests.UnitTests.Serialization.Response.Models;
 using Person = JsonApiDotNetCoreTests.UnitTests.Serialization.Response.Models.Person;
 
 // @formatter:wrap_chained_method_calls chop_always
-// @formatter:keep_existing_linebreaks true
+// @formatter:wrap_before_first_method_call true
 
 namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response;
 

@@ -119,7 +119,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             IQueryable<TResource> source = GetAll();
 
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_before_first_method_call true
 
             QueryableHandlerExpression[] queryableHandlers = _constraintProviders
                 .SelectMany(provider => provider.GetConstraints())
@@ -128,7 +128,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
                 .OfType<QueryableHandlerExpression>()
                 .ToArray();
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_before_first_method_call restore
             // @formatter:wrap_chained_method_calls restore
 
             foreach (QueryableHandlerExpression queryableHandler in queryableHandlers)
@@ -470,14 +470,14 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         object? rightValueStored = relationship.GetValue(leftResource);
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         HashSet<IIdentifiable> rightResourceIdsStored = _collectionConverter
             .ExtractResources(rightValueStored)
             .Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource))
             .ToHashSet(IdentifiableComparer.Instance);
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         if (rightResourceIdsStored.Any())
@@ -519,7 +519,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             object? rightValueStored = relationship.GetValue(leftResourceTracked);
 
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_before_first_method_call true
 
             IIdentifiable[] rightResourceIdsStored = _collectionConverter
                 .ExtractResources(rightValueStored)
@@ -527,7 +527,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
                 .Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource))
                 .ToArray();
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_before_first_method_call restore
             // @formatter:wrap_chained_method_calls restore
 
             rightValueStored = _collectionConverter.CopyToTypedCollection(rightResourceIdsStored, relationship.Property.PropertyType);
