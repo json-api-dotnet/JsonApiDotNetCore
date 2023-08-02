@@ -1,5 +1,5 @@
 image:
-#  - Ubuntu2004
+  - Ubuntu2004
   - Visual Studio 2022
 
 version: '{build}'
@@ -11,18 +11,6 @@ environment:
   PGPASSWORD: Password12!
   GIT_ACCESS_TOKEN:
     secure: WPzhuEyDE7yuHeEgLi3RoGJ8we+AHU6nMksbFoWQ0AmI/HJLh4bjOR0Jnnzc6aaG
-  APPVEYOR_RDP_PASSWORD: c6IuC99A-bbchKhD
-
-# In the VM, run the next commands to release locks before collecting logs:
-# Get-Process | Where-Object {$_.ProcessName -eq 'dotnet'} | Stop-Process -Force
-# Get-Process | Where-Object {$_.ProcessName -eq 'msbuild'} | Stop-Process -Force
-# Get-Process | Where-Object {$_.ProcessName -eq 'VBCSCompiler'} | Stop-Process -Force
-
-init:
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 branches:
   only:
