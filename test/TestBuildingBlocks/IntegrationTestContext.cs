@@ -172,9 +172,10 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         protected override IHostBuilder CreateHostBuilder()
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_before_first_method_call true
 
-            return Host.CreateDefaultBuilder(null)
+            return Host
+                .CreateDefaultBuilder(null)
                 .ConfigureAppConfiguration(builder =>
                 {
                     // For tests asserting on log output, we discard the logging settings from appsettings.json.
@@ -203,7 +204,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
                     _loggingConfiguration?.Invoke(options);
                 });
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_before_first_method_call restore
             // @formatter:wrap_chained_method_calls restore
         }
     }

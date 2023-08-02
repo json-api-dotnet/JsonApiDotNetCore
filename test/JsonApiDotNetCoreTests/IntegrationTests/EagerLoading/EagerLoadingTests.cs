@@ -245,7 +245,7 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             Building? buildingInDatabase = await dbContext.Buildings
                 .Include(building => building.PrimaryDoor)
@@ -253,7 +253,7 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
                 .Include(building => building.Windows)
                 .FirstWithIdOrDefaultAsync(newBuildingId);
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             buildingInDatabase.ShouldNotBeNull();
@@ -310,7 +310,7 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             Building? buildingInDatabase = await dbContext.Buildings
                 .Include(building => building.PrimaryDoor)
@@ -318,7 +318,7 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
                 .Include(building => building.Windows)
                 .FirstWithIdOrDefaultAsync(existingBuilding.Id);
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             buildingInDatabase.ShouldNotBeNull();

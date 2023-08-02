@@ -48,7 +48,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         ExpressionInScope[] constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         FilterExpression[] filtersInTopScope = constraints
             .Where(constraint => constraint.Scope == null)
@@ -56,7 +56,7 @@ public class QueryLayerComposer : IQueryLayerComposer
             .OfType<FilterExpression>()
             .ToArray();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         return GetFilter(filtersInTopScope, primaryResourceType);
@@ -83,7 +83,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         ExpressionInScope[] constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         FilterExpression[] filtersInSecondaryScope = constraints
             .Where(constraint => constraint.Scope == null)
@@ -91,7 +91,7 @@ public class QueryLayerComposer : IQueryLayerComposer
             .OfType<FilterExpression>()
             .ToArray();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         FilterExpression? primaryFilter = GetFilter(Array.Empty<QueryExpression>(), hasManyRelationship.LeftType);
@@ -146,14 +146,14 @@ public class QueryLayerComposer : IQueryLayerComposer
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Top-level query composition");
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         QueryExpression[] expressionsInTopScope = constraints
             .Where(constraint => constraint.Scope == null)
             .Select(constraint => constraint.Expression)
             .ToArray();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         PaginationExpression topPagination = GetPagination(expressionsInTopScope, resourceType);
@@ -174,7 +174,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         using IDisposable _ = CodeTimingSessionManager.Current.Measure("Nested query composition");
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         IncludeExpression include = constraints
             .Where(constraint => constraint.Scope == null)
@@ -182,7 +182,7 @@ public class QueryLayerComposer : IQueryLayerComposer
             .OfType<IncludeExpression>()
             .FirstOrDefault() ?? IncludeExpression.Empty;
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         IImmutableSet<IncludeElementExpression> includeElements = ProcessIncludeSet(include.Elements, topLayer, new List<RelationshipAttribute>(), constraints);
@@ -212,15 +212,14 @@ public class QueryLayerComposer : IQueryLayerComposer
                 };
 
                 // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
+                // @formatter:wrap_before_first_method_call true
 
                 QueryExpression[] expressionsInCurrentScope = constraints
-                    .Where(constraint =>
-                        constraint.Scope != null && constraint.Scope.Fields.SequenceEqual(relationshipChain))
+                    .Where(constraint => constraint.Scope != null && constraint.Scope.Fields.SequenceEqual(relationshipChain))
                     .Select(constraint => constraint.Expression)
                     .ToArray();
 
-                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_before_first_method_call restore
                 // @formatter:wrap_chained_method_calls restore
 
                 ResourceType resourceType = includeElement.Relationship.RightType;
