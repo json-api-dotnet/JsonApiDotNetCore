@@ -165,7 +165,7 @@ jobs:
       run: dotnet tool restore
     - name: Restore packages
       run: dotnet restore
-    - name: CleanupCode (PR diff)
+    - name: CleanupCode (on PR diff)
       shell: pwsh
       run: |
         # Not using the environment variables for SHAs, because they may be outdated. This happens on force-push after the build is queued, but before it starts.
