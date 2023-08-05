@@ -82,6 +82,7 @@ jobs:
 
   inspect-code:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
@@ -131,6 +132,7 @@ jobs:
   cleanup-code:
     if: github.event_name == 'pull_request'
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
