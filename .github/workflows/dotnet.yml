@@ -40,11 +40,13 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: ikalnytskyi/action-setup-postgres@v4
+    - name: Setup PostgreSQL
+      uses: ikalnytskyi/action-setup-postgres@v4
       with:
         username: postgres
         password: postgres
-    - uses: actions/checkout@v3
+    - name: Git checkout
+      uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -74,13 +76,13 @@ jobs:
       run: dotnet build --no-restore --configuration Release --version-suffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Test
       run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions"
-    - name: Upload coverage
+    - name: Upload coverage to codecov.io
       if: matrix.os == 'ubuntu-latest'
       uses: codecov/codecov-action@v3
     - name: Create packages
       shell: pwsh
       run: dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
-    - name: Upload packages
+    - name: Upload packages to artifacts
       if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v3
       with:
