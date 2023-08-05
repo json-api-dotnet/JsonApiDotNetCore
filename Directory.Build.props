@@ -21,7 +21,7 @@
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)CSharpGuidelinesAnalyzer.config" Visible="False" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
+  <ItemGroup Condition="$(MSBuildProjectName.EndsWith('Tests')) And '$(TargetFramework)' != 'netstandard1.0'">
     <PackageReference Include="GitHubActionsTestLogger" Version="2.3.2" />
   </ItemGroup>
 
