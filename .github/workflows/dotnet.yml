@@ -63,7 +63,7 @@ jobs:
       shell: pwsh
       run: dotnet build --no-restore --configuration Release --version-suffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Test
-      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --verbosity normal --logger "GitHubActions;report-warnings=false"
+      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions"
     - name: Create packages
       shell: pwsh
       run: dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
