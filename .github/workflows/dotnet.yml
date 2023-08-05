@@ -11,10 +11,9 @@ on:
   pull_request:
     branches: [ 'master', 'release/**' ]
 
-# TODO: Find a way to cancel previous workflow run, without affecting matrix build
-#concurrency:
-#  group: ${{ github.workflow }}-${{ github.ref }}
-#  cancel-in-progress: true
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
@@ -26,6 +25,7 @@ env:
 jobs:
   build-and-test:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
