@@ -1,20 +1,11 @@
 image:
-  - Ubuntu2004
   - Visual Studio 2022
 
 version: '{build}'
 
-stack: postgresql 15
-
-environment:
-  PGUSER: postgres
-  PGPASSWORD: Password12!
-  GIT_ACCESS_TOKEN:
-    secure: WPzhuEyDE7yuHeEgLi3RoGJ8we+AHU6nMksbFoWQ0AmI/HJLh4bjOR0Jnnzc6aaG
-
 branches:
   only:
-  - does_not_exist
+  - master
 
 pull_requests:
   do_not_increment_build_number: true
@@ -24,72 +15,6 @@ nuget:
 
 matrix:
   fast_finish: true
-
-for:
--
-  matrix:
-    only:
-    - image: Visual Studio 2022
-  services:
-  - postgresql15
-  install:
-  # Temporary workaround for https://help.appveyor.com/discussions/questions/60488-postgresql-version
-  - net start postgresql-x64-15
-  # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
-  before_build:
-    - pwsh: |
-        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
-            # https://dotnet.github.io/docfx/tutorial/docfx_getting_started.html
-            git checkout $env:APPVEYOR_REPO_BRANCH -q
-        }
-  after_build:
-    - pwsh: |
-        CD ./docs
-        & ./generate-examples.ps1
-        & dotnet docfx docfx.json
-        if ($LastExitCode -ne 0) {
-            throw "docfx failed with exit code $LastExitCode."
-        }
-
-        # https://www.appveyor.com/docs/how-to/git-push/
-        git config --global credential.helper store
-        Set-Content -Path "$HOME\.git-credentials" -Value "https://$($env:GIT_ACCESS_TOKEN):x-oauth-basic@github.com`n" -NoNewline
-        git config --global user.email "cibuild@jsonapi.net"
-        git config --global user.name "json-api-cibuild"
-        git config --global core.autocrlf false
-        git config --global core.safecrlf false
-        git clone https://github.com/json-api-dotnet/JsonApiDotNetCore.git -b gh-pages origin_site -q
-        Copy-Item origin_site/.git _site -recurse
-        Copy-Item CNAME _site/CNAME
-        Copy-Item home/*.html _site/
-        Copy-Item home/*.ico _site/
-        New-Item -Force _site/styles -ItemType Directory | Out-Null
-        Copy-Item -Recurse home/assets/* _site/styles/
-        CD _site
-        git add -A 2>&1
-        git commit -m "Automated commit from cibuild" -q
-        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
-            git push origin gh-pages -q
-            echo "Documentation updated successfully."
-        }
-  artifacts:
-  - path: .\**\artifacts\**\*.nupkg
-    name: NuGet
-  deploy:
-  - provider: NuGet
-    skip_symbols: false
-    api_key:
-      secure: hlP/zkfkHzmutSXPYAiINmPdv+QEj3TpAjKewHEkCtQnHnA2tSo+Xey0g6FVM6S5
-    on:
-      branch: master
-      appveyor_repo_tag: true
-  - provider: NuGet
-    skip_symbols: false
-    api_key:
-      secure: hlP/zkfkHzmutSXPYAiINmPdv+QEj3TpAjKewHEkCtQnHnA2tSo+Xey0g6FVM6S5
-    on:
-      branch: /release\/.+/
-      appveyor_repo_tag: true
 
 build_script:
 - pwsh: |
@@ -107,6 +32,7 @@ build_script:
         psql --version
     }
 
-    .\Build.ps1
+    Write-Host "Build has been turned off"
+    #.\Build.ps1
 
 test: off
