@@ -1,12 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>$(TargetFrameworkName);netstandard1.0</TargetFrameworks>
+    <TargetFrameworks>$(TargetFrameworkName);netstandard2.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
-    <Using Remove="System.Net.Http" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\JsonApiDotNetCore.Annotations\JsonApiDotNetCore.Annotations.csproj" />
