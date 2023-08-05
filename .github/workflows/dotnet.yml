@@ -2,7 +2,7 @@
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
 # TODO: Review https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
-# TODO: Adapt name
+# TODO: Adapt name and .yml file name (resets package counter)
 name: .NET
 
 # Advantages
@@ -91,7 +91,6 @@ jobs:
 # TODO: Build documentation website and publish
 # TODO: Upload pre-release NuGet package - https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
 # TODO: Push to NuGet on new release
-# TODO: Upload coverage
 # TODO: Try CodeQL Analysis
 # TODO: Add dependabot.yml (GH Security: Enable Dependabot version updates)
 
