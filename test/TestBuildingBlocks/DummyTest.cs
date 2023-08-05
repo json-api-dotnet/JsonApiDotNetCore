@@ -17,4 +17,10 @@ public sealed class DummyTest
     {
         true.Should().BeFalse();
     }
+
+    [Fact(Skip = "Example")]
+    public void SkipAlways()
+    {
+        true.Should().BeFalse();
+    }
 }
