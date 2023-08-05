@@ -33,6 +33,7 @@ env:
 
 jobs:
   build-and-test:
+    # TODO: Make this a required check in GitHub settings
     strategy:
       fail-fast: false
       matrix:
@@ -73,7 +74,8 @@ jobs:
       run: dotnet build --no-restore --configuration Release --version-suffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Test
       run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions"
-    - name: Upload test coverage
+    - name: Upload coverage
+      if: matrix.os == 'ubuntu-latest'
       uses: codecov/codecov-action@v3
     - name: Create packages
       shell: pwsh
