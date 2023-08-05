@@ -12,12 +12,6 @@ public sealed class DummyTest
         // during test runs that no tests were found in this project.
     }
 
-    [Fact]
-    public void FailAlways()
-    {
-        true.Should().BeFalse();
-    }
-
     [Fact(Skip = "Example")]
     public void SkipAlways()
     {
