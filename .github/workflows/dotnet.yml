@@ -16,6 +16,13 @@ on:
 #  group: ${{ github.workflow }}-${{ github.ref }}
 #  cancel-in-progress: true
 
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  # Windows comes with PG pre-installed, and defines the PGPASSWORD environment variable. Remove it as it interferes
+  # with some of our tests
+  PGPASSWORD: ""
+
 jobs:
   build-and-test:
     strategy:

@@ -27,7 +27,7 @@ public sealed class AtomicTransactionConsistencyTests
             services.AddResourceRepository<MusicTrackRepository>();
             services.AddResourceRepository<LyricRepository>();
 
-            string postgresPassword = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? "postgres";
+            string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
 
             string dbConnectionString =
                 $"Host=localhost;Database=JsonApiTest-Extra-{Guid.NewGuid():N};User ID=postgres;Password={postgresPassword};Include Error Detail=true";

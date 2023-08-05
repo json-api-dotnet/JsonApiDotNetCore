@@ -75,7 +75,7 @@ static void ConfigureServices(WebApplicationBuilder builder)
 
 static string? GetConnectionString(IConfiguration configuration)
 {
-    string postgresPassword = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? "postgres";
+    string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
     return configuration.GetConnectionString("Default")?.Replace("###", postgresPassword);
 }
 

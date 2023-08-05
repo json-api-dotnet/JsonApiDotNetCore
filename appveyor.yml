@@ -7,8 +7,8 @@ version: '{build}'
 stack: postgresql 15
 
 environment:
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: Password12!
+  PGUSER: postgres
+  PGPASSWORD: Password12!
   GIT_ACCESS_TOKEN:
     secure: WPzhuEyDE7yuHeEgLi3RoGJ8we+AHU6nMksbFoWQ0AmI/HJLh4bjOR0Jnnzc6aaG
 
