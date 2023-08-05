@@ -21,6 +21,10 @@
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)CSharpGuidelinesAnalyzer.config" Visible="False" />
   </ItemGroup>
 
+  <ItemGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
+    <PackageReference Include="GitHubActionsTestLogger" Version="2.3.2" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <NoWarn>$(NoWarn);1591</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

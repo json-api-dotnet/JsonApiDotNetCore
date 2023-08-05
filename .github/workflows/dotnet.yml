@@ -77,6 +77,8 @@ jobs:
 # TODO: Upload pre-release NuGet package - https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
 # TODO: Push to NuGet on new release
 # TODO: Upload coverage
+# TODO: Try CodeQL Analysis
+# TODO: Add dependabot.yml (GH Security: Enable Dependabot version updates)
 
   inspect-code:
     strategy:
