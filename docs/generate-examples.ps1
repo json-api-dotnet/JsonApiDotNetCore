@@ -40,7 +40,7 @@ function Kill-WebServer {
 
 function Start-WebServer {
     Write-Output "Starting web server"
-    Start-Job -Name StartWebServer -ScriptBlock { dotnet run --no-build --project ..\src\Examples\GettingStarted\GettingStarted.csproj } #| Out-Null
+    Start-Job -Name StartWebServer -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj --property:TreatWarningsAsErrors=True } #| Out-Null
 
     $webProcessId = $null
     Do {
