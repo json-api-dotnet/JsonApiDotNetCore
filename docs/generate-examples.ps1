@@ -40,12 +40,19 @@ function Kill-WebServer {
 
 function Start-WebServer {
     Write-Output "Starting web server"
-    Start-Job -Name StartWebServer -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj --configuration Release --property:TreatWarningsAsErrors=True } #| Out-Null
+    $job = Start-Job -Name StartWebServer -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj --configuration Release --property:TreatWarningsAsErrors=True } #| Out-Null
 
     $webProcessId = $null
     Do {
         Start-Sleep -Seconds 1
-        Receive-Job -Name StartWebServer
+        Write-Output "Job status"
+        Get-Job -Name StartWebServer
+        Write-Output "Job output"
+        Receive-Job -Job $job
+
+        Write-Host "Trying web request..."
+        curl -s -f http://localhost:14141/api/books
+
         $webProcessId = Get-WebServer-ProcessId
     } While ($webProcessId -eq $null)
 }
