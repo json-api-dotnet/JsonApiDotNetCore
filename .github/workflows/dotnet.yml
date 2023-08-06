@@ -103,11 +103,17 @@ jobs:
         cd docs
         & ./generate-examples.ps1
         dotnet docfx docfx.json
+    - name: Upload documentation to artifacts
+      if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v3
+      with:
+        name: documentation
+        path: docs/_site
     - name: Publish documentation
       if: (github.event_name == 'push' && github.ref == 'refs/heads/main')
       shell: pwsh
       run: |
-        Write-Host "TODO: Publish docs"
+        Write-Host "TODO: Publish documentation"
 
 
   inspect-code:
