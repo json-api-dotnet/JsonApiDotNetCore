@@ -11,13 +11,13 @@ function Get-WebServer-ProcessId {
         $webProcessId = $(Get-NetTCPConnection -LocalPort 14141 -ErrorAction SilentlyContinue).OwningProcess?[0]
     }
     else {
-        throw [System.Exception] "Unsupported operating system."
+        throw "Unsupported operating system."
     }
 
     return $webProcessId
 }
 
-function Kill-WebServer {
+function Stop-WebServer {
     $webProcessId = Get-WebServer-ProcessId
 
     if ($webProcessId -ne $null) {
@@ -33,8 +33,7 @@ function Kill-WebServer {
 function Start-WebServer {
     Write-Output "Starting web server"
     $startTimeUtc = Get-Date -AsUTC
-    #$job = Start-Job -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj --configuration Release --property:TreatWarningsAsErrors=True --urls=http://0.0.0.0:14141 } #| Out-Null
-    $job = Start-Job -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj --configuration Release --property:TreatWarningsAsErrors=True }
+    $job = Start-Job -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj --configuration Release --property:TreatWarningsAsErrors=True --urls=http://0.0.0.0:14141 }
 
     $webProcessId = $null
     $timeout = [timespan]::FromSeconds(30)
@@ -46,12 +45,13 @@ function Start-WebServer {
     } While ($webProcessId -eq $null -and -not $hasTimedOut)
 
     if ($hasTimedOut) {
+        Write-Host "Failed to start web server, dumping output."
         Receive-Job -Job $job
         throw "Failed to start web server."
     }
 }
 
-Kill-WebServer
+Stop-WebServer
 Start-WebServer
 
 try {
@@ -65,10 +65,10 @@ try {
         & $scriptFile.FullName > .\request-examples\$jsonFileName
 
         if ($LastExitCode -ne 0) {
-            throw [System.Exception] "Example request from '$($scriptFile.Name)' failed with exit code $LastExitCode."
+            throw "Example request from '$($scriptFile.Name)' failed with exit code $LastExitCode."
         }
     }
 }
 finally {
-    Kill-WebServer
+    Stop-WebServer
 }
