@@ -5,6 +5,13 @@
 function Get-WebServer-ProcessId {
     $processId = $null
     if ($IsMacOS -Or $IsLinux) {
+        Write-Host "Test1"
+        netstat -ltnp | grep -w ':14141'
+        Write-Host "Test2"
+        lsof -i :14141
+        Write-Host "Test3"
+        fuser 14141/tcp
+        Write-Host "Original"
         $processId = $(lsof -ti:14141)
     }
     elseif ($IsWindows) {
@@ -33,7 +40,7 @@ function Kill-WebServer {
 
 function Start-WebServer {
     Write-Output "Starting web server"
-    Start-Job -Name StartWebServer -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj /p:TreatWarningsAsErrors=True } #| Out-Null
+    Start-Job -Name StartWebServer -ScriptBlock { dotnet run --no-build --project ..\src\Examples\GettingStarted\GettingStarted.csproj } #| Out-Null
 
     $webProcessId = $null
     Do {
