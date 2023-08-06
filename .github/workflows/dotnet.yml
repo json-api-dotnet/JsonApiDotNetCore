@@ -8,7 +8,7 @@
 name: .NET
 
 # Advantages
-# - Max parallel builds is 20 (MacOS 5)
+# - Max parallel builds (jobs) is 20 (MacOS 5)
 # - Job timeout is 6 hours, workflow 35 days
 # - Artifact retention is 90 days
 # - Linux runs faster
@@ -38,7 +38,7 @@ env:
 
 jobs:
   build-and-test:
-    # TODO: Make this a required check in GitHub settings
+    # TODO: Update required checks in GitHub settings
     strategy:
       fail-fast: false
       matrix:
@@ -93,7 +93,6 @@ jobs:
 #      with:
 #        name: packages
 #        path: artifacts/packages
-# TODO: Build documentation website and publish
 # TODO: Upload pre-release NuGet package - https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
 # TODO: Push to NuGet on new release
 # TODO: Try CodeQL Analysis
@@ -119,8 +118,8 @@ jobs:
       if: (github.event_name == 'push' && github.ref == 'refs/heads/main')
       shell: pwsh
       run: |
+        # TODO: publish to gh_pages
         Write-Host "TODO: Publish documentation"
-
 
   inspect-code:
     runs-on: ubuntu-latest
@@ -168,6 +167,7 @@ jobs:
             }
         }
   cleanup-code:
+    # TODO: Test with PR from community user (pull_request_target)
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
