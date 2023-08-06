@@ -33,13 +33,12 @@ function Kill-WebServer {
 
 function Start-WebServer {
     Write-Output "Starting web server"
-    Start-Job -Name StartWebServer -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj } | Out-Null
-    Start-Sleep -Seconds 5
-    Receive-Job -Name StartWebServer
+    Start-Job -Name StartWebServer -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj /p:TreatWarningsAsErrors=True } #| Out-Null
 
     $webProcessId = $null
     Do {
         Start-Sleep -Seconds 1
+        Receive-Job -Name StartWebServer
         $webProcessId = Get-WebServer-ProcessId
     } While ($webProcessId -eq $null)
 }
