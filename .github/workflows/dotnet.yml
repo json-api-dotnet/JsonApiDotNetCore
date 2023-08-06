@@ -9,6 +9,7 @@ name: .NET
 # - Parallel builds
 # - Linux runs faster
 # - Integrated in GitHub
+# - Rich ecosystem of actions
 # - Timings per operation (build, test, cleanup)
 # - Test summaries
 # - Improved security
@@ -93,6 +94,21 @@ jobs:
 # TODO: Push to NuGet on new release
 # TODO: Try CodeQL Analysis
 # TODO: Add dependabot.yml (GH Security: Enable Dependabot version updates)
+    - name: Generate documentation
+      shell: pwsh
+      env:
+        DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
+      run: |
+        Write-Host "Using branch name: $env:DOCFX_SOURCE_BRANCH_NAME"
+        cd docs
+        & ./generate-examples.ps1
+        dotnet docfx docfx.json
+    - name: Publish documentation
+      if: (github.event_name == 'push' && github.ref == 'refs/heads/main')
+      shell: pwsh
+      run: |
+        Write-Host "TODO: Publish docs"
+
 
   inspect-code:
     strategy:
