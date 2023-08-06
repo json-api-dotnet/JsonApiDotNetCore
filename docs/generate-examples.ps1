@@ -1,6 +1,6 @@
 #Requires -Version 7.0
 
-# This script generates response files (*.json) for the request scripts (*.ps1) in ./request-examples
+# This script generates response files (*.json) for .ps1 files in ./request-examples
 
 function Get-WebServer-ProcessId {
     $webProcessId = $null
@@ -41,11 +41,12 @@ function Start-WebServer {
 
     Do {
         Start-Sleep -Seconds 1
-        $webProcessId = Get-WebServer-ProcessId
         $hasTimedOut = ($(Get-Date -AsUTC) - $startTimeUtc) -gt $timeout
+        $webProcessId = Get-WebServer-ProcessId
     } While ($webProcessId -eq $null -and -not $hasTimedOut)
 
     if ($hasTimedOut) {
+        Receive-Job -Job $job
         throw "Failed to start web server."
     }
 }
