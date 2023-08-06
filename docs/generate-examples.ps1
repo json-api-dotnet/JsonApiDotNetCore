@@ -4,7 +4,7 @@
 
 function Get-WebServer-ProcessId {
     $processId = $null
-    if ($IsMacOS || $IsLinux) {
+    if ($IsMacOS -or $IsLinux) {
         $processId = $(lsof -ti:14141)
     }
     elseif ($IsWindows) {

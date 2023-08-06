@@ -2,6 +2,7 @@
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
 # TODO: Review https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
+# TODO: Review https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
 # TODO: Adapt name and .yml file name (resets package counter)
 name: .NET
 
@@ -104,12 +105,13 @@ jobs:
         & ./generate-examples.ps1
         dotnet docfx docfx.json
     - name: Upload documentation to artifacts
-      if: matrix.os == 'ubuntu-latest'
+      if: matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v3
       with:
         name: documentation
         path: docs/_site
     - name: Publish documentation
+      # TODO: Setup Deployment protection rules (https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
       if: (github.event_name == 'push' && github.ref == 'refs/heads/main')
       shell: pwsh
       run: |
