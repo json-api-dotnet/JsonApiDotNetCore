@@ -33,7 +33,9 @@ function Stop-WebServer {
 function Start-WebServer {
     Write-Output "Starting web server"
     $startTimeUtc = Get-Date -AsUTC
-    $job = Start-Job -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj --configuration Release --property:TreatWarningsAsErrors=True --urls=http://0.0.0.0:14141 }
+    $job = Start-Job -ScriptBlock {
+        dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj --configuration Release --property:TreatWarningsAsErrors=True --urls=http://0.0.0.0:14141
+    }
 
     $webProcessId = $null
     $timeout = [timespan]::FromSeconds(30)
