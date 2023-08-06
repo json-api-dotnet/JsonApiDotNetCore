@@ -1,6 +1,6 @@
 #Requires -Version 7.0
 
-# This script generates response files (*.json) for .ps1 files in ./request-examples
+# This script generates HTTP response files (*.json) for .ps1 files in ./request-examples
 
 function Get-WebServer-ProcessId {
     $webProcessId = $null
