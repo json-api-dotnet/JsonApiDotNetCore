@@ -3,34 +3,34 @@
 # This script generates response documents for ./request-examples
 
 function Get-WebServer-ProcessId {
-    $processId = $null
+    $webProcessId = $null
     if ($IsMacOS -Or $IsLinux) {
-        Write-Host "Test1"
-        netstat -ltnp | grep -w ':14141'
-        Write-Host "Test2"
-        lsof -i :14141
-        Write-Host "Test3"
-        fuser 14141/tcp
-        Write-Host "Original"
-        $processId = $(lsof -ti:14141)
+        #Write-Host "Test1"
+        #netstat -ltnp | grep -w ':14141'
+        #Write-Host "Test2"
+        #lsof -i :14141
+        #Write-Host "Test3"
+        #fuser 14141/tcp
+        #Write-Host "Original"
+        $webProcessId = $(lsof -ti:14141)
     }
     elseif ($IsWindows) {
-        $processId = $(Get-NetTCPConnection -LocalPort 14141 -ErrorAction SilentlyContinue).OwningProcess?[0]
+        $webProcessId = $(Get-NetTCPConnection -LocalPort 14141 -ErrorAction SilentlyContinue).OwningProcess?[0]
     }
     else {
         throw [System.Exception] "Unsupported operating system."
     }
 
-    Write-Host "Returning PID $processId"
-    return $processId
+    Write-Host "ASP.NET process ID: $webProcessId"
+    return $webProcessId
 }
 
 function Kill-WebServer {
-    $processId = Get-WebServer-ProcessId
+    $webProcessId = Get-WebServer-ProcessId
 
-    if ($processId -ne $null) {
+    if ($webProcessId -ne $null) {
         Write-Output "Stopping web server"
-        Get-Process -Id $processId | Stop-Process -ErrorVariable stopErrorMessage
+        Get-Process -Id $webProcessId | Stop-Process -ErrorVariable stopErrorMessage
 
         if ($stopErrorMessage) {
             throw "Failed to stop web server: $stopErrorMessage"
@@ -45,13 +45,13 @@ function Start-WebServer {
     $webProcessId = $null
     Do {
         Start-Sleep -Seconds 1
-        Write-Output "Job status"
-        Get-Job -Name StartWebServer
-        Write-Output "Job output"
-        Receive-Job -Job $job
+        #Write-Output "Job status"
+        #Get-Job -Name StartWebServer
+        #Write-Output "Job output"
+        #Receive-Job -Job $job
 
-        Write-Host "Trying web request..."
-        curl -v -f http://localhost:14141/api/books
+        #Write-Host "Trying web request..."
+        #curl -v -f http://localhost:14141/api/books
 
         $webProcessId = Get-WebServer-ProcessId
     } While ($webProcessId -eq $null)
