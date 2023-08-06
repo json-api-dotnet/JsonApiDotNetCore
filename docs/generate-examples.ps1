@@ -51,7 +51,7 @@ function Start-WebServer {
         Receive-Job -Job $job
 
         Write-Host "Trying web request..."
-        curl -s -f http://localhost:14141/api/books
+        curl -v -f http://localhost:14141/api/books
 
         $webProcessId = Get-WebServer-ProcessId
     } While ($webProcessId -eq $null)
