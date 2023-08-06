@@ -14,6 +14,7 @@ function Get-WebServer-ProcessId {
         throw [System.Exception] "Unsupported operating system."
     }
 
+    Write-Host "Returning PID $processId"
     return $processId
 }
 
@@ -32,7 +33,7 @@ function Kill-WebServer {
 
 function Start-WebServer {
     Write-Output "Starting web server"
-    Start-Job -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj } | Out-Null
+    Start-Job -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj } #| Out-Null
 
     $webProcessId = $null
     Do {
