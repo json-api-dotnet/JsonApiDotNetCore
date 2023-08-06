@@ -1,17 +1,10 @@
 #Requires -Version 7.0
 
-# This script generates response documents for ./request-examples
+# This script generates response files (*.json) for the request scripts (*.ps1) in ./request-examples
 
 function Get-WebServer-ProcessId {
     $webProcessId = $null
     if ($IsMacOS -Or $IsLinux) {
-        #Write-Host "Test1"
-        #netstat -ltnp | grep -w ':14141'
-        #Write-Host "Test2"
-        #lsof -i :14141
-        #Write-Host "Test3"
-        #fuser 14141/tcp
-        #Write-Host "Original"
         $webProcessId = $(lsof -ti:14141)
     }
     elseif ($IsWindows) {
@@ -21,7 +14,6 @@ function Get-WebServer-ProcessId {
         throw [System.Exception] "Unsupported operating system."
     }
 
-    Write-Host "ASP.NET process ID: $webProcessId"
     return $webProcessId
 }
 
@@ -40,21 +32,22 @@ function Kill-WebServer {
 
 function Start-WebServer {
     Write-Output "Starting web server"
-    $job = Start-Job -Name StartWebServer -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj --configuration Release --property:TreatWarningsAsErrors=True --urls=http://0.0.0.0:14141 } #| Out-Null
+    $startTimeUtc = Get-Date -AsUTC
+    #$job = Start-Job -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj --configuration Release --property:TreatWarningsAsErrors=True --urls=http://0.0.0.0:14141 } | Out-Null
+    $job = Start-Job -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj --configuration Release --property:TreatWarningsAsErrors=True } | Out-Null
 
     $webProcessId = $null
+    $timeout = [timespan]::FromSeconds(30)
+
     Do {
         Start-Sleep -Seconds 1
-        #Write-Output "Job status"
-        #Get-Job -Name StartWebServer
-        #Write-Output "Job output"
-        #Receive-Job -Job $job
-
-        #Write-Host "Trying web request..."
-        #curl -v -f http://localhost:14141/api/books
-
         $webProcessId = Get-WebServer-ProcessId
-    } While ($webProcessId -eq $null)
+        $hasTimedOut = ($(Get-Date -AsUTC) - $startTimeUtc) -gt $timeout
+    } While ($webProcessId -eq $null -and -not $hasTimedOut)
+
+    if ($hasTimedOut) {
+        throw "Failed to start web server."
+    }
 }
 
 Kill-WebServer

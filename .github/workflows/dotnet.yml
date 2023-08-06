@@ -8,7 +8,9 @@
 name: .NET
 
 # Advantages
-# - Parallel builds
+# - Max parallel builds is 20 (MacOS 5)
+# - Job timeout is 6 hours, workflow 35 days
+# - Artifact retention is 90 days
 # - Linux runs faster
 # - Integrated in GitHub
 # - Rich ecosystem of actions
