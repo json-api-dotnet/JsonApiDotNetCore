@@ -45,11 +45,6 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - name: Update PowerShell
-      shell: pwsh
-      run: |
-        Invoke-Expression "& { $(Invoke-RestMethod 'https://aka.ms/install-powershell.ps1') } -Quiet -AddToPath"
-        pwsh --version
     - name: Setup PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v4
       with:
@@ -61,6 +56,16 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
+    - name: Update PowerShell
+      shell: pwsh
+      run: |
+        dotnet tool install --global PowerShell
+        #Invoke-Expression "& { $(Invoke-RestMethod 'https://aka.ms/install-powershell.ps1') } -UseMSI -Quiet"
+        pwsh --version
+    - name: Show PowerShell version
+      shell: pwsh
+      run: |
+        pwsh --version
     - name: Restore tools
       run: dotnet tool restore
     - name: Restore packages
