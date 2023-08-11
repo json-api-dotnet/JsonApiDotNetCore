@@ -54,15 +54,41 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Setup PowerShell
-      shell: pwsh
+    - name: Setup PowerShell (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
       run: |
-        dotnet tool install --global PowerShell
-        Write-Host "${HOME}/.dotnet/tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        # Update the list of packages
+        sudo apt-get update
+        # Install pre-requisite packages.
+        sudo apt-get install -y wget apt-transport-https software-properties-common
+        # Download the Microsoft repository GPG keys
+        wget -q "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
+        # Register the Microsoft repository GPG keys
+        sudo dpkg -i packages-microsoft-prod.deb
+        # Delete the the Microsoft repository GPG keys file
+        rm packages-microsoft-prod.deb
+        # Update the list of packages after we added packages.microsoft.com
+        sudo apt-get update
+        # Install PowerShell
+        sudo apt-get install -y powershell
+    - name: Setup PowerShell (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        winget install --id Microsoft.Powershell --source winget
+    - name: Setup PowerShell (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        brew install --cask powershell
+    #- name: Setup PowerShell
+    #  shell: pwsh
+    #  run: |
+    #    dotnet tool install --global PowerShell
+    #    #Write-Host "${HOME}/.dotnet/tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
     - name: Show installed versions
       shell: pwsh
       run: |
-        pwsh --version
+        Write-Host "$(pwsh --version) is installed at $PSHOME"
         psql --version
         Write-Host "Using .NET SDK: $(dotnet --version)"
         Write-Host "Installed .NET SDKs:"
