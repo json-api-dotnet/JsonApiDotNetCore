@@ -77,7 +77,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         Invoke-WebRequest -Uri "https://github.com/PowerShell/PowerShell/releases/download/v7.3.6/PowerShell-7.3.6-win-x64.zip" -OutFile "$env:RUNNER_TEMP\\PowerShell-7.3.6-win-x64.zip"
-        Expand-Archive -LiteralPath "$env:RUNNER_TEMP\\PowerShell-7.3.6-win-x64.zip" -DestinationPath "C:\Program Files\PowerShell\7"
+        Expand-Archive -LiteralPath "$env:RUNNER_TEMP\\PowerShell-7.3.6-win-x64.zip" -DestinationPath "C:\Program Files\PowerShell\7" -Force
     - name: Setup PowerShell (macOS)
       if: matrix.os == 'macos-latest'
       run: |
