@@ -89,20 +89,20 @@ jobs:
     - name: Build
       shell: pwsh
       run: dotnet build --no-restore --configuration Release --version-suffix=$env:PACKAGE_VERSION_SUFFIX
-#    - name: Test
-#      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions"
-#    - name: Upload coverage to codecov.io
-#      if: matrix.os == 'ubuntu-latest'
-#      uses: codecov/codecov-action@v3
-#    - name: Create packages
-#      shell: pwsh
-#      run: dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
-#    - name: Upload packages to artifacts
-#      if: matrix.os == 'ubuntu-latest'
-#      uses: actions/upload-artifact@v3
-#      with:
-#        name: packages
-#        path: artifacts/packages
+    - name: Test
+      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions"
+    - name: Upload coverage to codecov.io
+      if: matrix.os == 'ubuntu-latest'
+      uses: codecov/codecov-action@v3
+    - name: Create packages
+      shell: pwsh
+      run: dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
+    - name: Upload packages to artifacts
+      #if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v3
+      with:
+        name: packages-${{ matrix.os }}
+        path: artifacts/packages
 # TODO: Upload pre-release NuGet package - https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
 # TODO: Push to NuGet on new release
 # TODO: Try CodeQL Analysis
@@ -117,10 +117,10 @@ jobs:
         & ./generate-examples.ps1
         dotnet docfx docfx.json
     - name: Upload documentation to artifacts
-      if: matrix.os == 'windows-latest'
+      #if: matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v3
       with:
-        name: documentation
+        name: documentation-${{ matrix.os }}
         path: docs/_site
     - name: Publish documentation
       # TODO: Setup Deployment protection rules (https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
