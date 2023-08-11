@@ -72,7 +72,7 @@ jobs:
         Write-Host "Directories in PATH:"
         $(Get-ChildItem env:PATH).Value
         Write-Host "Environment variables:"
-        get-childitem env: | Format-Table -Wrap -AutoSize
+        dir env: | %{"{0}={1}" -f $_.Name,$_.Value}
     - name: Git checkout
       uses: actions/checkout@v3
     - name: Restore tools
