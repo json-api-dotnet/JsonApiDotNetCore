@@ -50,22 +50,22 @@ jobs:
       with:
         username: postgres
         password: postgres
-    - name: Git checkout
-      uses: actions/checkout@v3
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Update PowerShell
+    - name: Setup PowerShell
       shell: pwsh
       run: |
         dotnet tool install --global PowerShell
-        #Invoke-Expression "& { $(Invoke-RestMethod 'https://aka.ms/install-powershell.ps1') } -UseMSI -Quiet"
-        pwsh --version
-    - name: Show PowerShell version
+    - name: Show installed versions
       shell: pwsh
       run: |
         pwsh --version
+        dotnet --version
+        psql --version
+    - name: Git checkout
+      uses: actions/checkout@v3
     - name: Restore tools
       run: dotnet tool restore
     - name: Restore packages
