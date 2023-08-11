@@ -39,6 +39,7 @@ env:
 jobs:
   build-and-test:
     # TODO: Update required checks in GitHub settings
+    # TODO: Update status badges in README.md
     strategy:
       fail-fast: false
       matrix:
