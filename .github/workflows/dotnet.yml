@@ -60,23 +60,6 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         dotnet tool install --global PowerShell
-
-        # Below takes 25 sec, is the above faster?
-
-        # Update the list of packages
-        #sudo apt-get update
-        # Install pre-requisite packages.
-        #sudo apt-get install -y wget apt-transport-https software-properties-common
-        # Download the Microsoft repository GPG keys
-        #wget -q "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
-        # Register the Microsoft repository GPG keys
-        #sudo dpkg -i packages-microsoft-prod.deb
-        # Delete the the Microsoft repository GPG keys file
-        #rm packages-microsoft-prod.deb
-        # Update the list of packages after we added packages.microsoft.com
-        #sudo apt-get update
-        # Install PowerShell
-        #sudo apt-get install -y powershell
     - name: Setup PowerShell (Windows)
       if: matrix.os == 'windows-latest'
       shell: cmd
@@ -109,6 +92,7 @@ jobs:
     - name: Calculate version suffix
       shell: pwsh
       run: |
+        # TODO: Fail when package tag prefix does not match the version prefix stored in Directory.Build.props?
         if ($env:GITHUB_REF_TYPE -eq 'tag') {
             # Get the version suffix from the repo tag. Example: v1.0.0-preview1-final => preview1-final
             $segments = $env:GITHUB_REF_NAME -split "-"
@@ -142,19 +126,16 @@ jobs:
 # TODO: Push to NuGet on new release
 # TODO: Try CodeQL Analysis
 # TODO: Add dependabot.yml (GH Security: Enable Dependabot version updates)
+# TODO: Reorder steps so that unreversible actions come last
     - name: Generate documentation
       shell: pwsh
       env:
         DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
       run: |
-        Write-Host "Using branch name: $env:DOCFX_SOURCE_BRANCH_NAME"
+        Write-Host "Using docfx branch name: $env:DOCFX_SOURCE_BRANCH_NAME"
         cd docs
         & ./generate-examples.ps1
         dotnet docfx docfx.json
-    - name: Build website
-      shell: pwsh
-      run: |
-        cd docs
         Copy-Item CNAME _site/CNAME
         Copy-Item home/*.html _site/
         Copy-Item home/*.ico _site/
@@ -165,7 +146,7 @@ jobs:
       with:
         name: documentation-${{ matrix.os }}
         path: docs/_site
-    - name: Publish website
+    - name: Publish documentation
       # TODO: Setup Deployment protection rules (https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
       if: (github.event_name == 'push' && github.ref == 'refs/heads/main')
       shell: pwsh
