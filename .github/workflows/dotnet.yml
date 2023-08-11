@@ -91,14 +91,12 @@ jobs:
         Write-Host "$(pwsh --version) is installed at $PSHOME"
         psql --version
         Write-Host "Using .NET SDK: $(dotnet --version)"
-        Write-Host "Installed .NET SDKs:"
-        dotnet --list-sdks --list-runtimes
-        Write-Host "Installed .NET runtimes:"
-        dotnet --list-runtimes
-        Write-Host "Directories in PATH:"
-        $(Get-ChildItem env:PATH).Value
-        Write-Host "Environment variables:"
-        dir env: | %{"{0}={1}" -f $_.Name,$_.Value}
+        #Write-Host "Installed .NET SDKs:"
+        #dotnet --list-sdks --list-runtimes
+        #Write-Host "Installed .NET runtimes:"
+        #dotnet --list-runtimes
+        #Write-Host "Environment variables:"
+        #dir env: | %{"{0}={1}" -f $_.Name,$_.Value}
     - name: Git checkout
       uses: actions/checkout@v3
     - name: Restore tools
