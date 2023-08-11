@@ -62,8 +62,12 @@ jobs:
       shell: pwsh
       run: |
         pwsh --version
-        Write-Host ".NET SDK version: $(dotnet --version)"
         psql --version
+        Write-Host "Using .NET SDK: $(dotnet --version)"
+        Write-Host "Installed .NET SDKs"
+        dotnet --list-sdks --list-runtimes
+        Write-Host "Installed .NET runtimes"
+        dotnet --list-runtimes
     - name: Git checkout
       uses: actions/checkout@v3
     - name: Restore tools
