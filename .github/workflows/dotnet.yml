@@ -62,7 +62,7 @@ jobs:
       shell: pwsh
       run: |
         pwsh --version
-        dotnet --version
+        Write-Host ".NET SDK version: $(dotnet --version)"
         psql --version
     - name: Git checkout
       uses: actions/checkout@v3
