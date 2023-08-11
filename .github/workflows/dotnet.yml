@@ -48,7 +48,7 @@ jobs:
     - name: Update PowerShell
       shell: pwsh
       run: |
-        Invoke-Expression "& { $(irm https://aka.ms/install-powershell.ps1) } -Quiet -AddToPath"
+        Invoke-Expression "& { $(Invoke-RestMethod 'https://aka.ms/install-powershell.ps1') } -Quiet -AddToPath"
         pwsh --version
     - name: Setup PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v4
