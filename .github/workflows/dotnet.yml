@@ -151,13 +151,22 @@ jobs:
         cd docs
         & ./generate-examples.ps1
         dotnet docfx docfx.json
+    - name: Build website
+      shell: pwsh
+      run: |
+        cd docs
+        Copy-Item CNAME _site/CNAME
+        Copy-Item home/*.html _site/
+        Copy-Item home/*.ico _site/
+        New-Item -Force _site/styles -ItemType Directory | Out-Null
+        Copy-Item -Recurse home/assets/* _site/styles/
     - name: Upload documentation to artifacts
       #if: matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v3
       with:
         name: documentation-${{ matrix.os }}
         path: docs/_site
-    - name: Publish documentation
+    - name: Publish website
       # TODO: Setup Deployment protection rules (https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
       if: (github.event_name == 'push' && github.ref == 'refs/heads/main')
       shell: pwsh
