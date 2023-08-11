@@ -70,7 +70,9 @@ jobs:
         Write-Host "Installed .NET runtimes:"
         dotnet --list-runtimes
         Write-Host "Directories in PATH:"
-        get-childitem env:
+        $(get-childitem env:path).Value
+        Write-Host "Environment variables:"
+        get-childitem env: | Format-Table -Wrap -AutoSize
     - name: Git checkout
       uses: actions/checkout@v3
     - name: Restore tools
