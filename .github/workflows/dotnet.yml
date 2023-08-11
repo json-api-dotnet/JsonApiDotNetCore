@@ -148,6 +148,7 @@ jobs:
         path: docs/_site
     - name: Publish documentation
       # TODO: Setup Deployment protection rules (https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
+      # Better for us: https://github.com/peaceiris/actions-gh-pages
       if: (github.event_name == 'push' && github.ref == 'refs/heads/main')
       shell: pwsh
       run: |
