@@ -40,6 +40,7 @@ jobs:
   build-and-test:
     # TODO: Update required checks in GitHub settings
     # TODO: Update status badges in README.md
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -75,6 +76,7 @@ jobs:
     - name: Setup PowerShell (Windows)
       if: matrix.os == 'windows-latest'
       run: |
+        Invoke-WebRequest -Uri "https://github.com/PowerShell/PowerShell/releases/download/v7.3.6/PowerShell-7.3.6-win-x64.msi"
         msiexec.exe /package PowerShell-7.3.6-win-x64.msi /quiet USE_MU=1 ENABLE_MU=1 ADD_PATH=1 DISABLE_TELEMETRY=1 
     - name: Setup PowerShell (macOS)
       if: matrix.os == 'macos-latest'
@@ -174,6 +176,7 @@ jobs:
         Write-Host "TODO: Publish documentation"
 
   inspect-code:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
     - name: Git checkout
@@ -219,8 +222,9 @@ jobs:
             }
         }
   cleanup-code:
+    timeout-minutes: 30
     # TODO: Test with PR from community user (pull_request_target)
-    if: github.event_name == 'pull_request'
+    #if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
     - name: Git checkout
