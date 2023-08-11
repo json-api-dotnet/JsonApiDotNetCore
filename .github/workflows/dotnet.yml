@@ -39,7 +39,7 @@ env:
 jobs:
   build-and-test:
     # TODO: Update required checks in GitHub settings
-    # TODO: Update status badges in README.md
+    # TODO: Update status badge in /README.md
     timeout-minutes: 30
     strategy:
       fail-fast: false
@@ -47,32 +47,36 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    #- name: Setup PostgreSQL
-    #  uses: ikalnytskyi/action-setup-postgres@v4
-    #  with:
-    #    username: postgres
-    #    password: postgres
-    #- name: Setup .NET
-    #  uses: actions/setup-dotnet@v3
-    #  with:
-    #    dotnet-version: 6.0.x
+    - name: Setup PostgreSQL
+      uses: ikalnytskyi/action-setup-postgres@v4
+      with:
+        username: postgres
+        password: postgres
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
     - name: Setup PowerShell (Ubuntu)
       if: matrix.os == 'ubuntu-latest'
       run: |
+        dotnet tool install --global PowerShell
+
+        # Below takes 25 sec, is the above faster?
+
         # Update the list of packages
-        sudo apt-get update
+        #sudo apt-get update
         # Install pre-requisite packages.
-        sudo apt-get install -y wget apt-transport-https software-properties-common
+        #sudo apt-get install -y wget apt-transport-https software-properties-common
         # Download the Microsoft repository GPG keys
-        wget -q "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
+        #wget -q "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb"
         # Register the Microsoft repository GPG keys
-        sudo dpkg -i packages-microsoft-prod.deb
+        #sudo dpkg -i packages-microsoft-prod.deb
         # Delete the the Microsoft repository GPG keys file
-        rm packages-microsoft-prod.deb
+        #rm packages-microsoft-prod.deb
         # Update the list of packages after we added packages.microsoft.com
-        sudo apt-get update
+        #sudo apt-get update
         # Install PowerShell
-        sudo apt-get install -y powershell
+        #sudo apt-get install -y powershell
     - name: Setup PowerShell (Windows)
       if: matrix.os == 'windows-latest'
       shell: cmd
@@ -84,11 +88,6 @@ jobs:
       run: |
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         brew install --cask powershell
-    #- name: Setup PowerShell
-    #  shell: pwsh
-    #  run: |
-    #    dotnet tool install --global PowerShell
-    #    #Write-Host "${HOME}/.dotnet/tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
     - name: Show installed versions
       shell: pwsh
       run: |
@@ -135,7 +134,6 @@ jobs:
       shell: pwsh
       run: dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Upload packages to artifacts
-      #if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v3
       with:
         name: packages-${{ matrix.os }}
@@ -163,7 +161,6 @@ jobs:
         New-Item -Force _site/styles -ItemType Directory | Out-Null
         Copy-Item -Recurse home/assets/* _site/styles/
     - name: Upload documentation to artifacts
-      #if: matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v3
       with:
         name: documentation-${{ matrix.os }}
@@ -225,7 +222,6 @@ jobs:
   cleanup-code:
     timeout-minutes: 30
     # TODO: Test with PR from community user (pull_request_target)
-    #if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
     - name: Git checkout
@@ -241,6 +237,7 @@ jobs:
     - name: Restore packages
       run: dotnet restore
     - name: CleanupCode (on PR diff)
+      if: github.event_name == 'pull_request'
       shell: pwsh
       run: |
         # Not using the environment variables for SHAs, because they may be outdated. This happens on force-push after the build is queued, but before it starts.
@@ -256,3 +253,4 @@ jobs:
         else {
             Write-Output "No changed files in pull request."
         }
+      # TODO: Full cleanup on branch
