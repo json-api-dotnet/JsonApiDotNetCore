@@ -45,6 +45,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
+    - name: Update PowerShell
+      shell: pwsh
+      run: |
+        Invoke-Expression "& { $(irm https://aka.ms/install-powershell.ps1) } -Quiet -AddToPath"
+        pwsh --version
     - name: Setup PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v4
       with:
@@ -101,7 +106,6 @@ jobs:
       shell: pwsh
       env:
         DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
-        DOTNET_GENERATE_ASPNET_CERTIFICATE: false
       run: |
         Write-Host "Using branch name: $env:DOCFX_SOURCE_BRANCH_NAME"
         cd docs
