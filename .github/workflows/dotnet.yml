@@ -126,7 +126,19 @@ jobs:
 # TODO: Push to NuGet on new release
 # TODO: Try CodeQL Analysis
 # TODO: Add dependabot.yml (GH Security: Enable Dependabot version updates)
-# TODO: Reorder steps so that unreversible actions come last
+#         Keep actions up-to-date: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+#           in .github/dependabot.yml:
+#         version: 2
+#         updates:
+#         - package-ecosystem: "github-actions"
+#           directory: "/"
+#           schedule:
+#             interval: "daily"
+#           labels:
+#           - "CI/CD"
+#           commit-message:
+#             prefix: ci
+# TODO: Reorder steps so that irreversible actions come last
     - name: Generate documentation
       shell: pwsh
       env:
@@ -149,11 +161,16 @@ jobs:
     - name: Publish documentation
       # TODO: Setup Deployment protection rules (https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
       # Better for us: https://github.com/peaceiris/actions-gh-pages
-      if: (github.event_name == 'push' && github.ref == 'refs/heads/main')
-      shell: pwsh
-      run: |
-        # TODO: publish to gh_pages
-        Write-Host "TODO: Publish documentation"
+      #if: (github.event_name == 'push' && github.ref == 'refs/heads/main')
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        # TODO: Delete GitHub PAT
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages-test
+        publish_dir: ./docs/_site
+        #keep_files: true
+        #commit_message: ${{ github.event.head_commit.message }}
+        #full_commit_message: ${{ github.event.head_commit.message }}
 
   inspect-code:
     timeout-minutes: 30
