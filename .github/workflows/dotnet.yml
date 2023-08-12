@@ -1,24 +1,27 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-# TODO: Restore notification for failed actions
+# TODO: Post-cleanup
+# - Restore notification for failed actions in GitHub settings
+# - Update required status checks in GitHub settings
+# - Delete GitHub PAT after decommission of AppVeyor
+# - Recycle NuGet key? Affects MongoDB
+# - Document advantages in PR description
+#   - Max parallel builds (jobs) is 20 (MacOS 5)
+#   - Job timeout is 6 hours, workflow 35 days
+#   - Artifact retention is 90 days
+#   - Linux runs much faster
+#   - Managemnt UI integrated in GitHub, includes test summaries
+#   - Rich ecosystem of actions
+#   - Shows timings per operation (build, test, cleanup)
+#   - Improved security
+#   - Easier to try .NET preview versions
+
 # TODO: Review https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
 # TODO: Review https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
 # TODO: Adapt name and .yml file name (resets package counter)
     # TODO: Update status badge in /README.md (depends on workflow name)
 name: .NET
-
-# Advantages
-# - Max parallel builds (jobs) is 20 (MacOS 5)
-# - Job timeout is 6 hours, workflow 35 days
-# - Artifact retention is 90 days
-# - Linux runs faster
-# - Integrated in GitHub
-# - Rich ecosystem of actions
-# - Timings per operation (build, test, cleanup)
-# - Test summaries
-# - Improved security
-# - Easier to try .NET preview versions
 
 on:
   push:
@@ -39,7 +42,6 @@ env:
 
 jobs:
   build-and-test:
-    # TODO: Update required checks in GitHub settings
     timeout-minutes: 30
     strategy:
       fail-fast: false
@@ -163,7 +165,6 @@ jobs:
       if: matrix.os == 'ubuntu-latest' && github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v3
       with:
-        # TODO: Delete GitHub PAT after decommission of AppVeyor
         # TODO: Test a real deployment (change target to "gh-pages" branch below)
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages-test
@@ -220,7 +221,6 @@ jobs:
         }
   cleanup-code:
     timeout-minutes: 30
-    # TODO: Test with PR from community user (pull_request_target)
     runs-on: ubuntu-latest
     steps:
     - name: Git checkout
@@ -235,26 +235,26 @@ jobs:
       run: dotnet tool restore
     - name: Restore packages
       run: dotnet restore
-#    - name: CleanupCode (on PR diff)
-#      if: github.event_name == 'pull_request'
-#      shell: pwsh
-#      run: |
-#        # Not using the environment variables for SHAs, because they may be outdated. This happens on force-push after the build is queued, but before it starts.
-#        # The below works because HEAD is at the merge commit, so HEAD~1 is at the base branch.
-#        $headCommitHash = git rev-parse HEAD
-#        $baseCommitHash = git rev-parse HEAD~1
-#
-#        # TODO: What happens when PR is empty?
-#        if ($baseCommitHash -ne $headCommitHash) {
-#            Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
-#            dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
-#        }
-#        else {
-#            Write-Output "No changed files in pull request."
-#        }
-    - name: CleanupCode (on branch)
-      #if: github.event_name == 'push'
+    - name: CleanupCode (on PR diff)
+      # TODO: Test with PR from community user (pull_request_target)
       if: github.event_name == 'pull_request'
+      shell: pwsh
+      run: |
+        # Not using the environment variables for SHAs, because they may be outdated. This happens on force-push after the build is queued, but before it starts.
+        # The below works because HEAD is detached (at the merge commit), so HEAD~1 is at the base branch.
+        $headCommitHash = git rev-parse HEAD
+        $baseCommitHash = git rev-parse HEAD~1
+
+        # TODO: What happens when PR is empty?
+        if ($baseCommitHash -ne $headCommitHash) {
+            Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
+            dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
+        }
+        else {
+            Write-Output "No changed files in pull request."
+        }
+    - name: CleanupCode (on branch)
+      if: github.event_name == 'push'
       shell: pwsh
       run: |
         Write-Output "Running code cleanup on all files in branch."
