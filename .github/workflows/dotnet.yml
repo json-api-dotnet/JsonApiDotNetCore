@@ -140,7 +140,7 @@ jobs:
 #           commit-message:
 #             prefix: ci
 # TODO: Reorder steps so that irreversible actions come last
-    - name: Generate documentation
+    - name: Generate documentation website
       shell: pwsh
       env:
         DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
@@ -154,26 +154,23 @@ jobs:
         Copy-Item home/*.ico _site/
         New-Item -Force _site/styles -ItemType Directory | Out-Null
         Copy-Item -Recurse home/assets/* _site/styles/
-    - name: Upload documentation to artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: documentation-${{ matrix.os }}
-        path: docs/_site
-    - name: Publish documentation
-      # TODO: Setup Deployment protection rules (https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
-      # Better for us: https://github.com/peaceiris/actions-gh-pages
-      #if: (github.event_name == 'push' && github.ref == 'refs/heads/main')
-      if: matrix.os == 'ubuntu-latest'
+#    - name: Upload documentation website to artifacts
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: documentation-${{ matrix.os }}
+#        path: docs/_site
+    - name: Publish documentation website
+      if: matrix.os == 'ubuntu-latest' && github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v3
       with:
-        # TODO: Delete GitHub PAT
+        # TODO: Delete GitHub PAT after decommission of AppVeyor
+        # TODO: Test a real deployment (change target to "gh-pages" branch below)
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages-test
         publish_dir: ./docs/_site
         user_name: 'github-actions-bot'
         user_email: 'github-actions-bot@users.noreply.github.com'
-        commit_message: Automated commit from cibuild
-        #full_commit_message: ${{ github.event.head_commit.message }}
+        commit_message: 'Automated commit from cibuild'
 
   inspect-code:
     timeout-minutes: 30
