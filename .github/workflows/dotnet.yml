@@ -235,21 +235,27 @@ jobs:
       run: dotnet tool restore
     - name: Restore packages
       run: dotnet restore
-    - name: CleanupCode (on PR diff)
+#    - name: CleanupCode (on PR diff)
+#      if: github.event_name == 'pull_request'
+#      shell: pwsh
+#      run: |
+#        # Not using the environment variables for SHAs, because they may be outdated. This happens on force-push after the build is queued, but before it starts.
+#        # The below works because HEAD is at the merge commit, so HEAD~1 is at the base branch.
+#        $headCommitHash = git rev-parse HEAD
+#        $baseCommitHash = git rev-parse HEAD~1
+#
+#        # TODO: What happens when PR is empty?
+#        if ($baseCommitHash -ne $headCommitHash) {
+#            Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
+#            dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
+#        }
+#        else {
+#            Write-Output "No changed files in pull request."
+#        }
+    - name: CleanupCode (on branch)
+      #if: github.event_name == 'push'
       if: github.event_name == 'pull_request'
       shell: pwsh
       run: |
-        # Not using the environment variables for SHAs, because they may be outdated. This happens on force-push after the build is queued, but before it starts.
-        # The below works because HEAD is at the merge commit, so HEAD~1 is at the base branch.
-        $headCommitHash = git rev-parse HEAD
-        $baseCommitHash = git rev-parse HEAD~1
-
-        # TODO: What happens when PR is empty?
-        if ($baseCommitHash -ne $headCommitHash) {
-            Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
-            dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
-        }
-        else {
-            Write-Output "No changed files in pull request."
-        }
-      # TODO: Full cleanup on branch
+        Write-Output "Running code cleanup on all files in branch."
+        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN --fail-on-diff --print-diff
