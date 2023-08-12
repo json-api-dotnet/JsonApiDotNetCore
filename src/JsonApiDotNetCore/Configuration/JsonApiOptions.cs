@@ -21,7 +21,7 @@ public sealed class JsonApiOptions : IJsonApiOptions
     JsonSerializerOptions IJsonApiOptions.SerializerWriteOptions => _lazySerializerWriteOptions.Value;
 
     /// <inheritdoc />
-    public string? Namespace    { get; set; }
+    public string? Namespace { get; set; }
 
     /// <inheritdoc />
     public AttrCapabilities DefaultAttrCapabilities { get; set; } = AttrCapabilities.All;
