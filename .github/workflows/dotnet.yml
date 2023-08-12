@@ -170,8 +170,9 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages-test
         publish_dir: ./docs/_site
-        #keep_files: true
-        #commit_message: ${{ github.event.head_commit.message }}
+        user_name: 'github-actions-bot'
+        user_email: 'github-actions-bot@users.noreply.github.com'
+        commit_message: Automated commit from cibuild
         #full_commit_message: ${{ github.event.head_commit.message }}
 
   inspect-code:
