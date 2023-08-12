@@ -5,6 +5,7 @@
 # TODO: Review https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
 # TODO: Review https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
 # TODO: Adapt name and .yml file name (resets package counter)
+    # TODO: Update status badge in /README.md (depends on workflow name)
 name: .NET
 
 # Advantages
@@ -39,7 +40,6 @@ env:
 jobs:
   build-and-test:
     # TODO: Update required checks in GitHub settings
-    # TODO: Update status badge in /README.md
     timeout-minutes: 30
     strategy:
       fail-fast: false
