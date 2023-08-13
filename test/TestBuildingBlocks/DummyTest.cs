@@ -17,4 +17,10 @@ public sealed class DummyTest
     {
         true.Should().BeFalse();
     }
+
+    [Fact]
+    public void FailAlways()
+    {
+        true.Should().BeFalse();
+    }
 }
