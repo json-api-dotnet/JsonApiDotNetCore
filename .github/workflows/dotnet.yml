@@ -149,7 +149,7 @@ jobs:
         cd docs
         & ./generate-examples.ps1
         dotnet docfx docfx.json
-# TODO: Test nonzero exit code fails this action
+        # TODO: Test nonzero exit code fails this action
         Copy-Item CNAME _site/CNAME
         Copy-Item home/*.html _site/
         Copy-Item home/*.ico _site/
