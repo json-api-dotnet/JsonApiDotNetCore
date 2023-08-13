@@ -274,19 +274,11 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: pwsh
       run: |
-        # TODO: Update README.md on how to consume this package; make public in GitHub settings at organization level
+        # TODO: Update README.md on how to consume packages; make public in GitHub settings at organization level
         dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
         dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
-    - name: Publish to NuGet
-      # TODO: Test this
-      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-      env:
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-      shell: pwsh
-      run: |
-        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:NUGET_API_KEY" --source 'nuget.org'
     - name: Publish documentation
-      # TODO: Should also publish on release tag, but only from master
+      # TODO: Should also publish on release tag, but only from master - @($(git branch --remotes --contains v5.0.0 | select-object -first 1) -split '/')[1]
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: peaceiris/actions-gh-pages@v3
       with:
@@ -297,3 +289,11 @@ jobs:
         #user_name: 'github-actions-bot'
         #user_email: 'github-actions-bot@users.noreply.github.com'
         #commit_message: 'Automated commit from cibuild'
+    - name: Publish to NuGet
+      # TODO: Test this
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      shell: pwsh
+      run: |
+        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:NUGET_API_KEY" --source 'nuget.org'
