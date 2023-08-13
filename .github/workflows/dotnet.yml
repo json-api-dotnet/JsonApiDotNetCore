@@ -145,8 +145,8 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       shell: pwsh
       run: |
-        dotnet nuget add source --username json-api-dotnet --password $env:GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/json-api-dotnet/index.json"
-        dotnet nuget push $env:GITHUB_WORKSPACE/artifacts/packages/*.nupkg --source github --api-key $env:GITHUB_TOKEN
+        dotnet nuget add source --username "json-api-dotnet" --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name "github" "https://nuget.pkg.github.com/json-api-dotnet/index.json"
+        dotnet nuget push "$env:GITHUB_WORKSPACE/artifacts/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source "github"
 # TODO: Reorder steps so that irreversible actions come last
     - name: Generate documentation website
       shell: pwsh
