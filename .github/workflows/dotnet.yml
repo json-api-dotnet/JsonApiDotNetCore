@@ -119,6 +119,12 @@ jobs:
     - name: Test
       run: |
         dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.DeterministicReport=true
+    - name: Upload coverage to artifacts
+      if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage
+        path: '**/coverage.cobertura.xml'
     - name: Upload coverage to codecov.io
       # TODO: Why does codecov report 3.83% decreased coverage?
       if: matrix.os == 'ubuntu-latest'
