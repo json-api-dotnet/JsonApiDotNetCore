@@ -3,16 +3,16 @@
 # This script generates HTTP response files (*.json) for .ps1 files in ./request-examples
 
 function Get-WebServer-ProcessId {
-    $webProcessId = $null
-    if ($IsMacOS -Or $IsLinux) {
-        $webProcessId = $(lsof -ti:14141)
-    }
-    elseif ($IsWindows) {
-        $webProcessId = $(Get-NetTCPConnection -LocalPort 14141 -ErrorAction SilentlyContinue).OwningProcess?[0]
-    }
-    else {
+    #$webProcessId = $null
+    #if ($IsMacOS -Or $IsLinux) {
+    #    $webProcessId = $(lsof -ti:14141)
+    #}
+    #elseif ($IsWindows) {
+    #    $webProcessId = $(Get-NetTCPConnection -LocalPort 14141 -ErrorAction SilentlyContinue).OwningProcess?[0]
+    #}
+    #else {
         throw "Unsupported operating system."
-    }
+    #}
 
     return $webProcessId
 }
