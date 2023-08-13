@@ -79,10 +79,6 @@ jobs:
         Write-Host "$(pwsh --version) is installed at $PSHOME"
         psql --version
         Write-Host "Using .NET SDK: $(dotnet --version)"
-        #Write-Host "Installed .NET SDKs:"
-        #dotnet --list-sdks --list-runtimes
-        #Write-Host "Installed .NET runtimes:"
-        #dotnet --list-runtimes
         #Write-Host "Environment variables:"
         #dir env: | %{"{0}={1}" -f $_.Name,$_.Value}
     - name: Git checkout
@@ -154,8 +150,7 @@ jobs:
         Write-Host "Using docfx branch name: $env:DOCFX_SOURCE_BRANCH_NAME"
         cd docs
         & ./generate-examples.ps1
-        # TODO: Test that nonzero exit code fails this action
-        dotnet docfx docfx.json2
+        dotnet docfx docfx.json
         if ($LastExitCode -ne 0) {
             Write-Error "docfx failed with exit code $LastExitCode."
         }
@@ -218,6 +213,7 @@ jobs:
                 Write-Output "No issues found."
             }
         }
+
   cleanup-code:
     timeout-minutes: 30
     runs-on: ubuntu-latest
