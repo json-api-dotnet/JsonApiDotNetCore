@@ -121,11 +121,11 @@ jobs:
       shell: pwsh
       run: dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Upload packages to artifacts
+      if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v3
       with:
-        name: packages-${{ matrix.os }}
+        name: packages
         path: artifacts/packages
-# TODO: Push to NuGet on new release
 # TODO: Try CodeQL Analysis
 # TODO: Add dependabot.yml (GH Security: Enable Dependabot version updates)
 #         Keep actions up-to-date: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
@@ -140,20 +140,6 @@ jobs:
 #           - "CI/CD"
 #           commit-message:
 #             prefix: ci
-    - name: Publish to GitHub Packages
-      # TODO: Test this action does not run from PRs originating from forks
-      if: matrix.os == 'ubuntu-latest' && github.repository_owner == 'json-api-dotnet'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      shell: pwsh
-      run: |
-        dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
-        dotnet nuget push "$env:GITHUB_WORKSPACE/artifacts/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
-    - name: List package sources
-      shell: pwsh
-      run: |
-        dotnet nuget list source
-# TODO: Reorder steps so that irreversible actions come last
     - name: Generate documentation website
       shell: pwsh
       env:
@@ -163,27 +149,18 @@ jobs:
         cd docs
         & ./generate-examples.ps1
         dotnet docfx docfx.json
+# TODO: Test nonzero exit code fails this action
         Copy-Item CNAME _site/CNAME
         Copy-Item home/*.html _site/
         Copy-Item home/*.ico _site/
         New-Item -Force _site/styles -ItemType Directory | Out-Null
         Copy-Item -Recurse home/assets/* _site/styles/
-#    - name: Upload documentation website to artifacts
-#      uses: actions/upload-artifact@v3
-#      with:
-#        name: documentation-${{ matrix.os }}
-#        path: docs/_site
-    - name: Publish documentation website
-      if: matrix.os == 'ubuntu-latest' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-      uses: peaceiris/actions-gh-pages@v3
+    - name: Upload documentation website to artifacts
+      if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v3
       with:
-        # TODO: Test a real deployment (change target to "gh-pages" branch below)
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_branch: gh-pages-test
-        publish_dir: ./docs/_site
-        user_name: 'github-actions-bot'
-        user_email: 'github-actions-bot@users.noreply.github.com'
-        commit_message: 'Automated commit from cibuild'
+        name: documentation
+        path: docs/_site
 
   inspect-code:
     timeout-minutes: 30
@@ -271,3 +248,34 @@ jobs:
       run: |
         Write-Output "Running code cleanup on all files in branch."
         dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN --fail-on-diff --print-diff
+
+  publish:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    needs: [ build-and-test, inspect-code, cleanup-code ]
+    # TODO: Test this job does not run from PRs originating from forks
+    if: github.repository_owner == 'json-api-dotnet'
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+    - name: Publish to GitHub Packages
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: pwsh
+      run: |
+        dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
+        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
+# TODO: Push to NuGet on new release (tag)
+#   --source 'nuget.org'
+    - name: Publish documentation website
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      # TODO: See what happens when there's no diff
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        # TODO: Test a real deployment (change target to "gh-pages" branch below)
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages-test
+        publish_dir: ./documentation
+        user_name: 'github-actions-bot'
+        user_email: 'github-actions-bot@users.noreply.github.com'
+        commit_message: 'Automated commit from cibuild'
