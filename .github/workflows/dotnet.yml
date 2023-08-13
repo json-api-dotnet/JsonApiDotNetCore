@@ -112,7 +112,7 @@ jobs:
       shell: pwsh
       run: dotnet build --no-restore --configuration Release --version-suffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Test
-      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions"
+      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true
     - name: Upload coverage to codecov.io
       # TODO: Why does codecov report 3.83% decreased coverage?
       if: matrix.os == 'ubuntu-latest'
