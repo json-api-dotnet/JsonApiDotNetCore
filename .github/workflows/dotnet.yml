@@ -278,6 +278,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: pwsh
       run: |
+        # TODO: Update README.md on how to consume this package; make public in GitHub settings at organization level
         dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
         dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
     - name: Publish to NuGet
