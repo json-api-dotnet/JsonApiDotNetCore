@@ -254,7 +254,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build-and-test, inspect-code, cleanup-code ]
     # TODO: Test this job does not run from PRs originating from forks
-    #if: github.repository_owner == 'json-api-dotnet'
+    if: github.repository_owner == 'json-api-dotnet'
     steps:
     - name: Download artifacts
       uses: actions/download-artifact@v3
