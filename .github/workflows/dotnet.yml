@@ -2,7 +2,7 @@
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
 # General links
-# https://docs.github.com/en/actions/learn-github-actions/variables
+# https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
 # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
 # https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads
 # https://docs.github.com/en/actions/learn-github-actions/expressions
@@ -118,8 +118,7 @@ jobs:
         dotnet build --no-restore --configuration Release --version-suffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Test
       run: |
-        #dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true
-        dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
+        dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.DeterministicReport=true
     - name: Upload coverage to codecov.io
       # TODO: Why does codecov report 3.83% decreased coverage?
       if: matrix.os == 'ubuntu-latest'

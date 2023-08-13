@@ -18,6 +18,7 @@ public abstract class IntegrationTest : IAsyncLifetime
 
     static IntegrationTest()
     {
+        // GitHub Actions: Should we keep this? If so, check for CI environment variable.
         int maxConcurrentTestRuns = Environment.GetEnvironmentVariable("APPVEYOR") != null ? 32 : 64;
         ThrottleSemaphore = new SemaphoreSlim(maxConcurrentTestRuns);
     }
