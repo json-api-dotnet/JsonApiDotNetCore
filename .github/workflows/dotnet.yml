@@ -148,13 +148,14 @@ jobs:
     - name: Generate documentation
       shell: pwsh
       env:
+        # TODO: Does this use tag instead of branch name?
         DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
       run: |
         Write-Host "Using docfx branch name: $env:DOCFX_SOURCE_BRANCH_NAME"
         cd docs
         & ./generate-examples.ps1
         dotnet docfx docfx.json
-        # TODO: Test nonzero exit code fails this action
+        # TODO: Test that nonzero exit code fails this action
         Copy-Item CNAME _site/CNAME
         Copy-Item home/*.html _site/
         Copy-Item home/*.ico _site/
@@ -233,7 +234,7 @@ jobs:
       run: |
         dotnet restore
     - name: CleanupCode (on PR diff)
-      # TODO: Test with PR from community user (pull_request_target)
+      # TODO: Test with PR from community user
       if: github.event_name == 'pull_request'
       shell: pwsh
       run: |
@@ -276,11 +277,16 @@ jobs:
       run: |
         dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
         dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
-# TODO: Push to NuGet on new release (tag)
-#   --source 'nuget.org'
+    - name: Publish to NuGet
+      # TODO: Test this
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      shell: pwsh
+      run: |
+        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:NUGET_API_KEY" --source 'nuget.org'
     - name: Publish documentation
       #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      # TODO: See what happens when there's no diff
       uses: peaceiris/actions-gh-pages@v3
       with:
         # TODO: Test a real deployment (change target to "gh-pages" branch below)
