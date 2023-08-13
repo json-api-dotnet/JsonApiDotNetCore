@@ -125,7 +125,6 @@ jobs:
       with:
         name: packages-${{ matrix.os }}
         path: artifacts/packages
-# TODO: Upload pre-release NuGet package - https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry
 # TODO: Push to NuGet on new release
 # TODO: Try CodeQL Analysis
 # TODO: Add dependabot.yml (GH Security: Enable Dependabot version updates)
@@ -141,6 +140,11 @@ jobs:
 #           - "CI/CD"
 #           commit-message:
 #             prefix: ci
+    - name: Publish to GitHub Packages
+      #if: github.repository_owner == 'json-api-dotnet'
+      run: |
+        dotnet nuget add source --username json-api-dotnet --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/json-api-dotnet/index.json"
+        dotnet nuget push $env:GITHUB_WORKSPACE/artifacts/packages/*.nupkg --source "github" --api-key ${{ secrets.GITHUB_TOKEN }}
 # TODO: Reorder steps so that irreversible actions come last
     - name: Generate documentation website
       shell: pwsh
