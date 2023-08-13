@@ -154,7 +154,7 @@ jobs:
         Write-Host "Using docfx branch name: $env:DOCFX_SOURCE_BRANCH_NAME"
         cd docs
         & ./generate-examples.ps1
-        dotnet docfx docfx.json
+        dotnet docfx docfx.json2
         # TODO: Test that nonzero exit code fails this action
         Copy-Item CNAME _site/CNAME
         Copy-Item home/*.html _site/
