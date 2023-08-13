@@ -141,6 +141,7 @@ jobs:
 #           commit-message:
 #             prefix: ci
     - name: Publish to GitHub Packages
+      # TODO: Test this action does not run from PRs originating from forks
       if: matrix.os == 'ubuntu-latest' && github.repository_owner == 'json-api-dotnet'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
