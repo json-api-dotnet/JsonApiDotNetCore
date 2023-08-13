@@ -124,7 +124,6 @@ jobs:
     - name: Create packages
       shell: pwsh
       run: |
-        Write-Host "event = $env:GITHUB_EVENT_NAME"
         dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Upload packages to artifacts
       if: matrix.os == 'ubuntu-latest'
@@ -265,8 +264,7 @@ jobs:
     # TODO: Test this job does not run from PRs originating from forks
     permissions:
       packages: write
-      pages: write
-      contents: read
+      contents: write
     if: github.repository_owner == 'json-api-dotnet'
     steps:
     - name: Download artifacts
@@ -276,7 +274,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: pwsh
       run: |
-        Write-Host "event = $env:GITHUB_EVENT_NAME"
         dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
         dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
 # TODO: Push to NuGet on new release (tag)
