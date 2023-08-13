@@ -145,7 +145,7 @@ jobs:
 #           - "CI/CD"
 #           commit-message:
 #             prefix: ci
-    - name: Generate documentation website
+    - name: Generate documentation
       shell: pwsh
       env:
         DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
@@ -160,7 +160,7 @@ jobs:
         Copy-Item home/*.ico _site/
         New-Item -Force _site/styles -ItemType Directory | Out-Null
         Copy-Item -Recurse home/assets/* _site/styles/
-    - name: Upload documentation website to artifacts
+    - name: Upload documentation to artifacts
       if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v3
       with:
@@ -278,7 +278,7 @@ jobs:
         dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
 # TODO: Push to NuGet on new release (tag)
 #   --source 'nuget.org'
-    - name: Publish documentation website
+    - name: Publish documentation
       #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       # TODO: See what happens when there's no diff
       uses: peaceiris/actions-gh-pages@v3
