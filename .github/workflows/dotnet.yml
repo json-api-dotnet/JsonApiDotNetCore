@@ -117,7 +117,7 @@ jobs:
       # TODO: Why does codecov report 3.83% decreased coverage?
       if: matrix.os == 'ubuntu-latest'
       uses: codecov/codecov-action@v3
-    - name: Create packages
+    - name: Generate packages
       shell: pwsh
       run: |
         dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
