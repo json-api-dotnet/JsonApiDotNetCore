@@ -286,7 +286,8 @@ jobs:
       run: |
         dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:NUGET_API_KEY" --source 'nuget.org'
     - name: Publish documentation
-      #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      # TODO: Should also publish on release tag, but only from master
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: peaceiris/actions-gh-pages@v3
       with:
         # TODO: Test a real deployment (change target to "gh-pages" branch below)
