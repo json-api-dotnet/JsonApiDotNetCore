@@ -18,7 +18,7 @@
 #   - Easier to try .NET preview versions
 
 # TODO: Review https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
-# TODO: Review https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
+# TODO: Review https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions and https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
 # TODO: Adapt name and .yml file name (resets package counter)
     # TODO: Update status badge in /README.md (depends on workflow name)
 name: .NET
@@ -88,9 +88,11 @@ jobs:
     - name: Git checkout
       uses: actions/checkout@v3
     - name: Restore tools
-      run: dotnet tool restore
+      run: |
+        dotnet tool restore
     - name: Restore packages
-      run: dotnet restore
+      run: |
+        dotnet restore
     - name: Calculate version suffix
       shell: pwsh
       run: |
@@ -110,16 +112,20 @@ jobs:
         Write-Output "PACKAGE_VERSION_SUFFIX=$versionSuffix" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: Build
       shell: pwsh
-      run: dotnet build --no-restore --configuration Release --version-suffix=$env:PACKAGE_VERSION_SUFFIX
+      run: |
+        dotnet build --no-restore --configuration Release --version-suffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Test
-      run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true
+      run: |
+        dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true
     - name: Upload coverage to codecov.io
       # TODO: Why does codecov report 3.83% decreased coverage?
       if: matrix.os == 'ubuntu-latest'
       uses: codecov/codecov-action@v3
     - name: Create packages
       shell: pwsh
-      run: dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
+      run: |
+        Write-Host "event = $env:GITHUB_EVENT_NAME"
+        dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Upload packages to artifacts
       if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v3
@@ -173,7 +179,8 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore tools
-      run: dotnet tool restore
+      run: |
+        dotnet tool restore
     - name: InspectCode
       shell: pwsh
       run: |
@@ -221,9 +228,11 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore tools
-      run: dotnet tool restore
+      run: |
+        dotnet tool restore
     - name: Restore packages
-      run: dotnet restore
+      run: |
+        dotnet restore
     - name: CleanupCode (on PR diff)
       # TODO: Test with PR from community user (pull_request_target)
       if: github.event_name == 'pull_request'
@@ -254,6 +263,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build-and-test, inspect-code, cleanup-code ]
     # TODO: Test this job does not run from PRs originating from forks
+    permissions:
+      packages: write
+      pages: write
+      contents: read
     if: github.repository_owner == 'json-api-dotnet'
     steps:
     - name: Download artifacts
@@ -263,7 +276,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: pwsh
       run: |
-        Write-Host "Workspace dir = $env:GITHUB_WORKSPACE"
+        Write-Host "event = $env:GITHUB_EVENT_NAME"
         dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
         dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
 # TODO: Push to NuGet on new release (tag)
