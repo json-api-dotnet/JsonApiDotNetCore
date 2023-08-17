@@ -28,7 +28,7 @@ You can enable auto-discovery for the current assembly by adding the following a
 
 ```c#
 // Program.cs
-builder.Services.AddJsonApi(discovery => discovery.AddCurrentAssembly());
+builder.Services.AddJsonApi(discovery: discovery => discovery.AddCurrentAssembly());
 ```
 
 ### Specifying an Entity Framework Core DbContext
@@ -44,7 +44,7 @@ Be aware that this does not register resource definitions, resource services and
 
 ```c#
 // Program.cs
-builder.Services.AddJsonApi<AppDbContext>(discovery => discovery.AddCurrentAssembly());
+builder.Services.AddJsonApi<AppDbContext>(discovery: discovery => discovery.AddCurrentAssembly());
 ```
 
 ### Manual Specification
