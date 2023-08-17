@@ -96,7 +96,7 @@ detecting all of the JSON:API resources, resource definitions, resource services
 <p>The following command builds the resource graph using all <code>IIdentifiable</code> implementations and registers the services mentioned.
 You can enable auto-discovery for the current assembly by adding the following at startup.</p>
 <pre><code class="lang-c#">// Program.cs
-builder.Services.AddJsonApi(discovery =&gt; discovery.AddCurrentAssembly());
+builder.Services.AddJsonApi(discovery: discovery =&gt; discovery.AddCurrentAssembly());
 </code></pre>
 <h3 id="specifying-an-entity-framework-core-dbcontext">Specifying an Entity Framework Core DbContext</h3>
 <p>If you are using Entity Framework Core as your ORM, you can add all the models of a <code>DbContext</code> to the resource graph.</p>
@@ -105,7 +105,7 @@ builder.Services.AddJsonApi&lt;AppDbContext&gt;();
 </code></pre>
 <p>Be aware that this does not register resource definitions, resource services and repositories. You can combine it with auto-discovery to achieve this.</p>
 <pre><code class="lang-c#">// Program.cs
-builder.Services.AddJsonApi&lt;AppDbContext&gt;(discovery =&gt; discovery.AddCurrentAssembly());
+builder.Services.AddJsonApi&lt;AppDbContext&gt;(discovery: discovery =&gt; discovery.AddCurrentAssembly());
 </code></pre>
 <h3 id="manual-specification">Manual Specification</h3>
 <p>You can manually construct the graph.</p>
