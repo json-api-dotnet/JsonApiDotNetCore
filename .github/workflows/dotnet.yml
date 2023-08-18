@@ -126,12 +126,6 @@ jobs:
     - name: Test
       run: |
         dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.DeterministicReport=true
-    - name: Upload coverage to artifacts
-      if: matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage
-        path: '**/coverage.cobertura.xml'
     - name: Upload coverage to codecov.io
       if: matrix.os == 'ubuntu-latest'
       uses: codecov/codecov-action@v3
