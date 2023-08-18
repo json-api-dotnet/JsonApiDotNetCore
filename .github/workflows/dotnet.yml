@@ -48,9 +48,10 @@ concurrency:
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  # Windows comes with PostgreSQL pre-installed, and defines the PGPASSWORD environment variable. Remove it as it interferes
-  # with the tests running from AppVeyor
-  PGPASSWORD: ""
+  # The Windows runner image has PostgreSQL pre-installed and sets the PGPASSWORD environment variable to "root".
+  # This conflicts with the default password "postgres", which is used by ikalnytskyi/action-setup-postgres.
+  # Because action-setup-postgres forgets to update the environment variable accordingly, we do so here.
+  PGPASSWORD: "postgres"
 
 jobs:
   build-and-test:
@@ -132,7 +133,6 @@ jobs:
         name: coverage
         path: '**/coverage.cobertura.xml'
     - name: Upload coverage to codecov.io
-      # TODO: Why does codecov report 3.83% decreased coverage?
       if: matrix.os == 'ubuntu-latest'
       uses: codecov/codecov-action@v3
     - name: Generate packages
