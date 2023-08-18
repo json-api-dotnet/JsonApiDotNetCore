@@ -33,6 +33,8 @@
     # TODO: Update status badge in /README.md (depends on workflow name)
 name: .NET
 
+# TODO: Auto-close issues waiting for response: https://github.com/lee-dohm/no-response
+
 on:
   push:
     branches: [ 'master', 'release/**' ]
