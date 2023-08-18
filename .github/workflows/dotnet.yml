@@ -22,6 +22,10 @@
 #   - Shows timings per operation (build, test, cleanup)
 #   - Improved security
 #   - Easier to try .NET preview versions
+#   - Weekly refreshed runner images
+#   - Subsequent steps execute after timeout, enabling to capture logs on hang 
+#   Disadvantages:
+#   - There's no way to suppress notification for cancelled jobs
 
 # TODO: Review https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
 # TODO: Review https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions and https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
