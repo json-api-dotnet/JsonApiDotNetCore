@@ -17,7 +17,7 @@ public sealed class QueryExpressionRewriterTests
     private static readonly IResourceFactory ResourceFactory = new ResourceFactory(new ServiceContainer());
 
     // @formatter:wrap_chained_method_calls chop_always
-    // @formatter:keep_existing_linebreaks true
+    // @formatter:wrap_before_first_method_call true
 
     private static readonly IResourceGraph ResourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
         .Add<Blog, int>()
@@ -33,7 +33,7 @@ public sealed class QueryExpressionRewriterTests
         .Build();
 
     // @formatter:wrap_chained_method_calls restore
-    // @formatter:keep_existing_linebreaks restore
+    // @formatter:wrap_before_first_method_call restore
 
     [Theory]
     [InlineData("posts", "Include,IncludeElement")]
