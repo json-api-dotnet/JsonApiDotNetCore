@@ -33,6 +33,8 @@ public enum JsonApiEndpoints
     /// Represents the endpoint to get a secondary resource or collection of secondary resources. Example:
     /// <code><![CDATA[
     /// GET /articles/1/author HTTP/1.1
+    /// ]]></code> Example: <code><![CDATA[
+    /// GET /articles/1/revisions HTTP/1.1
     /// ]]></code>
     /// </summary>
     GetSecondary = 1 << 2,
@@ -48,7 +50,7 @@ public enum JsonApiEndpoints
     GetRelationship = 1 << 3,
 
     /// <summary>
-    /// Represents the endpoint to creates a new resource with attributes, relationships or both. Example:
+    /// Represents the endpoint to create a new resource with attributes, relationships or both. Example:
     /// <code><![CDATA[
     /// POST /articles HTTP/1.1
     /// ]]></code>
