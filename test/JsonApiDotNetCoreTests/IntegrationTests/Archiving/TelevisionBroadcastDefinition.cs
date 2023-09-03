@@ -180,7 +180,7 @@ public sealed class TelevisionBroadcastDefinition : JsonApiResourceDefinition<Te
     {
         public bool HasFilterOnArchivedAt { get; private set; }
 
-        public override QueryExpression? VisitResourceFieldChain(ResourceFieldChainExpression expression, object? argument)
+        public override QueryExpression VisitResourceFieldChain(ResourceFieldChainExpression expression, object? argument)
         {
             if (expression.Fields[0].Property.Name == nameof(TelevisionBroadcast.ArchivedAt))
             {
