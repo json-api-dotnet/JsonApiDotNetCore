@@ -24,7 +24,8 @@ public enum JsonApiEndpointsCopy
     GetSingle = 1 << 1,
 
     /// <summary>
-    /// Represents the endpoint to get a secondary resource or collection of secondary resources. Example: <code><![CDATA[
+    /// Represents the endpoint to get a secondary resource or collection of secondary resources. Example:
+    /// <code><![CDATA[
     /// GET /articles/1/author HTTP/1.1
     /// ]]></code>
     /// </summary>
@@ -41,7 +42,8 @@ public enum JsonApiEndpointsCopy
     GetRelationship = 1 << 3,
 
     /// <summary>
-    /// Represents the endpoint to creates a new resource with attributes, relationships or both. Example: <code><![CDATA[
+    /// Represents the endpoint to creates a new resource with attributes, relationships or both. Example:
+    /// <code><![CDATA[
     /// POST /articles HTTP/1.1
     /// ]]></code>
     /// </summary>
@@ -55,14 +57,16 @@ public enum JsonApiEndpointsCopy
     PostRelationship = 1 << 5,
 
     /// <summary>
-    /// Represents the endpoint to update the attributes and/or relationships of an existing resource. Example: <code><![CDATA[
+    /// Represents the endpoint to update the attributes and/or relationships of an existing resource. Example:
+    /// <code><![CDATA[
     /// PATCH /articles/1
     /// ]]></code>
     /// </summary>
     Patch = 1 << 6,
 
     /// <summary>
-    /// Represents the endpoint to perform a complete replacement of a relationship on an existing resource. Example: <code><![CDATA[
+    /// Represents the endpoint to perform a complete replacement of a relationship on an existing resource. Example:
+    /// <code><![CDATA[
     /// PATCH /articles/1/relationships/author HTTP/1.1
     /// ]]></code> Example:
     /// <code><![CDATA[
@@ -79,7 +83,8 @@ public enum JsonApiEndpointsCopy
     Delete = 1 << 8,
 
     /// <summary>
-    /// Represents the endpoint to remove resources from a to-many relationship. Example: <code><![CDATA[
+    /// Represents the endpoint to remove resources from a to-many relationship. Example:
+    /// <code><![CDATA[
     /// DELETE /articles/1/relationships/revisions
     /// ]]></code>
     /// </summary>
