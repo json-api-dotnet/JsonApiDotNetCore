@@ -10,106 +10,99 @@ namespace JsonApiDotNetCore.Controllers;
 [Flags]
 public enum JsonApiEndpoints
 {
+    /// <summary>
+    /// Represents none of the JSON:API endpoints.
+    /// </summary>
     None = 0,
 
     /// <summary>
-    /// Endpoint to get a collection of primary resources.
+    /// Represents the endpoint to get a collection of primary resources. Example: <code><![CDATA[
+    /// GET /articles HTTP/1.1
+    /// ]]></code>
     /// </summary>
-    /// <example>
-    /// <code><![CDATA[GET /articles]]></code>
-    /// </example>
     GetCollection = 1,
 
     /// <summary>
-    /// Endpoint to get a single primary resource by ID.
+    /// Represents the endpoint to get a single primary resource by ID. Example: <code><![CDATA[
+    /// GET /articles/1 HTTP/1.1
+    /// ]]></code>
     /// </summary>
-    /// <example>
-    /// <code><![CDATA[GET /articles/1]]></code>
-    /// </example>
     GetSingle = 1 << 1,
 
     /// <summary>
-    /// Endpoint to get a secondary resource or collection of secondary resources.
+    /// Represents the endpoint to get a secondary resource or collection of secondary resources. Example: <code><![CDATA[
+    /// GET /articles/1/author HTTP/1.1
+    /// ]]></code>
     /// </summary>
-    /// <example>
-    /// <code><![CDATA[GET /articles/1/author]]></code>
-    /// </example>
     GetSecondary = 1 << 2,
 
     /// <summary>
-    /// Endpoint to get a relationship value, which can be a <c>null</c>, a single object or a collection.
+    /// Represents the endpoint to get a relationship value. Example: <code><![CDATA[
+    /// GET /articles/1/relationships/author HTTP/1.1
+    /// ]]></code> Example:
+    /// <code><![CDATA[
+    /// GET /articles/1/relationships/revisions HTTP/1.1
+    /// ]]></code>
     /// </summary>
-    /// <example>
-    /// <code><![CDATA[GET /articles/1/relationships/author]]></code>
-    /// </example>
-    /// <example>
-    /// <code><![CDATA[GET /articles/1/relationships/revisions]]></code>
-    /// </example>
     GetRelationship = 1 << 3,
 
     /// <summary>
-    /// Endpoint to creates a new resource with attributes, relationships or both.
+    /// Represents the endpoint to creates a new resource with attributes, relationships or both. Example: <code><![CDATA[
+    /// POST /articles HTTP/1.1
+    /// ]]></code>
     /// </summary>
-    /// <example>
-    /// <code><![CDATA[POST /articles]]></code>
-    /// </example>
     Post = 1 << 4,
 
     /// <summary>
-    /// Endpoint to add resources to a to-many relationship.
+    /// Represents the endpoint to add resources to a to-many relationship. Example: <code><![CDATA[
+    /// POST /articles/1/revisions HTTP/1.1
+    /// ]]></code>
     /// </summary>
-    /// <example>
-    /// <code><![CDATA[POST /articles/1/revisions]]></code>
-    /// </example>
     PostRelationship = 1 << 5,
 
     /// <summary>
-    /// Endpoint to update the attributes and/or relationships of an existing resource.
+    /// Represents the endpoint to update the attributes and/or relationships of an existing resource. Example: <code><![CDATA[
+    /// PATCH /articles/1
+    /// ]]></code>
     /// </summary>
-    /// <example>
-    /// <code><![CDATA[PATCH /articles/1]]></code>
-    /// </example>
     Patch = 1 << 6,
 
     /// <summary>
-    /// Endpoint to perform a complete replacement of a relationship on an existing resource.
+    /// Represents the endpoint to perform a complete replacement of a relationship on an existing resource. Example: <code><![CDATA[
+    /// PATCH /articles/1/relationships/author HTTP/1.1
+    /// ]]></code> Example:
+    /// <code><![CDATA[
+    /// PATCH /articles/1/relationships/revisions HTTP/1.1
+    /// ]]></code>
     /// </summary>
-    /// <example>
-    /// <code><![CDATA[PATCH /articles/1/relationships/author]]></code>
-    /// </example>
-    /// <example>
-    /// <code><![CDATA[PATCH /articles/1/relationships/revisions]]></code>
-    /// </example>
     PatchRelationship = 1 << 7,
 
     /// <summary>
-    /// Endpoint to delete an existing resource.
+    /// Represents the endpoint to delete an existing resource. Example: <code><![CDATA[
+    /// DELETE /articles/1
+    /// ]]></code>
     /// </summary>
-    /// <example>
-    /// <code><![CDATA[DELETE /articles/1]]></code>
-    /// </example>
     Delete = 1 << 8,
 
     /// <summary>
-    /// Endpoint to remove resources from a to-many relationship.
+    /// Represents the endpoint to remove resources from a to-many relationship. Example: <code><![CDATA[
+    /// DELETE /articles/1/relationships/revisions
+    /// ]]></code>
     /// </summary>
-    /// <example>
-    /// <code><![CDATA[DELETE /articles/1/relationships/revisions]]></code>
-    /// </example>
     DeleteRelationship = 1 << 9,
 
     /// <summary>
-    /// All read-only endpoints.
+    /// Represents the set of JSON:API endpoints to query resources and relationships.
     /// </summary>
     Query = GetCollection | GetSingle | GetSecondary | GetRelationship,
 
     /// <summary>
-    /// All write endpoints.
+    /// Represents the set of JSON:API endpoints to change resources and relationships.
     /// </summary>
     Command = Post | PostRelationship | Patch | PatchRelationship | Delete | DeleteRelationship,
 
     /// <summary>
-    /// All endpoints.
+    /// Represents all of the JSON:API endpoints.
     /// </summary>
     All = Query | Command
 }
