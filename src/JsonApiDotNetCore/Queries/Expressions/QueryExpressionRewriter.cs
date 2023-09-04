@@ -34,7 +34,7 @@ public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgume
         return null;
     }
 
-    public override QueryExpression? VisitResourceFieldChain(ResourceFieldChainExpression expression, TArgument argument)
+    public override QueryExpression VisitResourceFieldChain(ResourceFieldChainExpression expression, TArgument argument)
     {
         return expression;
     }

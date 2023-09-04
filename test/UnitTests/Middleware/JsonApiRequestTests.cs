@@ -50,7 +50,8 @@ public sealed class JsonApiRequestTests
         var options = new JsonApiOptions();
         var request = new JsonApiRequest();
 
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_chained_method_calls chop_always
+        // @formatter:wrap_before_first_method_call true
 
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
             .Add<TodoItem, int>()
@@ -58,7 +59,8 @@ public sealed class JsonApiRequestTests
             .Add<ItemTag, int>()
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
+        // @formatter:wrap_chained_method_calls restore
 
         var httpContext = new DefaultHttpContext();
         IControllerResourceMapping controllerResourceMapping = SetupRoutes(httpContext, resourceGraph, requestMethod, requestPath);
