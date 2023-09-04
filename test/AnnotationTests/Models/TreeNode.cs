@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -6,7 +7,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace AnnotationTests.Models;
 
 [PublicAPI]
-[Resource(PublicName = "tree-node", ControllerNamespace = "Models", GenerateControllerEndpoints = JsonApiEndpoints.Query)]
+[Resource(PublicName = "tree-node", ClientIdGeneration = ClientIdGenerationMode.Required, ControllerNamespace = "Models",
+    GenerateControllerEndpoints = JsonApiEndpoints.Query)]
 public sealed class TreeNode : Identifiable<long>
 {
     [Attr(PublicName = "name", Capabilities = AttrCapabilities.AllowSort)]

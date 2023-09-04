@@ -3,7 +3,6 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -27,9 +26,6 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
             services.AddResourceRepository<CarCompositeKeyAwareRepository<Car, string?>>();
             services.AddResourceRepository<CarCompositeKeyAwareRepository<Dealership, int>>();
         });
-
-        var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.AllowClientGeneratedIds = true;
     }
 
     [Fact]

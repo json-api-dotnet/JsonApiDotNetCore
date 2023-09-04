@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 
 namespace JsonApiDotNetCore.Resources.Annotations;
@@ -10,10 +11,22 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
 public sealed class ResourceAttribute : Attribute
 {
+    internal ClientIdGenerationMode? NullableClientIdGeneration { get; set; }
+
     /// <summary>
     /// Optional. The publicly exposed name of this resource type.
     /// </summary>
     public string? PublicName { get; set; }
+
+    /// <summary>
+    /// Optional. Whether API clients are allowed or required to provide IDs when creating resources of this type. When not set, the value from global
+    /// options applies.
+    /// </summary>
+    public ClientIdGenerationMode ClientIdGeneration
+    {
+        get => NullableClientIdGeneration.GetValueOrDefault();
+        set => NullableClientIdGeneration = value;
+    }
 
     /// <summary>
     /// The set of endpoints to auto-generate an ASP.NET controller for. Defaults to <see cref="JsonApiEndpoints.All" />. Set to

@@ -122,13 +122,10 @@ public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
 
     private ResourceIdentityRequirements CreateRefRequirements(RequestAdapterState state)
     {
-        JsonElementConstraint? idConstraint = state.Request.WriteOperation == WriteOperationKind.CreateResource
-            ? _options.AllowClientGeneratedIds ? null : JsonElementConstraint.Forbidden
-            : JsonElementConstraint.Required;
-
         return new ResourceIdentityRequirements
         {
-            IdConstraint = idConstraint
+            EvaluateIdConstraint = resourceType =>
+                ResourceIdentityRequirements.DoEvaluateIdConstraint(resourceType, state.Request.WriteOperation, _options.ClientIdGeneration)
         };
     }
 
@@ -137,7 +134,7 @@ public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
         return new ResourceIdentityRequirements
         {
             ResourceType = refResult.ResourceType,
-            IdConstraint = refRequirements.IdConstraint,
+            EvaluateIdConstraint = refRequirements.EvaluateIdConstraint,
             IdValue = refResult.Resource.StringId,
             LidValue = refResult.Resource.LocalId,
             RelationshipName = refResult.Relationship?.PublicName
