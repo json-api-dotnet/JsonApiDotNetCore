@@ -165,7 +165,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     }
 
     /// <summary>
-    /// Gets a relationship value, which can be a <c>null</c>, a single object or a collection.
+    /// Gets a relationship value, which can be <c>null</c>, a single object or a collection.
     /// <para>
     /// Example endpoints: <code language="http"><![CDATA[
     /// GET /articles/1/relationships/author HTTP/1.1
@@ -197,7 +197,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     }
 
     /// <summary>
-    /// Creates a new resource with attributes, relationships or both.
+    /// Creates a new resource with attributes, relationships, or both.
     /// <para>
     /// Example endpoint: <code language="http"><![CDATA[
     /// POST /articles HTTP/1.1

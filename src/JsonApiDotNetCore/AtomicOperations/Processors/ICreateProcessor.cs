@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.AtomicOperations.Processors;
 
 /// <summary>
-/// Processes a single operation to create a new resource with attributes, relationships or both.
+/// Processes a single operation to create a new resource with attributes, relationships, or both.
 /// </summary>
 /// <typeparam name="TResource">
 /// The resource type.

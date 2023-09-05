@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.Middleware;
 public enum WriteOperationKind
 {
     /// <summary>
-    /// Create a new resource with attributes, relationships or both.
+    /// Create a new resource with attributes, relationships, or both.
     /// </summary>
     CreateResource,
 
