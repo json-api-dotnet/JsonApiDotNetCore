@@ -1,39 +1,11 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
 # General links
 # https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
 # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
 # https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads
 # https://docs.github.com/en/actions/learn-github-actions/expressions
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-# TODO: Post-cleanup
-# - Restore notification for failed actions in GitHub settings
-# - Update required status checks in GitHub settings
-# - Delete GitHub PAT after decommission of AppVeyor
-# - Recycle NuGet key? Affects MongoDB
-# - Document advantages in PR description
-#   - Max parallel builds (jobs) is 20 (MacOS 5)
-#   - Job timeout is 6 hours, workflow 35 days
-#   - Artifact retention is 90 days
-#   - Linux runs much faster
-#   - Managemnt UI integrated in GitHub, includes test summaries
-#   - Rich ecosystem of actions
-#   - Shows timings per operation (build, test, cleanup)
-#   - Improved security
-#   - Easier to try .NET preview versions
-#   - Weekly refreshed runner images
-#   - Subsequent steps execute after timeout, enabling to capture logs on hang 
-#   Disadvantages:
-#   - There's no way to suppress notification for cancelled jobs
-
-# TODO: Review https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions
-# TODO: Review https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions and https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
-# TODO: Adapt name and .yml file name (resets package counter)
-    # TODO: Update status badge in /README.md (depends on workflow name)
 name: .NET
-
-# TODO: Auto-close issues waiting for response: https://github.com/lee-dohm/no-response
 
 on:
   push:
@@ -57,7 +29,7 @@ env:
 
 jobs:
   build-and-test:
-    timeout-minutes: 30
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
@@ -82,7 +54,7 @@ jobs:
       shell: cmd
       run: |
         curl --location --output "%RUNNER_TEMP%\PowerShell-7.3.6-win-x64.msi" https://github.com/PowerShell/PowerShell/releases/download/v7.3.6/PowerShell-7.3.6-win-x64.msi
-        msiexec.exe /package "%RUNNER_TEMP%\PowerShell-7.3.6-win-x64.msi" /quiet USE_MU=1 ENABLE_MU=1 ADD_PATH=1 DISABLE_TELEMETRY=1 
+        msiexec.exe /package "%RUNNER_TEMP%\PowerShell-7.3.6-win-x64.msi" /quiet USE_MU=1 ENABLE_MU=1 ADD_PATH=1 DISABLE_TELEMETRY=1
     - name: Setup PowerShell (macOS)
       if: matrix.os == 'macos-latest'
       run: |
@@ -94,8 +66,6 @@ jobs:
         Write-Host "$(pwsh --version) is installed at $PSHOME"
         psql --version
         Write-Host "Using .NET SDK: $(dotnet --version)"
-        #Write-Host "Environment variables:"
-        #dir env: | %{"{0}={1}" -f $_.Name,$_.Value}
     - name: Git checkout
       uses: actions/checkout@v3
     - name: Restore tools
@@ -108,7 +78,7 @@ jobs:
       shell: pwsh
       run: |
         if ($env:GITHUB_REF_TYPE -eq 'tag') {
-            # Get the version prefix/suffix from the git tag. Example: 'v1.0.0-preview1-final' => '1.0.0' and 'preview1-final'
+            # Get the version prefix/suffix from the git tag. For example: 'v1.0.0-preview1-final' => '1.0.0' and 'preview1-final'
             $segments = $env:GITHUB_REF_NAME -split "-"
             $versionPrefix = $segments[0].TrimStart('v')
             $versionSuffix = $segments[1..-1] -join "-"
@@ -125,7 +95,7 @@ jobs:
             }
         }
         else {
-            # Get the version suffix from the auto-incrementing build number. Example: '123' => 'master-00123'
+            # Get the version suffix from the auto-incrementing build number. For example: '123' => 'master-00123'
             $revision = "{0:D5}" -f [convert]::ToInt32($env:GITHUB_RUN_NUMBER, 10)
             $versionSuffix = "$($env:GITHUB_HEAD_REF ?? $env:GITHUB_REF_NAME)-$revision"
         }
@@ -151,23 +121,10 @@ jobs:
       with:
         name: packages
         path: artifacts/packages
-# TODO: Try CodeQL Analysis
-# TODO: Add dependabot.yml (GH Security: Enable Dependabot version updates)
-#         Keep actions up-to-date: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
-#           in .github/dependabot.yml:
-#         version: 2
-#         updates:
-#         - package-ecosystem: "github-actions"
-#           directory: "/"
-#           schedule:
-#             interval: "daily"
-#           labels:
-#           - "CI/CD"
-#           commit-message:
-#             prefix: ci
     - name: Generate documentation
       shell: pwsh
       env:
+        # This contains the git tag name on release; in that case we build but don't publish.
         DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
       run: |
         Write-Host "Using docfx branch name: $env:DOCFX_SOURCE_BRANCH_NAME"
@@ -182,7 +139,7 @@ jobs:
         Copy-Item home/*.ico _site/
         New-Item -Force _site/styles -ItemType Directory | Out-Null
         Copy-Item -Recurse home/assets/* _site/styles/
-    - name: Upload documentation to artifacts
+    - name: Upload documentation to artifacts (Ubuntu)
       if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v3
       with:
@@ -190,8 +147,12 @@ jobs:
         path: docs/_site
 
   inspect-code:
-    timeout-minutes: 30
-    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
@@ -238,8 +199,12 @@ jobs:
         }
 
   cleanup-code:
-    timeout-minutes: 30
-    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Git checkout
       uses: actions/checkout@v3
@@ -256,7 +221,6 @@ jobs:
       run: |
         dotnet restore
     - name: CleanupCode (on PR diff)
-      # TODO: Test with PR from community user
       if: github.event_name == 'pull_request'
       shell: pwsh
       run: |
@@ -265,7 +229,6 @@ jobs:
         $headCommitHash = git rev-parse HEAD
         $baseCommitHash = git rev-parse HEAD~1
 
-        # TODO: What happens when PR is empty?
         if ($baseCommitHash -ne $headCommitHash) {
             Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
             dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
@@ -277,14 +240,13 @@ jobs:
       if: github.event_name == 'push'
       shell: pwsh
       run: |
-        Write-Output "Running code cleanup on all files in branch."
+        Write-Output "Running code cleanup on all files."
         dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN --fail-on-diff --print-diff
 
   publish:
-    timeout-minutes: 30
+    timeout-minutes: 60
     runs-on: ubuntu-latest
     needs: [ build-and-test, inspect-code, cleanup-code ]
-    # TODO: Test this job does not run from PRs originating from forks
     if: github.repository_owner == 'json-api-dotnet'
     permissions:
       packages: write
@@ -297,7 +259,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: pwsh
       run: |
-        # TODO: Update README.md on how to consume packages; make public in GitHub settings at organization level
         dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
         dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
     - name: Publish documentation
