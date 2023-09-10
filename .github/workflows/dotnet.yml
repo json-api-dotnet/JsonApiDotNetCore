@@ -41,6 +41,8 @@ on:
 # TODO: Revert changes
 #  pull_request:
 #    branches: [ 'master', 'release/**' ]
+    tags:
+    - 'v*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
