@@ -308,7 +308,7 @@ jobs:
       with:
         # TODO: Test a real deployment (change target to "gh-pages" branch below)
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_branch: gh-pages-test
+        publish_branch: gh-pages
         publish_dir: ./documentation
         commit_message: 'Auto-generated documentation from: ${{ github.event.head_commit.message }}'
     - name: Publish to NuGet
