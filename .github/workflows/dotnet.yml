@@ -301,7 +301,7 @@ jobs:
       # TODO: Test this
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
       env:
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
       shell: pwsh
       run: |
-        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:NUGET_API_KEY" --source 'nuget.org'
+        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:NUGET_ORG_API_KEY" --source 'nuget.org'
