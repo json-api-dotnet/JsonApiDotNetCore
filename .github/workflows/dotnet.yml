@@ -37,9 +37,10 @@ name: .NET
 
 on:
   push:
-    branches: [ 'master', 'release/**' ]
-  pull_request:
-    branches: [ 'master', 'release/**' ]
+    branches: [ 'master', 'release/**', 'setup-github-actions' ]
+# TODO: Revert changes
+#  pull_request:
+#    branches: [ 'master', 'release/**' ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
