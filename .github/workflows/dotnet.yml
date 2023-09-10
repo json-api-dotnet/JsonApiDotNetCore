@@ -156,7 +156,6 @@ jobs:
     - name: Generate documentation
       shell: pwsh
       env:
-        # TODO: Does this use tag instead of branch name?
         DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
       run: |
         Write-Host "Using docfx branch name: $env:DOCFX_SOURCE_BRANCH_NAME"
@@ -290,7 +289,6 @@ jobs:
         dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
         dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
     - name: Publish documentation
-      # TODO: Should also publish on release tag, but only from master - @($(git branch --remotes --contains v5.0.0 | select-object -first 1) -split '/')[1]
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: peaceiris/actions-gh-pages@v3
       with:
@@ -298,9 +296,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages-test
         publish_dir: ./documentation
-        #user_name: 'github-actions-bot'
-        #user_email: 'github-actions-bot@users.noreply.github.com'
-        #commit_message: 'Automated commit from cibuild'
+        commit_message: 'Auto-generated documentation from: ${{ github.event.head_commit.message }}'
     - name: Publish to NuGet
       # TODO: Test this
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
