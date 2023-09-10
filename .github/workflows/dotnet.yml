@@ -109,13 +109,13 @@ jobs:
       shell: pwsh
       run: |
         if ($env:GITHUB_REF_TYPE -eq 'tag') {
-            # Get the version prefix/suffix from the git tag. Example: 'v1.0.0-preview1-final' => 'v1.0.0' and 'preview1-final'
+            # Get the version prefix/suffix from the git tag. Example: 'v1.0.0-preview1-final' => '1.0.0' and 'preview1-final'
             $segments = $env:GITHUB_REF_NAME -split "-"
-            $versionPrefix = $segments[0]
+            $versionPrefix = $segments[0].TrimStart('v')
             $versionSuffix = $segments[1..-1] -join "-"
 
             [xml]$xml = Get-Content Directory.Build.props
-            $configuredVersionPrefix = $xml.Project.PropertyGroup.JsonApiDotNetCoreVersionPrefix
+            $configuredVersionPrefix = $xml.Project.PropertyGroup[0].JsonApiDotNetCoreVersionPrefix
             if ($configuredVersionPrefix -ne $versionPrefix) {
                 Write-Error "Version prefix from git tag '$versionPrefix' does not match version prefix '$configuredVersionPrefix' stored in Directory.Build.props."
             }
