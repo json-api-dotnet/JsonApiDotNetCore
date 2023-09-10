@@ -168,7 +168,9 @@ jobs:
     - name: Generate documentation
       shell: pwsh
       env:
-        DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
+        # TODO: Remove test
+        #DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
+        DOCFX_SOURCE_BRANCH_NAME: master
       run: |
         Write-Host "Using docfx branch name: $env:DOCFX_SOURCE_BRANCH_NAME"
         cd docs
