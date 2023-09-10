@@ -117,7 +117,7 @@ jobs:
             [xml]$xml = Get-Content Directory.Build.props
             $configuredVersionPrefix = $xml.Project.PropertyGroup[0].JsonApiDotNetCoreVersionPrefix
             if ($configuredVersionPrefix -ne $versionPrefix) {
-                Write-Error "Version prefix from git tag '$versionPrefix' does not match version prefix '$configuredVersionPrefix' stored in Directory.Build.props."
+                Write-Error "Version prefix from git release tag '$versionPrefix' does not match version prefix '$configuredVersionPrefix' stored in Directory.Build.props."
             }
         }
         else {
