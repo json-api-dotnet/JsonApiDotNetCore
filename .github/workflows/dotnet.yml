@@ -37,10 +37,9 @@ name: .NET
 
 on:
   push:
-    branches: [ 'master', 'release/**', 'setup-github-actions' ]
-# TODO: Revert changes
-#  pull_request:
-#    branches: [ 'master', 'release/**' ]
+    branches: [ 'master', 'release/**' ]
+  pull_request:
+    branches: [ 'master', 'release/**' ]
     tags:
     - 'v*'
 
@@ -108,15 +107,20 @@ jobs:
     - name: Calculate version suffix
       shell: pwsh
       run: |
-        # TODO: Fail when package tag prefix does not match the version prefix stored in Directory.Build.props?
         if ($env:GITHUB_REF_TYPE -eq 'tag') {
-            # Get the version suffix from the git tag. Example: v1.0.0-preview1-final => preview1-final
+            # Get the version prefix/suffix from the git tag. Example: 'v1.0.0-preview1-final' => 'v1.0.0' and 'preview1-final'
             $segments = $env:GITHUB_REF_NAME -split "-"
-            $suffixSegments = $segments[1..-1]
-            $versionSuffix = $suffixSegments -join "-"
+            $versionPrefix = $segments[0]
+            $versionSuffix = $segments[1..-1] -join "-"
+
+            [xml]$xml = Get-Content Directory.Build.props
+            $configuredVersionPrefix = $xml.Project.PropertyGroup.JsonApiDotNetCoreVersionPrefix
+            if ($configuredVersionPrefix -ne $versionPrefix) {
+                Write-Error "Version prefix from git tag '$versionPrefix' does not match version prefix '$configuredVersionPrefix' stored in Directory.Build.props."
+            }
         }
         else {
-            # Get the version suffix from the auto-incrementing build number. Example: 123 => master-00123
+            # Get the version suffix from the auto-incrementing build number. Example: '123' => 'master-00123'
             $revision = "{0:D5}" -f [convert]::ToInt32($env:GITHUB_RUN_NUMBER, 10)
             $versionSuffix = "$($env:GITHUB_HEAD_REF ?? $env:GITHUB_REF_NAME)-$revision"
         }
@@ -301,7 +305,6 @@ jobs:
         publish_dir: ./documentation
         commit_message: 'Auto-generated documentation from: ${{ github.event.head_commit.message }}'
     - name: Publish to NuGet
-      # TODO: Test this
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
       env:
         NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
