@@ -122,10 +122,12 @@ jobs:
     - name: Build
       shell: pwsh
       run: |
-        dotnet build --no-restore --configuration Release --version-suffix=$env:PACKAGE_VERSION_SUFFIX
+        # TODO: Revert package id after testing
+        dotnet build --property:PackageId=The.Other.JADNC.Package --no-restore --configuration Release --version-suffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Test
       run: |
-        dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.DeterministicReport=true
+        # TODO: Revert package id after testing
+        dotnet test --property:PackageId=The.Other.JADNC.Package --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.DeterministicReport=true
     - name: Upload coverage to codecov.io
       if: matrix.os == 'ubuntu-latest'
       uses: codecov/codecov-action@v3
