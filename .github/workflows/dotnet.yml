@@ -37,7 +37,8 @@ name: .NET
 
 on:
   push:
-    branches: [ 'master', 'release/**' ]
+    # TODO: Revert changes after test
+    branches: [ 'master', 'release/**', 'setup-github-actions' ]
   pull_request:
     branches: [ 'master', 'release/**' ]
     tags:
