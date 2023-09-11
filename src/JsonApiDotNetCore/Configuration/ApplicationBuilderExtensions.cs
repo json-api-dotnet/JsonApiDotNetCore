@@ -44,6 +44,7 @@ public static class ApplicationBuilderExtensions
             options.Conventions.Insert(0, routingConvention);
         };
 
+        builder.UseMiddleware<IdempotencyMiddleware>();
         builder.UseMiddleware<JsonApiMiddleware>();
     }
 }

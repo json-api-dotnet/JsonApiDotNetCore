@@ -13,17 +13,19 @@ public sealed class EntityFrameworkCoreTransaction : IOperationsTransaction
 {
     private readonly IDbContextTransaction _transaction;
     private readonly DbContext _dbContext;
+    private readonly bool _ownsTransaction;
 
     /// <inheritdoc />
     public string TransactionId => _transaction.TransactionId.ToString();
 
-    public EntityFrameworkCoreTransaction(IDbContextTransaction transaction, DbContext dbContext)
+    public EntityFrameworkCoreTransaction(IDbContextTransaction transaction, DbContext dbContext, bool ownsTransaction)
     {
         ArgumentGuard.NotNull(transaction);
         ArgumentGuard.NotNull(dbContext);
 
         _transaction = transaction;
         _dbContext = dbContext;
+        _ownsTransaction = ownsTransaction;
     }
 
     /// <summary>
@@ -44,14 +46,20 @@ public sealed class EntityFrameworkCoreTransaction : IOperationsTransaction
     }
 
     /// <inheritdoc />
-    public Task CommitAsync(CancellationToken cancellationToken)
+    public async Task CommitAsync(CancellationToken cancellationToken)
     {
-        return _transaction.CommitAsync(cancellationToken);
+        if (_ownsTransaction)
+        {
+            await _transaction.CommitAsync(cancellationToken);
+        }
     }
 
     /// <inheritdoc />
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        return _transaction.DisposeAsync();
+        if (_ownsTransaction)
+        {
+            await _transaction.DisposeAsync();
+        }
     }
 }

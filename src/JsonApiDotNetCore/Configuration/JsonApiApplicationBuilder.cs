@@ -178,6 +178,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
         _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
         _services.AddScoped<IJsonApiReader, JsonApiReader>();
         _services.AddScoped<ITargetedFields, TargetedFields>();
+        _services.AddScoped<IIdempotencyProvider, NoIdempotencyProvider>();
     }
 
     private void AddResourceLayer()
