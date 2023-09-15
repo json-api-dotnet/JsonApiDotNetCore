@@ -9,9 +9,9 @@ name: .NET
 
 on:
   push:
-    branches: [ 'master', 'release/**', 'setup-github-actions' ]
+    branches: [ 'master', 'release/**' ]
   pull_request:
-    branches: [ 'master', 'release/**', 'setup-github-actions' ]
+    branches: [ 'master', 'release/**' ]
     tags:
     - 'v*'
 
