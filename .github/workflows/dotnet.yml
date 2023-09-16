@@ -75,6 +75,7 @@ jobs:
     - uses: actions/github-script@v6
       id: get_issue_number
       with:
+        result-encoding: string
         script: |
           if (context.issue.number) {
               // Return issue number if present
@@ -83,6 +84,16 @@ jobs:
           } else {
               // Otherwise return issue number from commit
               echo "Fetching..."
+
+              $temp = (
+                await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                  commit_sha: context.sha,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+              })
+              );
+              echo $temp
+
               return (
                 await github.rest.repos.listPullRequestsAssociatedWithCommit({
                   commit_sha: context.sha,
@@ -91,7 +102,6 @@ jobs:
               })
               ).data[0].number;
           }
-          result-encoding: string
     - name: Print PR/Issue number
       run: echo '${{steps.get_issue_number.outputs.result}}'
 
