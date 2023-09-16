@@ -242,7 +242,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     needs: [ build-and-test, inspect-code, cleanup-code ]
-    if: github.repository_owner == 'json-api-dotnet'
+    if: ${{ !github.event.pull_request.head.repo.fork }}
     permissions:
       packages: write
       contents: write
