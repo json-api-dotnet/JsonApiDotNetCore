@@ -39,7 +39,7 @@ jobs:
     - name: Print messages
       run: |
         echo "PR ${{github.event.pull_request.number}} at ${{github.event.pull_request.url}}"
-        echo "Base repo = ${{github.context.repo.owner}}/${{github.context.repo.repo}}, SHA = ${{github.head_ref||github.sha}}"
+        echo "Base repo = ${{github.context.repo.owner}}/${{github.context.repo.repo}}, SHA = ${{github.event.pull_request.head.sha||github.sha}}"
     - name: Dump event object
       run: |
         echo "${{toJSON(github.event)}}"
