@@ -69,6 +69,33 @@ jobs:
         psql --version
         Write-Host "Using .NET SDK: $(dotnet --version)"
 #
+
+
+
+    - uses: actions/github-script@v6
+      id: get_issue_number
+      with:
+        script: |
+          if (context.issue.number) {
+              // Return issue number if present
+              echo "Found issue number"
+              return context.issue.number;
+          } else {
+              // Otherwise return issue number from commit
+              echo "Fetching..."
+              return (
+                await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                  commit_sha: context.sha,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+              })
+              ).data[0].number;
+          }
+          result-encoding: string
+    - name: Print PR/Issue number
+      run: echo '${{steps.get_issue_number.outputs.result}}'
+
+
     - name: Print messages
       shell: pwsh
       env:
