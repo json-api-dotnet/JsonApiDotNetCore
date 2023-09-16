@@ -71,7 +71,7 @@ jobs:
       shell: pwsh
       env:
         #MY_MSG: ${{ github.event.pull_request.merged == true && ('#'github.event.pull_request.number) || github.sha }}
-        MY_MSG: ${{ github.event_name == 'pull_request' && ('#'github.event.pull_request.number) || github.sha }}
+        MY_MSG: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.sha }}
       run: |
         # github.event.pull_request.merged == true
         Write-Host "Message = "$env:MY_MSG"
