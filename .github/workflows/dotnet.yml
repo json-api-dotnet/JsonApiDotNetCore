@@ -36,13 +36,6 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-    - name: Print messages
-      run: |
-        echo "PR ${{github.event.pull_request.number}} at ${{github.event.pull_request.url}}"
-        echo "Base repo = ${{github.context.repo.owner}}/${{github.context.repo.repo}}, SHA = ${{github.event.pull_request.head.sha||github.sha}}"
-    - name: Dump event object
-      run: |
-        echo "${{toJSON(github.event)}}"
     - name: Setup PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v4
       with:
@@ -73,6 +66,27 @@ jobs:
         Write-Host "$(pwsh --version) is installed at $PSHOME"
         psql --version
         Write-Host "Using .NET SDK: $(dotnet --version)"
+#
+    - name: Print messages
+      shell: pwsh
+      env:
+        #MY_MSG: ${{ github.event.pull_request.merged == true && ('#'github.event.pull_request.number) || github.sha }}
+        MY_MSG: ${{ github.event_name == 'pull_request' && ('#'github.event.pull_request.number) || github.sha }}
+      run: |
+        # github.event.pull_request.merged == true
+        Write-Host "Message = "$env:MY_MSG"
+
+
+        # For a PR:
+        #   Auto-generated documentation from [1294](https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1294)
+        # For a commit
+        #   Auto-generated documentation from {auto}
+        #echo "PR ${{github.event.pull_request.number}} at ${{github.event.pull_request.url}}"
+        #echo "Base repo = ${{github.context.repo.owner}}/${{github.context.repo.repo}}, SHA = ${{github.event.pull_request.head.sha||github.sha}}"
+    - name: Dump event object
+      run: |
+        echo "${{toJSON(github.event)}}"
+#
     - name: Git checkout
       uses: actions/checkout@v3
     - name: Restore tools
@@ -112,26 +126,26 @@ jobs:
       shell: pwsh
       run: |
         dotnet build --no-restore --configuration Release --version-suffix=$env:PACKAGE_VERSION_SUFFIX
-    - name: Test
-      run: |
-        dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.DeterministicReport=true
-    - name: Upload coverage to codecov.io
-      if: matrix.os == 'ubuntu-latest'
-      uses: codecov/codecov-action@v3
-    - name: Generate packages
-      shell: pwsh
-      run: |
-        dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
-    - name: Upload packages to artifacts
-      if: matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v3
-      with:
-        name: packages
-        path: artifacts/packages
+#    - name: Test
+#      run: |
+#        dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.DeterministicReport=true
+#    - name: Upload coverage to codecov.io
+#      if: matrix.os == 'ubuntu-latest'
+#      uses: codecov/codecov-action@v3
+#    - name: Generate packages
+#      shell: pwsh
+#      run: |
+#        dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
+#    - name: Upload packages to artifacts
+#      if: matrix.os == 'ubuntu-latest'
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: packages
+#        path: artifacts/packages
     - name: Generate documentation
       shell: pwsh
       env:
-        # This contains the git tag name on release; in that case we build but don't publish.
+        # This contains the git tag name on release; in that case we build the docs without publishing.
         DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
       run: |
         Write-Host "Using docfx branch name: $env:DOCFX_SOURCE_BRANCH_NAME"
@@ -232,7 +246,7 @@ jobs:
       shell: pwsh
       run: |
         # Not using the environment variables for SHAs, because they may be outdated. This happens on force-push after the build is queued, but before it starts.
-        # The below works because HEAD is detached (at the merge commit), so HEAD~1 is at the base branch.
+        # The below works because HEAD is detached (at the merge commit), so HEAD~1 is at the base branch. When a PR contains no commits, this job will not run.
         $headCommitHash = git rev-parse HEAD
         $baseCommitHash = git rev-parse HEAD~1
 
@@ -248,8 +262,9 @@ jobs:
   publish:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    needs: [ build-and-test, inspect-code, cleanup-code ]
-    if: ${{ !github.event.pull_request.head.repo.fork }}
+    needs: [ build-and-test ]
+    #needs: [ build-and-test, inspect-code, cleanup-code ]
+    #if: ${{ !github.event.pull_request.head.repo.fork }}
     permissions:
       packages: write
       contents: write
@@ -264,11 +279,13 @@ jobs:
         dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
         dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
     - name: Publish documentation
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_branch: gh-pages
+        # TODO: Revert
+        publish_branch: gh-pages-test
+        #publish_branch: gh-pages
         publish_dir: ./documentation
         commit_message: 'Auto-generated documentation from: ${{ github.event.head_commit.message }}'
     - name: Publish to NuGet
