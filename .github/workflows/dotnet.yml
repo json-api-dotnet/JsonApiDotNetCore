@@ -242,7 +242,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     needs: [ build-and-test, inspect-code, cleanup-code ]
-    if: ${{ !github.event.pull_request.head.repo.fork }}
+    #if: ${{ !github.event.pull_request.head.repo.fork }}
     permissions:
       packages: write
       contents: write
@@ -250,6 +250,7 @@ jobs:
     - name: Download artifacts
       uses: actions/download-artifact@v3
     - name: Publish to GitHub Packages
+      if: ${{ !github.event.pull_request.head.repo.fork }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: pwsh
@@ -265,7 +266,7 @@ jobs:
         publish_dir: ./documentation
         commit_message: 'Auto-generated documentation from: ${{ github.event.head_commit.message }}'
     - name: Publish to NuGet
-      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+      #if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
       env:
         NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
       shell: pwsh
