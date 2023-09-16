@@ -70,19 +70,10 @@ jobs:
     - name: Print messages
       shell: pwsh
       env:
-        #MY_MSG: ${{ github.event.pull_request.merged == true && ('#'github.event.pull_request.number) || github.sha }}
         MY_MSG: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.sha }}
       run: |
         # github.event.pull_request.merged == true
         Write-Host "Message = "$env:MY_MSG"
-
-
-        # For a PR:
-        #   Auto-generated documentation from [1294](https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/1294)
-        # For a commit
-        #   Auto-generated documentation from {auto}
-        #echo "PR ${{github.event.pull_request.number}} at ${{github.event.pull_request.url}}"
-        #echo "Base repo = ${{github.context.repo.owner}}/${{github.context.repo.repo}}, SHA = ${{github.event.pull_request.head.sha||github.sha}}"
     - name: Dump event object
       run: |
         echo "${{toJSON(github.event)}}"
