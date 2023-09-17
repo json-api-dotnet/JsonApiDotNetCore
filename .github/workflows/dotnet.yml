@@ -261,6 +261,7 @@ jobs:
 #      run: |
 #        dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
 #        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
+
     - name: Find merged pull request
       id: find_merged_pull_request
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
@@ -281,8 +282,8 @@ jobs:
         publish_branch: gh-pages-test
         #publish_branch: gh-pages
         publish_dir: ./documentation
-        #commit_message: 'Auto-generated documentation from: ${{ github.event.head_commit.message }}'
-        full_commit_message: "Auto-generated documentation from ${{ steps.find_merged_pull_request.outputs.number && format('#{0}', steps.find_merged_pull_request.outputs.number) || github.sha }}"
+        commit_message: 'Auto-generated documentation from...'
+        #full_commit_message: "Auto-generated documentation from ${{ steps.find_merged_pull_request.outputs.number && format('#{0}', steps.find_merged_pull_request.outputs.number) || github.sha }}"
 
     - name: Publish to NuGet
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
