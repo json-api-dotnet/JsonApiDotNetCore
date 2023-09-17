@@ -38,6 +38,16 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
+
+    - name: Get merged pull request
+      uses: actions-ecosystem/action-get-merged-pull-request@v1
+      id: get_merged_pull_request
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        password: postgres
+    - name: Print merged pull request
+      run: echo 'PR number = ${{steps.get_merged_pull_request.outputs.number}}'
+
     - name: Setup PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v4
       with:
