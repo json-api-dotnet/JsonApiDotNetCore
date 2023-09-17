@@ -44,7 +44,6 @@ jobs:
       id: get_merged_pull_request
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        password: postgres
     - name: Print merged pull request
       run: echo 'PR number = ${{steps.get_merged_pull_request.outputs.number}}'
 
