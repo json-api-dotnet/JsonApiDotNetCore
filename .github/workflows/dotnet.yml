@@ -38,15 +38,6 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-
-    - name: Get merged pull request
-      uses: actions-ecosystem/action-get-merged-pull-request@v1
-      id: get_merged_pull_request
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Print merged pull request
-      run: echo 'PR number = ${{steps.get_merged_pull_request.outputs.number}}'
-
     - name: Setup PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v4
       with:
@@ -77,19 +68,6 @@ jobs:
         Write-Host "$(pwsh --version) is installed at $PSHOME"
         psql --version
         Write-Host "Using .NET SDK: $(dotnet --version)"
-    - name: Print messages
-      shell: pwsh
-      env:
-        MY_MSG: "Auto-generated documentation from ${{ github.event.pull_request.merged == true && github.event.pull_request.url || github.sha }}"
-      run: |
-        Write-Host "Message = $env:MY_MSG"
-    - name: Dump event object
-      shell: pwsh
-      env:
-        MY_JSON: "${{toJSON(github.event)}}"
-      run: |
-        Write-Host "Message = $env:MY_JSON"
-#
     - name: Git checkout
       uses: actions/checkout@v3
     - name: Restore tools
@@ -281,6 +259,16 @@ jobs:
       run: |
         dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
         dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
+    - name: Find merged pull request
+      uses: actions-ecosystem/action-get-merged-pull-request@v1
+      id: find_merged_pull_request
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+    # TODO: Remove test
+    - name: Print merged pull request
+      run: |
+        echo 'PR number = ${{ steps.find_merged_pull_request.outputs.number }}'
+        echo 'SHA = ${{ github.sha }}'
     - name: Publish documentation
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: peaceiris/actions-gh-pages@v3
@@ -291,7 +279,7 @@ jobs:
         #publish_branch: gh-pages
         publish_dir: ./documentation
         #commit_message: 'Auto-generated documentation from: ${{ github.event.head_commit.message }}'
-        full_commit_message: "Auto-generated documentation from ${{ github.event.pull_request.merged == true && github.event.pull_request.url || github.sha }}"
+        full_commit_message: "Auto-generated documentation from ${{ steps.find_merged_pull_request.outputs.number && format('#{0}', steps.find_merged_pull_request.outputs.number) || github.sha }}"
 
     - name: Publish to NuGet
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
