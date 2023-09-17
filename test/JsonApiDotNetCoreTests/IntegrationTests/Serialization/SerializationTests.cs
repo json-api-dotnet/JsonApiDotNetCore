@@ -30,7 +30,6 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeExceptionStackTraceInErrors = false;
-        options.AllowClientGeneratedIds = true;
         options.IncludeJsonApiVersion = false;
         options.IncludeTotalResourceCount = true;
     }

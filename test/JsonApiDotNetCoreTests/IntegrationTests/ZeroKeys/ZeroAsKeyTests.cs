@@ -24,7 +24,6 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;
-        options.AllowClientGeneratedIds = true;
     }
 
     [Fact]
