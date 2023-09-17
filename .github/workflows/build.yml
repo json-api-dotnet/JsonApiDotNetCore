@@ -9,9 +9,9 @@ name: Build
 
 on:
   push:
-    branches: [ 'master', 'release/**' ]
+    branches: [ 'master', 'release/**', 'github-actions-base' ]
   pull_request:
-    branches: [ 'master', 'release/**' ]
+    branches: [ 'master', 'release/**', 'github-actions-base' ]
     tags:
     - 'v*'
 
@@ -60,6 +60,13 @@ jobs:
       run: |
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         brew install --cask powershell
+    - name: Print environment variables
+      shell: pwsh
+      run: |
+        Get-ChildItem env:* | Sort-Object Name | Format-List
+    - name: Print GitHub context
+      run: |
+        echo '${{ toJSON(github) }}'
     - name: Show installed versions
       shell: pwsh
       run: |
