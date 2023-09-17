@@ -97,7 +97,7 @@ jobs:
         else {
             # Get the version suffix from the auto-incrementing build number. For example: '123' => 'master-00123'
             $revision = "{0:D5}" -f [convert]::ToInt32($env:GITHUB_RUN_NUMBER, 10)
-            $versionSuffix = "$($env:GITHUB_HEAD_REF ?? $env:GITHUB_REF_NAME)-$revision"
+            $versionSuffix = "$(![string]::IsNullOrEmpty($env:GITHUB_HEAD_REF) ? $env:GITHUB_HEAD_REF : $env:GITHUB_REF_NAME)-$revision"
         }
         Write-Output "Using version suffix: $versionSuffix"
         Write-Output "PACKAGE_VERSION_SUFFIX=$versionSuffix" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
