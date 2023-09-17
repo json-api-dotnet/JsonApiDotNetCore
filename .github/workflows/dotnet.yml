@@ -38,6 +38,16 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
+
+    - name: Get merged pull request
+      uses: actions-ecosystem/action-get-merged-pull-request@v1
+      id: get_merged_pull_request
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        password: postgres
+    - name: Print merged pull request
+      run: echo 'PR number = ${{steps.get_merged_pull_request.outputs.number}}'
+
     - name: Setup PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v4
       with:
@@ -68,34 +78,6 @@ jobs:
         Write-Host "$(pwsh --version) is installed at $PSHOME"
         psql --version
         Write-Host "Using .NET SDK: $(dotnet --version)"
-#
-
-
-
-    - uses: actions/github-script@v6
-      id: get_issue_number
-      with:
-        script: |
-          if (context.issue.number) {
-              // Return issue number if present
-              echo "Found issue number"
-              return context.issue.number;
-          } else {
-              // Otherwise return issue number from commit
-              echo "Fetching..."
-              return (
-                await github.rest.repos.listPullRequestsAssociatedWithCommit({
-                  commit_sha: context.sha,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-              })
-              ).data[0].number;
-          }
-          result-encoding: string
-    - name: Print PR/Issue number
-      run: echo '${{steps.get_issue_number.outputs.result}}'
-
-
     - name: Print messages
       shell: pwsh
       env:
