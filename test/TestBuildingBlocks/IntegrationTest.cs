@@ -18,7 +18,7 @@ public abstract class IntegrationTest : IAsyncLifetime
 
     static IntegrationTest()
     {
-        int maxConcurrentTestRuns = Environment.GetEnvironmentVariable("APPVEYOR") != null ? 32 : 64;
+        int maxConcurrentTestRuns = OperatingSystem.IsWindows() && Environment.GetEnvironmentVariable("CI") != null ? 32 : 64;
         ThrottleSemaphore = new SemaphoreSlim(maxConcurrentTestRuns);
     }
 

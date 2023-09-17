@@ -39,6 +39,6 @@ if ($revision) {
 }
 else {
     Write-Output "Running code cleanup on all files."
-    dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN
+    dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN
     VerifySuccessExitCode
 }
