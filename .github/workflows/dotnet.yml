@@ -128,7 +128,8 @@ jobs:
       shell: pwsh
       env:
         # This contains the git tag name on release; in that case we build the docs without publishing.
-        DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
+        #DOCFX_SOURCE_BRANCH_NAME: ${{ github.base_ref || github.ref_name }}
+        DOCFX_SOURCE_BRANCH_NAME: 'master'
       run: |
         Write-Host "Using docfx branch name: $env:DOCFX_SOURCE_BRANCH_NAME"
         cd docs
@@ -253,16 +254,17 @@ jobs:
     steps:
     - name: Download artifacts
       uses: actions/download-artifact@v3
-    - name: Publish to GitHub Packages
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      shell: pwsh
-      run: |
-        dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
-        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
+#    - name: Publish to GitHub Packages
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      shell: pwsh
+#      run: |
+#        dotnet nuget add source --username 'json-api-dotnet' --password "$env:GITHUB_TOKEN" --store-password-in-clear-text --name 'github' 'https://nuget.pkg.github.com/json-api-dotnet/index.json'
+#        dotnet nuget push "$env:GITHUB_WORKSPACE/packages/*.nupkg" --api-key "$env:GITHUB_TOKEN" --source 'github'
     - name: Find merged pull request
-      uses: actions-ecosystem/action-get-merged-pull-request@v1
       id: find_merged_pull_request
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      uses: actions-ecosystem/action-get-merged-pull-request@v1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
     # TODO: Remove test
