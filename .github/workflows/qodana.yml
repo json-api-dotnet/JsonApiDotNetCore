@@ -19,11 +19,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        pr-mode: false # workaround for bug: job fails on PR (without writing logs) when no source files have changed
         ref: ${{ github.event.pull_request.head.sha }}  # to check out the actual pull request commit, not the merge commit
         fetch-depth: 0  # a full history is required for pull request analysis
     - name: 'Qodana Scan'
       uses: JetBrains/qodana-action@v2023.2
+      with:
+        pr-mode: false # workaround for bug: job fails on PR (without writing logs) when no source files have changed
       env:
         QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
     - name: Upload results to artifacts on failure
