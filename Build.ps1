@@ -16,7 +16,7 @@ VerifySuccessExitCode
 dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.DeterministicReport=true
 VerifySuccessExitCode
 
-dotnet reportgenerator -reports:**\coverage.cobertura.xml -targetdir:artifacts\coverage
+dotnet reportgenerator -reports:**\coverage.cobertura.xml -targetdir:artifacts\coverage -filefilters:-*.g.cs
 VerifySuccessExitCode
 
 dotnet pack --no-build --configuration Release --output artifacts/packages --version-suffix="pre"
