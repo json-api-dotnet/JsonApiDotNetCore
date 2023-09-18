@@ -3,7 +3,8 @@
 # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
 # https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads
 # https://docs.github.com/en/actions/learn-github-actions/expressions
-# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+# https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
+# https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
 
 name: Build
 
