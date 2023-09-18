@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <TargetFrameworkName>net6.0</TargetFrameworkName>
-    <AspNetVersion>6.0.*</AspNetVersion>
+    <AspNetVersion>7.0.*</AspNetVersion>
     <EFCoreVersion>7.0.*</EFCoreVersion>
     <EFCorePostgresVersion>7.0.*</EFCorePostgresVersion>
     <MicrosoftCodeAnalysisVersion>4.7.*</MicrosoftCodeAnalysisVersion>
