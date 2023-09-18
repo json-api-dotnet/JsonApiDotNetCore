@@ -13,3 +13,12 @@ updates:
   pull-request-branch-name:
     separator: "-"
   open-pull-requests-limit: 25
+  ignore:
+  # Block updates to all exposed dependencies of the NuGet packages we produce, as updating them would be a breaking change.
+  - dependency-name: 'Ben.Demystifier'
+  - dependency-name: 'Humanizer*'
+  - dependency-name: 'Microsoft.CodeAnalysis*'
+  - dependency-name: 'Microsoft.EntityFrameworkCore*'
+  # Block major updates of packages that require a matching .NET version.
+  - dependency-name: 'Microsoft.AspNetCore*'
+    update-types: ["version-update:semver-major"]
