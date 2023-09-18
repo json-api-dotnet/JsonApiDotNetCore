@@ -40,6 +40,6 @@
     <CoverletVersion>6.0.*</CoverletVersion>
     <GitHubActionsTestLoggerVersion>2.3.*</GitHubActionsTestLoggerVersion>
     <MoqVersion>4.18.*</MoqVersion>
-    <TestSdkVersion>17.6.*</TestSdkVersion>
+    <TestSdkVersion>17.7.*</TestSdkVersion>
   </PropertyGroup>
 </Project>
