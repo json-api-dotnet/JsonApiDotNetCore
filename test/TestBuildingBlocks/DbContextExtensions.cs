@@ -44,7 +44,9 @@ public static class DbContextExtensions
             }
             else
             {
+#pragma warning disable EF1002 // Risk of vulnerability to SQL injection.
                 await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\"");
+#pragma warning restore EF1002 // Risk of vulnerability to SQL injection.
             }
         }
     }
