@@ -4,8 +4,12 @@ updates:
   directory: "/"
   schedule:
     interval: "weekly"
+  pull-request-branch-name:
+    separator: "-"
 - package-ecosystem: nuget
   directory: "/"
   schedule:
     interval: daily
+  pull-request-branch-name:
+    separator: "-"
   open-pull-requests-limit: 25
