@@ -19,7 +19,7 @@ internal sealed class InMemoryModel : RuntimeModel
     {
         foreach (PropertyInfo property in resourceType.ClrType.GetProperties())
         {
-            entityType.AddProperty(property.Name, property.PropertyType, property);
+            entityType.AddProperty(property.Name, property.PropertyType, propertyInfo: property);
         }
     }
 }
