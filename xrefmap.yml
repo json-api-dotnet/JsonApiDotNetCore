@@ -939,6 +939,30 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.ApplicationBuilderExtensions.UseJsonApi
   nameWithType: ApplicationBuilderExtensions.UseJsonApi
+- uid: JsonApiDotNetCore.Configuration.ClientIdGenerationMode
+  name: ClientIdGenerationMode
+  href: api/JsonApiDotNetCore.Configuration.ClientIdGenerationMode.html
+  commentId: T:JsonApiDotNetCore.Configuration.ClientIdGenerationMode
+  fullName: JsonApiDotNetCore.Configuration.ClientIdGenerationMode
+  nameWithType: ClientIdGenerationMode
+- uid: JsonApiDotNetCore.Configuration.ClientIdGenerationMode.Allowed
+  name: Allowed
+  href: api/JsonApiDotNetCore.Configuration.ClientIdGenerationMode.html#JsonApiDotNetCore_Configuration_ClientIdGenerationMode_Allowed
+  commentId: F:JsonApiDotNetCore.Configuration.ClientIdGenerationMode.Allowed
+  fullName: JsonApiDotNetCore.Configuration.ClientIdGenerationMode.Allowed
+  nameWithType: ClientIdGenerationMode.Allowed
+- uid: JsonApiDotNetCore.Configuration.ClientIdGenerationMode.Forbidden
+  name: Forbidden
+  href: api/JsonApiDotNetCore.Configuration.ClientIdGenerationMode.html#JsonApiDotNetCore_Configuration_ClientIdGenerationMode_Forbidden
+  commentId: F:JsonApiDotNetCore.Configuration.ClientIdGenerationMode.Forbidden
+  fullName: JsonApiDotNetCore.Configuration.ClientIdGenerationMode.Forbidden
+  nameWithType: ClientIdGenerationMode.Forbidden
+- uid: JsonApiDotNetCore.Configuration.ClientIdGenerationMode.Required
+  name: Required
+  href: api/JsonApiDotNetCore.Configuration.ClientIdGenerationMode.html#JsonApiDotNetCore_Configuration_ClientIdGenerationMode_Required
+  commentId: F:JsonApiDotNetCore.Configuration.ClientIdGenerationMode.Required
+  fullName: JsonApiDotNetCore.Configuration.ClientIdGenerationMode.Required
+  nameWithType: ClientIdGenerationMode.Required
 - uid: JsonApiDotNetCore.Configuration.IInverseNavigationResolver
   name: IInverseNavigationResolver
   href: api/JsonApiDotNetCore.Configuration.IInverseNavigationResolver.html
@@ -1003,6 +1027,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.AllowUnknownQueryStringParameters
   nameWithType: IJsonApiOptions.AllowUnknownQueryStringParameters
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.ClientIdGeneration
+  name: ClientIdGeneration
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_ClientIdGeneration
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.ClientIdGeneration
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.ClientIdGeneration
+  nameWithType: IJsonApiOptions.ClientIdGeneration
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.ClientIdGeneration*
+  name: ClientIdGeneration
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_ClientIdGeneration_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.ClientIdGeneration
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.ClientIdGeneration
+  nameWithType: IJsonApiOptions.ClientIdGeneration
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.DefaultAttrCapabilities
   name: DefaultAttrCapabilities
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_DefaultAttrCapabilities
@@ -1524,6 +1561,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.AllowUnknownQueryStringParameters
   nameWithType: JsonApiOptions.AllowUnknownQueryStringParameters
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.ClientIdGeneration
+  name: ClientIdGeneration
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_ClientIdGeneration
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.ClientIdGeneration
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.ClientIdGeneration
+  nameWithType: JsonApiOptions.ClientIdGeneration
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.ClientIdGeneration*
+  name: ClientIdGeneration
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_ClientIdGeneration_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.ClientIdGeneration
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.ClientIdGeneration
+  nameWithType: JsonApiOptions.ClientIdGeneration
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttrCapabilities
   name: DefaultAttrCapabilities
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities
@@ -2195,24 +2245,24 @@ references:
   commentId: T:JsonApiDotNetCore.Configuration.ResourceType
   fullName: JsonApiDotNetCore.Configuration.ResourceType
   nameWithType: ResourceType
-- uid: JsonApiDotNetCore.Configuration.ResourceType.#ctor(System.String,System.Type,System.Type,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes)
-  name: ResourceType(string, Type, Type, LinkTypes, LinkTypes, LinkTypes)
-  href: api/JsonApiDotNetCore.Configuration.ResourceType.html#JsonApiDotNetCore_Configuration_ResourceType__ctor_System_String_System_Type_System_Type_JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_
-  commentId: M:JsonApiDotNetCore.Configuration.ResourceType.#ctor(System.String,System.Type,System.Type,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes)
-  name.vb: New(String, Type, Type, LinkTypes, LinkTypes, LinkTypes)
-  fullName: JsonApiDotNetCore.Configuration.ResourceType.ResourceType(string, System.Type, System.Type, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes)
-  fullName.vb: JsonApiDotNetCore.Configuration.ResourceType.New(String, System.Type, System.Type, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes)
-  nameWithType: ResourceType.ResourceType(string, Type, Type, LinkTypes, LinkTypes, LinkTypes)
-  nameWithType.vb: ResourceType.New(String, Type, Type, LinkTypes, LinkTypes, LinkTypes)
-- uid: JsonApiDotNetCore.Configuration.ResourceType.#ctor(System.String,System.Type,System.Type,System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.AttrAttribute},System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute},System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute},JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes)
-  name: ResourceType(string, Type, Type, IReadOnlyCollection<AttrAttribute>?, IReadOnlyCollection<RelationshipAttribute>?, IReadOnlyCollection<EagerLoadAttribute>?, LinkTypes, LinkTypes, LinkTypes)
-  href: api/JsonApiDotNetCore.Configuration.ResourceType.html#JsonApiDotNetCore_Configuration_ResourceType__ctor_System_String_System_Type_System_Type_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_AttrAttribute__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_EagerLoadAttribute__JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_
-  commentId: M:JsonApiDotNetCore.Configuration.ResourceType.#ctor(System.String,System.Type,System.Type,System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.AttrAttribute},System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute},System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute},JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes)
-  name.vb: New(String, Type, Type, IReadOnlyCollection(Of AttrAttribute), IReadOnlyCollection(Of RelationshipAttribute), IReadOnlyCollection(Of EagerLoadAttribute), LinkTypes, LinkTypes, LinkTypes)
-  fullName: JsonApiDotNetCore.Configuration.ResourceType.ResourceType(string, System.Type, System.Type, System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Resources.Annotations.AttrAttribute>?, System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute>?, System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute>?, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes)
-  fullName.vb: JsonApiDotNetCore.Configuration.ResourceType.New(String, System.Type, System.Type, System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Resources.Annotations.AttrAttribute), System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute), System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute), JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes)
-  nameWithType: ResourceType.ResourceType(string, Type, Type, IReadOnlyCollection<AttrAttribute>?, IReadOnlyCollection<RelationshipAttribute>?, IReadOnlyCollection<EagerLoadAttribute>?, LinkTypes, LinkTypes, LinkTypes)
-  nameWithType.vb: ResourceType.New(String, Type, Type, IReadOnlyCollection(Of AttrAttribute), IReadOnlyCollection(Of RelationshipAttribute), IReadOnlyCollection(Of EagerLoadAttribute), LinkTypes, LinkTypes, LinkTypes)
+- uid: JsonApiDotNetCore.Configuration.ResourceType.#ctor(System.String,System.Nullable{JsonApiDotNetCore.Configuration.ClientIdGenerationMode},System.Type,System.Type,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes)
+  name: ResourceType(string, ClientIdGenerationMode?, Type, Type, LinkTypes, LinkTypes, LinkTypes)
+  href: api/JsonApiDotNetCore.Configuration.ResourceType.html#JsonApiDotNetCore_Configuration_ResourceType__ctor_System_String_System_Nullable_JsonApiDotNetCore_Configuration_ClientIdGenerationMode__System_Type_System_Type_JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_
+  commentId: M:JsonApiDotNetCore.Configuration.ResourceType.#ctor(System.String,System.Nullable{JsonApiDotNetCore.Configuration.ClientIdGenerationMode},System.Type,System.Type,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes)
+  name.vb: New(String, ClientIdGenerationMode?, Type, Type, LinkTypes, LinkTypes, LinkTypes)
+  fullName: JsonApiDotNetCore.Configuration.ResourceType.ResourceType(string, JsonApiDotNetCore.Configuration.ClientIdGenerationMode?, System.Type, System.Type, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes)
+  fullName.vb: JsonApiDotNetCore.Configuration.ResourceType.New(String, JsonApiDotNetCore.Configuration.ClientIdGenerationMode?, System.Type, System.Type, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes)
+  nameWithType: ResourceType.ResourceType(string, ClientIdGenerationMode?, Type, Type, LinkTypes, LinkTypes, LinkTypes)
+  nameWithType.vb: ResourceType.New(String, ClientIdGenerationMode?, Type, Type, LinkTypes, LinkTypes, LinkTypes)
+- uid: JsonApiDotNetCore.Configuration.ResourceType.#ctor(System.String,System.Nullable{JsonApiDotNetCore.Configuration.ClientIdGenerationMode},System.Type,System.Type,System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.AttrAttribute},System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute},System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute},JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes)
+  name: ResourceType(string, ClientIdGenerationMode?, Type, Type, IReadOnlyCollection<AttrAttribute>?, IReadOnlyCollection<RelationshipAttribute>?, IReadOnlyCollection<EagerLoadAttribute>?, LinkTypes, LinkTypes, LinkTypes)
+  href: api/JsonApiDotNetCore.Configuration.ResourceType.html#JsonApiDotNetCore_Configuration_ResourceType__ctor_System_String_System_Nullable_JsonApiDotNetCore_Configuration_ClientIdGenerationMode__System_Type_System_Type_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_AttrAttribute__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_EagerLoadAttribute__JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_
+  commentId: M:JsonApiDotNetCore.Configuration.ResourceType.#ctor(System.String,System.Nullable{JsonApiDotNetCore.Configuration.ClientIdGenerationMode},System.Type,System.Type,System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.AttrAttribute},System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute},System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute},JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes)
+  name.vb: New(String, ClientIdGenerationMode?, Type, Type, IReadOnlyCollection(Of AttrAttribute), IReadOnlyCollection(Of RelationshipAttribute), IReadOnlyCollection(Of EagerLoadAttribute), LinkTypes, LinkTypes, LinkTypes)
+  fullName: JsonApiDotNetCore.Configuration.ResourceType.ResourceType(string, JsonApiDotNetCore.Configuration.ClientIdGenerationMode?, System.Type, System.Type, System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Resources.Annotations.AttrAttribute>?, System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute>?, System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute>?, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes)
+  fullName.vb: JsonApiDotNetCore.Configuration.ResourceType.New(String, JsonApiDotNetCore.Configuration.ClientIdGenerationMode?, System.Type, System.Type, System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Resources.Annotations.AttrAttribute), System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute), System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute), JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes, JsonApiDotNetCore.Resources.Annotations.LinkTypes)
+  nameWithType: ResourceType.ResourceType(string, ClientIdGenerationMode?, Type, Type, IReadOnlyCollection<AttrAttribute>?, IReadOnlyCollection<RelationshipAttribute>?, IReadOnlyCollection<EagerLoadAttribute>?, LinkTypes, LinkTypes, LinkTypes)
+  nameWithType.vb: ResourceType.New(String, ClientIdGenerationMode?, Type, Type, IReadOnlyCollection(Of AttrAttribute), IReadOnlyCollection(Of RelationshipAttribute), IReadOnlyCollection(Of EagerLoadAttribute), LinkTypes, LinkTypes, LinkTypes)
 - uid: JsonApiDotNetCore.Configuration.ResourceType.#ctor*
   name: ResourceType
   href: api/JsonApiDotNetCore.Configuration.ResourceType.html#JsonApiDotNetCore_Configuration_ResourceType__ctor_
@@ -2249,6 +2299,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.ResourceType.BaseType
   nameWithType: ResourceType.BaseType
+- uid: JsonApiDotNetCore.Configuration.ResourceType.ClientIdGeneration
+  name: ClientIdGeneration
+  href: api/JsonApiDotNetCore.Configuration.ResourceType.html#JsonApiDotNetCore_Configuration_ResourceType_ClientIdGeneration
+  commentId: P:JsonApiDotNetCore.Configuration.ResourceType.ClientIdGeneration
+  fullName: JsonApiDotNetCore.Configuration.ResourceType.ClientIdGeneration
+  nameWithType: ResourceType.ClientIdGeneration
+- uid: JsonApiDotNetCore.Configuration.ResourceType.ClientIdGeneration*
+  name: ClientIdGeneration
+  href: api/JsonApiDotNetCore.Configuration.ResourceType.html#JsonApiDotNetCore_Configuration_ResourceType_ClientIdGeneration_
+  commentId: Overload:JsonApiDotNetCore.Configuration.ResourceType.ClientIdGeneration
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.ResourceType.ClientIdGeneration
+  nameWithType: ResourceType.ClientIdGeneration
 - uid: JsonApiDotNetCore.Configuration.ResourceType.ClrType
   name: ClrType
   href: api/JsonApiDotNetCore.Configuration.ResourceType.html#JsonApiDotNetCore_Configuration_ResourceType_ClrType
@@ -14954,6 +15017,19 @@ references:
   commentId: T:JsonApiDotNetCore.Resources.Annotations.ResourceAttribute
   fullName: JsonApiDotNetCore.Resources.Annotations.ResourceAttribute
   nameWithType: ResourceAttribute
+- uid: JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.ClientIdGeneration
+  name: ClientIdGeneration
+  href: api/JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceAttribute_ClientIdGeneration
+  commentId: P:JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.ClientIdGeneration
+  fullName: JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.ClientIdGeneration
+  nameWithType: ResourceAttribute.ClientIdGeneration
+- uid: JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.ClientIdGeneration*
+  name: ClientIdGeneration
+  href: api/JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceAttribute_ClientIdGeneration_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.ClientIdGeneration
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.ClientIdGeneration
+  nameWithType: ResourceAttribute.ClientIdGeneration
 - uid: JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.ControllerNamespace
   name: ControllerNamespace
   href: api/JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceAttribute_ControllerNamespace
@@ -19312,19 +19388,19 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements
   fullName: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements
   nameWithType: ResourceIdentityRequirements
-- uid: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.IdConstraint
-  name: IdConstraint
-  href: api/JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.html#JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_IdConstraint
-  commentId: P:JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.IdConstraint
-  fullName: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.IdConstraint
-  nameWithType: ResourceIdentityRequirements.IdConstraint
-- uid: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.IdConstraint*
-  name: IdConstraint
-  href: api/JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.html#JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_IdConstraint_
-  commentId: Overload:JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.IdConstraint
+- uid: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateIdConstraint
+  name: EvaluateIdConstraint
+  href: api/JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.html#JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_EvaluateIdConstraint
+  commentId: P:JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateIdConstraint
+  fullName: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateIdConstraint
+  nameWithType: ResourceIdentityRequirements.EvaluateIdConstraint
+- uid: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateIdConstraint*
+  name: EvaluateIdConstraint
+  href: api/JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.html#JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_EvaluateIdConstraint_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateIdConstraint
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.IdConstraint
-  nameWithType: ResourceIdentityRequirements.IdConstraint
+  fullName: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.EvaluateIdConstraint
+  nameWithType: ResourceIdentityRequirements.EvaluateIdConstraint
 - uid: JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.IdValue
   name: IdValue
   href: api/JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityRequirements.html#JsonApiDotNetCore_Serialization_Request_Adapters_ResourceIdentityRequirements_IdValue

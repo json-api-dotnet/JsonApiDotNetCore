@@ -81,11 +81,25 @@ builder.Services.AddJsonApi&lt;AppDbContext&gt;(options =&gt;
     // Configure the options here...
 });
 </code></pre>
-<h2 id="client-generated-ids">Client Generated IDs</h2>
+<h2 id="client-generated-ids">Client-generated IDs</h2>
 <p>By default, the server will respond with a 403 Forbidden HTTP Status Code if a POST request is received with a client-generated ID.</p>
-<p>However, this can be allowed by setting the AllowClientGeneratedIds flag in the options:</p>
-<pre><code class="lang-c#">options.AllowClientGeneratedIds = true;
+<p>However, this can be allowed or required globally (for all resource types) by setting <code>ClientIdGeneration</code> in options:</p>
+<pre><code class="lang-c#">options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
 </code></pre>
+<p>or:</p>
+<pre><code class="lang-c#">options.ClientIdGeneration = ClientIdGenerationMode.Required;
+</code></pre>
+<p>It is possible to overrule this setting per resource type:</p>
+<pre><code class="lang-c#">[Resource(ClientIdGeneration = ClientIdGenerationMode.Required)]
+public class Article : Identifiable&lt;Guid&gt;
+{
+    // ...
+}
+</code></pre>
+<div class="NOTE">
+<h5>Note</h5>
+<p>JsonApiDotNetCore versions before v5.4.0 only provided the global <code>AllowClientGeneratedIds</code> boolean property.</p>
+</div>
 <h2 id="pagination">Pagination</h2>
 <p>The default page size used for all resources can be overridden in options (10 by default). To disable pagination, set it to <code>null</code>.
 The maximum page size and number allowed from client requests can be set too (unconstrained by default).</p>

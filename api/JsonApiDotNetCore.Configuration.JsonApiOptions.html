@@ -150,7 +150,7 @@ public sealed class JsonApiOptions : IJsonApiOptions</code></pre>
 
   <h3 id="JsonApiDotNetCore_Configuration_JsonApiOptions__ctor" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.#ctor">
   JsonApiOptions()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L111"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L119"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -180,16 +180,17 @@ public sealed class JsonApiOptions : IJsonApiOptions</code></pre>
 
   <h3 id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowClientGeneratedIds" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowClientGeneratedIds">
   AllowClientGeneratedIds
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L75"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Whether or not clients can provide IDs when creating resources. When not allowed, a 403 Forbidden response is returned if a client attempts to create
-a resource with a defined ID. False by default.</p>
+  <div class="markdown level1 summary"><p>Whether clients can provide IDs when creating resources. When not allowed, a 403 Forbidden response is returned if a client attempts to create a
+resource with a defined ID. <code>false</code> by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool AllowClientGeneratedIds { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use ClientIdGeneration instead.&quot;)]
+public bool AllowClientGeneratedIds { get; set; }</code></pre>
   </div>
 
 
@@ -205,6 +206,10 @@ a resource with a defined ID. False by default.</p>
 
 
 
+  <h4 class="section" id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowClientGeneratedIds_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Setting this to <code>true</code> corresponds to <a class="xref" href="JsonApiDotNetCore.Configuration.ClientIdGenerationMode.html#JsonApiDotNetCore_Configuration_ClientIdGenerationMode_Allowed">Allowed</a>, while <code>false</code> corresponds to
+<a class="xref" href="JsonApiDotNetCore.Configuration.ClientIdGenerationMode.html#JsonApiDotNetCore_Configuration_ClientIdGenerationMode_Forbidden">Forbidden</a>.</p>
+</div>
 
 
 
@@ -213,10 +218,10 @@ a resource with a defined ID. False by default.</p>
 
   <h3 id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowUnknownFieldsInRequestBody" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowUnknownFieldsInRequestBody">
   AllowUnknownFieldsInRequestBody
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L86"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Whether or not to produce an error on unknown attribute and relationship keys in request bodies. False by default.</p>
+  <div class="markdown level1 summary"><p>Whether to produce an error on unknown attribute and relationship keys in request bodies. <code>false</code> by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -245,10 +250,10 @@ a resource with a defined ID. False by default.</p>
 
   <h3 id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowUnknownQueryStringParameters" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowUnknownQueryStringParameters">
   AllowUnknownQueryStringParameters
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L83"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Whether or not to produce an error on unknown query string parameters. False by default.</p>
+  <div class="markdown level1 summary"><p>Whether to produce an error on unknown query string parameters. <code>false</code> by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -273,6 +278,39 @@ a resource with a defined ID. False by default.</p>
 
 
 
+  <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_ClientIdGeneration_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.ClientIdGeneration*"></a>
+
+  <h3 id="JsonApiDotNetCore_Configuration_JsonApiOptions_ClientIdGeneration" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.ClientIdGeneration">
+  ClientIdGeneration
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Whether clients are allowed or required to provide IDs when creating resources. <a class="xref" href="JsonApiDotNetCore.Configuration.ClientIdGenerationMode.html#JsonApiDotNetCore_Configuration_ClientIdGenerationMode_Forbidden">Forbidden</a> by default. This
+setting can be overruled per resource type using <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceAttribute.html#JsonApiDotNetCore_Resources_Annotations_ResourceAttribute_ClientIdGeneration">ClientIdGeneration</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ClientIdGenerationMode ClientIdGeneration { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="JsonApiDotNetCore.Configuration.ClientIdGenerationMode.html">ClientIdGenerationMode</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttrCapabilities*"></a>
 
   <h3 id="JsonApiDotNetCore_Configuration_JsonApiOptions_DefaultAttrCapabilities" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.DefaultAttrCapabilities">
@@ -280,7 +318,8 @@ a resource with a defined ID. False by default.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L27"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Specifies the default set of allowed capabilities on JSON:API attributes. Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.AttrCapabilities.html#JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_All">All</a>.</p>
+  <div class="markdown level1 summary"><p>Specifies the default set of allowed capabilities on JSON:API attributes. Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.AttrCapabilities.html#JsonApiDotNetCore_Resources_Annotations_AttrCapabilities_All">All</a>. This setting can be
+overruled per attribute using <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.AttrAttribute.html#JsonApiDotNetCore_Resources_Annotations_AttrAttribute_Capabilities">Capabilities</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -312,7 +351,8 @@ a resource with a defined ID. False by default.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Specifies the default set of allowed capabilities on JSON:API to-many relationships. Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_All">All</a>.</p>
+  <div class="markdown level1 summary"><p>Specifies the default set of allowed capabilities on JSON:API to-many relationships. Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasManyCapabilities_All">All</a>. This setting
+can be overruled per relationship using <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Capabilities">Capabilities</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -344,7 +384,8 @@ a resource with a defined ID. False by default.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Specifies the default set of allowed capabilities on JSON:API to-one relationships. Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_All">All</a>.</p>
+  <div class="markdown level1 summary"><p>Specifies the default set of allowed capabilities on JSON:API to-one relationships. Defaults to <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasOneCapabilities.html#JsonApiDotNetCore_Resources_Annotations_HasOneCapabilities_All">All</a>. This setting
+can be overruled per relationship using <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_Capabilities">Capabilities</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -405,10 +446,10 @@ a resource with a defined ID. False by default.</p>
 
   <h3 id="JsonApiDotNetCore_Configuration_JsonApiOptions_EnableLegacyFilterNotation" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.EnableLegacyFilterNotation">
   EnableLegacyFilterNotation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L89"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Determines whether legacy filter notation in query strings, such as =eq:, =like:, and =in: is enabled. False by default.</p>
+  <div class="markdown level1 summary"><p>Determines whether legacy filter notation in query strings (such as =eq:, =like:, and =in:) is enabled. <code>false</code> by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -440,7 +481,7 @@ a resource with a defined ID. False by default.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L39"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Whether or not <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a> stack traces should be included in <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ErrorObject.html#JsonApiDotNetCore_Serialization_Objects_ErrorObject_Meta">Meta</a>. False by default.</p>
+  <div class="markdown level1 summary"><p>Whether to include <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a> stack traces in <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ErrorObject.html#JsonApiDotNetCore_Serialization_Objects_ErrorObject_Meta">Meta</a> responses. <code>false</code> by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -472,7 +513,7 @@ a resource with a defined ID. False by default.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Indicates whether responses should contain a jsonapi object that contains the highest JSON:API version supported. False by default.</p>
+  <div class="markdown level1 summary"><p>Whether to include a 'jsonapi' object in responses, which contains the highest JSON:API version supported. <code>false</code> by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -504,7 +545,7 @@ a resource with a defined ID. False by default.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Whether or not the request body should be included in <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html#JsonApiDotNetCore_Serialization_Objects_Document_Meta">Meta</a> when it is invalid. False by default.</p>
+  <div class="markdown level1 summary"><p>Whether to include the request body in <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html#JsonApiDotNetCore_Serialization_Objects_Document_Meta">Meta</a> responses when it is invalid. <code>false</code> by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -536,7 +577,7 @@ a resource with a defined ID. False by default.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Whether or not the total resource count should be included in top-level meta objects. This requires an additional database query. False by default.</p>
+  <div class="markdown level1 summary"><p>Whether to include the total resource count in top-level meta objects. This requires an additional database query. <code>false</code> by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -565,7 +606,7 @@ a resource with a defined ID. False by default.</p>
 
   <h3 id="JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumIncludeDepth" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumIncludeDepth">
   MaximumIncludeDepth
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L92"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Controls how many levels deep includes are allowed to be nested. For example, MaximumIncludeDepth=1 would allow ?include=articles but not
@@ -598,7 +639,7 @@ a resource with a defined ID. False by default.</p>
 
   <h3 id="JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumOperationsPerRequest" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumOperationsPerRequest">
   MaximumOperationsPerRequest
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L95"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Limits the maximum number of operations allowed per atomic:operations request. Defaults to 10. Set to <code>null</code> for unlimited.</p>
@@ -798,7 +839,7 @@ setting can be overruled per resource type by adding <a class="xref" href="JsonA
 
   <h3 id="JsonApiDotNetCore_Configuration_JsonApiOptions_SerializerOptions" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.SerializerOptions">
   SerializerOptions
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L101"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Enables to customize the settings that are used by the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.text.json.jsonserializer">JsonSerializer</a>.</p>
@@ -868,7 +909,7 @@ setting can be overruled per resource type by adding <a class="xref" href="JsonA
 
   <h3 id="JsonApiDotNetCore_Configuration_JsonApiOptions_TransactionIsolationLevel" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.TransactionIsolationLevel">
   TransactionIsolationLevel
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L98"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Enables to override the default isolation level for database transactions, enabling to balance between consistency and performance. Defaults to
@@ -904,7 +945,7 @@ setting can be overruled per resource type by adding <a class="xref" href="JsonA
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L45"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Use relative links for all resources. False by default.</p>
+  <div class="markdown level1 summary"><p>Whether to use relative links for all resources. <code>false</code> by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -955,7 +996,7 @@ setting can be overruled per resource type by adding <a class="xref" href="JsonA
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/JsonApiOptions.cs/#L69"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Whether or not to enable ASP.NET ModelState validation. True by default.</p>
+  <div class="markdown level1 summary"><p>Whether ASP.NET ModelState validation is enabled. <code>true</code> by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
