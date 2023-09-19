@@ -18,6 +18,17 @@
       
       
       <meta name="docfx:docurl" content="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_JsonApiInputFormatter.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.JsonApiInputFormatter%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
   </head>
 
   <script type="module">
@@ -154,7 +165,9 @@
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiInputFormatter.cs/#L11"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Determines whether this <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.formatters.iinputformatter">IInputFormatter</a> can deserialize an object of the
+<code class="paramref">context</code>'s <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.formatters.inputformattercontext.modeltype">ModelType</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -164,13 +177,16 @@
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>context</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.formatters.inputformattercontext">InputFormatterContext</a></dt>
-    <dd></dd>
+    <dd><p>The <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.formatters.inputformattercontext">InputFormatterContext</a>.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p><code>true</code> if this <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.formatters.iinputformatter">IInputFormatter</a> can deserialize an object of the
+<code class="paramref">context</code>'s <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.formatters.inputformattercontext.modeltype">ModelType</a>. <code>false</code> otherwise.</p>
+</dd>
   </dl>
 
 
@@ -190,7 +206,8 @@
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiInputFormatter.cs/#L19"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Reads an object from the request body.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -200,13 +217,15 @@
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>context</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.formatters.inputformattercontext">InputFormatterContext</a></dt>
-    <dd></dd>
+    <dd><p>The <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.formatters.inputformattercontext">InputFormatterContext</a>.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.mvc.formatters.inputformatterresult">InputFormatterResult</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>A <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a> that on completion deserializes the request body.</p>
+</dd>
   </dl>
 
 
