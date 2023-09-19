@@ -87,7 +87,9 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Processes a single operation to update the attributes and/or relationships of an existing resource. Only the values of sent attributes are replaced.
+And only the values of sent relationships are replaced.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -100,9 +102,11 @@ public class UpdateProcessor&lt;TResource, TId&gt; : IUpdateProcessor&lt;TResour
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
     <dt><code>TResource</code></dt>
-    <dd></dd>
+    <dd><p>The resource type.</p>
+</dd>
     <dt><code>TId</code></dt>
-    <dd></dd>
+    <dd><p>The resource identifier type.</p>
+</dd>
   </dl>
 
   <dl class="typelist inheritance">

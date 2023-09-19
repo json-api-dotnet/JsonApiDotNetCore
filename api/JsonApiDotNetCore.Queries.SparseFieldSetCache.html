@@ -87,7 +87,9 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Takes sparse fieldsets from <a class="xref" href="JsonApiDotNetCore.Queries.IQueryConstraintProvider.html">IQueryConstraintProvider</a>s and invokes
+<a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplySparseFieldSet_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_">OnApplySparseFieldSet(SparseFieldSetExpression?)</a> on them.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -139,6 +141,11 @@
 
 
 
+  <h2 id="JsonApiDotNetCore_Queries_SparseFieldSetCache_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>This cache ensures that for each request (or operation per request), the resource definition callback is executed only twice per resource type. The
+first invocation is used to obtain the fields to retrieve from the underlying data store, while the second invocation is used to determine which
+fields to write to the response body.</p>
+</div>
 
 
   <h2 class="section" id="constructors">Constructors

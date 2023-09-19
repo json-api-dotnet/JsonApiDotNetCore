@@ -86,19 +86,26 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncConvertEmptyActionResultFilter.html">AsyncConvertEmptyActionResultFilter</a></dt>
-      <dd></dd>
+      <dd><p>Converts action result without parameters into action result with null parameter.
+<example><pre><code class="lang-csharp">return NotFound() -&gt; return NotFound(null)</code></pre></example>
+This ensures our formatter is invoked, where we'll build a JSON:API compliant response. For details, see:
+<a href="https://github.com/dotnet/aspnetcore/issues/16969">https://github.com/dotnet/aspnetcore/issues/16969</a></p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncJsonApiExceptionFilter.html">AsyncJsonApiExceptionFilter</a></dt>
-      <dd></dd>
+      <dd><p>Application-wide exception filter that invokes <a class="xref" href="JsonApiDotNetCore.Middleware.IExceptionHandler.html">IExceptionHandler</a> for JSON:API requests.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncQueryStringActionFilter.html">AsyncQueryStringActionFilter</a></dt>
-      <dd></dd>
+      <dd><p>Application-wide entry point for processing JSON:API request query strings.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Middleware.ExceptionHandler.html">ExceptionHandler</a></dt>
-      <dd></dd>
+      <dd><p>Central place to handle all exceptions, such as log them and translate into error response.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Middleware.HeaderConstants.html">HeaderConstants</a></dt>
@@ -110,7 +117,8 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiInputFormatter.html">JsonApiInputFormatter</a></dt>
-      <dd></dd>
+      <dd><p>Application-wide entry point for reading JSON:API request bodies.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiMiddleware.html">JsonApiMiddleware</a></dt>
@@ -119,11 +127,13 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiOutputFormatter.html">JsonApiOutputFormatter</a></dt>
-      <dd></dd>
+      <dd><p>Application-wide entry point for writing JSON:API response bodies.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiRequest.html">JsonApiRequest</a></dt>
-      <dd></dd>
+      <dd><p>Metadata associated with the JSON:API request that is currently being processed.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html">JsonApiRoutingConvention</a></dt>

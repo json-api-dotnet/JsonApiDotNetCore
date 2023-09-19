@@ -87,7 +87,11 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Converts action result without parameters into action result with null parameter.
+<example><pre><code class="lang-csharp">return NotFound() -&gt; return NotFound(null)</code></pre></example>
+This ensures our formatter is invoked, where we'll build a JSON:API compliant response. For details, see:
+<a href="https://github.com/dotnet/aspnetcore/issues/16969">https://github.com/dotnet/aspnetcore/issues/16969</a></p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">

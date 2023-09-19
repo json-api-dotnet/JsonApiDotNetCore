@@ -108,11 +108,14 @@ contains the nested query constraints.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayerComposer.html">QueryLayerComposer</a></dt>
-      <dd></dd>
+      <dd><p>Takes scoped expressions from <a class="xref" href="JsonApiDotNetCore.Queries.IQueryConstraintProvider.html">IQueryConstraintProvider</a>s and transforms them.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Queries.SparseFieldSetCache.html">SparseFieldSetCache</a></dt>
-      <dd></dd>
+      <dd><p>Takes sparse fieldsets from <a class="xref" href="JsonApiDotNetCore.Queries.IQueryConstraintProvider.html">IQueryConstraintProvider</a>s and invokes
+<a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplySparseFieldSet_JsonApiDotNetCore_Queries_Expressions_SparseFieldSetExpression_">OnApplySparseFieldSet(SparseFieldSetExpression?)</a> on them.</p>
+</dd>
     </dl>
     <h3 id="interfaces">
 Interfaces

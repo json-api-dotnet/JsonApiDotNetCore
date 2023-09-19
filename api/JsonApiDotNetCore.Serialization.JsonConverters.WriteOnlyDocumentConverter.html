@@ -160,10 +160,11 @@ public sealed class WriteOnlyDocumentConverter : JsonObjectConverter&lt;Document
 
   <h3 id="JsonApiDotNetCore_Serialization_JsonConverters_WriteOnlyDocumentConverter_Read_System_Text_Json_Utf8JsonReader__System_Type_System_Text_Json_JsonSerializerOptions_" data-uid="JsonApiDotNetCore.Serialization.JsonConverters.WriteOnlyDocumentConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
   Read(ref Utf8JsonReader, Type, JsonSerializerOptions)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonConverters/WriteOnlyDocumentConverter.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonConverters/WriteOnlyDocumentConverter.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Always throws a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notsupportedexception">NotSupportedException</a>. This converter is write-only.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -200,7 +201,7 @@ public sealed class WriteOnlyDocumentConverter : JsonObjectConverter&lt;Document
 
   <h3 id="JsonApiDotNetCore_Serialization_JsonConverters_WriteOnlyDocumentConverter_Write_System_Text_Json_Utf8JsonWriter_JsonApiDotNetCore_Serialization_Objects_Document_System_Text_Json_JsonSerializerOptions_" data-uid="JsonApiDotNetCore.Serialization.JsonConverters.WriteOnlyDocumentConverter.Write(System.Text.Json.Utf8JsonWriter,JsonApiDotNetCore.Serialization.Objects.Document,System.Text.Json.JsonSerializerOptions)">
   Write(Utf8JsonWriter, Document, JsonSerializerOptions)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonConverters/WriteOnlyDocumentConverter.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonConverters/WriteOnlyDocumentConverter.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Conditionally writes <pre><code class="lang-csharp">&quot;data&quot;: null</code></pre> or omits it, depending on <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData-1.html#JsonApiDotNetCore_Serialization_Objects_SingleOrManyData_1_IsAssigned">IsAssigned</a>.

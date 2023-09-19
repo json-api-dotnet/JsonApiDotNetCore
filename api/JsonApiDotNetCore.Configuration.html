@@ -90,11 +90,15 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Configuration.InverseNavigationResolver.html">InverseNavigationResolver</a></dt>
-      <dd></dd>
+      <dd><p>Responsible for populating <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a>. This service is instantiated in the configure phase of the
+application. When using a data access layer different from Entity Framework Core, you will need to implement and register this service, or set
+<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a> explicitly.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Configuration.JsonApiOptions.html">JsonApiOptions</a></dt>
-      <dd></dd>
+      <dd><p>Global options that configure the behavior of JsonApiDotNetCore.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Configuration.PageNumber.html">PageNumber</a></dt>
@@ -106,7 +110,9 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceGraph.html">ResourceGraph</a></dt>
-      <dd></dd>
+      <dd><p>Metadata about the shape of JSON:API resources that your API serves and the relationships between them. The resource graph is built at application
+startup and is exposed as a singleton through Dependency Injection.</p>
+</dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceGraphBuilder.html">ResourceGraphBuilder</a></dt>

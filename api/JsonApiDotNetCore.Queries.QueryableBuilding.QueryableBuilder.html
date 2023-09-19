@@ -87,7 +87,8 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Drives conversion from <a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a> into system <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression">Expression</a> trees.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -143,6 +144,12 @@ public class QueryableBuilder : IQueryableBuilder</code></pre>
 
 
 
+  <h2 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilder_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Types that implement this interface are stateless by design. Existing instances are reused recursively (perhaps this one not today, but that may
+change), so don't store mutable state in private fields when implementing this interface or deriving from the built-in implementations. To pass
+custom state, use the <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext_State">State</a> property. The only private field allowed is a stack where you push/pop state, so
+it works recursively.</p>
+</div>
 
 
   <h2 class="section" id="constructors">Constructors

@@ -79,7 +79,7 @@
 
   <h1 id="JsonApiDotNetCore_Serialization_Response_LinkBuilder" data-uid="JsonApiDotNetCore.Serialization.Response.LinkBuilder" class="text-break">
     Class LinkBuilder
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L19"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -87,7 +87,8 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Builds resource object links and relationship object links.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
@@ -153,7 +154,7 @@ public class LinkBuilder : ILinkBuilder</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Response_LinkBuilder__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Queries_IPaginationContext_Microsoft_AspNetCore_Http_IHttpContextAccessor_Microsoft_AspNetCore_Routing_LinkGenerator_JsonApiDotNetCore_Middleware_IControllerResourceMapping_JsonApiDotNetCore_Queries_Parsing_IPaginationParser_" data-uid="JsonApiDotNetCore.Serialization.Response.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Queries.IPaginationContext,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.AspNetCore.Routing.LinkGenerator,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Queries.Parsing.IPaginationParser)">
   LinkBuilder(IJsonApiOptions, IJsonApiRequest, IPaginationContext, IHttpContextAccessor, LinkGenerator, IControllerResourceMapping, IPaginationParser)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L52"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -200,7 +201,7 @@ public class LinkBuilder : ILinkBuilder</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Response_LinkBuilder_GetRelationshipLinks_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_JsonApiDotNetCore_Resources_IIdentifiable_" data-uid="JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetRelationshipLinks(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,JsonApiDotNetCore.Resources.IIdentifiable)">
   GetRelationshipLinks(RelationshipAttribute, IIdentifiable)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L266"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L267"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Builds the links object for a relationship inside a returned resource.</p>
@@ -239,7 +240,7 @@ public class LinkBuilder : ILinkBuilder</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Response_LinkBuilder_GetResourceLinks_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Resources_IIdentifiable_" data-uid="JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetResourceLinks(JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Resources.IIdentifiable)">
   GetResourceLinks(ResourceType, IIdentifiable)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L228"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L229"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Builds the links object for a returned resource (primary or included).</p>
@@ -278,7 +279,7 @@ public class LinkBuilder : ILinkBuilder</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Response_LinkBuilder_GetTopLevelLinks" data-uid="JsonApiDotNetCore.Serialization.Response.LinkBuilder.GetTopLevelLinks">
   GetTopLevelLinks()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L77"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Builds the links object that is included in the top-level of the document.</p>
@@ -310,7 +311,7 @@ public class LinkBuilder : ILinkBuilder</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Response_LinkBuilder_RenderLinkForAction_System_String_System_String_System_Collections_Generic_IDictionary_System_String_System_Object__" data-uid="JsonApiDotNetCore.Serialization.Response.LinkBuilder.RenderLinkForAction(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
   RenderLinkForAction(string?, string, IDictionary&lt;string, object?&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L315"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L316"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -350,7 +351,7 @@ public class LinkBuilder : ILinkBuilder</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L18" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Response/LinkBuilder.cs/#L19" class="edit-link">Edit this page</a>
         </div>
 
         
