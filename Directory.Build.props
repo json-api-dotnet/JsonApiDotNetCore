@@ -7,7 +7,7 @@
     <MicrosoftCodeAnalysisVersion>4.7.*</MicrosoftCodeAnalysisVersion>
     <HumanizerVersion>2.14.1</HumanizerVersion>
     <SwashbuckleVersion>6.5.*</SwashbuckleVersion>
-    <NSwagApiClientVersion>13.19.*</NSwagApiClientVersion>
+    <NSwagApiClientVersion>13.20.*</NSwagApiClientVersion>
     <MicrosoftApiClientVersion>7.0.*</MicrosoftApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
     <JsonApiDotNetCoreVersionPrefix>5.3.1</JsonApiDotNetCoreVersionPrefix>
