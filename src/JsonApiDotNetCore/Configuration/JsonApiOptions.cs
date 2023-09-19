@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Serialization.JsonConverters;
 
 namespace JsonApiDotNetCore.Configuration;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IJsonApiOptions" />
 [PublicAPI]
 public sealed class JsonApiOptions : IJsonApiOptions
 {

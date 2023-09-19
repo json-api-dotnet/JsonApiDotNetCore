@@ -14,6 +14,9 @@ public sealed class WriteOnlyRelationshipObjectConverter : JsonObjectConverter<R
     private static readonly JsonEncodedText LinksText = JsonEncodedText.Encode("links");
     private static readonly JsonEncodedText MetaText = JsonEncodedText.Encode("meta");
 
+    /// <summary>
+    /// Always throws a <see cref="NotSupportedException" />. This converter is write-only.
+    /// </summary>
     public override RelationshipObject Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         throw new NotSupportedException("This converter cannot be used for reading JSON.");

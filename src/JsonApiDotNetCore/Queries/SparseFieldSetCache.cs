@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries;
 
-/// <inheritdoc />
+/// <inheritdoc cref="ISparseFieldSetCache" />
 public sealed class SparseFieldSetCache : ISparseFieldSetCache
 {
     private static readonly ConcurrentDictionary<ResourceType, SparseFieldSetExpression> ViewableFieldSetCache = new();

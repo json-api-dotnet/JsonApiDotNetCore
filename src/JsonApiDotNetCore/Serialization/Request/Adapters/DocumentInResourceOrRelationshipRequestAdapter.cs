@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.Request.Adapters;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IDocumentInResourceOrRelationshipRequestAdapter" />
 public sealed class DocumentInResourceOrRelationshipRequestAdapter : IDocumentInResourceOrRelationshipRequestAdapter
 {
     private readonly IJsonApiOptions _options;

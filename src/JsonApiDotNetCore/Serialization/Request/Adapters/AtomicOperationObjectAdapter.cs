@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.Request.Adapters;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IAtomicOperationObjectAdapter" />
 public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
 {
     private readonly IResourceDataInOperationsRequestAdapter _resourceDataInOperationsRequestAdapter;

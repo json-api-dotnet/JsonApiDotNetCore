@@ -16,7 +16,7 @@ using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace JsonApiDotNetCore.Serialization.Request;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IJsonApiReader" />
 public sealed class JsonApiReader : IJsonApiReader
 {
     private readonly IJsonApiOptions _options;

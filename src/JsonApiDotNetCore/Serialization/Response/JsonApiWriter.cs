@@ -15,7 +15,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace JsonApiDotNetCore.Serialization.Response;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IJsonApiWriter" />
 public sealed class JsonApiWriter : IJsonApiWriter
 {
     private readonly IJsonApiRequest _request;

@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Errors;
 
 namespace JsonApiDotNetCore.AtomicOperations;
 
-/// <inheritdoc />
+/// <inheritdoc cref="ILocalIdTracker" />
 public sealed class LocalIdTracker : ILocalIdTracker
 {
     private readonly IDictionary<string, LocalIdState> _idsTracked = new Dictionary<string, LocalIdState>();

@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Configuration;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResourceGraph" />
 [PublicAPI]
 public sealed class ResourceGraph : IResourceGraph
 {
