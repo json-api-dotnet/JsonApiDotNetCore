@@ -12,7 +12,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Resources;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResourceDefinition{TResource,TId}" />
 [PublicAPI]
 public class JsonApiResourceDefinition<TResource, TId> : IResourceDefinition<TResource, TId>
     where TResource : class, IIdentifiable<TId>

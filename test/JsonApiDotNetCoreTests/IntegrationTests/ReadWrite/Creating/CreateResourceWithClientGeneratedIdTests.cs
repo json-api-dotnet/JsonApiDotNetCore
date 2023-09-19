@@ -28,7 +28,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         });
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.AllowClientGeneratedIds = true;
+        options.ClientIdGeneration = ClientIdGenerationMode.Required;
     }
 
     [Fact]
@@ -208,6 +208,43 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
         property.ShouldNotBeNull();
         property.PropertyType.Should().Be(typeof(string));
+    }
+
+    [Fact]
+    public async Task Cannot_create_resource_for_missing_client_generated_ID()
+    {
+        // Arrange
+        string newDisplayName = _fakers.RgbColor.Generate().DisplayName;
+
+        var requestBody = new
+        {
+            data = new
+            {
+                type = "rgbColors",
+                attributes = new
+                {
+                    displayName = newDisplayName
+                }
+            }
+        };
+
+        const string route = "/rgbColors";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
+        error.Detail.Should().BeNull();
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/data");
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
     }
 
     [Fact]

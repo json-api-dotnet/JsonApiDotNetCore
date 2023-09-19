@@ -7,7 +7,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IQueryStringReader" />
 public sealed class QueryStringReader : IQueryStringReader
 {
     private readonly IJsonApiOptions _options;

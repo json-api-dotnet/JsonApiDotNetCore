@@ -71,7 +71,7 @@ public sealed class TelevisionBroadcastDefinition : JsonApiResourceDefinition<Te
     private bool IsIncludingCollectionOfTelevisionBroadcasts()
     {
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         IncludeElementExpression[] includeElements = _constraintProviders
             .SelectMany(provider => provider.GetConstraints())
@@ -80,7 +80,7 @@ public sealed class TelevisionBroadcastDefinition : JsonApiResourceDefinition<Te
             .SelectMany(include => include.Elements)
             .ToArray();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         foreach (IncludeElementExpression includeElement in includeElements)
@@ -180,7 +180,7 @@ public sealed class TelevisionBroadcastDefinition : JsonApiResourceDefinition<Te
     {
         public bool HasFilterOnArchivedAt { get; private set; }
 
-        public override QueryExpression? VisitResourceFieldChain(ResourceFieldChainExpression expression, object? argument)
+        public override QueryExpression VisitResourceFieldChain(ResourceFieldChainExpression expression, object? argument)
         {
             if (expression.Fields[0].Property.Name == nameof(TelevisionBroadcast.ArchivedAt))
             {

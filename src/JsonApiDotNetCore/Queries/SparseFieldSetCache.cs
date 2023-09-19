@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries;
 
-/// <inheritdoc />
+/// <inheritdoc cref="ISparseFieldSetCache" />
 public sealed class SparseFieldSetCache : ISparseFieldSetCache
 {
     private static readonly ConcurrentDictionary<ResourceType, SparseFieldSetExpression> ViewableFieldSetCache = new();
@@ -29,7 +29,7 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
     private static IDictionary<ResourceType, IImmutableSet<ResourceFieldAttribute>> BuildSourceTable(IEnumerable<IQueryConstraintProvider> constraintProviders)
     {
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         KeyValuePair<ResourceType, SparseFieldSetExpression>[] sparseFieldTables = constraintProviders
             .SelectMany(provider => provider.GetConstraints())
@@ -40,7 +40,7 @@ public sealed class SparseFieldSetCache : ISparseFieldSetCache
             .SelectMany(table => table)
             .ToArray();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         var mergedTable = new Dictionary<ResourceType, ImmutableHashSet<ResourceFieldAttribute>.Builder>();

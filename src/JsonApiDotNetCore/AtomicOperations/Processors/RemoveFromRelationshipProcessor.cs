@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IRemoveFromRelationshipProcessor{TResource,TId}" />
 [PublicAPI]
 public class RemoveFromRelationshipProcessor<TResource, TId> : IRemoveFromRelationshipProcessor<TResource, TId>
     where TResource : class, IIdentifiable<TId>

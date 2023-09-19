@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Middleware;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IExceptionHandler" />
 [PublicAPI]
 public class ExceptionHandler : IExceptionHandler
 {

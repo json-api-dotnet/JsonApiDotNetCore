@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IDeleteProcessor{TResource,TId}" />
 [PublicAPI]
 public class DeleteProcessor<TResource, TId> : IDeleteProcessor<TResource, TId>
     where TResource : class, IIdentifiable<TId>

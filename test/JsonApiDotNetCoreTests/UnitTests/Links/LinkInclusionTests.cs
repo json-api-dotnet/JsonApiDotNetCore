@@ -57,7 +57,8 @@ public sealed class LinkInclusionTests
     public void Applies_cascading_settings_for_top_level_links(LinkTypes linksInResourceType, LinkTypes linksInOptions, LinkTypes expected)
     {
         // Arrange
-        var exampleResourceType = new ResourceType(nameof(ExampleResource), typeof(ExampleResource), typeof(int), linksInResourceType);
+        var exampleResourceType = new ResourceType(nameof(ExampleResource), ClientIdGenerationMode.Forbidden, typeof(ExampleResource), typeof(int),
+            linksInResourceType);
 
         var options = new JsonApiOptions
         {
@@ -156,7 +157,8 @@ public sealed class LinkInclusionTests
     public void Applies_cascading_settings_for_resource_links(LinkTypes linksInResourceType, LinkTypes linksInOptions, LinkTypes expected)
     {
         // Arrange
-        var exampleResourceType = new ResourceType(nameof(ExampleResource), typeof(ExampleResource), typeof(int), resourceLinks: linksInResourceType);
+        var exampleResourceType = new ResourceType(nameof(ExampleResource), ClientIdGenerationMode.Forbidden, typeof(ExampleResource), typeof(int),
+            resourceLinks: linksInResourceType);
 
         var options = new JsonApiOptions
         {
@@ -316,7 +318,8 @@ public sealed class LinkInclusionTests
         LinkTypes linksInOptions, LinkTypes expected)
     {
         // Arrange
-        var exampleResourceType = new ResourceType(nameof(ExampleResource), typeof(ExampleResource), typeof(int), relationshipLinks: linksInResourceType);
+        var exampleResourceType = new ResourceType(nameof(ExampleResource), ClientIdGenerationMode.Forbidden, typeof(ExampleResource), typeof(int),
+            relationshipLinks: linksInResourceType);
 
         var options = new JsonApiOptions
         {

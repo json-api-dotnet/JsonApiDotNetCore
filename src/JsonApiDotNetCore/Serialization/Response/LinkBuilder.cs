@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace JsonApiDotNetCore.Serialization.Response;
 
+/// <inheritdoc cref="ILinkBuilder" />
 [PublicAPI]
 public class LinkBuilder : ILinkBuilder
 {

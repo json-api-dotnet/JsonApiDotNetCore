@@ -1,6 +1,6 @@
 namespace JsonApiDotNetCore.Serialization.Response;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResponseMeta" />
 public sealed class EmptyResponseMeta : IResponseMeta
 {
     /// <inheritdoc />

@@ -15,7 +15,7 @@ using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace JsonApiDotNetCore.Services;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResourceService{TResource,TId}" />
 [PublicAPI]
 public class JsonApiResourceService<TResource, TId> : IResourceService<TResource, TId>
     where TResource : class, IIdentifiable<TId>

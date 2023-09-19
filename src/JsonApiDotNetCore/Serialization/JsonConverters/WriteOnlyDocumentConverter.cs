@@ -19,6 +19,9 @@ public sealed class WriteOnlyDocumentConverter : JsonObjectConverter<Document>
     private static readonly JsonEncodedText IncludedText = JsonEncodedText.Encode("included");
     private static readonly JsonEncodedText MetaText = JsonEncodedText.Encode("meta");
 
+    /// <summary>
+    /// Always throws a <see cref="NotSupportedException" />. This converter is write-only.
+    /// </summary>
     public override Document Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         throw new NotSupportedException("This converter cannot be used for reading JSON.");

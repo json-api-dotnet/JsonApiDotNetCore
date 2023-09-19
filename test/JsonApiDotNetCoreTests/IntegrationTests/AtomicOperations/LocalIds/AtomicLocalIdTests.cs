@@ -639,14 +639,14 @@ public sealed class AtomicLocalIdTests : IClassFixture<IntegrationTestContext<Te
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             MusicTrack trackInDatabase = await dbContext.MusicTracks
                 .Include(musicTrack => musicTrack.OwnedBy)
                 .Include(musicTrack => musicTrack.Performers)
                 .FirstWithIdAsync(newTrackId);
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             trackInDatabase.Title.Should().Be(newTrackTitle);

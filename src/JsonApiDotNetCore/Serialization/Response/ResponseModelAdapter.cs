@@ -14,7 +14,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.Response;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResponseModelAdapter" />
 [PublicAPI]
 public class ResponseModelAdapter : IResponseModelAdapter
 {

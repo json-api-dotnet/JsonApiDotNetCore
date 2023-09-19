@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace JsonApiDotNetCore.Middleware;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IAsyncConvertEmptyActionResultFilter" />
 public sealed class AsyncConvertEmptyActionResultFilter : IAsyncConvertEmptyActionResultFilter
 {
     /// <inheritdoc />

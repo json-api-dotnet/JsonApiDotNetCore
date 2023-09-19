@@ -3,7 +3,7 @@ using System.Text;
 
 namespace JsonApiDotNetCore.Serialization.Response;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IFingerprintGenerator" />
 internal sealed class FingerprintGenerator : IFingerprintGenerator
 {
     private static readonly byte[] Separator = Encoding.UTF8.GetBytes("|");

@@ -4,7 +4,7 @@
     <AspNetVersion>6.0.*</AspNetVersion>
     <EFCoreVersion>7.0.*</EFCoreVersion>
     <EFCorePostgresVersion>7.0.*</EFCorePostgresVersion>
-    <MicrosoftCodeAnalysisVersion>4.6.*</MicrosoftCodeAnalysisVersion>
+    <MicrosoftCodeAnalysisVersion>4.7.*</MicrosoftCodeAnalysisVersion>
     <HumanizerVersion>2.14.1</HumanizerVersion>
     <SwashbuckleVersion>6.5.*</SwashbuckleVersion>
     <NSwagApiClientVersion>13.19.*</NSwagApiClientVersion>
@@ -25,6 +25,10 @@
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)CSharpGuidelinesAnalyzer.config" Visible="False" />
   </ItemGroup>
 
+  <PropertyGroup Condition="'$(CI)' != ''">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <NoWarn>$(NoWarn);1591</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -38,7 +42,7 @@
   <!-- Test Project Dependencies -->
   <PropertyGroup>
     <CoverletVersion>6.0.*</CoverletVersion>
-    <MoqVersion>4.18.*</MoqVersion>
-    <TestSdkVersion>17.6.*</TestSdkVersion>
+    <GitHubActionsTestLoggerVersion>2.3.*</GitHubActionsTestLoggerVersion>
+    <TestSdkVersion>17.7.*</TestSdkVersion>
   </PropertyGroup>
 </Project>

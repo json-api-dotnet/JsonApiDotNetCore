@@ -52,12 +52,14 @@ public sealed class StarDefinition : HitCountingResourceDefinition<Star, int>
     {
         base.OnApplySparseFieldSet(existingSparseFieldSet);
 
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_chained_method_calls chop_always
+        // @formatter:wrap_before_first_method_call true
 
         return existingSparseFieldSet
             .Including<Star>(star => star.Kind, ResourceGraph)
             .Excluding<Star>(star => star.IsVisibleFromEarth, ResourceGraph);
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
+        // @formatter:wrap_chained_method_calls restore
     }
 }

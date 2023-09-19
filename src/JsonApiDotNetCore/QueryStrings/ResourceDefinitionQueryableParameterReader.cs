@@ -9,7 +9,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResourceDefinitionQueryableParameterReader" />
 [PublicAPI]
 public class ResourceDefinitionQueryableParameterReader : IResourceDefinitionQueryableParameterReader
 {
