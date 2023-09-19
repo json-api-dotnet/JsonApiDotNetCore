@@ -3,7 +3,6 @@ using JetBrains.Annotations;
 // We cannot rely on generating ApiException as soon as we are generating multiple clients, see https://github.com/RicoSuter/NSwag/issues/2839#issuecomment-776647377.
 // Instead, we configure NSwag to point to the exception below in the generated code.
 
-// ReSharper disable once CheckNamespace
 namespace JsonApiDotNetCore.OpenApi.Client.Exceptions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
