@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.AtomicOperations;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IOperationsProcessor" />
 [PublicAPI]
 public class OperationsProcessor : IOperationsProcessor
 {

@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.AtomicOperations;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IOperationProcessorAccessor" />
 [PublicAPI]
 public class OperationProcessorAccessor : IOperationProcessorAccessor
 {

@@ -241,14 +241,14 @@ public sealed class AtomicCreateResourceWithToOneRelationshipTests
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks
                 .Include(musicTrack => musicTrack.OwnedBy)
                 .Where(musicTrack => newTrackIds.Contains(musicTrack.Id))
                 .ToListAsync();
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             tracksInDatabase.ShouldHaveCount(elementCount);

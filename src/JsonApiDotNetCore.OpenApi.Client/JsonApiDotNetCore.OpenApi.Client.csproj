@@ -21,10 +21,6 @@
     <DebugType>embedded</DebugType>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(APPVEYOR)' != ''">
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-  </PropertyGroup>
-
   <ItemGroup>
     <None Include="..\..\logo.png" Visible="false" Pack="True" PackagePath="" />
     <None Include="..\..\PackageReadme.md" Visible="false" Pack="True" PackagePath="" />

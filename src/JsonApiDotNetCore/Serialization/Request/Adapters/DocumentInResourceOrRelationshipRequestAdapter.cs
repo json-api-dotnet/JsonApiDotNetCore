@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.Request.Adapters;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IDocumentInResourceOrRelationshipRequestAdapter" />
 public sealed class DocumentInResourceOrRelationshipRequestAdapter : IDocumentInResourceOrRelationshipRequestAdapter
 {
     private readonly IJsonApiOptions _options;
@@ -60,14 +60,11 @@ public sealed class DocumentInResourceOrRelationshipRequestAdapter : IDocumentIn
 
     private ResourceIdentityRequirements CreateIdentityRequirements(RequestAdapterState state)
     {
-        JsonElementConstraint? idConstraint = state.Request.WriteOperation == WriteOperationKind.CreateResource
-            ? _options.AllowClientGeneratedIds ? null : JsonElementConstraint.Forbidden
-            : JsonElementConstraint.Required;
-
         var requirements = new ResourceIdentityRequirements
         {
             ResourceType = state.Request.PrimaryResourceType,
-            IdConstraint = idConstraint,
+            EvaluateIdConstraint = resourceType =>
+                ResourceIdentityRequirements.DoEvaluateIdConstraint(resourceType, state.Request.WriteOperation, _options.ClientIdGeneration),
             IdValue = state.Request.PrimaryId
         };
 

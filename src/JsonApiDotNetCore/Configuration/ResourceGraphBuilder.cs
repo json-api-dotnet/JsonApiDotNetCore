@@ -237,6 +237,8 @@ public class ResourceGraphBuilder
 
     private ResourceType CreateResourceType(string publicName, Type resourceClrType, Type idClrType)
     {
+        ClientIdGenerationMode? clientIdGeneration = GetClientIdGeneration(resourceClrType);
+
         IReadOnlyCollection<AttrAttribute> attributes = GetAttributes(resourceClrType);
         IReadOnlyCollection<RelationshipAttribute> relationships = GetRelationships(resourceClrType);
         IReadOnlyCollection<EagerLoadAttribute> eagerLoads = GetEagerLoads(resourceClrType);
@@ -246,9 +248,15 @@ public class ResourceGraphBuilder
         var linksAttribute = resourceClrType.GetCustomAttribute<ResourceLinksAttribute>(true);
 
         return linksAttribute == null
-            ? new ResourceType(publicName, resourceClrType, idClrType, attributes, relationships, eagerLoads)
-            : new ResourceType(publicName, resourceClrType, idClrType, attributes, relationships, eagerLoads, linksAttribute.TopLevelLinks,
+            ? new ResourceType(publicName, clientIdGeneration, resourceClrType, idClrType, attributes, relationships, eagerLoads)
+            : new ResourceType(publicName, clientIdGeneration, resourceClrType, idClrType, attributes, relationships, eagerLoads, linksAttribute.TopLevelLinks,
                 linksAttribute.ResourceLinks, linksAttribute.RelationshipLinks);
+    }
+
+    private ClientIdGenerationMode? GetClientIdGeneration(Type resourceClrType)
+    {
+        var resourceAttribute = resourceClrType.GetCustomAttribute<ResourceAttribute>(true);
+        return resourceAttribute?.NullableClientIdGeneration;
     }
 
     private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceClrType)

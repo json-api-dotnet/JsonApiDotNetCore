@@ -1,5 +1,6 @@
 using System.Data;
 using System.Text.Json;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
@@ -21,37 +22,40 @@ public interface IJsonApiOptions
     string? Namespace { get; }
 
     /// <summary>
-    /// Specifies the default set of allowed capabilities on JSON:API attributes. Defaults to <see cref="AttrCapabilities.All" />.
+    /// Specifies the default set of allowed capabilities on JSON:API attributes. Defaults to <see cref="AttrCapabilities.All" />. This setting can be
+    /// overruled per attribute using <see cref="AttrAttribute.Capabilities" />.
     /// </summary>
     AttrCapabilities DefaultAttrCapabilities { get; }
 
     /// <summary>
-    /// Specifies the default set of allowed capabilities on JSON:API to-one relationships. Defaults to <see cref="HasOneCapabilities.All" />.
+    /// Specifies the default set of allowed capabilities on JSON:API to-one relationships. Defaults to <see cref="HasOneCapabilities.All" />. This setting
+    /// can be overruled per relationship using <see cref="HasOneAttribute.Capabilities" />.
     /// </summary>
     HasOneCapabilities DefaultHasOneCapabilities { get; }
 
     /// <summary>
-    /// Specifies the default set of allowed capabilities on JSON:API to-many relationships. Defaults to <see cref="HasManyCapabilities.All" />.
+    /// Specifies the default set of allowed capabilities on JSON:API to-many relationships. Defaults to <see cref="HasManyCapabilities.All" />. This setting
+    /// can be overruled per relationship using <see cref="HasManyAttribute.Capabilities" />.
     /// </summary>
     HasManyCapabilities DefaultHasManyCapabilities { get; }
 
     /// <summary>
-    /// Indicates whether responses should contain a jsonapi object that contains the highest JSON:API version supported. False by default.
+    /// Whether to include a 'jsonapi' object in responses, which contains the highest JSON:API version supported. <c>false</c> by default.
     /// </summary>
     bool IncludeJsonApiVersion { get; }
 
     /// <summary>
-    /// Whether or not <see cref="Exception" /> stack traces should be included in <see cref="ErrorObject.Meta" />. False by default.
+    /// Whether to include <see cref="Exception" /> stack traces in <see cref="ErrorObject.Meta" /> responses. <c>false</c> by default.
     /// </summary>
     bool IncludeExceptionStackTraceInErrors { get; }
 
     /// <summary>
-    /// Whether or not the request body should be included in <see cref="Document.Meta" /> when it is invalid. False by default.
+    /// Whether to include the request body in <see cref="Document.Meta" /> responses when it is invalid. <c>false</c> by default.
     /// </summary>
     bool IncludeRequestBodyInErrors { get; }
 
     /// <summary>
-    /// Use relative links for all resources. False by default.
+    /// Whether to use relative links for all resources. <c>false</c> by default.
     /// </summary>
     /// <example>
     /// <code><![CDATA[
@@ -94,7 +98,7 @@ public interface IJsonApiOptions
     LinkTypes RelationshipLinks { get; }
 
     /// <summary>
-    /// Whether or not the total resource count should be included in top-level meta objects. This requires an additional database query. False by default.
+    /// Whether to include the total resource count in top-level meta objects. This requires an additional database query. <c>false</c> by default.
     /// </summary>
     bool IncludeTotalResourceCount { get; }
 
@@ -114,28 +118,40 @@ public interface IJsonApiOptions
     PageNumber? MaximumPageNumber { get; }
 
     /// <summary>
-    /// Whether or not to enable ASP.NET ModelState validation. True by default.
+    /// Whether ASP.NET ModelState validation is enabled. <c>true</c> by default.
     /// </summary>
     bool ValidateModelState { get; }
 
     /// <summary>
-    /// Whether or not clients can provide IDs when creating resources. When not allowed, a 403 Forbidden response is returned if a client attempts to create
-    /// a resource with a defined ID. False by default.
+    /// Whether clients are allowed or required to provide IDs when creating resources. <see cref="ClientIdGenerationMode.Forbidden" /> by default. This
+    /// setting can be overruled per resource type using <see cref="ResourceAttribute.ClientIdGeneration" />.
     /// </summary>
+    ClientIdGenerationMode ClientIdGeneration { get; }
+
+    /// <summary>
+    /// Whether clients can provide IDs when creating resources. When not allowed, a 403 Forbidden response is returned if a client attempts to create a
+    /// resource with a defined ID. <c>false</c> by default.
+    /// </summary>
+    /// <remarks>
+    /// Setting this to <c>true</c> corresponds to <see cref="ClientIdGenerationMode.Allowed" />, while <c>false</c> corresponds to
+    /// <see cref="ClientIdGenerationMode.Forbidden" />.
+    /// </remarks>
+    [PublicAPI]
+    [Obsolete("Use ClientIdGeneration instead.")]
     bool AllowClientGeneratedIds { get; }
 
     /// <summary>
-    /// Whether or not to produce an error on unknown query string parameters. False by default.
+    /// Whether to produce an error on unknown query string parameters. <c>false</c> by default.
     /// </summary>
     bool AllowUnknownQueryStringParameters { get; }
 
     /// <summary>
-    /// Whether or not to produce an error on unknown attribute and relationship keys in request bodies. False by default.
+    /// Whether to produce an error on unknown attribute and relationship keys in request bodies. <c>false</c> by default.
     /// </summary>
     bool AllowUnknownFieldsInRequestBody { get; }
 
     /// <summary>
-    /// Determines whether legacy filter notation in query strings, such as =eq:, =like:, and =in: is enabled. False by default.
+    /// Determines whether legacy filter notation in query strings (such as =eq:, =like:, and =in:) is enabled. <c>false</c> by default.
     /// </summary>
     bool EnableLegacyFilterNotation { get; }
 

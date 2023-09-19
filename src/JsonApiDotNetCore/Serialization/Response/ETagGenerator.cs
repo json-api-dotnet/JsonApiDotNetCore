@@ -2,7 +2,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace JsonApiDotNetCore.Serialization.Response;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IETagGenerator" />
 internal sealed class ETagGenerator : IETagGenerator
 {
     private readonly IFingerprintGenerator _fingerprintGenerator;

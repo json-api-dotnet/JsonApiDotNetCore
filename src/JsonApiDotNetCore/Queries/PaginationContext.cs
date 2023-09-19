@@ -2,7 +2,7 @@ using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Queries;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IPaginationContext" />
 internal sealed class PaginationContext : IPaginationContext
 {
     /// <inheritdoc />

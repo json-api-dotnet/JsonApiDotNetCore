@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All" />
+    <PackageReference Include="GitHubActionsTestLogger" Version="$(GitHubActionsTestLoggerVersion)" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
     <PackageReference Include="BlushingPenguin.JsonPath" Version="1.0.6" />

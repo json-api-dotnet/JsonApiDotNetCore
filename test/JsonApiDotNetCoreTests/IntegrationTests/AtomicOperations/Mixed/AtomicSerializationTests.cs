@@ -31,7 +31,7 @@ public sealed class AtomicSerializationTests : IClassFixture<IntegrationTestCont
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeExceptionStackTraceInErrors = false;
         options.IncludeJsonApiVersion = true;
-        options.AllowClientGeneratedIds = true;
+        options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
     }
 
     [Fact]

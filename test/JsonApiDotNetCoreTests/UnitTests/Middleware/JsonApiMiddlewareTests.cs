@@ -7,17 +7,17 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moq;
 using TestBuildingBlocks;
 using Xunit;
 
 #pragma warning disable AV1561 // Signature contains too many parameters
 
-namespace UnitTests.Middleware;
+namespace JsonApiDotNetCoreTests.UnitTests.Middleware;
 
-public sealed class JsonApiRequestTests
+public sealed class JsonApiMiddlewareTests
 {
     // @formatter:wrap_lines false
     [Theory]
@@ -50,7 +50,8 @@ public sealed class JsonApiRequestTests
         var options = new JsonApiOptions();
         var request = new JsonApiRequest();
 
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_chained_method_calls chop_always
+        // @formatter:wrap_before_first_method_call true
 
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
             .Add<TodoItem, int>()
@@ -58,12 +59,13 @@ public sealed class JsonApiRequestTests
             .Add<ItemTag, int>()
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
+        // @formatter:wrap_chained_method_calls restore
 
         var httpContext = new DefaultHttpContext();
         IControllerResourceMapping controllerResourceMapping = SetupRoutes(httpContext, resourceGraph, requestMethod, requestPath);
 
-        var middleware = new JsonApiMiddleware(_ => Task.CompletedTask, new HttpContextAccessor
+        var middleware = new JsonApiMiddleware(null, new HttpContextAccessor
         {
             HttpContext = httpContext
         });
@@ -151,16 +153,10 @@ public sealed class JsonApiRequestTests
             ControllerTypeInfo = (TypeInfo)typeof(object)
         };
 
-        var controllerResourceMappingMock = new Mock<IControllerResourceMapping>();
+        httpContext.SetEndpoint(new Endpoint(null, new EndpointMetadataCollection(controllerActionDescriptor), null));
 
-        controllerResourceMappingMock.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(() =>
-        {
-            return pathSegments.Length > 0 ? resourceGraph.GetResourceTypes().FirstOrDefault(resourceType => resourceType.PublicName == pathSegments[0]) : null;
-        });
-
-        httpContext.SetEndpoint(new Endpoint(_ => Task.CompletedTask, new EndpointMetadataCollection(controllerActionDescriptor), null));
-
-        return controllerResourceMappingMock.Object;
+        string? resourceTypePublicName = pathSegments.Length > 0 ? pathSegments[0] : null;
+        return new FakeJsonApiRoutingConvention(resourceGraph, resourceTypePublicName);
     }
 
     public enum IsReadOnly
@@ -195,5 +191,32 @@ public sealed class JsonApiRequestTests
 
         [HasMany]
         public ISet<ItemTag> Tags { get; set; } = new HashSet<ItemTag>();
+    }
+
+    private sealed class FakeJsonApiRoutingConvention : IJsonApiRoutingConvention
+    {
+        private readonly IResourceGraph _resourceGraph;
+        private readonly string? _resourceTypePublicName;
+
+        public FakeJsonApiRoutingConvention(IResourceGraph resourceGraph, string? resourceTypePublicName)
+        {
+            _resourceGraph = resourceGraph;
+            _resourceTypePublicName = resourceTypePublicName;
+        }
+
+        public void Apply(ApplicationModel application)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ResourceType? GetResourceTypeForController(Type? controllerType)
+        {
+            return _resourceTypePublicName != null ? _resourceGraph.FindResourceType(_resourceTypePublicName) : null;
+        }
+
+        public string GetControllerNameForResourceType(ResourceType? resourceType)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

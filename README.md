@@ -5,7 +5,7 @@
 # JsonApiDotNetCore
 A framework for building [JSON:API](http://jsonapi.org/) compliant REST APIs using .NET Core and Entity Framework Core. Includes support for [Atomic Operations](https://jsonapi.org/ext/atomic/).
 
-[![Build](https://ci.appveyor.com/api/projects/status/t8noo6rjtst51kga/branch/master?svg=true)](https://ci.appveyor.com/project/json-api-dotnet/jsonapidotnetcore/branch/master)
+[![Build](https://github.com/json-api-dotnet/JsonApiDotNetCore/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/json-api-dotnet/JsonApiDotNetCore/actions/workflows/build.yml)
 [![Coverage](https://codecov.io/gh/json-api-dotnet/JsonApiDotNetCore/branch/master/graph/badge.svg?token=pn036tWV8T)](https://codecov.io/gh/json-api-dotnet/JsonApiDotNetCore)
 [![NuGet](https://img.shields.io/nuget/v/JsonApiDotNetCore.svg)](https://www.nuget.org/packages/JsonApiDotNetCore/)
 [![Chat](https://badges.gitter.im/json-api-dotnet-core/Lobby.svg)](https://gitter.im/json-api-dotnet-core/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -95,15 +95,24 @@ Have a question, found a bug or want to submit code changes? See our [contributi
 
 ## Trying out the latest build
 
-After each commit to the master branch, a new prerelease NuGet package is automatically published to AppVeyor at https://ci.appveyor.com/nuget/jsonapidotnetcore. To try it out, follow the next steps:
+After each commit to the master branch, a new pre-release NuGet package is automatically published to [GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry).
+To try it out, follow the steps below:
 
-* In Visual Studio: **Tools**, **NuGet Package Manager**, **Package Manager Settings**, **Package Sources**
-    * Click **+**
-    * Name: **AppVeyor JADNC**, Source: **https://ci.appveyor.com/nuget/jsonapidotnetcore**
-    * Click **Update**, **Ok**
-* Open the NuGet package manager console (**Tools**, **NuGet Package Manager**, **Package Manager Console**)
-    * Select **AppVeyor JADNC** as package source
-    * Run command: `Install-Package JonApiDotNetCore -pre`
+1. [Create a Personal Access Token (classic)](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic) with at least `read:packages` scope.
+1. Add our package source to your local user-specific `nuget.config` file by running:
+   ```bash
+   dotnet nuget add source https://nuget.pkg.github.com/json-api-dotnet/index.json --name github-json-api --username YOUR-GITHUB-USERNAME --password YOUR-PAT-CLASSIC
+   ```
+   In the command above:
+   - Replace YOUR-GITHUB-USERNAME with the username you use to login your GitHub account.
+   - Replace YOUR-PAT-CLASSIC with the token your created above.
+   
+   :warning: If the above command doesn't give you access in the next step, remove the package source by running:
+   ```bash
+   dotnet nuget remove source github-json-api
+   ```
+   and retry with the `--store-password-in-clear-text` switch added.
+1. Restart your IDE, open your project, and browse the list of packages from the github-json-api feed (make sure pre-release packages are included).
 
 ## Development
 
@@ -125,7 +134,7 @@ And then to run the tests:
 dotnet test
 ```
 
-Alternatively, to build and validate the code, run all tests, generate code coverage and produce the NuGet package:
+Alternatively, to build, run all tests, generate code coverage and NuGet packages:
 
 ```bash
 pwsh Build.ps1

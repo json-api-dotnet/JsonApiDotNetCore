@@ -3,7 +3,6 @@ using JetBrains.Annotations;
 using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 #pragma warning disable AV1008 // Class should not be static
-#pragma warning disable AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
 
 namespace JsonApiDotNetCore.OpenApi.Client;
 

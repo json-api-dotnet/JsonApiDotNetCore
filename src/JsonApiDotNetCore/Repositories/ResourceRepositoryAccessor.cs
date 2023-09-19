@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Repositories;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResourceRepositoryAccessor" />
 [PublicAPI]
 public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
 {

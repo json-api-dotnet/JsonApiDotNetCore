@@ -18,7 +18,7 @@ internal sealed class TestableQueryExpressionRewriter : QueryExpressionRewriter<
         return base.VisitComparison(expression, argument);
     }
 
-    public override QueryExpression? VisitResourceFieldChain(ResourceFieldChainExpression expression, object? argument)
+    public override QueryExpression VisitResourceFieldChain(ResourceFieldChainExpression expression, object? argument)
     {
         Capture(expression);
         return base.VisitResourceFieldChain(expression, argument);

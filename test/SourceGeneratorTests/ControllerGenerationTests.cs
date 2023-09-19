@@ -18,7 +18,7 @@ public sealed class ControllerGenerationTests
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -38,7 +38,7 @@ public sealed class ControllerGenerationTests
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -79,7 +79,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -100,7 +100,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -141,7 +141,7 @@ public sealed partial class ItemsController : JsonApiQueryController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -162,7 +162,7 @@ public sealed partial class ItemsController : JsonApiQueryController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -203,7 +203,7 @@ public sealed partial class ItemsController : JsonApiCommandController<Item, lon
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -227,7 +227,7 @@ public sealed partial class ItemsController : JsonApiCommandController<Item, lon
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -277,7 +277,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -296,7 +296,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -318,7 +318,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -339,7 +339,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -361,7 +361,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .InNamespace("ExampleApi.Models")
@@ -392,7 +392,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -415,7 +415,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -436,7 +436,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -459,7 +459,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(ResourceAttribute))
@@ -478,7 +478,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -503,7 +503,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -525,7 +525,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -548,7 +548,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -568,7 +568,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -609,7 +609,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -629,7 +629,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -670,7 +670,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -689,7 +689,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -727,7 +727,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -747,7 +747,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -787,7 +787,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -819,7 +819,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act

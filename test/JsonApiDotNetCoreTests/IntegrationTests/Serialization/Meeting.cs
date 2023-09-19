@@ -1,13 +1,14 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.Serialization")]
+[Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.Serialization", ClientIdGeneration = ClientIdGenerationMode.Required)]
 public sealed class Meeting : Identifiable<Guid>
 {
     [Attr]

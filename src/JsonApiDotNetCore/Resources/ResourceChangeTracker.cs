@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResourceChangeTracker{TResource}" />
 [PublicAPI]
 public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TResource>
     where TResource : class, IIdentifiable

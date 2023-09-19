@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Queries;
 
 namespace JsonApiDotNetCore.Serialization.Response;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IMetaBuilder" />
 [PublicAPI]
 public sealed class MetaBuilder : IMetaBuilder
 {
