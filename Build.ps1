@@ -7,15 +7,6 @@ function VerifySuccessExitCode {
 Write-Host "$(pwsh --version)"
 Write-Host "Active .NET SDK: $(dotnet --version)"
 
-# In a PR the base branch needs to be fetched in order for regitlint to work.
-function FetchBaseBranchIfNotMaster() {
-    if ($env:APPVEYOR_PULL_REQUEST_NUMBER -And $env:APPVEYOR_REPO_BRANCH -ne "master") {
-        git fetch -q origin ${env:APPVEYOR_REPO_BRANCH}:${env:APPVEYOR_REPO_BRANCH}
-    }
-}
-
-FetchBaseBranchIfNotMaster
-
 dotnet tool restore
 VerifySuccessExitCode
 

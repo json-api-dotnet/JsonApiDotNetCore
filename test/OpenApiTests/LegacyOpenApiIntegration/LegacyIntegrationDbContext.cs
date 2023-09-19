@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
-// @formatter:keep_existing_linebreaks true
 
 namespace OpenApiTests.LegacyOpenApiIntegration;
 

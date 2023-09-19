@@ -9,9 +9,9 @@ internal sealed class ResourceObjectSchemaGenerator
 {
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly IResourceGraph _resourceGraph;
+    private readonly IJsonApiOptions _options;
     private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
-    private readonly bool _allowClientGeneratedIds;
     private readonly Func<ResourceTypeInfo, ResourceFieldObjectSchemaBuilder> _resourceFieldObjectSchemaBuilderFactory;
 
     public ResourceObjectSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options,
@@ -24,11 +24,10 @@ internal sealed class ResourceObjectSchemaGenerator
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceGraph = resourceGraph;
+        _options = options;
         _schemaRepositoryAccessor = schemaRepositoryAccessor;
 
         _resourceTypeSchemaGenerator = new ResourceTypeSchemaGenerator(schemaRepositoryAccessor, resourceGraph, options.SerializerOptions.PropertyNamingPolicy);
-
-        _allowClientGeneratedIds = options.AllowClientGeneratedIds;
 
         _resourceFieldObjectSchemaBuilderFactory = resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor,
             defaultSchemaGenerator, _resourceTypeSchemaGenerator, options.SerializerOptions.PropertyNamingPolicy);
@@ -43,7 +42,7 @@ internal sealed class ResourceObjectSchemaGenerator
         var resourceTypeInfo = ResourceTypeInfo.Create(resourceObjectType, _resourceGraph);
         ResourceFieldObjectSchemaBuilder fieldObjectBuilder = _resourceFieldObjectSchemaBuilderFactory(resourceTypeInfo);
 
-        RemoveResourceIdIfPostResourceObject(resourceTypeInfo.ResourceObjectOpenType, fullSchemaForResourceObject);
+        RemoveResourceIdIfPostResourceObject(resourceTypeInfo, fullSchemaForResourceObject);
 
         SetResourceType(fullSchemaForResourceObject, resourceTypeInfo.ResourceType.ClrType);
 
@@ -76,12 +75,21 @@ internal sealed class ResourceObjectSchemaGenerator
         return (fullSchema, referenceSchema);
     }
 
-    private void RemoveResourceIdIfPostResourceObject(Type resourceObjectOpenType, OpenApiSchema fullSchemaForResourceObject)
+    private void RemoveResourceIdIfPostResourceObject(ResourceTypeInfo resourceTypeInfo, OpenApiSchema fullSchemaForResourceObject)
     {
-        if (resourceObjectOpenType == typeof(ResourceObjectInPostRequest<>) && !_allowClientGeneratedIds)
+        if (resourceTypeInfo.ResourceObjectOpenType == typeof(ResourceObjectInPostRequest<>))
         {
-            fullSchemaForResourceObject.Required.Remove(JsonApiObjectPropertyName.Id);
-            fullSchemaForResourceObject.Properties.Remove(JsonApiObjectPropertyName.Id);
+            ClientIdGenerationMode clientIdGeneration = resourceTypeInfo.ResourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
+
+            if (clientIdGeneration == ClientIdGenerationMode.Forbidden)
+            {
+                fullSchemaForResourceObject.Required.Remove(JsonApiObjectPropertyName.Id);
+                fullSchemaForResourceObject.Properties.Remove(JsonApiObjectPropertyName.Id);
+            }
+            else if (clientIdGeneration == ClientIdGenerationMode.Allowed)
+            {
+                fullSchemaForResourceObject.Required.Remove(JsonApiObjectPropertyName.Id);
+            }
         }
     }
 

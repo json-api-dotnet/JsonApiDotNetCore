@@ -10,9 +10,9 @@ name: Build
 
 on:
   push:
-    branches: [ 'master', 'release/**' ]
+    branches: [ 'master', 'release/**', 'openapi' ]
   pull_request:
-    branches: [ 'master', 'release/**' ]
+    branches: [ 'master', 'release/**', 'openapi' ]
     tags:
     - 'v*'
 
