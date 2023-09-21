@@ -4928,13 +4928,13 @@ references:
   fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware
   nameWithType: JsonApiMiddleware
 - uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.IHttpContextAccessor)
-  name: JsonApiMiddleware(RequestDelegate, IHttpContextAccessor)
+  name: JsonApiMiddleware(RequestDelegate?, IHttpContextAccessor)
   href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware__ctor_Microsoft_AspNetCore_Http_RequestDelegate_Microsoft_AspNetCore_Http_IHttpContextAccessor_
   commentId: M:JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.AspNetCore.Http.IHttpContextAccessor)
   name.vb: New(RequestDelegate, IHttpContextAccessor)
-  fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware.JsonApiMiddleware(Microsoft.AspNetCore.Http.RequestDelegate, Microsoft.AspNetCore.Http.IHttpContextAccessor)
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware.JsonApiMiddleware(Microsoft.AspNetCore.Http.RequestDelegate?, Microsoft.AspNetCore.Http.IHttpContextAccessor)
   fullName.vb: JsonApiDotNetCore.Middleware.JsonApiMiddleware.New(Microsoft.AspNetCore.Http.RequestDelegate, Microsoft.AspNetCore.Http.IHttpContextAccessor)
-  nameWithType: JsonApiMiddleware.JsonApiMiddleware(RequestDelegate, IHttpContextAccessor)
+  nameWithType: JsonApiMiddleware.JsonApiMiddleware(RequestDelegate?, IHttpContextAccessor)
   nameWithType.vb: JsonApiMiddleware.New(RequestDelegate, IHttpContextAccessor)
 - uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.#ctor*
   name: JsonApiMiddleware
