@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResourceDefinitionAccessor" />
 [PublicAPI]
 public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
 {
@@ -17,6 +17,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     private readonly IServiceProvider _serviceProvider;
 
     /// <inheritdoc />
+    [Obsolete("Use IJsonApiRequest.IsReadOnly.")]
     public bool IsReadOnlyRequest
     {
         get
@@ -27,6 +28,7 @@ public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     }
 
     /// <inheritdoc />
+    [Obsolete("Use injected IQueryableBuilder instead.")]
     public IQueryableBuilder QueryableBuilder => _serviceProvider.GetRequiredService<IQueryableBuilder>();
 
     public ResourceDefinitionAccessor(IResourceGraph resourceGraph, IServiceProvider serviceProvider)

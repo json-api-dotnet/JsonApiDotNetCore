@@ -10,15 +10,34 @@ builder.Services.AddJsonApi<AppDbContext>(options =>
 });
 ```
 
-## Client Generated IDs
+## Client-generated IDs
 
 By default, the server will respond with a 403 Forbidden HTTP Status Code if a POST request is received with a client-generated ID.
 
-However, this can be allowed by setting the AllowClientGeneratedIds flag in the options:
+However, this can be allowed or required globally (for all resource types) by setting `ClientIdGeneration` in options:
 
 ```c#
-options.AllowClientGeneratedIds = true;
+options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
 ```
+
+or:
+
+```c#
+options.ClientIdGeneration = ClientIdGenerationMode.Required;
+```
+
+It is possible to overrule this setting per resource type:
+
+```c#
+[Resource(ClientIdGeneration = ClientIdGenerationMode.Required)]
+public class Article : Identifiable<Guid>
+{
+    // ...
+}
+```
+
+> [!NOTE]
+> JsonApiDotNetCore versions before v5.4.0 only provided the global `AllowClientGeneratedIds` boolean property.
 
 ## Pagination
 

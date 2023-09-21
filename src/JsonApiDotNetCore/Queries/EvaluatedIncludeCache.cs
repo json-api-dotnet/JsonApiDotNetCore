@@ -2,7 +2,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Queries;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IEvaluatedIncludeCache" />
 internal sealed class EvaluatedIncludeCache : IEvaluatedIncludeCache
 {
     private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;

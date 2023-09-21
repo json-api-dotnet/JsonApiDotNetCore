@@ -27,7 +27,6 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = false;
-        options.AllowClientGeneratedIds = false;
         options.AllowUnknownFieldsInRequestBody = false;
     }
 

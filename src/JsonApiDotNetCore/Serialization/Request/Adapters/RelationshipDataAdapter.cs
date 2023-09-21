@@ -70,7 +70,7 @@ public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdap
         var requirements = new ResourceIdentityRequirements
         {
             ResourceType = relationship.RightType,
-            IdConstraint = JsonElementConstraint.Required,
+            EvaluateIdConstraint = _ => JsonElementConstraint.Required,
             RelationshipName = relationship.PublicName
         };
 

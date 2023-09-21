@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IQueryLayerComposer" />
 [PublicAPI]
 public class QueryLayerComposer : IQueryLayerComposer
 {

@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Serialization.Response;
 internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode>
 {
     // Placeholder root node for the tree, which is never emitted itself.
-    private static readonly ResourceType RootType = new("(root)", typeof(object), typeof(object));
+    private static readonly ResourceType RootType = new("(root)", ClientIdGenerationMode.Forbidden, typeof(object), typeof(object));
     private static readonly IIdentifiable RootResource = new EmptyResource();
 
     // Direct children from root. These are emitted in 'data'.

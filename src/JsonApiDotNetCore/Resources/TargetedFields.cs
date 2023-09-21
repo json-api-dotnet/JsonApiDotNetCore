@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources;
 
-/// <inheritdoc />
+/// <inheritdoc cref="ITargetedFields" />
 [PublicAPI]
 public sealed class TargetedFields : ITargetedFields
 {

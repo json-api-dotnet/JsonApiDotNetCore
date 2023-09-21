@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Middleware;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IAsyncJsonApiExceptionFilter" />
 [PublicAPI]
 public sealed class AsyncJsonApiExceptionFilter : IAsyncJsonApiExceptionFilter
 {

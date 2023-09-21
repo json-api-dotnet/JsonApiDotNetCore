@@ -33,7 +33,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         ArgumentGuard.NotNull(state);
 
         ResourceType resourceType = ResolveType(identity, requirements, state);
-        IIdentifiable resource = CreateResource(identity, requirements, resourceType.ClrType, state);
+        IIdentifiable resource = CreateResource(identity, requirements, resourceType, state);
 
         return (resource, resourceType);
     }
@@ -93,7 +93,8 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         }
     }
 
-    private IIdentifiable CreateResource(ResourceIdentity identity, ResourceIdentityRequirements requirements, Type resourceClrType, RequestAdapterState state)
+    private IIdentifiable CreateResource(ResourceIdentity identity, ResourceIdentityRequirements requirements, ResourceType resourceType,
+        RequestAdapterState state)
     {
         if (state.Request.Kind != EndpointKind.AtomicOperations)
         {
@@ -102,11 +103,13 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
 
         AssertNoIdWithLid(identity, state);
 
-        if (requirements.IdConstraint == JsonElementConstraint.Required)
+        JsonElementConstraint? idConstraint = requirements.EvaluateIdConstraint?.Invoke(resourceType);
+
+        if (idConstraint == JsonElementConstraint.Required)
         {
             AssertHasIdOrLid(identity, requirements, state);
         }
-        else if (requirements.IdConstraint == JsonElementConstraint.Forbidden)
+        else if (idConstraint == JsonElementConstraint.Forbidden)
         {
             AssertHasNoId(identity, state);
         }
@@ -114,7 +117,7 @@ public abstract class ResourceIdentityAdapter : BaseAdapter
         AssertSameIdValue(identity, requirements.IdValue, state);
         AssertSameLidValue(identity, requirements.LidValue, state);
 
-        IIdentifiable resource = _resourceFactory.CreateInstance(resourceClrType);
+        IIdentifiable resource = _resourceFactory.CreateInstance(resourceType.ClrType);
         AssignStringId(identity, resource, state);
         resource.LocalId = identity.Lid;
         return resource;

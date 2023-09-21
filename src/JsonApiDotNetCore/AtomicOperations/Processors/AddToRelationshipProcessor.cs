@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IAddToRelationshipProcessor{TResource,TId}" />
 [PublicAPI]
 public class AddToRelationshipProcessor<TResource, TId> : IAddToRelationshipProcessor<TResource, TId>
     where TResource : class, IIdentifiable<TId>

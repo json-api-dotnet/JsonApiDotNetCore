@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResourceFactory" />
 internal sealed class ResourceFactory : IResourceFactory
 {
     private static readonly TypeLocator TypeLocator = new();

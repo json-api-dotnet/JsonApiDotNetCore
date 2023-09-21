@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Queries.QueryableBuilding;
 
-/// <see cref="IQueryableBuilder" />
+/// <inheritdoc cref="IQueryableBuilder" />
 [PublicAPI]
 public class QueryableBuilder : IQueryableBuilder
 {
