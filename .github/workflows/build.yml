@@ -52,12 +52,27 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         dotnet tool install --global PowerShell
+    - name: Find latest PowerShell version (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        $packageName = "powershell"
+        $outputText = dotnet tool search $packageName --take 1
+        $outputLine = ("" + $outputText)
+        $indexOfVersionLine = $outputLine.IndexOf($packageName)
+        $latestVersion = $outputLine.substring($indexOfVersionLine + $packageName.length).trim().split(" ")[0].trim()
+
+        Write-Output "Found PowerShell version: $latestVersion"
+        Write-Output "POWERSHELL_LATEST_VERSION=$latestVersion" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: Setup PowerShell (Windows)
       if: matrix.os == 'windows-latest'
       shell: cmd
       run: |
-        curl --location --output "%RUNNER_TEMP%\PowerShell-7.3.6-win-x64.msi" https://github.com/PowerShell/PowerShell/releases/download/v7.3.6/PowerShell-7.3.6-win-x64.msi
-        msiexec.exe /package "%RUNNER_TEMP%\PowerShell-7.3.6-win-x64.msi" /quiet USE_MU=1 ENABLE_MU=1 ADD_PATH=1 DISABLE_TELEMETRY=1
+        set DOWNLOAD_LINK=https://github.com/PowerShell/PowerShell/releases/download/v%POWERSHELL_LATEST_VERSION%/PowerShell-%POWERSHELL_LATEST_VERSION%-win-x64.msi
+        set OUTPUT_PATH=%RUNNER_TEMP%\PowerShell-%POWERSHELL_LATEST_VERSION%-win-x64.msi
+        echo Downloading from: %DOWNLOAD_LINK% to: %OUTPUT_PATH%
+        curl --location --output %OUTPUT_PATH% %DOWNLOAD_LINK%
+        msiexec.exe /package %OUTPUT_PATH% /quiet USE_MU=1 ENABLE_MU=1 ADD_PATH=1 DISABLE_TELEMETRY=1
     - name: Setup PowerShell (macOS)
       if: matrix.os == 'macos-latest'
       run: |
