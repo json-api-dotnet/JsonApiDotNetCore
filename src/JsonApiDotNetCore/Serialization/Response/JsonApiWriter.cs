@@ -63,7 +63,12 @@ public sealed class JsonApiWriter : IJsonApiWriter
         }
 
         _traceWriter.LogMessage(() =>
-            $"Sending {httpContext.Response.StatusCode} response for {httpContext.Request.Method} request at '{httpContext.Request.GetEncodedUrl()}' with body: <<{responseBody}>>");
+        {
+            string method = httpContext.Request.Method.Replace(Environment.NewLine, "");
+            string url = httpContext.Request.GetEncodedUrl();
+
+            return $"Sending {httpContext.Response.StatusCode} response for {method} request at '{url}' with body: <<{responseBody}>>";
+        });
 
         await SendResponseBodyAsync(httpContext.Response, responseBody);
     }
