@@ -158,8 +158,8 @@ We use a similar approach for accessing [MongoDB](https://github.com/json-api-do
 #### I love JsonApiDotNetCore! How can I support the team?
 The best way to express your gratitude is by starring our repository.
 This increases our leverage when asking for bug fixes in dependent projects, such as the .NET runtime and Entity Framework Core.
+You can also [sponsor](https://github.com/sponsors/json-api-dotnet) our project.
 Of course, a simple thank-you message in our [Gitter channel](https://gitter.im/json-api-dotnet-core/Lobby) is appreciated too!
-We don't take monetary contributions at the moment.
 
 If you'd like to do more: try things out, ask questions, create GitHub bug reports or feature requests, or upvote existing issues that are important to you.
 We welcome PRs, but keep in mind: The worst thing in the world is opening a PR that gets rejected after you've put a lot of effort into it.
