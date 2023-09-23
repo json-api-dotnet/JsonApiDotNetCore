@@ -99,7 +99,7 @@ jobs:
             # Get the version prefix/suffix from the git tag. For example: 'v1.0.0-preview1-final' => '1.0.0' and 'preview1-final'
             $segments = $env:GITHUB_REF_NAME -split "-"
             $versionPrefix = $segments[0].TrimStart('v')
-            $versionSuffix = $segments.Count -eq 1 ? '' : $segments[1..$($segments.Length-1)] -join '-'
+            $versionSuffix = $segments.Length -eq 1 ? '' : $segments[1..$($segments.Length - 1)] -join '-'
 
             [xml]$xml = Get-Content Directory.Build.props
             $configuredVersionPrefix = $xml.Project.PropertyGroup[0].JsonApiDotNetCoreVersionPrefix
