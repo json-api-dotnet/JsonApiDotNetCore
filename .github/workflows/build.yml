@@ -124,12 +124,7 @@ jobs:
     - name: Build
       shell: pwsh
       run: |
-        if ($env:PACKAGE_VERSION_SUFFIX) {
-          dotnet build --no-restore --configuration Release --version-suffix=$env:PACKAGE_VERSION_SUFFIX
-        }
-        else {
-          dotnet build --no-restore --configuration Release
-        }
+        dotnet build --no-restore --configuration Release /p:VersionSuffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Test
       run: |
         dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.DeterministicReport=true
@@ -139,12 +134,7 @@ jobs:
     - name: Generate packages
       shell: pwsh
       run: |
-        if ($env:PACKAGE_VERSION_SUFFIX) {
-          dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
-        }
-        else {
-          dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages
-        }
+        dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages /p:VersionSuffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Upload packages to artifacts
       if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v3
