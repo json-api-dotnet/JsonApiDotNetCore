@@ -13,8 +13,8 @@ on:
     branches: [ 'master', 'release/**', 'openapi' ]
   pull_request:
     branches: [ 'master', 'release/**', 'openapi' ]
-    tags:
-    - 'v*'
+  release:
+    types: [published]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -52,12 +52,27 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         dotnet tool install --global PowerShell
+    - name: Find latest PowerShell version (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        $packageName = "powershell"
+        $outputText = dotnet tool search $packageName --take 1
+        $outputLine = ("" + $outputText)
+        $indexOfVersionLine = $outputLine.IndexOf($packageName)
+        $latestVersion = $outputLine.substring($indexOfVersionLine + $packageName.length).trim().split(" ")[0].trim()
+
+        Write-Output "Found PowerShell version: $latestVersion"
+        Write-Output "POWERSHELL_LATEST_VERSION=$latestVersion" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: Setup PowerShell (Windows)
       if: matrix.os == 'windows-latest'
       shell: cmd
       run: |
-        curl --location --output "%RUNNER_TEMP%\PowerShell-7.3.6-win-x64.msi" https://github.com/PowerShell/PowerShell/releases/download/v7.3.6/PowerShell-7.3.6-win-x64.msi
-        msiexec.exe /package "%RUNNER_TEMP%\PowerShell-7.3.6-win-x64.msi" /quiet USE_MU=1 ENABLE_MU=1 ADD_PATH=1 DISABLE_TELEMETRY=1
+        set DOWNLOAD_LINK=https://github.com/PowerShell/PowerShell/releases/download/v%POWERSHELL_LATEST_VERSION%/PowerShell-%POWERSHELL_LATEST_VERSION%-win-x64.msi
+        set OUTPUT_PATH=%RUNNER_TEMP%\PowerShell-%POWERSHELL_LATEST_VERSION%-win-x64.msi
+        echo Downloading from: %DOWNLOAD_LINK% to: %OUTPUT_PATH%
+        curl --location --output %OUTPUT_PATH% %DOWNLOAD_LINK%
+        msiexec.exe /package %OUTPUT_PATH% /quiet USE_MU=1 ENABLE_MU=1 ADD_PATH=1 DISABLE_TELEMETRY=1
     - name: Setup PowerShell (macOS)
       if: matrix.os == 'macos-latest'
       run: |
@@ -84,7 +99,7 @@ jobs:
             # Get the version prefix/suffix from the git tag. For example: 'v1.0.0-preview1-final' => '1.0.0' and 'preview1-final'
             $segments = $env:GITHUB_REF_NAME -split "-"
             $versionPrefix = $segments[0].TrimStart('v')
-            $versionSuffix = $segments[1..-1] -join "-"
+            $versionSuffix = $segments.Length -eq 1 ? '' : $segments[1..$($segments.Length - 1)] -join '-'
 
             [xml]$xml = Get-Content Directory.Build.props
             $configuredVersionPrefix = $xml.Project.PropertyGroup[0].JsonApiDotNetCoreVersionPrefix
@@ -92,7 +107,7 @@ jobs:
                 Write-Error "Version prefix from git release tag '$versionPrefix' does not match version prefix '$configuredVersionPrefix' stored in Directory.Build.props."
                 # To recover from this:
                 # - Delete the GitHub release
-                # - Run: git push --delete the-invalid-tag-name
+                # - Run: git push --delete origin the-invalid-tag-name
                 # - Adjust JsonApiDotNetCoreVersionPrefix in Directory.Build.props, commit and push
                 # - Recreate the GitHub release
             }
@@ -109,7 +124,7 @@ jobs:
     - name: Build
       shell: pwsh
       run: |
-        dotnet build --no-restore --configuration Release --version-suffix=$env:PACKAGE_VERSION_SUFFIX
+        dotnet build --no-restore --configuration Release /p:VersionSuffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Test
       run: |
         dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.DeterministicReport=true
@@ -119,7 +134,7 @@ jobs:
     - name: Generate packages
       shell: pwsh
       run: |
-        dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages --version-suffix=$env:PACKAGE_VERSION_SUFFIX
+        dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages /p:VersionSuffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Upload packages to artifacts
       if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v3
@@ -160,12 +175,12 @@ jobs:
     permissions:
       contents: read
     steps:
-    - name: Git checkout
-      uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
+    - name: Git checkout
+      uses: actions/checkout@v4
     - name: Restore tools
       run: |
         dotnet tool restore
@@ -211,14 +226,14 @@ jobs:
     permissions:
       contents: read
     steps:
-    - name: Git checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 2
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
+    - name: Git checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
     - name: Restore tools
       run: |
         dotnet tool restore
@@ -237,7 +252,7 @@ jobs:
         Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
         dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
     - name: CleanupCode (on branch)
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' || github.event_name == 'release'
       shell: pwsh
       run: |
         Write-Output "Running code cleanup on all files."
@@ -255,7 +270,7 @@ jobs:
     - name: Download artifacts
       uses: actions/download-artifact@v3
     - name: Publish to GitHub Packages
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' || github.event_name == 'release'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       shell: pwsh
@@ -271,7 +286,7 @@ jobs:
         publish_dir: ./documentation
         commit_message: 'Auto-generated documentation from'
     - name: Publish to NuGet
-      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+      if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/v')
       env:
         NUGET_ORG_API_KEY: ${{ secrets.NUGET_ORG_API_KEY }}
       shell: pwsh
