@@ -92,7 +92,8 @@ public sealed class JsonApiMiddleware
         {
             string timingResults = CodeTimingSessionManager.Current.GetResults();
             string url = httpContext.Request.GetDisplayUrl();
-            logger.LogInformation($"Measurement results for {httpContext.Request.Method} {url}:{Environment.NewLine}{timingResults}");
+            string method = httpContext.Request.Method.Replace(Environment.NewLine, "");
+            logger.LogInformation($"Measurement results for {method} {url}:{Environment.NewLine}{timingResults}");
         }
     }
 

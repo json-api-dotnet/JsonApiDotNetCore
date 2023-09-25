@@ -1,32 +1,6 @@
 <Project>
-  <PropertyGroup>
-    <TargetFrameworkName>net6.0</TargetFrameworkName>
-    <AspNetVersion>6.0.*</AspNetVersion>
-    <EFCoreVersion>7.0.*</EFCoreVersion>
-    <EFCorePostgresVersion>7.0.*</EFCorePostgresVersion>
-    <MicrosoftCodeAnalysisVersion>4.7.*</MicrosoftCodeAnalysisVersion>
-    <HumanizerVersion>2.14.1</HumanizerVersion>
-    <SwashbuckleVersion>6.5.*</SwashbuckleVersion>
-    <NSwagApiClientVersion>13.20.*</NSwagApiClientVersion>
-    <MicrosoftApiClientVersion>7.0.*</MicrosoftApiClientVersion>
-    <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
-    <JsonApiDotNetCoreVersionPrefix>5.3.1</JsonApiDotNetCoreVersionPrefix>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>9999</WarningLevel>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <IsPackable>false</IsPackable>
-    <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" PrivateAssets="All" />
-    <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.8.3" PrivateAssets="All" />
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)CSharpGuidelinesAnalyzer.config" Visible="False" />
-  </ItemGroup>
-
-  <PropertyGroup Condition="'$(CI)' != ''">
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <NoWarn>$(NoWarn);AV2210</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
@@ -35,14 +9,56 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <NoWarn>$(NoWarn);AV2210</NoWarn>
+  <PropertyGroup Condition="'$(CI)' != ''">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-  <!-- Test Project Dependencies -->
   <PropertyGroup>
+    <!-- Published dependencies (only update on major version change) -->
+    <TargetFrameworkName>net6.0</TargetFrameworkName>
+    <CodeAnalysisFrozenVersion>4.1.0</CodeAnalysisFrozenVersion>
+    <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
+    <EntityFrameworkCoreFrozenVersion>6.0.0</EntityFrameworkCoreFrozenVersion>
+    <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
+    <SwashbuckleFrozenVersion>6.5.0</SwashbuckleFrozenVersion>
+
+    <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
+    <AspNetCoreVersion>6.0.*</AspNetCoreVersion>
+    <BenchmarkDotNetVersion>0.13.*</BenchmarkDotNetVersion>
+    <BlushingPenguinVersion>1.0.*</BlushingPenguinVersion>
+    <BogusVersion>34.0.*</BogusVersion>
+    <CSharpGuidelinesAnalyzerVersion>3.8.*</CSharpGuidelinesAnalyzerVersion>
+    <CodeAnalysisVersion>4.7.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
+    <DateOnlyTimeOnlyVersion>2.1.*</DateOnlyTimeOnlyVersion>
+    <EntityFrameworkCoreVersion>7.0.*</EntityFrameworkCoreVersion>
+    <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>2.3.*</GitHubActionsTestLoggerVersion>
+    <InheritDocVersion>1.3.*</InheritDocVersion>
+    <JetBrainsAnnotationsVersion>2023.2.*</JetBrainsAnnotationsVersion>
+    <MicrosoftApiClientVersion>7.0.*</MicrosoftApiClientVersion>
+    <NSwagApiClientVersion>13.20.*</NSwagApiClientVersion>
+    <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
+    <NpgsqlVersion>7.0.*</NpgsqlVersion>
+    <SourceLinkVersion>1.1.*</SourceLinkVersion>
+    <SwashbuckleVersion>6.5.*</SwashbuckleVersion>
+    <SystemTextJsonVersion>7.0.*</SystemTextJsonVersion>
     <TestSdkVersion>17.7.*</TestSdkVersion>
+    <XunitVersion>2.5.*</XunitVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" PrivateAssets="All" />
+    <PackageReference Include="CSharpGuidelinesAnalyzer" Version="$(CSharpGuidelinesAnalyzerVersion)" PrivateAssets="All" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)CSharpGuidelinesAnalyzer.config" Visible="False" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
+    <JsonApiDotNetCoreVersionPrefix>5.4.1</JsonApiDotNetCoreVersionPrefix>
   </PropertyGroup>
 </Project>
