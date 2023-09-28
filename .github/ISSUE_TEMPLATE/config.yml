@@ -1,0 +1,14 @@
+blank_issues_enabled: true
+contact_links:
+- name: Documentation
+  url: https://www.jsonapi.net/usage/resources/index.html
+  about: Read our comprehensive documentation.
+- name: Sponsor JsonApiDotNetCore
+  url: https://github.com/sponsors/json-api-dotnet
+  about: Help the continued development.
+- name: Ask on Gitter
+  url: https://gitter.im/json-api-dotnet-core/Lobby
+  about: Get in touch with the whole community.
+- name: Ask on Stack Overflow
+  url: https://stackoverflow.com/questions/tagged/json-api
+  about: The best place for asking general-purpose questions.

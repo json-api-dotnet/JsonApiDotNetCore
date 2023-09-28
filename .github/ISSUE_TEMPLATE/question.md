@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Ask a question
+about: Ask a question.
 title: ''
 labels: 'question'
 assignees: ''
