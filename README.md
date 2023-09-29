@@ -34,8 +34,7 @@ These are some steps you can take to help you understand what this project is an
 
 - [Performance Reports](https://github.com/json-api-dotnet/PerformanceReports)
 - [JsonApiDotNetCore.MongoDb](https://github.com/json-api-dotnet/JsonApiDotNetCore.MongoDb)
-- [JsonApiDotNetCore.Marten](https://github.com/wayne-o/JsonApiDotNetCore.Marten)
-- [Todo List App](https://github.com/json-api-dotnet/TodoListExample)
+- [Ember.js Todo List App](https://github.com/json-api-dotnet/TodoListExample)
 
 ## Examples
 
