@@ -5,8 +5,8 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
+using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion;
 

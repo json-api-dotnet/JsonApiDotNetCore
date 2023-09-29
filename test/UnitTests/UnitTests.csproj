@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>$(TargetFrameworkName)</TargetFramework>
+    <TargetFrameworks>net8.0;net6.0</TargetFrameworks>
   </PropertyGroup>
+
+  <Import Project="..\..\package-versions.props" />
 
   <ItemGroup>
     <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />

@@ -5,20 +5,30 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Models;
+#if NET6_0
 using Microsoft.AspNetCore.Authentication;
+#endif
 
 namespace JsonApiDotNetCoreExample.Definitions;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem, long>
 {
-    private readonly ISystemClock _systemClock;
+    private readonly Func<DateTimeOffset> _getUtcNow;
 
+#if NET6_0
     public TodoItemDefinition(IResourceGraph resourceGraph, ISystemClock systemClock)
         : base(resourceGraph)
     {
-        _systemClock = systemClock;
+        _getUtcNow = () => systemClock.UtcNow;
     }
+#else
+    public TodoItemDefinition(IResourceGraph resourceGraph, TimeProvider timeProvider)
+        : base(resourceGraph)
+    {
+        _getUtcNow = timeProvider.GetUtcNow;
+    }
+#endif
 
     public override SortExpression OnApplySort(SortExpression? existingSort)
     {
@@ -38,11 +48,11 @@ public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem, lon
     {
         if (writeOperation == WriteOperationKind.CreateResource)
         {
-            resource.CreatedAt = _systemClock.UtcNow;
+            resource.CreatedAt = _getUtcNow();
         }
         else if (writeOperation == WriteOperationKind.UpdateResource)
         {
-            resource.LastModifiedAt = _systemClock.UtcNow;
+            resource.LastModifiedAt = _getUtcNow();
         }
 
         return Task.CompletedTask;

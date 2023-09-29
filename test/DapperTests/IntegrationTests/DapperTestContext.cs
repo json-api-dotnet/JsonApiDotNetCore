@@ -8,7 +8,6 @@ using FluentAssertions.Common;
 using FluentAssertions.Extensions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit.Abstractions;
+using IClock = DapperExample.IClock;
 
 namespace DapperTests.IntegrationTests;
 
@@ -74,7 +74,7 @@ public sealed class DapperTestContext : IntegrationTest
 
             builder.ConfigureServices(services =>
             {
-                services.AddSingleton<ISystemClock>(new FrozenSystemClock
+                services.AddSingleton<IClock>(new FrozenClock
                 {
                     UtcNow = FrozenTime
                 });
@@ -114,7 +114,10 @@ public sealed class DapperTestContext : IntegrationTest
                     _ => throw new NotSupportedException($"Unsupported database provider '{databaseProvider}'.")
                 };
 
+#pragma warning disable EF1002 // Risk of vulnerability to SQL injection.
+                // Justification: Table names cannot be parameterized.
                 await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM {escapedTableName}");
+#pragma warning restore EF1002 // Risk of vulnerability to SQL injection.
             }
         }
     }

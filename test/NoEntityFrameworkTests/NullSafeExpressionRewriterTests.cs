@@ -498,7 +498,11 @@ public sealed class NullSafeExpressionRewriterTests
                 Parent = new TestResource
                 {
                     Id = generator.GetNext(),
+#if NET6_0
                     Pointer = (IntPtr)1
+#else
+                    Pointer = 1
+#endif
                 }
             }
         };
