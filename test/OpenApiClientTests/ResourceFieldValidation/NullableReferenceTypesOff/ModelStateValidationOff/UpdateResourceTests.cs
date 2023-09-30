@@ -40,7 +40,6 @@ public sealed class UpdateResourceTests
         Func<Task> action = async () => await apiClient.PatchResourceAsync(Unknown.TypedId.Int32, requestDocument);
 
         // Assert
-        await action.Should().ThrowAsync<JsonSerializationException>();
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
         JsonSerializationException exception = assertion.Subject.Single();
 
