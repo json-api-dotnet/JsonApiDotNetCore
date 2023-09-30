@@ -62,7 +62,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
     [InlineData(nameof(ResourceAttributesInPostRequest.ValueType), "valueType")]
     [InlineData(nameof(ResourceAttributesInPostRequest.RequiredValueType), "requiredValueType")]
     [InlineData(nameof(ResourceAttributesInPostRequest.RequiredNullableValueType), "requiredNullableValueType")]
-    public async Task Can_set_default_value_to_attribute(string attributePropertyName, string jsonPropertyName)
+    public async Task Can_set_attribute_to_default_value(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePostRequestDocument
