@@ -82,7 +82,7 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
     }
 
     [Fact]
-    public async Task No_attribute_schema_properties_are_required_when_updating_resource()
+    public async Task No_attribute_schema_properties_are_required_for_updating_resource()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -92,7 +92,7 @@ public sealed class RequiredTests : IClassFixture<OpenApiTestContext<MsvOffStart
     }
 
     [Fact]
-    public async Task No_relationship_schema_properties_are_required_when_updating_resource()
+    public async Task No_relationship_schema_properties_are_required_for_updating_resource()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
