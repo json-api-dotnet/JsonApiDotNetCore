@@ -54,22 +54,13 @@ internal sealed class FakerFactory
 
         private static object ToPositiveValue(object idValue)
         {
-            if (idValue is short shortValue)
+            return idValue switch
             {
-                return Math.Abs(shortValue);
-            }
-
-            if (idValue is int intValue)
-            {
-                return Math.Abs(intValue);
-            }
-
-            if (idValue is long longValue)
-            {
-                return Math.Abs(longValue);
-            }
-
-            return idValue;
+                short shortValue => Math.Abs(shortValue),
+                int intValue => Math.Abs(intValue),
+                long longValue => Math.Abs(longValue),
+                _ => idValue
+            };
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]

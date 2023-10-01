@@ -50,27 +50,14 @@ internal sealed class JsonApiEndpointMetadataProvider
 
     private IJsonApiRequestMetadata? GetRequestMetadata(JsonApiEndpoint endpoint, ResourceType primaryResourceType)
     {
-        switch (endpoint)
+        return endpoint switch
         {
-            case JsonApiEndpoint.Post:
-            {
-                return GetPostRequestMetadata(primaryResourceType.ClrType);
-            }
-            case JsonApiEndpoint.Patch:
-            {
-                return GetPatchRequestMetadata(primaryResourceType.ClrType);
-            }
-            case JsonApiEndpoint.PostRelationship:
-            case JsonApiEndpoint.PatchRelationship:
-            case JsonApiEndpoint.DeleteRelationship:
-            {
-                return GetRelationshipRequestMetadata(primaryResourceType.Relationships, endpoint != JsonApiEndpoint.PatchRelationship);
-            }
-            default:
-            {
-                return null;
-            }
-        }
+            JsonApiEndpoint.Post => GetPostRequestMetadata(primaryResourceType.ClrType),
+            JsonApiEndpoint.Patch => GetPatchRequestMetadata(primaryResourceType.ClrType),
+            JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship => GetRelationshipRequestMetadata(
+                primaryResourceType.Relationships, endpoint != JsonApiEndpoint.PatchRelationship),
+            _ => null
+        };
     }
 
     private static PrimaryRequestMetadata GetPostRequestMetadata(Type resourceClrType)
@@ -99,28 +86,14 @@ internal sealed class JsonApiEndpointMetadataProvider
 
     private IJsonApiResponseMetadata? GetResponseMetadata(JsonApiEndpoint endpoint, ResourceType primaryResourceType)
     {
-        switch (endpoint)
+        return endpoint switch
         {
-            case JsonApiEndpoint.GetCollection:
-            case JsonApiEndpoint.GetSingle:
-            case JsonApiEndpoint.Post:
-            case JsonApiEndpoint.Patch:
-            {
-                return GetPrimaryResponseMetadata(primaryResourceType.ClrType, endpoint == JsonApiEndpoint.GetCollection);
-            }
-            case JsonApiEndpoint.GetSecondary:
-            {
-                return GetSecondaryResponseMetadata(primaryResourceType.Relationships);
-            }
-            case JsonApiEndpoint.GetRelationship:
-            {
-                return GetRelationshipResponseMetadata(primaryResourceType.Relationships);
-            }
-            default:
-            {
-                return null;
-            }
-        }
+            JsonApiEndpoint.GetCollection or JsonApiEndpoint.GetSingle or JsonApiEndpoint.Post or JsonApiEndpoint.Patch => GetPrimaryResponseMetadata(
+                primaryResourceType.ClrType, endpoint == JsonApiEndpoint.GetCollection),
+            JsonApiEndpoint.GetSecondary => GetSecondaryResponseMetadata(primaryResourceType.Relationships),
+            JsonApiEndpoint.GetRelationship => GetRelationshipResponseMetadata(primaryResourceType.Relationships),
+            _ => null
+        };
     }
 
     private static PrimaryResponseMetadata GetPrimaryResponseMetadata(Type resourceClrType, bool endpointReturnsCollection)
