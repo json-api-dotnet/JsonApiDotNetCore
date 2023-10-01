@@ -42,9 +42,8 @@ public sealed class UpdateResourceTests : BaseOpenApiClientTests
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-        JsonSerializationException exception = assertion.Subject.Single();
 
-        exception.Message.Should().Be("Cannot write a null value for property 'id'. Property requires a value. Path 'data'.");
+        assertion.Which.Message.Should().Be("Cannot write a null value for property 'id'. Property requires a value. Path 'data'.");
     }
 
     [Theory]

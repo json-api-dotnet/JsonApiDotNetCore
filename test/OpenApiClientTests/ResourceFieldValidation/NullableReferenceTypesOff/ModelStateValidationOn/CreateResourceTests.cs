@@ -136,9 +136,8 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-        JsonSerializationException exception = assertion.Subject.Single();
 
-        exception.Message.Should().Be($"Cannot write a null value for property '{jsonPropertyName}'. Property requires a value. Path 'data.attributes'.");
+        assertion.Which.Message.Should().Be($"Cannot write a null value for property '{jsonPropertyName}'. Property requires a value. Path 'data.attributes'.");
     }
 
     [Theory]
@@ -216,9 +215,8 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
 
         // Assert
         ExceptionAssertions<InvalidOperationException> assertion = await action.Should().ThrowExactlyAsync<InvalidOperationException>();
-        InvalidOperationException exception = assertion.Subject.Single();
 
-        exception.Message.Should().Be(
+        assertion.Which.Message.Should().Be(
             $"Required property '{attributePropertyName}' at JSON path 'data.attributes.{jsonPropertyName}' is not set. If sending its default value is intended, include it explicitly.");
     }
 
@@ -332,9 +330,8 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-        JsonSerializationException exception = assertion.Subject.Single();
 
-        exception.Message.Should().Be(
+        assertion.Which.Message.Should().Be(
             $"Cannot write a null value for property 'data'. Property requires a value. Path 'data.relationships.{jsonPropertyName}'.");
     }
 
@@ -370,9 +367,8 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-        JsonSerializationException exception = assertion.Subject.Single();
 
-        exception.Message.Should().Be(
+        assertion.Which.Message.Should().Be(
             $"Cannot write a null value for property 'data'. Property requires a value. Path 'data.relationships.{jsonPropertyName}'.");
     }
 
@@ -488,9 +484,8 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-        JsonSerializationException exception = assertion.Subject.Single();
 
-        exception.Message.Should().Be(
+        assertion.Which.Message.Should().Be(
             $"Cannot write a null value for property 'id'. Property requires a value. Path 'data.relationships.{jsonPropertyName}.data'.");
     }
 
@@ -524,9 +519,8 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-        JsonSerializationException exception = assertion.Subject.Single();
 
-        exception.Message.Should().Be(
+        assertion.Which.Message.Should().Be(
             $"Cannot write a null value for property 'id'. Property requires a value. Path 'data.relationships.{jsonPropertyName}.data'.");
     }
 }

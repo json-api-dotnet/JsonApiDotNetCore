@@ -216,10 +216,9 @@ public sealed class ResponseTests
 
         // Assert
         ExceptionAssertions<ApiException> assertion = await action.Should().ThrowExactlyAsync<ApiException>();
-        ApiException exception = assertion.Subject.Single();
 
-        exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
-        exception.Response.Should().Be(responseBody);
+        assertion.Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        assertion.Which.Response.Should().Be(responseBody);
     }
 
     [Fact]
