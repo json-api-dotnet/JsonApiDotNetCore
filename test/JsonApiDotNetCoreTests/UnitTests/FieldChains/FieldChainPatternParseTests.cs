@@ -49,7 +49,7 @@ public sealed class FieldChainPatternParseTests
         Action action = () => FieldChainPattern.Parse(patternSource.Text);
 
         // Assert
-        PatternFormatException exception = action.Should().Throw<PatternFormatException>().Which;
+        PatternFormatException exception = action.Should().ThrowExactly<PatternFormatException>().Which;
         exception.Message.Should().Be(errorMessage);
         exception.Position.Should().Be(patternSource.Position);
         exception.Pattern.Should().Be(patternSource.Text);
