@@ -13,9 +13,9 @@ namespace JsonApiDotNetCore.OpenApi;
 internal sealed class JsonApiOperationIdSelector
 {
     private const string ResourceOperationIdTemplate = "[Method] [PrimaryResourceName]";
-    private const string ResourceCollectionOperationIdTemplate = ResourceOperationIdTemplate + " Collection";
-    private const string SecondaryOperationIdTemplate = ResourceOperationIdTemplate + " [RelationshipName]";
-    private const string RelationshipOperationIdTemplate = SecondaryOperationIdTemplate + " Relationship";
+    private const string ResourceCollectionOperationIdTemplate = $"{ResourceOperationIdTemplate} Collection";
+    private const string SecondaryOperationIdTemplate = $"{ResourceOperationIdTemplate} [RelationshipName]";
+    private const string RelationshipOperationIdTemplate = $"{SecondaryOperationIdTemplate} Relationship";
 
     private static readonly IDictionary<Type, string> DocumentOpenTypeToOperationIdTemplateMap = new Dictionary<Type, string>
     {

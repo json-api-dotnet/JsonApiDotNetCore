@@ -28,7 +28,7 @@ public sealed class RequestTests
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Get);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + "flights");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights");
         wrapper.RequestBody.Should().BeNull();
     }
 
@@ -48,7 +48,7 @@ public sealed class RequestTests
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Get);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}");
         wrapper.RequestBody.Should().BeNull();
     }
 
@@ -93,7 +93,7 @@ public sealed class RequestTests
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Post);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + "flights");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
@@ -137,7 +137,7 @@ public sealed class RequestTests
             capitalLWithStroke
         });
 
-        string name = "anAirplaneName " + specialCharacters;
+        string name = $"anAirplaneName {specialCharacters}";
 
         var requestDocument = new AirplanePostRequestDocument
         {
@@ -163,7 +163,7 @@ public sealed class RequestTests
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Post);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + "airplanes");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}airplanes");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
@@ -214,7 +214,7 @@ public sealed class RequestTests
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Patch);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + $"airplanes/{airplaneId}");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}airplanes/{airplaneId}");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
@@ -248,7 +248,7 @@ public sealed class RequestTests
         // Assert
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Method.Should().Be(HttpMethod.Delete);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}");
         wrapper.RequestBody.Should().BeNull();
     }
 
@@ -268,7 +268,7 @@ public sealed class RequestTests
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Get);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/purser");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/purser");
         wrapper.RequestBody.Should().BeNull();
     }
 
@@ -288,7 +288,7 @@ public sealed class RequestTests
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Get);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/cabin-crew-members");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/cabin-crew-members");
         wrapper.RequestBody.Should().BeNull();
     }
 
@@ -308,7 +308,7 @@ public sealed class RequestTests
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Get);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/purser");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/purser");
         wrapper.RequestBody.Should().BeNull();
     }
 
@@ -336,7 +336,7 @@ public sealed class RequestTests
         // Assert
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Method.Should().Be(HttpMethod.Patch);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/purser");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/purser");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
@@ -365,7 +365,7 @@ public sealed class RequestTests
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
         wrapper.Request.Method.Should().Be(HttpMethod.Get);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/cabin-crew-members");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/cabin-crew-members");
         wrapper.RequestBody.Should().BeNull();
     }
 
@@ -401,7 +401,7 @@ public sealed class RequestTests
         // Assert
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Method.Should().Be(HttpMethod.Post);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/cabin-crew-members");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/cabin-crew-members");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
@@ -452,7 +452,7 @@ public sealed class RequestTests
         // Assert
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Method.Should().Be(HttpMethod.Patch);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/cabin-crew-members");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/cabin-crew-members");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
@@ -503,7 +503,7 @@ public sealed class RequestTests
         // Assert
         wrapper.Request.ShouldNotBeNull();
         wrapper.Request.Method.Should().Be(HttpMethod.Delete);
-        wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/cabin-crew-members");
+        wrapper.Request.RequestUri.Should().Be($"{HostPrefix}flights/{flightId}/relationships/cabin-crew-members");
         wrapper.Request.Content.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
