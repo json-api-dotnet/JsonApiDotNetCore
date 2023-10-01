@@ -16,7 +16,9 @@ The easiest way to get started is by using the built-in capabilities of Visual S
     Optionally provide a class name and namespace and click **Finish**.
     Visual Studio now downloads your swagger.json and updates your project file. This results in a pre-build step that generates the client code.
 
-    Tip: To later re-download swagger.json and regenerate the client code, right-click **Dependencies** > **Manage Connected Services** and click the **Refresh** icon.
+    > [!TIP]
+    > To later re-download swagger.json and regenerate the client code, right-click **Dependencies** > **Manage Connected Services** and click the **Refresh** icon.
+
 3.  Although not strictly required, we recommend to run package update now, which fixes some issues and removes the `Stream` parameter from generated calls.
 
 4.  Add some demo code that calls one of your JSON:API endpoints. For example:
@@ -41,7 +43,7 @@ The easiest way to get started is by using the built-in capabilities of Visual S
    dotnet add package JsonApiDotNetCore.OpenApi.Client
    ```
 
-6.  Add the following glue code to connect our package with your generated code. The code below assumes you specified `ExampleApiClient` as class name in step 2.
+6.  Add the following glue code to connect our package with your generated code. The code below assumes you specified `ExampleApiClient` as the class name in step 2.
 
     ```c#
     using JsonApiDotNetCore.OpenApi.Client;
@@ -55,6 +57,9 @@ The easiest way to get started is by using the built-in capabilities of Visual S
         }
     }
     ```
+
+    > [!NOTE]
+    > If you specified a namespace in step 2, put this class in the same namespace. For example, add `namespace GeneratedCode;` below the `using` lines.
 
 7.  Extend your demo code to send a partial PATCH request with the help of our package:
 
@@ -72,11 +77,11 @@ The easiest way to get started is by using the built-in capabilities of Visual S
     };
 
     // This line results in sending "lastName: null" instead of omitting it.
-    using (apiClient.RegisterAttributesForRequestDocument<PersonPatchRequestDocument,
-        PersonAttributesInPatchRequest>(patchRequest, person => person.LastName))
+    using (apiClient.WithPartialAttributeSerialization<PersonPatchRequestDocument, PersonAttributesInPatchRequest>(patchRequest,
+        person => person.LastName))
     {
         PersonPrimaryResponseDocument patchResponse =
-            await apiClient.PatchPersonAsync("1", patchRequest);
+            await apiClient.PatchPersonAsync(1, patchRequest);
 
         // The sent request looks like this:
         // {
@@ -100,19 +105,19 @@ Alternatively, the next section shows what to add to your client project file di
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="3.0.0">
+  <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="7.0.11">
     <PrivateAssets>all</PrivateAssets>
     <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
   </PackageReference>
-  <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-  <PackageReference Include="NSwag.ApiDescription.Client" Version="13.0.5">
+  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  <PackageReference Include="NSwag.ApiDescription.Client" Version="13.20.0">
     <PrivateAssets>all</PrivateAssets>
     <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
   </PackageReference>
 </ItemGroup>
 
 <ItemGroup>
-  <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" ClassName="ExampleApiClient">
+  <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" Namespace="GeneratedCode" ClassName="ExampleApiClient">
     <SourceUri>http://localhost:14140/swagger/v1/swagger.json</SourceUri>
   </OpenApiReference>
 </ItemGroup>
