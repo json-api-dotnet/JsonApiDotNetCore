@@ -1,0 +1,1677 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenApiTests",
+    "version": "1.0"
+  },
+  "paths": {
+    "/resources": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "getResourceCollection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resourceCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "headResourceCollection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resourceCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "postResource",
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/resourcePostRequestDocument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resourcePrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/resources/{id}": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "getResource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resourcePrimaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "headResource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resourcePrimaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "patchResource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/resourcePatchRequestDocument"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/resourcePrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "deleteResource",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/resources/{id}/requiredToMany": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "getResourceRequiredToMany",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/emptyCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "headResourceRequiredToMany",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/emptyCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources/{id}/relationships/requiredToMany": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "getResourceRequiredToManyRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/emptyIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "headResourceRequiredToManyRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/emptyIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "postResourceRequiredToManyRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "patchResourceRequiredToManyRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "deleteResourceRequiredToManyRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/resources/{id}/requiredToOne": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "getResourceRequiredToOne",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableEmptySecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "headResourceRequiredToOne",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableEmptySecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources/{id}/relationships/requiredToOne": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "getResourceRequiredToOneRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableEmptyIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "headResourceRequiredToOneRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableEmptyIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "patchResourceRequiredToOneRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/resources/{id}/toMany": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "getResourceToMany",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/emptyCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "headResourceToMany",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/emptyCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources/{id}/relationships/toMany": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "getResourceToManyRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/emptyIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "headResourceToManyRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/emptyIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "postResourceToManyRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "patchResourceToManyRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "deleteResourceToManyRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/resources/{id}/toOne": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "getResourceToOne",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableEmptySecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "headResourceToOne",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableEmptySecondaryResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources/{id}/relationships/toOne": {
+      "get": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "getResourceToOneRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableEmptyIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "headResourceToOneRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nullableEmptyIdentifierResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "resources"
+        ],
+        "operationId": "patchResourceToOneRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "emptyCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/emptyDataInResponse"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "emptyDataInResponse": {
+        "required": [
+          "id",
+          "links",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/emptyResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "emptyIdentifier": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/emptyResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "emptyIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/emptyIdentifier"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "emptyResourceType": {
+        "enum": [
+          "empties"
+        ],
+        "type": "string"
+      },
+      "jsonapiObject": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "ext": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "profile": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInRelationshipObject": {
+        "required": [
+          "related",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "related": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceCollectionDocument": {
+        "required": [
+          "first",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceDocument": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceIdentifierCollectionDocument": {
+        "required": [
+          "first",
+          "related",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "related": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "first": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceIdentifierDocument": {
+        "required": [
+          "related",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "related": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceObject": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullValue": {
+        "not": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "array"
+            }
+          ],
+          "items": { }
+        },
+        "nullable": true
+      },
+      "nullableEmptyIdentifierResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/emptyIdentifier"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableEmptySecondaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/emptyDataInResponse"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableToOneEmptyInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/emptyIdentifier"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "nullableToOneEmptyInResponse": {
+        "required": [
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/emptyIdentifier"
+              },
+              {
+                "$ref": "#/components/schemas/nullValue"
+              }
+            ]
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInRelationshipObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceAttributesInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "referenceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "requiredReferenceType": {
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "valueType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requiredValueType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nullableValueType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "requiredNullableValueType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceAttributesInPostRequest": {
+        "required": [
+          "requiredNullableValueType",
+          "requiredReferenceType",
+          "requiredValueType"
+        ],
+        "type": "object",
+        "properties": {
+          "referenceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "requiredReferenceType": {
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "valueType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requiredValueType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nullableValueType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "requiredNullableValueType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceAttributesInResponse": {
+        "required": [
+          "requiredNullableValueType",
+          "requiredReferenceType",
+          "requiredValueType"
+        ],
+        "type": "object",
+        "properties": {
+          "referenceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "requiredReferenceType": {
+            "minLength": 1,
+            "type": "string",
+            "nullable": true
+          },
+          "valueType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requiredValueType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nullableValueType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "requiredNullableValueType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/resourceDataInResponse"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceDataInPatchRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/resourceResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/resourceAttributesInPatchRequest"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/resourceRelationshipsInPatchRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceDataInPostRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/resourceResourceType"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/resourceAttributesInPostRequest"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/resourceRelationshipsInPostRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceDataInResponse": {
+        "required": [
+          "id",
+          "links",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/resourceResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/resourceAttributesInResponse"
+          },
+          "relationships": {
+            "$ref": "#/components/schemas/resourceRelationshipsInResponse"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourcePatchRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/resourceDataInPatchRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourcePostRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/resourceDataInPostRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourcePrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/resourceDataInResponse"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceDocument"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceRelationshipsInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "toOne": {
+            "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+          },
+          "requiredToOne": {
+            "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+          },
+          "toMany": {
+            "$ref": "#/components/schemas/toManyEmptyInRequest"
+          },
+          "requiredToMany": {
+            "$ref": "#/components/schemas/toManyEmptyInRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceRelationshipsInPostRequest": {
+        "required": [
+          "requiredToMany",
+          "requiredToOne"
+        ],
+        "type": "object",
+        "properties": {
+          "toOne": {
+            "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+          },
+          "requiredToOne": {
+            "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+          },
+          "toMany": {
+            "$ref": "#/components/schemas/toManyEmptyInRequest"
+          },
+          "requiredToMany": {
+            "$ref": "#/components/schemas/toManyEmptyInRequest"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceRelationshipsInResponse": {
+        "required": [
+          "requiredToMany",
+          "requiredToOne"
+        ],
+        "type": "object",
+        "properties": {
+          "toOne": {
+            "$ref": "#/components/schemas/nullableToOneEmptyInResponse"
+          },
+          "requiredToOne": {
+            "$ref": "#/components/schemas/nullableToOneEmptyInResponse"
+          },
+          "toMany": {
+            "$ref": "#/components/schemas/toManyEmptyInResponse"
+          },
+          "requiredToMany": {
+            "$ref": "#/components/schemas/toManyEmptyInResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "resourceResourceType": {
+        "enum": [
+          "resources"
+        ],
+        "type": "string"
+      },
+      "toManyEmptyInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/emptyIdentifier"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyEmptyInResponse": {
+        "required": [
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/emptyIdentifier"
+            }
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInRelationshipObject"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

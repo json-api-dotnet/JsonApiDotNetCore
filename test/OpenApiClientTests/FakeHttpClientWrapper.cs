@@ -23,11 +23,11 @@ internal sealed class FakeHttpClientWrapper : IDisposable
         _handler = handler;
     }
 
-    public JsonElement ParseRequestBody()
+    public JsonElement GetRequestBodyAsJson()
     {
         if (RequestBody == null)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("No body was provided with the request.");
         }
 
         using JsonDocument jsonDocument = JsonDocument.Parse(RequestBody);

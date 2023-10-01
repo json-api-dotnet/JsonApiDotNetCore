@@ -10,8 +10,7 @@ internal static class ObjectExtensions
         ArgumentGuard.NotNull(source);
         ArgumentGuard.NotNull(propertyName);
 
-        PropertyInfo propertyInfo = source.GetType().GetProperties().Single(property => property.Name == propertyName);
-
+        PropertyInfo propertyInfo = GetExistingProperty(source.GetType(), propertyName);
         return propertyInfo.GetValue(source);
     }
 
@@ -20,18 +19,19 @@ internal static class ObjectExtensions
         ArgumentGuard.NotNull(source);
         ArgumentGuard.NotNull(propertyName);
 
-        PropertyInfo propertyInfo = source.GetType().GetProperties().Single(property => property.Name == propertyName);
-
+        PropertyInfo propertyInfo = GetExistingProperty(source.GetType(), propertyName);
         propertyInfo.SetValue(source, value);
     }
 
-    public static object? GetDefaultValueForProperty(this object source, string propertyName)
+    private static PropertyInfo GetExistingProperty(Type type, string propertyName)
     {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(propertyName);
+        PropertyInfo? propertyInfo = type.GetProperty(propertyName);
 
-        PropertyInfo propertyInfo = source.GetType().GetProperties().Single(property => property.Name == propertyName);
+        if (propertyInfo == null)
+        {
+            throw new InvalidOperationException($"Type '{type}' does not contain a property named '{propertyName}'.");
+        }
 
-        return Activator.CreateInstance(propertyInfo.PropertyType);
+        return propertyInfo;
     }
 }

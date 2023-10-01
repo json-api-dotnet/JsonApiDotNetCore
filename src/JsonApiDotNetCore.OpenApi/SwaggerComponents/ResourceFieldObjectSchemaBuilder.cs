@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.Configuration;
+using System.Text.Json;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
@@ -34,14 +34,13 @@ internal sealed class ResourceFieldObjectSchemaBuilder
     private readonly RelationshipTypeFactory _relationshipTypeFactory;
 
     public ResourceFieldObjectSchemaBuilder(ResourceTypeInfo resourceTypeInfo, ISchemaRepositoryAccessor schemaRepositoryAccessor,
-        SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, IJsonApiOptions options,
+        SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, JsonNamingPolicy? namingPolicy,
         ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
         ArgumentGuard.NotNull(resourceTypeInfo);
         ArgumentGuard.NotNull(schemaRepositoryAccessor);
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
-        ArgumentGuard.NotNull(options);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
 
         _resourceTypeInfo = resourceTypeInfo;
@@ -50,7 +49,7 @@ internal sealed class ResourceFieldObjectSchemaBuilder
         _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
 
-        _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(schemaRepositoryAccessor, options.SerializerOptions.PropertyNamingPolicy);
+        _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(schemaRepositoryAccessor, namingPolicy);
         _relationshipTypeFactory = new RelationshipTypeFactory(resourceFieldValidationMetadataProvider);
         _schemasForResourceFields = GetFieldSchemas();
     }

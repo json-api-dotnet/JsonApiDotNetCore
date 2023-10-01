@@ -1,26 +1,25 @@
 using System.Linq.Expressions;
 using System.Reflection;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace JsonApiDotNetCore.OpenApi.Client;
 
 /// <summary>
-/// Base class to inherit auto-generated client from. Enables to mark fields to be explicitly included in a request body, even if they are null or
-/// default.
+/// Base class to inherit auto-generated OpenAPI clients from. Provides support for partial POST/PATCH in JSON:API requests.
 /// </summary>
-[PublicAPI]
 public abstract class JsonApiClient : IJsonApiClient
 {
-    private readonly JsonApiJsonConverter _jsonApiJsonConverter = new();
+    private readonly DocumentJsonConverter _documentJsonConverter = new();
 
+    /// <summary>
+    /// Initial setup. Call this from the UpdateJsonSerializerSettings partial method in the auto-generated OpenAPI client.
+    /// </summary>
     protected void SetSerializerSettingsForJsonApi(JsonSerializerSettings settings)
     {
         ArgumentGuard.NotNull(settings);
 
-        settings.Converters.Add(_jsonApiJsonConverter);
+        settings.Converters.Add(_documentJsonConverter);
     }
 
     /// <inheritdoc />
@@ -40,14 +39,15 @@ public abstract class JsonApiClient : IJsonApiClient
             }
             else
             {
-                throw new ArgumentException(
-                    $"The expression '{nameof(alwaysIncludedAttributeSelectors)}' should select a single property. For example: 'article => article.Title'.");
+                throw new ArgumentException($"The expression '{selector}' should select a single property. For example: 'article => article.Title'.",
+                    nameof(alwaysIncludedAttributeSelectors));
             }
         }
 
-        _jsonApiJsonConverter.RegisterDocument(requestDocument, new AttributeNamesContainer(attributeNames, typeof(TAttributesObject)));
+        var alwaysIncludedAttributes = new AlwaysIncludedAttributes(attributeNames, typeof(TAttributesObject));
+        _documentJsonConverter.RegisterDocument(requestDocument, alwaysIncludedAttributes);
 
-        return new RequestDocumentRegistrationScope(_jsonApiJsonConverter, requestDocument);
+        return new DocumentRegistrationScope(_documentJsonConverter, requestDocument);
     }
 
     private static Expression RemoveConvert(Expression expression)
@@ -67,40 +67,95 @@ public abstract class JsonApiClient : IJsonApiClient
         }
     }
 
-    private sealed class JsonApiJsonConverter : JsonConverter
+    /// <summary>
+    /// Tracks a JSON:API attributes registration for a JSON:API document instance in the serializer. Disposing removes the registration, so the client can
+    /// be reused.
+    /// </summary>
+    private sealed class DocumentRegistrationScope : IDisposable
     {
-        private readonly Dictionary<object, AttributeNamesContainer> _alwaysIncludedAttributesByRequestDocument = new();
-        private readonly Dictionary<Type, ISet<object>> _requestDocumentsByType = new();
-        private SerializationScope? _serializationScope;
+        private readonly DocumentJsonConverter _documentJsonConverter;
+        private readonly object _document;
+
+        public DocumentRegistrationScope(DocumentJsonConverter documentJsonConverter, object document)
+        {
+            ArgumentGuard.NotNull(documentJsonConverter);
+            ArgumentGuard.NotNull(document);
+
+            _documentJsonConverter = documentJsonConverter;
+            _document = document;
+        }
+
+        public void Dispose()
+        {
+            _documentJsonConverter.UnRegisterDocument(_document);
+        }
+    }
+
+    /// <summary>
+    /// Represents the set of JSON:API attributes to always send to the server, even if they are uninitialized (contain default value).
+    /// </summary>
+    private sealed class AlwaysIncludedAttributes
+    {
+        private readonly ISet<string> _propertyNames;
+        private readonly Type _attributesObjectType;
+
+        public AlwaysIncludedAttributes(ISet<string> propertyNames, Type attributesObjectType)
+        {
+            ArgumentGuard.NotNull(propertyNames);
+            ArgumentGuard.NotNull(attributesObjectType);
+
+            _propertyNames = propertyNames;
+            _attributesObjectType = attributesObjectType;
+        }
+
+        public bool ContainsAttribute(string propertyName)
+        {
+            return _propertyNames.Contains(propertyName);
+        }
+
+        public bool IsAttributesObjectType(Type type)
+        {
+            return _attributesObjectType == type;
+        }
+    }
+
+    /// <summary>
+    /// A <see cref="JsonConverter" /> that acts on JSON:API documents.
+    /// </summary>
+    private sealed class DocumentJsonConverter : JsonConverter
+    {
+        private readonly Dictionary<object, AlwaysIncludedAttributes> _alwaysIncludedAttributesByDocument = new();
+        private readonly Dictionary<Type, ISet<object>> _documentsByType = new();
+        private bool _isSerializing;
 
         public override bool CanRead => false;
 
-        public void RegisterDocument(object requestDocument, AttributeNamesContainer alwaysIncludedAttributes)
+        public void RegisterDocument(object document, AlwaysIncludedAttributes alwaysIncludedAttributes)
         {
-            _alwaysIncludedAttributesByRequestDocument[requestDocument] = alwaysIncludedAttributes;
+            _alwaysIncludedAttributesByDocument[document] = alwaysIncludedAttributes;
 
-            Type requestDocumentType = requestDocument.GetType();
+            Type documentType = document.GetType();
 
-            if (!_requestDocumentsByType.ContainsKey(requestDocumentType))
+            if (!_documentsByType.ContainsKey(documentType))
             {
-                _requestDocumentsByType[requestDocumentType] = new HashSet<object>();
+                _documentsByType[documentType] = new HashSet<object>();
             }
 
-            _requestDocumentsByType[requestDocumentType].Add(requestDocument);
+            _documentsByType[documentType].Add(document);
         }
 
-        public void RemoveRegistration(object requestDocument)
+        public void UnRegisterDocument(object document)
         {
-            if (_alwaysIncludedAttributesByRequestDocument.ContainsKey(requestDocument))
+            if (_alwaysIncludedAttributesByDocument.ContainsKey(document))
             {
-                _alwaysIncludedAttributesByRequestDocument.Remove(requestDocument);
+                _alwaysIncludedAttributesByDocument.Remove(document);
 
-                Type requestDocumentType = requestDocument.GetType();
-                _requestDocumentsByType[requestDocumentType].Remove(requestDocument);
+                Type documentType = document.GetType();
+                _documentsByType[documentType].Remove(document);
 
-                if (!_requestDocumentsByType[requestDocumentType].Any())
+                if (!_documentsByType[documentType].Any())
                 {
-                    _requestDocumentsByType.Remove(requestDocumentType);
+                    _documentsByType.Remove(documentType);
                 }
             }
         }
@@ -109,12 +164,13 @@ public abstract class JsonApiClient : IJsonApiClient
         {
             ArgumentGuard.NotNull(objectType);
 
-            if (_serializationScope == null)
+            if (_isSerializing)
             {
-                return _requestDocumentsByType.ContainsKey(objectType);
+                // Protect against infinite recursion.
+                return false;
             }
 
-            return _serializationScope.ShouldConvertAsAttributesObject(objectType);
+            return _documentsByType.ContainsKey(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
@@ -125,118 +181,125 @@ public abstract class JsonApiClient : IJsonApiClient
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
         {
             ArgumentGuard.NotNull(writer);
-            ArgumentGuard.NotNull(value);
             ArgumentGuard.NotNull(serializer);
 
-            if (_serializationScope == null)
+            if (value != null)
             {
-                AssertObjectIsRequestDocument(value);
-
-                SerializeRequestDocument(writer, value, serializer);
-            }
-            else
-            {
-                AttributeNamesContainer? attributesObjectInfo = _serializationScope.AttributesObjectInScope;
-
-                AssertObjectMatchesSerializationScope(attributesObjectInfo, value);
-
-                SerializeAttributesObject(attributesObjectInfo, writer, value, serializer);
-            }
-        }
-
-        private void AssertObjectIsRequestDocument(object value)
-        {
-            Type objectType = value.GetType();
-
-            if (!_requestDocumentsByType.ContainsKey(objectType))
-            {
-                throw new UnreachableCodeException();
-            }
-        }
-
-        private void SerializeRequestDocument(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            _serializationScope = new SerializationScope();
-
-            if (_alwaysIncludedAttributesByRequestDocument.TryGetValue(value, out AttributeNamesContainer? attributesObjectInfo))
-            {
-                _serializationScope.AttributesObjectInScope = attributesObjectInfo;
-            }
-
-            try
-            {
-                serializer.Serialize(writer, value);
-            }
-            finally
-            {
-                _serializationScope = null;
-            }
-        }
-
-        private static void AssertObjectMatchesSerializationScope([SysNotNull] AttributeNamesContainer? attributesObjectInfo, object value)
-        {
-            Type objectType = value.GetType();
-
-            if (attributesObjectInfo == null || !attributesObjectInfo.MatchesAttributesObjectType(objectType))
-            {
-                throw new UnreachableCodeException();
-            }
-        }
-
-        private static void SerializeAttributesObject(AttributeNamesContainer alwaysIncludedAttributes, JsonWriter writer, object value,
-            JsonSerializer serializer)
-        {
-            AssertRequiredPropertiesAreNotExcluded(value, alwaysIncludedAttributes, writer);
-
-            serializer.ContractResolver = new JsonApiAttributeContractResolver(alwaysIncludedAttributes);
-            serializer.Serialize(writer, value);
-        }
-
-        private static void AssertRequiredPropertiesAreNotExcluded(object value, AttributeNamesContainer alwaysIncludedAttributes, JsonWriter jsonWriter)
-        {
-            PropertyInfo[] propertyInfos = value.GetType().GetProperties();
-
-            foreach (PropertyInfo attributesPropertyInfo in propertyInfos)
-            {
-                bool isExplicitlyIncluded = alwaysIncludedAttributes.ContainsAttribute(attributesPropertyInfo.Name);
-
-                if (isExplicitlyIncluded)
+                if (_alwaysIncludedAttributesByDocument.TryGetValue(value, out AlwaysIncludedAttributes? alwaysIncludedAttributes))
                 {
-                    return;
+                    var attributesJsonConverter = new AttributesJsonConverter(alwaysIncludedAttributes);
+                    serializer.Converters.Add(attributesJsonConverter);
                 }
 
-                AssertRequiredPropertyIsNotIgnored(value, attributesPropertyInfo, jsonWriter.Path);
+                try
+                {
+                    _isSerializing = true;
+                    serializer.Serialize(writer, value);
+                }
+                finally
+                {
+                    _isSerializing = false;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// A <see cref="JsonConverter" /> that acts on JSON:API attribute objects.
+    /// </summary>
+    private sealed class AttributesJsonConverter : JsonConverter
+    {
+        private readonly AlwaysIncludedAttributes _alwaysIncludedAttributes;
+        private bool _isSerializing;
+
+        public override bool CanRead => false;
+
+        public AttributesJsonConverter(AlwaysIncludedAttributes alwaysIncludedAttributes)
+        {
+            ArgumentGuard.NotNull(alwaysIncludedAttributes);
+
+            _alwaysIncludedAttributes = alwaysIncludedAttributes;
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            ArgumentGuard.NotNull(objectType);
+
+            if (_isSerializing)
+            {
+                // Protect against infinite recursion.
+                return false;
+            }
+
+            return _alwaysIncludedAttributes.IsAttributesObjectType(objectType);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        {
+            throw new UnreachableCodeException();
+        }
+
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+        {
+            ArgumentGuard.NotNull(writer);
+            ArgumentGuard.NotNull(serializer);
+
+            if (value != null)
+            {
+                if (_alwaysIncludedAttributes.IsAttributesObjectType(value.GetType()))
+                {
+                    AssertRequiredAttributesHaveNonDefaultValues(value, writer.Path);
+
+                    serializer.ContractResolver = new JsonApiAttributeContractResolver(_alwaysIncludedAttributes);
+                }
+
+                try
+                {
+                    _isSerializing = true;
+                    serializer.Serialize(writer, value);
+                }
+                finally
+                {
+                    _isSerializing = false;
+                }
             }
         }
 
-        private static void AssertRequiredPropertyIsNotIgnored(object value, PropertyInfo attribute, string path)
+        private void AssertRequiredAttributesHaveNonDefaultValues(object attributesObject, string jsonPath)
         {
-            JsonPropertyAttribute jsonPropertyForAttribute = attribute.GetCustomAttributes<JsonPropertyAttribute>().Single();
-
-            if (jsonPropertyForAttribute.Required is not (Required.Always or Required.AllowNull))
+            foreach (PropertyInfo propertyInfo in attributesObject.GetType().GetProperties())
             {
-                return;
-            }
+                bool isExplicitlyIncluded = _alwaysIncludedAttributes.ContainsAttribute(propertyInfo.Name);
 
-            bool isPropertyIgnored = DefaultValueEqualsCurrentValue(attribute, value);
-
-            if (isPropertyIgnored)
-            {
-                throw new InvalidOperationException($"The following property should not be omitted: {path}.{jsonPropertyForAttribute.PropertyName}.");
+                if (!isExplicitlyIncluded)
+                {
+                    AssertPropertyHasNonDefaultValueIfRequired(attributesObject, propertyInfo, jsonPath);
+                }
             }
         }
 
-        private static bool DefaultValueEqualsCurrentValue(PropertyInfo propertyInfo, object instance)
+        private static void AssertPropertyHasNonDefaultValueIfRequired(object attributesObject, PropertyInfo propertyInfo, string jsonPath)
         {
-            object? currentValue = propertyInfo.GetValue(instance);
+            JsonPropertyAttribute jsonProperty = propertyInfo.GetCustomAttributes<JsonPropertyAttribute>().Single();
+
+            if (jsonProperty.Required is Required.Always or Required.AllowNull)
+            {
+                bool propertyHasDefaultValue = PropertyHasDefaultValue(propertyInfo, attributesObject);
+
+                if (propertyHasDefaultValue)
+                {
+                    throw new InvalidOperationException(
+                        $"Required property '{propertyInfo.Name}' at JSON path '{jsonPath}.{jsonProperty.PropertyName}' is not set. If sending its default value is intended, include it explicitly.");
+                }
+            }
+        }
+
+        private static bool PropertyHasDefaultValue(PropertyInfo propertyInfo, object instance)
+        {
+            object? propertyValue = propertyInfo.GetValue(instance);
             object? defaultValue = GetDefaultValue(propertyInfo.PropertyType);
 
-            if (defaultValue == null)
-            {
-                return currentValue == null;
-            }
-
-            return defaultValue.Equals(currentValue);
+            return EqualityComparer<object>.Default.Equals(propertyValue, defaultValue);
         }
 
         private static object? GetDefaultValue(Type type)
@@ -245,78 +308,20 @@ public abstract class JsonApiClient : IJsonApiClient
         }
     }
 
-    private sealed class SerializationScope
-    {
-        private bool _isFirstAttemptToConvertAttributes = true;
-        public AttributeNamesContainer? AttributesObjectInScope { get; set; }
-
-        public bool ShouldConvertAsAttributesObject(Type type)
-        {
-            if (!_isFirstAttemptToConvertAttributes || AttributesObjectInScope == null)
-            {
-                return false;
-            }
-
-            if (!AttributesObjectInScope.MatchesAttributesObjectType(type))
-            {
-                return false;
-            }
-
-            _isFirstAttemptToConvertAttributes = false;
-            return true;
-        }
-    }
-
-    private sealed class AttributeNamesContainer
-    {
-        private readonly ISet<string> _attributeNames;
-        private readonly Type _attributesObjectType;
-
-        public AttributeNamesContainer(ISet<string> attributeNames, Type attributesObjectType)
-        {
-            ArgumentGuard.NotNull(attributeNames);
-            ArgumentGuard.NotNull(attributesObjectType);
-
-            _attributeNames = attributeNames;
-            _attributesObjectType = attributesObjectType;
-        }
-
-        public bool ContainsAttribute(string name)
-        {
-            return _attributeNames.Contains(name);
-        }
-
-        public bool MatchesAttributesObjectType(Type type)
-        {
-            return _attributesObjectType == type;
-        }
-    }
-
-    private sealed class RequestDocumentRegistrationScope : IDisposable
-    {
-        private readonly JsonApiJsonConverter _jsonApiJsonConverter;
-        private readonly object _requestDocument;
-
-        public RequestDocumentRegistrationScope(JsonApiJsonConverter jsonApiJsonConverter, object requestDocument)
-        {
-            ArgumentGuard.NotNull(jsonApiJsonConverter);
-            ArgumentGuard.NotNull(requestDocument);
-
-            _jsonApiJsonConverter = jsonApiJsonConverter;
-            _requestDocument = requestDocument;
-        }
-
-        public void Dispose()
-        {
-            _jsonApiJsonConverter.RemoveRegistration(_requestDocument);
-        }
-    }
-
+    /// <summary>
+    /// Corrects the <see cref="NullValueHandling" /> and <see cref="DefaultValueHandling" /> JSON annotations at runtime, which appear on the auto-generated
+    /// properties for JSON:API attributes. For example:
+    /// <code>
+    /// <![CDATA[
+    /// [Newtonsoft.Json.JsonProperty("firstName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+    /// ]]>
+    /// </code>
+    /// </summary>
     private sealed class JsonApiAttributeContractResolver : DefaultContractResolver
     {
-        private readonly AttributeNamesContainer _alwaysIncludedAttributes;
+        private readonly AlwaysIncludedAttributes _alwaysIncludedAttributes;
 
-        public JsonApiAttributeContractResolver(AttributeNamesContainer alwaysIncludedAttributes)
+        public JsonApiAttributeContractResolver(AlwaysIncludedAttributes alwaysIncludedAttributes)
         {
             ArgumentGuard.NotNull(alwaysIncludedAttributes);
 
@@ -325,25 +330,23 @@ public abstract class JsonApiClient : IJsonApiClient
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
-            JsonProperty property = base.CreateProperty(member, memberSerialization);
+            JsonProperty jsonProperty = base.CreateProperty(member, memberSerialization);
 
-            bool canOmitAttribute = property.Required != Required.Always;
-
-            if (canOmitAttribute && _alwaysIncludedAttributes.MatchesAttributesObjectType(property.DeclaringType!))
+            if (_alwaysIncludedAttributes.IsAttributesObjectType(jsonProperty.DeclaringType!))
             {
-                if (_alwaysIncludedAttributes.ContainsAttribute(property.UnderlyingName!))
+                if (_alwaysIncludedAttributes.ContainsAttribute(jsonProperty.UnderlyingName!))
                 {
-                    property.NullValueHandling = NullValueHandling.Include;
-                    property.DefaultValueHandling = DefaultValueHandling.Include;
+                    jsonProperty.NullValueHandling = NullValueHandling.Include;
+                    jsonProperty.DefaultValueHandling = DefaultValueHandling.Include;
                 }
                 else
                 {
-                    property.NullValueHandling = NullValueHandling.Ignore;
-                    property.DefaultValueHandling = DefaultValueHandling.Ignore;
+                    jsonProperty.NullValueHandling = NullValueHandling.Ignore;
+                    jsonProperty.DefaultValueHandling = DefaultValueHandling.Ignore;
                 }
             }
 
-            return property;
+            return jsonProperty;
         }
     }
 }

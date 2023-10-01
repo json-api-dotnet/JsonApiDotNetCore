@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.OpenApi;
 internal sealed class ResourceFieldValidationMetadataProvider
 {
     private readonly bool _validateModelState;
-    private readonly NullabilityInfoContext _nullabilityContext;
+    private readonly NullabilityInfoContext _nullabilityContext = new();
     private readonly IModelMetadataProvider _modelMetadataProvider;
 
     public ResourceFieldValidationMetadataProvider(IJsonApiOptions options, IModelMetadataProvider modelMetadataProvider)
@@ -20,7 +20,6 @@ internal sealed class ResourceFieldValidationMetadataProvider
 
         _validateModelState = options.ValidateModelState;
         _modelMetadataProvider = modelMetadataProvider;
-        _nullabilityContext = new NullabilityInfoContext();
     }
 
     public bool IsNullable(ResourceFieldAttribute field)
@@ -33,18 +32,13 @@ internal sealed class ResourceFieldValidationMetadataProvider
         }
 
         bool hasRequiredAttribute = field.Property.HasAttribute<RequiredAttribute>();
+
+        if (_validateModelState && hasRequiredAttribute)
+        {
+            return false;
+        }
+
         NullabilityInfo nullabilityInfo = _nullabilityContext.Create(field.Property);
-
-        if (field is HasManyAttribute)
-        {
-            return false;
-        }
-
-        if (hasRequiredAttribute && _validateModelState && nullabilityInfo.ReadState != NullabilityState.NotNull)
-        {
-            return false;
-        }
-
         return nullabilityInfo.ReadState != NullabilityState.NotNull;
     }
 
@@ -64,11 +58,12 @@ internal sealed class ResourceFieldValidationMetadataProvider
             return false;
         }
 
-        bool isNotNull = HasNullabilityStateNotNull(field);
-        bool isRequiredValueType = field.Property.PropertyType.IsValueType && hasRequiredAttribute && isNotNull;
+        NullabilityInfo nullabilityInfo = _nullabilityContext.Create(field.Property);
+        bool isRequiredValueType = field.Property.PropertyType.IsValueType && hasRequiredAttribute && nullabilityInfo.ReadState == NullabilityState.NotNull;
 
         if (isRequiredValueType)
         {
+            // Special case: ASP.NET ModelState Validation effectively ignores value types with [Required].
             return false;
         }
 
@@ -77,16 +72,9 @@ internal sealed class ResourceFieldValidationMetadataProvider
 
     private bool IsModelStateValidationRequired(ResourceFieldAttribute field)
     {
-        ModelMetadata resourceFieldModelMetadata = _modelMetadataProvider.GetMetadataForProperties(field.Type.ClrType)
-            .Single(modelMetadata => modelMetadata.PropertyName! == field.Property.Name);
+        ModelMetadata modelMetadata = _modelMetadataProvider.GetMetadataForProperty(field.Type.ClrType, field.Property.Name);
 
-        return resourceFieldModelMetadata.ValidatorMetadata.Any(validatorMetadata => validatorMetadata is RequiredAttribute);
-    }
-
-    private bool HasNullabilityStateNotNull(ResourceFieldAttribute field)
-    {
-        NullabilityInfo resourceFieldNullabilityInfo = _nullabilityContext.Create(field.Property);
-        bool hasNullabilityStateNotNull = resourceFieldNullabilityInfo is { ReadState: NullabilityState.NotNull, WriteState: NullabilityState.NotNull };
-        return hasNullabilityStateNotNull;
+        // Non-nullable reference types are implicitly required, unless SuppressImplicitRequiredAttributeForNonNullableReferenceTypes is set.
+        return modelMetadata.ValidatorMetadata.Any(validatorMetadata => validatorMetadata is RequiredAttribute);
     }
 }
