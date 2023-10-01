@@ -79,11 +79,9 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship;
     }
 
-    private void SetResponseMetadata(ActionModel action, JsonApiEndpoint endpoint)
+    private static void SetResponseMetadata(ActionModel action, JsonApiEndpoint endpoint)
     {
-        IList<int> statusCodes = GetStatusCodesForEndpoint(endpoint);
-
-        foreach (int statusCode in statusCodes)
+        foreach (int statusCode in GetStatusCodesForEndpoint(endpoint))
         {
             action.Filters.Add(new ProducesResponseTypeAttribute(statusCode));
 
@@ -103,7 +101,7 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
         }
     }
 
-    private static IList<int> GetStatusCodesForEndpoint(JsonApiEndpoint endpoint)
+    private static IEnumerable<int> GetStatusCodesForEndpoint(JsonApiEndpoint endpoint)
     {
         return endpoint switch
         {
