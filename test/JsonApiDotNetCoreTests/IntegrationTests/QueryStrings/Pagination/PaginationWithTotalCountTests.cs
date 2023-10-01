@@ -323,10 +323,10 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         responseDocument.Links.ShouldNotBeNull();
         responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
-        responseDocument.Links.First.Should().Be(basePath + "?page%5Bsize%5D=1");
+        responseDocument.Links.First.Should().Be($"{basePath}?page%5Bsize%5D=1");
         responseDocument.Links.Last.Should().BeNull();
         responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
-        responseDocument.Links.Next.Should().Be(basePath + "?page%5Bnumber%5D=3&page%5Bsize%5D=1");
+        responseDocument.Links.Next.Should().Be($"{basePath}?page%5Bnumber%5D=3&page%5Bsize%5D=1");
     }
 
     [Fact]
