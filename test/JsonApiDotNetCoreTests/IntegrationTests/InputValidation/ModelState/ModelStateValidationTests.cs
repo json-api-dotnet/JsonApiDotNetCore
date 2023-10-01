@@ -125,7 +125,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
-        error.Detail.Should().Be(@"The field Name must match the regular expression '^[\w\s]+$'.");
+        error.Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/directoryName");
     }
@@ -534,7 +534,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Title.Should().Be("Input validation failed.");
-        error.Detail.Should().Be(@"The field Name must match the regular expression '^[\w\s]+$'.");
+        error.Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/data/attributes/directoryName");
     }

@@ -74,8 +74,8 @@ public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<Keba
             await dbContext.SaveChangesAsync();
         });
 
-        string route =
-            $"/public-api/swimming-pools/{pool.StringId}/water-slides?filter=greaterThan(length-in-meters,'1')&fields[water-slides]=length-in-meters";
+        string route = $"/public-api/swimming-pools/{pool.StringId}/water-slides" +
+            "?filter=greaterThan(length-in-meters,'1')&fields[water-slides]=length-in-meters";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

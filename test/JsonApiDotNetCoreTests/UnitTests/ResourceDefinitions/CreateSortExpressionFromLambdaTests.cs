@@ -317,7 +317,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         // Act
         Action action = () => resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<FileEntry, long>.PropertySortOrder
         {
-            (file => $"{file.Name}:{file.Content}", ListSortDirection.Ascending)
+            (file => file.Name + ":" + file.Content, ListSortDirection.Ascending)
         });
 
         // Assert
