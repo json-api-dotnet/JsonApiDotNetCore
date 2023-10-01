@@ -1,26 +1,46 @@
-namespace JsonApiDotNetCoreExampleClient;
+using JsonApiDotNetCoreExampleClient;
 
-internal static class Program
+using var httpClient = new HttpClient();
+var apiClient = new ExampleApiClient("http://localhost:14140", httpClient);
+
+PersonCollectionResponseDocument getResponse = await apiClient.GetPersonCollectionAsync();
+
+foreach (PersonDataInResponse person in getResponse.Data)
 {
-    private const string BaseUrl = "http://localhost:14140";
+    Console.WriteLine($"Found person {person.Id}: {person.Attributes.DisplayName}");
+}
 
-    private static async Task Main()
+var patchRequest = new PersonPatchRequestDocument
+{
+    Data = new PersonDataInPatchRequest
     {
-        using var httpClient = new HttpClient();
-
-        ExampleApiClient exampleApiClient = new(BaseUrl, httpClient);
-
-        try
+        Id = "1",
+        Attributes = new PersonAttributesInPatchRequest
         {
-            const int nonExistingId = int.MaxValue;
-            await exampleApiClient.DeletePersonAsync(nonExistingId);
+            LastName = "Doe"
         }
-        catch (ApiException exception)
-        {
-            Console.WriteLine(exception.Response);
-        }
+    }
+};
 
-        Console.WriteLine("Press any key to close.");
-        Console.ReadKey();
+// This line results in sending "firstName: null" instead of omitting it.
+using (apiClient.WithPartialAttributeSerialization<PersonPatchRequestDocument, PersonAttributesInPatchRequest>(patchRequest, person => person.FirstName))
+{
+    await TranslateAsync(async () => await apiClient.PatchPersonAsync(1, patchRequest));
+}
+
+Console.WriteLine("Press any key to close.");
+Console.ReadKey();
+
+static async Task<TResponse?> TranslateAsync<TResponse>(Func<Task<TResponse>> operation)
+    where TResponse : class
+{
+    try
+    {
+        return await operation();
+    }
+    catch (ApiException exception) when (exception.StatusCode == 204)
+    {
+        // Workaround for https://github.com/RicoSuter/NSwag/issues/2499
+        return null;
     }
 }

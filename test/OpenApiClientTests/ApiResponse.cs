@@ -10,21 +10,15 @@ internal static class ApiResponse
     public static async Task<TResponse?> TranslateAsync<TResponse>(Func<Task<TResponse>> operation)
         where TResponse : class
     {
-        // Workaround for https://github.com/RicoSuter/NSwag/issues/2499
-
         ArgumentGuard.NotNull(operation);
 
         try
         {
             return await operation();
         }
-        catch (ApiException exception)
+        catch (ApiException exception) when (exception.StatusCode == 204)
         {
-            if (exception.StatusCode != 204)
-            {
-                throw;
-            }
-
+            // Workaround for https://github.com/RicoSuter/NSwag/issues/2499
             return null;
         }
     }
