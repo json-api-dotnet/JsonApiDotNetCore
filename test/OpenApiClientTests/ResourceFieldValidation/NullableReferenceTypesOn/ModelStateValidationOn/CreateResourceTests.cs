@@ -12,7 +12,6 @@ namespace OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOn.Mo
 
 public sealed class CreateResourceTests : BaseOpenApiClientTests
 {
-    private const string DataPropertyName = "Data";
     private readonly NrtOnMsvOnFakers _fakers = new();
 
     [Theory]
@@ -38,7 +37,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        requestDocument.Data.Attributes.SetPropertyValue(attributePropertyName, null);
+        SetPropertyToDefaultValue(requestDocument.Data.Attributes, attributePropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
@@ -84,8 +83,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        object? defaultValue = requestDocument.Data.Attributes.GetDefaultValueForProperty(attributePropertyName);
-        requestDocument.Data.Attributes.SetPropertyValue(attributePropertyName, defaultValue);
+        SetPropertyToDefaultValue(requestDocument.Data.Attributes, attributePropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
@@ -131,7 +129,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        requestDocument.Data.Attributes.SetPropertyValue(attributePropertyName, null);
+        SetPropertyToDefaultValue(requestDocument.Data.Attributes, attributePropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
@@ -156,7 +154,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
     [InlineData(nameof(ResourceAttributesInPostRequest.ValueType), "valueType")]
     [InlineData(nameof(ResourceAttributesInPostRequest.RequiredValueType), "requiredValueType")]
     [InlineData(nameof(ResourceAttributesInPostRequest.NullableValueType), "nullableValueType")]
-    public async Task Can_exclude_attribute(string attributePropertyName, string jsonPropertyName)
+    public async Task Can_omit_attribute(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePostRequestDocument
@@ -176,9 +174,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        ResourceAttributesInPostRequest emptyAttributesObject = new();
-        object? defaultValue = emptyAttributesObject.GetPropertyValue(attributePropertyName);
-        requestDocument.Data.Attributes.SetPropertyValue(attributePropertyName, defaultValue);
+        SetPropertyToInitialValue(requestDocument.Data.Attributes, attributePropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
@@ -202,7 +198,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
     [InlineData(nameof(ResourceAttributesInPostRequest.RequiredNonNullableReferenceType), "requiredNonNullableReferenceType")]
     [InlineData(nameof(ResourceAttributesInPostRequest.RequiredNullableReferenceType), "requiredNullableReferenceType")]
     [InlineData(nameof(ResourceAttributesInPostRequest.RequiredNullableValueType), "requiredNullableValueType")]
-    public async Task Cannot_exclude_attribute(string attributePropertyName, string jsonPropertyName)
+    public async Task Cannot_omit_attribute(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePostRequestDocument
@@ -222,9 +218,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        ResourceAttributesInPostRequest emptyAttributesObject = new();
-        object? defaultValue = emptyAttributesObject.GetPropertyValue(attributePropertyName);
-        requestDocument.Data.Attributes.SetPropertyValue(attributePropertyName, defaultValue);
+        SetPropertyToInitialValue(requestDocument.Data.Attributes, attributePropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
@@ -264,8 +258,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        object? relationshipObject = requestDocument.Data.Relationships.GetPropertyValue(relationshipPropertyName);
-        relationshipObject!.SetPropertyValue(DataPropertyName, null);
+        SetDataPropertyToNull(requestDocument.Data.Relationships, relationshipPropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
@@ -306,8 +299,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        object? relationshipObject = requestDocument.Data.Relationships.GetPropertyValue(relationshipPropertyName);
-        relationshipObject!.SetPropertyValue(DataPropertyName, null);
+        SetDataPropertyToNull(requestDocument.Data.Relationships, relationshipPropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
@@ -350,8 +342,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        object? relationshipObject = requestDocument.Data.Relationships.GetPropertyValue(relationshipPropertyName);
-        relationshipObject!.SetPropertyValue(DataPropertyName, null);
+        SetDataPropertyToNull(requestDocument.Data.Relationships, relationshipPropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
@@ -395,8 +386,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        object? relationshipObject = requestDocument.Data.Relationships.GetPropertyValue(relationshipPropertyName);
-        relationshipObject!.SetPropertyValue(DataPropertyName, null);
+        SetDataPropertyToNull(requestDocument.Data.Relationships, relationshipPropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
@@ -416,7 +406,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
     [InlineData(nameof(ResourceRelationshipsInPostRequest.NullableToOne), "nullableToOne")]
     [InlineData(nameof(ResourceRelationshipsInPostRequest.ToMany), "toMany")]
     [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToMany), "requiredToMany")]
-    public async Task Can_exclude_relationship_with_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
+    public async Task Can_omit_relationship_with_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePostRequestDocument
@@ -436,9 +426,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        ResourceRelationshipsInPostRequest emptyRelationshipsObject = new();
-        object? defaultValue = emptyRelationshipsObject.GetPropertyValue(relationshipPropertyName);
-        requestDocument.Data.Relationships.SetPropertyValue(relationshipPropertyName, defaultValue);
+        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
@@ -461,7 +449,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
     [InlineData(nameof(ResourceRelationshipsInPostRequest.NullableToOne), "nullableToOne")]
     [InlineData(nameof(ResourceRelationshipsInPostRequest.ToMany), "toMany")]
     [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredToMany), "requiredToMany")]
-    public async Task Can_exclude_relationship_without_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
+    public async Task Can_omit_relationship_without_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePostRequestDocument
@@ -481,9 +469,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        ResourceRelationshipsInPostRequest emptyRelationshipsObject = new();
-        object? defaultValue = emptyRelationshipsObject.GetPropertyValue(relationshipPropertyName);
-        requestDocument.Data.Relationships.SetPropertyValue(relationshipPropertyName, defaultValue);
+        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
@@ -504,7 +490,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
     [InlineData(nameof(ResourceRelationshipsInPostRequest.NonNullableToOne), "nonNullableToOne")]
     [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredNonNullableToOne), "requiredNonNullableToOne")]
     [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredNullableToOne), "requiredNullableToOne")]
-    public async Task Cannot_exclude_relationship_with_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
+    public async Task Cannot_omit_relationship_with_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePostRequestDocument
@@ -524,9 +510,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        ResourceRelationshipsInPostRequest emptyRelationshipsObject = new();
-        object? defaultValue = emptyRelationshipsObject.GetPropertyValue(relationshipPropertyName);
-        requestDocument.Data.Relationships.SetPropertyValue(relationshipPropertyName, defaultValue);
+        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
@@ -548,7 +532,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
     [InlineData(nameof(ResourceRelationshipsInPostRequest.NonNullableToOne), "nonNullableToOne")]
     [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredNonNullableToOne), "requiredNonNullableToOne")]
     [InlineData(nameof(ResourceRelationshipsInPostRequest.RequiredNullableToOne), "requiredNullableToOne")]
-    public async Task Cannot_exclude_relationship_without_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
+    public async Task Cannot_omit_relationship_without_partial_attribute_serialization(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePostRequestDocument
@@ -568,9 +552,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        ResourceRelationshipsInPostRequest emptyRelationshipsObject = new();
-        object? defaultValue = emptyRelationshipsObject.GetPropertyValue(relationshipPropertyName);
-        requestDocument.Data.Relationships.SetPropertyValue(relationshipPropertyName, defaultValue);
+        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);

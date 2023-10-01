@@ -23,15 +23,6 @@ internal static class ObjectExtensions
         propertyInfo.SetValue(source, value);
     }
 
-    public static object? GetDefaultValueForProperty(this object source, string propertyName)
-    {
-        ArgumentGuard.NotNull(source);
-        ArgumentGuard.NotNull(propertyName);
-
-        PropertyInfo propertyInfo = GetExistingProperty(source.GetType(), propertyName);
-        return propertyInfo.PropertyType.IsValueType ? Activator.CreateInstance(propertyInfo.PropertyType) : null;
-    }
-
     private static PropertyInfo GetExistingProperty(Type type, string propertyName)
     {
         PropertyInfo? propertyInfo = type.GetProperty(propertyName);

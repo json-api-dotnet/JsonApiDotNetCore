@@ -9,19 +9,18 @@ using Xunit;
 
 namespace OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOn.ModelStateValidationOn;
 
-public sealed class UpdateResourceTests
+public sealed class UpdateResourceTests : BaseOpenApiClientTests
 {
     private readonly NrtOnMsvOnFakers _fakers = new();
 
     [Fact]
-    public async Task Cannot_exclude_Id()
+    public async Task Cannot_omit_Id()
     {
         // Arrange
         var requestDocument = new ResourcePatchRequestDocument
         {
             Data = new ResourceDataInPatchRequest
             {
-                Id = null!,
                 Attributes = _fakers.PatchAttributes.Generate(),
                 Relationships = new ResourceRelationshipsInPatchRequest
                 {
@@ -57,7 +56,7 @@ public sealed class UpdateResourceTests
     [InlineData(nameof(ResourceAttributesInPatchRequest.RequiredValueType), "requiredValueType")]
     [InlineData(nameof(ResourceAttributesInPatchRequest.NullableValueType), "nullableValueType")]
     [InlineData(nameof(ResourceAttributesInPatchRequest.RequiredNullableValueType), "requiredNullableValueType")]
-    public async Task Can_exclude_attribute(string attributePropertyName, string jsonPropertyName)
+    public async Task Can_omit_attribute(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePatchRequestDocument
@@ -78,9 +77,7 @@ public sealed class UpdateResourceTests
             }
         };
 
-        ResourceAttributesInPatchRequest emptyAttributesObject = new();
-        object? defaultValue = emptyAttributesObject.GetPropertyValue(attributePropertyName);
-        requestDocument.Data.Attributes.SetPropertyValue(attributePropertyName, defaultValue);
+        SetPropertyToInitialValue(requestDocument.Data.Attributes, attributePropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
@@ -106,7 +103,7 @@ public sealed class UpdateResourceTests
     [InlineData(nameof(ResourceRelationshipsInPatchRequest.RequiredNullableToOne), "requiredNullableToOne")]
     [InlineData(nameof(ResourceRelationshipsInPatchRequest.ToMany), "toMany")]
     [InlineData(nameof(ResourceRelationshipsInPatchRequest.RequiredToMany), "requiredToMany")]
-    public async Task Can_exclude_relationship(string relationshipPropertyName, string jsonPropertyName)
+    public async Task Can_omit_relationship(string relationshipPropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePatchRequestDocument
@@ -127,9 +124,7 @@ public sealed class UpdateResourceTests
             }
         };
 
-        ResourceRelationshipsInPatchRequest emptyRelationshipsObject = new();
-        object? defaultValue = emptyRelationshipsObject.GetPropertyValue(relationshipPropertyName);
-        requestDocument.Data.Relationships.SetPropertyValue(relationshipPropertyName, defaultValue);
+        SetPropertyToInitialValue(requestDocument.Data.Relationships, relationshipPropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOnMsvOnClient(wrapper.HttpClient);
