@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal.QueryableBuilding;
+using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
@@ -119,7 +119,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             IQueryable<TResource> source = GetAll();
 
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_before_first_method_call true
 
             QueryableHandlerExpression[] queryableHandlers = _constraintProviders
                 .SelectMany(provider => provider.GetConstraints())
@@ -128,7 +128,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
                 .OfType<QueryableHandlerExpression>()
                 .ToArray();
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_before_first_method_call restore
             // @formatter:wrap_chained_method_calls restore
 
             foreach (QueryableHandlerExpression queryableHandler in queryableHandlers)
@@ -136,11 +136,12 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
                 source = queryableHandler.Apply(source);
             }
 
-            var nameFactory = new LambdaParameterNameFactory();
+#pragma warning disable CS0618
+            IQueryableBuilder builder = _resourceDefinitionAccessor.QueryableBuilder;
+#pragma warning restore CS0618
 
-            var builder = new QueryableBuilder(source.Expression, source.ElementType, typeof(Queryable), nameFactory, _resourceFactory, _dbContext.Model);
-
-            Expression expression = builder.ApplyQuery(queryLayer);
+            var context = QueryableBuilderContext.CreateRoot(source, typeof(Queryable), _dbContext.Model, null);
+            Expression expression = builder.ApplyQuery(queryLayer, context);
 
             using (CodeTimingSessionManager.Current.Measure("Convert System.Expression to IQueryable"))
             {
@@ -151,7 +152,24 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
     protected virtual IQueryable<TResource> GetAll()
     {
-        return _dbContext.Set<TResource>();
+        IQueryable<TResource> source = _dbContext.Set<TResource>();
+
+        return GetTrackingBehavior() switch
+        {
+            QueryTrackingBehavior.NoTrackingWithIdentityResolution => source.AsNoTrackingWithIdentityResolution(),
+            QueryTrackingBehavior.NoTracking => source.AsNoTracking(),
+            QueryTrackingBehavior.TrackAll => source.AsTracking(),
+            _ => source
+        };
+    }
+
+    protected virtual QueryTrackingBehavior? GetTrackingBehavior()
+    {
+        // EF Core rejects the way we project sparse fieldsets when owned entities are involved, unless the query is explicitly
+        // marked as non-tracked (see https://github.com/dotnet/EntityFramework.Docs/issues/2205#issuecomment-1542914439).
+#pragma warning disable CS0618
+        return _resourceDefinitionAccessor.IsReadOnlyRequest ? QueryTrackingBehavior.NoTrackingWithIdentityResolution : null;
+#pragma warning restore CS0618
     }
 
     /// <inheritdoc />
@@ -162,6 +180,8 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             resourceClrType,
             id
         });
+
+        ArgumentGuard.NotNull(resourceClrType);
 
         var resource = (TResource)_resourceFactory.CreateInstance(resourceClrType);
         resource.Id = id;
@@ -269,7 +289,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             object? rightValueEvaluated = await VisitSetRelationshipAsync(resourceFromDatabase, relationship, rightValue, WriteOperationKind.UpdateResource,
                 cancellationToken);
 
-            AssertIsNotClearingRequiredToOneRelationship(relationship, resourceFromDatabase, rightValueEvaluated);
+            AssertIsNotClearingRequiredToOneRelationship(relationship, rightValueEvaluated);
 
             await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightValueEvaluated, cancellationToken);
         }
@@ -288,7 +308,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         _dbContext.ResetChangeTracker();
     }
 
-    protected void AssertIsNotClearingRequiredToOneRelationship(RelationshipAttribute relationship, TResource leftResource, object? rightValue)
+    protected void AssertIsNotClearingRequiredToOneRelationship(RelationshipAttribute relationship, object? rightValue)
     {
         if (relationship is HasOneAttribute)
         {
@@ -300,7 +320,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             if (isRelationshipRequired && isClearingRelationship)
             {
                 string resourceName = _resourceGraph.GetResourceType<TResource>().PublicName;
-                throw new CannotClearRequiredRelationshipException(relationship.PublicName, leftResource.StringId!, resourceName);
+                throw new CannotClearRequiredRelationshipException(relationship.PublicName, resourceName);
             }
         }
     }
@@ -347,21 +367,12 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     {
         EntityEntry<TResource> entityEntry = _dbContext.Entry(resource);
 
-        switch (relationship)
+        return relationship switch
         {
-            case HasOneAttribute hasOneRelationship:
-            {
-                return entityEntry.Reference(hasOneRelationship.Property.Name);
-            }
-            case HasManyAttribute hasManyRelationship:
-            {
-                return entityEntry.Collection(hasManyRelationship.Property.Name);
-            }
-            default:
-            {
-                throw new InvalidOperationException($"Unknown relationship type '{relationship.GetType().Name}'.");
-            }
-        }
+            HasOneAttribute hasOneRelationship => entityEntry.Reference(hasOneRelationship.Property.Name),
+            HasManyAttribute hasManyRelationship => entityEntry.Collection(hasManyRelationship.Property.Name),
+            _ => throw new InvalidOperationException($"Unknown relationship type '{relationship.GetType().Name}'.")
+        };
     }
 
     private bool RequiresLoadOfRelationshipForDeletion(RelationshipAttribute relationship)
@@ -403,7 +414,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         object? rightValueEvaluated =
             await VisitSetRelationshipAsync(leftResource, relationship, rightValue, WriteOperationKind.SetRelationship, cancellationToken);
 
-        AssertIsNotClearingRequiredToOneRelationship(relationship, leftResource, rightValueEvaluated);
+        AssertIsNotClearingRequiredToOneRelationship(relationship, rightValueEvaluated);
 
         await UpdateRelationshipAsync(relationship, leftResource, rightValueEvaluated, cancellationToken);
 
@@ -459,14 +470,14 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
         object? rightValueStored = relationship.GetValue(leftResource);
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         HashSet<IIdentifiable> rightResourceIdsStored = _collectionConverter
             .ExtractResources(rightValueStored)
             .Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource))
             .ToHashSet(IdentifiableComparer.Instance);
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         if (rightResourceIdsStored.Any())
@@ -508,7 +519,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
             object? rightValueStored = relationship.GetValue(leftResourceTracked);
 
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_before_first_method_call true
 
             IIdentifiable[] rightResourceIdsStored = _collectionConverter
                 .ExtractResources(rightValueStored)
@@ -516,7 +527,7 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
                 .Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource))
                 .ToArray();
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_before_first_method_call restore
             // @formatter:wrap_chained_method_calls restore
 
             rightValueStored = _collectionConverter.CopyToTypedCollection(rightResourceIdsStored, relationship.Property.PropertyType);
@@ -529,8 +540,6 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
 
             if (!rightResourceIdsToStore.SetEquals(rightResourceIdsStored))
             {
-                AssertIsNotClearingRequiredToOneRelationship(relationship, leftResourceTracked, rightResourceIdsToStore);
-
                 await UpdateRelationshipAsync(relationship, leftResourceTracked, rightResourceIdsToStore, cancellationToken);
 
                 await _resourceDefinitionAccessor.OnWritingAsync(leftResourceTracked, WriteOperationKind.RemoveFromRelationship, cancellationToken);
@@ -611,7 +620,18 @@ public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository
     private bool RequireLoadOfInverseRelationship(RelationshipAttribute relationship, [NotNullWhen(true)] object? trackedValueToAssign)
     {
         // See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
-        return trackedValueToAssign != null && relationship is HasOneAttribute { IsOneToOne: true };
+        if (trackedValueToAssign != null && relationship is HasOneAttribute { IsOneToOne: true })
+        {
+            IEntityType? leftEntityType = _dbContext.Model.FindEntityType(relationship.LeftType.ClrType);
+            INavigation? navigation = leftEntityType?.FindNavigation(relationship.Property.Name);
+
+            if (HasForeignKeyAtLeftSide(relationship, navigation))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected virtual async Task SaveChangesAsync(CancellationToken cancellationToken)

@@ -30,7 +30,6 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeExceptionStackTraceInErrors = false;
-        options.AllowClientGeneratedIds = true;
         options.IncludeJsonApiVersion = false;
         options.IncludeTotalResourceCount = true;
     }
@@ -142,7 +141,13 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
       ""type"": ""meetingAttendees"",
       ""id"": """ + meeting.Attendees[0].StringId + @""",
       ""attributes"": {
-        ""displayName"": """ + meeting.Attendees[0].DisplayName + @"""
+        ""displayName"": """ + meeting.Attendees[0].DisplayName + @""",
+        ""homeAddress"": {
+          ""street"": """ + meeting.Attendees[0].HomeAddress.Street + @""",
+          ""zipCode"": """ + meeting.Attendees[0].HomeAddress.ZipCode + @""",
+          ""city"": """ + meeting.Attendees[0].HomeAddress.City + @""",
+          ""country"": """ + meeting.Attendees[0].HomeAddress.Country + @"""
+        }
       },
       ""relationships"": {
         ""meeting"": {
@@ -191,7 +196,13 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     ""type"": ""meetingAttendees"",
     ""id"": """ + attendee.StringId + @""",
     ""attributes"": {
-      ""displayName"": """ + attendee.DisplayName + @"""
+      ""displayName"": """ + attendee.DisplayName + @""",
+      ""homeAddress"": {
+        ""street"": """ + attendee.HomeAddress.Street + @""",
+        ""zipCode"": """ + attendee.HomeAddress.ZipCode + @""",
+        ""city"": """ + attendee.HomeAddress.City + @""",
+        ""country"": """ + attendee.HomeAddress.Country + @"""
+      }
     },
     ""relationships"": {
       ""meeting"": {
@@ -465,7 +476,13 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
       ""type"": ""meetingAttendees"",
       ""id"": """ + meeting.Attendees[0].StringId + @""",
       ""attributes"": {
-        ""displayName"": """ + meeting.Attendees[0].DisplayName + @"""
+        ""displayName"": """ + meeting.Attendees[0].DisplayName + @""",
+        ""homeAddress"": {
+          ""street"": """ + meeting.Attendees[0].HomeAddress.Street + @""",
+          ""zipCode"": """ + meeting.Attendees[0].HomeAddress.ZipCode + @""",
+          ""city"": """ + meeting.Attendees[0].HomeAddress.City + @""",
+          ""country"": """ + meeting.Attendees[0].HomeAddress.Country + @"""
+        }
       },
       ""relationships"": {
         ""meeting"": {
@@ -704,7 +721,13 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     ""type"": ""meetingAttendees"",
     ""id"": """ + existingAttendee.StringId + @""",
     ""attributes"": {
-      ""displayName"": """ + existingAttendee.DisplayName + @"""
+      ""displayName"": """ + existingAttendee.DisplayName + @""",
+      ""homeAddress"": {
+        ""street"": """ + existingAttendee.HomeAddress.Street + @""",
+        ""zipCode"": """ + existingAttendee.HomeAddress.ZipCode + @""",
+        ""city"": """ + existingAttendee.HomeAddress.City + @""",
+        ""country"": """ + existingAttendee.HomeAddress.Country + @"""
+      }
     },
     ""relationships"": {
       ""meeting"": {
@@ -768,7 +791,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
-    public async Task Includes_version_on_resource_endpoint()
+    public async Task Includes_version_at_resource_endpoint()
     {
         // Arrange
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
@@ -802,7 +825,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
-    public async Task Includes_version_on_error_in_resource_endpoint()
+    public async Task Includes_version_on_error_at_resource_endpoint()
     {
         // Arrange
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

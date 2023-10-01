@@ -3,17 +3,33 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResourceDefinitionAccessor" />
 [PublicAPI]
 public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
 {
     private readonly IResourceGraph _resourceGraph;
     private readonly IServiceProvider _serviceProvider;
+
+    /// <inheritdoc />
+    [Obsolete("Use IJsonApiRequest.IsReadOnly.")]
+    public bool IsReadOnlyRequest
+    {
+        get
+        {
+            var request = _serviceProvider.GetRequiredService<IJsonApiRequest>();
+            return request.IsReadOnly;
+        }
+    }
+
+    /// <inheritdoc />
+    [Obsolete("Use injected IQueryableBuilder instead.")]
+    public IQueryableBuilder QueryableBuilder => _serviceProvider.GetRequiredService<IQueryableBuilder>();
 
     public ResourceDefinitionAccessor(IResourceGraph resourceGraph, IServiceProvider serviceProvider)
     {

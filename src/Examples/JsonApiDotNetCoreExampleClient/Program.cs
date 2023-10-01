@@ -13,7 +13,7 @@ internal static class Program
         try
         {
             const int nonExistingId = int.MaxValue;
-            await exampleApiClient.Delete_personAsync(nonExistingId);
+            await exampleApiClient.DeletePersonAsync(nonExistingId);
         }
         catch (ApiException exception)
         {

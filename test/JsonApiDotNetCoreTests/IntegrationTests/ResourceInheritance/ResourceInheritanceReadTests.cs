@@ -614,9 +614,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/chromeWheels/{resource.Id}");
 
-            resource.Attributes.ShouldHaveCount(2);
-            resource.Attributes.ShouldContainKey("radius");
-            resource.Attributes.ShouldContainKey("paintColor");
+            resource.Attributes.ShouldOnlyContainKeys("radius", "paintColor");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "carbonWheels"))
@@ -624,9 +622,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/carbonWheels/{resource.Id}");
 
-            resource.Attributes.ShouldHaveCount(2);
-            resource.Attributes.ShouldContainKey("radius");
-            resource.Attributes.ShouldContainKey("hasTube");
+            resource.Attributes.ShouldOnlyContainKeys("radius", "hasTube");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue)
@@ -686,9 +682,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/chromeWheels/{resource.Id}");
 
-            resource.Attributes.ShouldHaveCount(2);
-            resource.Attributes.ShouldContainKey("radius");
-            resource.Attributes.ShouldContainKey("paintColor");
+            resource.Attributes.ShouldOnlyContainKeys("radius", "paintColor");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "carbonWheels"))
@@ -696,9 +690,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/carbonWheels/{resource.Id}");
 
-            resource.Attributes.ShouldHaveCount(2);
-            resource.Attributes.ShouldContainKey("radius");
-            resource.Attributes.ShouldContainKey("hasTube");
+            resource.Attributes.ShouldOnlyContainKeys("radius", "hasTube");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue)
@@ -752,9 +744,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/chromeWheels/{resource.Id}");
 
-            resource.Attributes.ShouldHaveCount(2);
-            resource.Attributes.ShouldContainKey("radius");
-            resource.Attributes.ShouldContainKey("paintColor");
+            resource.Attributes.ShouldOnlyContainKeys("radius", "paintColor");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue.Where(value => value.Type == "carbonWheels"))
@@ -762,9 +752,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
             resource.Links.ShouldNotBeNull();
             resource.Links.Self.Should().Be($"/carbonWheels/{resource.Id}");
 
-            resource.Attributes.ShouldHaveCount(2);
-            resource.Attributes.ShouldContainKey("radius");
-            resource.Attributes.ShouldContainKey("hasTube");
+            resource.Attributes.ShouldOnlyContainKeys("radius", "hasTube");
         }
 
         foreach (ResourceObject resource in responseDocument.Data.ManyValue)
@@ -2362,7 +2350,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Cannot_sort_on_ambiguous_derived_attribute()
     {
         // Arrange
-        const string route = "/cars?sort=engine.serialCode";
+        var parameterValue = new MarkedText("engine.^serialCode", '^');
+        string route = $"/cars?sort={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -2375,7 +2364,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Be("Attribute 'serialCode' in 'engine.serialCode' is defined on multiple derived types.");
+        error.Detail.Should().Be($"Field 'serialCode' is defined on multiple types that derive from resource type 'engines'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }
@@ -2384,7 +2373,8 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
     public async Task Cannot_sort_on_ambiguous_derived_relationship()
     {
         // Arrange
-        const string route = "/vehicles?sort=count(features)";
+        var parameterValue = new MarkedText("count(^features)", '^');
+        string route = $"/vehicles?sort={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -2397,7 +2387,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified sort is invalid.");
-        error.Detail.Should().Be("Relationship 'features' is defined on multiple derived types.");
+        error.Detail.Should().Be($"Field 'features' is defined on multiple types that derive from resource type 'vehicles'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("sort");
     }

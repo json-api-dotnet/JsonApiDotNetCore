@@ -30,7 +30,8 @@ public sealed class RangeValidationTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_use_negative_page_number()
     {
         // Arrange
-        const string route = "/blogs?page[number]=-1";
+        var parameterValue = new MarkedText("^-1", '^');
+        string route = $"/blogs?page[number]={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -42,8 +43,8 @@ public sealed class RangeValidationTests : IClassFixture<IntegrationTestContext<
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
-        error.Detail.Should().Be("Page number cannot be negative or zero.");
+        error.Title.Should().Be("The specified pagination is invalid.");
+        error.Detail.Should().Be($"Page number cannot be negative or zero. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
@@ -52,7 +53,8 @@ public sealed class RangeValidationTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_use_zero_page_number()
     {
         // Arrange
-        const string route = "/blogs?page[number]=0";
+        var parameterValue = new MarkedText("^0", '^');
+        string route = $"/blogs?page[number]={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -64,8 +66,8 @@ public sealed class RangeValidationTests : IClassFixture<IntegrationTestContext<
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
-        error.Detail.Should().Be("Page number cannot be negative or zero.");
+        error.Title.Should().Be("The specified pagination is invalid.");
+        error.Detail.Should().Be($"Page number cannot be negative or zero. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
@@ -111,7 +113,8 @@ public sealed class RangeValidationTests : IClassFixture<IntegrationTestContext<
     public async Task Cannot_use_negative_page_size()
     {
         // Arrange
-        const string route = "/blogs?page[size]=-1";
+        var parameterValue = new MarkedText("^-1", '^');
+        string route = $"/blogs?page[size]={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -123,8 +126,8 @@ public sealed class RangeValidationTests : IClassFixture<IntegrationTestContext<
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
-        error.Detail.Should().Be("Page size cannot be negative.");
+        error.Title.Should().Be("The specified pagination is invalid.");
+        error.Detail.Should().Be($"Page size cannot be negative. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }

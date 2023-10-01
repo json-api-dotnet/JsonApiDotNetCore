@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Queries;
 
 namespace JsonApiDotNetCore.Serialization.Response;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IMetaBuilder" />
 [PublicAPI]
 public sealed class MetaBuilder : IMetaBuilder
 {
@@ -30,7 +30,7 @@ public sealed class MetaBuilder : IMetaBuilder
     {
         ArgumentGuard.NotNull(values);
 
-        _meta = values.Keys.Union(_meta.Keys).ToDictionary(key => key, key => values.ContainsKey(key) ? values[key] : _meta[key]);
+        _meta = values.Keys.Union(_meta.Keys).ToDictionary(key => key, key => values.TryGetValue(key, out object? value) ? value : _meta[key]);
     }
 
     /// <inheritdoc />

@@ -2,6 +2,8 @@ using JetBrains.Annotations;
 using JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 using Microsoft.EntityFrameworkCore;
 
+// @formatter:wrap_chained_method_calls chop_always
+
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.TablePerType;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
@@ -14,24 +16,17 @@ public sealed class TablePerTypeDbContext : ResourceInheritanceDbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Vehicle>().ToTable("Vehicles");
-        builder.Entity<Bike>().ToTable("Bikes");
-        builder.Entity<Tandem>().ToTable("Tandems");
-        builder.Entity<MotorVehicle>().ToTable("MotorVehicles");
-        builder.Entity<Car>().ToTable("Cars");
-        builder.Entity<Truck>().ToTable("Trucks");
+        builder.Entity<Vehicle>()
+            .UseTptMappingStrategy();
 
-        builder.Entity<Wheel>().ToTable("Wheels");
-        builder.Entity<CarbonWheel>().ToTable("CarbonWheels");
-        builder.Entity<ChromeWheel>().ToTable("ChromeWheels");
+        builder.Entity<Wheel>()
+            .UseTptMappingStrategy();
 
-        builder.Entity<Engine>().ToTable("Engines");
-        builder.Entity<GasolineEngine>().ToTable("GasolineEngines");
-        builder.Entity<DieselEngine>().ToTable("DieselEngines");
+        builder.Entity<Engine>()
+            .UseTptMappingStrategy();
 
-        builder.Entity<GenericProperty>().ToTable("GenericProperties");
-        builder.Entity<StringProperty>().ToTable("StringProperties");
-        builder.Entity<NumberProperty>().ToTable("NumberProperties");
+        builder.Entity<GenericProperty>()
+            .UseTptMappingStrategy();
 
         base.OnModelCreating(builder);
     }

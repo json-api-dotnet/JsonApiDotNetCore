@@ -23,19 +23,29 @@ public static class DbContextExtensions
         await ClearTablesAsync(dbContext, typeof(TEntity1), typeof(TEntity2));
     }
 
-    private static async Task ClearTablesAsync(this DbContext dbContext, params Type[] models)
+    private static async Task ClearTablesAsync(this DbContext dbContext, params Type[] modelTypes)
     {
-        foreach (Type model in models)
+        foreach (Type modelType in modelTypes)
         {
-            IEntityType? entityType = dbContext.Model.FindEntityType(model);
+            IEntityType? entityType = dbContext.Model.FindEntityType(modelType);
 
             if (entityType == null)
             {
-                throw new InvalidOperationException($"Table for '{model.Name}' not found.");
+                throw new InvalidOperationException($"Table for '{modelType.Name}' not found.");
             }
 
-            string tableName = entityType.GetTableName()!;
-            await dbContext.Database.ExecuteSqlRawAsync($"delete from \"{tableName}\"");
+            string? tableName = entityType.GetTableName();
+
+            if (tableName == null)
+            {
+                // There is no table for the specified abstract base type when using TablePerConcreteType inheritance.
+                IEnumerable<IEntityType> derivedTypes = entityType.GetConcreteDerivedTypesInclusive();
+                await ClearTablesAsync(dbContext, derivedTypes.Select(derivedType => derivedType.ClrType).ToArray());
+            }
+            else
+            {
+                await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\"");
+            }
         }
     }
 }

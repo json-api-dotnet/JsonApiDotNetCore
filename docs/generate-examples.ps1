@@ -1,57 +1,76 @@
-#Requires -Version 7.0
+#Requires -Version 7.3
 
-# This script generates response documents for ./request-examples
+# This script generates HTTP response files (*.json) for .ps1 files in ./request-examples
 
 function Get-WebServer-ProcessId {
-    $processId = $null
-    if ($IsMacOs || $IsLinux) {
-        $processId = $(lsof -ti:14141)
+    $webProcessId = $null
+    if ($IsMacOS -Or $IsLinux) {
+        $webProcessId = $(lsof -ti:14141)
     }
     elseif ($IsWindows) {
-        $processId = $(Get-NetTCPConnection -LocalPort 14141 -ErrorAction SilentlyContinue).OwningProcess
+        $webProcessId = $(Get-NetTCPConnection -LocalPort 14141 -ErrorAction SilentlyContinue).OwningProcess?[0]
     }
     else {
-        throw [System.Exception] "Unsupported operating system."
+        throw "Unsupported operating system."
     }
 
-    return $processId
+    return $webProcessId
 }
 
-function Kill-WebServer {
-    $processId = Get-WebServer-ProcessId
+function Stop-WebServer {
+    $webProcessId = Get-WebServer-ProcessId
 
-    if ($processId -ne $null) {
+    if ($webProcessId -ne $null) {
         Write-Output "Stopping web server"
-        Get-Process -Id $processId | Stop-Process
+        Get-Process -Id $webProcessId | Stop-Process -ErrorVariable stopErrorMessage
+
+        if ($stopErrorMessage) {
+            throw "Failed to stop web server: $stopErrorMessage"
+        }
     }
 }
 
 function Start-WebServer {
     Write-Output "Starting web server"
-    Start-Job -ScriptBlock { dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj } | Out-Null
+    $startTimeUtc = Get-Date -AsUTC
+    $job = Start-Job -ScriptBlock {
+        dotnet run --project ..\src\Examples\GettingStarted\GettingStarted.csproj --configuration Debug --property:TreatWarningsAsErrors=True --urls=http://0.0.0.0:14141
+    }
 
     $webProcessId = $null
+    $timeout = [timespan]::FromSeconds(30)
+
     Do {
         Start-Sleep -Seconds 1
+        $hasTimedOut = ($(Get-Date -AsUTC) - $startTimeUtc) -gt $timeout
         $webProcessId = Get-WebServer-ProcessId
-    } While ($webProcessId -eq $null)
-}
+    } While ($webProcessId -eq $null -and -not $hasTimedOut)
 
-Kill-WebServer
-Start-WebServer
-
-Remove-Item -Force -Path .\request-examples\*.json
-
-$scriptFiles = Get-ChildItem .\request-examples\*.ps1
-foreach ($scriptFile in $scriptFiles) {
-    $jsonFileName = [System.IO.Path]::GetFileNameWithoutExtension($scriptFile.Name) + "_Response.json"
-
-    Write-Output "Writing file: $jsonFileName"
-    & $scriptFile.FullName > .\request-examples\$jsonFileName
-
-    if ($LastExitCode -ne 0) {
-        throw [System.Exception] "Example request from '$($scriptFile.Name)' failed with exit code $LastExitCode."
+    if ($hasTimedOut) {
+        Write-Host "Failed to start web server, dumping output."
+        Receive-Job -Job $job
+        throw "Failed to start web server."
     }
 }
 
-Kill-WebServer
+Stop-WebServer
+Start-WebServer
+
+try {
+    Remove-Item -Force -Path .\request-examples\*.json
+
+    $scriptFiles = Get-ChildItem .\request-examples\*.ps1
+    foreach ($scriptFile in $scriptFiles) {
+        $jsonFileName = [System.IO.Path]::GetFileNameWithoutExtension($scriptFile.Name) + "_Response.json"
+
+        Write-Output "Writing file: $jsonFileName"
+        & $scriptFile.FullName > .\request-examples\$jsonFileName
+
+        if ($LastExitCode -ne 0) {
+            throw "Example request from '$($scriptFile.Name)' failed with exit code $LastExitCode."
+        }
+    }
+}
+finally {
+    Stop-WebServer
+}

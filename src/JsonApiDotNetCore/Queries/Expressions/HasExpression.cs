@@ -1,16 +1,33 @@
 using System.Text;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents the "has" filter function, resulting from text such as: has(articles) or has(articles,equals(isHidden,'false'))
+/// This expression allows to test if a to-many relationship has related resources, optionally with a condition. It represents the "has" filter function,
+/// resulting from text such as:
+/// <c>
+/// has(articles)
+/// </c>
+/// , or:
+/// <c>
+/// has(articles,equals(isHidden,'false'))
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class HasExpression : FilterExpression
 {
+    /// <summary>
+    /// The to-many relationship to determine related resources for. Chain format: an optional list of to-one relationships, followed by a to-many
+    /// relationship.
+    /// </summary>
     public ResourceFieldChainExpression TargetCollection { get; }
+
+    /// <summary>
+    /// An optional filter that is applied on the related resources. Any related resources that do not match the filter are ignored.
+    /// </summary>
     public FilterExpression? Filter { get; }
 
     public HasExpression(ResourceFieldChainExpression targetCollection, FilterExpression? filter)

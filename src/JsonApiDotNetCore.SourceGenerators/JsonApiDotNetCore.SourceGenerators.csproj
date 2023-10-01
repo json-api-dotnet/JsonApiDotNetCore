@@ -19,14 +19,13 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>See https://github.com/json-api-dotnet/JsonApiDotNetCore/releases.</PackageReleaseNotes>
     <PackageIcon>logo.png</PackageIcon>
+    <PackageReadmeFile>PackageReadme.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/json-api-dotnet/JsonApiDotNetCore</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\logo.png" Visible="false">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Include="..\..\logo.png" Visible="false" Pack="True" PackagePath="" />
+    <None Include="..\..\PackageReadme.md" Visible="false" Pack="True" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,7 +45,7 @@
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="Humanizer.Core" Version="$(HumanizerVersion)" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" PrivateAssets="all" />
+    <PackageReference Include="Humanizer.Core" Version="$(HumanizerFrozenVersion)" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(CodeAnalysisFrozenVersion)" PrivateAssets="all" />
   </ItemGroup>
 </Project>

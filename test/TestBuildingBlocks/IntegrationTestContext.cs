@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -65,8 +67,8 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
     {
         string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
 
-        string dbConnectionString = $"Host=localhost;Port=5432;Database=JsonApiTest-{Guid.NewGuid():N};User ID=postgres;" +
-            $"Password={postgresPassword};Include Error Detail=true";
+        string dbConnectionString =
+            $"Host=localhost;Database=JsonApiTest-{Guid.NewGuid():N};User ID=postgres;Password={postgresPassword};Include Error Detail=true";
 
         var factory = new IntegrationTestWebApplicationFactory();
 
@@ -81,11 +83,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
             services.AddDbContext<TDbContext>(options =>
             {
                 options.UseNpgsql(dbConnectionString, builder => builder.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
-
-#if DEBUG
-                options.EnableSensitiveDataLogging();
-                options.EnableDetailedErrors();
-#endif
+                SetDbContextDebugOptions(options);
             });
         });
 
@@ -101,6 +99,14 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         dbContext.Database.EnsureCreated();
 
         return factoryWithConfiguredContentRoot;
+    }
+
+    [Conditional("DEBUG")]
+    private static void SetDbContextDebugOptions(DbContextOptionsBuilder options)
+    {
+        options.EnableDetailedErrors();
+        options.EnableSensitiveDataLogging();
+        options.ConfigureWarnings(builder => builder.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning));
     }
 
     public void ConfigureLogging(Action<ILoggingBuilder> loggingConfiguration)
@@ -166,9 +172,10 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         protected override IHostBuilder CreateHostBuilder()
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_before_first_method_call true
 
-            return Host.CreateDefaultBuilder(null)
+            return Host
+                .CreateDefaultBuilder(null)
                 .ConfigureAppConfiguration(builder =>
                 {
                     // For tests asserting on log output, we discard the logging settings from appsettings.json.
@@ -197,7 +204,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
                     _loggingConfiguration?.Invoke(options);
                 });
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_before_first_method_call restore
             // @formatter:wrap_chained_method_calls restore
         }
     }

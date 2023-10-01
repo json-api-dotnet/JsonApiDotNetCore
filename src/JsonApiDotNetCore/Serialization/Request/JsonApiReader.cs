@@ -16,7 +16,7 @@ using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace JsonApiDotNetCore.Serialization.Request;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IJsonApiReader" />
 public sealed class JsonApiReader : IJsonApiReader
 {
     private readonly IJsonApiOptions _options;
@@ -40,8 +40,9 @@ public sealed class JsonApiReader : IJsonApiReader
         ArgumentGuard.NotNull(httpRequest);
 
         string requestBody = await ReceiveRequestBodyAsync(httpRequest);
+        string method = httpRequest.Method.Replace(Environment.NewLine, "");
 
-        _traceWriter.LogMessage(() => $"Received {httpRequest.Method} request at '{httpRequest.GetEncodedUrl()}' with body: <<{requestBody}>>");
+        _traceWriter.LogMessage(() => $"Received {method} request at '{httpRequest.GetEncodedUrl()}' with body: <<{requestBody}>>");
 
         return GetModel(requestBody);
     }

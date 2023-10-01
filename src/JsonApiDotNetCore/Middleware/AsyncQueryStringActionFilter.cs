@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Middleware;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IAsyncQueryStringActionFilter" />
 public sealed class AsyncQueryStringActionFilter : IAsyncQueryStringActionFilter
 {
     private readonly IQueryStringReader _queryStringReader;

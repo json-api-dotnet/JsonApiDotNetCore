@@ -3,6 +3,7 @@ using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -25,6 +26,11 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         testContext.UseController<LyricsController>();
         testContext.UseController<MusicTracksController>();
         testContext.UseController<PlaylistsController>();
+
+        testContext.ConfigureServicesBeforeStartup(services =>
+        {
+            services.AddSingleton<ISystemClock, FrozenSystemClock>();
+        });
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = false;
@@ -495,7 +501,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
                 new
                 {
                     op = "add",
-                    href = "/api/v1/musicTracks"
+                    href = "/api/musicTracks"
                 }
             }
         };
@@ -925,7 +931,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             MusicTrack trackInDatabase = await dbContext.MusicTracks
                 .Include(musicTrack => musicTrack.Lyric)
@@ -933,7 +939,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
                 .Include(musicTrack => musicTrack.Performers)
                 .FirstWithIdAsync(newTrackId);
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             trackInDatabase.Title.Should().Be(newTitle);

@@ -3,8 +3,8 @@ using JsonApiDotNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 
-// @formatter:wrap_chained_method_calls chop_always
-// @formatter:keep_existing_linebreaks true
+// @formatter:wrap_chained_method_calls chop_if_long
+// @formatter:wrap_before_first_method_call true
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection;
 
@@ -24,18 +24,15 @@ internal sealed class InjectionFakers : FakerContainer
 
         _serviceProvider = serviceProvider;
 
-        _lazyPostOfficeFaker = new Lazy<Faker<PostOffice>>(() =>
-            new Faker<PostOffice>()
-                .UseSeed(GetFakerSeed())
-                .CustomInstantiator(_ => new PostOffice(ResolveDbContext()))
-                .RuleFor(postOffice => postOffice.Address, faker => faker.Address.FullAddress()));
+        _lazyPostOfficeFaker = new Lazy<Faker<PostOffice>>(() => new Faker<PostOffice>()
+            .UseSeed(GetFakerSeed())
+            .CustomInstantiator(_ => new PostOffice(ResolveDbContext()))
+            .RuleFor(postOffice => postOffice.Address, faker => faker.Address.FullAddress()));
 
-        _lazyGiftCertificateFaker = new Lazy<Faker<GiftCertificate>>(() =>
-            new Faker<GiftCertificate>()
-                .UseSeed(GetFakerSeed())
-                .CustomInstantiator(_ => new GiftCertificate(ResolveDbContext()))
-                .RuleFor(giftCertificate => giftCertificate.IssueDate, faker => faker.Date.PastOffset()
-                    .TruncateToWholeMilliseconds()));
+        _lazyGiftCertificateFaker = new Lazy<Faker<GiftCertificate>>(() => new Faker<GiftCertificate>()
+            .UseSeed(GetFakerSeed())
+            .CustomInstantiator(_ => new GiftCertificate(ResolveDbContext()))
+            .RuleFor(giftCertificate => giftCertificate.IssueDate, faker => faker.Date.PastOffset().TruncateToWholeMilliseconds()));
     }
 
     private InjectionDbContext ResolveDbContext()

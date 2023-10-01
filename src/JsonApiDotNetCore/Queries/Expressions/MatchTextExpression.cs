@@ -5,13 +5,37 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents a text-matching filter function, resulting from text such as: startsWith(name,'A')
+/// This expression allows partial matching on the value of a JSON:API attribute. It represents text-matching filter functions, resulting from text such
+/// as:
+/// <c>
+/// startsWith(name,'The')
+/// </c>
+/// ,
+/// <c>
+/// endsWith(name,'end.')
+/// </c>
+/// , or:
+/// <c>
+/// contains(name,'middle')
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class MatchTextExpression : FilterExpression
 {
+    /// <summary>
+    /// The attribute whose value to match. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// </summary>
     public ResourceFieldChainExpression TargetAttribute { get; }
+
+    /// <summary>
+    /// The text to match the attribute's value against.
+    /// </summary>
     public LiteralConstantExpression TextValue { get; }
+
+    /// <summary>
+    /// The kind of matching to perform.
+    /// </summary>
     public TextMatchKind MatchKind { get; }
 
     public MatchTextExpression(ResourceFieldChainExpression targetAttribute, LiteralConstantExpression textValue, TextMatchKind matchKind)

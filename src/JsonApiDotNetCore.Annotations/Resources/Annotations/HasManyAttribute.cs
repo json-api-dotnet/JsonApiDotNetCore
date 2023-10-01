@@ -1,3 +1,4 @@
+using System.Collections;
 using JetBrains.Annotations;
 
 // ReSharper disable NonReadonlyMemberInGetHashCode
@@ -65,6 +66,34 @@ public sealed class HasManyAttribute : RelationshipAttribute
         return false;
     }
 
+    /// <inheritdoc />
+    public override void SetValue(object resource, object? newValue)
+    {
+        ArgumentGuard.NotNull(newValue);
+        AssertIsIdentifiableCollection(newValue);
+
+        base.SetValue(resource, newValue);
+    }
+
+    private void AssertIsIdentifiableCollection(object newValue)
+    {
+        if (newValue is not IEnumerable enumerable)
+        {
+            throw new InvalidOperationException($"Resource of type '{newValue.GetType()}' must be a collection.");
+        }
+
+        foreach (object? element in enumerable)
+        {
+            if (element == null)
+            {
+                throw new InvalidOperationException("Resource collection must not contain null values.");
+            }
+
+            AssertIsIdentifiable(element);
+        }
+    }
+
+    /// <inheritdoc />
     public override bool Equals(object? obj)
     {
         if (ReferenceEquals(this, obj))
@@ -82,6 +111,7 @@ public sealed class HasManyAttribute : RelationshipAttribute
         return _capabilities == other._capabilities && base.Equals(other);
     }
 
+    /// <inheritdoc />
     public override int GetHashCode()
     {
         return HashCode.Combine(_capabilities, base.GetHashCode());

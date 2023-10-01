@@ -1,12 +1,12 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Queries.Internal;
+using JsonApiDotNetCore.Queries;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResourceFactory" />
 internal sealed class ResourceFactory : IResourceFactory
 {
     private static readonly TypeLocator TypeLocator = new();

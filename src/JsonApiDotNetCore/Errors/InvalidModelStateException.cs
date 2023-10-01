@@ -67,7 +67,7 @@ public sealed class InvalidModelStateException : JsonApiException
                 return ResolveSourcePointerInComplexType(propertySegment, resourceGraph);
             }
 
-            if (propertySegment.PropertyName == nameof(OperationContainer.Resource) && propertySegment.Parent != null &&
+            if (propertySegment is { PropertyName: nameof(OperationContainer.Resource), Parent: not null } &&
                 propertySegment.Parent.ModelType == typeof(IList<OperationContainer>))
             {
                 // Special case: Stepping over OperationContainer.Resource property.

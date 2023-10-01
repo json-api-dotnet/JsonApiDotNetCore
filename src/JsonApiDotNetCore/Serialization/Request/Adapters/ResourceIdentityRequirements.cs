@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.Request.Adapters;
@@ -16,9 +17,9 @@ public sealed class ResourceIdentityRequirements
     public ResourceType? ResourceType { get; init; }
 
     /// <summary>
-    /// When not null, indicates the presence or absence of the "id" element.
+    /// When not null, provides a callback to indicate the presence or absence of the "id" element.
     /// </summary>
-    public JsonElementConstraint? IdConstraint { get; init; }
+    public Func<ResourceType, JsonElementConstraint?>? EvaluateIdConstraint { get; init; }
 
     /// <summary>
     /// When not null, indicates what the value of the "id" element must be.
@@ -34,4 +35,19 @@ public sealed class ResourceIdentityRequirements
     /// When not null, indicates the name of the relationship to use in error messages.
     /// </summary>
     public string? RelationshipName { get; init; }
+
+    internal static JsonElementConstraint? DoEvaluateIdConstraint(ResourceType resourceType, WriteOperationKind? writeOperation,
+        ClientIdGenerationMode globalClientIdGeneration)
+    {
+        ClientIdGenerationMode clientIdGeneration = resourceType.ClientIdGeneration ?? globalClientIdGeneration;
+
+        return writeOperation == WriteOperationKind.CreateResource
+            ? clientIdGeneration switch
+            {
+                ClientIdGenerationMode.Required => JsonElementConstraint.Required,
+                ClientIdGenerationMode.Forbidden => JsonElementConstraint.Forbidden,
+                _ => null
+            }
+            : JsonElementConstraint.Required;
+    }
 }

@@ -81,42 +81,34 @@ In some cases it may be necessary to only expose a few actions on a resource. Fo
 
 This interface hierarchy is defined by this tree structure.
 
-```
-IResourceService
-|
-+-- IResourceQueryService
-|   |
-|   +-- IGetAllService
-|   |   GET /
-|   |
-|   +-- IGetByIdService
-|   |   GET /{id}
-|   |
-|   +-- IGetSecondaryService
-|   |   GET /{id}/{relationship}
-|   |
-|   +-- IGetRelationshipService
-|       GET /{id}/relationships/{relationship}
-|
-+-- IResourceCommandService
-    |
-    +-- ICreateService
-    |   POST /
-    |
-    +-- IUpdateService
-    |   PATCH /{id}
-    |
-    +-- IDeleteService
-    |   DELETE /{id}
-    |
-    +-- IAddToRelationshipService
-    |   POST /{id}/relationships/{relationship}
-    |
-    +-- ISetRelationshipService
-    |   PATCH /{id}/relationships/{relationship}
-    |
-    +-- IRemoveFromRelationshipService
-        DELETE /{id}/relationships/{relationship}
+```mermaid
+classDiagram
+direction LR
+class IResourceService
+class IResourceQueryService
+class IGetAllService ["IGetAllService\nGET /"]
+class IGetByIdService ["IGetByIdService\nGET /{id}"]
+class IGetSecondaryService ["IGetSecondaryService\nGET /{id}/{relationship}"]
+class IGetRelationshipService ["IGetRelationshipService\nGET /{id}/relationships/{relationship}"]
+class IResourceCommandService
+class ICreateService ["ICreateService\nPOST /"]
+class IUpdateService ["IUpdateService\nPATCH /{id}"]
+class IDeleteService ["IDeleteService\nDELETE /{id}"]
+class IAddToRelationshipService ["IAddToRelationshipService\nPOST /{id}/relationships/{relationship}"]
+class ISetRelationshipService ["ISetRelationshipService\nPATCH /{id}/relationships/{relationship}"]
+class IRemoveFromRelationshipService ["IRemoveFromRelationshipService\nDELETE /{id}/relationships/{relationship}"]
+IResourceService <|-- IResourceQueryService
+IResourceQueryService<|-- IGetAllService
+IResourceQueryService<|-- IGetByIdService
+IResourceQueryService<|-- IGetSecondaryService
+IResourceQueryService<|-- IGetRelationshipService
+IResourceService <|-- IResourceCommandService
+IResourceCommandService <|-- ICreateService
+IResourceCommandService <|-- IUpdateService
+IResourceCommandService <|-- IDeleteService
+IResourceCommandService <|-- IAddToRelationshipService
+IResourceCommandService <|-- ISetRelationshipService
+IResourceCommandService <|-- IRemoveFromRelationshipService
 ```
 
 In order to take advantage of these interfaces you first need to register the service for each implemented interface.
@@ -135,12 +127,13 @@ builder.Services.AddScoped<IDeleteService<Article, int>, ArticleService>();
 In v3.0 we introduced an extension method that you can use to register a resource service on all of its JsonApiDotNetCore interfaces.
 This is helpful when you implement (a subset of) the resource interfaces and want to register them all in one go.
 
-**Note:** If you're using [auto-discovery](~/usage/resource-graph.md#auto-discovery), this happens automatically.
-
 ```c#
 // Program.cs
 builder.Services.AddResourceService<ArticleService>();
 ```
+
+> [!TIP]
+> If you're using [auto-discovery](~/usage/resource-graph.md#auto-discovery), then resource services, repositories and resource definitions will be automatically registered for you.
 
 Then on your model, pass in the set of endpoints to expose (the ones that you've registered services for):
 

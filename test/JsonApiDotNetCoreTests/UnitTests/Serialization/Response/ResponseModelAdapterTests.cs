@@ -4,8 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Response;
 using JsonApiDotNetCoreTests.UnitTests.Serialization.Response.Models;
@@ -549,7 +548,7 @@ public sealed class ResponseModelAdapterTests
     private ResponseModelAdapter CreateAdapter(IJsonApiOptions options, string? primaryId, string includeChains)
     {
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
             .Add<Article, int>()
@@ -560,7 +559,7 @@ public sealed class ResponseModelAdapterTests
             .Build();
 
         // @formatter:wrap_chained_method_calls restore
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
 
         var request = new JsonApiRequest
         {
@@ -569,15 +568,15 @@ public sealed class ResponseModelAdapterTests
             PrimaryId = primaryId
         };
 
-        var evaluatedIncludeCache = new EvaluatedIncludeCache();
+        var evaluatedIncludeCache = new EvaluatedIncludeCache(Array.Empty<IQueryConstraintProvider>());
         var linkBuilder = new FakeLinkBuilder();
         var metaBuilder = new FakeMetaBuilder();
         var resourceDefinitionAccessor = new FakeResourceDefinitionAccessor();
         var sparseFieldSetCache = new SparseFieldSetCache(Array.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor);
         var requestQueryStringAccessor = new FakeRequestQueryStringAccessor();
 
-        var parser = new IncludeParser();
-        IncludeExpression include = parser.Parse(includeChains, request.PrimaryResourceType, null);
+        var includeParser = new IncludeParser(options);
+        IncludeExpression include = includeParser.Parse(includeChains, request.PrimaryResourceType);
         evaluatedIncludeCache.Set(include);
 
         return new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, evaluatedIncludeCache, sparseFieldSetCache,

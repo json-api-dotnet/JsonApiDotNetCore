@@ -27,7 +27,6 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = false;
-        options.AllowClientGeneratedIds = false;
         options.AllowUnknownFieldsInRequestBody = false;
     }
 
@@ -49,7 +48,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
             }
         };
 
-        const string route = "/workItems";
+        const string route = "/workItems/";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -61,7 +60,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         httpResponse.Headers.Location.Should().Be($"/workItems/{newWorkItemId}");
 
         responseDocument.Links.ShouldNotBeNull();
-        responseDocument.Links.Self.Should().Be("http://localhost/workItems");
+        responseDocument.Links.Self.Should().Be("http://localhost/workItems/");
         responseDocument.Links.First.Should().BeNull();
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
@@ -900,7 +899,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             WorkItem workItemInDatabase = await dbContext.WorkItems
                 .Include(workItem => workItem.Assignee)
@@ -908,7 +907,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
                 .Include(workItem => workItem.Tags)
                 .FirstWithIdAsync(newWorkItemId);
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             workItemInDatabase.Description.Should().Be(newDescription);

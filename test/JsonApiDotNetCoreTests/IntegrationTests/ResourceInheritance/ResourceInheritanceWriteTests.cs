@@ -202,7 +202,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             Bike bikeInDatabase = await dbContext.Bikes
                 .Include(tandem => tandem.Manufacturer)
@@ -211,7 +211,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
                 .Include(tandem => tandem.Lights)
                 .FirstWithIdAsync(newBikeId);
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             bikeInDatabase.Should().BeOfType<Bike>();
@@ -343,7 +343,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             Car carInDatabase = await dbContext.Cars
                 .Include(car => car.Manufacturer)
@@ -353,7 +353,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
                 .Include(car => car.Features)
                 .FirstWithIdAsync(newCarId);
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             carInDatabase.Should().BeOfType<Car>();
@@ -493,7 +493,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             Tandem tandemInDatabase = await dbContext.Tandems
                 .Include(tandem => tandem.Manufacturer)
@@ -503,7 +503,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
                 .Include(tandem => tandem.Features)
                 .FirstWithIdAsync(newTandemId);
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             tandemInDatabase.Should().BeOfType<Tandem>();
@@ -1134,7 +1134,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             Bike bikeInDatabase = await dbContext.Bikes
                 .Include(tandem => tandem.Manufacturer)
@@ -1143,7 +1143,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
                 .Include(tandem => tandem.Lights)
                 .FirstWithIdAsync(existingBike.Id);
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             bikeInDatabase.Should().BeOfType<Bike>();
@@ -1262,7 +1262,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             Tandem tandemInDatabase = await dbContext.Tandems
                 .Include(tandem => tandem.Manufacturer)
@@ -1271,7 +1271,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
                 .Include(tandem => tandem.Lights)
                 .FirstWithIdAsync(existingTandem.Id);
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             tandemInDatabase.Should().BeOfType<Tandem>();
@@ -2298,7 +2298,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.Set<VehicleManufacturer>().Add(existingManufacturer);
+            dbContext.VehicleManufacturers.Add(existingManufacturer);
             dbContext.Vehicles.Add(existingTandem);
             await dbContext.SaveChangesAsync();
         });
@@ -2327,8 +2327,15 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            VehicleManufacturer manufacturerInDatabase = await dbContext.Set<VehicleManufacturer>().Include(manufacturer => manufacturer.Vehicles)
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:wrap_after_property_in_chained_method_calls true
+
+            VehicleManufacturer manufacturerInDatabase = await dbContext.VehicleManufacturers
+                .Include(manufacturer => manufacturer.Vehicles.OrderByDescending(vehicle => vehicle.Id))
                 .FirstWithIdAsync(existingManufacturer.Id);
+
+            // @formatter:wrap_after_property_in_chained_method_calls restore
+            // @formatter:wrap_chained_method_calls restore
 
             manufacturerInDatabase.Vehicles.ShouldHaveCount(2);
             manufacturerInDatabase.Vehicles.ElementAt(0).Should().BeOfType<Car>();
@@ -2578,7 +2585,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            dbContext.Set<VehicleManufacturer>().Add(existingManufacturer);
+            dbContext.VehicleManufacturers.Add(existingManufacturer);
             await dbContext.SaveChangesAsync();
         });
 
@@ -2606,7 +2613,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            VehicleManufacturer manufacturerInDatabase = await dbContext.Set<VehicleManufacturer>().Include(manufacturer => manufacturer.Vehicles)
+            VehicleManufacturer manufacturerInDatabase = await dbContext.VehicleManufacturers.Include(manufacturer => manufacturer.Vehicles)
                 .FirstWithIdAsync(existingManufacturer.Id);
 
             manufacturerInDatabase.Vehicles.ShouldHaveCount(1);

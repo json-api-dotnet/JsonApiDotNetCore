@@ -2,9 +2,9 @@ using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.AtomicOperations.Processors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Queries.Internal;
+using JsonApiDotNetCore.Queries.Parsing;
+using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.QueryStrings;
-using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.JsonConverters;
@@ -193,6 +193,13 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
         RegisterImplementationForInterfaces(ServiceDiscoveryFacade.RepositoryUnboundInterfaces, typeof(EntityFrameworkCoreRepository<,>));
 
         _services.AddScoped<IResourceRepositoryAccessor, ResourceRepositoryAccessor>();
+
+        _services.TryAddTransient<IQueryableBuilder, QueryableBuilder>();
+        _services.TryAddTransient<IIncludeClauseBuilder, IncludeClauseBuilder>();
+        _services.TryAddTransient<IOrderClauseBuilder, OrderClauseBuilder>();
+        _services.TryAddTransient<ISelectClauseBuilder, SelectClauseBuilder>();
+        _services.TryAddTransient<ISkipTakeClauseBuilder, SkipTakeClauseBuilder>();
+        _services.TryAddTransient<IWhereClauseBuilder, WhereClauseBuilder>();
     }
 
     private void AddServiceLayer()
@@ -210,6 +217,14 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
 
     private void AddQueryStringLayer()
     {
+        _services.TryAddTransient<IQueryStringParameterScopeParser, QueryStringParameterScopeParser>();
+        _services.TryAddTransient<IIncludeParser, IncludeParser>();
+        _services.TryAddTransient<IFilterParser, FilterParser>();
+        _services.TryAddTransient<ISortParser, SortParser>();
+        _services.TryAddTransient<ISparseFieldTypeParser, SparseFieldTypeParser>();
+        _services.TryAddTransient<ISparseFieldSetParser, SparseFieldSetParser>();
+        _services.TryAddTransient<IPaginationParser, PaginationParser>();
+
         _services.AddScoped<IIncludeQueryStringParameterReader, IncludeQueryStringParameterReader>();
         _services.AddScoped<IFilterQueryStringParameterReader, FilterQueryStringParameterReader>();
         _services.AddScoped<ISortQueryStringParameterReader, SortQueryStringParameterReader>();

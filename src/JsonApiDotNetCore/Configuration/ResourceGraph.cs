@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Configuration;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResourceGraph" />
 [PublicAPI]
 public sealed class ResourceGraph : IResourceGraph
 {
@@ -130,7 +130,7 @@ public sealed class ResourceGraph : IResourceGraph
 
             if (matchingField == null)
             {
-                throw new ArgumentException($"Member '{memberName}' is not exposed as a JSON:API field.");
+                throw new ArgumentException($"Member '{memberName}' is not exposed as a JSON:API field.", nameof(selector));
             }
 
             matches.Add(matchingField);
@@ -178,8 +178,9 @@ public sealed class ResourceGraph : IResourceGraph
         }
         else
         {
-            throw new ArgumentException($"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " +
-                "For example: 'article => article.Title' or 'article => new { article.Title, article.PageCount }'.");
+            throw new ArgumentException(
+                $"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " +
+                "For example: 'article => article.Title' or 'article => new { article.Title, article.PageCount }'.", nameof(selector));
         }
     }
 

@@ -4,7 +4,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Response;
@@ -34,7 +33,7 @@ public sealed class IncompleteResourceGraphTests
         var resourceDefinitionAccessor = new FakeResourceDefinitionAccessor();
         var sparseFieldSetCache = new SparseFieldSetCache(Array.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor);
         var requestQueryStringAccessor = new FakeRequestQueryStringAccessor();
-        var evaluatedIncludeCache = new EvaluatedIncludeCache();
+        var evaluatedIncludeCache = new EvaluatedIncludeCache(Array.Empty<IQueryConstraintProvider>());
 
         var responseModelAdapter = new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, evaluatedIncludeCache,
             sparseFieldSetCache, requestQueryStringAccessor);

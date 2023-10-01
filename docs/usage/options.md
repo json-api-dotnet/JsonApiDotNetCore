@@ -10,21 +10,44 @@ builder.Services.AddJsonApi<AppDbContext>(options =>
 });
 ```
 
-## Client Generated IDs
+## Client-generated IDs
 
 By default, the server will respond with a 403 Forbidden HTTP Status Code if a POST request is received with a client-generated ID.
 
-However, this can be allowed by setting the AllowClientGeneratedIds flag in the options:
+However, this can be allowed or required globally (for all resource types) by setting `ClientIdGeneration` in options:
 
 ```c#
-options.AllowClientGeneratedIds = true;
+options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
 ```
+
+or:
+
+```c#
+options.ClientIdGeneration = ClientIdGenerationMode.Required;
+```
+
+It is possible to overrule this setting per resource type:
+
+```c#
+[Resource(ClientIdGeneration = ClientIdGenerationMode.Required)]
+public class Article : Identifiable<Guid>
+{
+    // ...
+}
+```
+
+> [!NOTE]
+> JsonApiDotNetCore versions before v5.4.0 only provided the global `AllowClientGeneratedIds` boolean property.
 
 ## Pagination
 
-The default page size used for all resources can be overridden in options (10 by default). To disable paging, set it to `null`.
+The default page size used for all resources can be overridden in options (10 by default). To disable pagination, set it to `null`.
 The maximum page size and number allowed from client requests can be set too (unconstrained by default).
-You can also include the total number of resources in each response. Note that when using this feature, it does add some query overhead since we have to also request the total number of resources.
+
+You can also include the total number of resources in each response.
+
+> [!NOTE]
+> Including the total number of resources adds some overhead, because the count is fetched in a separate query.
 
 ```c#
 options.DefaultPageSize = new PageSize(25);
@@ -34,11 +57,11 @@ options.IncludeTotalResourceCount = true;
 ```
 
 To retrieve the total number of resources on secondary and relationship endpoints, the reverse of the relationship must to be available. For example, in `GET /customers/1/orders`, both the relationships `[HasMany] Customer.Orders` and `[HasOne] Order.Customer` must be defined.
-If `IncludeTotalResourceCount` is set to `false` (or the inverse relationship is unavailable on a non-primary endpoint), best-effort paging links are returned instead. This means no `last` link and the `next` link only occurs when the current page is full.
+If `IncludeTotalResourceCount` is set to `false` (or the inverse relationship is unavailable on a non-primary endpoint), best-effort pagination links are returned instead. This means no `last` link and the `next` link only occurs when the current page is full.
 
 ## Relative Links
 
-All links are absolute by default. However, you can configure relative links.
+All links are absolute by default. However, you can configure relative links:
 
 ```c#
 options.UseRelativeLinks = true;
@@ -51,8 +74,8 @@ options.UseRelativeLinks = true;
   "relationships": {
      "author": {
        "links": {
-         "self": "/api/v1/articles/4309/relationships/author",
-         "related": "/api/v1/articles/4309/author"
+         "self": "/articles/4309/relationships/author",
+         "related": "/articles/4309/author"
        }
      }
   }

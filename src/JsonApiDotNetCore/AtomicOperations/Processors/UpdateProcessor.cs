@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IUpdateProcessor{TResource,TId}" />
 [PublicAPI]
 public class UpdateProcessor<TResource, TId> : IUpdateProcessor<TResource, TId>
     where TResource : class, IIdentifiable<TId>

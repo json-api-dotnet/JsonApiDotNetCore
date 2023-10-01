@@ -1,6 +1,5 @@
 using System.Net;
 using FluentAssertions;
-using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Authentication;
@@ -12,8 +11,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings;
 
 public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
 {
-    private static readonly DateTime FrozenTime = 30.July(2018).At(13, 46, 12).AsUtc();
-
     private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
     private readonly OperationsFakers _fakers = new();
 
@@ -26,17 +23,13 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
 
         testContext.ConfigureServicesAfterStartup(services =>
         {
-            services.AddSingleton<ISystemClock>(new FrozenSystemClock
-            {
-                UtcNow = FrozenTime
-            });
-
+            services.AddSingleton<ISystemClock, FrozenSystemClock>();
             services.AddResourceDefinition<MusicTrackReleaseDefinition>();
         });
     }
 
     [Fact]
-    public async Task Cannot_include_on_operations_endpoint()
+    public async Task Cannot_include_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -76,7 +69,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Cannot_filter_on_operations_endpoint()
+    public async Task Cannot_filter_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -116,7 +109,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Cannot_sort_on_operations_endpoint()
+    public async Task Cannot_sort_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -156,7 +149,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Cannot_use_pagination_number_on_operations_endpoint()
+    public async Task Cannot_use_pagination_number_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -196,7 +189,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Cannot_use_pagination_size_on_operations_endpoint()
+    public async Task Cannot_use_pagination_size_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -236,7 +229,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Cannot_use_sparse_fieldset_on_operations_endpoint()
+    public async Task Cannot_use_sparse_fieldset_at_operations_endpoint()
     {
         // Arrange
         var requestBody = new
@@ -276,13 +269,15 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Can_use_Queryable_handler_on_resource_endpoint()
+    public async Task Can_use_Queryable_handler_at_resource_endpoint()
     {
         // Arrange
+        var clock = _testContext.Factory.Services.GetRequiredService<ISystemClock>();
+
         List<MusicTrack> musicTracks = _fakers.MusicTrack.Generate(3);
-        musicTracks[0].ReleasedAt = FrozenTime.AddMonths(5);
-        musicTracks[1].ReleasedAt = FrozenTime.AddMonths(-5);
-        musicTracks[2].ReleasedAt = FrozenTime.AddMonths(-1);
+        musicTracks[0].ReleasedAt = clock.UtcNow.AddMonths(5);
+        musicTracks[1].ReleasedAt = clock.UtcNow.AddMonths(-5);
+        musicTracks[2].ReleasedAt = clock.UtcNow.AddMonths(-1);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -304,7 +299,7 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
     }
 
     [Fact]
-    public async Task Cannot_use_Queryable_handler_on_operations_endpoint()
+    public async Task Cannot_use_Queryable_handler_at_operations_endpoint()
     {
         // Arrange
         string newTrackTitle = _fakers.MusicTrack.Generate().Title;

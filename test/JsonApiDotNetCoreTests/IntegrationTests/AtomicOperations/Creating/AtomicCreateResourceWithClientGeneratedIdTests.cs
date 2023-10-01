@@ -2,6 +2,7 @@ using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
@@ -28,10 +29,11 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
             services.AddResourceDefinition<ImplicitlyChangingTextLanguageDefinition>();
 
             services.AddSingleton<ResourceDefinitionHitCounter>();
+            services.AddSingleton<ISystemClock, FrozenSystemClock>();
         });
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-        options.AllowClientGeneratedIds = true;
+        options.ClientIdGeneration = ClientIdGenerationMode.Required;
     }
 
     [Fact]
@@ -135,6 +137,50 @@ public sealed class AtomicCreateResourceWithClientGeneratedIdTests
             trackInDatabase.Title.Should().Be(newTrack.Title);
             trackInDatabase.LengthInSeconds.Should().BeApproximately(newTrack.LengthInSeconds);
         });
+    }
+
+    [Fact]
+    public async Task Cannot_create_resource_for_missing_client_generated_ID()
+    {
+        // Arrange
+        string? newIsoCode = _fakers.TextLanguage.Generate().IsoCode;
+
+        var requestBody = new
+        {
+            atomic__operations = new[]
+            {
+                new
+                {
+                    op = "add",
+                    data = new
+                    {
+                        type = "textLanguages",
+                        attributes = new
+                        {
+                            isoCode = newIsoCode
+                        }
+                    }
+                }
+            }
+        };
+
+        const string route = "/operations";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+        responseDocument.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = responseDocument.Errors[0];
+        error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Title.Should().Be("Failed to deserialize request body: The 'id' or 'lid' element is required.");
+        error.Detail.Should().BeNull();
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
+        error.Meta.ShouldContainKey("requestBody").With(value => value.ShouldNotBeNull().ToString().ShouldNotBeEmpty());
     }
 
     [Fact]

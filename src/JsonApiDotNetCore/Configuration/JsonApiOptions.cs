@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Serialization.JsonConverters;
 
 namespace JsonApiDotNetCore.Configuration;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IJsonApiOptions" />
 [PublicAPI]
 public sealed class JsonApiOptions : IJsonApiOptions
 {
@@ -69,7 +69,15 @@ public sealed class JsonApiOptions : IJsonApiOptions
     public bool ValidateModelState { get; set; } = true;
 
     /// <inheritdoc />
-    public bool AllowClientGeneratedIds { get; set; }
+    public ClientIdGenerationMode ClientIdGeneration { get; set; }
+
+    /// <inheritdoc />
+    [Obsolete("Use ClientIdGeneration instead.")]
+    public bool AllowClientGeneratedIds
+    {
+        get => ClientIdGeneration is ClientIdGenerationMode.Allowed or ClientIdGenerationMode.Required;
+        set => ClientIdGeneration = value ? ClientIdGenerationMode.Allowed : ClientIdGenerationMode.Forbidden;
+    }
 
     /// <inheritdoc />
     public bool AllowUnknownQueryStringParameters { get; set; }

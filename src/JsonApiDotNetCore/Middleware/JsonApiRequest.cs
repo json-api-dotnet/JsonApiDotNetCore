@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Middleware;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IJsonApiRequest" />
 [PublicAPI]
 public sealed class JsonApiRequest : IJsonApiRequest
 {

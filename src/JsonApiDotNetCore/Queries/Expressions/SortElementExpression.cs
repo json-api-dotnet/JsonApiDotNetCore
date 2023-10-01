@@ -4,28 +4,34 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents an element in <see cref="SortExpression" />.
+/// Represents an element in <see cref="SortExpression" />, resulting from text such as: <c>lastName</c>,
+/// <c>
+/// -lastModifiedAt
+/// </c>
+/// , or:
+/// <c>
+/// count(children)
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class SortElementExpression : QueryExpression
 {
-    public ResourceFieldChainExpression? TargetAttribute { get; }
-    public CountExpression? Count { get; }
+    /// <summary>
+    /// The target to sort on, which can be a function or a field chain. Chain format: an optional list of to-one relationships, followed by an attribute.
+    /// </summary>
+    public QueryExpression Target { get; }
+
+    /// <summary>
+    /// Indicates the sort direction.
+    /// </summary>
     public bool IsAscending { get; }
 
-    public SortElementExpression(ResourceFieldChainExpression targetAttribute, bool isAscending)
+    public SortElementExpression(QueryExpression target, bool isAscending)
     {
-        ArgumentGuard.NotNull(targetAttribute);
+        ArgumentGuard.NotNull(target);
 
-        TargetAttribute = targetAttribute;
-        IsAscending = isAscending;
-    }
-
-    public SortElementExpression(CountExpression count, bool isAscending)
-    {
-        ArgumentGuard.NotNull(count);
-
-        Count = count;
+        Target = target;
         IsAscending = isAscending;
     }
 
@@ -53,14 +59,7 @@ public class SortElementExpression : QueryExpression
             builder.Append('-');
         }
 
-        if (TargetAttribute != null)
-        {
-            builder.Append(toFullString ? TargetAttribute.ToFullString() : TargetAttribute);
-        }
-        else if (Count != null)
-        {
-            builder.Append(toFullString ? Count.ToFullString() : Count);
-        }
+        builder.Append(toFullString ? Target.ToFullString() : Target);
 
         return builder.ToString();
     }
@@ -79,11 +78,11 @@ public class SortElementExpression : QueryExpression
 
         var other = (SortElementExpression)obj;
 
-        return Equals(TargetAttribute, other.TargetAttribute) && Equals(Count, other.Count) && IsAscending == other.IsAscending;
+        return Equals(Target, other.Target) && IsAscending == other.IsAscending;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(TargetAttribute, Count, IsAscending);
+        return HashCode.Combine(Target, IsAscending);
     }
 }

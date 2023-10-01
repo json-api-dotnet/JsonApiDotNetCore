@@ -4,8 +4,9 @@ _since v4.0_
 
 The query pipeline roughly looks like this:
 
-```
-HTTP --[ASP.NET]--> QueryString --[JADNC:QueryStringParameterReader]--> QueryExpression[] --[JADNC:ResourceService]--> QueryLayer --[JADNC:Repository]--> IQueryable --[Entity Framework Core]--> SQL
+```mermaid
+flowchart TB
+A[HTTP] -->|ASP.NET| B(QueryString) -->|JADNC:QueryStringParameterReader| C("QueryExpression[]") -->|JADNC:ResourceService| D(QueryLayer) -->|JADNC:Repository| E(IQueryable) -->|Entity Framework Core| F[(SQL)]
 ```
 
 Processing a request involves the following steps:
@@ -29,7 +30,7 @@ Processing a request involves the following steps:
 To get a sense of what this all looks like, let's look at an example query string:
 
 ```
-/api/v1/blogs?
+/api/blogs?
   include=owner,posts.comments.author&
   filter=has(posts)&
   sort=count(posts)&

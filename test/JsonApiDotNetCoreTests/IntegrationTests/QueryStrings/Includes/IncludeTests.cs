@@ -256,7 +256,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     }
 
     [Fact]
-    public async Task Can_include_ManyToMany_relationship_on_secondary_endpoint()
+    public async Task Can_include_ManyToMany_relationship_at_secondary_endpoint()
     {
         // Arrange
         BlogPost post = _fakers.BlogPost.Generate();
@@ -853,7 +853,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Cannot_include_unknown_relationship()
     {
         // Arrange
-        const string route = $"/webAccounts?include={Unknown.Relationship}";
+        var parameterValue = new MarkedText($"^{Unknown.Relationship}", '^');
+        string route = $"/webAccounts?include={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -866,7 +867,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
-        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'.");
+        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
@@ -875,7 +876,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Cannot_include_unknown_nested_relationship()
     {
         // Arrange
-        const string route = $"/blogs?include=posts.{Unknown.Relationship}";
+        var parameterValue = new MarkedText($"posts.^{Unknown.Relationship}", '^');
+        string route = $"/blogs?include={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -888,7 +890,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
-        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource type 'blogPosts'.");
+        error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'blogPosts'. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
@@ -897,7 +899,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Cannot_include_relationship_when_inclusion_blocked()
     {
         // Arrange
-        const string route = "/blogPosts?include=parent";
+        var parameterValue = new MarkedText("^parent", '^');
+        string route = $"/blogPosts?include={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -909,8 +912,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Including the requested relationship is not allowed.");
-        error.Detail.Should().Be("Including the relationship 'parent' on 'blogPosts' is not allowed.");
+        error.Title.Should().Be("The specified include is invalid.");
+        error.Detail.Should().Be($"Including the relationship 'parent' on 'blogPosts' is not allowed. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
@@ -919,7 +922,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
     public async Task Cannot_include_relationship_when_nested_inclusion_blocked()
     {
         // Arrange
-        const string route = "/blogs?include=posts.parent";
+        var parameterValue = new MarkedText("posts.^parent", '^');
+        string route = $"/blogs?include={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -931,8 +935,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Including the requested relationship is not allowed.");
-        error.Detail.Should().Be("Including the relationship 'parent' in 'posts.parent' on 'blogPosts' is not allowed.");
+        error.Title.Should().Be("The specified include is invalid.");
+        error.Detail.Should().Be($"Including the relationship 'parent' on 'blogPosts' is not allowed. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("include");
     }
@@ -1091,7 +1095,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.MaximumIncludeDepth = 1;
 
-        const string route = "/blogs/123/owner?include=posts.comments";
+        var parameterValue = new MarkedText("^posts.comments", '^');
+        string route = $"/blogs/123/owner?include={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -1104,7 +1109,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<Testable
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified include is invalid.");
-        error.Detail.Should().Be("Including 'posts.comments' exceeds the maximum inclusion depth of 1.");
+        error.Detail.Should().Be($"Including 'posts.comments' exceeds the maximum inclusion depth of 1. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("include");
     }

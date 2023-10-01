@@ -1,15 +1,28 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions;
 
 /// <summary>
-/// Represents the "count" function, resulting from text such as: count(articles)
+/// This expression allows to determine the number of related resources in a to-many relationship. It represents the "count" function, resulting from
+/// text such as:
+/// <c>
+/// count(articles)
+/// </c>
+/// .
 /// </summary>
 [PublicAPI]
 public class CountExpression : FunctionExpression
 {
+    /// <summary>
+    /// The to-many relationship to count related resources for. Chain format: an optional list of to-one relationships, followed by a to-many relationship.
+    /// </summary>
     public ResourceFieldChainExpression TargetCollection { get; }
+
+    /// <summary>
+    /// The CLR type this function returns, which is always <see cref="int" />.
+    /// </summary>
+    public override Type ReturnType { get; } = typeof(int);
 
     public CountExpression(ResourceFieldChainExpression targetCollection)
     {

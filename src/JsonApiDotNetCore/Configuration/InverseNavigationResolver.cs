@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace JsonApiDotNetCore.Configuration;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IInverseNavigationResolver" />
 [PublicAPI]
 public sealed class InverseNavigationResolver : IInverseNavigationResolver
 {

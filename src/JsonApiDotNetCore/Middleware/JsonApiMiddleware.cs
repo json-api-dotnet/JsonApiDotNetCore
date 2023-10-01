@@ -23,10 +23,12 @@ public sealed class JsonApiMiddleware
     private static readonly MediaTypeHeaderValue MediaType = MediaTypeHeaderValue.Parse(HeaderConstants.MediaType);
     private static readonly MediaTypeHeaderValue AtomicOperationsMediaType = MediaTypeHeaderValue.Parse(HeaderConstants.AtomicOperationsMediaType);
 
-    private readonly RequestDelegate _next;
+    private readonly RequestDelegate? _next;
 
-    public JsonApiMiddleware(RequestDelegate next, IHttpContextAccessor httpContextAccessor)
+    public JsonApiMiddleware(RequestDelegate? next, IHttpContextAccessor httpContextAccessor)
     {
+        ArgumentGuard.NotNull(httpContextAccessor);
+
         _next = next;
 
         var session = new AspNetCodeTimerSession(httpContextAccessor);
@@ -77,9 +79,12 @@ public sealed class JsonApiMiddleware
                 httpContext.RegisterJsonApiRequest();
             }
 
-            using (CodeTimingSessionManager.Current.Measure("Subsequent middleware"))
+            if (_next != null)
             {
-                await _next(httpContext);
+                using (CodeTimingSessionManager.Current.Measure("Subsequent middleware"))
+                {
+                    await _next(httpContext);
+                }
             }
         }
 
@@ -87,7 +92,8 @@ public sealed class JsonApiMiddleware
         {
             string timingResults = CodeTimingSessionManager.Current.GetResults();
             string url = httpContext.Request.GetDisplayUrl();
-            logger.LogInformation($"Measurement results for {httpContext.Request.Method} {url}:{Environment.NewLine}{timingResults}");
+            string method = httpContext.Request.Method.Replace(Environment.NewLine, "");
+            logger.LogInformation($"Measurement results for {method} {url}:{Environment.NewLine}{timingResults}");
         }
     }
 

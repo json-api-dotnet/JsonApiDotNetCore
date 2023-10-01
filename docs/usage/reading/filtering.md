@@ -69,7 +69,8 @@ GET /articles?include=author,tags&filter=equals(author.lastName,'Smith')&filter[
 
 In the above request, the first filter is applied on the collection of articles, while the second one is applied on the nested collection of tags.
 
-Note this does **not** hide articles without any matching tags! Use the `has` function with a filter condition (see below) to accomplish that.
+> [!WARNING]
+> The request above does **not** hide articles without any matching tags! Use the `has` function with a filter condition (see below) to accomplish that.
 
 Putting it all together, you can build quite complex filters, such as:
 
@@ -196,7 +197,7 @@ matchTextExpression:
     ( 'contains' | 'startsWith' | 'endsWith' ) LPAREN fieldChain COMMA literalConstant RPAREN;
 
 anyExpression:
-    'any' LPAREN fieldChain COMMA literalConstant ( COMMA literalConstant )+ RPAREN;
+    'any' LPAREN fieldChain ( COMMA literalConstant )+ RPAREN;
 
 hasExpression:
     'has' LPAREN fieldChain ( COMMA filterExpression )? RPAREN;

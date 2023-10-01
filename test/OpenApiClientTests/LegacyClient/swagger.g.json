@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/v1/airplanes": {
+    "/api/airplanes": {
       "get": {
         "tags": [
           "airplanes"
@@ -73,7 +73,7 @@
         }
       }
     },
-    "/api/v1/airplanes/{id}": {
+    "/api/airplanes/{id}": {
       "get": {
         "tags": [
           "airplanes"
@@ -192,7 +192,7 @@
         }
       }
     },
-    "/api/v1/airplanes/{id}/flights": {
+    "/api/airplanes/{id}/flights": {
       "get": {
         "tags": [
           "airplanes"
@@ -250,7 +250,7 @@
         }
       }
     },
-    "/api/v1/airplanes/{id}/relationships/flights": {
+    "/api/airplanes/{id}/relationships/flights": {
       "get": {
         "tags": [
           "airplanes"
@@ -398,7 +398,7 @@
         }
       }
     },
-    "/api/v1/flight-attendants": {
+    "/api/flight-attendants": {
       "get": {
         "tags": [
           "flight-attendants"
@@ -466,7 +466,7 @@
         }
       }
     },
-    "/api/v1/flight-attendants/{id}": {
+    "/api/flight-attendants/{id}": {
       "get": {
         "tags": [
           "flight-attendants"
@@ -585,7 +585,7 @@
         }
       }
     },
-    "/api/v1/flight-attendants/{id}/purser-on-flights": {
+    "/api/flight-attendants/{id}/purser-on-flights": {
       "get": {
         "tags": [
           "flight-attendants"
@@ -643,7 +643,7 @@
         }
       }
     },
-    "/api/v1/flight-attendants/{id}/relationships/purser-on-flights": {
+    "/api/flight-attendants/{id}/relationships/purser-on-flights": {
       "get": {
         "tags": [
           "flight-attendants"
@@ -791,7 +791,7 @@
         }
       }
     },
-    "/api/v1/flight-attendants/{id}/scheduled-for-flights": {
+    "/api/flight-attendants/{id}/scheduled-for-flights": {
       "get": {
         "tags": [
           "flight-attendants"
@@ -849,7 +849,7 @@
         }
       }
     },
-    "/api/v1/flight-attendants/{id}/relationships/scheduled-for-flights": {
+    "/api/flight-attendants/{id}/relationships/scheduled-for-flights": {
       "get": {
         "tags": [
           "flight-attendants"
@@ -997,7 +997,7 @@
         }
       }
     },
-    "/api/v1/flights": {
+    "/api/flights": {
       "get": {
         "tags": [
           "flights"
@@ -1065,7 +1065,7 @@
         }
       }
     },
-    "/api/v1/flights/{id}": {
+    "/api/flights/{id}": {
       "get": {
         "tags": [
           "flights"
@@ -1184,7 +1184,7 @@
         }
       }
     },
-    "/api/v1/flights/{id}/backup-purser": {
+    "/api/flights/{id}/backup-purser": {
       "get": {
         "tags": [
           "flights"
@@ -1242,7 +1242,7 @@
         }
       }
     },
-    "/api/v1/flights/{id}/relationships/backup-purser": {
+    "/api/flights/{id}/relationships/backup-purser": {
       "get": {
         "tags": [
           "flights"
@@ -1330,7 +1330,7 @@
         }
       }
     },
-    "/api/v1/flights/{id}/cabin-crew-members": {
+    "/api/flights/{id}/cabin-crew-members": {
       "get": {
         "tags": [
           "flights"
@@ -1388,7 +1388,7 @@
         }
       }
     },
-    "/api/v1/flights/{id}/relationships/cabin-crew-members": {
+    "/api/flights/{id}/relationships/cabin-crew-members": {
       "get": {
         "tags": [
           "flights"
@@ -1536,7 +1536,7 @@
         }
       }
     },
-    "/api/v1/flights/{id}/passengers": {
+    "/api/flights/{id}/passengers": {
       "get": {
         "tags": [
           "flights"
@@ -1594,7 +1594,7 @@
         }
       }
     },
-    "/api/v1/flights/{id}/relationships/passengers": {
+    "/api/flights/{id}/relationships/passengers": {
       "get": {
         "tags": [
           "flights"
@@ -1742,7 +1742,7 @@
         }
       }
     },
-    "/api/v1/flights/{id}/purser": {
+    "/api/flights/{id}/purser": {
       "get": {
         "tags": [
           "flights"
@@ -1800,7 +1800,7 @@
         }
       }
     },
-    "/api/v1/flights/{id}/relationships/purser": {
+    "/api/flights/{id}/relationships/purser": {
       "get": {
         "tags": [
           "flights"

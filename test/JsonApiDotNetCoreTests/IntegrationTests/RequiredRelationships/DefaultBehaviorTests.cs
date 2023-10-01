@@ -177,7 +177,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task Cannot_clear_required_ManyToOne_relationship_through_primary_endpoint()
+    public async Task Cannot_clear_required_ManyToOne_relationship_at_primary_endpoint()
     {
         // Arrange
         Order existingOrder = _fakers.Order.Generate();
@@ -225,7 +225,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task Cannot_clear_required_ManyToOne_relationship_through_relationship_endpoint()
+    public async Task Cannot_clear_required_ManyToOne_relationship_at_relationship_endpoint()
     {
         // Arrange
         Order existingOrder = _fakers.Order.Generate();
@@ -256,13 +256,11 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("Failed to clear a required relationship.");
-
-        error.Detail.Should().Be($"The relationship 'customer' on resource type 'orders' with ID '{existingOrder.StringId}' " +
-            "cannot be cleared because it is a required relationship.");
+        error.Detail.Should().Be("The relationship 'customer' on resource type 'orders' cannot be cleared because it is a required relationship.");
     }
 
     [Fact]
-    public async Task Clearing_OneToMany_relationship_through_primary_endpoint_triggers_cascading_delete()
+    public async Task Clearing_OneToMany_relationship_at_primary_endpoint_triggers_cascading_delete()
     {
         // Arrange
         Order existingOrder = _fakers.Order.Generate();
@@ -312,7 +310,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task Clearing_OneToMany_relationship_through_update_relationship_endpoint_triggers_cascading_delete()
+    public async Task Clearing_OneToMany_relationship_at_update_relationship_endpoint_triggers_cascading_delete()
     {
         // Arrange
         Order existingOrder = _fakers.Order.Generate();
@@ -351,7 +349,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task Clearing_OneToMany_relationship_through_delete_relationship_endpoint_triggers_cascading_delete()
+    public async Task Clearing_OneToMany_relationship_at_delete_relationship_endpoint_triggers_cascading_delete()
     {
         // Arrange
         Order existingOrder = _fakers.Order.Generate();
@@ -397,7 +395,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task Can_reassign_dependent_side_of_ZeroOrOneToOne_relationship_through_primary_endpoint()
+    public async Task Can_reassign_dependent_side_of_ZeroOrOneToOne_relationship_at_primary_endpoint()
     {
         // Arrange
         Order orderWithShipment = _fakers.Order.Generate();
@@ -452,7 +450,7 @@ public sealed class DefaultBehaviorTests : IClassFixture<IntegrationTestContext<
     }
 
     [Fact]
-    public async Task Can_reassign_dependent_side_of_ZeroOrOneToOne_relationship_through_relationship_endpoint()
+    public async Task Can_reassign_dependent_side_of_ZeroOrOneToOne_relationship_at_relationship_endpoint()
     {
         // Arrange
         Order orderWithShipment = _fakers.Order.Generate();

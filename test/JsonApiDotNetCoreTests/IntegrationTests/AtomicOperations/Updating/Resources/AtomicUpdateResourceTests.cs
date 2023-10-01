@@ -3,6 +3,7 @@ using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -29,6 +30,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
             services.AddResourceDefinition<ImplicitlyChangingTextLanguageDefinition>();
 
             services.AddSingleton<ResourceDefinitionHitCounter>();
+            services.AddSingleton<ISystemClock, FrozenSystemClock>();
         });
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
@@ -618,7 +620,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
                 new
                 {
                     op = "update",
-                    href = "/api/v1/musicTracks/1"
+                    href = "/api/musicTracks/1"
                 }
             }
         };
@@ -1740,7 +1742,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             MusicTrack trackInDatabase = await dbContext.MusicTracks
                 .Include(musicTrack => musicTrack.Lyric)
@@ -1748,7 +1750,7 @@ public sealed class AtomicUpdateResourceTests : IClassFixture<IntegrationTestCon
                 .Include(musicTrack => musicTrack.Performers)
                 .FirstWithIdAsync(existingTrack.Id);
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             trackInDatabase.Title.Should().Be(existingTrack.Title);

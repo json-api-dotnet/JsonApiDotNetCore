@@ -5,8 +5,8 @@ using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
-using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
@@ -20,7 +20,8 @@ public sealed class PaginationParseTests : BaseParseTests
     public PaginationParseTests()
     {
         Options.DefaultPageSize = new PageSize(25);
-        _reader = new PaginationQueryStringParameterReader(Request, ResourceGraph, Options);
+        var parser = new PaginationParser();
+        _reader = new PaginationQueryStringParameterReader(parser, Request, ResourceGraph, Options);
     }
 
     [Theory]
@@ -53,26 +54,36 @@ public sealed class PaginationParseTests : BaseParseTests
     }
 
     [Theory]
-    [InlineData("", "Number or relationship name expected.")]
-    [InlineData("1,", "Number or relationship name expected.")]
-    [InlineData("(", "Number or relationship name expected.")]
-    [InlineData(" ", "Unexpected whitespace.")]
-    [InlineData("-", "Digits expected.")]
-    [InlineData("-1", "Page number cannot be negative or zero.")]
-    [InlineData("posts", ": expected.")]
-    [InlineData("posts:", "Number expected.")]
-    [InlineData("posts:abc", "Number expected.")]
-    [InlineData("1(", ", expected.")]
-    [InlineData("posts:-abc", "Digits expected.")]
-    [InlineData("posts:-1", "Page number cannot be negative or zero.")]
-    [InlineData("posts.id", "Relationship 'id' in 'posts.id' does not exist on resource type 'blogPosts'.")]
-    [InlineData("posts.comments.id", "Relationship 'id' in 'posts.comments.id' does not exist on resource type 'comments'.")]
-    [InlineData("posts.author", "Relationship 'author' in 'posts.author' must be a to-many relationship on resource type 'blogPosts'.")]
-    [InlineData("something", "Relationship 'something' does not exist on resource type 'blogs'.")]
+    [InlineData("^", "Number or relationship name expected.")]
+    [InlineData("1,^", "Number or relationship name expected.")]
+    [InlineData("^(", "Number or relationship name expected.")]
+    [InlineData("^ ", "Unexpected whitespace.")]
+    [InlineData("-^", "Digits expected.")]
+    [InlineData("^-1", "Page number cannot be negative or zero.")]
+    [InlineData("posts^", ": expected.")]
+    [InlineData("posts:^", "Number expected.")]
+    [InlineData("posts:^abc", "Number expected.")]
+    [InlineData("1^(", ", expected.")]
+    [InlineData("posts:-^abc", "Digits expected.")]
+    [InlineData("posts:^-1", "Page number cannot be negative or zero.")]
+    [InlineData("posts.^some", "Field 'some' does not exist on resource type 'blogPosts'.")]
+    [InlineData("posts.^id",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'blogPosts' expected.")]
+    [InlineData("posts.comments.^id",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'comments' expected.")]
+    [InlineData("posts.author^",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'webAccounts' expected.")]
+    [InlineData("^some", "Field 'some' does not exist on resource type 'blogs'.")]
     public void Reader_Read_Page_Number_Fails(string parameterValue, string errorMessage)
     {
+        // Arrange
+        var parameterValueSource = new MarkedText(parameterValue, '^');
+
         // Act
-        Action action = () => _reader.Read("page[number]", parameterValue);
+        Action action = () => _reader.Read("page[number]", parameterValueSource.Text);
 
         // Assert
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
@@ -82,33 +93,42 @@ public sealed class PaginationParseTests : BaseParseTests
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
-        error.Detail.Should().Be(errorMessage);
+        error.Title.Should().Be("The specified pagination is invalid.");
+        error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[number]");
     }
 
     [Theory]
-    [InlineData("", "Number or relationship name expected.")]
-    [InlineData("1,", "Number or relationship name expected.")]
-    [InlineData("(", "Number or relationship name expected.")]
-    [InlineData(" ", "Unexpected whitespace.")]
-    [InlineData("-", "Digits expected.")]
-    [InlineData("-1", "Page size cannot be negative.")]
-    [InlineData("posts", ": expected.")]
-    [InlineData("posts:", "Number expected.")]
-    [InlineData("posts:abc", "Number expected.")]
-    [InlineData("1(", ", expected.")]
-    [InlineData("posts:-abc", "Digits expected.")]
-    [InlineData("posts:-1", "Page size cannot be negative.")]
-    [InlineData("posts.id", "Relationship 'id' in 'posts.id' does not exist on resource type 'blogPosts'.")]
-    [InlineData("posts.comments.id", "Relationship 'id' in 'posts.comments.id' does not exist on resource type 'comments'.")]
-    [InlineData("posts.author", "Relationship 'author' in 'posts.author' must be a to-many relationship on resource type 'blogPosts'.")]
-    [InlineData("something", "Relationship 'something' does not exist on resource type 'blogs'.")]
+    [InlineData("^", "Number or relationship name expected.")]
+    [InlineData("1,^", "Number or relationship name expected.")]
+    [InlineData("^(", "Number or relationship name expected.")]
+    [InlineData("^ ", "Unexpected whitespace.")]
+    [InlineData("-^", "Digits expected.")]
+    [InlineData("^-1", "Page size cannot be negative.")]
+    [InlineData("posts^", ": expected.")]
+    [InlineData("posts:^", "Number expected.")]
+    [InlineData("posts:^abc", "Number expected.")]
+    [InlineData("1^(", ", expected.")]
+    [InlineData("posts:-^abc", "Digits expected.")]
+    [InlineData("posts:^-1", "Page size cannot be negative.")]
+    [InlineData("posts.^id",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'blogPosts' expected.")]
+    [InlineData("posts.comments.^id",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'comments' expected.")]
+    [InlineData("posts.author^",
+        "Field chain on resource type 'blogs' failed to match the pattern: zero or more relationships, followed by a to-many relationship. " +
+        "Relationship on resource type 'webAccounts' expected.")]
+    [InlineData("^some", "Field 'some' does not exist on resource type 'blogs'.")]
     public void Reader_Read_Page_Size_Fails(string parameterValue, string errorMessage)
     {
+        // Arrange
+        var parameterValueSource = new MarkedText(parameterValue, '^');
+
         // Act
-        Action action = () => _reader.Read("page[size]", parameterValue);
+        Action action = () => _reader.Read("page[size]", parameterValueSource.Text);
 
         // Assert
         InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
@@ -118,8 +138,8 @@ public sealed class PaginationParseTests : BaseParseTests
 
         ErrorObject error = exception.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("The specified paging is invalid.");
-        error.Detail.Should().Be(errorMessage);
+        error.Title.Should().Be("The specified pagination is invalid.");
+        error.Detail.Should().Be($"{errorMessage} {parameterValueSource}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("page[size]");
     }

@@ -2,7 +2,7 @@ using System.Text.Json;
 using BenchmarkDotNet.Attributes;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Queries.Internal;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 
@@ -130,6 +130,6 @@ public class OperationsSerializationBenchmarks : SerializationBenchmarkBase
 
     protected override IEvaluatedIncludeCache CreateEvaluatedIncludeCache(IResourceGraph resourceGraph)
     {
-        return new EvaluatedIncludeCache();
+        return new EvaluatedIncludeCache(Array.Empty<IQueryConstraintProvider>());
     }
 }

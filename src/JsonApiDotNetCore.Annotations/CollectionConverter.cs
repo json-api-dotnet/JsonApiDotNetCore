@@ -45,7 +45,7 @@ internal sealed class CollectionConverter
     /// </summary>
     private Type ToConcreteCollectionType(Type collectionType)
     {
-        if (collectionType.IsInterface && collectionType.IsGenericType)
+        if (collectionType is { IsInterface: true, IsGenericType: true })
         {
             Type openCollectionType = collectionType.GetGenericTypeDefinition();
 
@@ -101,14 +101,11 @@ internal sealed class CollectionConverter
     /// </summary>
     public Type? FindCollectionElementType(Type? type)
     {
-        if (type != null)
+        if (type is { IsGenericType: true, GenericTypeArguments.Length: 1 })
         {
-            if (type.IsGenericType && type.GenericTypeArguments.Length == 1)
+            if (type.IsOrImplementsInterface<IEnumerable>())
             {
-                if (type.IsOrImplementsInterface<IEnumerable>())
-                {
-                    return type.GenericTypeArguments[0];
-                }
+                return type.GenericTypeArguments[0];
             }
         }
 

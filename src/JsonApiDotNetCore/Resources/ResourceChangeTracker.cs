@@ -1,11 +1,10 @@
-using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IResourceChangeTracker{TResource}" />
 [PublicAPI]
 public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TResource>
     where TResource : class, IIdentifiable
@@ -13,9 +12,9 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
     private readonly IJsonApiRequest _request;
     private readonly ITargetedFields _targetedFields;
 
-    private IDictionary<string, string>? _initiallyStoredAttributeValues;
-    private IDictionary<string, string>? _requestAttributeValues;
-    private IDictionary<string, string>? _finallyStoredAttributeValues;
+    private IDictionary<string, object?>? _initiallyStoredAttributeValues;
+    private IDictionary<string, object?>? _requestAttributeValues;
+    private IDictionary<string, object?>? _finallyStoredAttributeValues;
 
     public ResourceChangeTracker(IJsonApiRequest request, ITargetedFields targetedFields)
     {
@@ -50,15 +49,14 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
         _finallyStoredAttributeValues = CreateAttributeDictionary(resource, _request.PrimaryResourceType!.Attributes);
     }
 
-    private IDictionary<string, string> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
+    private IDictionary<string, object?> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
     {
-        var result = new Dictionary<string, string>();
+        var result = new Dictionary<string, object?>();
 
         foreach (AttrAttribute attribute in attributes)
         {
             object? value = attribute.GetValue(resource);
-            string json = JsonSerializer.Serialize(value);
-            result.Add(attribute.PublicName, json);
+            result.Add(attribute.PublicName, value);
         }
 
         return result;
@@ -71,21 +69,21 @@ public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TR
         {
             foreach (string key in _initiallyStoredAttributeValues.Keys)
             {
-                if (_requestAttributeValues.TryGetValue(key, out string? requestValue))
+                if (_requestAttributeValues.TryGetValue(key, out object? requestValue))
                 {
-                    string actualValue = _finallyStoredAttributeValues[key];
+                    object? actualValue = _finallyStoredAttributeValues[key];
 
-                    if (requestValue != actualValue)
+                    if (!Equals(requestValue, actualValue))
                     {
                         return true;
                     }
                 }
                 else
                 {
-                    string initiallyStoredValue = _initiallyStoredAttributeValues[key];
-                    string finallyStoredValue = _finallyStoredAttributeValues[key];
+                    object? initiallyStoredValue = _initiallyStoredAttributeValues[key];
+                    object? finallyStoredValue = _finallyStoredAttributeValues[key];
 
-                    if (initiallyStoredValue != finallyStoredValue)
+                    if (!Equals(initiallyStoredValue, finallyStoredValue))
                     {
                         return true;
                     }

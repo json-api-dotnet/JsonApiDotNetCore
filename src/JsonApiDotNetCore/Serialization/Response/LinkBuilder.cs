@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace JsonApiDotNetCore.Serialization.Response;
 
+/// <inheritdoc cref="ILinkBuilder" />
 [PublicAPI]
 public class LinkBuilder : ILinkBuilder
 {
@@ -33,6 +34,7 @@ public class LinkBuilder : ILinkBuilder
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly LinkGenerator _linkGenerator;
     private readonly IControllerResourceMapping _controllerResourceMapping;
+    private readonly IPaginationParser _paginationParser;
 
     private HttpContext HttpContext
     {
@@ -48,13 +50,14 @@ public class LinkBuilder : ILinkBuilder
     }
 
     public LinkBuilder(IJsonApiOptions options, IJsonApiRequest request, IPaginationContext paginationContext, IHttpContextAccessor httpContextAccessor,
-        LinkGenerator linkGenerator, IControllerResourceMapping controllerResourceMapping)
+        LinkGenerator linkGenerator, IControllerResourceMapping controllerResourceMapping, IPaginationParser paginationParser)
     {
         ArgumentGuard.NotNull(options);
         ArgumentGuard.NotNull(request);
         ArgumentGuard.NotNull(paginationContext);
         ArgumentGuard.NotNull(linkGenerator);
         ArgumentGuard.NotNull(controllerResourceMapping);
+        ArgumentGuard.NotNull(paginationParser);
 
         _options = options;
         _request = request;
@@ -62,6 +65,7 @@ public class LinkBuilder : ILinkBuilder
         _httpContextAccessor = httpContextAccessor;
         _linkGenerator = linkGenerator;
         _controllerResourceMapping = controllerResourceMapping;
+        _paginationParser = paginationParser;
     }
 
     private static string NoAsyncSuffix(string actionName)
@@ -80,12 +84,12 @@ public class LinkBuilder : ILinkBuilder
             links.Self = GetLinkForTopLevelSelf();
         }
 
-        if (_request.Kind == EndpointKind.Relationship && _request.Relationship != null && ShouldIncludeTopLevelLink(LinkTypes.Related, resourceType))
+        if (_request is { Kind: EndpointKind.Relationship, Relationship: not null } && ShouldIncludeTopLevelLink(LinkTypes.Related, resourceType))
         {
             links.Related = GetLinkForRelationshipRelated(_request.PrimaryId!, _request.Relationship);
         }
 
-        if (_request.IsCollection && _paginationContext.PageSize != null && ShouldIncludeTopLevelLink(LinkTypes.Paging, resourceType))
+        if (_request.IsCollection && _paginationContext.PageSize != null && ShouldIncludeTopLevelLink(LinkTypes.Pagination, resourceType))
         {
             SetPaginationInTopLevelLinks(resourceType!, links);
         }
@@ -153,7 +157,7 @@ public class LinkBuilder : ILinkBuilder
 
         if (topPageSize != null)
         {
-            var topPageSizeElement = new PaginationElementQueryStringValueExpression(null, topPageSize.Value);
+            var topPageSizeElement = new PaginationElementQueryStringValueExpression(null, topPageSize.Value, -1);
 
             elements = elementInTopScopeIndex != -1 ? elements.SetItem(elementInTopScopeIndex, topPageSizeElement) : elements.Insert(0, topPageSizeElement);
         }
@@ -178,10 +182,9 @@ public class LinkBuilder : ILinkBuilder
             return ImmutableArray<PaginationElementQueryStringValueExpression>.Empty;
         }
 
-        var parser = new PaginationParser();
-        PaginationQueryStringValueExpression paginationExpression = parser.Parse(pageSizeParameterValue, resourceType);
+        PaginationQueryStringValueExpression pagination = _paginationParser.Parse(pageSizeParameterValue, resourceType);
 
-        return paginationExpression.Elements;
+        return pagination.Elements;
     }
 
     private string GetLinkForPagination(int pageOffset, string? pageSizeValue)

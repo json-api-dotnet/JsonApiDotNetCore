@@ -18,19 +18,19 @@ public sealed class ControllerGenerationTests
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -38,7 +38,7 @@ public sealed class ControllerGenerationTests
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -79,7 +79,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -87,12 +87,12 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithNamespaceImportFor(typeof(JsonApiEndpoints))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource(GenerateControllerEndpoints = JsonApiEndpoints.Query)]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource(GenerateControllerEndpoints = JsonApiEndpoints.Query)]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -100,7 +100,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -141,7 +141,7 @@ public sealed partial class ItemsController : JsonApiQueryController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -149,12 +149,12 @@ public sealed partial class ItemsController : JsonApiQueryController<Item, long>
             .WithNamespaceImportFor(typeof(JsonApiEndpoints))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource(GenerateControllerEndpoints = JsonApiEndpoints.Command)]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource(GenerateControllerEndpoints = JsonApiEndpoints.Command)]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -162,7 +162,7 @@ public sealed partial class ItemsController : JsonApiQueryController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -203,7 +203,7 @@ public sealed partial class ItemsController : JsonApiCommandController<Item, lon
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -211,15 +211,15 @@ public sealed partial class ItemsController : JsonApiCommandController<Item, lon
             .WithNamespaceImportFor(typeof(JsonApiEndpoints))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource(GenerateControllerEndpoints = NoRelationshipEndpoints)]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        private const JsonApiEndpoints NoRelationshipEndpoints = JsonApiEndpoints.GetCollection |
-                            JsonApiEndpoints.GetSingle | JsonApiEndpoints.Post | JsonApiEndpoints.Patch | JsonApiEndpoints.Delete;
+                [Resource(GenerateControllerEndpoints = NoRelationshipEndpoints)]
+                public sealed class Item : Identifiable<long>
+                {
+                    private const JsonApiEndpoints NoRelationshipEndpoints = JsonApiEndpoints.GetCollection |
+                        JsonApiEndpoints.GetSingle | JsonApiEndpoints.Post | JsonApiEndpoints.Patch | JsonApiEndpoints.Delete;
 
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -227,7 +227,7 @@ public sealed partial class ItemsController : JsonApiCommandController<Item, lon
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -277,18 +277,18 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(AttrAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -296,7 +296,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -318,7 +318,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
@@ -326,12 +326,12 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithNamespaceImportFor(typeof(JsonApiEndpoints))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource(GenerateControllerEndpoints = JsonApiEndpoints.None)]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource(GenerateControllerEndpoints = JsonApiEndpoints.None)]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -339,7 +339,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -361,29 +361,29 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    public abstract class Identifiable<TId>
-                    {
-                    }
+                public abstract class Identifiable<TId>
+                {
+                }
 
-                    public sealed class ResourceAttribute : System.Attribute
-                    {
-                    }
+                public sealed class ResourceAttribute : System.Attribute
+                {
+                }
 
-                    public sealed class AttrAttribute : System.Attribute
-                    {
-                    }
+                public sealed class AttrAttribute : System.Attribute
+                {
+                }
 
-                    [Resource]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -392,7 +392,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -415,19 +415,19 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -436,7 +436,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -459,18 +459,18 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource]
-                    public sealed class Item
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -478,7 +478,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -490,9 +490,8 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
 
         GeneratorDriverRunResult runResult = driver.GetRunResult();
 
-        runResult.Should()
-            .HaveSingleDiagnostic(
-                "(6,21): warning JADNC001: Type 'Item' must implement IIdentifiable<TId> when using ResourceAttribute to auto-generate ASP.NET controllers");
+        runResult.Should().HaveSingleDiagnostic(
+            "(6,17): warning JADNC001: Type 'Item' must implement IIdentifiable<TId> when using ResourceAttribute to auto-generate ASP.NET controllers");
 
         runResult.Should().NotHaveProducedSourceCode();
     }
@@ -504,21 +503,21 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    #nullable enable
+                #nullable enable
 
-                    [Resource]
-                    public sealed class Item : Identifiable<string?>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item : Identifiable<string?>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -526,7 +525,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -539,7 +538,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriverRunResult runResult = driver.GetRunResult();
         runResult.Should().NotHaveDiagnostics();
 
-        runResult.Should().HaveProducedSourceCodeContaining(@"#nullable enable");
+        runResult.Should().HaveProducedSourceCodeContaining("#nullable enable");
     }
 
     [Fact]
@@ -549,19 +548,19 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("ExampleApi.Models")
             .WithCode(@"
-                    [Resource(ControllerNamespace = ""Some.Path.To.Generate.Code.In"")]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource(ControllerNamespace = ""Some.Path.To.Generate.Code.In"")]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -569,7 +568,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -610,19 +609,19 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .InNamespace("TopLevel")
             .WithCode(@"
-                    [Resource]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -630,7 +629,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -671,18 +670,18 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
             .WithCode(@"
-                    [Resource]
-                    public sealed class Item : Identifiable<long>
-                    {
-                        [Attr]
-                        public int Value { get; set; }
-                    }")
+                [Resource]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -690,7 +689,7 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act
@@ -722,37 +721,25 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
     }
 
     [Fact]
-    public void Generates_unique_file_names_for_duplicate_resource_name_in_different_namespaces()
+    public void Can_generate_for_shared_namespace()
     {
         // Arrange
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:keep_existing_linebreaks true
+        // @formatter:wrap_before_first_method_call true
 
         string source = new SourceCodeBuilder()
             .WithNamespaceImportFor(typeof(IIdentifiable))
             .WithNamespaceImportFor(typeof(ResourceAttribute))
+            .InNamespace("ExampleApi")
             .WithCode(@"
-                    namespace The.First.One
-                    {
-                        [Resource]
-                        public sealed class Item : Identifiable<long>
-                        {
-                            [Attr]
-                            public int Value { get; set; }
-                        }
-                    }
-
-                    namespace The.Second.One
-                    {
-                        [Resource]
-                        public sealed class Item : Identifiable<long>
-                        {
-                            [Attr]
-                            public int Value { get; set; }
-                        }
-                    }")
+                [Resource(ControllerNamespace = ""ExampleApi"")]
+                public sealed class Item : Identifiable<long>
+                {
+                    [Attr]
+                    public int Value { get; set; }
+                }")
             .Build();
 
         Compilation inputCompilation = new CompilationBuilder()
@@ -760,7 +747,79 @@ public sealed partial class ItemsController : JsonApiController<Item, long>
             .WithSourceCode(source)
             .Build();
 
-        // @formatter:keep_existing_linebreaks restore
+        // @formatter:wrap_before_first_method_call restore
+        // @formatter:wrap_chained_method_calls restore
+
+        // Act
+        driver = driver.RunGeneratorsAndUpdateCompilation(inputCompilation, out Compilation outputCompilation, out _);
+
+        // Assert
+        inputCompilation.GetDiagnostics().Should().BeEmpty();
+        outputCompilation.GetDiagnostics().Should().BeEmpty();
+
+        GeneratorDriverRunResult runResult = driver.GetRunResult();
+        runResult.Should().NotHaveDiagnostics();
+
+        runResult.Should().HaveProducedSourceCode(@"// <auto-generated />
+
+using Microsoft.Extensions.Logging;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
+using JsonApiDotNetCore.Services;
+
+namespace ExampleApi;
+
+public sealed partial class ItemsController : JsonApiController<Item, long>
+{
+    public ItemsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+        IResourceService<Item, long> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
+    {
+    }
+}
+");
+    }
+
+    [Fact]
+    public void Generates_unique_file_names_for_duplicate_resource_name_in_different_namespaces()
+    {
+        // Arrange
+        GeneratorDriver driver = CSharpGeneratorDriver.Create(new ControllerSourceGenerator());
+
+        // @formatter:wrap_chained_method_calls chop_always
+        // @formatter:wrap_before_first_method_call true
+
+        string source = new SourceCodeBuilder()
+            .WithNamespaceImportFor(typeof(IIdentifiable))
+            .WithNamespaceImportFor(typeof(ResourceAttribute))
+            .WithCode(@"
+                namespace The.First.One
+                {
+                    [Resource]
+                    public sealed class Item : Identifiable<long>
+                    {
+                        [Attr]
+                        public int Value { get; set; }
+                    }
+                }
+
+                namespace The.Second.One
+                {
+                    [Resource]
+                    public sealed class Item : Identifiable<long>
+                    {
+                        [Attr]
+                        public int Value { get; set; }
+                    }
+                }")
+            .Build();
+
+        Compilation inputCompilation = new CompilationBuilder()
+            .WithDefaultReferences()
+            .WithSourceCode(source)
+            .Build();
+
+        // @formatter:wrap_before_first_method_call restore
         // @formatter:wrap_chained_method_calls restore
 
         // Act

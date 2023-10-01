@@ -19,6 +19,12 @@ public sealed class ResourceType
     public string PublicName { get; }
 
     /// <summary>
+    /// Whether API clients are allowed or required to provide IDs when creating resources of this type. When <c>null</c>, the value from global options
+    /// applies.
+    /// </summary>
+    public ClientIdGenerationMode? ClientIdGeneration { get; }
+
+    /// <summary>
     /// The CLR type of the resource.
     /// </summary>
     public Type ClrType { get; }
@@ -89,22 +95,24 @@ public sealed class ResourceType
     /// </remarks>
     public LinkTypes RelationshipLinks { get; }
 
-    public ResourceType(string publicName, Type clrType, Type identityClrType, LinkTypes topLevelLinks = LinkTypes.NotConfigured,
-        LinkTypes resourceLinks = LinkTypes.NotConfigured, LinkTypes relationshipLinks = LinkTypes.NotConfigured)
-        : this(publicName, clrType, identityClrType, null, null, null, topLevelLinks, resourceLinks, relationshipLinks)
+    public ResourceType(string publicName, ClientIdGenerationMode? clientIdGeneration, Type clrType, Type identityClrType,
+        LinkTypes topLevelLinks = LinkTypes.NotConfigured, LinkTypes resourceLinks = LinkTypes.NotConfigured,
+        LinkTypes relationshipLinks = LinkTypes.NotConfigured)
+        : this(publicName, clientIdGeneration, clrType, identityClrType, null, null, null, topLevelLinks, resourceLinks, relationshipLinks)
     {
     }
 
-    public ResourceType(string publicName, Type clrType, Type identityClrType, IReadOnlyCollection<AttrAttribute>? attributes,
-        IReadOnlyCollection<RelationshipAttribute>? relationships, IReadOnlyCollection<EagerLoadAttribute>? eagerLoads,
-        LinkTypes topLevelLinks = LinkTypes.NotConfigured, LinkTypes resourceLinks = LinkTypes.NotConfigured,
-        LinkTypes relationshipLinks = LinkTypes.NotConfigured)
+    public ResourceType(string publicName, ClientIdGenerationMode? clientIdGeneration, Type clrType, Type identityClrType,
+        IReadOnlyCollection<AttrAttribute>? attributes, IReadOnlyCollection<RelationshipAttribute>? relationships,
+        IReadOnlyCollection<EagerLoadAttribute>? eagerLoads, LinkTypes topLevelLinks = LinkTypes.NotConfigured,
+        LinkTypes resourceLinks = LinkTypes.NotConfigured, LinkTypes relationshipLinks = LinkTypes.NotConfigured)
     {
         ArgumentGuard.NotNullNorEmpty(publicName);
         ArgumentGuard.NotNull(clrType);
         ArgumentGuard.NotNull(identityClrType);
 
         PublicName = publicName;
+        ClientIdGeneration = clientIdGeneration;
         ClrType = clrType;
         IdentityClrType = identityClrType;
         Attributes = attributes ?? Array.Empty<AttrAttribute>();

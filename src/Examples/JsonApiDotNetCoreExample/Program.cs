@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;
@@ -6,6 +7,7 @@ using JsonApiDotNetCore.OpenApi;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 [assembly: ExcludeFromCodeCoverage]
@@ -48,13 +50,10 @@ static void ConfigureServices(WebApplicationBuilder builder)
 
     builder.Services.AddDbContext<AppDbContext>(options =>
     {
-        string connectionString = GetConnectionString(builder.Configuration);
-
+        string? connectionString = GetConnectionString(builder.Configuration);
         options.UseNpgsql(connectionString);
-#if DEBUG
-        options.EnableSensitiveDataLogging();
-        options.EnableDetailedErrors();
-#endif
+
+        SetDbContextDebugOptions(options);
     });
 
     IMvcCoreBuilder mvcCoreBuilder = builder.Services.AddMvcCore();
@@ -63,14 +62,15 @@ static void ConfigureServices(WebApplicationBuilder builder)
     {
         builder.Services.AddJsonApi<AppDbContext>(options =>
         {
-            options.Namespace = "api/v1";
+            options.Namespace = "api";
             options.UseRelativeLinks = true;
             options.IncludeTotalResourceCount = true;
-            options.SerializerOptions.WriteIndented = true;
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+
 #if DEBUG
             options.IncludeExceptionStackTraceInErrors = true;
             options.IncludeRequestBodyInErrors = true;
+            options.SerializerOptions.WriteIndented = true;
 #endif
         }, discovery => discovery.AddCurrentAssembly(), mvcBuilder: mvcCoreBuilder);
     }
@@ -81,10 +81,18 @@ static void ConfigureServices(WebApplicationBuilder builder)
     }
 }
 
-static string GetConnectionString(IConfiguration configuration)
+static string? GetConnectionString(IConfiguration configuration)
 {
     string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
-    return configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
+    return configuration.GetConnectionString("Default")?.Replace("###", postgresPassword);
+}
+
+[Conditional("DEBUG")]
+static void SetDbContextDebugOptions(DbContextOptionsBuilder options)
+{
+    options.EnableDetailedErrors();
+    options.EnableSensitiveDataLogging();
+    options.ConfigureWarnings(builder => builder.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning));
 }
 
 static void ConfigurePipeline(WebApplication webApplication)
@@ -109,5 +117,9 @@ static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
     await using AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
 
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await dbContext.Database.EnsureCreatedAsync();
+
+    if (await dbContext.Database.EnsureCreatedAsync())
+    {
+        await Seeder.CreateSampleDataAsync(dbContext);
+    }
 }

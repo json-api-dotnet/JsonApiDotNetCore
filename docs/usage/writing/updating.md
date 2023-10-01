@@ -5,7 +5,7 @@
 To modify the attributes of a single resource, send a PATCH request. The next example changes the article caption:
 
 ```http
-POST /articles HTTP/1.1
+PATCH /articles HTTP/1.1
 
 {
   "data": {
@@ -21,12 +21,14 @@ POST /articles HTTP/1.1
 This preserves the values of all other unsent attributes and is called a *partial patch*.
 
 When only the attributes that were sent in the request have changed, the server returns `204 No Content`.
-But if additional attributes have changed (for example, by a database trigger that refreshes the last-modified date) the server returns `200 OK`, along with all attributes of the updated resource.
+But if additional attributes have changed (for example, by a database trigger or [resource definition](~/usage/extensibility/resource-definitions.md) that refreshes the last-modified date) the server returns `200 OK`, along with all attributes of the updated resource.
 
 ## Updating resource relationships
 
 Besides its attributes, the relationships of a resource can be changed using a PATCH request too.
-Note that all resources being assigned in a relationship must already exist.
+
+> [!NOTE]
+> All resources being assigned in a relationship must already exist.
 
 When updating a HasMany relationship, the existing set is replaced by the new set. See below on how to add/remove resources.
 
@@ -65,7 +67,8 @@ PATCH /articles/1 HTTP/1.1
 
 A HasOne relationship can be cleared by setting `data` to `null`, while a HasMany relationship can be cleared by setting it to an empty array.
 
-By combining the examples above, both attributes and relationships can be updated using a single PATCH request.
+> [!TIP]
+> By combining the examples above, both attributes and relationships can be updated using a single PATCH request.
 
 ## Response body
 
@@ -79,8 +82,9 @@ PATCH /articles/1?include=owner&fields[people]=firstName HTTP/1.1
 }
 ```
 
-After the resource has been updated on the server, it is re-fetched from the database using the specified query string parameters and returned to the client.
-Note this only has an effect when `200 OK` is returned.
+> [!NOTE]
+> After the resource has been updated on the server, it is re-fetched from the database using the specified query string parameters and returned to the client.
+> However, the used query string parameters only have an effect when `200 OK` is returned.
 
 # Updating relationships
 

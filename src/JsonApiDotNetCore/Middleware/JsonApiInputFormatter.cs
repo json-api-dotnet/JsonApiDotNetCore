@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Middleware;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IJsonApiInputFormatter" />
 public sealed class JsonApiInputFormatter : IJsonApiInputFormatter
 {
     /// <inheritdoc />

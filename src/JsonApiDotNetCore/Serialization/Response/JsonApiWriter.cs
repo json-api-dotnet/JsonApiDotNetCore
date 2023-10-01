@@ -15,7 +15,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace JsonApiDotNetCore.Serialization.Response;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IJsonApiWriter" />
 public sealed class JsonApiWriter : IJsonApiWriter
 {
     private readonly IJsonApiRequest _request;
@@ -63,7 +63,12 @@ public sealed class JsonApiWriter : IJsonApiWriter
         }
 
         _traceWriter.LogMessage(() =>
-            $"Sending {httpContext.Response.StatusCode} response for {httpContext.Request.Method} request at '{httpContext.Request.GetEncodedUrl()}' with body: <<{responseBody}>>");
+        {
+            string method = httpContext.Request.Method.Replace(Environment.NewLine, "");
+            string url = httpContext.Request.GetEncodedUrl();
+
+            return $"Sending {httpContext.Response.StatusCode} response for {method} request at '{url}' with body: <<{responseBody}>>";
+        });
 
         await SendResponseBodyAsync(httpContext.Response, responseBody);
     }
@@ -137,7 +142,7 @@ public sealed class JsonApiWriter : IJsonApiWriter
             string url = request.GetEncodedUrl();
             EntityTagHeaderValue responseETag = _eTagGenerator.Generate(url, responseContent);
 
-            response.Headers.Add(HeaderNames.ETag, responseETag.ToString());
+            response.Headers.Append(HeaderNames.ETag, responseETag.ToString());
 
             return RequestContainsMatchingETag(request.Headers, responseETag);
         }

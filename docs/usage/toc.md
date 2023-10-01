@@ -23,6 +23,7 @@
 # [Errors](errors.md)
 # [Metadata](meta.md)
 # [Caching](caching.md)
+# [Common Pitfalls](common-pitfalls.md)
 
 # [OpenAPI](openapi.md)
 ## [Client](openapi-client.md)
@@ -35,4 +36,3 @@
 ## [Resource Repositories](extensibility/repositories.md)
 ## [Middleware](extensibility/middleware.md)
 ## [Query Strings](extensibility/query-strings.md)
-

@@ -10,7 +10,7 @@ namespace OpenApiClientTests.LegacyClient;
 
 public sealed class ResponseTests
 {
-    private const string HostPrefix = "http://localhost/api/v1/";
+    private const string HostPrefix = "http://localhost/api/";
 
     [Fact]
     public async Task Getting_resource_collection_translates_response()
@@ -155,7 +155,7 @@ public sealed class ResponseTests
 
         const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]=departs-at,arrives-at""
+    ""self"": """ + HostPrefix + "flights/" + flightId + @"&fields[flights]=departs-at,arrives-at""
   },
   ""data"": {
       ""type"": ""flights"",
@@ -167,7 +167,7 @@ public sealed class ResponseTests
         ""services-on-board"": [""" + flightServiceOnBoard + @"""]
       },
       ""links"": {
-        ""self"": """ + HostPrefix + @"flights/" + flightId + @"""
+        ""self"": """ + HostPrefix + "flights/" + flightId + @"""
       }
     }
 }";
@@ -231,7 +231,7 @@ public sealed class ResponseTests
 
         const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=purser,cabin-crew-members,passengers""
+    ""self"": """ + HostPrefix + "flights/" + flightId + @"&fields[flights]&include=purser,cabin-crew-members,passengers""
   },
   ""data"": {
       ""type"": ""flights"",
@@ -239,8 +239,8 @@ public sealed class ResponseTests
       ""relationships"": {
         ""purser"": {
           ""links"": {
-            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/purser"",
-            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/purser""
+            ""self"": """ + HostPrefix + "flights/" + flightId + @"/relationships/purser"",
+            ""related"": """ + HostPrefix + "flights/" + flightId + @"/purser""
           },
           ""data"": {
               ""type"": ""flight-attendants"",
@@ -249,8 +249,8 @@ public sealed class ResponseTests
         },
         ""cabin-crew-members"": {
           ""links"": {
-            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-crew-members"",
-            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/cabin-crew-members""
+            ""self"": """ + HostPrefix + "flights/" + flightId + @"/relationships/cabin-crew-members"",
+            ""related"": """ + HostPrefix + "flights/" + flightId + @"/cabin-crew-members""
           },
           ""data"": [
             {
@@ -261,14 +261,14 @@ public sealed class ResponseTests
         },
         ""passengers"": {
           ""links"": {
-            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/passengers"",
-            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/passengers""
+            ""self"": """ + HostPrefix + "flights/" + flightId + @"/relationships/passengers"",
+            ""related"": """ + HostPrefix + "flights/" + flightId + @"/passengers""
           },
           ""data"": [ ]
         }
       },
       ""links"": {
-        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=purser,cabin-crew-members,passengers""
+        ""self"": """ + HostPrefix + "flights/" + flightId + @"&fields[flights]&include=purser,cabin-crew-members,passengers""
       }
     }
 }";
@@ -314,13 +314,13 @@ public sealed class ResponseTests
 
         const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]""
+    ""self"": """ + HostPrefix + "flights/" + flightId + @"&fields[flights]""
   },
   ""data"": {
       ""type"": ""flights"",
       ""id"": """ + flightId + @""",
       ""links"": {
-        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=purser,cabin-crew-members,passengers""
+        ""self"": """ + HostPrefix + "flights/" + flightId + @"&fields[flights]&include=purser,cabin-crew-members,passengers""
       }
     }
 }";
@@ -394,9 +394,9 @@ public sealed class ResponseTests
 
         const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/purser"",
-    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/purser"",
-    ""last"": """ + HostPrefix + @"flights/" + flightId + @"/purser""
+    ""self"": """ + HostPrefix + "flights/" + flightId + @"/purser"",
+    ""first"": """ + HostPrefix + "flights/" + flightId + @"/purser"",
+    ""last"": """ + HostPrefix + "flights/" + flightId + @"/purser""
   },
   ""data"": {
     ""type"": ""flight-attendants"",
@@ -410,19 +410,19 @@ public sealed class ResponseTests
     ""relationships"": {
       ""scheduled-for-flights"": {
         ""links"": {
-          ""self"": """ + HostPrefix + @"flight-attendants/" + purserId + @"/relationships/scheduled-for-flights"",
-          ""related"": """ + HostPrefix + @"flight-attendants/" + purserId + @"/scheduled-for-flights""
+          ""self"": """ + HostPrefix + "flight-attendants/" + purserId + @"/relationships/scheduled-for-flights"",
+          ""related"": """ + HostPrefix + "flight-attendants/" + purserId + @"/scheduled-for-flights""
         }
       },
       ""purser-on-flights"": {
         ""links"": {
-          ""self"": """ + HostPrefix + @"flight-attendants/" + purserId + @"/relationships/purser-on-flights"",
-          ""related"": """ + HostPrefix + @"flight-attendants/" + purserId + @"/purser-on-flights""
+          ""self"": """ + HostPrefix + "flight-attendants/" + purserId + @"/relationships/purser-on-flights"",
+          ""related"": """ + HostPrefix + "flight-attendants/" + purserId + @"/purser-on-flights""
         }
       },
     },
     ""links"": {
-      ""self"": """ + HostPrefix + @"flight-attendants/" + purserId + @""",
+      ""self"": """ + HostPrefix + "flight-attendants/" + purserId + @""",
     }
   }
 }";
@@ -450,9 +450,9 @@ public sealed class ResponseTests
 
         const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/backup-purser"",
-    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/backup-purser"",
-    ""last"": """ + HostPrefix + @"flights/" + flightId + @"/backup-purser""
+    ""self"": """ + HostPrefix + "flights/" + flightId + @"/backup-purser"",
+    ""first"": """ + HostPrefix + "flights/" + flightId + @"/backup-purser"",
+    ""last"": """ + HostPrefix + "flights/" + flightId + @"/backup-purser""
   },
   ""data"": null
 }";
@@ -475,8 +475,8 @@ public sealed class ResponseTests
 
         const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/cabin-crew-members"",
-    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/cabin-crew-members""
+    ""self"": """ + HostPrefix + "flights/" + flightId + @"/cabin-crew-members"",
+    ""first"": """ + HostPrefix + "flights/" + flightId + @"/cabin-crew-members""
   },
   ""data"": [ ]
 }";
@@ -499,8 +499,8 @@ public sealed class ResponseTests
 
         const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/backup-purser"",
-    ""related"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/backup-purser""
+    ""self"": """ + HostPrefix + "flights/" + flightId + @"/relationships/backup-purser"",
+    ""related"": """ + HostPrefix + "flights/" + flightId + @"/relationships/backup-purser""
   },
   ""data"": null
 }";
@@ -524,8 +524,8 @@ public sealed class ResponseTests
 
         const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/purser"",
-    ""related"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/purser""
+    ""self"": """ + HostPrefix + "flights/" + flightId + @"/relationships/purser"",
+    ""related"": """ + HostPrefix + "flights/" + flightId + @"/relationships/purser""
   },
   ""data"": {
     ""type"": ""flight-attendants"",
@@ -573,9 +573,9 @@ public sealed class ResponseTests
 
         const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-crew-members"",
-    ""related"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-crew-members"",
-    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-crew-members""
+    ""self"": """ + HostPrefix + "flights/" + flightId + @"/relationships/cabin-crew-members"",
+    ""related"": """ + HostPrefix + "flights/" + flightId + @"/relationships/cabin-crew-members"",
+    ""first"": """ + HostPrefix + "flights/" + flightId + @"/relationships/cabin-crew-members""
   },
   ""data"": [{
     ""type"": ""flight-attendants"",

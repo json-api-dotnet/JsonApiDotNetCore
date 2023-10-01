@@ -2,13 +2,13 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.Queries.Internal;
+using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.AtomicOperations;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IOperationsProcessor" />
 [PublicAPI]
 public class OperationsProcessor : IOperationsProcessor
 {

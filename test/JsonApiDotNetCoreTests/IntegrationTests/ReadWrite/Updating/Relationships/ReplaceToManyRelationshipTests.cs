@@ -902,14 +902,14 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             WorkItem workItemInDatabase = await dbContext.WorkItems
                 .Include(workItem => workItem.RelatedFrom)
                 .Include(workItem => workItem.RelatedTo)
                 .FirstWithIdAsync(existingWorkItem.Id);
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             workItemInDatabase.RelatedFrom.Should().BeEmpty();
@@ -997,14 +997,14 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            // @formatter:wrap_after_property_in_chained_method_calls true
 
             WorkItem workItemInDatabase = await dbContext.WorkItems
                 .Include(workItem => workItem.RelatedFrom)
                 .Include(workItem => workItem.RelatedTo)
                 .FirstWithIdAsync(existingWorkItem.Id);
 
-            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_after_property_in_chained_method_calls restore
             // @formatter:wrap_chained_method_calls restore
 
             workItemInDatabase.RelatedFrom.ShouldHaveCount(1);

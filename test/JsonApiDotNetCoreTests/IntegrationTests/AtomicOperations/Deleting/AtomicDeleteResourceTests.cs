@@ -334,7 +334,7 @@ public sealed class AtomicDeleteResourceTests : IClassFixture<IntegrationTestCon
                 new
                 {
                     op = "remove",
-                    href = "/api/v1/musicTracks/1"
+                    href = "/api/musicTracks/1"
                 }
             }
         };

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Reflection;
 using System.Text.Json.Serialization;
@@ -60,7 +61,9 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
         });
 
         string attributeName = propertyName.Camelize();
-        string route = $"/filterableResources?filter=equals({attributeName},'{propertyValue}')";
+        string? attributeValue = Convert.ToString(propertyValue, CultureInfo.InvariantCulture);
+
+        string route = $"/filterableResources?filter=equals({attributeName},'{attributeValue}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -88,7 +91,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/filterableResources?filter=equals(someDecimal,'{resource.SomeDecimal}')";
+        string route = $"/filterableResources?filter=equals(someDecimal,'{resource.SomeDecimal.ToString(CultureInfo.InvariantCulture)}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -232,7 +235,7 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        string route = $"/filterableResources?filter=equals(someTimeSpan,'{resource.SomeTimeSpan}')";
+        string route = $"/filterableResources?filter=equals(someTimeSpan,'{resource.SomeTimeSpan:c}')";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -245,7 +248,63 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task Cannot_filter_equality_on_incompatible_value()
+    public async Task Can_filter_equality_on_type_DateOnly()
+    {
+        // Arrange
+        var resource = new FilterableResource
+        {
+            SomeDateOnly = DateOnly.FromDateTime(27.January(2003))
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resource, new FilterableResource());
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter=equals(someDateOnly,'{resource.SomeDateOnly:O}')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateOnly").With(value => value.Should().Be(resource.SomeDateOnly));
+    }
+
+    [Fact]
+    public async Task Can_filter_equality_on_type_TimeOnly()
+    {
+        // Arrange
+        var resource = new FilterableResource
+        {
+            SomeTimeOnly = new TimeOnly(23, 59, 59, 999)
+        };
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<FilterableResource>();
+            dbContext.FilterableResources.AddRange(resource, new FilterableResource());
+            await dbContext.SaveChangesAsync();
+        });
+
+        string route = $"/filterableResources?filter=equals(someTimeOnly,'{resource.SomeTimeOnly:O}')";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+
+        responseDocument.Data.ManyValue.ShouldHaveCount(1);
+        responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someTimeOnly").With(value => value.Should().Be(resource.SomeTimeOnly));
+    }
+
+    [Fact]
+    public async Task Cannot_filter_equality_on_incompatible_values()
     {
         // Arrange
         var resource = new FilterableResource
@@ -260,7 +319,8 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
             await dbContext.SaveChangesAsync();
         });
 
-        const string route = "/filterableResources?filter=equals(someInt32,'ABC')";
+        var parameterValue = new MarkedText("equals(someInt32,^'ABC')", '^');
+        string route = $"/filterableResources?filter={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -272,9 +332,10 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Query creation failed due to incompatible types.");
-        error.Detail.Should().Be("Failed to convert 'ABC' of type 'String' to type 'Int32'.");
-        error.Source.Should().BeNull();
+        error.Title.Should().Be("The specified filter is invalid.");
+        error.Detail.Should().Be($"Failed to convert 'ABC' of type 'String' to type 'Int32'. {parameterValue}");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("filter");
     }
 
     [Theory]
@@ -288,6 +349,8 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
     [InlineData(nameof(FilterableResource.SomeNullableDateTime))]
     [InlineData(nameof(FilterableResource.SomeNullableDateTimeOffset))]
     [InlineData(nameof(FilterableResource.SomeNullableTimeSpan))]
+    [InlineData(nameof(FilterableResource.SomeNullableDateOnly))]
+    [InlineData(nameof(FilterableResource.SomeNullableTimeOnly))]
     [InlineData(nameof(FilterableResource.SomeNullableEnum))]
     public async Task Can_filter_is_null_on_type(string propertyName)
     {
@@ -308,6 +371,8 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
             SomeNullableDateTime = 1.January(2001).AsUtc(),
             SomeNullableDateTimeOffset = 1.January(2001).AsUtc(),
             SomeNullableTimeSpan = TimeSpan.FromHours(1),
+            SomeNullableDateOnly = DateOnly.FromDateTime(1.January(2001)),
+            SomeNullableTimeOnly = new TimeOnly(1, 0),
             SomeNullableEnum = DayOfWeek.Friday
         };
 
@@ -342,6 +407,8 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
     [InlineData(nameof(FilterableResource.SomeNullableDateTime))]
     [InlineData(nameof(FilterableResource.SomeNullableDateTimeOffset))]
     [InlineData(nameof(FilterableResource.SomeNullableTimeSpan))]
+    [InlineData(nameof(FilterableResource.SomeNullableDateOnly))]
+    [InlineData(nameof(FilterableResource.SomeNullableTimeOnly))]
     [InlineData(nameof(FilterableResource.SomeNullableEnum))]
     public async Task Can_filter_is_not_null_on_type(string propertyName)
     {
@@ -358,6 +425,8 @@ public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<T
             SomeNullableDateTime = 1.January(2001).AsUtc(),
             SomeNullableDateTimeOffset = 1.January(2001).AsUtc(),
             SomeNullableTimeSpan = TimeSpan.FromHours(1),
+            SomeNullableDateOnly = DateOnly.FromDateTime(1.January(2001)),
+            SomeNullableTimeOnly = new TimeOnly(1, 0),
             SomeNullableEnum = DayOfWeek.Friday
         };
 

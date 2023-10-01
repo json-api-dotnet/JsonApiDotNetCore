@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Serialization.Response;
 internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode>
 {
     // Placeholder root node for the tree, which is never emitted itself.
-    private static readonly ResourceType RootType = new("(root)", typeof(object), typeof(object));
+    private static readonly ResourceType RootType = new("(root)", ClientIdGenerationMode.Forbidden, typeof(object), typeof(object));
     private static readonly IIdentifiable RootResource = new EmptyResource();
 
     // Direct children from root. These are emitted in 'data'.
@@ -181,13 +181,14 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
             VisitRelationshipChildrenInSubtree(child, visited);
         }
 
-        List<ResourceObject> includes = visited.Select(node => node.ResourceObject).ToList();
+        ISet<ResourceObject> primaryResourceObjectSet = GetDirectChildren().Select(node => node.ResourceObject).ToHashSet(ResourceObjectComparer.Instance);
+        List<ResourceObject> includes = new();
 
-        foreach (ResourceObject primaryResourceObject in GetDirectChildren().Select(node => node.ResourceObject))
+        foreach (ResourceObject include in visited.Select(node => node.ResourceObject))
         {
-            if (includes.Contains(primaryResourceObject, ResourceObjectComparer.Instance))
+            if (!primaryResourceObjectSet.Contains(include))
             {
-                includes.Remove(primaryResourceObject);
+                includes.Add(include);
             }
         }
 

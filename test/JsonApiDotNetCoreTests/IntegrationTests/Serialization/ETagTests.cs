@@ -97,6 +97,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
     public async Task Returns_no_ETag_for_POST_request()
     {
         // Arrange
+        var newId = Guid.NewGuid();
         string newTitle = _fakers.Meeting.Generate().Title;
 
         var requestBody = new
@@ -104,6 +105,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
             data = new
             {
                 type = "meetings",
+                id = newId,
                 attributes = new
                 {
                     title = newTitle

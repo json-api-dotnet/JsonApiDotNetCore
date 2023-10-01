@@ -11,6 +11,9 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 [PublicAPI]
 public class SparseFieldTableExpression : QueryExpression
 {
+    /// <summary>
+    /// The set of JSON:API fields to include, per resource type.
+    /// </summary>
     public IImmutableDictionary<ResourceType, SparseFieldSetExpression> Table { get; }
 
     public SparseFieldTableExpression(IImmutableDictionary<ResourceType, SparseFieldSetExpression> table)

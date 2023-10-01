@@ -32,11 +32,7 @@ internal sealed class JsonApiModelMetadataProvider : DefaultModelMetadataProvide
     protected override ModelMetadata CreateModelMetadata(DefaultMetadataDetails entry)
     {
         var metadata = (DefaultModelMetadata)base.CreateModelMetadata(entry);
-
-        if (metadata.ValidationMetadata.IsRequired == true)
-        {
-            metadata.ValidationMetadata.PropertyValidationFilter = _jsonApiValidationFilter;
-        }
+        metadata.ValidationMetadata.PropertyValidationFilter = _jsonApiValidationFilter;
 
         return metadata;
     }

@@ -1,17 +1,52 @@
-# This script assumes that you have already installed docfx and httpserver.
-# If that's not the case, run the next commands:
-#   choco install docfx -y
-#   npm install -g httpserver
+#Requires -Version 7.3
 
-Remove-Item _site -Recurse -ErrorAction Ignore
+# This script builds the documentation website, starts a web server and opens the site in your browser. Intended for local development.
 
-dotnet build .. --configuration Release
-Invoke-Expression ./generate-examples.ps1
+param(
+    # Specify -NoBuild to skip code build and examples generation. This runs faster, so handy when only editing Markdown files.
+    [switch] $NoBuild=$False
+)
 
-docfx ./docfx.json
-Copy-Item home/*.html _site/
-Copy-Item home/*.ico _site/
-Copy-Item -Recurse home/assets/* _site/styles/
+function VerifySuccessExitCode {
+    if ($LastExitCode -ne 0) {
+        throw "Command failed with exit code $LastExitCode."
+    }
+}
+
+function EnsureHttpServerIsInstalled {
+    if ((Get-Command "npm" -ErrorAction SilentlyContinue) -eq $null) {
+        throw "Unable to find npm in your PATH. please install Node.js first."
+    }
+
+    npm list --depth 1 --global httpserver >$null
+
+    if ($LastExitCode -eq 1) {
+        npm install -g httpserver
+    }
+}
+
+EnsureHttpServerIsInstalled
+VerifySuccessExitCode
+
+if (-Not $NoBuild -Or -Not (Test-Path -Path _site)) {
+    Remove-Item _site -Recurse -ErrorAction Ignore
+
+    dotnet build .. --configuration Release
+    VerifySuccessExitCode
+
+    Invoke-Expression ./generate-examples.ps1
+}
+
+dotnet tool restore
+VerifySuccessExitCode
+
+dotnet docfx ./docfx.json
+VerifySuccessExitCode
+
+Copy-Item -Force home/*.html _site/
+Copy-Item -Force home/*.ico _site/
+New-Item -Force _site/styles -ItemType Directory | Out-Null
+Copy-Item -Force -Recurse home/assets/* _site/styles/
 
 cd _site
 $webServerJob = httpserver &

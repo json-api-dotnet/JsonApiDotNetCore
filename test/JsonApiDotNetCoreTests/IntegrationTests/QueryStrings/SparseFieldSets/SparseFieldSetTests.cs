@@ -371,7 +371,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     }
 
     [Fact]
-    public async Task Can_select_fields_of_OneToMany_relationship_on_secondary_endpoint()
+    public async Task Can_select_fields_of_OneToMany_relationship_at_secondary_endpoint()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
@@ -700,7 +700,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
     public async Task Cannot_select_on_unknown_resource_type()
     {
         // Arrange
-        const string route = $"/webAccounts?fields[{Unknown.ResourceType}]=id";
+        var parameterName = new MarkedText($"fields[^{Unknown.ResourceType}]", '^');
+        string route = $"/webAccounts?{parameterName.Text}=id";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -713,9 +714,9 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         error.Title.Should().Be("The specified fieldset is invalid.");
-        error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
+        error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist. {parameterName}");
         error.Source.ShouldNotBeNull();
-        error.Source.Parameter.Should().Be($"fields[{Unknown.ResourceType}]");
+        error.Source.Parameter.Should().Be(parameterName.Text);
     }
 
     [Fact]
@@ -724,7 +725,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         // Arrange
         WebAccount account = _fakers.WebAccount.Generate();
 
-        string route = $"/webAccounts/{account.Id}?fields[webAccounts]=password";
+        var parameterValue = new MarkedText("^password", '^');
+        string route = $"/webAccounts/{account.Id}?fields[webAccounts]={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -736,8 +738,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Retrieving the requested attribute is not allowed.");
-        error.Detail.Should().Be("Retrieving the attribute 'password' is not allowed.");
+        error.Title.Should().Be("The specified fieldset is invalid.");
+        error.Detail.Should().Be($"Retrieving the attribute 'password' is not allowed. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("fields[webAccounts]");
     }
@@ -748,7 +750,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         // Arrange
         WebAccount account = _fakers.WebAccount.Generate();
 
-        string route = $"/webAccounts/{account.Id}?fields[webAccounts]=person";
+        var parameterValue = new MarkedText("^person", '^');
+        string route = $"/webAccounts/{account.Id}?fields[webAccounts]={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -760,8 +763,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Retrieving the requested relationship is not allowed.");
-        error.Detail.Should().Be("Retrieving the relationship 'person' is not allowed.");
+        error.Title.Should().Be("The specified fieldset is invalid.");
+        error.Detail.Should().Be($"Retrieving the relationship 'person' is not allowed. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("fields[webAccounts]");
     }
@@ -772,7 +775,8 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         // Arrange
         Calendar calendar = _fakers.Calendar.Generate();
 
-        string route = $"/calendars/{calendar.Id}?fields[calendars]=appointments";
+        var parameterValue = new MarkedText("^appointments", '^');
+        string route = $"/calendars/{calendar.Id}?fields[calendars]={parameterValue.Text}";
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -784,14 +788,14 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
 
         ErrorObject error = responseDocument.Errors[0];
         error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        error.Title.Should().Be("Retrieving the requested relationship is not allowed.");
-        error.Detail.Should().Be("Retrieving the relationship 'appointments' is not allowed.");
+        error.Title.Should().Be("The specified fieldset is invalid.");
+        error.Detail.Should().Be($"Retrieving the relationship 'appointments' is not allowed. {parameterValue}");
         error.Source.ShouldNotBeNull();
         error.Source.Parameter.Should().Be("fields[calendars]");
     }
 
     [Fact]
-    public async Task Retrieves_all_properties_when_fieldset_contains_readonly_attribute()
+    public async Task Fetches_all_scalar_properties_when_fieldset_contains_readonly_attribute()
     {
         // Arrange
         var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();

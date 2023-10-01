@@ -24,7 +24,6 @@ public sealed class EmptyGuidAsKeyTests : IClassFixture<IntegrationTestContext<T
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;
-        options.AllowClientGeneratedIds = true;
     }
 
     [Fact]
