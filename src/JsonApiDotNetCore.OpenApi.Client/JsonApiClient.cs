@@ -280,9 +280,9 @@ public abstract class JsonApiClient : IJsonApiClient
 
         private static void AssertPropertyHasNonDefaultValueIfRequired(object attributesObject, PropertyInfo propertyInfo, string jsonPath)
         {
-            JsonPropertyAttribute jsonProperty = propertyInfo.GetCustomAttributes<JsonPropertyAttribute>().Single();
+            var jsonProperty = propertyInfo.GetCustomAttribute<JsonPropertyAttribute>();
 
-            if (jsonProperty.Required is Required.Always or Required.AllowNull)
+            if (jsonProperty is { Required: Required.Always or Required.AllowNull })
             {
                 bool propertyHasDefaultValue = PropertyHasDefaultValue(propertyInfo, attributesObject);
 
@@ -311,8 +311,7 @@ public abstract class JsonApiClient : IJsonApiClient
     /// <summary>
     /// Corrects the <see cref="NullValueHandling" /> and <see cref="DefaultValueHandling" /> JSON annotations at runtime, which appear on the auto-generated
     /// properties for JSON:API attributes. For example:
-    /// <code>
-    /// <![CDATA[
+    /// <code><![CDATA[
     /// [Newtonsoft.Json.JsonProperty("firstName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
     /// ]]>
     /// </code>
