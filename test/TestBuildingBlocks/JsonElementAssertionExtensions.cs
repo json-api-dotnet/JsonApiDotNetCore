@@ -90,16 +90,30 @@ public static class JsonElementAssertionExtensions
             pathToken.Should().BeNull();
         }
 
-        public void Be(string value)
+        public void Be(object? value)
         {
-            _subject.ValueKind.Should().Be(JsonValueKind.String);
-            _subject.GetString().Should().Be(value);
-        }
-
-        public void Be(int value)
-        {
-            _subject.ValueKind.Should().Be(JsonValueKind.Number);
-            _subject.GetInt32().Should().Be(value);
+            if (value == null)
+            {
+                _subject.ValueKind.Should().Be(JsonValueKind.Null);
+            }
+            else if (value is bool boolValue)
+            {
+                _subject.ValueKind.Should().Be(boolValue ? JsonValueKind.True : JsonValueKind.False);
+            }
+            else if (value is int intValue)
+            {
+                _subject.ValueKind.Should().Be(JsonValueKind.Number);
+                _subject.GetInt32().Should().Be(intValue);
+            }
+            else if (value is string stringValue)
+            {
+                _subject.ValueKind.Should().Be(JsonValueKind.String);
+                _subject.GetString().Should().Be(stringValue);
+            }
+            else
+            {
+                throw new NotSupportedException($"Unknown object of type '{value.GetType()}'.");
+            }
         }
 
         public void ContainArrayElement(string value)

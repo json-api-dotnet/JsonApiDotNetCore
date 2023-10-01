@@ -16,50 +16,9 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
 
     [Theory]
     [InlineData(nameof(ResourceAttributesInPostRequest.ReferenceType), "referenceType")]
-    [InlineData(nameof(ResourceAttributesInPostRequest.NullableValueType), "nullableValueType")]
-    public async Task Can_clear_attribute(string attributePropertyName, string jsonPropertyName)
-    {
-        // Arrange
-        var requestDocument = new ResourcePostRequestDocument
-        {
-            Data = new ResourceDataInPostRequest
-            {
-                Attributes = _fakers.PostAttributes.Generate(),
-                Relationships = new ResourceRelationshipsInPostRequest
-                {
-                    ToOne = _fakers.NullableToOne.Generate(),
-                    RequiredToOne = _fakers.ToOne.Generate(),
-                    ToMany = _fakers.ToMany.Generate(),
-                    RequiredToMany = _fakers.ToMany.Generate()
-                }
-            }
-        };
-
-        SetPropertyToDefaultValue(requestDocument.Data.Attributes, attributePropertyName);
-
-        using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
-
-        Expression<Func<ResourceAttributesInPostRequest, object?>> includeAttributeSelector =
-            CreateAttributeSelectorFor<ResourceAttributesInPostRequest>(attributePropertyName);
-
-        using IDisposable _ = apiClient.WithPartialAttributeSerialization(requestDocument, includeAttributeSelector);
-
-        // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PostResourceAsync(requestDocument));
-
-        // Assert
-        JsonElement document = wrapper.GetRequestBodyAsJson();
-
-        document.Should().ContainPath("data.attributes").With(attributesObject =>
-        {
-            attributesObject.Should().ContainPath(jsonPropertyName).With(attribute => attribute.ValueKind.Should().Be(JsonValueKind.Null));
-        });
-    }
-
-    [Theory]
     [InlineData(nameof(ResourceAttributesInPostRequest.ValueType), "valueType")]
     [InlineData(nameof(ResourceAttributesInPostRequest.RequiredValueType), "requiredValueType")]
+    [InlineData(nameof(ResourceAttributesInPostRequest.NullableValueType), "nullableValueType")]
     [InlineData(nameof(ResourceAttributesInPostRequest.RequiredNullableValueType), "requiredNullableValueType")]
     public async Task Can_set_attribute_to_default_value(string attributePropertyName, string jsonPropertyName)
     {
@@ -79,7 +38,7 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
             }
         };
 
-        SetPropertyToDefaultValue(requestDocument.Data.Attributes, attributePropertyName);
+        object? defaultValue = SetPropertyToDefaultValue(requestDocument.Data.Attributes, attributePropertyName);
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
@@ -97,13 +56,13 @@ public sealed class CreateResourceTests : BaseOpenApiClientTests
 
         document.Should().ContainPath("data.attributes").With(attributesObject =>
         {
-            attributesObject.Should().ContainPath(jsonPropertyName).With(attribute => attribute.Should().Be(0));
+            attributesObject.Should().ContainPath(jsonPropertyName).With(attribute => attribute.Should().Be(defaultValue));
         });
     }
 
     [Theory]
     [InlineData(nameof(ResourceAttributesInPostRequest.RequiredReferenceType), "requiredReferenceType")]
-    public async Task Cannot_clear_attribute(string attributePropertyName, string jsonPropertyName)
+    public async Task Cannot_set_attribute_to_default_value(string attributePropertyName, string jsonPropertyName)
     {
         // Arrange
         var requestDocument = new ResourcePostRequestDocument

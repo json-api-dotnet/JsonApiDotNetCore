@@ -23,7 +23,7 @@ public abstract class BaseOpenApiClientTests
     /// <summary>
     /// Sets the property on the specified source to its default value (null for string, 0 for int, false for bool, etc).
     /// </summary>
-    protected static void SetPropertyToDefaultValue<T>(T source, string propertyName)
+    protected static object? SetPropertyToDefaultValue<T>(T source, string propertyName)
         where T : class
     {
         ArgumentGuard.NotNull(source);
@@ -33,6 +33,8 @@ public abstract class BaseOpenApiClientTests
 
         object? defaultValue = property.PropertyType.IsValueType ? Activator.CreateInstance(property.PropertyType) : null;
         property.SetValue(source, defaultValue);
+
+        return defaultValue;
     }
 
     /// <summary>
