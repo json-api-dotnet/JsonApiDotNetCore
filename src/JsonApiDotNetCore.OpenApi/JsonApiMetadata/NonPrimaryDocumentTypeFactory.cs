@@ -2,7 +2,7 @@ using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.OpenApi.JsonApiObjects;
+namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 
 internal sealed class NonPrimaryDocumentTypeFactory
 {

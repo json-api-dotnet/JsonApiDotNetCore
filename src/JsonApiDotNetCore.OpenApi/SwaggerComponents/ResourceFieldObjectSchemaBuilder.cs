@@ -1,5 +1,5 @@
 using System.Text.Json;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects;
+using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.Resources.Annotations;
