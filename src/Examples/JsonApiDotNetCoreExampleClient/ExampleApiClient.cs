@@ -2,6 +2,8 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.Client;
 using Newtonsoft.Json;
 
+// ReSharper disable UnusedParameterInPartialMethod
+
 namespace JsonApiDotNetCoreExampleClient;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Itself)]

@@ -31,6 +31,7 @@ using (apiClient.WithPartialAttributeSerialization<PersonPatchRequestDocument, P
 Console.WriteLine("Press any key to close.");
 Console.ReadKey();
 
+// ReSharper disable once UnusedLocalFunctionReturnValue
 static async Task<TResponse?> TranslateAsync<TResponse>(Func<Task<TResponse>> operation)
     where TResponse : class
 {
