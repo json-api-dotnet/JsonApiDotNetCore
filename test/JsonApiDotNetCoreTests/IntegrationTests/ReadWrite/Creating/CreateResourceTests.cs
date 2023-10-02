@@ -684,7 +684,7 @@ public sealed class CreateResourceTests : IClassFixture<IntegrationTestContext<T
             }
         };
 
-        const string route = "/" + Unknown.ResourceType;
+        const string route = $"/{Unknown.ResourceType}";
 
         // Act
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
