@@ -6,8 +6,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-#pragma warning disable RS2008 // Enable analyzer release tracking
-
 namespace JsonApiDotNetCore.SourceGenerators;
 // To debug in Visual Studio (requires v17.2 or higher):
 // - Set JsonApiDotNetCore.SourceGenerators as startup project
