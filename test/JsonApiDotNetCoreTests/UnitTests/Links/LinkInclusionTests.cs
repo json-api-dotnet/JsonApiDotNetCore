@@ -403,7 +403,6 @@ public sealed class LinkInclusionTests
 
     private sealed class FakeLinkGenerator : LinkGenerator
     {
-#pragma warning disable AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
         public override string GetPathByAddress<TAddress>(HttpContext httpContext, TAddress address, RouteValueDictionary values,
             RouteValueDictionary? ambientValues = null, PathString? pathBase = null, FragmentString fragment = new(), LinkOptions? options = null)
         {
@@ -428,6 +427,5 @@ public sealed class LinkInclusionTests
         {
             throw new NotImplementedException();
         }
-#pragma warning restore AV1553 // Do not use optional parameters with default value null for strings, collections or tasks
     }
 }
