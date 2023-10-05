@@ -21,7 +21,7 @@ public sealed class SumFilterTests : IClassFixture<IntegrationTestContext<Testab
         testContext.UseController<BlogsController>();
         testContext.UseController<BlogPostsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddTransient<IFilterParser, SumFilterParser>();
             services.AddTransient<IWhereClauseBuilder, SumWhereClauseBuilder>();

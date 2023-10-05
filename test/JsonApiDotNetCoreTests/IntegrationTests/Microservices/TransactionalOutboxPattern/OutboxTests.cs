@@ -23,7 +23,7 @@ public sealed partial class OutboxTests : IClassFixture<IntegrationTestContext<T
         testContext.UseController<DomainUsersController>();
         testContext.UseController<DomainGroupsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<OutboxUserDefinition>();
             services.AddResourceDefinition<OutboxGroupDefinition>();

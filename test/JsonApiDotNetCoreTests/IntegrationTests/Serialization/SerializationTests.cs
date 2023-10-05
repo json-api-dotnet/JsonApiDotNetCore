@@ -23,7 +23,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         testContext.UseController<MeetingAttendeesController>();
         testContext.UseController<MeetingsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
         });

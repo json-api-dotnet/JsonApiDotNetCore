@@ -21,7 +21,7 @@ public sealed class AtomicResponseMetaTests : IClassFixture<IntegrationTestConte
 
         testContext.UseController<OperationsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<ImplicitlyChangingTextLanguageDefinition>();
 

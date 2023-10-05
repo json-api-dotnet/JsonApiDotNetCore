@@ -30,14 +30,11 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
             options.AddProvider(loggerFactory);
         });
 
-        testContext.ConfigureServicesBeforeStartup(services =>
-        {
-            services.AddSingleton(loggerFactory);
-        });
-
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceService<ConsumerArticleService>();
+
+            services.AddSingleton(loggerFactory);
             services.AddScoped<IExceptionHandler, AlternateExceptionHandler>();
         });
     }

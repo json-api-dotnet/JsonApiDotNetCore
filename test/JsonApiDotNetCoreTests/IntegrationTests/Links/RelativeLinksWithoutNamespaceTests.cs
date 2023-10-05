@@ -25,7 +25,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         testContext.UseController<PhotoAlbumsController>();
         testContext.UseController<PhotosController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
         });

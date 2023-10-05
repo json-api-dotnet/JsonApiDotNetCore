@@ -27,7 +27,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         testContext.UseController<MusicTracksController>();
         testContext.UseController<PlaylistsController>();
 
-        testContext.ConfigureServicesBeforeStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddSingleton<ISystemClock, FrozenSystemClock>();
         });

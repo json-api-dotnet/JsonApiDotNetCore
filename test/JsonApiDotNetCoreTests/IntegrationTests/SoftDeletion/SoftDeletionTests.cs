@@ -25,15 +25,15 @@ public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<Tes
         testContext.UseController<CompaniesController>();
         testContext.UseController<DepartmentsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
+            services.AddResourceService<SoftDeletionAwareResourceService<Company, int>>();
+            services.AddResourceService<SoftDeletionAwareResourceService<Department, int>>();
+
             services.AddSingleton<ISystemClock>(new FrozenSystemClock
             {
                 UtcNow = 1.January(2005).AsUtc()
             });
-
-            services.AddResourceService<SoftDeletionAwareResourceService<Company, int>>();
-            services.AddResourceService<SoftDeletionAwareResourceService<Department, int>>();
         });
     }
 

@@ -20,7 +20,7 @@ public sealed partial class FireForgetTests : IClassFixture<IntegrationTestConte
         testContext.UseController<DomainUsersController>();
         testContext.UseController<DomainGroupsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<FireForgetUserDefinition>();
             services.AddResourceDefinition<FireForgetGroupDefinition>();

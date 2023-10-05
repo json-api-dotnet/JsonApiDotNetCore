@@ -20,7 +20,7 @@ public sealed class LengthSortTests : IClassFixture<IntegrationTestContext<Testa
 
         testContext.UseController<BlogsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddTransient<ISortParser, LengthSortParser>();
             services.AddTransient<IOrderClauseBuilder, LengthOrderClauseBuilder>();

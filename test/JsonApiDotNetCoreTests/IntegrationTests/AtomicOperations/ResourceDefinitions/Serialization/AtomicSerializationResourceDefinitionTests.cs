@@ -22,7 +22,7 @@ public sealed class AtomicSerializationResourceDefinitionTests
 
         testContext.UseController<OperationsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<RecordCompanyDefinition>();
 

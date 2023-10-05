@@ -21,7 +21,7 @@ public sealed class AtomicSparseFieldSetResourceDefinitionTests
 
         testContext.UseController<OperationsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<LyricTextDefinition>();
 

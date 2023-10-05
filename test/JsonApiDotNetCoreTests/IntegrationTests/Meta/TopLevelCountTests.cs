@@ -21,7 +21,7 @@ public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<Te
         testContext.UseController<ProductFamiliesController>();
         testContext.UseController<SupportTicketsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
         });

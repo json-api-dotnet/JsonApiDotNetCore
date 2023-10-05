@@ -22,7 +22,7 @@ public sealed class AtomicResourceMetaTests : IClassFixture<IntegrationTestConte
 
         testContext.UseController<OperationsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<MusicTrackMetaDefinition>();
             services.AddResourceDefinition<TextLanguageMetaDefinition>();

@@ -25,7 +25,7 @@ public sealed class AtomicAbsoluteLinksTests : IClassFixture<IntegrationTestCont
         testContext.UseController<TextLanguagesController>();
         testContext.UseController<RecordCompaniesController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
         });

@@ -26,7 +26,7 @@ public sealed class AtomicRelativeLinksWithNamespaceTests
         testContext.UseController<TextLanguagesController>();
         testContext.UseController<RecordCompaniesController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
         });

@@ -21,7 +21,7 @@ public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<Tes
         testContext.UseController<EnginesController>();
         testContext.UseController<CarsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceRepository<CarCompositeKeyAwareRepository<Car, string?>>();
             services.AddResourceRepository<CarCompositeKeyAwareRepository<Dealership, int>>();
