@@ -44,8 +44,7 @@ public sealed class AppDbContext : DbContext
             throw GetErrorForInvalidTenant(tenantName);
         }
 
-        string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
-        return connectionString.Replace("###", postgresPassword);
+        return connectionString;
     }
 
     private string? GetTenantName()
