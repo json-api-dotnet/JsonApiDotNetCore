@@ -20,9 +20,10 @@ public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<Tes
         testContext.UseController<ProductFamiliesController>();
         testContext.UseController<SupportTicketsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<SupportTicketDefinition>();
+
             services.AddSingleton<ResourceDefinitionHitCounter>();
         });
 

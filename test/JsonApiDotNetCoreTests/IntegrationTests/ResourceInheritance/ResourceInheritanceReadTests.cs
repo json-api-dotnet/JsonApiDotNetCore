@@ -35,7 +35,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         testContext.UseController<ChromeWheelsController>();
         testContext.UseController<CarbonWheelsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<WheelSortDefinition>();
         });

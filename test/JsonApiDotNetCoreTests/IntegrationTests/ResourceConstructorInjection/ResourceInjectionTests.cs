@@ -22,7 +22,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         testContext.UseController<GiftCertificatesController>();
         testContext.UseController<PostOfficesController>();
 
-        testContext.ConfigureServicesBeforeStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddSingleton<ISystemClock, FrozenSystemClock>();
         });

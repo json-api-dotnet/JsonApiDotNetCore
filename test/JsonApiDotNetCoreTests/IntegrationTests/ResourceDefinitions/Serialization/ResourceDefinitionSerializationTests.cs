@@ -22,13 +22,12 @@ public sealed class ResourceDefinitionSerializationTests
         testContext.UseController<StudentsController>();
         testContext.UseController<ScholarshipsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<StudentDefinition>();
 
             services.AddSingleton<IEncryptionService, AesEncryptionService>();
             services.AddSingleton<ResourceDefinitionHitCounter>();
-
             services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
         });
 

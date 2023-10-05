@@ -25,7 +25,7 @@ public sealed class TimeOffsetTests : IClassFixture<IntegrationTestContext<Testa
         testContext.UseController<CalendarsController>();
         testContext.UseController<RemindersController>();
 
-        testContext.ConfigureServicesBeforeStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddTransient<IFilterParser, TimeOffsetFilterParser>();
             services.AddSingleton<ISystemClock, FrozenSystemClock>();

@@ -22,13 +22,13 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<T
         testContext.UseController<BlogsController>();
         testContext.UseController<CalendarsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
-            services.AddSingleton<ResourceCaptureStore>();
-
             services.AddResourceRepository<ResultCapturingRepository<Blog, int>>();
             services.AddResourceRepository<ResultCapturingRepository<BlogPost, int>>();
             services.AddResourceRepository<ResultCapturingRepository<WebAccount, int>>();
+
+            services.AddSingleton<ResourceCaptureStore>();
         });
     }
 

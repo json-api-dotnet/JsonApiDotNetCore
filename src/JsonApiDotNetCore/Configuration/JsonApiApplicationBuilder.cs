@@ -89,7 +89,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
 
         _options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
 
-        _services.AddSingleton(resourceGraph);
+        _services.TryAddSingleton(resourceGraph);
     }
 
     /// <summary>
@@ -109,7 +109,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
         if (_options.ValidateModelState)
         {
             _mvcBuilder.AddDataAnnotations();
-            _services.AddSingleton<IModelMetadataProvider, JsonApiModelMetadataProvider>();
+            _services.Replace(new ServiceDescriptor(typeof(IModelMetadataProvider), typeof(JsonApiModelMetadataProvider), ServiceLifetime.Singleton));
         }
     }
 
@@ -130,19 +130,19 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
 
         if (dbContextTypes.Any())
         {
-            _services.AddScoped(typeof(DbContextResolver<>));
+            _services.TryAddScoped(typeof(DbContextResolver<>));
 
             foreach (Type dbContextType in dbContextTypes)
             {
                 Type dbContextResolverClosedType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
-                _services.AddScoped(typeof(IDbContextResolver), dbContextResolverClosedType);
+                _services.TryAddScoped(typeof(IDbContextResolver), dbContextResolverClosedType);
             }
 
-            _services.AddScoped<IOperationsTransactionFactory, EntityFrameworkCoreTransactionFactory>();
+            _services.TryAddScoped<IOperationsTransactionFactory, EntityFrameworkCoreTransactionFactory>();
         }
         else
         {
-            _services.AddScoped<IOperationsTransactionFactory, MissingTransactionFactory>();
+            _services.TryAddScoped<IOperationsTransactionFactory, MissingTransactionFactory>();
         }
 
         AddResourceLayer();
@@ -153,46 +153,46 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
         AddQueryStringLayer();
         AddOperationsLayer();
 
-        _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
-        _services.AddScoped<IPaginationContext, PaginationContext>();
-        _services.AddScoped<IEvaluatedIncludeCache, EvaluatedIncludeCache>();
-        _services.AddScoped<ISparseFieldSetCache, SparseFieldSetCache>();
-        _services.AddScoped<IQueryLayerComposer, QueryLayerComposer>();
-        _services.AddScoped<IInverseNavigationResolver, InverseNavigationResolver>();
+        _services.TryAddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
+        _services.TryAddScoped<IPaginationContext, PaginationContext>();
+        _services.TryAddScoped<IEvaluatedIncludeCache, EvaluatedIncludeCache>();
+        _services.TryAddScoped<ISparseFieldSetCache, SparseFieldSetCache>();
+        _services.TryAddScoped<IQueryLayerComposer, QueryLayerComposer>();
+        _services.TryAddScoped<IInverseNavigationResolver, InverseNavigationResolver>();
     }
 
     private void AddMiddlewareLayer()
     {
-        _services.AddSingleton<IJsonApiOptions>(_options);
-        _services.AddSingleton<IJsonApiApplicationBuilder>(this);
-        _services.AddSingleton<IExceptionHandler, ExceptionHandler>();
-        _services.AddScoped<IAsyncJsonApiExceptionFilter, AsyncJsonApiExceptionFilter>();
-        _services.AddScoped<IAsyncQueryStringActionFilter, AsyncQueryStringActionFilter>();
-        _services.AddScoped<IAsyncConvertEmptyActionResultFilter, AsyncConvertEmptyActionResultFilter>();
-        _services.AddSingleton<IJsonApiInputFormatter, JsonApiInputFormatter>();
-        _services.AddSingleton<IJsonApiOutputFormatter, JsonApiOutputFormatter>();
-        _services.AddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
-        _services.AddSingleton<IControllerResourceMapping>(sp => sp.GetRequiredService<IJsonApiRoutingConvention>());
-        _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        _services.AddScoped<IJsonApiRequest, JsonApiRequest>();
-        _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
-        _services.AddScoped<IJsonApiReader, JsonApiReader>();
-        _services.AddScoped<ITargetedFields, TargetedFields>();
+        _services.TryAddSingleton<IJsonApiOptions>(_options);
+        _services.TryAddSingleton<IJsonApiApplicationBuilder>(this);
+        _services.TryAddSingleton<IExceptionHandler, ExceptionHandler>();
+        _services.TryAddScoped<IAsyncJsonApiExceptionFilter, AsyncJsonApiExceptionFilter>();
+        _services.TryAddScoped<IAsyncQueryStringActionFilter, AsyncQueryStringActionFilter>();
+        _services.TryAddScoped<IAsyncConvertEmptyActionResultFilter, AsyncConvertEmptyActionResultFilter>();
+        _services.TryAddSingleton<IJsonApiInputFormatter, JsonApiInputFormatter>();
+        _services.TryAddSingleton<IJsonApiOutputFormatter, JsonApiOutputFormatter>();
+        _services.TryAddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
+        _services.TryAddSingleton<IControllerResourceMapping>(provider => provider.GetRequiredService<IJsonApiRoutingConvention>());
+        _services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        _services.TryAddScoped<IJsonApiRequest, JsonApiRequest>();
+        _services.TryAddScoped<IJsonApiWriter, JsonApiWriter>();
+        _services.TryAddScoped<IJsonApiReader, JsonApiReader>();
+        _services.TryAddScoped<ITargetedFields, TargetedFields>();
     }
 
     private void AddResourceLayer()
     {
         RegisterImplementationForInterfaces(ServiceDiscoveryFacade.ResourceDefinitionUnboundInterfaces, typeof(JsonApiResourceDefinition<,>));
 
-        _services.AddScoped<IResourceDefinitionAccessor, ResourceDefinitionAccessor>();
-        _services.AddScoped<IResourceFactory, ResourceFactory>();
+        _services.TryAddScoped<IResourceDefinitionAccessor, ResourceDefinitionAccessor>();
+        _services.TryAddScoped<IResourceFactory, ResourceFactory>();
     }
 
     private void AddRepositoryLayer()
     {
         RegisterImplementationForInterfaces(ServiceDiscoveryFacade.RepositoryUnboundInterfaces, typeof(EntityFrameworkCoreRepository<,>));
 
-        _services.AddScoped<IResourceRepositoryAccessor, ResourceRepositoryAccessor>();
+        _services.TryAddScoped<IResourceRepositoryAccessor, ResourceRepositoryAccessor>();
 
         _services.TryAddTransient<IQueryableBuilder, QueryableBuilder>();
         _services.TryAddTransient<IIncludeClauseBuilder, IncludeClauseBuilder>();
@@ -225,12 +225,12 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
         _services.TryAddTransient<ISparseFieldSetParser, SparseFieldSetParser>();
         _services.TryAddTransient<IPaginationParser, PaginationParser>();
 
-        _services.AddScoped<IIncludeQueryStringParameterReader, IncludeQueryStringParameterReader>();
-        _services.AddScoped<IFilterQueryStringParameterReader, FilterQueryStringParameterReader>();
-        _services.AddScoped<ISortQueryStringParameterReader, SortQueryStringParameterReader>();
-        _services.AddScoped<ISparseFieldSetQueryStringParameterReader, SparseFieldSetQueryStringParameterReader>();
-        _services.AddScoped<IPaginationQueryStringParameterReader, PaginationQueryStringParameterReader>();
-        _services.AddScoped<IResourceDefinitionQueryableParameterReader, ResourceDefinitionQueryableParameterReader>();
+        _services.TryAddScoped<IIncludeQueryStringParameterReader, IncludeQueryStringParameterReader>();
+        _services.TryAddScoped<IFilterQueryStringParameterReader, FilterQueryStringParameterReader>();
+        _services.TryAddScoped<ISortQueryStringParameterReader, SortQueryStringParameterReader>();
+        _services.TryAddScoped<ISparseFieldSetQueryStringParameterReader, SparseFieldSetQueryStringParameterReader>();
+        _services.TryAddScoped<IPaginationQueryStringParameterReader, PaginationQueryStringParameterReader>();
+        _services.TryAddScoped<IResourceDefinitionQueryableParameterReader, ResourceDefinitionQueryableParameterReader>();
 
         RegisterDependentService<IQueryStringParameterReader, IIncludeQueryStringParameterReader>();
         RegisterDependentService<IQueryStringParameterReader, IFilterQueryStringParameterReader>();
@@ -246,50 +246,50 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
         RegisterDependentService<IQueryConstraintProvider, IPaginationQueryStringParameterReader>();
         RegisterDependentService<IQueryConstraintProvider, IResourceDefinitionQueryableParameterReader>();
 
-        _services.AddScoped<IQueryStringReader, QueryStringReader>();
-        _services.AddSingleton<IRequestQueryStringAccessor, RequestQueryStringAccessor>();
+        _services.TryAddScoped<IQueryStringReader, QueryStringReader>();
+        _services.TryAddSingleton<IRequestQueryStringAccessor, RequestQueryStringAccessor>();
     }
 
     private void RegisterDependentService<TCollectionElement, TElementToAdd>()
         where TCollectionElement : class
         where TElementToAdd : TCollectionElement
     {
-        _services.AddScoped<TCollectionElement>(serviceProvider => serviceProvider.GetRequiredService<TElementToAdd>());
+        _services.AddScoped<TCollectionElement>(provider => provider.GetRequiredService<TElementToAdd>());
     }
 
     private void AddSerializationLayer()
     {
-        _services.AddScoped<IResourceIdentifierObjectAdapter, ResourceIdentifierObjectAdapter>();
-        _services.AddScoped<IRelationshipDataAdapter, RelationshipDataAdapter>();
-        _services.AddScoped<IResourceObjectAdapter, ResourceObjectAdapter>();
-        _services.AddScoped<IResourceDataAdapter, ResourceDataAdapter>();
-        _services.AddScoped<IAtomicReferenceAdapter, AtomicReferenceAdapter>();
-        _services.AddScoped<IResourceDataInOperationsRequestAdapter, ResourceDataInOperationsRequestAdapter>();
-        _services.AddScoped<IAtomicOperationObjectAdapter, AtomicOperationObjectAdapter>();
-        _services.AddScoped<IDocumentInResourceOrRelationshipRequestAdapter, DocumentInResourceOrRelationshipRequestAdapter>();
-        _services.AddScoped<IDocumentInOperationsRequestAdapter, DocumentInOperationsRequestAdapter>();
-        _services.AddScoped<IDocumentAdapter, DocumentAdapter>();
+        _services.TryAddScoped<IResourceIdentifierObjectAdapter, ResourceIdentifierObjectAdapter>();
+        _services.TryAddScoped<IRelationshipDataAdapter, RelationshipDataAdapter>();
+        _services.TryAddScoped<IResourceObjectAdapter, ResourceObjectAdapter>();
+        _services.TryAddScoped<IResourceDataAdapter, ResourceDataAdapter>();
+        _services.TryAddScoped<IAtomicReferenceAdapter, AtomicReferenceAdapter>();
+        _services.TryAddScoped<IResourceDataInOperationsRequestAdapter, ResourceDataInOperationsRequestAdapter>();
+        _services.TryAddScoped<IAtomicOperationObjectAdapter, AtomicOperationObjectAdapter>();
+        _services.TryAddScoped<IDocumentInResourceOrRelationshipRequestAdapter, DocumentInResourceOrRelationshipRequestAdapter>();
+        _services.TryAddScoped<IDocumentInOperationsRequestAdapter, DocumentInOperationsRequestAdapter>();
+        _services.TryAddScoped<IDocumentAdapter, DocumentAdapter>();
 
-        _services.AddScoped<ILinkBuilder, LinkBuilder>();
-        _services.AddScoped<IResponseMeta, EmptyResponseMeta>();
-        _services.AddScoped<IMetaBuilder, MetaBuilder>();
-        _services.AddSingleton<IFingerprintGenerator, FingerprintGenerator>();
-        _services.AddSingleton<IETagGenerator, ETagGenerator>();
-        _services.AddScoped<IResponseModelAdapter, ResponseModelAdapter>();
+        _services.TryAddScoped<ILinkBuilder, LinkBuilder>();
+        _services.TryAddScoped<IResponseMeta, EmptyResponseMeta>();
+        _services.TryAddScoped<IMetaBuilder, MetaBuilder>();
+        _services.TryAddSingleton<IFingerprintGenerator, FingerprintGenerator>();
+        _services.TryAddSingleton<IETagGenerator, ETagGenerator>();
+        _services.TryAddScoped<IResponseModelAdapter, ResponseModelAdapter>();
     }
 
     private void AddOperationsLayer()
     {
-        _services.AddScoped(typeof(ICreateProcessor<,>), typeof(CreateProcessor<,>));
-        _services.AddScoped(typeof(IUpdateProcessor<,>), typeof(UpdateProcessor<,>));
-        _services.AddScoped(typeof(IDeleteProcessor<,>), typeof(DeleteProcessor<,>));
-        _services.AddScoped(typeof(IAddToRelationshipProcessor<,>), typeof(AddToRelationshipProcessor<,>));
-        _services.AddScoped(typeof(ISetRelationshipProcessor<,>), typeof(SetRelationshipProcessor<,>));
-        _services.AddScoped(typeof(IRemoveFromRelationshipProcessor<,>), typeof(RemoveFromRelationshipProcessor<,>));
+        _services.TryAddScoped(typeof(ICreateProcessor<,>), typeof(CreateProcessor<,>));
+        _services.TryAddScoped(typeof(IUpdateProcessor<,>), typeof(UpdateProcessor<,>));
+        _services.TryAddScoped(typeof(IDeleteProcessor<,>), typeof(DeleteProcessor<,>));
+        _services.TryAddScoped(typeof(IAddToRelationshipProcessor<,>), typeof(AddToRelationshipProcessor<,>));
+        _services.TryAddScoped(typeof(ISetRelationshipProcessor<,>), typeof(SetRelationshipProcessor<,>));
+        _services.TryAddScoped(typeof(IRemoveFromRelationshipProcessor<,>), typeof(RemoveFromRelationshipProcessor<,>));
 
-        _services.AddScoped<IOperationsProcessor, OperationsProcessor>();
-        _services.AddScoped<IOperationProcessorAccessor, OperationProcessorAccessor>();
-        _services.AddScoped<ILocalIdTracker, LocalIdTracker>();
+        _services.TryAddScoped<IOperationsProcessor, OperationsProcessor>();
+        _services.TryAddScoped<IOperationProcessorAccessor, OperationProcessorAccessor>();
+        _services.TryAddScoped<ILocalIdTracker, LocalIdTracker>();
     }
 
     public void Dispose()

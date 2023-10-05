@@ -22,7 +22,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         testContext.UseController<WorkItemGroupsController>();
         testContext.UseController<UserAccountsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<ImplicitlyChangingWorkItemDefinition>();
         });

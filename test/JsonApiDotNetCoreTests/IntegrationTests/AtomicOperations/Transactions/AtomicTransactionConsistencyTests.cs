@@ -21,7 +21,7 @@ public sealed class AtomicTransactionConsistencyTests
 
         testContext.UseController<OperationsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceRepository<PerformerRepository>();
             services.AddResourceRepository<MusicTrackRepository>();

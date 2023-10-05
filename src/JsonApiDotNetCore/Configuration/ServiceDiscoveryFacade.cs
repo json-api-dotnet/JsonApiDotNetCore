@@ -5,6 +5,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Configuration;
@@ -119,7 +120,7 @@ public sealed class ServiceDiscoveryFacade
         foreach (Type dbContextType in dbContextTypes)
         {
             Type dbContextResolverClosedType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
-            _services.AddScoped(typeof(IDbContextResolver), dbContextResolverClosedType);
+            _services.TryAddScoped(typeof(IDbContextResolver), dbContextResolverClosedType);
         }
     }
 
@@ -163,7 +164,7 @@ public sealed class ServiceDiscoveryFacade
         if (result != null)
         {
             (Type implementationType, Type serviceInterface) = result.Value;
-            _services.AddScoped(serviceInterface, implementationType);
+            _services.TryAddScoped(serviceInterface, implementationType);
         }
     }
 }

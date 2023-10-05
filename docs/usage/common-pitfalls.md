@@ -87,10 +87,12 @@ Neither sounds very compelling. If stored procedures is what you need, you're be
 Although recommended by Microsoft for hard-written controllers, the opinionated behavior of [`[ApiController]`](https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-7.0#apicontroller-attribute) violates the JSON:API specification.
 Despite JsonApiDotNetCore trying its best to deal with it, the experience won't be as good as leaving it out.
 
-#### Replace injectable services *after* calling `AddJsonApi()`
-Registering your own services in the IoC container afterwards increases the chances that your replacements will take effect.
-Also, register with `services.AddResourceDefinition/AddResourceService/AddResourceRepository()` instead of `services.AddScoped()`.
+#### Register/override injectable services
+Register your JSON:API resource services, resource definitions and repositories with `services.AddResourceService/AddResourceDefinition/AddResourceRepository()` instead of `services.AddScoped()`.
 When using [Auto-discovery](~/usage/resource-graph.md#auto-discovery), you don't need to register these at all.
+
+> [!NOTE]
+> In older versions of JsonApiDotNetCore, registering your own services in the IoC container *afterwards* increased the chances that your replacements would take effect.
 
 #### Never use the Entity Framework Core In-Memory Database Provider
 When using this provider, many invalid mappings go unnoticed, leading to strange errors or wrong behavior. A real SQL engine fails to create the schema when mappings are invalid.

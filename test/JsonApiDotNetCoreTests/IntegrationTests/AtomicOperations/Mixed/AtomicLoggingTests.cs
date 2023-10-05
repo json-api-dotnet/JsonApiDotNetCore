@@ -28,13 +28,9 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
             options.SetMinimumLevel(LogLevel.Information);
         });
 
-        testContext.ConfigureServicesBeforeStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddSingleton(loggerFactory);
-        });
-
-        testContext.ConfigureServicesAfterStartup(services =>
-        {
             services.AddSingleton<IOperationsTransactionFactory, ThrowingOperationsTransactionFactory>();
         });
     }

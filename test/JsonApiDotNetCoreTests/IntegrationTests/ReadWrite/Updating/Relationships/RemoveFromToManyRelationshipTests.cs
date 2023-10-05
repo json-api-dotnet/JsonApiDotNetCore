@@ -25,7 +25,7 @@ public sealed class RemoveFromToManyRelationshipTests : IClassFixture<Integratio
         testContext.UseController<WorkItemsController>();
         testContext.UseController<WorkItemGroupsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddSingleton<IResourceDefinition<WorkItem, int>, RemoveExtraFromWorkItemDefinition>();
         });

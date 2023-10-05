@@ -25,16 +25,13 @@ public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<Tes
         testContext.UseController<WebShopsController>();
         testContext.UseController<WebProductsController>();
 
-        testContext.ConfigureServicesBeforeStartup(services =>
-        {
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<ITenantProvider, RouteTenantProvider>();
-        });
-
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceService<MultiTenantResourceService<WebShop, int>>();
             services.AddResourceService<MultiTenantResourceService<WebProduct, int>>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<ITenantProvider, RouteTenantProvider>();
         });
 
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

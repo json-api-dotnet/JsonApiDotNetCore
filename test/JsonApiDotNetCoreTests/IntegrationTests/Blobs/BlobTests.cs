@@ -19,7 +19,7 @@ public sealed class BlobTests : IClassFixture<IntegrationTestContext<TestableSta
 
         testContext.UseController<ImageContainersController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
         });

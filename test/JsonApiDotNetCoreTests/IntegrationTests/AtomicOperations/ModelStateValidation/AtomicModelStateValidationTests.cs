@@ -18,7 +18,7 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     {
         _testContext = testContext;
 
-        _testContext.ConfigureServicesBeforeStartup(services =>
+        _testContext.ConfigureServices(services =>
         {
             services.AddSingleton<ISystemClock, FrozenSystemClock>();
         });

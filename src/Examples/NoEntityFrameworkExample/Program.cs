@@ -5,6 +5,8 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddScoped<IInverseNavigationResolver, InMemoryInverseNavigationResolver>();
+
 builder.Services.AddJsonApi(options =>
 {
     options.Namespace = "api";
@@ -17,8 +19,6 @@ builder.Services.AddJsonApi(options =>
     options.SerializerOptions.WriteIndented = true;
 #endif
 }, discovery => discovery.AddCurrentAssembly());
-
-builder.Services.AddScoped<IInverseNavigationResolver, InMemoryInverseNavigationResolver>();
 
 WebApplication app = builder.Build();
 

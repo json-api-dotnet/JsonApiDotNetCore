@@ -21,10 +21,11 @@ public sealed class AtomicQueryStringTests : IClassFixture<IntegrationTestContex
         testContext.UseController<OperationsController>();
         testContext.UseController<MusicTracksController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
-            services.AddSingleton<ISystemClock, FrozenSystemClock>();
             services.AddResourceDefinition<MusicTrackReleaseDefinition>();
+
+            services.AddSingleton<ISystemClock, FrozenSystemClock>();
         });
     }
 

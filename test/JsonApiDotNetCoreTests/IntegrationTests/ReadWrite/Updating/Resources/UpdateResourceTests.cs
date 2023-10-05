@@ -25,7 +25,7 @@ public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<T
         testContext.UseController<UserAccountsController>();
         testContext.UseController<RgbColorsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<ImplicitlyChangingWorkItemDefinition>();
             services.AddResourceDefinition<ImplicitlyChangingWorkItemGroupDefinition>();

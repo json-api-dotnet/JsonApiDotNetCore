@@ -37,7 +37,7 @@ public abstract class ResourceInheritanceWriteTests<TDbContext> : IClassFixture<
 
         testContext.UseController<VehicleManufacturersController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddSingleton<ResourceTypeCaptureStore<Bike, long>>();
             services.AddResourceDefinition<ResourceTypeCapturingDefinition<Bike, long>>();

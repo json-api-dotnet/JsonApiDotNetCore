@@ -19,10 +19,10 @@ public sealed class DisableQueryStringTests : IClassFixture<IntegrationTestConte
         testContext.UseController<SofasController>();
         testContext.UseController<PillowsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddScoped<SkipCacheQueryStringParameterReader>();
-            services.AddScoped<IQueryStringParameterReader>(sp => sp.GetRequiredService<SkipCacheQueryStringParameterReader>());
+            services.AddScoped<IQueryStringParameterReader>(provider => provider.GetRequiredService<SkipCacheQueryStringParameterReader>());
         });
     }
 

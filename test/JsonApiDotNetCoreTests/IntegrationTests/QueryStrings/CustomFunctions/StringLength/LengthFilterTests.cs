@@ -20,7 +20,7 @@ public sealed class LengthFilterTests : IClassFixture<IntegrationTestContext<Tes
 
         testContext.UseController<BlogsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddTransient<IFilterParser, LengthFilterParser>();
             services.AddTransient<IWhereClauseBuilder, LengthWhereClauseBuilder>();

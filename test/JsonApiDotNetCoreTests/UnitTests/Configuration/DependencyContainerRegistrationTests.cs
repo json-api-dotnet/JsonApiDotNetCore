@@ -1,12 +1,17 @@
 using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers.Annotations;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Primitives;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -67,6 +72,55 @@ public sealed class DependencyContainerRegistrationTests
 
         // Assert
         action.Should().ThrowExactly<AggregateException>().WithMessage("Some services are not able to be constructed * A circular dependency was detected *");
+    }
+
+    [Fact]
+    public void Can_replace_enumerable_service()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddLogging();
+
+        services.AddScoped<IFilterQueryStringParameterReader, CustomFilterQueryStringParameterReader>();
+
+        // Act
+        services.AddJsonApi();
+
+        // Assert
+        ServiceProvider provider = services.BuildServiceProvider();
+
+        IQueryStringParameterReader[] parameterReaders = provider.GetRequiredService<IEnumerable<IQueryStringParameterReader>>().ToArray();
+        parameterReaders.Should().NotContain(parameterReader => parameterReader is FilterQueryStringParameterReader);
+        parameterReaders.Should().ContainSingle(parameterReader => parameterReader is CustomFilterQueryStringParameterReader);
+
+        IQueryConstraintProvider[] constraintProviders = provider.GetRequiredService<IEnumerable<IQueryConstraintProvider>>().ToArray();
+        constraintProviders.Should().NotContain(constraintProvider => constraintProvider is FilterQueryStringParameterReader);
+        constraintProviders.Should().ContainSingle(constraintProvider => constraintProvider is CustomFilterQueryStringParameterReader);
+    }
+
+    [Fact]
+    public void Can_add_enumerable_service()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddLogging();
+
+        services.AddScoped<IQueryStringParameterReader, CustomFilterQueryStringParameterReader>();
+        services.AddScoped<IQueryConstraintProvider, CustomFilterQueryStringParameterReader>();
+
+        // Act
+        services.AddJsonApi();
+
+        // Assert
+        ServiceProvider provider = services.BuildServiceProvider();
+
+        IQueryStringParameterReader[] parameterReaders = provider.GetRequiredService<IEnumerable<IQueryStringParameterReader>>().ToArray();
+        parameterReaders.Should().ContainSingle(parameterReader => parameterReader is CustomFilterQueryStringParameterReader);
+        parameterReaders.Should().ContainSingle(parameterReader => parameterReader is FilterQueryStringParameterReader);
+
+        IQueryConstraintProvider[] constraintProviders = provider.GetRequiredService<IEnumerable<IQueryConstraintProvider>>().ToArray();
+        constraintProviders.Should().ContainSingle(constraintProvider => constraintProvider is CustomFilterQueryStringParameterReader);
+        constraintProviders.Should().ContainSingle(constraintProvider => constraintProvider is FilterQueryStringParameterReader);
     }
 
     private static IHostBuilder CreateValidatingHostBuilder()
@@ -139,5 +193,31 @@ public sealed class DependencyContainerRegistrationTests
     {
         [Attr]
         public string? Field { get; set; }
+    }
+
+    [UsedImplicitly(ImplicitUseKindFlags.Access)]
+    private sealed class CustomFilterQueryStringParameterReader : IFilterQueryStringParameterReader
+    {
+        public bool AllowEmptyValue => throw new NotImplementedException();
+
+        public bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CanRead(string parameterName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Read(string parameterName, StringValues parameterValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IReadOnlyCollection<ExpressionInScope> GetConstraints()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
