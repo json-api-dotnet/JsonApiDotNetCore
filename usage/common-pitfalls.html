@@ -164,10 +164,13 @@ Neither sounds very compelling. If stored procedures is what you need, you're be
 <h4 id="do-not-use-apicontroller-on-jsonapi-controllers">Do not use <code>[ApiController]</code> on JSON:API controllers</h4>
 <p>Although recommended by Microsoft for hard-written controllers, the opinionated behavior of <a href="https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-7.0#apicontroller-attribute"><code>[ApiController]</code></a> violates the JSON:API specification.
 Despite JsonApiDotNetCore trying its best to deal with it, the experience won't be as good as leaving it out.</p>
-<h4 id="replace-injectable-services-after-calling-addjsonapi">Replace injectable services <em>after</em> calling <code>AddJsonApi()</code></h4>
-<p>Registering your own services in the IoC container afterwards increases the chances that your replacements will take effect.
-Also, register with <code>services.AddResourceDefinition/AddResourceService/AddResourceRepository()</code> instead of <code>services.AddScoped()</code>.
+<h4 id="registeroverride-injectable-services">Register/override injectable services</h4>
+<p>Register your JSON:API resource services, resource definitions and repositories with <code>services.AddResourceService/AddResourceDefinition/AddResourceRepository()</code> instead of <code>services.AddScoped()</code>.
 When using <a href="resource-graph.html#auto-discovery">Auto-discovery</a>, you don't need to register these at all.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>In older versions of JsonApiDotNetCore, registering your own services in the IoC container <em>afterwards</em> increased the chances that your replacements would take effect.</p>
+</div>
 <h4 id="never-use-the-entity-framework-core-in-memory-database-provider">Never use the Entity Framework Core In-Memory Database Provider</h4>
 <p>When using this provider, many invalid mappings go unnoticed, leading to strange errors or wrong behavior. A real SQL engine fails to create the schema when mappings are invalid.
 If you're in need of a quick setup, use <a href="https://www.sqlite.org/">SQLite</a>. After adding its <a href="https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.Sqlite">NuGet package</a>, it's as simple as:</p>
