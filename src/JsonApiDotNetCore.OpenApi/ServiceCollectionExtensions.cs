@@ -6,6 +6,7 @@ using JsonApiDotNetCore.OpenApi.SwaggerComponents;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -34,9 +35,9 @@ public static class ServiceCollectionExtensions
 
     private static void AddCustomApiExplorer(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
     {
-        services.AddSingleton<ResourceFieldValidationMetadataProvider>();
+        services.TryAddSingleton<ResourceFieldValidationMetadataProvider>();
 
-        services.AddSingleton<IApiDescriptionGroupCollectionProvider>(provider =>
+        services.TryAddSingleton<IApiDescriptionGroupCollectionProvider>(provider =>
         {
             var controllerResourceMapping = provider.GetRequiredService<IControllerResourceMapping>();
             var actionDescriptorCollectionProvider = provider.GetRequiredService<IActionDescriptorCollectionProvider>();
@@ -76,8 +77,8 @@ public static class ServiceCollectionExtensions
 
     private static void AddSchemaGenerator(IServiceCollection services)
     {
-        services.AddSingleton<SchemaGenerator>();
-        services.AddSingleton<ISchemaGenerator, JsonApiSchemaGenerator>();
+        services.TryAddSingleton<SchemaGenerator>();
+        services.TryAddSingleton<ISchemaGenerator, JsonApiSchemaGenerator>();
     }
 
     private static void SetOperationInfo(SwaggerGenOptions swaggerGenOptions, IControllerResourceMapping controllerResourceMapping,
@@ -114,10 +115,10 @@ public static class ServiceCollectionExtensions
 
     private static void AddCustomSwaggerComponents(IServiceCollection services)
     {
-        services.AddSingleton<SwaggerGenerator>();
-        services.AddSingleton<ISwaggerProvider, CachingSwaggerGenerator>();
+        services.TryAddSingleton<SwaggerGenerator>();
+        services.TryAddSingleton<ISwaggerProvider, CachingSwaggerGenerator>();
 
-        services.AddSingleton<ISerializerDataContractResolver, JsonApiDataContractResolver>();
+        services.TryAddSingleton<ISerializerDataContractResolver, JsonApiDataContractResolver>();
     }
 
     private static void AddSwashbuckleCliCompatibility(IServiceScope scope, IMvcCoreBuilder mvcBuilder)
