@@ -22,13 +22,14 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
     public ActionDescriptorCollection ActionDescriptors => GetActionDescriptors();
 
-    public JsonApiActionDescriptorCollectionProvider(IControllerResourceMapping controllerResourceMapping, IActionDescriptorCollectionProvider defaultProvider)
+    public JsonApiActionDescriptorCollectionProvider(IControllerResourceMapping controllerResourceMapping, IActionDescriptorCollectionProvider defaultProvider,
+        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
         ArgumentGuard.NotNull(controllerResourceMapping);
         ArgumentGuard.NotNull(defaultProvider);
 
         _defaultProvider = defaultProvider;
-        _jsonApiEndpointMetadataProvider = new JsonApiEndpointMetadataProvider(controllerResourceMapping);
+        _jsonApiEndpointMetadataProvider = new JsonApiEndpointMetadataProvider(controllerResourceMapping, resourceFieldValidationMetadataProvider);
     }
 
     private ActionDescriptorCollection GetActionDescriptors()

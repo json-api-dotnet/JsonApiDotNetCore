@@ -15,7 +15,7 @@ public abstract class FakerContainer
         Date.SystemClock = () => 1.January(2020).At(1, 1, 1).AsUtc();
     }
 
-    protected static int GetFakerSeed()
+    public static int GetFakerSeed()
     {
         // The goal here is to have stable data over multiple test runs, but at the same time different data per test case.
 

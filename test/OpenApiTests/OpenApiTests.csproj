@@ -6,7 +6,7 @@
   <ItemGroup>
     <EmbeddedResource Include="LegacyOpenApiIntegration\swagger.json" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\JsonApiDotNetCore.SourceGenerators\JsonApiDotNetCore.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj" />
@@ -18,6 +18,5 @@
     <PackageReference Include="GitHubActionsTestLogger" Version="$(GitHubActionsTestLoggerVersion)" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
-    <PackageReference Include="BlushingPenguin.JsonPath" Version="$(BlushingPenguinVersion)" />
   </ItemGroup>
 </Project>

@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 internal sealed class EndpointOrderingFilter : IDocumentFilter
 {
     private static readonly Regex RelationshipNameInUrlPattern =
-        new($".*{JsonApiRoutingTemplate.PrimaryEndpoint}/(?>{JsonApiRoutingTemplate.RelationshipsPart}\\/)?(\\w+)", RegexOptions.Compiled);
+        new($@".*{JsonApiRoutingTemplate.PrimaryEndpoint}/(?>{JsonApiRoutingTemplate.RelationshipsPart}\/)?(\w+)", RegexOptions.Compiled);
 
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
@@ -34,7 +34,7 @@ internal sealed class EndpointOrderingFilter : IDocumentFilter
 
     private static bool IsSecondaryEndpoint(KeyValuePair<string, OpenApiPathItem> entry)
     {
-        return entry.Key.Contains("/" + JsonApiRoutingTemplate.RelationshipsPart);
+        return entry.Key.Contains($"/{JsonApiRoutingTemplate.RelationshipsPart}");
     }
 
     private static string GetRelationshipName(KeyValuePair<string, OpenApiPathItem> entry)

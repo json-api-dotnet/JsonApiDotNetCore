@@ -79,11 +79,9 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship;
     }
 
-    private void SetResponseMetadata(ActionModel action, JsonApiEndpoint endpoint)
+    private static void SetResponseMetadata(ActionModel action, JsonApiEndpoint endpoint)
     {
-        IList<int> statusCodes = GetStatusCodesForEndpoint(endpoint);
-
-        foreach (int statusCode in statusCodes)
+        foreach (int statusCode in GetStatusCodesForEndpoint(endpoint))
         {
             action.Filters.Add(new ProducesResponseTypeAttribute(statusCode));
 
@@ -103,51 +101,30 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
         }
     }
 
-    private static IList<int> GetStatusCodesForEndpoint(JsonApiEndpoint endpoint)
+    private static IEnumerable<int> GetStatusCodesForEndpoint(JsonApiEndpoint endpoint)
     {
-        switch (endpoint)
+        return endpoint switch
         {
-            case JsonApiEndpoint.GetCollection:
-            case JsonApiEndpoint.GetSingle:
-            case JsonApiEndpoint.GetSecondary:
-            case JsonApiEndpoint.GetRelationship:
+            JsonApiEndpoint.GetCollection or JsonApiEndpoint.GetSingle or JsonApiEndpoint.GetSecondary or JsonApiEndpoint.GetRelationship => new[]
             {
-                return new[]
-                {
-                    StatusCodes.Status200OK
-                };
-            }
-            case JsonApiEndpoint.Post:
+                StatusCodes.Status200OK
+            },
+            JsonApiEndpoint.Post => new[]
             {
-                return new[]
-                {
-                    StatusCodes.Status201Created,
-                    StatusCodes.Status204NoContent
-                };
-            }
-            case JsonApiEndpoint.Patch:
+                StatusCodes.Status201Created,
+                StatusCodes.Status204NoContent
+            },
+            JsonApiEndpoint.Patch => new[]
             {
-                return new[]
-                {
-                    StatusCodes.Status200OK,
-                    StatusCodes.Status204NoContent
-                };
-            }
-            case JsonApiEndpoint.Delete:
-            case JsonApiEndpoint.PostRelationship:
-            case JsonApiEndpoint.PatchRelationship:
-            case JsonApiEndpoint.DeleteRelationship:
+                StatusCodes.Status200OK,
+                StatusCodes.Status204NoContent
+            },
+            JsonApiEndpoint.Delete or JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship => new[]
             {
-                return new[]
-                {
-                    StatusCodes.Status204NoContent
-                };
-            }
-            default:
-            {
-                throw new UnreachableCodeException();
-            }
-        }
+                StatusCodes.Status204NoContent
+            },
+            _ => throw new UnreachableCodeException()
+        };
     }
 
     private static void SetRequestMetadata(ActionModel action, JsonApiEndpoint endpoint)

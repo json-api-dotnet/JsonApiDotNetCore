@@ -1,7 +1,5 @@
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 using System.Text.Json;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects;
+using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -12,10 +10,16 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class ResourceFieldObjectSchemaBuilder
 {
-    private static readonly Type[] RelationshipInResponseOpenTypes =
+    private static readonly Type[] RelationshipSchemaInResponseOpenTypes =
     {
         typeof(ToOneRelationshipInResponse<>),
         typeof(ToManyRelationshipInResponse<>),
+        typeof(NullableToOneRelationshipInResponse<>)
+    };
+
+    private static readonly Type[] NullableRelationshipSchemaOpenTypes =
+    {
+        typeof(NullableToOneRelationshipInRequest<>),
         typeof(NullableToOneRelationshipInResponse<>)
     };
 
@@ -26,21 +30,27 @@ internal sealed class ResourceFieldObjectSchemaBuilder
     private readonly SchemaRepository _resourceSchemaRepository = new();
     private readonly NullableReferenceSchemaGenerator _nullableReferenceSchemaGenerator;
     private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
+    private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
+    private readonly RelationshipTypeFactory _relationshipTypeFactory;
 
     public ResourceFieldObjectSchemaBuilder(ResourceTypeInfo resourceTypeInfo, ISchemaRepositoryAccessor schemaRepositoryAccessor,
-        SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, JsonNamingPolicy? namingPolicy)
+        SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, JsonNamingPolicy? namingPolicy,
+        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
         ArgumentGuard.NotNull(resourceTypeInfo);
         ArgumentGuard.NotNull(schemaRepositoryAccessor);
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
+        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
 
         _resourceTypeInfo = resourceTypeInfo;
         _schemaRepositoryAccessor = schemaRepositoryAccessor;
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
+        _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
 
         _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(schemaRepositoryAccessor, namingPolicy);
+        _relationshipTypeFactory = new RelationshipTypeFactory(resourceFieldValidationMetadataProvider);
         _schemasForResourceFields = GetFieldSchemas();
     }
 
@@ -67,7 +77,7 @@ internal sealed class ResourceFieldObjectSchemaBuilder
             {
                 AddAttributeSchemaToResourceObject(matchingAttribute, fullSchemaForAttributesObject, resourceFieldSchema);
 
-                resourceFieldSchema.Nullable = matchingAttribute.IsNullable();
+                resourceFieldSchema.Nullable = _resourceFieldValidationMetadataProvider.IsNullable(matchingAttribute);
 
                 if (IsFieldRequired(matchingAttribute))
                 {
@@ -103,21 +113,9 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
     private bool IsFieldRequired(ResourceFieldAttribute field)
     {
-        if (field is HasManyAttribute || _resourceTypeInfo.ResourceObjectOpenType != typeof(ResourceObjectInPostRequest<>))
-        {
-            return false;
-        }
+        bool isSchemaForUpdateResourceEndpoint = _resourceTypeInfo.ResourceObjectOpenType == typeof(ResourceObjectInPatchRequest<>);
 
-        TypeCategory fieldTypeCategory = field.Property.GetTypeCategory();
-        bool hasRequiredAttribute = field.Property.HasAttribute<RequiredAttribute>();
-
-        return fieldTypeCategory switch
-        {
-            TypeCategory.NonNullableReferenceType => true,
-            TypeCategory.ValueType => hasRequiredAttribute,
-            TypeCategory.NullableReferenceType or TypeCategory.NullableValueType => hasRequiredAttribute,
-            _ => throw new UnreachableCodeException()
-        };
+        return !isSchemaForUpdateResourceEndpoint && _resourceFieldValidationMetadataProvider.IsRequired(field);
     }
 
     public void SetMembersOfRelationshipsObject(OpenApiSchema fullSchemaForRelationshipsObject)
@@ -175,11 +173,11 @@ internal sealed class ResourceFieldObjectSchemaBuilder
         }
     }
 
-    private static Type GetRelationshipSchemaType(RelationshipAttribute relationship, Type resourceObjectType)
+    private Type GetRelationshipSchemaType(RelationshipAttribute relationship, Type resourceObjectType)
     {
         return resourceObjectType.GetGenericTypeDefinition().IsAssignableTo(typeof(ResourceObjectInResponse<>))
-            ? RelationshipTypeFactory.Instance.GetForResponse(relationship)
-            : RelationshipTypeFactory.Instance.GetForRequest(relationship);
+            ? _relationshipTypeFactory.GetForResponse(relationship)
+            : _relationshipTypeFactory.GetForRequest(relationship);
     }
 
     private OpenApiSchema? GetReferenceSchemaForRelationship(Type relationshipSchemaType)
@@ -194,7 +192,7 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
         OpenApiSchema fullSchema = _schemaRepositoryAccessor.Current.Schemas[referenceSchema.Reference.Id];
 
-        if (IsDataPropertyNullable(relationshipSchemaType))
+        if (IsDataPropertyNullableInRelationshipSchemaType(relationshipSchemaType))
         {
             fullSchema.Properties[JsonApiObjectPropertyName.Data] =
                 _nullableReferenceSchemaGenerator.GenerateSchema(fullSchema.Properties[JsonApiObjectPropertyName.Data]);
@@ -212,18 +210,12 @@ internal sealed class ResourceFieldObjectSchemaBuilder
     {
         Type relationshipSchemaOpenType = relationshipSchemaType.GetGenericTypeDefinition();
 
-        return RelationshipInResponseOpenTypes.Contains(relationshipSchemaOpenType);
+        return RelationshipSchemaInResponseOpenTypes.Contains(relationshipSchemaOpenType);
     }
 
-    private static bool IsDataPropertyNullable(Type type)
+    private static bool IsDataPropertyNullableInRelationshipSchemaType(Type relationshipSchemaType)
     {
-        PropertyInfo? dataProperty = type.GetProperty(nameof(JsonApiObjectPropertyName.Data));
-
-        if (dataProperty == null)
-        {
-            throw new UnreachableCodeException();
-        }
-
-        return dataProperty.GetTypeCategory() == TypeCategory.NullableReferenceType;
+        Type relationshipSchemaOpenType = relationshipSchemaType.GetGenericTypeDefinition();
+        return NullableRelationshipSchemaOpenTypes.Contains(relationshipSchemaOpenType);
     }
 }

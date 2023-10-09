@@ -6,7 +6,7 @@ using TestBuildingBlocks;
 
 namespace OpenApiTests;
 
-public abstract class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
+public class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
     where TDbContext : TestableDbContext
 {
     public override void ConfigureServices(IServiceCollection services)

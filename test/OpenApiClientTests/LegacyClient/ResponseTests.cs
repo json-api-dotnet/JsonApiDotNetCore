@@ -25,8 +25,8 @@ public sealed class ResponseTests
         const string purserMetaValue = "https://api.jsonapi.net/docs/#get-flight-purser";
         const string cabinCrewMembersMetaValue = "https://api.jsonapi.net/docs/#get-flight-cabin-crew-members";
         const string passengersMetaValue = "https://api.jsonapi.net/docs/#get-flight-passengers";
-        const string topLevelLink = HostPrefix + "flights";
-        const string flightResourceLink = topLevelLink + "/" + flightId;
+        const string topLevelLink = $"{HostPrefix}flights";
+        const string flightResourceLink = $"{topLevelLink}/{flightId}";
 
         const string responseBody = @"{
   ""meta"": {
@@ -125,20 +125,20 @@ public sealed class ResponseTests
         flight.Attributes.ArrivesAt.Should().BeNull();
 
         flight.Relationships.Purser.Data.Should().BeNull();
-        flight.Relationships.Purser.Links.Self.Should().Be(flightResourceLink + "/relationships/purser");
-        flight.Relationships.Purser.Links.Related.Should().Be(flightResourceLink + "/purser");
+        flight.Relationships.Purser.Links.Self.Should().Be($"{flightResourceLink}/relationships/purser");
+        flight.Relationships.Purser.Links.Related.Should().Be($"{flightResourceLink}/purser");
         flight.Relationships.Purser.Meta.Should().HaveCount(1);
         flight.Relationships.Purser.Meta["docs"].Should().Be(purserMetaValue);
 
         flight.Relationships.CabinCrewMembers.Data.Should().BeNull();
-        flight.Relationships.CabinCrewMembers.Links.Self.Should().Be(flightResourceLink + "/relationships/cabin-crew-members");
-        flight.Relationships.CabinCrewMembers.Links.Related.Should().Be(flightResourceLink + "/cabin-crew-members");
+        flight.Relationships.CabinCrewMembers.Links.Self.Should().Be($"{flightResourceLink}/relationships/cabin-crew-members");
+        flight.Relationships.CabinCrewMembers.Links.Related.Should().Be($"{flightResourceLink}/cabin-crew-members");
         flight.Relationships.CabinCrewMembers.Meta.Should().HaveCount(1);
         flight.Relationships.CabinCrewMembers.Meta["docs"].Should().Be(cabinCrewMembersMetaValue);
 
         flight.Relationships.Passengers.Data.Should().BeNull();
-        flight.Relationships.Passengers.Links.Self.Should().Be(flightResourceLink + "/relationships/passengers");
-        flight.Relationships.Passengers.Links.Related.Should().Be(flightResourceLink + "/passengers");
+        flight.Relationships.Passengers.Links.Self.Should().Be($"{flightResourceLink}/relationships/passengers");
+        flight.Relationships.Passengers.Links.Related.Should().Be($"{flightResourceLink}/passengers");
         flight.Relationships.Passengers.Meta.Should().HaveCount(1);
         flight.Relationships.Passengers.Meta["docs"].Should().Be(passengersMetaValue);
     }
@@ -149,7 +149,9 @@ public sealed class ResponseTests
         // Arrange
         const string flightId = "ZvuH1";
         const string departsAtInZuluTime = "2021-06-08T12:53:30.554Z";
+        const string flightDestination = "Amsterdam";
         const string arrivesAtWithUtcOffset = "2019-02-20T11:56:33.0721266+01:00";
+        const string flightServiceOnBoard = "Movies";
 
         const string responseBody = @"{
   ""links"": {
@@ -160,7 +162,9 @@ public sealed class ResponseTests
       ""id"": """ + flightId + @""",
       ""attributes"": {
         ""departs-at"": """ + departsAtInZuluTime + @""",
-        ""arrives-at"": """ + arrivesAtWithUtcOffset + @"""
+        ""arrives-at"": """ + arrivesAtWithUtcOffset + @""",
+        ""final-destination"": """ + flightDestination + @""",
+        ""services-on-board"": [""" + flightServiceOnBoard + @"""]
       },
       ""links"": {
         ""self"": """ + HostPrefix + "flights/" + flightId + @"""
@@ -181,8 +185,8 @@ public sealed class ResponseTests
         document.Data.Relationships.Should().BeNull();
         document.Data.Attributes.DepartsAt.Should().Be(DateTimeOffset.Parse(departsAtInZuluTime));
         document.Data.Attributes.ArrivesAt.Should().Be(DateTimeOffset.Parse(arrivesAtWithUtcOffset));
-        document.Data.Attributes.ServicesOnBoard.Should().BeNull();
-        document.Data.Attributes.FinalDestination.Should().BeNull();
+        document.Data.Attributes.ServicesOnBoard.Should().Contain(flightServiceOnBoard);
+        document.Data.Attributes.FinalDestination.Should().Be(flightDestination);
         document.Data.Attributes.StopOverDestination.Should().BeNull();
         document.Data.Attributes.OperatedBy.Should().Be(default);
     }
@@ -212,10 +216,9 @@ public sealed class ResponseTests
 
         // Assert
         ExceptionAssertions<ApiException> assertion = await action.Should().ThrowExactlyAsync<ApiException>();
-        ApiException exception = assertion.Subject.Single();
 
-        exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
-        exception.Response.Should().Be(responseBody);
+        assertion.Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        assertion.Which.Response.Should().Be(responseBody);
     }
 
     [Fact]

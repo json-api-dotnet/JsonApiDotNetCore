@@ -1,9 +1,10 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using JsonApiDotNetCore.OpenApi.Client;
 
-namespace OpenApiClientTests.LegacyClient;
+namespace OpenApiClientTests;
 
 /// <summary>
 /// Enables to inject an outgoing response body and inspect the incoming request.
@@ -20,6 +21,17 @@ internal sealed class FakeHttpClientWrapper : IDisposable
     {
         HttpClient = httpClient;
         _handler = handler;
+    }
+
+    public JsonElement GetRequestBodyAsJson()
+    {
+        if (RequestBody == null)
+        {
+            throw new InvalidOperationException("No body was provided with the request.");
+        }
+
+        using JsonDocument jsonDocument = JsonDocument.Parse(RequestBody);
+        return jsonDocument.RootElement.Clone();
     }
 
     public static FakeHttpClientWrapper Create(HttpStatusCode statusCode, string? responseBody)

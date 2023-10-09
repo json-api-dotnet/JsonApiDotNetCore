@@ -2051,6 +2051,10 @@
         "additionalProperties": false
       },
       "personAttributesInResponse": {
+        "required": [
+          "displayName",
+          "lastName"
+        ],
         "type": "object",
         "properties": {
           "firstName": {
@@ -2341,6 +2345,9 @@
         "additionalProperties": false
       },
       "tagAttributesInResponse": {
+        "required": [
+          "name"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -2715,6 +2722,10 @@
         "additionalProperties": false
       },
       "todoItemAttributesInResponse": {
+        "required": [
+          "description",
+          "priority"
+        ],
         "type": "object",
         "properties": {
           "description": {
@@ -2970,6 +2981,9 @@
         "additionalProperties": false
       },
       "todoItemRelationshipsInResponse": {
+        "required": [
+          "owner"
+        ],
         "type": "object",
         "properties": {
           "owner": {

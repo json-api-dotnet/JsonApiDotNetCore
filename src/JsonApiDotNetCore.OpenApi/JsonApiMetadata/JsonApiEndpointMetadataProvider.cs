@@ -1,7 +1,6 @@
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -15,11 +14,13 @@ internal sealed class JsonApiEndpointMetadataProvider
 {
     private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly EndpointResolver _endpointResolver = new();
+    private readonly NonPrimaryDocumentTypeFactory _nonPrimaryDocumentTypeFactory;
 
-    public JsonApiEndpointMetadataProvider(IControllerResourceMapping controllerResourceMapping)
+    public JsonApiEndpointMetadataProvider(IControllerResourceMapping controllerResourceMapping,
+        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
         ArgumentGuard.NotNull(controllerResourceMapping);
-
+        _nonPrimaryDocumentTypeFactory = new NonPrimaryDocumentTypeFactory(resourceFieldValidationMetadataProvider);
         _controllerResourceMapping = controllerResourceMapping;
     }
 
@@ -48,27 +49,14 @@ internal sealed class JsonApiEndpointMetadataProvider
 
     private IJsonApiRequestMetadata? GetRequestMetadata(JsonApiEndpoint endpoint, ResourceType primaryResourceType)
     {
-        switch (endpoint)
+        return endpoint switch
         {
-            case JsonApiEndpoint.Post:
-            {
-                return GetPostRequestMetadata(primaryResourceType.ClrType);
-            }
-            case JsonApiEndpoint.Patch:
-            {
-                return GetPatchRequestMetadata(primaryResourceType.ClrType);
-            }
-            case JsonApiEndpoint.PostRelationship:
-            case JsonApiEndpoint.PatchRelationship:
-            case JsonApiEndpoint.DeleteRelationship:
-            {
-                return GetRelationshipRequestMetadata(primaryResourceType.Relationships, endpoint != JsonApiEndpoint.PatchRelationship);
-            }
-            default:
-            {
-                return null;
-            }
-        }
+            JsonApiEndpoint.Post => GetPostRequestMetadata(primaryResourceType.ClrType),
+            JsonApiEndpoint.Patch => GetPatchRequestMetadata(primaryResourceType.ClrType),
+            JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship => GetRelationshipRequestMetadata(
+                primaryResourceType.Relationships, endpoint != JsonApiEndpoint.PatchRelationship),
+            _ => null
+        };
     }
 
     private static PrimaryRequestMetadata GetPostRequestMetadata(Type resourceClrType)
@@ -85,40 +73,26 @@ internal sealed class JsonApiEndpointMetadataProvider
         return new PrimaryRequestMetadata(documentType);
     }
 
-    private static RelationshipRequestMetadata GetRelationshipRequestMetadata(IEnumerable<RelationshipAttribute> relationships, bool ignoreHasOneRelationships)
+    private RelationshipRequestMetadata GetRelationshipRequestMetadata(IEnumerable<RelationshipAttribute> relationships, bool ignoreHasOneRelationships)
     {
         IEnumerable<RelationshipAttribute> relationshipsOfEndpoint = ignoreHasOneRelationships ? relationships.OfType<HasManyAttribute>() : relationships;
 
         IDictionary<string, Type> requestDocumentTypesByRelationshipName = relationshipsOfEndpoint.ToDictionary(relationship => relationship.PublicName,
-            NonPrimaryDocumentTypeFactory.Instance.GetForRelationshipRequest);
+            _nonPrimaryDocumentTypeFactory.GetForRelationshipRequest);
 
         return new RelationshipRequestMetadata(requestDocumentTypesByRelationshipName);
     }
 
     private IJsonApiResponseMetadata? GetResponseMetadata(JsonApiEndpoint endpoint, ResourceType primaryResourceType)
     {
-        switch (endpoint)
+        return endpoint switch
         {
-            case JsonApiEndpoint.GetCollection:
-            case JsonApiEndpoint.GetSingle:
-            case JsonApiEndpoint.Post:
-            case JsonApiEndpoint.Patch:
-            {
-                return GetPrimaryResponseMetadata(primaryResourceType.ClrType, endpoint == JsonApiEndpoint.GetCollection);
-            }
-            case JsonApiEndpoint.GetSecondary:
-            {
-                return GetSecondaryResponseMetadata(primaryResourceType.Relationships);
-            }
-            case JsonApiEndpoint.GetRelationship:
-            {
-                return GetRelationshipResponseMetadata(primaryResourceType.Relationships);
-            }
-            default:
-            {
-                return null;
-            }
-        }
+            JsonApiEndpoint.GetCollection or JsonApiEndpoint.GetSingle or JsonApiEndpoint.Post or JsonApiEndpoint.Patch => GetPrimaryResponseMetadata(
+                primaryResourceType.ClrType, endpoint == JsonApiEndpoint.GetCollection),
+            JsonApiEndpoint.GetSecondary => GetSecondaryResponseMetadata(primaryResourceType.Relationships),
+            JsonApiEndpoint.GetRelationship => GetRelationshipResponseMetadata(primaryResourceType.Relationships),
+            _ => null
+        };
     }
 
     private static PrimaryResponseMetadata GetPrimaryResponseMetadata(Type resourceClrType, bool endpointReturnsCollection)
@@ -129,18 +103,18 @@ internal sealed class JsonApiEndpointMetadataProvider
         return new PrimaryResponseMetadata(documentType);
     }
 
-    private static SecondaryResponseMetadata GetSecondaryResponseMetadata(IEnumerable<RelationshipAttribute> relationships)
+    private SecondaryResponseMetadata GetSecondaryResponseMetadata(IEnumerable<RelationshipAttribute> relationships)
     {
         IDictionary<string, Type> responseDocumentTypesByRelationshipName = relationships.ToDictionary(relationship => relationship.PublicName,
-            NonPrimaryDocumentTypeFactory.Instance.GetForSecondaryResponse);
+            _nonPrimaryDocumentTypeFactory.GetForSecondaryResponse);
 
         return new SecondaryResponseMetadata(responseDocumentTypesByRelationshipName);
     }
 
-    private static RelationshipResponseMetadata GetRelationshipResponseMetadata(IEnumerable<RelationshipAttribute> relationships)
+    private RelationshipResponseMetadata GetRelationshipResponseMetadata(IEnumerable<RelationshipAttribute> relationships)
     {
         IDictionary<string, Type> responseDocumentTypesByRelationshipName = relationships.ToDictionary(relationship => relationship.PublicName,
-            NonPrimaryDocumentTypeFactory.Instance.GetForRelationshipResponse);
+            _nonPrimaryDocumentTypeFactory.GetForRelationshipResponse);
 
         return new RelationshipResponseMetadata(responseDocumentTypesByRelationshipName);
     }

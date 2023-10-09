@@ -21,7 +21,7 @@ internal static class ActionDescriptorExtensions
         ArgumentGuard.NotNull(descriptor);
 
         IFilterMetadata? filterMetadata = descriptor.FilterDescriptors.Select(filterDescriptor => filterDescriptor.Filter)
-            .FirstOrDefault(filter => filter is TFilterMetaData);
+            .OfType<TFilterMetaData>().FirstOrDefault();
 
         return (TFilterMetaData?)filterMetadata;
     }

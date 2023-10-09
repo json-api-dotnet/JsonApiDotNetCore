@@ -1,21 +1,24 @@
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCore.OpenApi.JsonApiObjects;
+namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 
 internal sealed class RelationshipTypeFactory
 {
-    public static RelationshipTypeFactory Instance { get; } = new();
+    private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
+    private readonly NonPrimaryDocumentTypeFactory _nonPrimaryDocumentTypeFactory;
 
-    private RelationshipTypeFactory()
+    public RelationshipTypeFactory(ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
+        _nonPrimaryDocumentTypeFactory = new NonPrimaryDocumentTypeFactory(resourceFieldValidationMetadataProvider);
+        _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
     }
 
     public Type GetForRequest(RelationshipAttribute relationship)
     {
         ArgumentGuard.NotNull(relationship);
 
-        return NonPrimaryDocumentTypeFactory.Instance.GetForRelationshipRequest(relationship);
+        return _nonPrimaryDocumentTypeFactory.GetForRelationshipRequest(relationship);
     }
 
     public Type GetForResponse(RelationshipAttribute relationship)
@@ -26,7 +29,7 @@ internal sealed class RelationshipTypeFactory
 
         Type relationshipDataOpenType = relationship is HasManyAttribute
             ? typeof(ToManyRelationshipInResponse<>)
-            : relationship.IsNullable()
+            : _resourceFieldValidationMetadataProvider.IsNullable(relationship)
                 ? typeof(NullableToOneRelationshipInResponse<>)
                 : typeof(ToOneRelationshipInResponse<>);
 
