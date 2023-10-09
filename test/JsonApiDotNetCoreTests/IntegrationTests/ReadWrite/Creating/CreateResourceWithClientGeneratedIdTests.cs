@@ -22,7 +22,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         testContext.UseController<WorkItemGroupsController>();
         testContext.UseController<RgbColorsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<ImplicitlyChangingWorkItemGroupDefinition>();
         });

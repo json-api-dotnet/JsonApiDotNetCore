@@ -25,7 +25,7 @@ public sealed class AbsoluteLinksWithNamespaceTests : IClassFixture<IntegrationT
         testContext.UseController<PhotoAlbumsController>();
         testContext.UseController<PhotosController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
         });

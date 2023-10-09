@@ -21,7 +21,7 @@ public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestC
         testContext.UseController<PlanetsController>();
         testContext.UseController<MoonsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<StarDefinition>();
             services.AddResourceDefinition<PlanetDefinition>();

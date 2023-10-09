@@ -50,7 +50,7 @@ static void ConfigureServices(WebApplicationBuilder builder)
 
     builder.Services.AddDbContext<AppDbContext>(options =>
     {
-        string? connectionString = GetConnectionString(builder.Configuration);
+        string? connectionString = builder.Configuration.GetConnectionString("Default");
         options.UseNpgsql(connectionString);
 
         SetDbContextDebugOptions(options);
@@ -79,12 +79,6 @@ static void ConfigureServices(WebApplicationBuilder builder)
     {
         builder.Services.AddOpenApi(mvcCoreBuilder);
     }
-}
-
-static string? GetConnectionString(IConfiguration configuration)
-{
-    string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
-    return configuration.GetConnectionString("Default")?.Replace("###", postgresPassword);
 }
 
 [Conditional("DEBUG")]

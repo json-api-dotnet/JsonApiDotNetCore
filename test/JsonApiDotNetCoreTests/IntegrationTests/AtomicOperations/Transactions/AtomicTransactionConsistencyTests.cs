@@ -21,16 +21,14 @@ public sealed class AtomicTransactionConsistencyTests
 
         testContext.UseController<OperationsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceRepository<PerformerRepository>();
             services.AddResourceRepository<MusicTrackRepository>();
             services.AddResourceRepository<LyricRepository>();
 
-            string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
-
             string dbConnectionString =
-                $"Host=localhost;Database=JsonApiTest-Extra-{Guid.NewGuid():N};User ID=postgres;Password={postgresPassword};Include Error Detail=true";
+                $"Host=localhost;Database=JsonApiTest-Extra-{Guid.NewGuid():N};User ID=postgres;Password=postgres;Include Error Detail=true";
 
             services.AddDbContext<ExtraDbContext>(options => options.UseNpgsql(dbConnectionString));
         });

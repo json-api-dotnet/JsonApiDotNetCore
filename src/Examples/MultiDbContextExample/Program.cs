@@ -22,6 +22,9 @@ builder.Services.AddDbContext<DbContextB>(options =>
     SetDbContextDebugOptions(options);
 });
 
+builder.Services.AddResourceRepository<DbContextARepository<ResourceA>>();
+builder.Services.AddResourceRepository<DbContextBRepository<ResourceB>>();
+
 builder.Services.AddJsonApi(options =>
 {
     options.Namespace = "api";
@@ -38,9 +41,6 @@ builder.Services.AddJsonApi(options =>
     typeof(DbContextA),
     typeof(DbContextB)
 });
-
-builder.Services.AddResourceRepository<DbContextARepository<ResourceA>>();
-builder.Services.AddResourceRepository<DbContextBRepository<ResourceB>>();
 
 WebApplication app = builder.Build();
 

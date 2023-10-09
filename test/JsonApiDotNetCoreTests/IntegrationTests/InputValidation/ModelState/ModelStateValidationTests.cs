@@ -19,7 +19,7 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
         testContext.UseController<SystemDirectoriesController>();
         testContext.UseController<SystemFilesController>();
 
-        testContext.ConfigureServicesBeforeStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             // Polyfill for missing DateOnly/TimeOnly support in .NET 6 ModelState validation.
             services.AddDateOnlyTimeOnlyStringConverters();

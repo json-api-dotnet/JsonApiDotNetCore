@@ -33,8 +33,7 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
     private readonly Lazy<WebApplicationFactory<TStartup>> _lazyFactory;
     private readonly TestControllerProvider _testControllerProvider = new();
     private Action<ILoggingBuilder>? _loggingConfiguration;
-    private Action<IServiceCollection>? _beforeServicesConfiguration;
-    private Action<IServiceCollection>? _afterServicesConfiguration;
+    private Action<IServiceCollection>? _configureServices;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -65,18 +64,15 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
 
     private WebApplicationFactory<TStartup> CreateFactory()
     {
-        string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
-
-        string dbConnectionString =
-            $"Host=localhost;Database=JsonApiTest-{Guid.NewGuid():N};User ID=postgres;Password={postgresPassword};Include Error Detail=true";
+        string dbConnectionString = $"Host=localhost;Database=JsonApiTest-{Guid.NewGuid():N};User ID=postgres;Password=postgres;Include Error Detail=true";
 
         var factory = new IntegrationTestWebApplicationFactory();
 
         factory.ConfigureLogging(_loggingConfiguration);
 
-        factory.ConfigureServicesBeforeStartup(services =>
+        factory.ConfigureServices(services =>
         {
-            _beforeServicesConfiguration?.Invoke(services);
+            _configureServices?.Invoke(services);
 
             services.ReplaceControllers(_testControllerProvider);
 
@@ -86,8 +82,6 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
                 SetDbContextDebugOptions(options);
             });
         });
-
-        factory.ConfigureServicesAfterStartup(_afterServicesConfiguration);
 
         // We have placed an appsettings.json in the TestBuildingBlock project folder and set the content root to there. Note that controllers
         // are not discovered in the content root but are registered manually using IntegrationTestContext.UseController.
@@ -114,14 +108,9 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
         _loggingConfiguration = loggingConfiguration;
     }
 
-    public void ConfigureServicesBeforeStartup(Action<IServiceCollection> servicesConfiguration)
+    public void ConfigureServices(Action<IServiceCollection> configureServices)
     {
-        _beforeServicesConfiguration = servicesConfiguration;
-    }
-
-    public void ConfigureServicesAfterStartup(Action<IServiceCollection> servicesConfiguration)
-    {
-        _afterServicesConfiguration = servicesConfiguration;
+        _configureServices = configureServices;
     }
 
     public async Task RunOnDatabaseAsync(Func<TDbContext, Task> asyncAction)
@@ -151,22 +140,16 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
     private sealed class IntegrationTestWebApplicationFactory : WebApplicationFactory<TStartup>
     {
         private Action<ILoggingBuilder>? _loggingConfiguration;
-        private Action<IServiceCollection>? _beforeServicesConfiguration;
-        private Action<IServiceCollection>? _afterServicesConfiguration;
+        private Action<IServiceCollection>? _configureServices;
 
         public void ConfigureLogging(Action<ILoggingBuilder>? loggingConfiguration)
         {
             _loggingConfiguration = loggingConfiguration;
         }
 
-        public void ConfigureServicesBeforeStartup(Action<IServiceCollection>? servicesConfiguration)
+        public void ConfigureServices(Action<IServiceCollection>? configureServices)
         {
-            _beforeServicesConfiguration = servicesConfiguration;
-        }
-
-        public void ConfigureServicesAfterStartup(Action<IServiceCollection>? servicesConfiguration)
-        {
-            _afterServicesConfiguration = servicesConfiguration;
+            _configureServices = configureServices;
         }
 
         protected override IHostBuilder CreateHostBuilder()
@@ -189,15 +172,10 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
                 {
                     webBuilder.ConfigureServices(services =>
                     {
-                        _beforeServicesConfiguration?.Invoke(services);
+                        _configureServices?.Invoke(services);
                     });
 
                     webBuilder.UseStartup<TStartup>();
-
-                    webBuilder.ConfigureServices(services =>
-                    {
-                        _afterServicesConfiguration?.Invoke(services);
-                    });
                 })
                 .ConfigureLogging(options =>
                 {

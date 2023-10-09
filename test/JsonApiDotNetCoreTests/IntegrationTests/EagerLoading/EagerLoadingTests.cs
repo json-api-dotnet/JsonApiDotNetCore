@@ -21,7 +21,7 @@ public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<Tes
         testContext.UseController<StatesController>();
         testContext.UseController<BuildingsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<BuildingDefinition>();
             services.AddResourceRepository<BuildingRepository>();

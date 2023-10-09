@@ -19,7 +19,7 @@ public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<Tes
         testContext.UseController<ProductFamiliesController>();
         testContext.UseController<SupportTicketsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddSingleton<IResponseMeta, SupportResponseMeta>();
         });

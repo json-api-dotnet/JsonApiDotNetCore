@@ -27,7 +27,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
             options.SetMinimumLevel(LogLevel.Trace);
         });
 
-        testContext.ConfigureServicesBeforeStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddSingleton(loggerFactory);
         });

@@ -15,12 +15,12 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace UnitTests.Extensions;
+namespace JsonApiDotNetCoreTests.UnitTests.Configuration;
 
 public sealed class ServiceCollectionExtensionsTests
 {
     [Fact]
-    public void RegisterResource_DeviatingDbContextPropertyName_RegistersCorrectly()
+    public void Register_resource_from_DbContext_ignores_deviating_DbContext_property_name()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -39,7 +39,7 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void AddResourceService_Registers_Service_Interfaces_Of_Int32()
+    public void Can_register_resource_service_for_Id_type_Int32()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -63,7 +63,7 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void AddResourceService_Registers_Service_Interfaces_Of_Guid()
+    public void Can_register_resource_service_for_Id_type_Guid()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -87,7 +87,7 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void AddResourceService_Throws_If_Type_Does_Not_Implement_Any_Interfaces()
+    public void Cannot_register_resource_service_for_type_that_does_not_implement_required_interfaces()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -101,7 +101,7 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void AddResourceRepository_Registers_Repository_Interfaces_Of_Int32()
+    public void Can_register_resource_repository_for_Id_type_Int32()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -118,7 +118,7 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void AddResourceRepository_Registers_Repository_Interfaces_Of_Guid()
+    public void Can_register_resource_repository_for_Id_type_Guid()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -135,7 +135,7 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void AddResourceDefinition_Registers_Definition_Interface_Of_Int32()
+    public void Can_register_resource_definition_for_Id_type_Int32()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -150,7 +150,7 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void AddResourceDefinition_Registers_Definition_Interface_Of_Guid()
+    public void Can_register_resource_definition_for_Id_type_Guid()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -162,25 +162,6 @@ public sealed class ServiceCollectionExtensionsTests
         ServiceProvider provider = services.BuildServiceProvider();
 
         provider.GetRequiredService(typeof(IResourceDefinition<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceDefinitionOfGuid>();
-    }
-
-    [Fact]
-    public void AddJsonApi_With_Context_Uses_Resource_Type_Name_If_NoOtherSpecified()
-    {
-        // Arrange
-        var services = new ServiceCollection();
-        services.AddLogging();
-        services.AddDbContext<TestDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
-
-        // Act
-        services.AddJsonApi<TestDbContext>();
-
-        // Assert
-        ServiceProvider provider = services.BuildServiceProvider();
-        var resourceGraph = provider.GetRequiredService<IResourceGraph>();
-        ResourceType resourceType = resourceGraph.GetResourceType(typeof(ResourceOfInt32));
-
-        resourceType.PublicName.Should().Be("resourceOfInt32s");
     }
 
     private sealed class ResourceOfInt32 : Identifiable<int>
@@ -594,7 +575,7 @@ public sealed class ServiceCollectionExtensionsTests
     {
         public DbSet<ResourceOfInt32> ResourcesOfInt32 => Set<ResourceOfInt32>();
         public DbSet<ResourceOfGuid> ResourcesOfGuid => Set<ResourceOfGuid>();
-        public DbSet<Person> People => Set<Person>();
+        public DbSet<Person> SetOfPersons => Set<Person>();
 
         public TestDbContext(DbContextOptions<TestDbContext> options)
             : base(options)

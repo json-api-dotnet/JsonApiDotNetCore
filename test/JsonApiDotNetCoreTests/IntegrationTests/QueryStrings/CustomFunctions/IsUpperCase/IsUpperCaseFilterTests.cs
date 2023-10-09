@@ -20,7 +20,7 @@ public sealed class IsUpperCaseFilterTests : IClassFixture<IntegrationTestContex
 
         testContext.UseController<BlogsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddTransient<IFilterParser, IsUpperCaseFilterParser>();
             services.AddTransient<IWhereClauseBuilder, IsUpperCaseWhereClauseBuilder>();

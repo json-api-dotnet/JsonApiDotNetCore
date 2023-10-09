@@ -21,7 +21,7 @@ public sealed class AtomicSerializationTests : IClassFixture<IntegrationTestCont
         // These routes need to be registered in ASP.NET for rendering links to resource/relationship endpoints.
         testContext.UseController<TextLanguagesController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<ImplicitlyChangingTextLanguageDefinition>();
 

@@ -22,7 +22,7 @@ public sealed class UpdateToOneRelationshipTests : IClassFixture<IntegrationTest
         testContext.UseController<RgbColorsController>();
         testContext.UseController<UserAccountsController>();
 
-        testContext.ConfigureServicesAfterStartup(services =>
+        testContext.ConfigureServices(services =>
         {
             services.AddResourceDefinition<ImplicitlyChangingWorkItemDefinition>();
         });
