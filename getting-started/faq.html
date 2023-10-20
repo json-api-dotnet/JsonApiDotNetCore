@@ -29,11 +29,7 @@
       <meta name="loc:copy" content="Copy">
   </head>
 
-  <script type="module">
-    import options from './../public/main.js'
-    import { init } from './../public/docfx.min.js'
-    init(options)
-  </script>
+  <script type="module" src="./../public/docfx.min.js"></script>
 
   <script>
     const theme = localStorage.getItem('theme') || 'auto'
@@ -230,6 +226,7 @@ We welcome PRs, but keep in mind: The worst thing in the world is opening a PR t
 So for any non-trivial changes, please open an issue first to discuss your approach and ensure it fits the product vision.</p>
 <h4 id="is-there-anything-else-i-should-be-aware-of">Is there anything else I should be aware of?</h4>
 <p>See <a href="../usage/common-pitfalls.html">Common Pitfalls</a>.</p>
+
 </article>
 
         <div class="contribution d-print-none">
@@ -237,7 +234,7 @@ So for any non-trivial changes, please open an issue first to discuss your appro
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>
-        
+
       </div>
 
       <div class="affix">

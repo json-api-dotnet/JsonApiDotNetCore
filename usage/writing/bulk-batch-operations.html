@@ -29,11 +29,7 @@
       <meta name="loc:copy" content="Copy">
   </head>
 
-  <script type="module">
-    import options from './../../public/main.js'
-    import { init } from './../../public/docfx.min.js'
-    init(options)
-  </script>
+  <script type="module" src="./../../public/docfx.min.js"></script>
 
   <script>
     const theme = localStorage.getItem('theme') || 'auto'
@@ -180,6 +176,7 @@ public sealed class CreateMusicTrackOperationsController : JsonApiOperationsCont
 <li>All repositories used in an operations request must implement <code>IRepositorySupportsTransaction</code> and participate in the same transaction.</li>
 <li>If you're not using Entity Framework Core, you'll need to implement and register <code>IOperationsTransactionFactory</code> yourself.</li>
 </ul>
+
 </article>
 
         <div class="contribution d-print-none">
@@ -187,7 +184,7 @@ public sealed class CreateMusicTrackOperationsController : JsonApiOperationsCont
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>
-        
+
       </div>
 
       <div class="affix">

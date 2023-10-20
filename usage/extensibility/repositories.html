@@ -29,11 +29,7 @@
       <meta name="loc:copy" content="Copy">
   </head>
 
-  <script type="module">
-    import options from './../../public/main.js'
-    import { init } from './../../public/docfx.min.js'
-    init(options)
-  </script>
+  <script type="module" src="./../../public/docfx.min.js"></script>
 
   <script>
     const theme = localStorage.getItem('theme') || 'auto'
@@ -155,6 +151,7 @@ builder.Services.AddJsonApi(dbContextTypes: new[] { typeof(DbContextA), typeof(D
 builder.Services.AddScoped&lt;IResourceRepository&lt;ResourceA&gt;, DbContextARepository&lt;ResourceA&gt;&gt;();
 builder.Services.AddScoped&lt;IResourceRepository&lt;ResourceB&gt;, DbContextBRepository&lt;ResourceB&gt;&gt;();
 </code></pre>
+
 </article>
 
         <div class="contribution d-print-none">
@@ -162,7 +159,7 @@ builder.Services.AddScoped&lt;IResourceRepository&lt;ResourceB&gt;, DbContextBRe
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>
-        
+
       </div>
 
       <div class="affix">

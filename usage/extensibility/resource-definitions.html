@@ -29,11 +29,7 @@
       <meta name="loc:copy" content="Copy">
   </head>
 
-  <script type="module">
-    import options from './../../public/main.js'
-    import { init } from './../../public/docfx.min.js'
-    init(options)
-  </script>
+  <script type="module" src="./../../public/docfx.min.js"></script>
 
   <script>
     const theme = localStorage.getItem('theme') || 'auto'
@@ -364,6 +360,7 @@ Click on a diagram to open it full-size in a new window.</p>
 <li>Developer sends notification to service bus</li>
 <li>Success status is sent back to user</li>
 </ol>
+
 </article>
 
         <div class="contribution d-print-none">
@@ -371,7 +368,7 @@ Click on a diagram to open it full-size in a new window.</p>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>
-        
+
       </div>
 
       <div class="affix">
