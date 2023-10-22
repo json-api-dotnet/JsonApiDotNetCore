@@ -127,10 +127,13 @@ jobs:
         dotnet build --no-restore --configuration Release /p:VersionSuffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Test
       run: |
-        dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true" -- RunConfiguration.CollectSourceInformation=true DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.DeterministicReport=true
+        dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true"
     - name: Upload coverage to codecov.io
       if: matrix.os == 'ubuntu-latest'
       uses: codecov/codecov-action@v3
+      with:
+        fail_ci_if_error: true
+        verbose: true
     - name: Generate packages
       shell: pwsh
       run: |

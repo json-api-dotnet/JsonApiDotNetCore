@@ -10,13 +10,16 @@ Write-Host "$(pwsh --version)"
 Write-Host "Active .NET SDK: $(dotnet --version)"
 Write-Host "Using version suffix: $versionSuffix"
 
+Remove-Item -Recurse -Force artifacts -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force * -Include coverage.cobertura.xml
+
 dotnet tool restore
 VerifySuccessExitCode
 
 dotnet build --configuration Release /p:VersionSuffix=$versionSuffix
 VerifySuccessExitCode
 
-dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.DeterministicReport=true
+dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
 VerifySuccessExitCode
 
 dotnet reportgenerator -reports:**\coverage.cobertura.xml -targetdir:artifacts\coverage -filefilters:-*.g.cs
