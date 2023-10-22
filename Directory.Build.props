@@ -22,7 +22,7 @@
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
-    <AspNetCoreVersion>6.0.*</AspNetCoreVersion>
+    <AspNetCoreVersion>7.0.*</AspNetCoreVersion>
     <BenchmarkDotNetVersion>0.13.*</BenchmarkDotNetVersion>
     <BogusVersion>34.0.*</BogusVersion>
     <CSharpGuidelinesAnalyzerVersion>3.8.*</CSharpGuidelinesAnalyzerVersion>
