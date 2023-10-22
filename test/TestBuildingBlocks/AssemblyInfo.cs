@@ -1,4 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
 
-// https://github.com/coverlet-coverage/coverlet/blob/master/Documentation/MSBuildIntegration.md#excluding-from-coverage
+// Justification: This assembly contains building blocks for writing tests. It does not contain code that ships.
 [assembly: ExcludeFromCodeCoverage]
