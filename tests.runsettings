@@ -7,6 +7,7 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat Code Coverage">
         <Configuration>
+          <Exclude>[*]JsonApiDotNetCore.OpenApi.JsonApiObjects.*</Exclude>
           <ExcludeByAttribute>ObsoleteAttribute,GeneratedCodeAttribute</ExcludeByAttribute>
           <DeterministicReport>true</DeterministicReport>
         </Configuration>
