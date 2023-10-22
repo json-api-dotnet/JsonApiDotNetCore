@@ -27,18 +27,18 @@ static WebApplication CreateWebApplication(string[] args)
     // Add services to the container.
     ConfigureServices(builder);
 
-    WebApplication webApplication = builder.Build();
+    WebApplication app = builder.Build();
 
     // Configure the HTTP request pipeline.
-    ConfigurePipeline(webApplication);
+    ConfigurePipeline(app);
 
     if (CodeTimingSessionManager.IsEnabled)
     {
         string timingResults = CodeTimingSessionManager.Current.GetResults();
-        webApplication.Logger.LogInformation($"Measurement results for application startup:{Environment.NewLine}{timingResults}");
+        app.Logger.LogInformation($"Measurement results for application startup:{Environment.NewLine}{timingResults}");
     }
 
-    return webApplication;
+    return app;
 }
 
 static void ConfigureServices(WebApplicationBuilder builder)
@@ -81,18 +81,18 @@ static void SetDbContextDebugOptions(DbContextOptionsBuilder options)
     options.ConfigureWarnings(builder => builder.Ignore(CoreEventId.SensitiveDataLoggingEnabledWarning));
 }
 
-static void ConfigurePipeline(WebApplication webApplication)
+static void ConfigurePipeline(WebApplication app)
 {
     using IDisposable _ = CodeTimingSessionManager.Current.Measure("Configure pipeline");
 
-    webApplication.UseRouting();
+    app.UseRouting();
 
     using (CodeTimingSessionManager.Current.Measure("UseJsonApi()"))
     {
-        webApplication.UseJsonApi();
+        app.UseJsonApi();
     }
 
-    webApplication.MapControllers();
+    app.MapControllers();
 }
 
 static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)

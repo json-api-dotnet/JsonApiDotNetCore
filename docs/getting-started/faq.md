@@ -145,12 +145,18 @@ Take a look at [JsonApiResourceService](https://github.com/json-api-dotnet/JsonA
 
 You'll get a lot more out of the box if replacing at the repository level instead. You don't need to apply options or analyze query strings.
 And most resource definition callbacks are handled.
-That's because the built-in resource service translates all JSON:API aspects of the request into a database-agnostic data structure called `QueryLayer`.
+That's because the built-in resource service translates all JSON:API query aspects of the request into a database-agnostic data structure called `QueryLayer`.
 Now the hard part for you becomes reading that data structure and producing data access calls from that.
-If your data store provides a LINQ provider, you may reuse most of [QueryableBuilder](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/QueryableBuilding/QueryableBuilder.cs),
+If your data store provides a LINQ provider, you can probably reuse [QueryableBuilder](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilder.cs),
 which drives the translation into [System.Linq.Expressions](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/expression-trees/).
-Note however, that it also produces calls to `.Include("")`, which is an Entity Framework Core-specific extension method, so you'll likely need to prevent that from happening. There's an example [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/Examples/NoEntityFrameworkExample/Repositories/InMemoryResourceRepository.cs).
-We use a similar approach for accessing [MongoDB](https://github.com/json-api-dotnet/JsonApiDotNetCore.MongoDb/blob/674889e037334e3f376550178ce12d0842d7560c/src/JsonApiDotNetCore.MongoDb/Queries/Internal/QueryableBuilding/MongoQueryableBuilder.cs).
+Note however, that it also produces calls to `.Include("")`, which is an Entity Framework Core-specific extension method, so you'll need to
+[prevent that from happening](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryLayerIncludeConverter.cs).
+
+The example [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/Examples/NoEntityFrameworkExample/Repositories/InMemoryResourceRepository.cs) compiles and executes
+the LINQ query against an in-memory list of resources.
+For [MongoDB](https://github.com/json-api-dotnet/JsonApiDotNetCore.MongoDb/blob/master/src/JsonApiDotNetCore.MongoDb/Repositories/MongoRepository.cs), we use the MongoDB LINQ provider.
+If there's no LINQ provider available, the example [here](https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/Examples/DapperExample/Repositories/DapperRepository.cs) may be of help,
+which produces SQL and uses [Dapper](https://github.com/DapperLib/Dapper) for data access.
 
 > [!TIP]
 > [ExpressionTreeVisualizer](https://github.com/zspitz/ExpressionTreeVisualizer) is very helpful in trying to debug LINQ expression trees!

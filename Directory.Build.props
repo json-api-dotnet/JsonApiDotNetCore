@@ -28,6 +28,7 @@
     <CSharpGuidelinesAnalyzerVersion>3.8.*</CSharpGuidelinesAnalyzerVersion>
     <CodeAnalysisVersion>4.7.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
+    <DapperVersion>2.1.*</DapperVersion>
     <DateOnlyTimeOnlyVersion>2.1.*</DateOnlyTimeOnlyVersion>
     <EntityFrameworkCoreVersion>7.0.*</EntityFrameworkCoreVersion>
     <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
