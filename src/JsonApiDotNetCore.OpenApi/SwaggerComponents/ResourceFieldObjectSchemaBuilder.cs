@@ -23,6 +23,13 @@ internal sealed class ResourceFieldObjectSchemaBuilder
         typeof(NullableToOneRelationshipInResponse<>)
     };
 
+    private static readonly string[] RelationshipObjectPropertyNamesInOrder =
+    {
+        JsonApiPropertyName.Links,
+        JsonApiPropertyName.Data,
+        JsonApiPropertyName.Meta
+    };
+
     private readonly ResourceTypeInfo _resourceTypeInfo;
     private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
     private readonly SchemaGenerator _defaultSchemaGenerator;
@@ -156,7 +163,7 @@ internal sealed class ResourceFieldObjectSchemaBuilder
             _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForResourceIdentifierObject.Reference.Id];
 
         Type resourceType = resourceIdentifierObjectType.GetGenericArguments()[0];
-        fullSchemaForResourceIdentifierObject.Properties[JsonApiObjectPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType);
+        fullSchemaForResourceIdentifierObject.Properties[JsonApiPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType);
     }
 
     private void AddRelationshipSchemaToResourceObject(RelationshipAttribute relationship, OpenApiSchema fullSchemaForRelationshipsObject)
@@ -194,13 +201,14 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
         if (IsDataPropertyNullableInRelationshipSchemaType(relationshipSchemaType))
         {
-            fullSchema.Properties[JsonApiObjectPropertyName.Data] =
-                _nullableReferenceSchemaGenerator.GenerateSchema(fullSchema.Properties[JsonApiObjectPropertyName.Data]);
+            fullSchema.Properties[JsonApiPropertyName.Data] = _nullableReferenceSchemaGenerator.GenerateSchema(fullSchema.Properties[JsonApiPropertyName.Data]);
         }
 
         if (IsRelationshipInResponseType(relationshipSchemaType))
         {
-            fullSchema.Required.Remove(JsonApiObjectPropertyName.Data);
+            fullSchema.Required.Remove(JsonApiPropertyName.Data);
+
+            fullSchema.ReorderProperties(RelationshipObjectPropertyNamesInOrder);
         }
 
         return referenceSchema;

@@ -11,13 +11,13 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 internal sealed class ResourceIdentifierCollectionResponseDocument<TResource> : ManyData<ResourceIdentifierObject<TResource>>
     where TResource : IIdentifiable
 {
-    [JsonPropertyName("meta")]
-    public IDictionary<string, object> Meta { get; set; } = null!;
-
     [JsonPropertyName("jsonapi")]
     public JsonapiObject Jsonapi { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("links")]
     public LinksInResourceIdentifierCollectionDocument Links { get; set; } = null!;
+
+    [JsonPropertyName("meta")]
+    public IDictionary<string, object> Meta { get; set; } = null!;
 }

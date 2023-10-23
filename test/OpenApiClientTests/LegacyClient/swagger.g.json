@@ -2019,6 +2019,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-collection-document"
+          },
           "data": {
             "type": "array",
             "items": {
@@ -2028,12 +2034,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-collection-document"
           }
         },
         "additionalProperties": false
@@ -2141,18 +2141,18 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-document"
+          },
           "data": {
             "$ref": "#/components/schemas/airplane-data-in-response"
           },
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-document"
           }
         },
         "additionalProperties": false
@@ -2276,6 +2276,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-collection-document"
+          },
           "data": {
             "type": "array",
             "items": {
@@ -2285,12 +2291,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-collection-document"
           }
         },
         "additionalProperties": false
@@ -2391,6 +2391,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+          },
           "data": {
             "type": "array",
             "items": {
@@ -2400,12 +2406,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
           }
         },
         "additionalProperties": false
@@ -2417,18 +2417,18 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-identifier-document"
+          },
           "data": {
             "$ref": "#/components/schemas/flight-attendant-identifier"
           },
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-identifier-document"
           }
         },
         "additionalProperties": false
@@ -2464,18 +2464,18 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-document"
+          },
           "data": {
             "$ref": "#/components/schemas/flight-attendant-data-in-response"
           },
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-document"
           }
         },
         "additionalProperties": false
@@ -2529,18 +2529,18 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-document"
+          },
           "data": {
             "$ref": "#/components/schemas/flight-attendant-data-in-response"
           },
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-document"
           }
         },
         "additionalProperties": false
@@ -2608,6 +2608,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-collection-document"
+          },
           "data": {
             "type": "array",
             "items": {
@@ -2617,12 +2623,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-collection-document"
           }
         },
         "additionalProperties": false
@@ -2720,6 +2720,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+          },
           "data": {
             "type": "array",
             "items": {
@@ -2729,12 +2735,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
           }
         },
         "additionalProperties": false
@@ -2770,18 +2770,18 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-document"
+          },
           "data": {
             "$ref": "#/components/schemas/flight-data-in-response"
           },
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-document"
           }
         },
         "additionalProperties": false
@@ -2953,11 +2953,11 @@
             "minLength": 1,
             "type": "string"
           },
-          "describedby": {
-            "type": "string"
-          },
           "related": {
             "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
             "type": "string"
           },
           "first": {
@@ -2987,11 +2987,11 @@
             "minLength": 1,
             "type": "string"
           },
-          "describedby": {
-            "type": "string"
-          },
           "related": {
             "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
             "type": "string"
           }
         },
@@ -3040,6 +3040,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-identifier-document"
+          },
           "data": {
             "oneOf": [
               {
@@ -3053,12 +3059,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-identifier-document"
           }
         },
         "additionalProperties": false
@@ -3070,6 +3070,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-document"
+          },
           "data": {
             "oneOf": [
               {
@@ -3083,12 +3089,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-document"
           }
         },
         "additionalProperties": false
@@ -3118,6 +3118,9 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "$ref": "#/components/schemas/links-in-relationship-object"
+          },
           "data": {
             "oneOf": [
               {
@@ -3127,9 +3130,6 @@
                 "$ref": "#/components/schemas/null-value"
               }
             ]
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-relationship-object"
           },
           "meta": {
             "type": "object",
@@ -3158,6 +3158,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-collection-document"
+          },
           "data": {
             "type": "array",
             "items": {
@@ -3167,12 +3173,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-collection-document"
           }
         },
         "additionalProperties": false
@@ -3229,6 +3229,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+          },
           "data": {
             "type": "array",
             "items": {
@@ -3238,12 +3244,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapi-object"
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
           }
         },
         "additionalProperties": false
@@ -3275,14 +3275,14 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "$ref": "#/components/schemas/links-in-relationship-object"
+          },
           "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/flight-attendant-identifier"
             }
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-relationship-object"
           },
           "meta": {
             "type": "object",
@@ -3312,14 +3312,14 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "$ref": "#/components/schemas/links-in-relationship-object"
+          },
           "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/flight-identifier"
             }
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-relationship-object"
           },
           "meta": {
             "type": "object",
@@ -3349,14 +3349,14 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "$ref": "#/components/schemas/links-in-relationship-object"
+          },
           "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/passenger-identifier"
             }
-          },
-          "links": {
-            "$ref": "#/components/schemas/links-in-relationship-object"
           },
           "meta": {
             "type": "object",
@@ -3383,11 +3383,11 @@
         ],
         "type": "object",
         "properties": {
-          "data": {
-            "$ref": "#/components/schemas/flight-attendant-identifier"
-          },
           "links": {
             "$ref": "#/components/schemas/links-in-relationship-object"
+          },
+          "data": {
+            "$ref": "#/components/schemas/flight-attendant-identifier"
           },
           "meta": {
             "type": "object",

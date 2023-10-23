@@ -7,6 +7,16 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class ResourceObjectSchemaGenerator
 {
+    private static readonly string[] ResourceObjectPropertyNamesInOrder =
+    {
+        JsonApiPropertyName.Type,
+        JsonApiPropertyName.Id,
+        JsonApiPropertyName.Attributes,
+        JsonApiPropertyName.Relationships,
+        JsonApiPropertyName.Links,
+        JsonApiPropertyName.Meta
+    };
+
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiOptions _options;
@@ -50,15 +60,7 @@ internal sealed class ResourceObjectSchemaGenerator
 
         SetResourceRelationships(fullSchemaForResourceObject, fieldObjectBuilder);
 
-        ReorderMembers(fullSchemaForResourceObject, new[]
-        {
-            JsonApiObjectPropertyName.Type,
-            JsonApiObjectPropertyName.Id,
-            JsonApiObjectPropertyName.AttributesObject,
-            JsonApiObjectPropertyName.RelationshipsObject,
-            JsonApiObjectPropertyName.LinksObject,
-            JsonApiObjectPropertyName.MetaObject
-        });
+        fullSchemaForResourceObject.ReorderProperties(ResourceObjectPropertyNamesInOrder);
 
         return referenceSchemaForResourceObject;
     }
@@ -83,31 +85,31 @@ internal sealed class ResourceObjectSchemaGenerator
 
             if (clientIdGeneration == ClientIdGenerationMode.Forbidden)
             {
-                fullSchemaForResourceObject.Required.Remove(JsonApiObjectPropertyName.Id);
-                fullSchemaForResourceObject.Properties.Remove(JsonApiObjectPropertyName.Id);
+                fullSchemaForResourceObject.Required.Remove(JsonApiPropertyName.Id);
+                fullSchemaForResourceObject.Properties.Remove(JsonApiPropertyName.Id);
             }
             else if (clientIdGeneration == ClientIdGenerationMode.Allowed)
             {
-                fullSchemaForResourceObject.Required.Remove(JsonApiObjectPropertyName.Id);
+                fullSchemaForResourceObject.Required.Remove(JsonApiPropertyName.Id);
             }
         }
     }
 
     private void SetResourceType(OpenApiSchema fullSchemaForResourceObject, Type resourceType)
     {
-        fullSchemaForResourceObject.Properties[JsonApiObjectPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType);
+        fullSchemaForResourceObject.Properties[JsonApiPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType);
     }
 
     private void SetResourceAttributes(OpenApiSchema fullSchemaForResourceObject, ResourceFieldObjectSchemaBuilder builder)
     {
-        OpenApiSchema referenceSchemaForAttributesObject = fullSchemaForResourceObject.Properties[JsonApiObjectPropertyName.AttributesObject];
+        OpenApiSchema referenceSchemaForAttributesObject = fullSchemaForResourceObject.Properties[JsonApiPropertyName.Attributes];
         OpenApiSchema fullSchemaForAttributesObject = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForAttributesObject.Reference.Id];
 
         builder.SetMembersOfAttributesObject(fullSchemaForAttributesObject);
 
         if (!fullSchemaForAttributesObject.Properties.Any())
         {
-            fullSchemaForResourceObject.Properties.Remove(JsonApiObjectPropertyName.AttributesObject);
+            fullSchemaForResourceObject.Properties.Remove(JsonApiPropertyName.Attributes);
             _schemaRepositoryAccessor.Current.Schemas.Remove(referenceSchemaForAttributesObject.Reference.Id);
         }
         else
@@ -118,34 +120,19 @@ internal sealed class ResourceObjectSchemaGenerator
 
     private void SetResourceRelationships(OpenApiSchema fullSchemaForResourceObject, ResourceFieldObjectSchemaBuilder builder)
     {
-        OpenApiSchema referenceSchemaForRelationshipsObject = fullSchemaForResourceObject.Properties[JsonApiObjectPropertyName.RelationshipsObject];
+        OpenApiSchema referenceSchemaForRelationshipsObject = fullSchemaForResourceObject.Properties[JsonApiPropertyName.Relationships];
         OpenApiSchema fullSchemaForRelationshipsObject = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForRelationshipsObject.Reference.Id];
 
         builder.SetMembersOfRelationshipsObject(fullSchemaForRelationshipsObject);
 
         if (!fullSchemaForRelationshipsObject.Properties.Any())
         {
-            fullSchemaForResourceObject.Properties.Remove(JsonApiObjectPropertyName.RelationshipsObject);
+            fullSchemaForResourceObject.Properties.Remove(JsonApiPropertyName.Relationships);
             _schemaRepositoryAccessor.Current.Schemas.Remove(referenceSchemaForRelationshipsObject.Reference.Id);
         }
         else
         {
             fullSchemaForRelationshipsObject.AdditionalPropertiesAllowed = false;
         }
-    }
-
-    private static void ReorderMembers(OpenApiSchema fullSchemaForResourceObject, IEnumerable<string> orderedMembers)
-    {
-        var reorderedMembers = new Dictionary<string, OpenApiSchema>();
-
-        foreach (string member in orderedMembers)
-        {
-            if (fullSchemaForResourceObject.Properties.TryGetValue(member, out OpenApiSchema? schema))
-            {
-                reorderedMembers[member] = schema;
-            }
-        }
-
-        fullSchemaForResourceObject.Properties = reorderedMembers;
     }
 }
