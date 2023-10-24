@@ -34,6 +34,16 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         typeof(NullableToOneRelationshipInRequest<>)
     };
 
+    private static readonly string[] DocumentPropertyNamesInOrder =
+    {
+        JsonApiPropertyName.Jsonapi,
+        JsonApiPropertyName.Links,
+        JsonApiPropertyName.Data,
+        JsonApiPropertyName.Errors,
+        JsonApiPropertyName.Included,
+        JsonApiPropertyName.Meta
+    };
+
     private readonly ISchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceObjectSchemaGenerator _resourceObjectSchemaGenerator;
     private readonly NullableReferenceSchemaGenerator _nullableReferenceSchemaGenerator;
@@ -76,7 +86,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
             }
         }
 
-        return _defaultSchemaGenerator.GenerateSchema(modelType, schemaRepository, memberInfo, parameterInfo);
+        return _defaultSchemaGenerator.GenerateSchema(modelType, schemaRepository, memberInfo, parameterInfo, routeInfo);
     }
 
     private static bool IsJsonApiDocument(Type type)
@@ -100,7 +110,9 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
             ? CreateArrayTypeDataSchema(referenceSchemaForResourceObject)
             : referenceSchemaForResourceObject;
 
-        fullSchemaForDocument.Properties[JsonApiObjectPropertyName.Data] = referenceSchemaForDataObject;
+        fullSchemaForDocument.Properties[JsonApiPropertyName.Data] = referenceSchemaForDataObject;
+
+        fullSchemaForDocument.ReorderProperties(DocumentPropertyNamesInOrder);
 
         return referenceSchemaForDocument;
     }
@@ -120,8 +132,8 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
     private void SetDataObjectSchemaToNullable(OpenApiSchema referenceSchemaForDocument)
     {
         OpenApiSchema fullSchemaForDocument = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForDocument.Reference.Id];
-        OpenApiSchema referenceSchemaForData = fullSchemaForDocument.Properties[JsonApiObjectPropertyName.Data];
-        fullSchemaForDocument.Properties[JsonApiObjectPropertyName.Data] = _nullableReferenceSchemaGenerator.GenerateSchema(referenceSchemaForData);
+        OpenApiSchema referenceSchemaForData = fullSchemaForDocument.Properties[JsonApiPropertyName.Data];
+        fullSchemaForDocument.Properties[JsonApiPropertyName.Data] = _nullableReferenceSchemaGenerator.GenerateSchema(referenceSchemaForData);
     }
 
     private static OpenApiSchema CreateArrayTypeDataSchema(OpenApiSchema referenceSchemaForResourceObject)

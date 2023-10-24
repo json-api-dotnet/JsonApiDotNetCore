@@ -11,10 +11,10 @@ internal sealed class LinksInResourceIdentifierDocument
     [JsonPropertyName("self")]
     public string Self { get; set; } = null!;
 
-    [JsonPropertyName("describedby")]
-    public string Describedby { get; set; } = null!;
-
     [Required]
     [JsonPropertyName("related")]
     public string Related { get; set; } = null!;
+
+    [JsonPropertyName("describedby")]
+    public string Describedby { get; set; } = null!;
 }

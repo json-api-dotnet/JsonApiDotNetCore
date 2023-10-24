@@ -934,6 +934,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+          },
           "data": {
             "type": "array",
             "items": {
@@ -943,12 +949,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
           }
         },
         "additionalProperties": false
@@ -1002,6 +1002,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+          },
           "data": {
             "type": "array",
             "items": {
@@ -1011,12 +1017,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
           }
         },
         "additionalProperties": false
@@ -1128,11 +1128,11 @@
             "minLength": 1,
             "type": "string"
           },
-          "describedby": {
-            "type": "string"
-          },
           "related": {
             "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
             "type": "string"
           },
           "first": {
@@ -1162,11 +1162,11 @@
             "minLength": 1,
             "type": "string"
           },
-          "describedby": {
-            "type": "string"
-          },
           "related": {
             "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
             "type": "string"
           }
         },
@@ -1215,6 +1215,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+          },
           "data": {
             "oneOf": [
               {
@@ -1228,12 +1234,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
           }
         },
         "additionalProperties": false
@@ -1245,6 +1245,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceDocument"
+          },
           "data": {
             "oneOf": [
               {
@@ -1258,12 +1264,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceDocument"
           }
         },
         "additionalProperties": false
@@ -1293,6 +1293,9 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "$ref": "#/components/schemas/linksInRelationshipObject"
+          },
           "data": {
             "oneOf": [
               {
@@ -1302,9 +1305,6 @@
                 "$ref": "#/components/schemas/nullValue"
               }
             ]
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInRelationshipObject"
           },
           "meta": {
             "type": "object",
@@ -1429,6 +1429,12 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+          },
           "data": {
             "type": "array",
             "items": {
@@ -1438,12 +1444,6 @@
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
           }
         },
         "additionalProperties": false
@@ -1551,18 +1551,18 @@
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapiObject"
+          },
+          "links": {
+            "$ref": "#/components/schemas/linksInResourceDocument"
+          },
           "data": {
             "$ref": "#/components/schemas/resourceDataInResponse"
           },
           "meta": {
             "type": "object",
             "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceDocument"
           }
         },
         "additionalProperties": false
@@ -1656,14 +1656,14 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "$ref": "#/components/schemas/linksInRelationshipObject"
+          },
           "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/emptyIdentifier"
             }
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInRelationshipObject"
           },
           "meta": {
             "type": "object",
