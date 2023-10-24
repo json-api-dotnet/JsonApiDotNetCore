@@ -13,6 +13,7 @@ public sealed class PascalCaseNamingConventionStartup<TDbContext> : OpenApiStart
     {
         base.SetJsonApiOptions(options);
 
+        options.IncludeJsonApiVersion = true;
         options.SerializerOptions.PropertyNamingPolicy = null;
         options.SerializerOptions.DictionaryKeyPolicy = null;
         options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());

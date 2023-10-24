@@ -14,6 +14,7 @@ public sealed class KebabCaseNamingConventionStartup<TDbContext> : OpenApiStartu
     {
         base.SetJsonApiOptions(options);
 
+        options.IncludeJsonApiVersion = true;
         options.SerializerOptions.PropertyNamingPolicy = JsonKebabCaseNamingPolicy.Instance;
         options.SerializerOptions.DictionaryKeyPolicy = JsonKebabCaseNamingPolicy.Instance;
         options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());

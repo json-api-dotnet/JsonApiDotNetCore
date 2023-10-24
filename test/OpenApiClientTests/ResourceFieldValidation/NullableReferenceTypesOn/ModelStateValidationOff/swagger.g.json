@@ -1236,9 +1236,6 @@
         ],
         "type": "object",
         "properties": {
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
           "links": {
             "$ref": "#/components/schemas/linksInResourceCollectionDocument"
           },
@@ -1304,9 +1301,6 @@
         ],
         "type": "object",
         "properties": {
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
           "links": {
             "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
           },
@@ -1330,9 +1324,6 @@
         ],
         "type": "object",
         "properties": {
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
           "links": {
             "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
           },
@@ -1359,9 +1350,6 @@
         ],
         "type": "object",
         "properties": {
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
           "links": {
             "$ref": "#/components/schemas/linksInResourceDocument"
           },
@@ -1563,9 +1551,6 @@
         ],
         "type": "object",
         "properties": {
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
           "links": {
             "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
           },
@@ -1593,9 +1578,6 @@
         ],
         "type": "object",
         "properties": {
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
           "links": {
             "$ref": "#/components/schemas/linksInResourceDocument"
           },
@@ -1800,9 +1782,6 @@
         ],
         "type": "object",
         "properties": {
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
           "links": {
             "$ref": "#/components/schemas/linksInResourceCollectionDocument"
           },
@@ -1922,9 +1901,6 @@
         ],
         "type": "object",
         "properties": {
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
           "links": {
             "$ref": "#/components/schemas/linksInResourceDocument"
           },
