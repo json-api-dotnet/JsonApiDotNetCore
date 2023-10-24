@@ -17,6 +17,7 @@ internal sealed class CachingSwaggerGenerator : ISwaggerProvider
     public CachingSwaggerGenerator(SwaggerGenerator defaultSwaggerGenerator)
     {
         ArgumentGuard.NotNull(defaultSwaggerGenerator);
+
         _defaultSwaggerGenerator = defaultSwaggerGenerator;
     }
 

@@ -20,6 +20,8 @@ internal sealed class JsonApiEndpointMetadataProvider
         ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
         ArgumentGuard.NotNull(controllerResourceMapping);
+        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
+
         _nonPrimaryDocumentTypeFactory = new NonPrimaryDocumentTypeFactory(resourceFieldValidationMetadataProvider);
         _controllerResourceMapping = controllerResourceMapping;
     }

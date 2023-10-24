@@ -31,6 +31,7 @@ internal sealed class ResourceObjectSchemaGenerator
         ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
         ArgumentGuard.NotNull(schemaRepositoryAccessor);
+        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceGraph = resourceGraph;

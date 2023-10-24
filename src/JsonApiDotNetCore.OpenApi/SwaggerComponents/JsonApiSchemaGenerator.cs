@@ -55,6 +55,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(_schemaRepositoryAccessor, options.SerializerOptions.PropertyNamingPolicy);

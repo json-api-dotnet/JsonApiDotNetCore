@@ -10,6 +10,8 @@ internal sealed class RelationshipTypeFactory
 
     public RelationshipTypeFactory(ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
+        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
+
         _nonPrimaryDocumentTypeFactory = new NonPrimaryDocumentTypeFactory(resourceFieldValidationMetadataProvider);
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
     }
