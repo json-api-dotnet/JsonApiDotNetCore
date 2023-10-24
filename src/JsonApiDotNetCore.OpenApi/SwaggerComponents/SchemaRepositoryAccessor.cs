@@ -12,7 +12,7 @@ internal sealed class SchemaRepositoryAccessor : ISchemaRepositoryAccessor
         {
             if (_schemaRepository == null)
             {
-                throw new InvalidOperationException("SchemaRepository unavailable.");
+                throw new InvalidOperationException("SchemaRepository is unavailable.");
             }
 
             return _schemaRepository;

@@ -20,7 +20,6 @@ internal sealed class NullableReferenceSchemaGenerator
         ArgumentGuard.NotNull(schemaRepositoryAccessor);
 
         _schemaRepositoryAccessor = schemaRepositoryAccessor;
-
         _nullableSchemaReferenceId = namingPolicy != null ? namingPolicy.ConvertName(PascalCaseNullableSchemaReferenceId) : PascalCaseNullableSchemaReferenceId;
     }
 

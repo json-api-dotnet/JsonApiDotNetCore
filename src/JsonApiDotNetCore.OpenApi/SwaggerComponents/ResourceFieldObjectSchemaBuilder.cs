@@ -74,6 +74,8 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
     public void SetMembersOfAttributesObject(OpenApiSchema fullSchemaForAttributesObject)
     {
+        ArgumentGuard.NotNull(fullSchemaForAttributesObject);
+
         AttrCapabilities requiredCapability = GetRequiredCapabilityForAttributes(_resourceTypeInfo.ResourceObjectOpenType);
 
         foreach ((string fieldName, OpenApiSchema resourceFieldSchema) in _schemasForResourceFields)
@@ -127,6 +129,8 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
     public void SetMembersOfRelationshipsObject(OpenApiSchema fullSchemaForRelationshipsObject)
     {
+        ArgumentGuard.NotNull(fullSchemaForRelationshipsObject);
+
         foreach (string fieldName in _schemasForResourceFields.Keys)
         {
             RelationshipAttribute? matchingRelationship = _resourceTypeInfo.ResourceType.FindRelationshipByPublicName(fieldName);

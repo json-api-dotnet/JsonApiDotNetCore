@@ -6,6 +6,9 @@ internal static class OpenApiSchemaExtensions
 {
     public static void ReorderProperties(this OpenApiSchema fullSchemaForResourceObject, IEnumerable<string> propertyNamesInOrder)
     {
+        ArgumentGuard.NotNull(fullSchemaForResourceObject);
+        ArgumentGuard.NotNull(propertyNamesInOrder);
+
         var propertiesInOrder = new Dictionary<string, OpenApiSchema>();
 
         foreach (string propertyName in propertyNamesInOrder)

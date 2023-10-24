@@ -14,6 +14,7 @@ public sealed class CamelCaseNamingConventionStartup<TDbContext> : OpenApiStartu
     {
         base.SetJsonApiOptions(options);
 
+        options.IncludeJsonApiVersion = true;
         options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
         options.SerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
         options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());

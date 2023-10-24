@@ -16,6 +16,7 @@ public sealed class LegacyOpenApiIntegrationStartup<TDbContext> : OpenApiStartup
 
         options.Namespace = "api";
         options.DefaultAttrCapabilities = AttrCapabilities.AllowView;
+        options.IncludeJsonApiVersion = true;
         options.SerializerOptions.PropertyNamingPolicy = JsonKebabCaseNamingPolicy.Instance;
         options.SerializerOptions.DictionaryKeyPolicy = JsonKebabCaseNamingPolicy.Instance;
         options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());

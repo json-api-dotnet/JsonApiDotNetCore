@@ -27,6 +27,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
     {
         ArgumentGuard.NotNull(controllerResourceMapping);
         ArgumentGuard.NotNull(defaultProvider);
+        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
 
         _defaultProvider = defaultProvider;
         _jsonApiEndpointMetadataProvider = new JsonApiEndpointMetadataProvider(controllerResourceMapping, resourceFieldValidationMetadataProvider);
