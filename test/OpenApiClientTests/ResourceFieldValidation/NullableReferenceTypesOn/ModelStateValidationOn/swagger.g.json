@@ -10,10 +10,11 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves a collection of resources.",
         "operationId": "getResourceCollection",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found resources, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -28,17 +29,12 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves a collection of resources without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResourceCollection",
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/resourceCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
           }
         }
       },
@@ -46,8 +42,10 @@
         "tags": [
           "resources"
         ],
+        "summary": "Creates a new resource.",
         "operationId": "postResource",
         "requestBody": {
+          "description": "The attributes and relationships of the resource to create.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -58,7 +56,7 @@
         },
         "responses": {
           "201": {
-            "description": "Created",
+            "description": "The resource was successfully created, which resulted in additional changes. The newly created resource is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -68,7 +66,16 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The resource was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       }
@@ -78,11 +85,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves an individual resource by its identifier.",
         "operationId": "getResource",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -92,7 +101,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found resource.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -100,6 +109,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -107,11 +119,14 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves an individual resource by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResource",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -121,14 +136,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/resourcePrimaryResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -136,11 +147,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Updates an existing resource.",
         "operationId": "patchResource",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource to update.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -149,6 +162,7 @@
           }
         ],
         "requestBody": {
+          "description": "The attributes and relationships of the resource to update. Omitted fields are left unchanged.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -159,7 +173,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The resource was successfully updated, which resulted in additional changes. The updated resource is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -169,7 +183,19 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The resource was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The resource or a related resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       },
@@ -177,11 +203,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Deletes an existing resource by its identifier.",
         "operationId": "deleteResource",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource to delete.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -191,7 +219,10 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The resource was successfully deleted."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       }
@@ -201,11 +232,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty of an individual resource's nonNullableToOne relationship.",
         "operationId": "getResourceNonNullableToOne",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -215,7 +248,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found empty, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -223,6 +256,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -230,11 +266,14 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty of an individual resource's nonNullableToOne relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResourceNonNullableToOne",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -244,14 +283,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/emptySecondaryResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       }
@@ -261,11 +296,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty identity of an individual resource's nonNullableToOne relationship.",
         "operationId": "getResourceNonNullableToOneRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -275,7 +312,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found empty identity, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -283,6 +320,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -290,11 +330,14 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty identity of an individual resource's nonNullableToOne relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResourceNonNullableToOneRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -304,14 +347,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/emptyIdentifierResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -319,11 +358,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Assigns an existing empty to the nonNullableToOne relationship of an individual resource.",
         "operationId": "patchResourceNonNullableToOneRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose nonNullableToOne relationship to assign.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -332,6 +373,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identity of the empty to assign to the nonNullableToOne relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -342,7 +384,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The nonNullableToOne relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -352,11 +403,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty of an individual resource's nullableToOne relationship.",
         "operationId": "getResourceNullableToOne",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -366,7 +419,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found empty, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -374,6 +427,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -381,11 +437,14 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty of an individual resource's nullableToOne relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResourceNullableToOne",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -395,14 +454,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/nullableEmptySecondaryResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       }
@@ -412,11 +467,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty identity of an individual resource's nullableToOne relationship.",
         "operationId": "getResourceNullableToOneRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -426,7 +483,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found empty identity, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -434,6 +491,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -441,11 +501,14 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty identity of an individual resource's nullableToOne relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResourceNullableToOneRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -455,14 +518,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/nullableEmptyIdentifierResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -470,11 +529,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Clears or assigns an existing empty to the nullableToOne relationship of an individual resource.",
         "operationId": "patchResourceNullableToOneRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose nullableToOne relationship to assign or clear.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -483,6 +544,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identity of the empty to assign to the nullableToOne relationship, or `null` to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -493,7 +555,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The nullableToOne relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -503,11 +574,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty of an individual resource's requiredNonNullableToOne relationship.",
         "operationId": "getResourceRequiredNonNullableToOne",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -517,7 +590,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found empty, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -525,6 +598,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -532,11 +608,14 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty of an individual resource's requiredNonNullableToOne relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResourceRequiredNonNullableToOne",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -546,14 +625,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/emptySecondaryResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       }
@@ -563,11 +638,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty identity of an individual resource's requiredNonNullableToOne relationship.",
         "operationId": "getResourceRequiredNonNullableToOneRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -577,7 +654,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found empty identity, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -585,6 +662,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -592,11 +672,14 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty identity of an individual resource's requiredNonNullableToOne relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResourceRequiredNonNullableToOneRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -606,14 +689,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/emptyIdentifierResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -621,11 +700,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Assigns an existing empty to the requiredNonNullableToOne relationship of an individual resource.",
         "operationId": "patchResourceRequiredNonNullableToOneRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose requiredNonNullableToOne relationship to assign.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -634,6 +715,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identity of the empty to assign to the requiredNonNullableToOne relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -644,7 +726,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The requiredNonNullableToOne relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -654,11 +745,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty of an individual resource's requiredNullableToOne relationship.",
         "operationId": "getResourceRequiredNullableToOne",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -668,7 +761,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found empty, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -676,6 +769,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -683,11 +779,14 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty of an individual resource's requiredNullableToOne relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResourceRequiredNullableToOne",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -697,14 +796,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/emptySecondaryResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       }
@@ -714,11 +809,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty identity of an individual resource's requiredNullableToOne relationship.",
         "operationId": "getResourceRequiredNullableToOneRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -728,7 +825,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found empty identity, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -736,6 +833,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -743,11 +843,14 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty identity of an individual resource's requiredNullableToOne relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResourceRequiredNullableToOneRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -757,14 +860,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/emptyIdentifierResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -772,11 +871,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Assigns an existing empty to the requiredNullableToOne relationship of an individual resource.",
         "operationId": "patchResourceRequiredNullableToOneRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose requiredNullableToOne relationship to assign.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -785,6 +886,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identity of the empty to assign to the requiredNullableToOne relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -795,7 +897,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The requiredNullableToOne relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -805,11 +916,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empties of an individual resource's requiredToMany relationship.",
         "operationId": "getResourceRequiredToMany",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empties to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -819,7 +932,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found empties, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -827,6 +940,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -834,11 +950,14 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empties of an individual resource's requiredToMany relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResourceRequiredToMany",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empties to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -848,14 +967,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/emptyCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       }
@@ -865,11 +980,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty identities of an individual resource's requiredToMany relationship.",
         "operationId": "getResourceRequiredToManyRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -879,7 +996,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found empty identities, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -887,6 +1004,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -894,11 +1014,14 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty identities of an individual resource's requiredToMany relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResourceRequiredToManyRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -908,14 +1031,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/emptyIdentifierCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -923,11 +1042,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Adds existing empties to the requiredToMany relationship of an individual resource.",
         "operationId": "postResourceRequiredToManyRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource to add empties to.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -936,6 +1057,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the empties to add to the requiredToMany relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -946,7 +1068,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The empties were successfully added, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -954,11 +1085,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Assigns existing empties to the requiredToMany relationship of an individual resource.",
         "operationId": "patchResourceRequiredToManyRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose requiredToMany relationship to assign.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -967,6 +1100,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the empties to assign to the requiredToMany relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -977,7 +1111,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The requiredToMany relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -985,11 +1128,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Removes existing empties from the requiredToMany relationship of an individual resource.",
         "operationId": "deleteResourceRequiredToManyRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource to remove empties from.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -998,6 +1143,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the empties to remove from the requiredToMany relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1008,7 +1154,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The empties were successfully removed, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -1018,11 +1173,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empties of an individual resource's toMany relationship.",
         "operationId": "getResourceToMany",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empties to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1032,7 +1189,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found empties, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1040,6 +1197,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -1047,11 +1207,14 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empties of an individual resource's toMany relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResourceToMany",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empties to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1061,14 +1224,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/emptyCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       }
@@ -1078,11 +1237,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty identities of an individual resource's toMany relationship.",
         "operationId": "getResourceToManyRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1092,7 +1253,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found empty identities, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1100,6 +1261,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -1107,11 +1271,14 @@
         "tags": [
           "resources"
         ],
+        "summary": "Retrieves the related empty identities of an individual resource's toMany relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headResourceToManyRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose related empty identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1121,14 +1288,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/emptyIdentifierCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The resource does not exist."
           }
         }
       },
@@ -1136,11 +1299,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Adds existing empties to the toMany relationship of an individual resource.",
         "operationId": "postResourceToManyRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource to add empties to.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1149,6 +1314,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the empties to add to the toMany relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1159,7 +1325,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The empties were successfully added, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -1167,11 +1342,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Assigns existing empties to the toMany relationship of an individual resource.",
         "operationId": "patchResourceToManyRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource whose toMany relationship to assign.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1180,6 +1357,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the empties to assign to the toMany relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1190,7 +1368,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The toMany relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -1198,11 +1385,13 @@
         "tags": [
           "resources"
         ],
+        "summary": "Removes existing empties from the toMany relationship of an individual resource.",
         "operationId": "deleteResourceToManyRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the resource to remove empties from.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1211,6 +1400,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the empties to remove from the toMany relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1221,7 +1411,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The empties were successfully removed, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }

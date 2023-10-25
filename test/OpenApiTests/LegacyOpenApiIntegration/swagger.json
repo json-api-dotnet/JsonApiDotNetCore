@@ -10,10 +10,11 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Retrieves a collection of airplanes.",
         "operationId": "get-airplane-collection",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found airplanes, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -28,17 +29,12 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Retrieves a collection of airplanes without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-airplane-collection",
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/airplane-collection-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
           }
         }
       },
@@ -46,8 +42,10 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Creates a new airplane.",
         "operationId": "post-airplane",
         "requestBody": {
+          "description": "The attributes and relationships of the airplane to create.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -58,7 +56,7 @@
         },
         "responses": {
           "201": {
-            "description": "Created",
+            "description": "The airplane was successfully created, which resulted in additional changes. The newly created airplane is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -68,7 +66,16 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The airplane was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       }
@@ -78,11 +85,13 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Retrieves an individual airplane by its identifier.",
         "operationId": "get-airplane",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the airplane to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -91,7 +100,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found airplane.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -99,6 +108,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The airplane does not exist."
           }
         }
       },
@@ -106,11 +118,14 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Retrieves an individual airplane by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-airplane",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the airplane to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -119,14 +134,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/airplane-primary-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The airplane does not exist."
           }
         }
       },
@@ -134,11 +145,13 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Updates an existing airplane.",
         "operationId": "patch-airplane",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the airplane to update.",
             "required": true,
             "schema": {
               "type": "string"
@@ -146,6 +159,7 @@
           }
         ],
         "requestBody": {
+          "description": "The attributes and relationships of the airplane to update. Omitted fields are left unchanged.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -156,7 +170,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The airplane was successfully updated, which resulted in additional changes. The updated airplane is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -166,7 +180,19 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The airplane was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The airplane or a related resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       },
@@ -174,11 +200,13 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Deletes an existing airplane by its identifier.",
         "operationId": "delete-airplane",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the airplane to delete.",
             "required": true,
             "schema": {
               "type": "string"
@@ -187,7 +215,10 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The airplane was successfully deleted."
+          },
+          "404": {
+            "description": "The airplane does not exist."
           }
         }
       }
@@ -197,11 +228,13 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Retrieves the related flights of an individual airplane's flights relationship.",
         "operationId": "get-airplane-flights",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the airplane whose related flights to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -210,7 +243,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flights, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -218,6 +251,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The airplane does not exist."
           }
         }
       },
@@ -225,11 +261,14 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Retrieves the related flights of an individual airplane's flights relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-airplane-flights",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the airplane whose related flights to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -238,14 +277,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-collection-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The airplane does not exist."
           }
         }
       }
@@ -255,11 +290,13 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Retrieves the related flight identities of an individual airplane's flights relationship.",
         "operationId": "get-airplane-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the airplane whose related flight identities to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -268,7 +305,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flight identities, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -276,6 +313,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The airplane does not exist."
           }
         }
       },
@@ -283,11 +323,14 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Retrieves the related flight identities of an individual airplane's flights relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-airplane-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the airplane whose related flight identities to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -296,14 +339,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-identifier-collection-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The airplane does not exist."
           }
         }
       },
@@ -311,11 +350,13 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Adds existing flights to the flights relationship of an individual airplane.",
         "operationId": "post-airplane-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the airplane to add flights to.",
             "required": true,
             "schema": {
               "type": "string"
@@ -323,6 +364,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the flights to add to the flights relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -333,7 +375,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The flights were successfully added, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The airplane does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -341,11 +392,13 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Assigns existing flights to the flights relationship of an individual airplane.",
         "operationId": "patch-airplane-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the airplane whose flights relationship to assign.",
             "required": true,
             "schema": {
               "type": "string"
@@ -353,6 +406,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the flights to assign to the flights relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -363,7 +417,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The flights relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The airplane does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -371,11 +434,13 @@
         "tags": [
           "airplanes"
         ],
+        "summary": "Removes existing flights from the flights relationship of an individual airplane.",
         "operationId": "delete-airplane-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the airplane to remove flights from.",
             "required": true,
             "schema": {
               "type": "string"
@@ -383,6 +448,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the flights to remove from the flights relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -393,7 +459,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The flights were successfully removed, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The airplane does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -403,10 +478,11 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Retrieves a collection of flight-attendants.",
         "operationId": "get-flight-attendant-collection",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flight-attendants, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -421,17 +497,12 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Retrieves a collection of flight-attendants without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-attendant-collection",
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-collection-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
           }
         }
       },
@@ -439,8 +510,10 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Creates a new flight-attendant.",
         "operationId": "post-flight-attendant",
         "requestBody": {
+          "description": "The attributes and relationships of the flight-attendant to create.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -451,7 +524,7 @@
         },
         "responses": {
           "201": {
-            "description": "Created",
+            "description": "The flight-attendant was successfully created, which resulted in additional changes. The newly created flight-attendant is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -461,7 +534,16 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The flight-attendant was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       }
@@ -471,11 +553,13 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Retrieves an individual flight-attendant by its identifier.",
         "operationId": "get-flight-attendant",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -484,7 +568,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flight-attendant.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -492,6 +576,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           }
         }
       },
@@ -499,11 +586,14 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Retrieves an individual flight-attendant by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-attendant",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -512,14 +602,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-primary-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           }
         }
       },
@@ -527,11 +613,13 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Updates an existing flight-attendant.",
         "operationId": "patch-flight-attendant",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant to update.",
             "required": true,
             "schema": {
               "type": "string"
@@ -539,6 +627,7 @@
           }
         ],
         "requestBody": {
+          "description": "The attributes and relationships of the flight-attendant to update. Omitted fields are left unchanged.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -549,7 +638,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The flight-attendant was successfully updated, which resulted in additional changes. The updated flight-attendant is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -559,7 +648,19 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The flight-attendant was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight-attendant or a related resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       },
@@ -567,11 +668,13 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Deletes an existing flight-attendant by its identifier.",
         "operationId": "delete-flight-attendant",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant to delete.",
             "required": true,
             "schema": {
               "type": "string"
@@ -580,7 +683,10 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The flight-attendant was successfully deleted."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           }
         }
       }
@@ -590,11 +696,13 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Retrieves the related flights of an individual flight-attendant's purser-on-flights relationship.",
         "operationId": "get-flight-attendant-purser-on-flights",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant whose related flights to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -603,7 +711,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flights, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -611,6 +719,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           }
         }
       },
@@ -618,11 +729,14 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Retrieves the related flights of an individual flight-attendant's purser-on-flights relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-attendant-purser-on-flights",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant whose related flights to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -631,14 +745,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-collection-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           }
         }
       }
@@ -648,11 +758,13 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Retrieves the related flight identities of an individual flight-attendant's purser-on-flights relationship.",
         "operationId": "get-flight-attendant-purser-on-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant whose related flight identities to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -661,7 +773,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flight identities, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -669,6 +781,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           }
         }
       },
@@ -676,11 +791,14 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Retrieves the related flight identities of an individual flight-attendant's purser-on-flights relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-attendant-purser-on-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant whose related flight identities to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -689,14 +807,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-identifier-collection-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           }
         }
       },
@@ -704,11 +818,13 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Adds existing flights to the purser-on-flights relationship of an individual flight-attendant.",
         "operationId": "post-flight-attendant-purser-on-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant to add flights to.",
             "required": true,
             "schema": {
               "type": "string"
@@ -716,6 +832,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the flights to add to the purser-on-flights relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -726,7 +843,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The flights were successfully added, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -734,11 +860,13 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Assigns existing flights to the purser-on-flights relationship of an individual flight-attendant.",
         "operationId": "patch-flight-attendant-purser-on-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant whose purser-on-flights relationship to assign.",
             "required": true,
             "schema": {
               "type": "string"
@@ -746,6 +874,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the flights to assign to the purser-on-flights relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -756,7 +885,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The purser-on-flights relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -764,11 +902,13 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Removes existing flights from the purser-on-flights relationship of an individual flight-attendant.",
         "operationId": "delete-flight-attendant-purser-on-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant to remove flights from.",
             "required": true,
             "schema": {
               "type": "string"
@@ -776,6 +916,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the flights to remove from the purser-on-flights relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -786,7 +927,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The flights were successfully removed, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -796,11 +946,13 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Retrieves the related flights of an individual flight-attendant's scheduled-for-flights relationship.",
         "operationId": "get-flight-attendant-scheduled-for-flights",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant whose related flights to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -809,7 +961,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flights, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -817,6 +969,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           }
         }
       },
@@ -824,11 +979,14 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Retrieves the related flights of an individual flight-attendant's scheduled-for-flights relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-attendant-scheduled-for-flights",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant whose related flights to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -837,14 +995,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-collection-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           }
         }
       }
@@ -854,11 +1008,13 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Retrieves the related flight identities of an individual flight-attendant's scheduled-for-flights relationship.",
         "operationId": "get-flight-attendant-scheduled-for-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant whose related flight identities to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -867,7 +1023,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flight identities, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -875,6 +1031,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           }
         }
       },
@@ -882,11 +1041,14 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Retrieves the related flight identities of an individual flight-attendant's scheduled-for-flights relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-attendant-scheduled-for-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant whose related flight identities to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -895,14 +1057,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-identifier-collection-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           }
         }
       },
@@ -910,11 +1068,13 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Adds existing flights to the scheduled-for-flights relationship of an individual flight-attendant.",
         "operationId": "post-flight-attendant-scheduled-for-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant to add flights to.",
             "required": true,
             "schema": {
               "type": "string"
@@ -922,6 +1082,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the flights to add to the scheduled-for-flights relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -932,7 +1093,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The flights were successfully added, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -940,11 +1110,13 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Assigns existing flights to the scheduled-for-flights relationship of an individual flight-attendant.",
         "operationId": "patch-flight-attendant-scheduled-for-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant whose scheduled-for-flights relationship to assign.",
             "required": true,
             "schema": {
               "type": "string"
@@ -952,6 +1124,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the flights to assign to the scheduled-for-flights relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -962,7 +1135,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The scheduled-for-flights relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -970,11 +1152,13 @@
         "tags": [
           "flight-attendants"
         ],
+        "summary": "Removes existing flights from the scheduled-for-flights relationship of an individual flight-attendant.",
         "operationId": "delete-flight-attendant-scheduled-for-flights-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight-attendant to remove flights from.",
             "required": true,
             "schema": {
               "type": "string"
@@ -982,6 +1166,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the flights to remove from the scheduled-for-flights relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -992,7 +1177,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The flights were successfully removed, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -1002,10 +1196,11 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves a collection of flights.",
         "operationId": "get-flight-collection",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flights, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1020,17 +1215,12 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves a collection of flights without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-collection",
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-collection-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
           }
         }
       },
@@ -1038,8 +1228,10 @@
         "tags": [
           "flights"
         ],
+        "summary": "Creates a new flight.",
         "operationId": "post-flight",
         "requestBody": {
+          "description": "The attributes and relationships of the flight to create.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1050,7 +1242,7 @@
         },
         "responses": {
           "201": {
-            "description": "Created",
+            "description": "The flight was successfully created, which resulted in additional changes. The newly created flight is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1060,7 +1252,16 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The flight was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       }
@@ -1070,11 +1271,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves an individual flight by its identifier.",
         "operationId": "get-flight",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1083,7 +1286,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flight.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1091,6 +1294,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1098,11 +1304,14 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves an individual flight by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1111,14 +1320,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-primary-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1126,11 +1331,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Updates an existing flight.",
         "operationId": "patch-flight",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight to update.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1138,6 +1345,7 @@
           }
         ],
         "requestBody": {
+          "description": "The attributes and relationships of the flight to update. Omitted fields are left unchanged.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1148,7 +1356,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The flight was successfully updated, which resulted in additional changes. The updated flight is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1158,7 +1366,19 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The flight was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight or a related resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       },
@@ -1166,11 +1386,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Deletes an existing flight by its identifier.",
         "operationId": "delete-flight",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight to delete.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1179,7 +1401,10 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The flight was successfully deleted."
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       }
@@ -1189,11 +1414,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related flight-attendant of an individual flight's backup-purser relationship.",
         "operationId": "get-flight-backup-purser",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related flight-attendant to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1202,7 +1429,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flight-attendant, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1210,6 +1437,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1217,11 +1447,14 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related flight-attendant of an individual flight's backup-purser relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-backup-purser",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related flight-attendant to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1230,14 +1463,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/nullable-flight-attendant-secondary-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       }
@@ -1247,11 +1476,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related flight-attendant identity of an individual flight's backup-purser relationship.",
         "operationId": "get-flight-backup-purser-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related flight-attendant identity to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1260,7 +1491,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flight-attendant identity, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1268,6 +1499,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1275,11 +1509,14 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related flight-attendant identity of an individual flight's backup-purser relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-backup-purser-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related flight-attendant identity to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1288,14 +1525,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/nullable-flight-attendant-identifier-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1303,11 +1536,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Clears or assigns an existing flight-attendant to the backup-purser relationship of an individual flight.",
         "operationId": "patch-flight-backup-purser-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose backup-purser relationship to assign or clear.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1315,6 +1550,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identity of the flight-attendant to assign to the backup-purser relationship, or `null` to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1325,7 +1561,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The backup-purser relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -1335,11 +1580,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related flight-attendants of an individual flight's cabin-crew-members relationship.",
         "operationId": "get-flight-cabin-crew-members",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related flight-attendants to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1348,7 +1595,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flight-attendants, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1356,6 +1603,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1363,11 +1613,14 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related flight-attendants of an individual flight's cabin-crew-members relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-cabin-crew-members",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related flight-attendants to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1376,14 +1629,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-collection-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       }
@@ -1393,11 +1642,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related flight-attendant identities of an individual flight's cabin-crew-members relationship.",
         "operationId": "get-flight-cabin-crew-members-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related flight-attendant identities to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1406,7 +1657,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flight-attendant identities, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1414,6 +1665,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1421,11 +1675,14 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related flight-attendant identities of an individual flight's cabin-crew-members relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-cabin-crew-members-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related flight-attendant identities to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1434,14 +1691,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-identifier-collection-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1449,11 +1702,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Adds existing flight-attendants to the cabin-crew-members relationship of an individual flight.",
         "operationId": "post-flight-cabin-crew-members-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight to add flight-attendants to.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1461,6 +1716,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the flight-attendants to add to the cabin-crew-members relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1471,7 +1727,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The flight-attendants were successfully added, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -1479,11 +1744,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Assigns existing flight-attendants to the cabin-crew-members relationship of an individual flight.",
         "operationId": "patch-flight-cabin-crew-members-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose cabin-crew-members relationship to assign.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1491,6 +1758,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the flight-attendants to assign to the cabin-crew-members relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1501,7 +1769,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The cabin-crew-members relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -1509,11 +1786,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Removes existing flight-attendants from the cabin-crew-members relationship of an individual flight.",
         "operationId": "delete-flight-cabin-crew-members-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight to remove flight-attendants from.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1521,6 +1800,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the flight-attendants to remove from the cabin-crew-members relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1531,7 +1811,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The flight-attendants were successfully removed, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -1541,11 +1830,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related passengers of an individual flight's passengers relationship.",
         "operationId": "get-flight-passengers",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related passengers to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1554,7 +1845,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found passengers, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1562,6 +1853,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1569,11 +1863,14 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related passengers of an individual flight's passengers relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-passengers",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related passengers to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1582,14 +1879,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/passenger-collection-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       }
@@ -1599,11 +1892,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related passenger identities of an individual flight's passengers relationship.",
         "operationId": "get-flight-passengers-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related passenger identities to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1612,7 +1907,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found passenger identities, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1620,6 +1915,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1627,11 +1925,14 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related passenger identities of an individual flight's passengers relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-passengers-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related passenger identities to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1640,14 +1941,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/passenger-identifier-collection-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1655,11 +1952,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Adds existing passengers to the passengers relationship of an individual flight.",
         "operationId": "post-flight-passengers-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight to add passengers to.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1667,6 +1966,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the passengers to add to the passengers relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1677,7 +1977,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The passengers were successfully added, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -1685,11 +1994,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Assigns existing passengers to the passengers relationship of an individual flight.",
         "operationId": "patch-flight-passengers-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose passengers relationship to assign.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1697,6 +2008,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the passengers to assign to the passengers relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1707,7 +2019,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The passengers relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -1715,11 +2036,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Removes existing passengers from the passengers relationship of an individual flight.",
         "operationId": "delete-flight-passengers-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight to remove passengers from.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1727,6 +2050,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the passengers to remove from the passengers relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1737,7 +2061,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The passengers were successfully removed, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -1747,11 +2080,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related flight-attendant of an individual flight's purser relationship.",
         "operationId": "get-flight-purser",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related flight-attendant to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1760,7 +2095,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flight-attendant, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1768,6 +2103,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1775,11 +2113,14 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related flight-attendant of an individual flight's purser relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-purser",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related flight-attendant to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1788,14 +2129,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-secondary-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       }
@@ -1805,11 +2142,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related flight-attendant identity of an individual flight's purser relationship.",
         "operationId": "get-flight-purser-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related flight-attendant identity to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1818,7 +2157,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found flight-attendant identity, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1826,6 +2165,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1833,11 +2175,14 @@
         "tags": [
           "flights"
         ],
+        "summary": "Retrieves the related flight-attendant identity of an individual flight's purser relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-purser-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose related flight-attendant identity to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1846,14 +2191,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-identifier-response-document"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The flight does not exist."
           }
         }
       },
@@ -1861,11 +2202,13 @@
         "tags": [
           "flights"
         ],
+        "summary": "Assigns an existing flight-attendant to the purser relationship of an individual flight.",
         "operationId": "patch-flight-purser-relationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the flight whose purser relationship to assign.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1873,6 +2216,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identity of the flight-attendant to assign to the purser relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -1883,7 +2227,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The purser relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The flight does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
