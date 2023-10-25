@@ -18,7 +18,7 @@
     <TargetFrameworkName>net6.0</TargetFrameworkName>
     <CodeAnalysisFrozenVersion>4.1.0</CodeAnalysisFrozenVersion>
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
-    <EntityFrameworkCoreFrozenVersion>6.0.0</EntityFrameworkCoreFrozenVersion>
+    <EntityFrameworkCoreFrozenVersion>7.0.13</EntityFrameworkCoreFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
