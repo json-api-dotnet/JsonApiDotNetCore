@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -10,6 +11,12 @@ namespace OpenApiTests.DocComments;
 public sealed class DocCommentsStartup<TDbContext> : OpenApiStartup<TDbContext>
     where TDbContext : TestableDbContext
 {
+    protected override void SetJsonApiOptions(JsonApiOptions options)
+    {
+        options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
+        base.SetJsonApiOptions(options);
+    }
+
     protected override void SetupSwaggerGenAction(SwaggerGenOptions options)
     {
         options.SwaggerDoc("v1", new OpenApiInfo

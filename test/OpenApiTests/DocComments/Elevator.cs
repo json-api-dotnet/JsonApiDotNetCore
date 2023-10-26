@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -8,7 +9,7 @@ namespace OpenApiTests.DocComments;
 /// An elevator within a skyscraper.
 /// </summary>
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.DocComments")]
+[Resource(ControllerNamespace = "OpenApiTests.DocComments", ClientIdGeneration = ClientIdGenerationMode.Forbidden)]
 public sealed class Elevator : Identifiable<long>
 {
     /// <summary>

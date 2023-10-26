@@ -33,16 +33,20 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
     private const string TextRequestBodyIncompatibleType = "A resource type in the request body is incompatible.";
     private const string TextRequestBodyIncompatibleIdOrType = "A resource type or identifier in the request body is incompatible.";
     private const string TextRequestBodyValidationFailed = "Validation of the request body failed.";
+    private const string TextRequestBodyClientId = "Client-generated IDs cannot be used at this endpoint.";
 
+    private readonly IJsonApiOptions _options;
     private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
 
-    public JsonApiOperationDocumentationFilter(IControllerResourceMapping controllerResourceMapping,
+    public JsonApiOperationDocumentationFilter(IJsonApiOptions options, IControllerResourceMapping controllerResourceMapping,
         ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
+        ArgumentGuard.NotNull(options);
         ArgumentGuard.NotNull(controllerResourceMapping);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
 
+        _options = options;
         _controllerResourceMapping = controllerResourceMapping;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
     }
@@ -190,6 +194,13 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyMissingOrMalformed);
         SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextRequestBodyIncompatibleType);
         SetResponseDescription(operation.Responses, HttpStatusCode.UnprocessableEntity, TextRequestBodyValidationFailed);
+
+        ClientIdGenerationMode clientIdGeneration = resourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
+
+        if (clientIdGeneration == ClientIdGenerationMode.Forbidden)
+        {
+            SetResponseDescription(operation.Responses, HttpStatusCode.Forbidden, TextRequestBodyClientId);
+        }
     }
 
     private void ApplyPatchResource(OpenApiOperation operation, ResourceType resourceType)

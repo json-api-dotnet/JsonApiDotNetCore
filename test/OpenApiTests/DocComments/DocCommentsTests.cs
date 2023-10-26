@@ -483,4 +483,17 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
             schemasElement.Should().HaveProperty("spaceKind.description", "Lists the various kinds of spaces within a skyscraper.");
         });
     }
+
+    [Fact]
+    public async Task Forbidden_status_is_added_when_client_generated_IDs_are_disabled()
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath("paths./elevators.post.responses").With(responseElement =>
+        {
+            responseElement.Should().HaveProperty("403.description", "Client-generated IDs cannot be used at this endpoint.");
+        });
+    }
 }

@@ -76,6 +76,9 @@
           },
           "422": {
             "description": "Validation of the request body failed."
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint."
           }
         }
       }
@@ -544,6 +547,9 @@
           },
           "422": {
             "description": "Validation of the request body failed."
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint."
           }
         }
       }
@@ -1262,6 +1268,9 @@
           },
           "422": {
             "description": "Validation of the request body failed."
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint."
           }
         }
       }
