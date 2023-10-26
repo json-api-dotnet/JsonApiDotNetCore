@@ -13,7 +13,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
         _testContext = testContext;
 
         testContext.UseController<SupermarketsController>();
-        testContext.SwaggerDocumentOutputPath = "test/OpenApiClientTests/NamingConventions/CamelCase";
+        testContext.SwaggerDocumentOutputDirectory = "test/OpenApiClientTests/NamingConventions/CamelCase";
     }
 
     [Fact]

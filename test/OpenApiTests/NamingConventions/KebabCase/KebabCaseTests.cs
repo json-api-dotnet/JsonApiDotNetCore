@@ -13,7 +13,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
         _testContext = testContext;
 
         testContext.UseController<SupermarketsController>();
-        testContext.SwaggerDocumentOutputPath = "test/OpenApiClientTests/NamingConventions/KebabCase";
+        testContext.SwaggerDocumentOutputDirectory = "test/OpenApiClientTests/NamingConventions/KebabCase";
     }
 
     [Fact]

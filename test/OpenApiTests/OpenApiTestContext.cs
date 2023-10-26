@@ -12,7 +12,7 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
 {
     private readonly Lazy<Task<JsonElement>> _lazySwaggerDocument;
 
-    internal string? SwaggerDocumentOutputPath { private get; set; }
+    internal string? SwaggerDocumentOutputDirectory { private get; set; }
 
     public OpenApiTestContext()
     {
@@ -30,9 +30,9 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
 
         JsonElement rootElement = ParseSwaggerDocument(content);
 
-        if (SwaggerDocumentOutputPath != null)
+        if (SwaggerDocumentOutputDirectory != null)
         {
-            string absoluteOutputPath = GetSwaggerDocumentAbsoluteOutputPath(SwaggerDocumentOutputPath);
+            string absoluteOutputPath = GetSwaggerDocumentAbsoluteOutputPath(SwaggerDocumentOutputDirectory);
             await WriteToDiskAsync(absoluteOutputPath, rootElement);
         }
 

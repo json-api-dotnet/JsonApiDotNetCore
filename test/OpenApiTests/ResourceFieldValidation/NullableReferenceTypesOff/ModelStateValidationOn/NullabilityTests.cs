@@ -14,7 +14,7 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<OpenApiS
         _testContext = testContext;
 
         testContext.UseController<NrtOffResourcesController>();
-        testContext.SwaggerDocumentOutputPath = "test/OpenApiClientTests/ResourceFieldValidation/NullableReferenceTypesOff/ModelStateValidationOn";
+        testContext.SwaggerDocumentOutputDirectory = "test/OpenApiClientTests/ResourceFieldValidation/NullableReferenceTypesOff/ModelStateValidationOn";
     }
 
     [Theory]
