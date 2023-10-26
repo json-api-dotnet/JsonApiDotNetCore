@@ -23,6 +23,7 @@ internal sealed class ResourceObjectSchemaGenerator
     private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
     private readonly Func<ResourceTypeInfo, ResourceFieldObjectSchemaBuilder> _resourceFieldObjectSchemaBuilderFactory;
+    private readonly ResourceObjectDocumentationReader _resourceObjectDocumentationReader;
 
     public ResourceObjectSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options,
         ISchemaRepositoryAccessor schemaRepositoryAccessor, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
@@ -42,6 +43,8 @@ internal sealed class ResourceObjectSchemaGenerator
 
         _resourceFieldObjectSchemaBuilderFactory = resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor,
             defaultSchemaGenerator, _resourceTypeSchemaGenerator, options.SerializerOptions.PropertyNamingPolicy, resourceFieldValidationMetadataProvider);
+
+        _resourceObjectDocumentationReader = new ResourceObjectDocumentationReader();
     }
 
     public OpenApiSchema GenerateSchema(Type resourceObjectType)
@@ -55,7 +58,7 @@ internal sealed class ResourceObjectSchemaGenerator
 
         RemoveResourceIdIfPostResourceObject(resourceTypeInfo, fullSchemaForResourceObject);
 
-        SetResourceType(fullSchemaForResourceObject, resourceTypeInfo.ResourceType.ClrType);
+        SetResourceType(fullSchemaForResourceObject, resourceTypeInfo.ResourceType);
 
         SetResourceAttributes(fullSchemaForResourceObject, fieldObjectBuilder);
 
@@ -96,9 +99,11 @@ internal sealed class ResourceObjectSchemaGenerator
         }
     }
 
-    private void SetResourceType(OpenApiSchema fullSchemaForResourceObject, Type resourceType)
+    private void SetResourceType(OpenApiSchema fullSchemaForResourceObject, ResourceType resourceType)
     {
-        fullSchemaForResourceObject.Properties[JsonApiPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType);
+        fullSchemaForResourceObject.Properties[JsonApiPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType.ClrType);
+
+        fullSchemaForResourceObject.Description = _resourceObjectDocumentationReader.GetDocumentationForType(resourceType);
     }
 
     private void SetResourceAttributes(OpenApiSchema fullSchemaForResourceObject, ResourceFieldObjectSchemaBuilder builder)

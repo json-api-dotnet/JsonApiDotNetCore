@@ -28,5 +28,7 @@ public sealed class DocCommentsStartup<TDbContext> : OpenApiStartup<TDbContext>
                 Url = new Uri("https://licenses.nuget.org/MIT")
             }
         });
+
+        base.SetupSwaggerGenAction(options);
     }
 }

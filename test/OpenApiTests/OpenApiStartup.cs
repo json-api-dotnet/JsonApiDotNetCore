@@ -1,3 +1,4 @@
+using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi;
 using Microsoft.AspNetCore.Builder;
@@ -21,6 +22,8 @@ public class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
 
     protected virtual void SetupSwaggerGenAction(SwaggerGenOptions options)
     {
+        string documentationPath = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
+        options.IncludeXmlComments(documentationPath);
     }
 
     public override void Configure(IApplicationBuilder app)

@@ -18,6 +18,12 @@ public sealed class Space : Identifiable<long>
     public int FloorNumber { get; set; }
 
     /// <summary>
+    /// The kind of this space.
+    /// </summary>
+    [Attr]
+    public SpaceKind Kind { get; set; }
+
+    /// <summary>
     /// The skyscraper this space exists in.
     /// </summary>
     [HasOne]

@@ -15,6 +15,8 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
         _testContext = testContext;
 
         testContext.UseController<SkyscrapersController>();
+        testContext.UseController<ElevatorsController>();
+        testContext.UseController<SpacesController>();
     }
 
     [Fact]
@@ -420,6 +422,65 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responseElement.Should().HaveProperty("409.description", "A resource type in the request body is incompatible.");
                 });
             });
+        });
+    }
+
+    [Fact]
+    public async Task Resource_types_are_documented()
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath("components.schemas").With(schemasElement =>
+        {
+            schemasElement.Should().HaveProperty("elevatorDataInPatchRequest.description", "An elevator within a skyscraper.");
+            schemasElement.Should().HaveProperty("elevatorDataInPostRequest.description", "An elevator within a skyscraper.");
+            schemasElement.Should().HaveProperty("elevatorDataInResponse.description", "An elevator within a skyscraper.");
+
+            schemasElement.Should().HaveProperty("skyscraperDataInPatchRequest.description", "A tall, continuously habitable building having multiple floors.");
+            schemasElement.Should().HaveProperty("skyscraperDataInPostRequest.description", "A tall, continuously habitable building having multiple floors.");
+            schemasElement.Should().HaveProperty("skyscraperDataInResponse.description", "A tall, continuously habitable building having multiple floors.");
+
+            schemasElement.Should().HaveProperty("spaceDataInPatchRequest.description", "A space within a skyscraper, such as an office, hotel, residential space, or retail space.");
+            schemasElement.Should().HaveProperty("spaceDataInPostRequest.description", "A space within a skyscraper, such as an office, hotel, residential space, or retail space.");
+            schemasElement.Should().HaveProperty("spaceDataInResponse.description", "A space within a skyscraper, such as an office, hotel, residential space, or retail space.");
+        });
+    }
+
+    [Fact]
+    public async Task Resource_attributes_are_documented()
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath("components.schemas").With(schemasElement =>
+        {
+            schemasElement.Should().HaveProperty("elevatorAttributesInPatchRequest.properties.floorCount.description", "The number of floors this elevator provides access to.");
+            schemasElement.Should().HaveProperty("elevatorAttributesInPostRequest.properties.floorCount.description", "The number of floors this elevator provides access to.");
+            schemasElement.Should().HaveProperty("elevatorAttributesInResponse.properties.floorCount.description", "The number of floors this elevator provides access to.");
+
+            schemasElement.Should().HaveProperty("skyscraperAttributesInPatchRequest.properties.heightInMeters.description", "The height of this building, in meters.");
+            schemasElement.Should().HaveProperty("skyscraperAttributesInPostRequest.properties.heightInMeters.description", "The height of this building, in meters.");
+            schemasElement.Should().HaveProperty("skyscraperAttributesInResponse.properties.heightInMeters.description", "The height of this building, in meters.");
+
+            schemasElement.Should().HaveProperty("spaceAttributesInPatchRequest.properties.floorNumber.description", "The floor number on which this space resides.");
+            schemasElement.Should().HaveProperty("spaceAttributesInPostRequest.properties.floorNumber.description", "The floor number on which this space resides.");
+            schemasElement.Should().HaveProperty("spaceAttributesInResponse.properties.floorNumber.description", "The floor number on which this space resides.");
+        });
+    }
+
+    [Fact]
+    public async Task Enums_are_documented()
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath("components.schemas").With(schemasElement =>
+        {
+            schemasElement.Should().HaveProperty("spaceKind.description", "Lists the various kinds of spaces within a skyscraper.");
         });
     }
 }

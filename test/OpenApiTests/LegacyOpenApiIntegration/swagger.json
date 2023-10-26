@@ -2259,7 +2259,8 @@
           "LufthansaGroup",
           "AirFranceKlm"
         ],
-        "type": "string"
+        "type": "string",
+        "description": "Lists the various airlines used in this API."
       },
       "airplane-attributes-in-patch-request": {
         "type": "object",
@@ -2349,6 +2350,7 @@
           },
           "manufactured-at": {
             "type": "string",
+            "description": "Gets the day on which this airplane was manufactured.",
             "format": "date-time"
           },
           "is-in-maintenance": {
