@@ -116,6 +116,11 @@ public static class JsonElementAssertionExtensions
             }
         }
 
+        public void HaveProperty(string propertyName, string propertyValue)
+        {
+            _subject.Should().ContainPath(propertyName).With(element => element.Should().Be(propertyValue));
+        }
+
         public void ContainArrayElement(string value)
         {
             _subject.ValueKind.Should().Be(JsonValueKind.Array);

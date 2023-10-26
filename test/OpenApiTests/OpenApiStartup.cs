@@ -1,7 +1,9 @@
+using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using TestBuildingBlocks;
 
 namespace OpenApiTests;
@@ -15,7 +17,13 @@ public class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
 
         services.AddJsonApi<TDbContext>(SetJsonApiOptions, mvcBuilder: mvcBuilder);
 
-        services.AddOpenApi(mvcBuilder);
+        services.AddOpenApi(mvcBuilder, SetupSwaggerGenAction);
+    }
+
+    protected virtual void SetupSwaggerGenAction(SwaggerGenOptions options)
+    {
+        string documentationPath = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
+        options.IncludeXmlComments(documentationPath);
     }
 
     public override void Configure(IApplicationBuilder app)

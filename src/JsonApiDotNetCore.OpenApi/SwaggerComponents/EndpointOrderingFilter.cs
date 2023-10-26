@@ -16,12 +16,12 @@ internal sealed class EndpointOrderingFilter : IDocumentFilter
         ArgumentGuard.NotNull(swaggerDoc);
         ArgumentGuard.NotNull(context);
 
-        List<KeyValuePair<string, OpenApiPathItem>> orderedEndpoints = swaggerDoc.Paths.OrderBy(GetPrimaryResourcePublicName)
+        List<KeyValuePair<string, OpenApiPathItem>> endpointsInOrder = swaggerDoc.Paths.OrderBy(GetPrimaryResourcePublicName)
             .ThenBy(GetRelationshipName).ThenBy(IsSecondaryEndpoint).ToList();
 
         swaggerDoc.Paths.Clear();
 
-        foreach ((string url, OpenApiPathItem path) in orderedEndpoints)
+        foreach ((string url, OpenApiPathItem path) in endpointsInOrder)
         {
             swaggerDoc.Paths.Add(url, path);
         }

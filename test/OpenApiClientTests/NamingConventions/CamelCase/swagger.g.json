@@ -10,10 +10,11 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves a collection of supermarkets.",
         "operationId": "getSupermarketCollection",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found supermarkets, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -28,17 +29,12 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves a collection of supermarkets without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headSupermarketCollection",
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/supermarketCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
           }
         }
       },
@@ -46,8 +42,10 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Creates a new supermarket.",
         "operationId": "postSupermarket",
         "requestBody": {
+          "description": "The attributes and relationships of the supermarket to create.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -58,7 +56,7 @@
         },
         "responses": {
           "201": {
-            "description": "Created",
+            "description": "The supermarket was successfully created, which resulted in additional changes. The newly created supermarket is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -68,7 +66,19 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The supermarket was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint."
           }
         }
       }
@@ -78,11 +88,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves an individual supermarket by its identifier.",
         "operationId": "getSupermarket",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -92,7 +104,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found supermarket.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -100,6 +112,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       },
@@ -107,11 +122,14 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves an individual supermarket by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headSupermarket",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -121,14 +139,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/supermarketPrimaryResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       },
@@ -136,11 +150,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Updates an existing supermarket.",
         "operationId": "patchSupermarket",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket to update.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -149,6 +165,7 @@
           }
         ],
         "requestBody": {
+          "description": "The attributes and relationships of the supermarket to update. Omitted fields are left unchanged.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -159,7 +176,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The supermarket was successfully updated, which resulted in additional changes. The updated supermarket is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -169,7 +186,19 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The supermarket was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The supermarket or a related resource does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       },
@@ -177,11 +206,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Deletes an existing supermarket by its identifier.",
         "operationId": "deleteSupermarket",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket to delete.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -191,7 +222,10 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The supermarket was successfully deleted."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       }
@@ -201,11 +235,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves the related staffMember of an individual supermarket's backupStoreManager relationship.",
         "operationId": "getSupermarketBackupStoreManager",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -215,7 +251,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found staffMember, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -223,6 +259,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       },
@@ -230,11 +269,14 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves the related staffMember of an individual supermarket's backupStoreManager relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headSupermarketBackupStoreManager",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -244,14 +286,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/nullableStaffMemberSecondaryResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       }
@@ -261,11 +299,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves the related staffMember identity of an individual supermarket's backupStoreManager relationship.",
         "operationId": "getSupermarketBackupStoreManagerRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -275,7 +315,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found staffMember identity, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -283,6 +323,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       },
@@ -290,11 +333,14 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves the related staffMember identity of an individual supermarket's backupStoreManager relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headSupermarketBackupStoreManagerRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -304,14 +350,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/nullableStaffMemberIdentifierResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       },
@@ -319,11 +361,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Clears or assigns an existing staffMember to the backupStoreManager relationship of an individual supermarket.",
         "operationId": "patchSupermarketBackupStoreManagerRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose backupStoreManager relationship to assign or clear.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -332,6 +376,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identity of the staffMember to assign to the backupStoreManager relationship, or `null` to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -342,7 +387,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The backupStoreManager relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -352,11 +406,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves the related staffMembers of an individual supermarket's cashiers relationship.",
         "operationId": "getSupermarketCashiers",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose related staffMembers to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -366,7 +422,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found staffMembers, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -374,6 +430,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       },
@@ -381,11 +440,14 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves the related staffMembers of an individual supermarket's cashiers relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headSupermarketCashiers",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose related staffMembers to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -395,14 +457,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/staffMemberCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       }
@@ -412,11 +470,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves the related staffMember identities of an individual supermarket's cashiers relationship.",
         "operationId": "getSupermarketCashiersRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -426,7 +486,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found staffMember identities, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -434,6 +494,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       },
@@ -441,11 +504,14 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves the related staffMember identities of an individual supermarket's cashiers relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headSupermarketCashiersRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -455,14 +521,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/staffMemberIdentifierCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       },
@@ -470,11 +532,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Adds existing staffMembers to the cashiers relationship of an individual supermarket.",
         "operationId": "postSupermarketCashiersRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket to add staffMembers to.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -483,6 +547,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the staffMembers to add to the cashiers relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -493,7 +558,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The staffMembers were successfully added, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -501,11 +575,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Assigns existing staffMembers to the cashiers relationship of an individual supermarket.",
         "operationId": "patchSupermarketCashiersRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose cashiers relationship to assign.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -514,6 +590,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the staffMembers to assign to the cashiers relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -524,7 +601,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The cashiers relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -532,11 +618,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Removes existing staffMembers from the cashiers relationship of an individual supermarket.",
         "operationId": "deleteSupermarketCashiersRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket to remove staffMembers from.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -545,6 +633,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the staffMembers to remove from the cashiers relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -555,7 +644,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The staffMembers were successfully removed, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -565,11 +663,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves the related staffMember of an individual supermarket's storeManager relationship.",
         "operationId": "getSupermarketStoreManager",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -579,7 +679,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found staffMember, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -587,6 +687,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       },
@@ -594,11 +697,14 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves the related staffMember of an individual supermarket's storeManager relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headSupermarketStoreManager",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -608,14 +714,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/staffMemberSecondaryResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       }
@@ -625,11 +727,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves the related staffMember identity of an individual supermarket's storeManager relationship.",
         "operationId": "getSupermarketStoreManagerRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -639,7 +743,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found staffMember identity, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -647,6 +751,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       },
@@ -654,11 +761,14 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Retrieves the related staffMember identity of an individual supermarket's storeManager relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headSupermarketStoreManagerRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose related staffMember identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -668,14 +778,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/staffMemberIdentifierResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           }
         }
       },
@@ -683,11 +789,13 @@
         "tags": [
           "supermarkets"
         ],
+        "summary": "Assigns an existing staffMember to the storeManager relationship of an individual supermarket.",
         "operationId": "patchSupermarketStoreManagerRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the supermarket whose storeManager relationship to assign.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -696,6 +804,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identity of the staffMember to assign to the storeManager relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -706,7 +815,16 @@
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The storeManager relationship was successfully updated, which did not result in additional changes."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }

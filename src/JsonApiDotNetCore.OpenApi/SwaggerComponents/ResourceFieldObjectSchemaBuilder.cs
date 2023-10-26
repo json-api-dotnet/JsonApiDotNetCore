@@ -39,6 +39,7 @@ internal sealed class ResourceFieldObjectSchemaBuilder
     private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
     private readonly RelationshipTypeFactory _relationshipTypeFactory;
+    private readonly ResourceObjectDocumentationReader _resourceObjectDocumentationReader;
 
     public ResourceFieldObjectSchemaBuilder(ResourceTypeInfo resourceTypeInfo, ISchemaRepositoryAccessor schemaRepositoryAccessor,
         SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator, JsonNamingPolicy? namingPolicy,
@@ -59,6 +60,7 @@ internal sealed class ResourceFieldObjectSchemaBuilder
         _nullableReferenceSchemaGenerator = new NullableReferenceSchemaGenerator(schemaRepositoryAccessor, namingPolicy);
         _relationshipTypeFactory = new RelationshipTypeFactory(resourceFieldValidationMetadataProvider);
         _schemasForResourceFields = GetFieldSchemas();
+        _resourceObjectDocumentationReader = new ResourceObjectDocumentationReader();
     }
 
     private IDictionary<string, OpenApiSchema> GetFieldSchemas()
@@ -92,6 +94,8 @@ internal sealed class ResourceFieldObjectSchemaBuilder
                 {
                     fullSchemaForAttributesObject.Required.Add(matchingAttribute.PublicName);
                 }
+
+                resourceFieldSchema.Description = _resourceObjectDocumentationReader.GetDocumentationForAttribute(matchingAttribute);
             }
         }
     }
@@ -131,7 +135,7 @@ internal sealed class ResourceFieldObjectSchemaBuilder
     {
         ArgumentGuard.NotNull(fullSchemaForRelationshipsObject);
 
-        foreach (string fieldName in _schemasForResourceFields.Keys)
+        foreach ((string fieldName, OpenApiSchema resourceFieldSchema) in _schemasForResourceFields)
         {
             RelationshipAttribute? matchingRelationship = _resourceTypeInfo.ResourceType.FindRelationshipByPublicName(fieldName);
 
@@ -139,6 +143,10 @@ internal sealed class ResourceFieldObjectSchemaBuilder
             {
                 EnsureResourceIdentifierObjectSchemaExists(matchingRelationship);
                 AddRelationshipSchemaToResourceObject(matchingRelationship, fullSchemaForRelationshipsObject);
+
+                // This currently has no effect because $ref cannot be combined with other elements in OAS 3.0.
+                // This can be worked around by using the allOf operator. See https://github.com/OAI/OpenAPI-Specification/issues/1514.
+                resourceFieldSchema.Description = _resourceObjectDocumentationReader.GetDocumentationForRelationship(matchingRelationship);
             }
         }
     }

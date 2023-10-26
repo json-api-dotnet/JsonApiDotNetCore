@@ -23,6 +23,9 @@ public sealed class Airplane : Identifiable<string>
     [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
     public DateTime? LastServicedAt { get; set; }
 
+    /// <summary>
+    /// Gets the day on which this airplane was manufactured.
+    /// </summary>
     [Attr]
     public DateTime ManufacturedAt { get; set; }
 

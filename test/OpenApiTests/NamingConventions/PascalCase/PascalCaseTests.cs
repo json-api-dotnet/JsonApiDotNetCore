@@ -14,7 +14,7 @@ public sealed class PascalCaseTests
         _testContext = testContext;
 
         testContext.UseController<SupermarketsController>();
-        testContext.SwaggerDocumentOutputPath = "test/OpenApiClientTests/NamingConventions/PascalCase";
+        testContext.SwaggerDocumentOutputDirectory = "test/OpenApiClientTests/NamingConventions/PascalCase";
     }
 
     [Fact]

@@ -116,7 +116,7 @@ internal sealed class JsonApiOperationIdSelector
         string relationshipName = operationIdTemplate.Contains("[RelationshipName]") ? endpoint.RelativePath.Split("/").Last() : string.Empty;
 
         // @formatter:wrap_chained_method_calls chop_always
-        // @formatter:wrap_before_first_method_call true true
+        // @formatter:wrap_before_first_method_call true
 
         string pascalCaseOperationId = operationIdTemplate
             .Replace("[Method]", method)
