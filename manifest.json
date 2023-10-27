@@ -1824,6 +1824,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.yml",
       "output": {
         ".html": {

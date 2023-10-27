@@ -359,11 +359,46 @@ public sealed class HasManyAttribute : RelationshipAttribute</code></pre>
 </h2>
 
 
+  <a id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_AddValue_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.AddValue*"></a>
+
+  <h3 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_AddValue_System_Object_JsonApiDotNetCore_Resources_IIdentifiable_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.AddValue(System.Object,JsonApiDotNetCore.Resources.IIdentifiable)">
+  AddValue(object, IIdentifiable)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds a resource to this to-many relationship on the specified resource instance. Throws if the property is read-only or if the field does not belong
+to the specified resource instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddValue(object resource, IIdentifiable resourceToAdd)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>resource</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd></dd>
+    <dt><code>resourceToAdd</code> <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Equals_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Equals*"></a>
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Equals_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L119"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a value that indicates whether this instance is equal to a specified object.</p>
@@ -402,7 +437,7 @@ public sealed class HasManyAttribute : RelationshipAttribute</code></pre>
 
   <h3 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_GetHashCode" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L115"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore.Annotations/Resources/Annotations/HasManyAttribute.cs/#L137"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>

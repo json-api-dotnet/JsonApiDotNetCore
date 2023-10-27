@@ -11591,6 +11591,70 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.WithSource
   nameWithType: QueryClauseBuilderContext.WithSource
+- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter
+  name: QueryLayerIncludeConverter
+  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.html
+  commentId: T:JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter
+  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter
+  nameWithType: QueryLayerIncludeConverter
+- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.#ctor(JsonApiDotNetCore.Queries.QueryLayer)
+  name: QueryLayerIncludeConverter(QueryLayer)
+  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryLayerIncludeConverter__ctor_JsonApiDotNetCore_Queries_QueryLayer_
+  commentId: M:JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.#ctor(JsonApiDotNetCore.Queries.QueryLayer)
+  name.vb: New(QueryLayer)
+  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.QueryLayerIncludeConverter(JsonApiDotNetCore.Queries.QueryLayer)
+  fullName.vb: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.New(JsonApiDotNetCore.Queries.QueryLayer)
+  nameWithType: QueryLayerIncludeConverter.QueryLayerIncludeConverter(QueryLayer)
+  nameWithType.vb: QueryLayerIncludeConverter.New(QueryLayer)
+- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.#ctor*
+  name: QueryLayerIncludeConverter
+  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryLayerIncludeConverter__ctor_
+  commentId: Overload:JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.QueryLayerIncludeConverter
+  fullName.vb: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.New
+  nameWithType: QueryLayerIncludeConverter.QueryLayerIncludeConverter
+  nameWithType.vb: QueryLayerIncludeConverter.New
+- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.ConvertIncludesToSelections
+  name: ConvertIncludesToSelections()
+  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryLayerIncludeConverter_ConvertIncludesToSelections
+  commentId: M:JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.ConvertIncludesToSelections
+  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.ConvertIncludesToSelections()
+  nameWithType: QueryLayerIncludeConverter.ConvertIncludesToSelections()
+- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.ConvertIncludesToSelections*
+  name: ConvertIncludesToSelections
+  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryLayerIncludeConverter_ConvertIncludesToSelections_
+  commentId: Overload:JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.ConvertIncludesToSelections
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.ConvertIncludesToSelections
+  nameWithType: QueryLayerIncludeConverter.ConvertIncludesToSelections
+- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.VisitInclude(JsonApiDotNetCore.Queries.Expressions.IncludeExpression,JsonApiDotNetCore.Queries.QueryLayer)
+  name: VisitInclude(IncludeExpression, QueryLayer)
+  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryLayerIncludeConverter_VisitInclude_JsonApiDotNetCore_Queries_Expressions_IncludeExpression_JsonApiDotNetCore_Queries_QueryLayer_
+  commentId: M:JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.VisitInclude(JsonApiDotNetCore.Queries.Expressions.IncludeExpression,JsonApiDotNetCore.Queries.QueryLayer)
+  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.VisitInclude(JsonApiDotNetCore.Queries.Expressions.IncludeExpression, JsonApiDotNetCore.Queries.QueryLayer)
+  nameWithType: QueryLayerIncludeConverter.VisitInclude(IncludeExpression, QueryLayer)
+- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.VisitInclude*
+  name: VisitInclude
+  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryLayerIncludeConverter_VisitInclude_
+  commentId: Overload:JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.VisitInclude
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.VisitInclude
+  nameWithType: QueryLayerIncludeConverter.VisitInclude
+- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.VisitIncludeElement(JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression,JsonApiDotNetCore.Queries.QueryLayer)
+  name: VisitIncludeElement(IncludeElementExpression, QueryLayer)
+  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryLayerIncludeConverter_VisitIncludeElement_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression_JsonApiDotNetCore_Queries_QueryLayer_
+  commentId: M:JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.VisitIncludeElement(JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression,JsonApiDotNetCore.Queries.QueryLayer)
+  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.VisitIncludeElement(JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression, JsonApiDotNetCore.Queries.QueryLayer)
+  nameWithType: QueryLayerIncludeConverter.VisitIncludeElement(IncludeElementExpression, QueryLayer)
+- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.VisitIncludeElement*
+  name: VisitIncludeElement
+  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryLayerIncludeConverter_VisitIncludeElement_
+  commentId: Overload:JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.VisitIncludeElement
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryLayerIncludeConverter.VisitIncludeElement
+  nameWithType: QueryLayerIncludeConverter.VisitIncludeElement
 - uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder
   name: QueryableBuilder
   href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilder.html
@@ -14632,6 +14696,22 @@ references:
   fullName.vb: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.New
   nameWithType: HasManyAttribute.HasManyAttribute
   nameWithType.vb: HasManyAttribute.New
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.AddValue(System.Object,JsonApiDotNetCore.Resources.IIdentifiable)
+  name: AddValue(object, IIdentifiable)
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_AddValue_System_Object_JsonApiDotNetCore_Resources_IIdentifiable_
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.AddValue(System.Object,JsonApiDotNetCore.Resources.IIdentifiable)
+  name.vb: AddValue(Object, IIdentifiable)
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.AddValue(object, JsonApiDotNetCore.Resources.IIdentifiable)
+  fullName.vb: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.AddValue(Object, JsonApiDotNetCore.Resources.IIdentifiable)
+  nameWithType: HasManyAttribute.AddValue(object, IIdentifiable)
+  nameWithType.vb: HasManyAttribute.AddValue(Object, IIdentifiable)
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.AddValue*
+  name: AddValue
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_AddValue_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.AddValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.AddValue
+  nameWithType: HasManyAttribute.AddValue
 - uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.Capabilities
   name: Capabilities
   href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_Capabilities
