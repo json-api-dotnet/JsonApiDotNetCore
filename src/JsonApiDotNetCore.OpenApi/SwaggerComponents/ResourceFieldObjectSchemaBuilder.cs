@@ -154,7 +154,7 @@ internal sealed class ResourceFieldObjectSchemaBuilder
     {
         ArgumentGuard.NotNull(fullSchemaForRelationshipsObject);
 
-        foreach ((string fieldName, OpenApiSchema resourceFieldSchema) in _schemasForResourceFields)
+        foreach (string fieldName in _schemasForResourceFields.Keys)
         {
             RelationshipAttribute? matchingRelationship = _resourceTypeInfo.ResourceType.FindRelationshipByPublicName(fieldName);
 
@@ -162,10 +162,6 @@ internal sealed class ResourceFieldObjectSchemaBuilder
             {
                 EnsureResourceIdentifierObjectSchemaExists(matchingRelationship);
                 AddRelationshipSchemaToResourceObject(matchingRelationship, fullSchemaForRelationshipsObject);
-
-                // This currently has no effect because $ref cannot be combined with other elements in OAS 3.0.
-                // This can be worked around by using the allOf operator. See https://github.com/OAI/OpenAPI-Specification/issues/1514.
-                resourceFieldSchema.Description = _resourceObjectDocumentationReader.GetDocumentationForRelationship(matchingRelationship);
             }
         }
     }
@@ -209,7 +205,8 @@ internal sealed class ResourceFieldObjectSchemaBuilder
             AllOf = new List<OpenApiSchema>
             {
                 referenceSchemaForRelationship
-            }
+            },
+            Description = _resourceObjectDocumentationReader.GetDocumentationForRelationship(relationship)
         };
 
         fullSchemaForRelationshipsObject.Properties.Add(relationship.PublicName, extendedReferenceSchemaForRelationship);
