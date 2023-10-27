@@ -324,6 +324,11 @@ public class QueryLayerComposer : IQueryLayerComposer
         IncludeExpression? innerInclude = secondaryLayer.Include;
         secondaryLayer.Include = null;
 
+        if (relationship is HasOneAttribute)
+        {
+            secondaryLayer.Sort = null;
+        }
+
         var primarySelection = new FieldSelection();
         FieldSelectors primarySelectors = primarySelection.GetOrCreateSelectors(primaryResourceType);
 

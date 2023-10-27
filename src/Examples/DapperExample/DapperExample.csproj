@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>$(TargetFrameworkName)</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+    <ProjectReference Include="..\..\JsonApiDotNetCore.SourceGenerators\JsonApiDotNetCore.SourceGenerators.csproj" OutputItemType="Analyzer"
+      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="$(DapperVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EntityFrameworkCoreVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="$(EntityFrameworkCoreVersion)" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlVersion)" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="$(EntityFrameworkCoreVersion)" />
+  </ItemGroup>
+</Project>
