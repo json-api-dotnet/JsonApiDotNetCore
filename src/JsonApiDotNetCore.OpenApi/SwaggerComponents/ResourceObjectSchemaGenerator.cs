@@ -42,7 +42,7 @@ internal sealed class ResourceObjectSchemaGenerator
         _resourceTypeSchemaGenerator = new ResourceTypeSchemaGenerator(schemaRepositoryAccessor, resourceGraph, options.SerializerOptions.PropertyNamingPolicy);
 
         _resourceFieldObjectSchemaBuilderFactory = resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor,
-            defaultSchemaGenerator, _resourceTypeSchemaGenerator, options.SerializerOptions.PropertyNamingPolicy, resourceFieldValidationMetadataProvider);
+            defaultSchemaGenerator, _resourceTypeSchemaGenerator, resourceFieldValidationMetadataProvider);
 
         _resourceObjectDocumentationReader = new ResourceObjectDocumentationReader();
     }
@@ -108,7 +108,9 @@ internal sealed class ResourceObjectSchemaGenerator
 
     private void SetResourceAttributes(OpenApiSchema fullSchemaForResourceObject, ResourceFieldObjectSchemaBuilder builder)
     {
-        OpenApiSchema referenceSchemaForAttributesObject = fullSchemaForResourceObject.Properties[JsonApiPropertyName.Attributes];
+        OpenApiSchema referenceSchemaForAttributesObject =
+            fullSchemaForResourceObject.Properties[JsonApiPropertyName.Attributes].UnwrapExtendedReferenceSchema();
+
         OpenApiSchema fullSchemaForAttributesObject = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForAttributesObject.Reference.Id];
 
         builder.SetMembersOfAttributesObject(fullSchemaForAttributesObject);
@@ -126,7 +128,9 @@ internal sealed class ResourceObjectSchemaGenerator
 
     private void SetResourceRelationships(OpenApiSchema fullSchemaForResourceObject, ResourceFieldObjectSchemaBuilder builder)
     {
-        OpenApiSchema referenceSchemaForRelationshipsObject = fullSchemaForResourceObject.Properties[JsonApiPropertyName.Relationships];
+        OpenApiSchema referenceSchemaForRelationshipsObject =
+            fullSchemaForResourceObject.Properties[JsonApiPropertyName.Relationships].UnwrapExtendedReferenceSchema();
+
         OpenApiSchema fullSchemaForRelationshipsObject = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForRelationshipsObject.Reference.Id];
 
         builder.SetMembersOfRelationshipsObject(fullSchemaForRelationshipsObject);

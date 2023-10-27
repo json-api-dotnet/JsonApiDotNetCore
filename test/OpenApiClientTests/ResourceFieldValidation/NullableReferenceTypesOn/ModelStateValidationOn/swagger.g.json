@@ -49,7 +49,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/resourcePostRequestDocument"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourcePostRequestDocument"
+                  }
+                ]
               }
             }
           }
@@ -169,7 +173,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/resourcePatchRequestDocument"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourcePatchRequestDocument"
+                  }
+                ]
               }
             }
           }
@@ -380,7 +388,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toOneEmptyInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneEmptyInRequest"
+                  }
+                ]
               }
             }
           }
@@ -551,7 +563,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+                  }
+                ]
               }
             }
           }
@@ -722,7 +738,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toOneEmptyInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneEmptyInRequest"
+                  }
+                ]
               }
             }
           }
@@ -893,7 +913,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toOneEmptyInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOneEmptyInRequest"
+                  }
+                ]
               }
             }
           }
@@ -1064,7 +1088,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyEmptyInRequest"
+                  }
+                ]
               }
             }
           }
@@ -1107,7 +1135,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyEmptyInRequest"
+                  }
+                ]
               }
             }
           }
@@ -1150,7 +1182,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyEmptyInRequest"
+                  }
+                ]
               }
             }
           }
@@ -1321,7 +1357,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyEmptyInRequest"
+                  }
+                ]
               }
             }
           }
@@ -1364,7 +1404,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyEmptyInRequest"
+                  }
+                ]
               }
             }
           }
@@ -1407,7 +1451,11 @@
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyEmptyInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyEmptyInRequest"
+                  }
+                ]
               }
             }
           }
@@ -1439,7 +1487,11 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -1463,14 +1515,22 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/emptyResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceObject"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -1487,7 +1547,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/emptyResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -1504,7 +1568,11 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -1527,10 +1595,18 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+              }
+            ]
           },
           "data": {
-            "$ref": "#/components/schemas/emptyIdentifier"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyIdentifier"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -1553,10 +1629,18 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/linksInResourceDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceDocument"
+              }
+            ]
           },
           "data": {
-            "$ref": "#/components/schemas/emptyDataInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyDataInResponse"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -1723,29 +1807,6 @@
         },
         "additionalProperties": false
       },
-      "nullValue": {
-        "not": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object"
-            },
-            {
-              "type": "array"
-            }
-          ],
-          "items": { }
-        },
-        "nullable": true
-      },
       "nullableEmptyIdentifierResponseDocument": {
         "required": [
           "data",
@@ -1754,17 +1815,19 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
-          },
-          "data": {
-            "oneOf": [
+            "allOf": [
               {
-                "$ref": "#/components/schemas/emptyIdentifier"
-              },
-              {
-                "$ref": "#/components/schemas/nullValue"
+                "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
               }
             ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyIdentifier"
+              }
+            ],
+            "nullable": true
           },
           "meta": {
             "type": "object",
@@ -1781,17 +1844,19 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/linksInResourceDocument"
-          },
-          "data": {
-            "oneOf": [
+            "allOf": [
               {
-                "$ref": "#/components/schemas/emptyDataInResponse"
-              },
-              {
-                "$ref": "#/components/schemas/nullValue"
+                "$ref": "#/components/schemas/linksInResourceDocument"
               }
             ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyDataInResponse"
+              }
+            ],
+            "nullable": true
           },
           "meta": {
             "type": "object",
@@ -1807,14 +1872,12 @@
         "type": "object",
         "properties": {
           "data": {
-            "oneOf": [
+            "allOf": [
               {
                 "$ref": "#/components/schemas/emptyIdentifier"
-              },
-              {
-                "$ref": "#/components/schemas/nullValue"
               }
-            ]
+            ],
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1826,17 +1889,19 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/linksInRelationshipObject"
-          },
-          "data": {
-            "oneOf": [
+            "allOf": [
               {
-                "$ref": "#/components/schemas/emptyIdentifier"
-              },
-              {
-                "$ref": "#/components/schemas/nullValue"
+                "$ref": "#/components/schemas/linksInRelationshipObject"
               }
             ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyIdentifier"
+              }
+            ],
+            "nullable": true
           },
           "meta": {
             "type": "object",
@@ -1979,7 +2044,11 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -2002,17 +2071,29 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/resourceResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/resourceAttributesInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceAttributesInPatchRequest"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/resourceRelationshipsInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceRelationshipsInPatchRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2024,13 +2105,25 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/resourceResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceResourceType"
+              }
+            ]
           },
           "attributes": {
-            "$ref": "#/components/schemas/resourceAttributesInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceAttributesInPostRequest"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/resourceRelationshipsInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceRelationshipsInPostRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2044,20 +2137,36 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/resourceResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/resourceAttributesInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceAttributesInResponse"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/resourceRelationshipsInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceRelationshipsInResponse"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceObject"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -2073,7 +2182,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/resourceDataInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceDataInPatchRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2085,7 +2198,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/resourceDataInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceDataInPostRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2098,10 +2215,18 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/linksInResourceDocument"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceDocument"
+              }
+            ]
           },
           "data": {
-            "$ref": "#/components/schemas/resourceDataInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/resourceDataInResponse"
+              }
+            ]
           },
           "meta": {
             "type": "object",
@@ -2114,22 +2239,46 @@
         "type": "object",
         "properties": {
           "nonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyInRequest"
+              }
+            ]
           },
           "requiredNonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyInRequest"
+              }
+            ]
           },
           "nullableToOne": {
-            "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+              }
+            ]
           },
           "requiredNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyInRequest"
+              }
+            ]
           },
           "toMany": {
-            "$ref": "#/components/schemas/toManyEmptyInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            ]
           },
           "requiredToMany": {
-            "$ref": "#/components/schemas/toManyEmptyInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2143,22 +2292,46 @@
         "type": "object",
         "properties": {
           "nonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyInRequest"
+              }
+            ]
           },
           "requiredNonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyInRequest"
+              }
+            ]
           },
           "nullableToOne": {
-            "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneEmptyInRequest"
+              }
+            ]
           },
           "requiredNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyInRequest"
+              }
+            ]
           },
           "toMany": {
-            "$ref": "#/components/schemas/toManyEmptyInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            ]
           },
           "requiredToMany": {
-            "$ref": "#/components/schemas/toManyEmptyInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2172,22 +2345,46 @@
         "type": "object",
         "properties": {
           "nonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyInResponse"
+              }
+            ]
           },
           "requiredNonNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyInResponse"
+              }
+            ]
           },
           "nullableToOne": {
-            "$ref": "#/components/schemas/nullableToOneEmptyInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOneEmptyInResponse"
+              }
+            ]
           },
           "requiredNullableToOne": {
-            "$ref": "#/components/schemas/toOneEmptyInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOneEmptyInResponse"
+              }
+            ]
           },
           "toMany": {
-            "$ref": "#/components/schemas/toManyEmptyInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyInResponse"
+              }
+            ]
           },
           "requiredToMany": {
-            "$ref": "#/components/schemas/toManyEmptyInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyEmptyInResponse"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2220,7 +2417,11 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/linksInRelationshipObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInRelationshipObject"
+              }
+            ]
           },
           "data": {
             "type": "array",
@@ -2242,7 +2443,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/emptyIdentifier"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyIdentifier"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2254,10 +2459,18 @@
         "type": "object",
         "properties": {
           "links": {
-            "$ref": "#/components/schemas/linksInRelationshipObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInRelationshipObject"
+              }
+            ]
           },
           "data": {
-            "$ref": "#/components/schemas/emptyIdentifier"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/emptyIdentifier"
+              }
+            ]
           },
           "meta": {
             "type": "object",
