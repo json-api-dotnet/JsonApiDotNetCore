@@ -1,5 +1,6 @@
 using System.Net;
 using FluentAssertions;
+using JsonApiDotNetCore.OpenApi.Client;
 using OpenApiClientTests.LegacyClient.GeneratedCode;
 using TestBuildingBlocks;
 using Xunit;

@@ -3,6 +3,7 @@ using System.Net;
 using System.Text.Json;
 using FluentAssertions;
 using FluentAssertions.Specialized;
+using JsonApiDotNetCore.OpenApi.Client;
 using Newtonsoft.Json;
 using OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOff.ModelStateValidationOff.GeneratedCode;
 using TestBuildingBlocks;
