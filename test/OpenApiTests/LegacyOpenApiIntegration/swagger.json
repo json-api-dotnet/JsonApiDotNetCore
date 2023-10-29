@@ -3697,7 +3697,6 @@
       },
       "links-in-resource-collection-document": {
         "required": [
-          "first",
           "self"
         ],
         "type": "object",
@@ -3710,7 +3709,6 @@
             "type": "string"
           },
           "first": {
-            "minLength": 1,
             "type": "string"
           },
           "last": {
@@ -3743,7 +3741,6 @@
       },
       "links-in-resource-identifier-collection-document": {
         "required": [
-          "first",
           "related",
           "self"
         ],
@@ -3761,7 +3758,6 @@
             "type": "string"
           },
           "first": {
-            "minLength": 1,
             "type": "string"
           },
           "last": {

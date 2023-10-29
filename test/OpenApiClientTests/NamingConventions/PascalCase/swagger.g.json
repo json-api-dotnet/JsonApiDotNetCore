@@ -905,7 +905,6 @@
       },
       "LinksInResourceCollectionDocument": {
         "required": [
-          "first",
           "self"
         ],
         "type": "object",
@@ -918,7 +917,6 @@
             "type": "string"
           },
           "first": {
-            "minLength": 1,
             "type": "string"
           },
           "last": {
@@ -951,7 +949,6 @@
       },
       "LinksInResourceIdentifierCollectionDocument": {
         "required": [
-          "first",
           "related",
           "self"
         ],
@@ -969,7 +966,6 @@
             "type": "string"
           },
           "first": {
-            "minLength": 1,
             "type": "string"
           },
           "last": {
