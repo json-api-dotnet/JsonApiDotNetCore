@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -29,11 +30,19 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.";
 
     private const string TextCompletedSuccessfully = "The operation completed successfully.";
-    private const string TextRequestBodyMissingOrMalformed = "The request body is missing or malformed.";
+    private const string TextQueryStringBad = "The query string is invalid.";
+    private const string TextRequestBodyBad = "The request body is missing or malformed.";
+    private const string TextQueryStringOrRequestBodyBad = "The query string is invalid or the request body is missing or malformed.";
     private const string TextRequestBodyIncompatibleType = "A resource type in the request body is incompatible.";
     private const string TextRequestBodyIncompatibleIdOrType = "A resource type or identifier in the request body is incompatible.";
     private const string TextRequestBodyValidationFailed = "Validation of the request body failed.";
     private const string TextRequestBodyClientId = "Client-generated IDs cannot be used at this endpoint.";
+
+    private const string TextQueryStringParameters =
+        "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/" +
+        "[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/" +
+        "[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/" +
+        "[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
 
     private readonly IJsonApiOptions _options;
     private readonly IControllerResourceMapping _controllerResourceMapping;
@@ -156,6 +165,9 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK,
                     $"Successfully returns the found {resourceType}, or an empty array if none were found.");
             }
+
+            AddQueryStringParameters(operation);
+            SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         }
         else if (operation.Parameters.Count == 1)
         {
@@ -174,6 +186,8 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             }
 
             SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularName} to retrieve.");
+            AddQueryStringParameters(operation);
+            SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
             SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularName} does not exist.");
         }
     }
@@ -183,6 +197,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         string singularName = resourceType.PublicName.Singularize();
 
         SetOperationSummary(operation, $"Creates a new {singularName}.");
+        AddQueryStringParameters(operation);
         SetRequestBodyDescription(operation.RequestBody, $"The attributes and relationships of the {singularName} to create.");
 
         SetResponseDescription(operation.Responses, HttpStatusCode.Created,
@@ -191,9 +206,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         SetResponseDescription(operation.Responses, HttpStatusCode.NoContent,
             $"The {singularName} was successfully created, which did not result in additional changes.");
 
-        SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyMissingOrMalformed);
-        SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextRequestBodyIncompatibleType);
-        SetResponseDescription(operation.Responses, HttpStatusCode.UnprocessableEntity, TextRequestBodyValidationFailed);
+        SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringOrRequestBodyBad);
 
         ClientIdGenerationMode clientIdGeneration = resourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
 
@@ -201,6 +214,9 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         {
             SetResponseDescription(operation.Responses, HttpStatusCode.Forbidden, TextRequestBodyClientId);
         }
+
+        SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextRequestBodyIncompatibleType);
+        SetResponseDescription(operation.Responses, HttpStatusCode.UnprocessableEntity, TextRequestBodyValidationFailed);
     }
 
     private void ApplyPatchResource(OpenApiOperation operation, ResourceType resourceType)
@@ -209,6 +225,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
         SetOperationSummary(operation, $"Updates an existing {singularName}.");
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularName} to update.");
+        AddQueryStringParameters(operation);
 
         SetRequestBodyDescription(operation.RequestBody,
             $"The attributes and relationships of the {singularName} to update. Omitted fields are left unchanged.");
@@ -219,8 +236,8 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         SetResponseDescription(operation.Responses, HttpStatusCode.NoContent,
             $"The {singularName} was successfully updated, which did not result in additional changes.");
 
+        SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringOrRequestBodyBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularName} or a related resource does not exist.");
-        SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyMissingOrMalformed);
         SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextRequestBodyIncompatibleIdOrType);
         SetResponseDescription(operation.Responses, HttpStatusCode.UnprocessableEntity, TextRequestBodyValidationFailed);
     }
@@ -261,6 +278,8 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         }
 
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {rightName} to retrieve.");
+        AddQueryStringParameters(operation);
+        SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
     }
 
@@ -292,6 +311,8 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         }
 
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {singularRightName} {ident} to retrieve.");
+        AddQueryStringParameters(operation);
+        SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
     }
 
@@ -307,8 +328,8 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         SetResponseDescription(operation.Responses, HttpStatusCode.NoContent,
             $"The {rightName} were successfully added, which did not result in additional changes.");
 
+        SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
-        SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyMissingOrMalformed);
         SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextRequestBodyIncompatibleType);
     }
 
@@ -340,8 +361,8 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         SetResponseDescription(operation.Responses, HttpStatusCode.NoContent,
             $"The {relationship} relationship was successfully updated, which did not result in additional changes.");
 
+        SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
-        SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyMissingOrMalformed);
         SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextRequestBodyIncompatibleType);
     }
 
@@ -357,8 +378,8 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         SetResponseDescription(operation.Responses, HttpStatusCode.NoContent,
             $"The {rightName} were successfully removed, which did not result in additional changes.");
 
+        SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
-        SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyMissingOrMalformed);
         SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextRequestBodyIncompatibleType);
     }
 
@@ -404,5 +425,36 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         }
 
         response.Description = XmlCommentsTextHelper.Humanize(description);
+    }
+
+    private static void AddQueryStringParameters(OpenApiOperation operation)
+    {
+        // The JSON:API query string parameters (include, filter, sort, page[size], page[number], fields[]) are too dynamic to represent in OpenAPI.
+        // - The parameter names for fields[] require exploding to all resource types, because outcome of possible resource types depends on
+        //     the relationship chains in include, which are provided at invocation time.
+        // - The parameter names for filter/sort take a relationship path, which could be infinite. For example: ?filter[node.parent.parent.parent...]=...
+
+        // The next best thing is to expose the query string parameters as unstructured and optional.
+        // - This makes SwaggerUI ask for JSON, which is a bit odd, but it works. For example: {"sort":"-id"} produces: ?sort=-id
+        // - This makes NSwag produce a C# client with method signature: GetAsync(IDictionary<string, string?>? query)
+        //     when combined with <Options>/GenerateNullableReferenceTypes:true</Options> in the project file.
+
+        operation.Parameters.Add(new OpenApiParameter
+        {
+            In = ParameterLocation.Query,
+            Name = "query",
+            Schema = new OpenApiSchema
+            {
+                Type = "object",
+                AdditionalProperties = new OpenApiSchema
+                {
+                    Type = "string",
+                    Nullable = true
+                },
+                // Prevent SwaggerUI from producing sample, which fails when used because unknown query string parameters are blocked by default.
+                Example = new OpenApiNull()
+            },
+            Description = TextQueryStringParameters
+        });
     }
 }

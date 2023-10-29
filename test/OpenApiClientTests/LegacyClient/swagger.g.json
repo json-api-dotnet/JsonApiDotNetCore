@@ -12,6 +12,21 @@
         ],
         "summary": "Retrieves a collection of airplanes.",
         "operationId": "get-airplane-collection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successfully returns the found airplanes, or an empty array if none were found.",
@@ -22,6 +37,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -32,9 +50,27 @@
         "summary": "Retrieves a collection of airplanes without returning them.",
         "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-airplane-collection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -44,6 +80,21 @@
         ],
         "summary": "Creates a new airplane.",
         "operationId": "post-airplane",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "requestBody": {
           "description": "The attributes and relationships of the airplane to create.",
           "content": {
@@ -73,16 +124,16 @@
             "description": "The airplane was successfully created, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
           },
           "422": {
             "description": "Validation of the request body failed."
-          },
-          "403": {
-            "description": "Client-generated IDs cannot be used at this endpoint."
           }
         }
       }
@@ -103,6 +154,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -115,6 +179,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The airplane does not exist."
@@ -137,11 +204,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The airplane does not exist."
@@ -162,6 +245,19 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
             }
           }
         ],
@@ -193,11 +289,11 @@
           "204": {
             "description": "The airplane was successfully updated, which did not result in additional changes."
           },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
           "404": {
             "description": "The airplane or a related resource does not exist."
-          },
-          "400": {
-            "description": "The request body is missing or malformed."
           },
           "409": {
             "description": "A resource type or identifier in the request body is incompatible."
@@ -250,6 +346,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -262,6 +371,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The airplane does not exist."
@@ -284,11 +396,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The airplane does not exist."
@@ -312,6 +440,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -324,6 +465,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The airplane does not exist."
@@ -346,11 +490,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The airplane does not exist."
@@ -392,11 +552,11 @@
           "204": {
             "description": "The flights were successfully added, which did not result in additional changes."
           },
-          "404": {
-            "description": "The airplane does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The airplane does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -438,11 +598,11 @@
           "204": {
             "description": "The flights relationship was successfully updated, which did not result in additional changes."
           },
-          "404": {
-            "description": "The airplane does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The airplane does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -484,11 +644,11 @@
           "204": {
             "description": "The flights were successfully removed, which did not result in additional changes."
           },
-          "404": {
-            "description": "The airplane does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The airplane does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -503,6 +663,21 @@
         ],
         "summary": "Retrieves a collection of flight-attendants.",
         "operationId": "get-flight-attendant-collection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successfully returns the found flight-attendants, or an empty array if none were found.",
@@ -513,6 +688,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -523,9 +701,27 @@
         "summary": "Retrieves a collection of flight-attendants without returning them.",
         "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-attendant-collection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -535,6 +731,21 @@
         ],
         "summary": "Creates a new flight-attendant.",
         "operationId": "post-flight-attendant",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "requestBody": {
           "description": "The attributes and relationships of the flight-attendant to create.",
           "content": {
@@ -564,16 +775,16 @@
             "description": "The flight-attendant was successfully created, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
           },
           "422": {
             "description": "Validation of the request body failed."
-          },
-          "403": {
-            "description": "Client-generated IDs cannot be used at this endpoint."
           }
         }
       }
@@ -594,6 +805,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -606,6 +830,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight-attendant does not exist."
@@ -628,11 +855,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight-attendant does not exist."
@@ -653,6 +896,19 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
             }
           }
         ],
@@ -684,11 +940,11 @@
           "204": {
             "description": "The flight-attendant was successfully updated, which did not result in additional changes."
           },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
           "404": {
             "description": "The flight-attendant or a related resource does not exist."
-          },
-          "400": {
-            "description": "The request body is missing or malformed."
           },
           "409": {
             "description": "A resource type or identifier in the request body is incompatible."
@@ -741,6 +997,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -753,6 +1022,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight-attendant does not exist."
@@ -775,11 +1047,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight-attendant does not exist."
@@ -803,6 +1091,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -815,6 +1116,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight-attendant does not exist."
@@ -837,11 +1141,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight-attendant does not exist."
@@ -883,11 +1203,11 @@
           "204": {
             "description": "The flights were successfully added, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight-attendant does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -929,11 +1249,11 @@
           "204": {
             "description": "The purser-on-flights relationship was successfully updated, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight-attendant does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -975,11 +1295,11 @@
           "204": {
             "description": "The flights were successfully removed, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight-attendant does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -1003,6 +1323,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -1015,6 +1348,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight-attendant does not exist."
@@ -1037,11 +1373,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight-attendant does not exist."
@@ -1065,6 +1417,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -1077,6 +1442,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight-attendant does not exist."
@@ -1099,11 +1467,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight-attendant does not exist."
@@ -1145,11 +1529,11 @@
           "204": {
             "description": "The flights were successfully added, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight-attendant does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -1191,11 +1575,11 @@
           "204": {
             "description": "The scheduled-for-flights relationship was successfully updated, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight-attendant does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -1237,11 +1621,11 @@
           "204": {
             "description": "The flights were successfully removed, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight-attendant does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight-attendant does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -1256,6 +1640,21 @@
         ],
         "summary": "Retrieves a collection of flights.",
         "operationId": "get-flight-collection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successfully returns the found flights, or an empty array if none were found.",
@@ -1266,6 +1665,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -1276,9 +1678,27 @@
         "summary": "Retrieves a collection of flights without returning them.",
         "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-flight-collection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -1288,6 +1708,21 @@
         ],
         "summary": "Creates a new flight.",
         "operationId": "post-flight",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "requestBody": {
           "description": "The attributes and relationships of the flight to create.",
           "content": {
@@ -1317,16 +1752,16 @@
             "description": "The flight was successfully created, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
           },
           "422": {
             "description": "Validation of the request body failed."
-          },
-          "403": {
-            "description": "Client-generated IDs cannot be used at this endpoint."
           }
         }
       }
@@ -1347,6 +1782,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -1359,6 +1807,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -1381,11 +1832,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -1406,6 +1873,19 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
             }
           }
         ],
@@ -1437,11 +1917,11 @@
           "204": {
             "description": "The flight was successfully updated, which did not result in additional changes."
           },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
           "404": {
             "description": "The flight or a related resource does not exist."
-          },
-          "400": {
-            "description": "The request body is missing or malformed."
           },
           "409": {
             "description": "A resource type or identifier in the request body is incompatible."
@@ -1494,6 +1974,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -1506,6 +1999,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -1528,11 +2024,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -1556,6 +2068,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -1568,6 +2093,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -1590,11 +2118,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -1636,11 +2180,11 @@
           "204": {
             "description": "The backup-purser relationship was successfully updated, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -1664,6 +2208,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -1676,6 +2233,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -1698,11 +2258,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -1726,6 +2302,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -1738,6 +2327,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -1760,11 +2352,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -1806,11 +2414,11 @@
           "204": {
             "description": "The flight-attendants were successfully added, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -1852,11 +2460,11 @@
           "204": {
             "description": "The cabin-crew-members relationship was successfully updated, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -1898,11 +2506,11 @@
           "204": {
             "description": "The flight-attendants were successfully removed, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -1926,6 +2534,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -1938,6 +2559,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -1960,11 +2584,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -1988,6 +2628,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -2000,6 +2653,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -2022,11 +2678,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -2068,11 +2740,11 @@
           "204": {
             "description": "The passengers were successfully added, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -2114,11 +2786,11 @@
           "204": {
             "description": "The passengers relationship was successfully updated, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -2160,11 +2832,11 @@
           "204": {
             "description": "The passengers were successfully removed, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -2188,6 +2860,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -2200,6 +2885,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -2222,11 +2910,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -2250,6 +2954,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -2262,6 +2979,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -2284,11 +3004,27 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The flight does not exist."
@@ -2330,11 +3066,11 @@
           "204": {
             "description": "The purser relationship was successfully updated, which did not result in additional changes."
           },
-          "404": {
-            "description": "The flight does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The flight does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."

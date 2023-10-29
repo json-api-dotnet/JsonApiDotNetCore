@@ -23,7 +23,7 @@ public sealed class RequestTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightCollectionAsync());
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightCollectionAsync(null));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
@@ -43,7 +43,7 @@ public sealed class RequestTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightAsync(flightId));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightAsync(flightId, null));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
@@ -88,7 +88,7 @@ public sealed class RequestTests
         };
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostFlightAsync(requestDocument));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostFlightAsync(null, requestDocument));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
@@ -157,7 +157,7 @@ public sealed class RequestTests
             airplane => airplane.SerialNumber))
         {
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(requestDocument));
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(null, requestDocument));
         }
 
         // Assert
@@ -208,7 +208,7 @@ public sealed class RequestTests
             airplane => airplane.SerialNumber, airplane => airplane.LastServicedAt, airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))
         {
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
+            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
         }
 
         // Assert
@@ -263,7 +263,7 @@ public sealed class RequestTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightPurserAsync(flightId));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightPurserAsync(flightId, null));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
@@ -283,7 +283,7 @@ public sealed class RequestTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightCabinCrewMembersAsync(flightId));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightCabinCrewMembersAsync(flightId, null));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
@@ -303,7 +303,7 @@ public sealed class RequestTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightPurserRelationshipAsync(flightId));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightPurserRelationshipAsync(flightId, null));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
@@ -360,7 +360,7 @@ public sealed class RequestTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId));
+        _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId, null));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();

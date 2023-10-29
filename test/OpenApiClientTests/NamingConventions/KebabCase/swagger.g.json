@@ -12,6 +12,21 @@
         ],
         "summary": "Retrieves a collection of supermarkets.",
         "operationId": "get-supermarket-collection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successfully returns the found supermarkets, or an empty array if none were found.",
@@ -22,6 +37,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -32,9 +50,27 @@
         "summary": "Retrieves a collection of supermarkets without returning them.",
         "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "head-supermarket-collection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -44,6 +80,21 @@
         ],
         "summary": "Creates a new supermarket.",
         "operationId": "post-supermarket",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "requestBody": {
           "description": "The attributes and relationships of the supermarket to create.",
           "content": {
@@ -73,16 +124,16 @@
             "description": "The supermarket was successfully created, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
           },
           "422": {
             "description": "Validation of the request body failed."
-          },
-          "403": {
-            "description": "Client-generated IDs cannot be used at this endpoint."
           }
         }
       }
@@ -104,6 +155,19 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -116,6 +180,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -139,11 +206,27 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -165,6 +248,19 @@
             "schema": {
               "type": "integer",
               "format": "int32"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
             }
           }
         ],
@@ -196,11 +292,11 @@
           "204": {
             "description": "The supermarket was successfully updated, which did not result in additional changes."
           },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
           "404": {
             "description": "The supermarket or a related resource does not exist."
-          },
-          "400": {
-            "description": "The request body is missing or malformed."
           },
           "409": {
             "description": "A resource type or identifier in the request body is incompatible."
@@ -255,6 +351,19 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -267,6 +376,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -290,11 +402,27 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -319,6 +447,19 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -331,6 +472,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -354,11 +498,27 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -401,11 +561,11 @@
           "204": {
             "description": "The backup-store-manager relationship was successfully updated, which did not result in additional changes."
           },
-          "404": {
-            "description": "The supermarket does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -430,6 +590,19 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -442,6 +615,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -465,11 +641,27 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -494,6 +686,19 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -506,6 +711,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -529,11 +737,27 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -576,11 +800,11 @@
           "204": {
             "description": "The staff-members were successfully added, which did not result in additional changes."
           },
-          "404": {
-            "description": "The supermarket does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -623,11 +847,11 @@
           "204": {
             "description": "The cashiers relationship was successfully updated, which did not result in additional changes."
           },
-          "404": {
-            "description": "The supermarket does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -670,11 +894,11 @@
           "204": {
             "description": "The staff-members were successfully removed, which did not result in additional changes."
           },
-          "404": {
-            "description": "The supermarket does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."
@@ -699,6 +923,19 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -711,6 +948,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -734,11 +974,27 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -763,6 +1019,19 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
@@ -775,6 +1044,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -798,11 +1070,27 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           },
           "404": {
             "description": "The supermarket does not exist."
@@ -845,11 +1133,11 @@
           "204": {
             "description": "The store-manager relationship was successfully updated, which did not result in additional changes."
           },
-          "404": {
-            "description": "The supermarket does not exist."
-          },
           "400": {
             "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The supermarket does not exist."
           },
           "409": {
             "description": "A resource type in the request body is incompatible."

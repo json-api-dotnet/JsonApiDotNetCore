@@ -97,7 +97,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightCollectionResponseDocument document = await apiClient.GetFlightCollectionAsync();
+        FlightCollectionResponseDocument document = await apiClient.GetFlightCollectionAsync(null);
 
         // Assert
         document.Jsonapi.Should().BeNull();
@@ -177,7 +177,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightPrimaryResponseDocument document = await apiClient.GetFlightAsync(flightId);
+        FlightPrimaryResponseDocument document = await apiClient.GetFlightAsync(flightId, null);
 
         // Assert
         document.Jsonapi.Should().BeNull();
@@ -213,7 +213,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        Func<Task<FlightPrimaryResponseDocument>> action = async () => await apiClient.GetFlightAsync(flightId);
+        Func<Task<FlightPrimaryResponseDocument>> action = async () => await apiClient.GetFlightAsync(flightId, null);
 
         // Assert
         ExceptionAssertions<ApiException> assertion = await action.Should().ThrowExactlyAsync<ApiException>();
@@ -277,7 +277,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightPrimaryResponseDocument document = await apiClient.PostFlightAsync(new FlightPostRequestDocument
+        FlightPrimaryResponseDocument document = await apiClient.PostFlightAsync(null, new FlightPostRequestDocument
         {
             Data = new FlightDataInPostRequest
             {
@@ -329,7 +329,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightPrimaryResponseDocument document = await apiClient.PatchFlightAsync(flightId, new FlightPatchRequestDocument
+        FlightPrimaryResponseDocument document = await apiClient.PatchFlightAsync(flightId, null, new FlightPatchRequestDocument
         {
             Data = new FlightDataInPatchRequest
             {
@@ -353,7 +353,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PatchFlightAsync(flightId,
+        FlightPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PatchFlightAsync(flightId, null,
             new FlightPatchRequestDocument
             {
                 Data = new FlightDataInPatchRequest
@@ -431,7 +431,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightPurserAsync(flightId);
+        FlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightPurserAsync(flightId, null);
 
         // Assert
         document.Data.Should().NotBeNull();
@@ -461,7 +461,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        NullableFlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightBackupPurserAsync(flightId);
+        NullableFlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightBackupPurserAsync(flightId, null);
 
         // Assert
         document.Data.Should().BeNull();
@@ -485,7 +485,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightAttendantCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersAsync(flightId);
+        FlightAttendantCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersAsync(flightId, null);
 
         // Assert
         document.Data.Should().BeEmpty();
@@ -509,7 +509,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        NullableFlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightBackupPurserRelationshipAsync(flightId);
+        NullableFlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightBackupPurserRelationshipAsync(flightId, null);
 
         // Assert
         document.Data.Should().BeNull();
@@ -537,7 +537,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightPurserRelationshipAsync(flightId);
+        FlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightPurserRelationshipAsync(flightId, null);
 
         // Assert
         document.Data.Should().NotBeNull();
@@ -591,7 +591,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightAttendantIdentifierCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId);
+        FlightAttendantIdentifierCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId, null);
 
         // Assert
         document.Data.Should().HaveCount(2);

@@ -32,7 +32,12 @@ The next steps describe how to generate a JSON:API client library and use our pa
     using var httpClient = new HttpClient();
     var apiClient = new ExampleApiClient("http://localhost:14140", httpClient);
 
-    PersonCollectionResponseDocument getResponse = await apiClient.GetPersonCollectionAsync();
+    PersonCollectionResponseDocument getResponse = await apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
+    {
+        ["filter"] = "has(assignedTodoItems)",
+        ["sort"] = "-lastName",
+        ["page[size]"] = "5"
+    });
 
     foreach (PersonDataInResponse person in getResponse.Data)
     {
@@ -88,7 +93,8 @@ The next steps describe how to generate a JSON:API client library and use our pa
     using (apiClient.WithPartialAttributeSerialization<PersonPatchRequestDocument, PersonAttributesInPatchRequest>(patchRequest,
         person => person.FirstName))
     {
-        await TranslateAsync(async () => await apiClient.PatchPersonAsync(1, patchRequest));
+        // Workaround for https://github.com/RicoSuter/NSwag/issues/2499.
+        await TranslateAsync(async () => await apiClient.PatchPersonAsync(1, null, patchRequest));
 
         // The sent request looks like this:
         // {
@@ -101,20 +107,6 @@ The next steps describe how to generate a JSON:API client library and use our pa
         //     }
         //   }
         // }
-    }
-
-    static async Task<TResponse?> TranslateAsync<TResponse>(Func<Task<TResponse>> operation)
-        where TResponse : class
-    {
-        try
-        {
-            return await operation();
-        }
-        catch (ApiException exception) when (exception.StatusCode == 204)
-        {
-            // Workaround for https://github.com/RicoSuter/NSwag/issues/2499
-            return null;
-        }
     }
     ```
 
