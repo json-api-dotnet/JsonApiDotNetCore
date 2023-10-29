@@ -56,14 +56,14 @@ internal sealed class JsonApiOperationIdSelector
             throw new UnreachableCodeException();
         }
 
-        string template = GetTemplate(primaryResourceType.ClrType, endpoint);
+        string template = GetTemplate(endpoint);
 
         return ApplyTemplate(template, primaryResourceType, endpoint);
     }
 
-    private static string GetTemplate(Type resourceClrType, ApiDescription endpoint)
+    private static string GetTemplate(ApiDescription endpoint)
     {
-        Type requestDocumentType = GetDocumentType(resourceClrType, endpoint);
+        Type requestDocumentType = GetDocumentType(endpoint);
 
         if (!DocumentOpenTypeToOperationIdTemplateMap.TryGetValue(requestDocumentType, out string? template))
         {
@@ -73,7 +73,7 @@ internal sealed class JsonApiOperationIdSelector
         return template;
     }
 
-    private static Type GetDocumentType(Type primaryResourceClrType, ApiDescription endpoint)
+    private static Type GetDocumentType(ApiDescription endpoint)
     {
         var producesResponseTypeAttribute = endpoint.ActionDescriptor.GetFilterMetadata<ProducesResponseTypeAttribute>();
 
@@ -87,14 +87,9 @@ internal sealed class JsonApiOperationIdSelector
         Type documentType = requestBodyDescriptor?.ParameterType.GetGenericTypeDefinition() ??
             GetGenericTypeDefinition(producesResponseTypeAttribute.Type) ?? producesResponseTypeAttribute.Type;
 
-        if (documentType == typeof(ResourceCollectionResponseDocument<>))
+        if (documentType == typeof(ResourceCollectionResponseDocument<>) && endpoint.ParameterDescriptions.Count > 0)
         {
-            Type documentResourceType = producesResponseTypeAttribute.Type.GetGenericArguments()[0];
-
-            if (documentResourceType != primaryResourceClrType)
-            {
-                documentType = typeof(SecondaryResourceResponseDocument<>);
-            }
+            documentType = typeof(SecondaryResourceResponseDocument<>);
         }
 
         return documentType;
