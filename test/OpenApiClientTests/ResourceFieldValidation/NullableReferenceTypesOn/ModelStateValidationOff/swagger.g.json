@@ -1993,12 +1993,6 @@
         "additionalProperties": false
       },
       "resourceAttributesInResponse": {
-        "required": [
-          "requiredNonNullableReferenceType",
-          "requiredNullableReferenceType",
-          "requiredNullableValueType",
-          "requiredValueType"
-        ],
         "type": "object",
         "properties": {
           "nonNullableReferenceType": {
@@ -2339,11 +2333,6 @@
         "additionalProperties": false
       },
       "resourceRelationshipsInResponse": {
-        "required": [
-          "requiredNonNullableToOne",
-          "requiredNullableToOne",
-          "requiredToMany"
-        ],
         "type": "object",
         "properties": {
           "nonNullableToOne": {

@@ -1623,10 +1623,6 @@
         "additionalProperties": false
       },
       "resourceAttributesInResponse": {
-        "required": [
-          "requiredNullableValueType",
-          "requiredReferenceType"
-        ],
         "type": "object",
         "properties": {
           "referenceType": {
@@ -1928,9 +1924,6 @@
         "additionalProperties": false
       },
       "resourceRelationshipsInResponse": {
-        "required": [
-          "requiredToOne"
-        ],
         "type": "object",
         "properties": {
           "toOne": {

@@ -145,9 +145,8 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
     private bool IsFieldRequired(ResourceFieldAttribute field)
     {
-        bool isSchemaForUpdateResourceEndpoint = _resourceTypeInfo.ResourceObjectOpenType == typeof(ResourceObjectInPatchRequest<>);
-
-        return !isSchemaForUpdateResourceEndpoint && _resourceFieldValidationMetadataProvider.IsRequired(field);
+        bool isSchemaForPostResourceRequest = _resourceTypeInfo.ResourceObjectOpenType == typeof(ResourceObjectInPostRequest<>);
+        return isSchemaForPostResourceRequest && _resourceFieldValidationMetadataProvider.IsRequired(field);
     }
 
     public void SetMembersOfRelationshipsObject(OpenApiSchema fullSchemaForRelationshipsObject)

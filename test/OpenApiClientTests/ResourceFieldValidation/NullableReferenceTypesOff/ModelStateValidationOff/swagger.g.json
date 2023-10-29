@@ -1572,11 +1572,6 @@
         "additionalProperties": false
       },
       "resourceAttributesInResponse": {
-        "required": [
-          "requiredNullableValueType",
-          "requiredReferenceType",
-          "requiredValueType"
-        ],
         "type": "object",
         "properties": {
           "referenceType": {
@@ -1881,10 +1876,6 @@
         "additionalProperties": false
       },
       "resourceRelationshipsInResponse": {
-        "required": [
-          "requiredToMany",
-          "requiredToOne"
-        ],
         "type": "object",
         "properties": {
           "toOne": {

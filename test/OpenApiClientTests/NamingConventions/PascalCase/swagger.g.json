@@ -1132,9 +1132,6 @@
         "additionalProperties": false
       },
       "StaffMemberAttributesInResponse": {
-        "required": [
-          "Name"
-        ],
         "type": "object",
         "properties": {
           "Name": {
@@ -1388,9 +1385,6 @@
         "additionalProperties": false
       },
       "SupermarketAttributesInResponse": {
-        "required": [
-          "NameOfCity"
-        ],
         "type": "object",
         "properties": {
           "NameOfCity": {
@@ -1677,9 +1671,6 @@
         "additionalProperties": false
       },
       "SupermarketRelationshipsInResponse": {
-        "required": [
-          "StoreManager"
-        ],
         "type": "object",
         "properties": {
           "StoreManager": {
