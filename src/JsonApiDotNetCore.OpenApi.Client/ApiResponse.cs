@@ -1,11 +1,12 @@
-using JsonApiDotNetCore.OpenApi.Client;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.Client.Exceptions;
 
 #pragma warning disable AV1008 // Class should not be static
 
-namespace OpenApiClientTests;
+namespace JsonApiDotNetCore.OpenApi.Client;
 
-internal static class ApiResponse
+[PublicAPI]
+public static class ApiResponse
 {
     public static async Task<TResponse?> TranslateAsync<TResponse>(Func<Task<TResponse>> operation)
         where TResponse : class

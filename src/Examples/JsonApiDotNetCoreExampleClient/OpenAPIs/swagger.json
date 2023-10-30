@@ -10,10 +10,26 @@
         "tags": [
           "people"
         ],
+        "summary": "Retrieves a collection of people.",
         "operationId": "getPersonCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found people, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -21,6 +37,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -28,17 +47,30 @@
         "tags": [
           "people"
         ],
+        "summary": "Retrieves a collection of people without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headPersonCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/personCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -46,19 +78,40 @@
         "tags": [
           "people"
         ],
+        "summary": "Creates a new person.",
         "operationId": "postPerson",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "requestBody": {
+          "description": "The attributes and relationships of the person to create.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/personPostRequestDocument"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personPostRequestDocument"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Created",
+            "description": "The person was successfully created, which resulted in additional changes. The newly created person is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -68,7 +121,19 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The person was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       }
@@ -78,21 +143,36 @@
         "tags": [
           "people"
         ],
+        "summary": "Retrieves an individual person by its identifier.",
         "operationId": "getPerson",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found person.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -100,6 +180,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The person does not exist."
           }
         }
       },
@@ -107,28 +193,43 @@
         "tags": [
           "people"
         ],
+        "summary": "Retrieves an individual person by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headPerson",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/personPrimaryResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The person does not exist."
           }
         }
       },
@@ -136,30 +237,50 @@
         "tags": [
           "people"
         ],
+        "summary": "Updates an existing person.",
         "operationId": "patchPerson",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person to update.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "requestBody": {
+          "description": "The attributes and relationships of the person to update. Omitted fields are left unchanged.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/personPatchRequestDocument"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personPatchRequestDocument"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The person was successfully updated, which resulted in additional changes. The updated person is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -169,7 +290,19 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The person was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
+          "404": {
+            "description": "The person or a related resource does not exist."
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       },
@@ -177,11 +310,13 @@
         "tags": [
           "people"
         ],
+        "summary": "Deletes an existing person by its identifier.",
         "operationId": "deletePerson",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person to delete.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -191,7 +326,10 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The person was successfully deleted."
+          },
+          "404": {
+            "description": "The person does not exist."
           }
         }
       }
@@ -201,21 +339,36 @@
         "tags": [
           "people"
         ],
+        "summary": "Retrieves the related todoItems of an individual person's assignedTodoItems relationship.",
         "operationId": "getPersonAssignedTodoItems",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person whose related todoItems to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found todoItems, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -223,6 +376,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The person does not exist."
           }
         }
       },
@@ -230,28 +389,43 @@
         "tags": [
           "people"
         ],
+        "summary": "Retrieves the related todoItems of an individual person's assignedTodoItems relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headPersonAssignedTodoItems",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person whose related todoItems to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The person does not exist."
           }
         }
       }
@@ -261,21 +435,36 @@
         "tags": [
           "people"
         ],
+        "summary": "Retrieves the related todoItem identities of an individual person's assignedTodoItems relationship.",
         "operationId": "getPersonAssignedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person whose related todoItem identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found todoItem identities, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -283,6 +472,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The person does not exist."
           }
         }
       },
@@ -290,28 +485,43 @@
         "tags": [
           "people"
         ],
+        "summary": "Retrieves the related todoItem identities of an individual person's assignedTodoItems relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headPersonAssignedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person whose related todoItem identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/todoItemIdentifierCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The person does not exist."
           }
         }
       },
@@ -319,11 +529,13 @@
         "tags": [
           "people"
         ],
+        "summary": "Adds existing todoItems to the assignedTodoItems relationship of an individual person.",
         "operationId": "postPersonAssignedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person to add todoItems to.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -332,17 +544,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the todoItems to add to the assignedTodoItems relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The todoItems were successfully added, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The person does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -350,11 +576,13 @@
         "tags": [
           "people"
         ],
+        "summary": "Assigns existing todoItems to the assignedTodoItems relationship of an individual person.",
         "operationId": "patchPersonAssignedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person whose assignedTodoItems relationship to assign.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -363,17 +591,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the todoItems to assign to the assignedTodoItems relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The assignedTodoItems relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The person does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -381,11 +623,13 @@
         "tags": [
           "people"
         ],
+        "summary": "Removes existing todoItems from the assignedTodoItems relationship of an individual person.",
         "operationId": "deletePersonAssignedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person to remove todoItems from.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -394,17 +638,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the todoItems to remove from the assignedTodoItems relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The todoItems were successfully removed, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The person does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -414,21 +672,36 @@
         "tags": [
           "people"
         ],
+        "summary": "Retrieves the related todoItems of an individual person's ownedTodoItems relationship.",
         "operationId": "getPersonOwnedTodoItems",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person whose related todoItems to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found todoItems, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -436,6 +709,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The person does not exist."
           }
         }
       },
@@ -443,28 +722,43 @@
         "tags": [
           "people"
         ],
+        "summary": "Retrieves the related todoItems of an individual person's ownedTodoItems relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headPersonOwnedTodoItems",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person whose related todoItems to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The person does not exist."
           }
         }
       }
@@ -474,21 +768,36 @@
         "tags": [
           "people"
         ],
+        "summary": "Retrieves the related todoItem identities of an individual person's ownedTodoItems relationship.",
         "operationId": "getPersonOwnedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person whose related todoItem identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found todoItem identities, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -496,6 +805,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The person does not exist."
           }
         }
       },
@@ -503,28 +818,43 @@
         "tags": [
           "people"
         ],
+        "summary": "Retrieves the related todoItem identities of an individual person's ownedTodoItems relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headPersonOwnedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person whose related todoItem identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/todoItemIdentifierCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The person does not exist."
           }
         }
       },
@@ -532,11 +862,13 @@
         "tags": [
           "people"
         ],
+        "summary": "Adds existing todoItems to the ownedTodoItems relationship of an individual person.",
         "operationId": "postPersonOwnedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person to add todoItems to.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -545,17 +877,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the todoItems to add to the ownedTodoItems relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The todoItems were successfully added, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The person does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -563,11 +909,13 @@
         "tags": [
           "people"
         ],
+        "summary": "Assigns existing todoItems to the ownedTodoItems relationship of an individual person.",
         "operationId": "patchPersonOwnedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person whose ownedTodoItems relationship to assign.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -576,17 +924,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the todoItems to assign to the ownedTodoItems relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The ownedTodoItems relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The person does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -594,11 +956,13 @@
         "tags": [
           "people"
         ],
+        "summary": "Removes existing todoItems from the ownedTodoItems relationship of an individual person.",
         "operationId": "deletePersonOwnedTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the person to remove todoItems from.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -607,17 +971,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the todoItems to remove from the ownedTodoItems relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The todoItems were successfully removed, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The person does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -627,10 +1005,26 @@
         "tags": [
           "tags"
         ],
+        "summary": "Retrieves a collection of tags.",
         "operationId": "getTagCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found tags, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -638,6 +1032,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -645,17 +1042,30 @@
         "tags": [
           "tags"
         ],
+        "summary": "Retrieves a collection of tags without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headTagCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/tagCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -663,19 +1073,40 @@
         "tags": [
           "tags"
         ],
+        "summary": "Creates a new tag.",
         "operationId": "postTag",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "requestBody": {
+          "description": "The attributes and relationships of the tag to create.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/tagPostRequestDocument"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/tagPostRequestDocument"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Created",
+            "description": "The tag was successfully created, which resulted in additional changes. The newly created tag is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -685,7 +1116,19 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The tag was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       }
@@ -695,21 +1138,36 @@
         "tags": [
           "tags"
         ],
+        "summary": "Retrieves an individual tag by its identifier.",
         "operationId": "getTag",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the tag to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found tag.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -717,6 +1175,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The tag does not exist."
           }
         }
       },
@@ -724,28 +1188,43 @@
         "tags": [
           "tags"
         ],
+        "summary": "Retrieves an individual tag by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headTag",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the tag to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/tagPrimaryResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The tag does not exist."
           }
         }
       },
@@ -753,30 +1232,50 @@
         "tags": [
           "tags"
         ],
+        "summary": "Updates an existing tag.",
         "operationId": "patchTag",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the tag to update.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "requestBody": {
+          "description": "The attributes and relationships of the tag to update. Omitted fields are left unchanged.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/tagPatchRequestDocument"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/tagPatchRequestDocument"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The tag was successfully updated, which resulted in additional changes. The updated tag is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -786,7 +1285,19 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The tag was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
+          "404": {
+            "description": "The tag or a related resource does not exist."
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       },
@@ -794,11 +1305,13 @@
         "tags": [
           "tags"
         ],
+        "summary": "Deletes an existing tag by its identifier.",
         "operationId": "deleteTag",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the tag to delete.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -808,7 +1321,10 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The tag was successfully deleted."
+          },
+          "404": {
+            "description": "The tag does not exist."
           }
         }
       }
@@ -818,21 +1334,36 @@
         "tags": [
           "tags"
         ],
+        "summary": "Retrieves the related todoItems of an individual tag's todoItems relationship.",
         "operationId": "getTagTodoItems",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the tag whose related todoItems to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found todoItems, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -840,6 +1371,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The tag does not exist."
           }
         }
       },
@@ -847,28 +1384,43 @@
         "tags": [
           "tags"
         ],
+        "summary": "Retrieves the related todoItems of an individual tag's todoItems relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headTagTodoItems",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the tag whose related todoItems to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The tag does not exist."
           }
         }
       }
@@ -878,21 +1430,36 @@
         "tags": [
           "tags"
         ],
+        "summary": "Retrieves the related todoItem identities of an individual tag's todoItems relationship.",
         "operationId": "getTagTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the tag whose related todoItem identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found todoItem identities, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -900,6 +1467,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The tag does not exist."
           }
         }
       },
@@ -907,28 +1480,43 @@
         "tags": [
           "tags"
         ],
+        "summary": "Retrieves the related todoItem identities of an individual tag's todoItems relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headTagTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the tag whose related todoItem identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/todoItemIdentifierCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The tag does not exist."
           }
         }
       },
@@ -936,11 +1524,13 @@
         "tags": [
           "tags"
         ],
+        "summary": "Adds existing todoItems to the todoItems relationship of an individual tag.",
         "operationId": "postTagTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the tag to add todoItems to.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -949,17 +1539,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the todoItems to add to the todoItems relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The todoItems were successfully added, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The tag does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -967,11 +1571,13 @@
         "tags": [
           "tags"
         ],
+        "summary": "Assigns existing todoItems to the todoItems relationship of an individual tag.",
         "operationId": "patchTagTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the tag whose todoItems relationship to assign.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -980,17 +1586,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the todoItems to assign to the todoItems relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The todoItems relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The tag does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -998,11 +1618,13 @@
         "tags": [
           "tags"
         ],
+        "summary": "Removes existing todoItems from the todoItems relationship of an individual tag.",
         "operationId": "deleteTagTodoItemsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the tag to remove todoItems from.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1011,17 +1633,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the todoItems to remove from the todoItems relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTodoItemInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The todoItems were successfully removed, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The tag does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -1031,10 +1667,26 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves a collection of todoItems.",
         "operationId": "getTodoItemCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found todoItems, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1042,6 +1694,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -1049,17 +1704,30 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves a collection of todoItems without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headTodoItemCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/todoItemCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
           }
         }
       },
@@ -1067,19 +1735,40 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Creates a new todoItem.",
         "operationId": "postTodoItem",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
+          }
+        ],
         "requestBody": {
+          "description": "The attributes and relationships of the todoItem to create.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/todoItemPostRequestDocument"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemPostRequestDocument"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Created",
+            "description": "The todoItem was successfully created, which resulted in additional changes. The newly created todoItem is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1089,7 +1778,19 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The todoItem was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       }
@@ -1099,21 +1800,36 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves an individual todoItem by its identifier.",
         "operationId": "getTodoItem",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found todoItem.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1121,6 +1837,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       },
@@ -1128,28 +1850,43 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves an individual todoItem by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headTodoItem",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/todoItemPrimaryResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       },
@@ -1157,30 +1894,50 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Updates an existing todoItem.",
         "operationId": "patchTodoItem",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem to update.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "requestBody": {
+          "description": "The attributes and relationships of the todoItem to update. Omitted fields are left unchanged.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/todoItemPatchRequestDocument"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemPatchRequestDocument"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "The todoItem was successfully updated, which resulted in additional changes. The updated todoItem is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1190,7 +1947,19 @@
             }
           },
           "204": {
-            "description": "No Content"
+            "description": "The todoItem was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
+          "404": {
+            "description": "The todoItem or a related resource does not exist."
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
           }
         }
       },
@@ -1198,11 +1967,13 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Deletes an existing todoItem by its identifier.",
         "operationId": "deleteTodoItem",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem to delete.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1212,7 +1983,10 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The todoItem was successfully deleted."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       }
@@ -1222,21 +1996,36 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves the related person of an individual todoItem's assignee relationship.",
         "operationId": "getTodoItemAssignee",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose related person to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found person, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1244,6 +2033,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       },
@@ -1251,28 +2046,43 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves the related person of an individual todoItem's assignee relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headTodoItemAssignee",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose related person to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/nullablePersonSecondaryResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       }
@@ -1282,21 +2092,36 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves the related person identity of an individual todoItem's assignee relationship.",
         "operationId": "getTodoItemAssigneeRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose related person identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found person identity, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1304,6 +2129,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       },
@@ -1311,28 +2142,43 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves the related person identity of an individual todoItem's assignee relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headTodoItemAssigneeRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose related person identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/nullablePersonIdentifierResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       },
@@ -1340,11 +2186,13 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Clears or assigns an existing person to the assignee relationship of an individual todoItem.",
         "operationId": "patchTodoItemAssigneeRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose assignee relationship to assign or clear.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1353,17 +2201,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identity of the person to assign to the assignee relationship, or `null` to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/nullableToOnePersonInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nullableToOnePersonInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The assignee relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -1373,21 +2235,36 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves the related person of an individual todoItem's owner relationship.",
         "operationId": "getTodoItemOwner",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose related person to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found person, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1395,6 +2272,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       },
@@ -1402,28 +2285,43 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves the related person of an individual todoItem's owner relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headTodoItemOwner",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose related person to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/personSecondaryResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       }
@@ -1433,21 +2331,36 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves the related person identity of an individual todoItem's owner relationship.",
         "operationId": "getTodoItemOwnerRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose related person identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found person identity, or `null` if it was not found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1455,6 +2368,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       },
@@ -1462,28 +2381,43 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves the related person identity of an individual todoItem's owner relationship without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headTodoItemOwnerRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose related person identity to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/personIdentifierResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       },
@@ -1491,11 +2425,13 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Assigns an existing person to the owner relationship of an individual todoItem.",
         "operationId": "patchTodoItemOwnerRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose owner relationship to assign.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1504,17 +2440,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identity of the person to assign to the owner relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toOnePersonInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toOnePersonInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The owner relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -1524,21 +2474,36 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves the related tags of an individual todoItem's tags relationship.",
         "operationId": "getTodoItemTags",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose related tags to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found tags, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1546,6 +2511,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       },
@@ -1553,28 +2524,43 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves the related tags of an individual todoItem's tags relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headTodoItemTags",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose related tags to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/tagCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       }
@@ -1584,21 +2570,36 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves the related tag identities of an individual todoItem's tags relationship.",
         "operationId": "getTodoItemTagsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose related tag identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Successfully returns the found tag identities, or an empty array if none were found.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1606,6 +2607,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       },
@@ -1613,28 +2620,43 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Retrieves the related tag identities of an individual todoItem's tags relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
         "operationId": "headTodoItemTagsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose related tag identities to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": null
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/tagIdentifierCollectionResponseDocument"
-                }
-              }
-            }
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
           }
         }
       },
@@ -1642,11 +2664,13 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Adds existing tags to the tags relationship of an individual todoItem.",
         "operationId": "postTodoItemTagsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem to add tags to.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1655,17 +2679,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the tags to add to the tags relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyTagInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTagInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The tags were successfully added, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -1673,11 +2711,13 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Assigns existing tags to the tags relationship of an individual todoItem.",
         "operationId": "patchTodoItemTagsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem whose tags relationship to assign.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1686,17 +2726,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the tags to assign to the tags relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyTagInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTagInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The tags relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       },
@@ -1704,11 +2758,13 @@
         "tags": [
           "todoItems"
         ],
+        "summary": "Removes existing tags from the tags relationship of an individual todoItem.",
         "operationId": "deleteTodoItemTagsRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the todoItem to remove tags from.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1717,17 +2773,31 @@
           }
         ],
         "requestBody": {
+          "description": "The identities of the tags to remove from the tags relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/toManyTagInRequest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyTagInRequest"
+                  }
+                ]
               }
             }
           }
         },
         "responses": {
           "204": {
-            "description": "No Content"
+            "description": "The tags were successfully removed, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed."
+          },
+          "404": {
+            "description": "The todoItem does not exist."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
           }
         }
       }
@@ -1735,31 +2805,6 @@
   },
   "components": {
     "schemas": {
-      "jsonapiObject": {
-        "type": "object",
-        "properties": {
-          "version": {
-            "type": "string"
-          },
-          "ext": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "profile": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "meta": {
-            "type": "object",
-            "additionalProperties": { }
-          }
-        },
-        "additionalProperties": false
-      },
       "linksInRelationshipObject": {
         "required": [
           "related",
@@ -1780,7 +2825,6 @@
       },
       "linksInResourceCollectionDocument": {
         "required": [
-          "first",
           "self"
         ],
         "type": "object",
@@ -1793,7 +2837,6 @@
             "type": "string"
           },
           "first": {
-            "minLength": 1,
             "type": "string"
           },
           "last": {
@@ -1826,7 +2869,6 @@
       },
       "linksInResourceIdentifierCollectionDocument": {
         "required": [
-          "first",
           "related",
           "self"
         ],
@@ -1836,15 +2878,14 @@
             "minLength": 1,
             "type": "string"
           },
-          "describedby": {
-            "type": "string"
-          },
           "related": {
             "minLength": 1,
             "type": "string"
           },
+          "describedby": {
+            "type": "string"
+          },
           "first": {
-            "minLength": 1,
             "type": "string"
           },
           "last": {
@@ -1870,11 +2911,11 @@
             "minLength": 1,
             "type": "string"
           },
-          "describedby": {
-            "type": "string"
-          },
           "related": {
             "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
             "type": "string"
           }
         },
@@ -1893,29 +2934,6 @@
         },
         "additionalProperties": false
       },
-      "nullValue": {
-        "not": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "number"
-            },
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object"
-            },
-            {
-              "type": "array"
-            }
-          ],
-          "items": { }
-        },
-        "nullable": true
-      },
       "nullablePersonIdentifierResponseDocument": {
         "required": [
           "data",
@@ -1923,25 +2941,27 @@
         ],
         "type": "object",
         "properties": {
-          "data": {
-            "oneOf": [
+          "links": {
+            "allOf": [
               {
-                "$ref": "#/components/schemas/personIdentifier"
-              },
-              {
-                "$ref": "#/components/schemas/nullValue"
+                "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
               }
             ]
           },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personIdentifier"
+              }
+            ],
+            "nullable": true
+          },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1953,25 +2973,27 @@
         ],
         "type": "object",
         "properties": {
-          "data": {
-            "oneOf": [
+          "links": {
+            "allOf": [
               {
-                "$ref": "#/components/schemas/personDataInResponse"
-              },
-              {
-                "$ref": "#/components/schemas/nullValue"
+                "$ref": "#/components/schemas/linksInResourceDocument"
               }
             ]
           },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personDataInResponse"
+              }
+            ],
+            "nullable": true
+          },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceDocument"
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1983,14 +3005,12 @@
         "type": "object",
         "properties": {
           "data": {
-            "oneOf": [
+            "allOf": [
               {
                 "$ref": "#/components/schemas/personIdentifier"
-              },
-              {
-                "$ref": "#/components/schemas/nullValue"
               }
-            ]
+            ],
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2001,22 +3021,27 @@
         ],
         "type": "object",
         "properties": {
-          "data": {
-            "oneOf": [
+          "links": {
+            "allOf": [
               {
-                "$ref": "#/components/schemas/personIdentifier"
-              },
-              {
-                "$ref": "#/components/schemas/nullValue"
+                "$ref": "#/components/schemas/linksInRelationshipObject"
               }
             ]
           },
-          "links": {
-            "$ref": "#/components/schemas/linksInRelationshipObject"
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personIdentifier"
+              }
+            ],
+            "nullable": true
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2051,10 +3076,6 @@
         "additionalProperties": false
       },
       "personAttributesInResponse": {
-        "required": [
-          "displayName",
-          "lastName"
-        ],
         "type": "object",
         "properties": {
           "firstName": {
@@ -2078,6 +3099,13 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+              }
+            ]
+          },
           "data": {
             "type": "array",
             "items": {
@@ -2086,13 +3114,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2105,17 +3130,29 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/personResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/personAttributesInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personAttributesInPatchRequest"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/personRelationshipsInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personRelationshipsInPatchRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2127,13 +3164,25 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/personResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personResourceType"
+              }
+            ]
           },
           "attributes": {
-            "$ref": "#/components/schemas/personAttributesInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personAttributesInPostRequest"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/personRelationshipsInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personRelationshipsInPostRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2147,24 +3196,43 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/personResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/personAttributesInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personAttributesInResponse"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/personRelationshipsInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personRelationshipsInResponse"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceObject"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2177,7 +3245,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/personResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -2193,18 +3265,26 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+              }
+            ]
+          },
           "data": {
-            "$ref": "#/components/schemas/personIdentifier"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personIdentifier"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceIdentifierDocument"
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2216,7 +3296,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/personDataInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personDataInPatchRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2228,7 +3312,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/personDataInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personDataInPostRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2240,18 +3328,26 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceDocument"
+              }
+            ]
+          },
           "data": {
-            "$ref": "#/components/schemas/personDataInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personDataInResponse"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceDocument"
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2260,10 +3356,18 @@
         "type": "object",
         "properties": {
           "ownedTodoItems": {
-            "$ref": "#/components/schemas/toManyTodoItemInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+              }
+            ]
           },
           "assignedTodoItems": {
-            "$ref": "#/components/schemas/toManyTodoItemInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2272,10 +3376,18 @@
         "type": "object",
         "properties": {
           "ownedTodoItems": {
-            "$ref": "#/components/schemas/toManyTodoItemInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+              }
+            ]
           },
           "assignedTodoItems": {
-            "$ref": "#/components/schemas/toManyTodoItemInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2284,10 +3396,18 @@
         "type": "object",
         "properties": {
           "ownedTodoItems": {
-            "$ref": "#/components/schemas/toManyTodoItemInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyTodoItemInResponse"
+              }
+            ]
           },
           "assignedTodoItems": {
-            "$ref": "#/components/schemas/toManyTodoItemInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyTodoItemInResponse"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2305,18 +3425,26 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceDocument"
+              }
+            ]
+          },
           "data": {
-            "$ref": "#/components/schemas/personDataInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personDataInResponse"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceDocument"
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2345,9 +3473,6 @@
         "additionalProperties": false
       },
       "tagAttributesInResponse": {
-        "required": [
-          "name"
-        ],
         "type": "object",
         "properties": {
           "name": {
@@ -2364,6 +3489,13 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+              }
+            ]
+          },
           "data": {
             "type": "array",
             "items": {
@@ -2372,13 +3504,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2391,17 +3520,29 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/tagResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/tagAttributesInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagAttributesInPatchRequest"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/tagRelationshipsInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagRelationshipsInPatchRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2413,13 +3554,25 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/tagResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagResourceType"
+              }
+            ]
           },
           "attributes": {
-            "$ref": "#/components/schemas/tagAttributesInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagAttributesInPostRequest"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/tagRelationshipsInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagRelationshipsInPostRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2433,24 +3586,43 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/tagResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/tagAttributesInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagAttributesInResponse"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/tagRelationshipsInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagRelationshipsInResponse"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceObject"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2463,7 +3635,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/tagResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -2479,6 +3655,13 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+              }
+            ]
+          },
           "data": {
             "type": "array",
             "items": {
@@ -2487,13 +3670,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2505,7 +3685,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/tagDataInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagDataInPatchRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2517,7 +3701,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/tagDataInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagDataInPostRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2529,18 +3717,26 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceDocument"
+              }
+            ]
+          },
           "data": {
-            "$ref": "#/components/schemas/tagDataInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/tagDataInResponse"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceDocument"
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2549,7 +3745,11 @@
         "type": "object",
         "properties": {
           "todoItems": {
-            "$ref": "#/components/schemas/toManyTodoItemInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2558,7 +3758,11 @@
         "type": "object",
         "properties": {
           "todoItems": {
-            "$ref": "#/components/schemas/toManyTodoItemInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyTodoItemInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2567,7 +3771,11 @@
         "type": "object",
         "properties": {
           "todoItems": {
-            "$ref": "#/components/schemas/toManyTodoItemInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyTodoItemInResponse"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2599,18 +3807,25 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInRelationshipObject"
+              }
+            ]
+          },
           "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/tagIdentifier"
             }
           },
-          "links": {
-            "$ref": "#/components/schemas/linksInRelationshipObject"
-          },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2636,18 +3851,25 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInRelationshipObject"
+              }
+            ]
+          },
           "data": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/todoItemIdentifier"
             }
           },
-          "links": {
-            "$ref": "#/components/schemas/linksInRelationshipObject"
-          },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2659,7 +3881,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/personIdentifier"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personIdentifier"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2670,15 +3896,26 @@
         ],
         "type": "object",
         "properties": {
-          "data": {
-            "$ref": "#/components/schemas/personIdentifier"
-          },
           "links": {
-            "$ref": "#/components/schemas/linksInRelationshipObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInRelationshipObject"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/personIdentifier"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2690,7 +3927,11 @@
             "type": "string"
           },
           "priority": {
-            "$ref": "#/components/schemas/todoItemPriority"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemPriority"
+              }
+            ]
           },
           "durationInHours": {
             "type": "integer",
@@ -2711,7 +3952,11 @@
             "type": "string"
           },
           "priority": {
-            "$ref": "#/components/schemas/todoItemPriority"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemPriority"
+              }
+            ]
           },
           "durationInHours": {
             "type": "integer",
@@ -2722,17 +3967,17 @@
         "additionalProperties": false
       },
       "todoItemAttributesInResponse": {
-        "required": [
-          "description",
-          "priority"
-        ],
         "type": "object",
         "properties": {
           "description": {
             "type": "string"
           },
           "priority": {
-            "$ref": "#/components/schemas/todoItemPriority"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemPriority"
+              }
+            ]
           },
           "durationInHours": {
             "type": "integer",
@@ -2758,6 +4003,13 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+              }
+            ]
+          },
           "data": {
             "type": "array",
             "items": {
@@ -2766,13 +4018,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2785,17 +4034,29 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/todoItemResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/todoItemAttributesInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemAttributesInPatchRequest"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/todoItemRelationshipsInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemRelationshipsInPatchRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2807,13 +4068,25 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/todoItemResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemResourceType"
+              }
+            ]
           },
           "attributes": {
-            "$ref": "#/components/schemas/todoItemAttributesInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemAttributesInPostRequest"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/todoItemRelationshipsInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemRelationshipsInPostRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2827,24 +4100,43 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/todoItemResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
             "type": "string"
           },
           "attributes": {
-            "$ref": "#/components/schemas/todoItemAttributesInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemAttributesInResponse"
+              }
+            ]
           },
           "relationships": {
-            "$ref": "#/components/schemas/todoItemRelationshipsInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemRelationshipsInResponse"
+              }
+            ]
           },
           "links": {
-            "$ref": "#/components/schemas/linksInResourceObject"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceObject"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2857,7 +4149,11 @@
         "type": "object",
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/todoItemResourceType"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemResourceType"
+              }
+            ]
           },
           "id": {
             "minLength": 1,
@@ -2873,6 +4169,13 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+              }
+            ]
+          },
           "data": {
             "type": "array",
             "items": {
@@ -2881,13 +4184,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2899,7 +4199,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/todoItemDataInPatchRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemDataInPatchRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2911,7 +4215,11 @@
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/todoItemDataInPostRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemDataInPostRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2923,18 +4231,26 @@
         ],
         "type": "object",
         "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceDocument"
+              }
+            ]
+          },
           "data": {
-            "$ref": "#/components/schemas/todoItemDataInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/todoItemDataInResponse"
+              }
+            ]
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
-          },
-          "jsonapi": {
-            "$ref": "#/components/schemas/jsonapiObject"
-          },
-          "links": {
-            "$ref": "#/components/schemas/linksInResourceDocument"
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2951,13 +4267,25 @@
         "type": "object",
         "properties": {
           "owner": {
-            "$ref": "#/components/schemas/toOnePersonInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOnePersonInRequest"
+              }
+            ]
           },
           "assignee": {
-            "$ref": "#/components/schemas/nullableToOnePersonInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOnePersonInRequest"
+              }
+            ]
           },
           "tags": {
-            "$ref": "#/components/schemas/toManyTagInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyTagInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -2969,31 +4297,52 @@
         "type": "object",
         "properties": {
           "owner": {
-            "$ref": "#/components/schemas/toOnePersonInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOnePersonInRequest"
+              }
+            ]
           },
           "assignee": {
-            "$ref": "#/components/schemas/nullableToOnePersonInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOnePersonInRequest"
+              }
+            ]
           },
           "tags": {
-            "$ref": "#/components/schemas/toManyTagInRequest"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyTagInRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
       },
       "todoItemRelationshipsInResponse": {
-        "required": [
-          "owner"
-        ],
         "type": "object",
         "properties": {
           "owner": {
-            "$ref": "#/components/schemas/toOnePersonInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toOnePersonInResponse"
+              }
+            ]
           },
           "assignee": {
-            "$ref": "#/components/schemas/nullableToOnePersonInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nullableToOnePersonInResponse"
+              }
+            ]
           },
           "tags": {
-            "$ref": "#/components/schemas/toManyTagInResponse"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyTagInResponse"
+              }
+            ]
           }
         },
         "additionalProperties": false

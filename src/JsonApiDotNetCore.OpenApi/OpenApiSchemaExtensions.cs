@@ -4,6 +4,29 @@ namespace JsonApiDotNetCore.OpenApi;
 
 internal static class OpenApiSchemaExtensions
 {
+    public static void ReorderProperties(this OpenApiSchema fullSchema, IEnumerable<string> propertyNamesInOrder)
+    {
+        ArgumentGuard.NotNull(fullSchema);
+        ArgumentGuard.NotNull(propertyNamesInOrder);
+
+        var propertiesInOrder = new Dictionary<string, OpenApiSchema>();
+
+        foreach (string propertyName in propertyNamesInOrder)
+        {
+            if (fullSchema.Properties.TryGetValue(propertyName, out OpenApiSchema? schema))
+            {
+                propertiesInOrder.Add(propertyName, schema);
+            }
+        }
+
+        if (fullSchema.Properties.Count != propertiesInOrder.Count)
+        {
+            throw new UnreachableCodeException();
+        }
+
+        fullSchema.Properties = propertiesInOrder;
+    }
+
     public static OpenApiSchema UnwrapExtendedReferenceSchema(this OpenApiSchema source)
     {
         ArgumentGuard.NotNull(source);
@@ -14,5 +37,19 @@ internal static class OpenApiSchemaExtensions
         }
 
         return source.AllOf.Single();
+    }
+
+    public static void SetValuesInMetaToNullable(this OpenApiSchema fullSchema)
+    {
+        ArgumentGuard.NotNull(fullSchema);
+
+        if (fullSchema.Properties.TryGetValue(JsonApiPropertyName.Meta, out OpenApiSchema? schemaForMeta))
+        {
+            schemaForMeta.AdditionalProperties = new OpenApiSchema
+            {
+                Type = "object",
+                Nullable = true
+            };
+        }
     }
 }

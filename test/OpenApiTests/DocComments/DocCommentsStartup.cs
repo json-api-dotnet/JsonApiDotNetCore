@@ -13,8 +13,9 @@ public sealed class DocCommentsStartup<TDbContext> : OpenApiStartup<TDbContext>
 {
     protected override void SetJsonApiOptions(JsonApiOptions options)
     {
-        options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
         base.SetJsonApiOptions(options);
+
+        options.ClientIdGeneration = ClientIdGenerationMode.Allowed;
     }
 
     protected override void SetupSwaggerGenAction(SwaggerGenOptions options)

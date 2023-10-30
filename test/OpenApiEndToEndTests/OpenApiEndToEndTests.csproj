@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>$(TargetFrameworkName)</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi.Client\JsonApiDotNetCore.OpenApi.Client.csproj" />
+    <ProjectReference Include="..\OpenApiTests\OpenApiTests.csproj" />
+    <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All" />
+    <PackageReference Include="GitHubActionsTestLogger" Version="$(GitHubActionsTestLoggerVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
+    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="$(NSwagApiClientVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="$(MicrosoftApiClientVersion)" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <OpenApiReference Include="QueryStrings\swagger.g.json">
+      <Namespace>OpenApiEndToEndTests.QueryStrings.GeneratedCode</Namespace>
+      <ClassName>QueryStringsClient</ClassName>
+      <OutputPath>QueryStringsClient.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:true</Options>
+    </OpenApiReference>
+  </ItemGroup>
+</Project>

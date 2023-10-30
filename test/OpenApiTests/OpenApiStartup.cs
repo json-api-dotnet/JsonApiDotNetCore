@@ -20,6 +20,14 @@ public class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
         services.AddOpenApi(mvcBuilder, SetupSwaggerGenAction);
     }
 
+    protected override void SetJsonApiOptions(JsonApiOptions options)
+    {
+        base.SetJsonApiOptions(options);
+
+        options.UseRelativeLinks = true;
+        options.IncludeTotalResourceCount = true;
+    }
+
     protected virtual void SetupSwaggerGenAction(SwaggerGenOptions options)
     {
         string documentationPath = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");

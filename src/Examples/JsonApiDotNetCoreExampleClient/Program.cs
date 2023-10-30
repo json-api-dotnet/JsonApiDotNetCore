@@ -3,7 +3,12 @@ using JsonApiDotNetCoreExampleClient;
 using var httpClient = new HttpClient();
 var apiClient = new ExampleApiClient("http://localhost:14140", httpClient);
 
-PersonCollectionResponseDocument getResponse = await apiClient.GetPersonCollectionAsync();
+PersonCollectionResponseDocument getResponse = await apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
+{
+    ["filter"] = "has(assignedTodoItems)",
+    ["sort"] = "-lastName",
+    ["page[size]"] = "5"
+});
 
 foreach (PersonDataInResponse person in getResponse.Data)
 {
@@ -25,7 +30,8 @@ var patchRequest = new PersonPatchRequestDocument
 // This line results in sending "firstName: null" instead of omitting it.
 using (apiClient.WithPartialAttributeSerialization<PersonPatchRequestDocument, PersonAttributesInPatchRequest>(patchRequest, person => person.FirstName))
 {
-    await TranslateAsync(async () => await apiClient.PatchPersonAsync(1, patchRequest));
+    // Workaround for https://github.com/RicoSuter/NSwag/issues/2499.
+    await TranslateAsync(async () => await apiClient.PatchPersonAsync(1, null, patchRequest));
 }
 
 Console.WriteLine("Press any key to close.");

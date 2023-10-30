@@ -78,15 +78,15 @@ public static class JsonElementAssertionExtensions
                 .FailWith($"Expected JSON element '{escapedJson}' to contain a property named '{propertyName}'.");
         }
 
-        public JsonElement ContainPath(string path)
+        public JsonElement ContainPath(string jsonPath)
         {
-            Func<JsonElement> elementSelector = () => _subject.SelectToken(path, true)!.Value;
+            Func<JsonElement> elementSelector = () => _subject.SelectToken(jsonPath, true)!.Value;
             return elementSelector.Should().NotThrow().Subject;
         }
 
-        public void NotContainPath(string path)
+        public void NotContainPath(string jsonPath)
         {
-            JsonElement? pathToken = _subject.SelectToken(path);
+            JsonElement? pathToken = _subject.SelectToken(jsonPath);
             pathToken.Should().BeNull();
         }
 
@@ -116,9 +116,9 @@ public static class JsonElementAssertionExtensions
             }
         }
 
-        public void HaveProperty(string propertyName, string propertyValue)
+        public void HaveProperty(string jsonPath, object? propertyValue)
         {
-            _subject.Should().ContainPath(propertyName).With(element => element.Should().Be(propertyValue));
+            _subject.Should().ContainPath(jsonPath).With(element => element.Should().Be(propertyValue));
         }
 
         public void ContainArrayElement(string value)

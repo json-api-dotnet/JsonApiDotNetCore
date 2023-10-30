@@ -2,6 +2,7 @@ using System.Net;
 using System.Text.Json;
 using FluentAssertions;
 using FluentAssertions.Specialized;
+using JsonApiDotNetCore.OpenApi.Client;
 using Newtonsoft.Json;
 using OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOff.ModelStateValidationOn.GeneratedCode;
 using TestBuildingBlocks;
@@ -36,7 +37,7 @@ public sealed class UpdateResourceTests : BaseOpenApiClientTests
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
         // Act
-        Func<Task> action = async () => await apiClient.PatchResourceAsync(Unknown.TypedId.Int32, requestDocument);
+        Func<Task> action = async () => await apiClient.PatchResourceAsync(Unknown.TypedId.Int32, null, requestDocument);
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -78,7 +79,7 @@ public sealed class UpdateResourceTests : BaseOpenApiClientTests
         using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePatchRequestDocument, ResourceAttributesInPatchRequest>(requestDocument);
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(int.Parse(requestDocument.Data.Id), requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(int.Parse(requestDocument.Data.Id), null, requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -119,7 +120,7 @@ public sealed class UpdateResourceTests : BaseOpenApiClientTests
         var apiClient = new NrtOffMsvOnClient(wrapper.HttpClient);
 
         // Act
-        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(int.Parse(requestDocument.Data.Id), requestDocument));
+        await ApiResponse.TranslateAsync(async () => await apiClient.PatchResourceAsync(int.Parse(requestDocument.Data.Id), null, requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();

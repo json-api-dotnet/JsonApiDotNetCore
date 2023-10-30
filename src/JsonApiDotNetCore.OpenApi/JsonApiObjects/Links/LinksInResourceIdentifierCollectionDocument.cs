@@ -18,7 +18,6 @@ internal sealed class LinksInResourceIdentifierCollectionDocument
     [JsonPropertyName("describedby")]
     public string Describedby { get; set; } = null!;
 
-    [Required]
     [JsonPropertyName("first")]
     public string First { get; set; } = null!;
 

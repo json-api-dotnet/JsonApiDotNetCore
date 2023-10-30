@@ -59,6 +59,7 @@ internal sealed class ResourceObjectSchemaGenerator
         RemoveResourceIdIfPostResourceObject(resourceTypeInfo, fullSchemaForResourceObject);
 
         SetResourceType(fullSchemaForResourceObject, resourceTypeInfo.ResourceType);
+        fullSchemaForResourceObject.SetValuesInMetaToNullable();
 
         SetResourceAttributes(fullSchemaForResourceObject, fieldObjectBuilder);
 

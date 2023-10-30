@@ -83,17 +83,17 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
         if (IsJsonApiDocument(modelType))
         {
-            OpenApiSchema schema = GenerateJsonApiDocumentSchema(modelType);
+            OpenApiSchema referenceSchemaForDocument = GenerateJsonApiDocumentSchema(modelType);
+            OpenApiSchema fullSchemaForDocument = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForDocument.Reference.Id];
 
             if (IsDataPropertyNullableInDocument(modelType))
             {
-                SetDataObjectSchemaToNullable(schema);
+                SetDataObjectSchemaToNullable(fullSchemaForDocument);
             }
 
-            if (!_options.IncludeJsonApiVersion)
-            {
-                RemoveJsonApiObject(schema);
-            }
+            fullSchemaForDocument.SetValuesInMetaToNullable();
+
+            SetJsonApiVersion(fullSchemaForDocument);
 
             // Schema might depend on other schemas not handled by us, so should not return here.
         }
@@ -150,20 +150,30 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         };
     }
 
-    private void SetDataObjectSchemaToNullable(OpenApiSchema referenceSchemaForDocument)
+    private void SetDataObjectSchemaToNullable(OpenApiSchema fullSchemaForDocument)
     {
-        OpenApiSchema fullSchemaForDocument = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForDocument.Reference.Id];
         OpenApiSchema referenceSchemaForData = fullSchemaForDocument.Properties[JsonApiPropertyName.Data];
         referenceSchemaForData.Nullable = true;
         fullSchemaForDocument.Properties[JsonApiPropertyName.Data] = referenceSchemaForData;
     }
 
-    private void RemoveJsonApiObject(OpenApiSchema referenceSchemaForDocument)
+    private void SetJsonApiVersion(OpenApiSchema fullSchemaForDocument)
     {
-        OpenApiSchema fullSchemaForDocument = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForDocument.Reference.Id];
-        fullSchemaForDocument.Properties.Remove(JsonApiPropertyName.Jsonapi);
+        if (fullSchemaForDocument.Properties.TryGetValue(JsonApiPropertyName.Jsonapi, out OpenApiSchema? referenceSchemaForJsonapi))
+        {
+            string jsonapiSchemaId = referenceSchemaForJsonapi.AllOf[0].Reference.Id;
 
-        _schemaRepositoryAccessor.Current.Schemas.Remove("jsonapi-object");
+            if (!_options.IncludeJsonApiVersion)
+            {
+                fullSchemaForDocument.Properties.Remove(JsonApiPropertyName.Jsonapi);
+                _schemaRepositoryAccessor.Current.Schemas.Remove(jsonapiSchemaId);
+            }
+            else
+            {
+                OpenApiSchema fullSchemaForJsonapi = _schemaRepositoryAccessor.Current.Schemas[jsonapiSchemaId];
+                fullSchemaForJsonapi.SetValuesInMetaToNullable();
+            }
+        }
     }
 
     private static OpenApiSchema CreateExtendedReferenceSchema(OpenApiSchema referenceSchemaForResourceObject)
