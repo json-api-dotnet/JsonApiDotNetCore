@@ -1168,7 +1168,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1333,7 +1336,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1369,7 +1375,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1414,7 +1423,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1461,7 +1473,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1501,7 +1516,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1556,7 +1574,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1591,7 +1612,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1632,7 +1656,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1717,7 +1744,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1829,7 +1859,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1896,7 +1929,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2035,7 +2071,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2078,7 +2117,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false

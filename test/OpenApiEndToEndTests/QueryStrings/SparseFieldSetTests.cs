@@ -180,6 +180,4 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         response.Data.Id.Should().Be(node.StringId);
         response.Data.Attributes.Should().BeNull();
     }
-
-    // TODO: Add tests for other query string parameters.
 }

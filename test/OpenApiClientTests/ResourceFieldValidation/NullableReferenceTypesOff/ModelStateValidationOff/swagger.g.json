@@ -1503,7 +1503,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1536,7 +1539,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1584,7 +1590,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1594,31 +1603,6 @@
           "empties"
         ],
         "type": "string"
-      },
-      "jsonapiObject": {
-        "type": "object",
-        "properties": {
-          "version": {
-            "type": "string"
-          },
-          "ext": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "profile": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "meta": {
-            "type": "object",
-            "additionalProperties": { }
-          }
-        },
-        "additionalProperties": false
       },
       "linksInRelationshipObject": {
         "required": [
@@ -1773,7 +1757,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1802,7 +1789,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1847,7 +1837,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1978,7 +1971,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2090,7 +2086,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2150,7 +2149,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2303,7 +2305,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false

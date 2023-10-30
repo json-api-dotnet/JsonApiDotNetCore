@@ -244,6 +244,8 @@ internal sealed class ResourceFieldObjectSchemaBuilder
         {
             fullSchema.Required.Remove(JsonApiPropertyName.Data);
 
+            fullSchema.SetValuesInMetaToNullable();
+
             fullSchema.ReorderProperties(RelationshipObjectPropertyNamesInOrder);
         }
 

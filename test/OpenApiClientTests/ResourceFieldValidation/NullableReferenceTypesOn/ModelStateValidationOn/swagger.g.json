@@ -1981,7 +1981,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2014,7 +2017,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2062,7 +2068,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2090,7 +2099,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2124,32 +2136,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
-          }
-        },
-        "additionalProperties": false
-      },
-      "jsonapiObject": {
-        "type": "object",
-        "properties": {
-          "version": {
-            "type": "string"
-          },
-          "ext": {
-            "type": "array",
-            "items": {
-              "type": "string"
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
             }
-          },
-          "profile": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "meta": {
-            "type": "object",
-            "additionalProperties": { }
           }
         },
         "additionalProperties": false
@@ -2307,7 +2297,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2336,7 +2329,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2381,7 +2377,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2528,7 +2527,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2640,7 +2642,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2700,7 +2705,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2896,7 +2904,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -2939,7 +2950,10 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
