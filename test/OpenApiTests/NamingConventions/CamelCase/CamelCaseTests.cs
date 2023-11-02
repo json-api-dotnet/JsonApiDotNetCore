@@ -72,7 +72,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
                 linksInResourceObjectSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("linksInResourceObject").SchemaReferenceId;
 
-                primaryResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.allOf[0].$ref")
+                primaryResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.$ref")
                     .ShouldBeSchemaReferenceId("supermarketResourceType").SchemaReferenceId;
 
                 resourceAttributesInResponseSchemaRefId = propertiesElement.Should().ContainPath("attributes.allOf[0].$ref")
@@ -136,7 +136,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
 
             schemasElement.Should().ContainPath($"{relatedResourceIdentifierSchemaRefId}.properties").With(propertiesElement =>
             {
-                relatedResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.allOf[0].$ref")
+                relatedResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.$ref")
                     .ShouldBeSchemaReferenceId("staffMemberResourceType").SchemaReferenceId;
             });
 

@@ -1102,11 +1102,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nodeResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/nodeResourceType"
           },
           "id": {
             "minLength": 1,
@@ -1136,11 +1132,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nodeResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/nodeResourceType"
           },
           "attributes": {
             "allOf": [
@@ -1168,11 +1160,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nodeResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/nodeResourceType"
           },
           "id": {
             "minLength": 1,
@@ -1217,11 +1205,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nodeResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/nodeResourceType"
           },
           "id": {
             "minLength": 1,

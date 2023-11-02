@@ -73,7 +73,7 @@ public sealed class PascalCaseTests
                 linksInResourceObjectSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("LinksInResourceObject").SchemaReferenceId;
 
-                primaryResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.allOf[0].$ref")
+                primaryResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.$ref")
                     .ShouldBeSchemaReferenceId("SupermarketResourceType").SchemaReferenceId;
 
                 resourceAttributesInResponseSchemaRefId = propertiesElement.Should().ContainPath("attributes.allOf[0].$ref")
@@ -137,7 +137,7 @@ public sealed class PascalCaseTests
 
             schemasElement.Should().ContainPath($"{relatedResourceIdentifierSchemaRefId}.properties").With(propertiesElement =>
             {
-                relatedResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.allOf[0].$ref")
+                relatedResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.$ref")
                     .ShouldBeSchemaReferenceId("StaffMemberResourceType").SchemaReferenceId;
             });
 

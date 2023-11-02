@@ -3250,11 +3250,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/airplane-resource-type"
-              }
-            ]
+            "$ref": "#/components/schemas/airplane-resource-type"
           },
           "id": {
             "minLength": 1,
@@ -3284,11 +3280,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/airplane-resource-type"
-              }
-            ]
+            "$ref": "#/components/schemas/airplane-resource-type"
           },
           "attributes": {
             "allOf": [
@@ -3316,11 +3308,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/airplane-resource-type"
-              }
-            ]
+            "$ref": "#/components/schemas/airplane-resource-type"
           },
           "id": {
             "minLength": 1,
@@ -3593,11 +3581,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-resource-type"
-              }
-            ]
+            "$ref": "#/components/schemas/flight-attendant-resource-type"
           },
           "id": {
             "minLength": 1,
@@ -3627,11 +3611,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-resource-type"
-              }
-            ]
+            "$ref": "#/components/schemas/flight-attendant-resource-type"
           },
           "attributes": {
             "allOf": [
@@ -3659,11 +3639,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-resource-type"
-              }
-            ]
+            "$ref": "#/components/schemas/flight-attendant-resource-type"
           },
           "id": {
             "minLength": 1,
@@ -3708,11 +3684,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-resource-type"
-              }
-            ]
+            "$ref": "#/components/schemas/flight-attendant-resource-type"
           },
           "id": {
             "minLength": 1,
@@ -4076,11 +4048,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-resource-type"
-              }
-            ]
+            "$ref": "#/components/schemas/flight-resource-type"
           },
           "id": {
             "minLength": 1,
@@ -4110,11 +4078,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-resource-type"
-              }
-            ]
+            "$ref": "#/components/schemas/flight-resource-type"
           },
           "relationships": {
             "allOf": [
@@ -4135,11 +4099,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-resource-type"
-              }
-            ]
+            "$ref": "#/components/schemas/flight-resource-type"
           },
           "id": {
             "minLength": 1,
@@ -4184,11 +4144,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-resource-type"
-              }
-            ]
+            "$ref": "#/components/schemas/flight-resource-type"
           },
           "id": {
             "minLength": 1,
@@ -4762,11 +4718,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/passenger-resource-type"
-              }
-            ]
+            "$ref": "#/components/schemas/passenger-resource-type"
           },
           "id": {
             "minLength": 1,
@@ -4804,11 +4756,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/passenger-resource-type"
-              }
-            ]
+            "$ref": "#/components/schemas/passenger-resource-type"
           },
           "id": {
             "minLength": 1,

@@ -1492,11 +1492,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/emptyResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/emptyResourceType"
           },
           "id": {
             "minLength": 1,
@@ -1527,11 +1523,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/emptyResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/emptyResourceType"
           },
           "id": {
             "minLength": 1,
@@ -2015,11 +2007,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/resourceResourceType"
           },
           "id": {
             "minLength": 1,
@@ -2049,11 +2037,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/resourceResourceType"
           },
           "attributes": {
             "allOf": [
@@ -2081,11 +2065,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/resourceResourceType"
           },
           "id": {
             "minLength": 1,

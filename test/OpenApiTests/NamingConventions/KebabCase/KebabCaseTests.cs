@@ -72,7 +72,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 linksInResourceObjectSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("links-in-resource-object").SchemaReferenceId;
 
-                primaryResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.allOf[0].$ref")
+                primaryResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.$ref")
                     .ShouldBeSchemaReferenceId("supermarket-resource-type").SchemaReferenceId;
 
                 resourceAttributesInResponseSchemaRefId = propertiesElement.Should().ContainPath("attributes.allOf[0].$ref")
@@ -136,7 +136,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
 
             schemasElement.Should().ContainPath($"{relatedResourceIdentifierSchemaRefId}.properties").With(propertiesElement =>
             {
-                relatedResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.allOf[0].$ref")
+                relatedResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.$ref")
                     .ShouldBeSchemaReferenceId("staff-member-resource-type").SchemaReferenceId;
             });
 
