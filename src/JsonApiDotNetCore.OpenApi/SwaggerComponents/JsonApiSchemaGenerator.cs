@@ -22,10 +22,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         typeof(ResourcePatchRequestDocument<>),
         typeof(ResourceIdentifierCollectionResponseDocument<>),
         typeof(ResourceIdentifierResponseDocument<>),
-        typeof(NullableResourceIdentifierResponseDocument<>),
-        typeof(ToManyRelationshipInRequest<>),
-        typeof(ToOneRelationshipInRequest<>),
-        typeof(NullableToOneRelationshipInRequest<>)
+        typeof(NullableResourceIdentifierResponseDocument<>)
     ];
 
     private static readonly Type[] JsonApiDocumentWithNullableDataOpenTypes =
