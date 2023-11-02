@@ -1605,7 +1605,8 @@
         "enum": [
           "empties"
         ],
-        "type": "string"
+        "type": "string",
+        "additionalProperties": false
       },
       "emptySecondaryResponseDocument": {
         "required": [
@@ -2293,7 +2294,8 @@
         "enum": [
           "resources"
         ],
-        "type": "string"
+        "type": "string",
+        "additionalProperties": false
       },
       "toManyEmptyInRequest": {
         "required": [

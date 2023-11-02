@@ -1387,7 +1387,8 @@
         "enum": [
           "nodes"
         ],
-        "type": "string"
+        "type": "string",
+        "additionalProperties": false
       },
       "nullableNodeIdentifierResponseDocument": {
         "required": [

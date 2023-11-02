@@ -3470,7 +3470,8 @@
         "enum": [
           "airplanes"
         ],
-        "type": "string"
+        "type": "string",
+        "additionalProperties": false
       },
       "cabin-area": {
         "enum": [
@@ -3929,7 +3930,8 @@
         "enum": [
           "flight-attendants"
         ],
-        "type": "string"
+        "type": "string",
+        "additionalProperties": false
       },
       "flight-attendant-secondary-response-document": {
         "required": [
@@ -4411,7 +4413,8 @@
         "enum": [
           "flights"
         ],
-        "type": "string"
+        "type": "string",
+        "additionalProperties": false
       },
       "jsonapi-object": {
         "type": "object",
@@ -4855,7 +4858,8 @@
         "enum": [
           "passengers"
         ],
-        "type": "string"
+        "type": "string",
+        "additionalProperties": false
       },
       "to-many-flight-attendant-in-request": {
         "required": [

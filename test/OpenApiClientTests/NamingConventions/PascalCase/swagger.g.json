@@ -1603,7 +1603,8 @@
         "enum": [
           "StaffMembers"
         ],
-        "type": "string"
+        "type": "string",
+        "additionalProperties": false
       },
       "StaffMemberSecondaryResponseDocument": {
         "required": [
@@ -2004,7 +2005,8 @@
         "enum": [
           "Supermarkets"
         ],
-        "type": "string"
+        "type": "string",
+        "additionalProperties": false
       },
       "SupermarketType": {
         "enum": [

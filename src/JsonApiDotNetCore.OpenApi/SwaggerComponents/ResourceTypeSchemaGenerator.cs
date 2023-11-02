@@ -41,7 +41,8 @@ internal sealed class ResourceTypeSchemaGenerator
             Enum = new List<IOpenApiAny>
             {
                 new OpenApiString(resourceType.PublicName)
-            }
+            },
+            AdditionalPropertiesAllowed = false
         };
 
         string schemaId = GetSchemaId(resourceType);
