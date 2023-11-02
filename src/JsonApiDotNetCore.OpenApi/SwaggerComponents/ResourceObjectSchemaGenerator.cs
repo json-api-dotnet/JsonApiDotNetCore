@@ -38,8 +38,7 @@ internal sealed class ResourceObjectSchemaGenerator
         _resourceGraph = resourceGraph;
         _options = options;
         _schemaRepositoryAccessor = schemaRepositoryAccessor;
-
-        _resourceTypeSchemaGenerator = new ResourceTypeSchemaGenerator(schemaRepositoryAccessor, resourceGraph, options.SerializerOptions.PropertyNamingPolicy);
+        _resourceTypeSchemaGenerator = new ResourceTypeSchemaGenerator(schemaRepositoryAccessor, options.SerializerOptions.PropertyNamingPolicy);
 
         _resourceFieldObjectSchemaBuilderFactory = resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor,
             defaultSchemaGenerator, _resourceTypeSchemaGenerator, resourceFieldValidationMetadataProvider);
@@ -102,7 +101,7 @@ internal sealed class ResourceObjectSchemaGenerator
 
     private void SetResourceType(OpenApiSchema fullSchemaForResourceObject, ResourceType resourceType)
     {
-        fullSchemaForResourceObject.Properties[JsonApiPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType.ClrType);
+        fullSchemaForResourceObject.Properties[JsonApiPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType);
 
         fullSchemaForResourceObject.Description = _resourceObjectDocumentationReader.GetDocumentationForType(resourceType);
     }

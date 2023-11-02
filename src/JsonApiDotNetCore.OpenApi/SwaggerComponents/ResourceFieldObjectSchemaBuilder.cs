@@ -1,4 +1,5 @@
 using System.Reflection;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
@@ -171,7 +172,7 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
         if (!ResourceIdentifierObjectSchemaExists(resourceIdentifierObjectType))
         {
-            GenerateResourceIdentifierObjectSchema(resourceIdentifierObjectType);
+            GenerateResourceIdentifierObjectSchema(resourceIdentifierObjectType, relationship.RightType);
         }
     }
 
@@ -180,7 +181,7 @@ internal sealed class ResourceFieldObjectSchemaBuilder
         return _schemaRepositoryAccessor.Current.TryLookupByType(resourceIdentifierObjectType, out _);
     }
 
-    private void GenerateResourceIdentifierObjectSchema(Type resourceIdentifierObjectType)
+    private void GenerateResourceIdentifierObjectSchema(Type resourceIdentifierObjectType, ResourceType resourceType)
     {
         OpenApiSchema referenceSchemaForResourceIdentifierObject =
             _defaultSchemaGenerator.GenerateSchema(resourceIdentifierObjectType, _schemaRepositoryAccessor.Current);
@@ -188,7 +189,6 @@ internal sealed class ResourceFieldObjectSchemaBuilder
         OpenApiSchema fullSchemaForResourceIdentifierObject =
             _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForResourceIdentifierObject.Reference.Id];
 
-        Type resourceType = resourceIdentifierObjectType.GetGenericArguments()[0];
         fullSchemaForResourceIdentifierObject.Properties[JsonApiPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType);
     }
 
