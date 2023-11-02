@@ -9,12 +9,12 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 /// The default <see cref="ISwaggerProvider" /> implementation re-renders the OpenApiDocument every time it is requested, which is redundant in our case.
 /// This implementation provides a very basic caching layer.
 /// </summary>
-internal sealed class CachingSwaggerGenerator : ISwaggerProvider
+internal sealed class CachingSwaggerProvider : ISwaggerProvider
 {
     private readonly SwaggerGenerator _defaultSwaggerGenerator;
     private readonly ConcurrentDictionary<string, OpenApiDocument> _openApiDocumentCache = new();
 
-    public CachingSwaggerGenerator(SwaggerGenerator defaultSwaggerGenerator)
+    public CachingSwaggerProvider(SwaggerGenerator defaultSwaggerGenerator)
     {
         ArgumentGuard.NotNull(defaultSwaggerGenerator);
 

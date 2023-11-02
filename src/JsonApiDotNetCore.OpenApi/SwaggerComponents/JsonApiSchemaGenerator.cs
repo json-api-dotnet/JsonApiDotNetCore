@@ -63,7 +63,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _options = options;
 
-        _resourceObjectSchemaGenerator = new ResourceObjectSchemaGenerator(defaultSchemaGenerator, resourceGraph, options, _schemaRepositoryAccessor,
+        _resourceObjectSchemaGenerator = new ResourceObjectSchemaGenerator(defaultSchemaGenerator, _schemaRepositoryAccessor, resourceGraph, options,
             resourceFieldValidationMetadataProvider);
     }
 

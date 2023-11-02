@@ -9,6 +9,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 internal sealed class ResourceTypeSchemaGenerator
 {
     private const string ResourceTypeSchemaIdTemplate = "[ResourceName] Resource Type";
+
     private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
     private readonly JsonNamingPolicy? _namingPolicy;
     private readonly Dictionary<Type, OpenApiSchema> _resourceClrTypeSchemaCache = [];

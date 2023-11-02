@@ -1,5 +1,4 @@
 using System.Reflection;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
@@ -31,31 +30,31 @@ internal sealed class ResourceFieldObjectSchemaBuilder
         JsonApiPropertyName.Meta
     ];
 
-    private readonly ResourceTypeInfo _resourceTypeInfo;
-    private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
     private readonly SchemaGenerator _defaultSchemaGenerator;
-    private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
-    private readonly SchemaRepository _resourceSchemaRepository = new();
-    private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
+    private readonly ResourceIdentifierObjectSchemaGenerator _resourceIdentifierObjectSchemaGenerator;
+    private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
+    private readonly ResourceTypeInfo _resourceTypeInfo;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
+    private readonly SchemaRepository _resourceSchemaRepository = new();
     private readonly RelationshipTypeFactory _relationshipTypeFactory;
+    private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
     private readonly NullabilityInfoContext _nullabilityInfoContext = new();
     private readonly ResourceObjectDocumentationReader _resourceObjectDocumentationReader;
 
-    public ResourceFieldObjectSchemaBuilder(ResourceTypeInfo resourceTypeInfo, ISchemaRepositoryAccessor schemaRepositoryAccessor,
-        SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator,
-        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
+    public ResourceFieldObjectSchemaBuilder(SchemaGenerator defaultSchemaGenerator,
+        ResourceIdentifierObjectSchemaGenerator resourceIdentifierObjectSchemaGenerator, ISchemaRepositoryAccessor schemaRepositoryAccessor,
+        ResourceTypeInfo resourceTypeInfo, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
-        ArgumentGuard.NotNull(resourceTypeInfo);
-        ArgumentGuard.NotNull(schemaRepositoryAccessor);
         ArgumentGuard.NotNull(defaultSchemaGenerator);
-        ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
+        ArgumentGuard.NotNull(resourceIdentifierObjectSchemaGenerator);
+        ArgumentGuard.NotNull(schemaRepositoryAccessor);
+        ArgumentGuard.NotNull(resourceTypeInfo);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
 
-        _resourceTypeInfo = resourceTypeInfo;
-        _schemaRepositoryAccessor = schemaRepositoryAccessor;
         _defaultSchemaGenerator = defaultSchemaGenerator;
-        _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
+        _resourceIdentifierObjectSchemaGenerator = resourceIdentifierObjectSchemaGenerator;
+        _schemaRepositoryAccessor = schemaRepositoryAccessor;
+        _resourceTypeInfo = resourceTypeInfo;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
 
         _relationshipTypeFactory = new RelationshipTypeFactory(resourceFieldValidationMetadataProvider);
@@ -160,36 +159,10 @@ internal sealed class ResourceFieldObjectSchemaBuilder
 
             if (matchingRelationship != null)
             {
-                EnsureResourceIdentifierObjectSchemaExists(matchingRelationship);
+                _ = _resourceIdentifierObjectSchemaGenerator.GenerateSchema(matchingRelationship.RightType);
                 AddRelationshipSchemaToResourceObject(matchingRelationship, fullSchemaForRelationshipsObject);
             }
         }
-    }
-
-    private void EnsureResourceIdentifierObjectSchemaExists(RelationshipAttribute relationship)
-    {
-        Type resourceIdentifierObjectType = typeof(ResourceIdentifierObject<>).MakeGenericType(relationship.RightType.ClrType);
-
-        if (!ResourceIdentifierObjectSchemaExists(resourceIdentifierObjectType))
-        {
-            GenerateResourceIdentifierObjectSchema(resourceIdentifierObjectType, relationship.RightType);
-        }
-    }
-
-    private bool ResourceIdentifierObjectSchemaExists(Type resourceIdentifierObjectType)
-    {
-        return _schemaRepositoryAccessor.Current.TryLookupByType(resourceIdentifierObjectType, out _);
-    }
-
-    private void GenerateResourceIdentifierObjectSchema(Type resourceIdentifierObjectType, ResourceType resourceType)
-    {
-        OpenApiSchema referenceSchemaForResourceIdentifierObject =
-            _defaultSchemaGenerator.GenerateSchema(resourceIdentifierObjectType, _schemaRepositoryAccessor.Current);
-
-        OpenApiSchema fullSchemaForResourceIdentifierObject =
-            _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForResourceIdentifierObject.Reference.Id];
-
-        fullSchemaForResourceIdentifierObject.Properties[JsonApiPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType);
     }
 
     private void AddRelationshipSchemaToResourceObject(RelationshipAttribute relationship, OpenApiSchema fullSchemaForRelationshipsObject)

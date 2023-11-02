@@ -18,30 +18,33 @@ internal sealed class ResourceObjectSchemaGenerator
     ];
 
     private readonly SchemaGenerator _defaultSchemaGenerator;
+    private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
     private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiOptions _options;
-    private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
     private readonly Func<ResourceTypeInfo, ResourceFieldObjectSchemaBuilder> _resourceFieldObjectSchemaBuilderFactory;
     private readonly ResourceObjectDocumentationReader _resourceObjectDocumentationReader;
 
-    public ResourceObjectSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options,
-        ISchemaRepositoryAccessor schemaRepositoryAccessor, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
+    public ResourceObjectSchemaGenerator(SchemaGenerator defaultSchemaGenerator, ISchemaRepositoryAccessor schemaRepositoryAccessor,
+        IResourceGraph resourceGraph, IJsonApiOptions options, ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
+        ArgumentGuard.NotNull(schemaRepositoryAccessor);
         ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
-        ArgumentGuard.NotNull(schemaRepositoryAccessor);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
+        _schemaRepositoryAccessor = schemaRepositoryAccessor;
         _resourceGraph = resourceGraph;
         _options = options;
-        _schemaRepositoryAccessor = schemaRepositoryAccessor;
         _resourceTypeSchemaGenerator = new ResourceTypeSchemaGenerator(schemaRepositoryAccessor, options.SerializerOptions.PropertyNamingPolicy);
 
-        _resourceFieldObjectSchemaBuilderFactory = resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor,
-            defaultSchemaGenerator, _resourceTypeSchemaGenerator, resourceFieldValidationMetadataProvider);
+        var resourceIdentifierObjectSchemaGenerator =
+            new ResourceIdentifierObjectSchemaGenerator(defaultSchemaGenerator, _resourceTypeSchemaGenerator, schemaRepositoryAccessor);
+
+        _resourceFieldObjectSchemaBuilderFactory = resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(defaultSchemaGenerator,
+            resourceIdentifierObjectSchemaGenerator, schemaRepositoryAccessor, resourceTypeInfo, resourceFieldValidationMetadataProvider);
 
         _resourceObjectDocumentationReader = new ResourceObjectDocumentationReader();
     }

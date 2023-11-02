@@ -118,7 +118,7 @@ public static class ServiceCollectionExtensions
     private static void AddCustomSwaggerComponents(IServiceCollection services)
     {
         services.TryAddSingleton<SwaggerGenerator>();
-        services.TryAddSingleton<ISwaggerProvider, CachingSwaggerGenerator>();
+        services.TryAddSingleton<ISwaggerProvider, CachingSwaggerProvider>();
 
         services.TryAddSingleton<ISerializerDataContractResolver, JsonApiDataContractResolver>();
     }
