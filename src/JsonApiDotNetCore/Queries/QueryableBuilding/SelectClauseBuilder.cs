@@ -119,10 +119,11 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     {
         var propertySelectors = new Dictionary<PropertyInfo, PropertySelector>();
 
-        if (fieldSelectors.ContainsReadOnlyAttribute || fieldSelectors.ContainsOnlyRelationships)
+        if (fieldSelectors.IsEmpty || fieldSelectors.ContainsReadOnlyAttribute || fieldSelectors.ContainsOnlyRelationships)
         {
             // If a read-only attribute is selected, its calculated value likely depends on another property, so fetch all scalar properties.
             // And only selecting relationships implicitly means to fetch all scalar properties as well.
+            // Additionally, empty selectors (originating from eliminated includes) indicate to fetch all scalar properties too.
 
             IncludeAllScalarProperties(elementType, propertySelectors, entityModel);
         }

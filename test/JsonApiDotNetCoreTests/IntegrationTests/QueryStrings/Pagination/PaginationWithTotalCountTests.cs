@@ -503,7 +503,7 @@ public sealed class PaginationWithTotalCountTests : IClassFixture<IntegrationTes
 
         Blog blog = _fakers.Blog.Generate();
         blog.Posts = _fakers.BlogPost.Generate(3);
-        blog.Posts.ToList().ForEach(post => post.Labels = _fakers.Label.Generate(3).ToHashSet());
+        blog.Posts.ForEach(post => post.Labels = _fakers.Label.Generate(3).ToHashSet());
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

@@ -93,6 +93,28 @@ public sealed class HasManyAttribute : RelationshipAttribute
         }
     }
 
+    /// <summary>
+    /// Adds a resource to this to-many relationship on the specified resource instance. Throws if the property is read-only or if the field does not belong
+    /// to the specified resource instance.
+    /// </summary>
+    public void AddValue(object resource, IIdentifiable resourceToAdd)
+    {
+        ArgumentGuard.NotNull(resource);
+        ArgumentGuard.NotNull(resourceToAdd);
+
+        object? rightValue = GetValue(resource);
+        List<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue).ToList();
+
+        if (!rightResources.Exists(nextResource => nextResource == resourceToAdd))
+        {
+            rightResources.Add(resourceToAdd);
+
+            Type collectionType = rightValue?.GetType() ?? Property.PropertyType;
+            IEnumerable typedCollection = CollectionConverter.CopyToTypedCollection(rightResources, collectionType);
+            base.SetValue(resource, typedCollection);
+        }
+    }
+
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
