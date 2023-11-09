@@ -44,7 +44,7 @@
     <SourceLinkVersion>1.1.*</SourceLinkVersion>
     <SwashbuckleVersion>6.5.*</SwashbuckleVersion>
     <SystemTextJsonVersion>7.0.*</SystemTextJsonVersion>
-    <TestSdkVersion>17.7.*</TestSdkVersion>
+    <TestSdkVersion>17.8.*</TestSdkVersion>
     <XunitVersion>2.5.*</XunitVersion>
   </PropertyGroup>
 
