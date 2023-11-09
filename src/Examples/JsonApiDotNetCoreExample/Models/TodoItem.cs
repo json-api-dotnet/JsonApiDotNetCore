@@ -29,6 +29,7 @@ public sealed class TodoItem : Identifiable<long>
     public Person Owner { get; set; } = null!;
 
     [HasOne]
+    [UserDefinedCapabilities(AllowCreateRelationship = false, AllowUpdateRelationship = true)]
     public Person? Assignee { get; set; }
 
     [HasMany]
