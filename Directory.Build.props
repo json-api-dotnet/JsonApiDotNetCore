@@ -34,11 +34,11 @@
     <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>2.3.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>1.3.*</InheritDocVersion>
-    <JetBrainsAnnotationsVersion>2023.2.*</JetBrainsAnnotationsVersion>
+    <JetBrainsAnnotationsVersion>2023.3.*</JetBrainsAnnotationsVersion>
     <NpgsqlVersion>7.0.*</NpgsqlVersion>
     <SourceLinkVersion>1.1.*</SourceLinkVersion>
     <SystemTextJsonVersion>$(AspNetCoreVersion)</SystemTextJsonVersion>
-    <TestSdkVersion>17.7.*</TestSdkVersion>
+    <TestSdkVersion>17.8.*</TestSdkVersion>
     <XunitVersion>2.5.*</XunitVersion>
   </PropertyGroup>
 
