@@ -133,7 +133,139 @@ public sealed class HasManyAttributeTests
         action.Should().ThrowExactly<InvalidOperationException>().WithMessage("Resource of type 'System.Int32' does not implement IIdentifiable.");
     }
 
-    private sealed class TestResource : Identifiable<long>
+    [Fact]
+    public void Can_add_value_to_List()
+    {
+        // Arrange
+        var attribute = new HasManyAttribute
+        {
+            Property = typeof(TestResource).GetProperty(nameof(TestResource.Children))!
+        };
+
+        var resource = new TestResource
+        {
+            Children = new List<TestResource>
+            {
+                new()
+            }
+        };
+
+        var resourceToAdd = new TestResource();
+
+        // Act
+        attribute.AddValue(resource, resourceToAdd);
+
+        // Assert
+        List<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<List<TestResource>>().Subject!;
+        collection.ShouldHaveCount(2);
+    }
+
+    [Fact]
+    public void Can_add_existing_value_to_List()
+    {
+        // Arrange
+        var attribute = new HasManyAttribute
+        {
+            Property = typeof(TestResource).GetProperty(nameof(TestResource.Children))!
+        };
+
+        var resourceToAdd = new TestResource();
+
+        var resource = new TestResource
+        {
+            Children = new List<TestResource>
+            {
+                resourceToAdd
+            }
+        };
+
+        // Act
+        attribute.AddValue(resource, resourceToAdd);
+
+        // Assert
+        List<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<List<TestResource>>().Subject!;
+        collection.ShouldHaveCount(1);
+    }
+
+    [Fact]
+    public void Can_add_value_to_HashSet()
+    {
+        // Arrange
+        var attribute = new HasManyAttribute
+        {
+            Property = typeof(TestResource).GetProperty(nameof(TestResource.Children))!
+        };
+
+        var resource = new TestResource
+        {
+            Children = new HashSet<TestResource>
+            {
+                new()
+            }
+        };
+
+        var resourceToAdd = new TestResource();
+
+        // Act
+        attribute.AddValue(resource, resourceToAdd);
+
+        // Assert
+        HashSet<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<HashSet<TestResource>>().Subject!;
+        collection.ShouldHaveCount(2);
+    }
+
+    [Fact]
+    public void Can_add_existing_value_to_HashSet()
+    {
+        // Arrange
+        var attribute = new HasManyAttribute
+        {
+            Property = typeof(TestResource).GetProperty(nameof(TestResource.Children))!
+        };
+
+        var resourceToAdd = new TestResource();
+
+        var resource = new TestResource
+        {
+            Children = new HashSet<TestResource>
+            {
+                resourceToAdd
+            }
+        };
+
+        // Act
+        attribute.AddValue(resource, resourceToAdd);
+
+        // Assert
+        HashSet<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<HashSet<TestResource>>().Subject!;
+        collection.ShouldHaveCount(1);
+    }
+
+    [Fact]
+    public void Can_add_value_to_null_collection()
+    {
+        // Arrange
+        var attribute = new HasManyAttribute
+        {
+            Property = typeof(TestResource).GetProperty(nameof(TestResource.Children))!
+        };
+
+        var resource = new TestResource
+        {
+            Children = null!
+        };
+
+        var resourceToAdd = new TestResource();
+
+        // Act
+        attribute.AddValue(resource, resourceToAdd);
+
+        // Assert
+        HashSet<TestResource> collection = attribute.GetValue(resource).Should().BeOfType<HashSet<TestResource>>().Subject!;
+        collection.ShouldHaveCount(1);
+    }
+
+    public sealed class TestResource : Identifiable<long>
     {
         [HasMany]
         public IEnumerable<TestResource> Children { get; set; } = new HashSet<TestResource>();

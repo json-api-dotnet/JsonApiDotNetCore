@@ -1,18 +1,19 @@
-using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace NoEntityFrameworkExample;
+namespace JsonApiDotNetCore.Queries.QueryableBuilding;
 
 /// <summary>
-/// Replaces all <see cref="QueryLayer.Include" />s with <see cref="QueryLayer.Selection" />s.
+/// Replaces all <see cref="QueryLayer.Include" />s with <see cref="QueryLayer.Selection" />s in-place.
 /// </summary>
-internal sealed class QueryLayerIncludeConverter : QueryExpressionVisitor<QueryLayer, object?>
+public sealed class QueryLayerIncludeConverter : QueryExpressionVisitor<QueryLayer, object?>
 {
     private readonly QueryLayer _queryLayer;
 
     public QueryLayerIncludeConverter(QueryLayer queryLayer)
     {
+        ArgumentGuard.NotNull(queryLayer);
+
         _queryLayer = queryLayer;
     }
 
@@ -29,7 +30,7 @@ internal sealed class QueryLayerIncludeConverter : QueryExpressionVisitor<QueryL
 
     public override object? VisitInclude(IncludeExpression expression, QueryLayer queryLayer)
     {
-        foreach (IncludeElementExpression element in expression.Elements)
+        foreach (IncludeElementExpression element in expression.Elements.OrderBy(element => element.Relationship.PublicName))
         {
             _ = Visit(element, queryLayer);
         }
@@ -41,7 +42,7 @@ internal sealed class QueryLayerIncludeConverter : QueryExpressionVisitor<QueryL
     {
         QueryLayer subLayer = EnsureRelationshipInSelection(queryLayer, expression.Relationship);
 
-        foreach (IncludeElementExpression nextIncludeElement in expression.Children)
+        foreach (IncludeElementExpression nextIncludeElement in expression.Children.OrderBy(child => child.Relationship.PublicName))
         {
             Visit(nextIncludeElement, subLayer);
         }
@@ -69,13 +70,9 @@ internal sealed class QueryLayerIncludeConverter : QueryExpressionVisitor<QueryL
     {
         if (queryLayer.Selection == null)
         {
+            // Empty selection indicates to fetch all scalar properties.
             queryLayer.Selection = new FieldSelection();
-            FieldSelectors selectors = queryLayer.Selection.GetOrCreateSelectors(queryLayer.ResourceType);
-
-            foreach (AttrAttribute attribute in queryLayer.ResourceType.Attributes)
-            {
-                selectors.IncludeAttribute(attribute);
-            }
+            queryLayer.Selection.GetOrCreateSelectors(queryLayer.ResourceType);
         }
     }
 }

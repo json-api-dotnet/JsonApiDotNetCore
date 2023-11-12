@@ -30,12 +30,13 @@
     <CSharpGuidelinesAnalyzerVersion>3.8.*</CSharpGuidelinesAnalyzerVersion>
     <CodeAnalysisVersion>4.7.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
+    <DapperVersion>2.1.*</DapperVersion>
     <DateOnlyTimeOnlyVersion>2.1.*</DateOnlyTimeOnlyVersion>
     <EntityFrameworkCoreVersion>7.0.*</EntityFrameworkCoreVersion>
     <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>2.3.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>1.3.*</InheritDocVersion>
-    <JetBrainsAnnotationsVersion>2023.2.*</JetBrainsAnnotationsVersion>
+    <JetBrainsAnnotationsVersion>2023.3.*</JetBrainsAnnotationsVersion>
     <MicrosoftApiClientVersion>7.0.*</MicrosoftApiClientVersion>
     <NSwagApiClientVersion>13.20.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
@@ -43,7 +44,7 @@
     <SourceLinkVersion>1.1.*</SourceLinkVersion>
     <SwashbuckleVersion>6.5.*</SwashbuckleVersion>
     <SystemTextJsonVersion>7.0.*</SystemTextJsonVersion>
-    <TestSdkVersion>17.7.*</TestSdkVersion>
+    <TestSdkVersion>17.8.*</TestSdkVersion>
     <XunitVersion>2.5.*</XunitVersion>
   </PropertyGroup>
 

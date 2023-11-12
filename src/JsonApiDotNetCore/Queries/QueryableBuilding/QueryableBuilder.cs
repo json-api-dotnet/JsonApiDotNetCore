@@ -58,7 +58,7 @@ public class QueryableBuilder : IQueryableBuilder
             expression = ApplyPagination(expression, layer.Pagination, layer.ResourceType, context);
         }
 
-        if (layer.Selection is { IsEmpty: false })
+        if (layer.Selection != null)
         {
             expression = ApplySelection(expression, layer.Selection, layer.ResourceType, context);
         }

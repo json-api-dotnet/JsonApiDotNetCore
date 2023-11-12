@@ -43,7 +43,7 @@ public sealed class FieldChainPatternInheritanceMatchTests
 
     public FieldChainPatternInheritanceMatchTests(ITestOutputHelper testOutputHelper)
     {
-        var loggerProvider = new XUnitLoggerProvider(testOutputHelper, LogOutputFields.Message);
+        var loggerProvider = new XUnitLoggerProvider(testOutputHelper, null, LogOutputFields.Message);
         _loggerFactory = new LoggerFactory(loggerProvider.AsEnumerable());
 
         var options = new JsonApiOptions();

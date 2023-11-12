@@ -27,7 +27,7 @@ internal partial class QueryStringsClient : JsonApiClient
     {
         var loggerFactory = new LoggerFactory(new[]
         {
-            new XUnitLoggerProvider(testOutputHelper, LogOutputFields.Message)
+            new XUnitLoggerProvider(testOutputHelper, null, LogOutputFields.Message)
         });
 
         return loggerFactory.CreateLogger<QueryStringsClient>();
