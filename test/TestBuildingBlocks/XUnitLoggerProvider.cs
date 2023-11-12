@@ -1,6 +1,7 @@
 using System.Text;
 using JsonApiDotNetCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit.Abstractions;
 
 namespace TestBuildingBlocks;
@@ -10,18 +11,27 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
 {
     private readonly ITestOutputHelper _testOutputHelper;
     private readonly LogOutputFields _outputFields;
+    private readonly string? _categoryPrefixFilter;
 
-    public XUnitLoggerProvider(ITestOutputHelper testOutputHelper, LogOutputFields outputFields = LogOutputFields.All)
+    public XUnitLoggerProvider(ITestOutputHelper testOutputHelper, string? categoryPrefixFilter, LogOutputFields outputFields = LogOutputFields.All)
     {
         ArgumentGuard.NotNull(testOutputHelper);
 
         _testOutputHelper = testOutputHelper;
+        _categoryPrefixFilter = categoryPrefixFilter;
         _outputFields = outputFields;
     }
 
     public ILogger CreateLogger(string categoryName)
     {
-        return new XUnitLogger(_testOutputHelper, _outputFields, categoryName);
+        ArgumentGuard.NotNull(categoryName);
+
+        if (_categoryPrefixFilter == null || categoryName.StartsWith(_categoryPrefixFilter, StringComparison.Ordinal))
+        {
+            return new XUnitLogger(_testOutputHelper, _outputFields, categoryName);
+        }
+
+        return NullLogger.Instance;
     }
 
     public void Dispose()
@@ -33,13 +43,9 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly LogOutputFields _outputFields;
         private readonly string _categoryName;
-        private readonly IExternalScopeProvider _scopeProvider = new NoExternalScopeProvider();
 
         public XUnitLogger(ITestOutputHelper testOutputHelper, LogOutputFields outputFields, string categoryName)
         {
-            ArgumentGuard.NotNull(testOutputHelper);
-            ArgumentGuard.NotNull(categoryName);
-
             _testOutputHelper = testOutputHelper;
             _outputFields = outputFields;
             _categoryName = categoryName;
@@ -57,7 +63,7 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
         public IDisposable BeginScope<TState>(TState state)
             where TState : notnull
         {
-            return _scopeProvider.Push(state);
+            return EmptyDisposable.Instance;
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
@@ -95,17 +101,8 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
 
             if (exception != null && _outputFields.HasFlag(LogOutputFields.Exception))
             {
-                builder.Append('\n');
+                builder.Append(Environment.NewLine);
                 builder.Append(exception);
-            }
-
-            if (_outputFields.HasFlag(LogOutputFields.Scopes))
-            {
-                _scopeProvider.ForEachScope((scope, nextState) =>
-                {
-                    nextState.Append("\n => ");
-                    nextState.Append(scope);
-                }, builder);
             }
 
             try
@@ -133,24 +130,12 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
             };
         }
 
-        private sealed class NoExternalScopeProvider : IExternalScopeProvider
+        private sealed class EmptyDisposable : IDisposable
         {
-            public void ForEachScope<TState>(Action<object?, TState> callback, TState state)
-            {
-            }
+            public static EmptyDisposable Instance { get; } = new();
 
-            public IDisposable Push(object? state)
+            public void Dispose()
             {
-                return EmptyDisposable.Instance;
-            }
-
-            private sealed class EmptyDisposable : IDisposable
-            {
-                public static EmptyDisposable Instance { get; } = new();
-
-                public void Dispose()
-                {
-                }
             }
         }
     }

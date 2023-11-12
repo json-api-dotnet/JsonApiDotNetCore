@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Queries;
 [PublicAPI]
 public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLayer?>
 {
-    public bool IsEmpty => !this.Any();
+    public bool IsEmpty => Count == 0;
 
     public bool ContainsReadOnlyAttribute
     {
@@ -24,7 +24,7 @@ public sealed class FieldSelectors : Dictionary<ResourceFieldAttribute, QueryLay
     {
         get
         {
-            return this.All(selector => selector.Key is RelationshipAttribute);
+            return Count > 0 && this.All(selector => selector.Key is RelationshipAttribute);
         }
     }
 
