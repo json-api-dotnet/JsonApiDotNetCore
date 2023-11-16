@@ -80,9 +80,11 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
 
         responseDocument.Meta.Should().BeNull();
 
-        loggerFactory.Logger.Messages.ShouldHaveCount(1);
-        loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Warning);
-        loggerFactory.Logger.Messages.Single().Text.Should().Contain("Article with code 'X123' is no longer available.");
+        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
+        logMessages.ShouldHaveCount(1);
+
+        logMessages[0].LogLevel.Should().Be(LogLevel.Warning);
+        logMessages[0].Text.Should().Contain("Article with code 'X123' is no longer available.");
     }
 
     [Fact]
@@ -123,7 +125,8 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
             stackTraceLines.ShouldNotBeEmpty();
         });
 
-        loggerFactory.Logger.Messages.Should().BeEmpty();
+        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
+        logMessages.Should().BeEmpty();
     }
 
     [Fact]
@@ -166,8 +169,10 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
 
         responseDocument.Meta.Should().BeNull();
 
-        loggerFactory.Logger.Messages.ShouldHaveCount(1);
-        loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Error);
-        loggerFactory.Logger.Messages.Single().Text.Should().Contain("Exception has been thrown by the target of an invocation.");
+        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
+        logMessages.ShouldHaveCount(1);
+
+        logMessages[0].LogLevel.Should().Be(LogLevel.Error);
+        logMessages[0].Text.Should().Contain("Exception has been thrown by the target of an invocation.");
     }
 }

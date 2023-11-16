@@ -4,6 +4,9 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Middleware;
@@ -14,8 +17,69 @@ internal abstract class TraceLogWriter
     {
         WriteIndented = true,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        ReferenceHandler = ReferenceHandler.Preserve
+        ReferenceHandler = ReferenceHandler.IgnoreCycles,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        Converters =
+        {
+            new JsonStringEnumConverter(),
+            new ResourceTypeInTraceJsonConverter(),
+            new ResourceFieldInTraceJsonConverterFactory(),
+            new IdentifiableInTraceJsonConverter()
+        }
     };
+
+    private sealed class ResourceTypeInTraceJsonConverter : JsonConverter<ResourceType>
+    {
+        public override ResourceType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override void Write(Utf8JsonWriter writer, ResourceType value, JsonSerializerOptions options)
+        {
+            writer.WriteStringValue(value.PublicName);
+        }
+    }
+
+    private sealed class ResourceFieldInTraceJsonConverterFactory : JsonConverterFactory
+    {
+        public override bool CanConvert(Type typeToConvert)
+        {
+            return typeToConvert.IsAssignableTo(typeof(ResourceFieldAttribute));
+        }
+
+        public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+        {
+            return new ResourceFieldInTraceJsonConverter();
+        }
+
+        private sealed class ResourceFieldInTraceJsonConverter : JsonConverter<ResourceFieldAttribute>
+        {
+            public override ResourceFieldAttribute Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                throw new NotSupportedException();
+            }
+
+            public override void Write(Utf8JsonWriter writer, ResourceFieldAttribute value, JsonSerializerOptions options)
+            {
+                writer.WriteStringValue(value.PublicName);
+            }
+        }
+    }
+
+    private sealed class IdentifiableInTraceJsonConverter : JsonConverter<IIdentifiable>
+    {
+        public override IIdentifiable Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override void Write(Utf8JsonWriter writer, IIdentifiable value, JsonSerializerOptions options)
+        {
+            Type runtimeType = value.GetType();
+            JsonSerializer.Serialize(writer, value, runtimeType, options);
+        }
+    }
 }
 
 internal sealed class TraceLogWriter<T> : TraceLogWriter
@@ -88,26 +152,12 @@ internal sealed class TraceLogWriter<T> : TraceLogWriter
         builder.Append(": ");
 
         object? value = property.GetValue(instance);
-
-        if (value == null)
-        {
-            builder.Append("null");
-        }
-        else if (value is string stringValue)
-        {
-            builder.Append('"');
-            builder.Append(stringValue);
-            builder.Append('"');
-        }
-        else
-        {
-            WriteObject(builder, value);
-        }
+        WriteObject(builder, value);
     }
 
-    private static void WriteObject(StringBuilder builder, object value)
+    private static void WriteObject(StringBuilder builder, object? value)
     {
-        if (HasToStringOverload(value.GetType()))
+        if (value != null && value is not string && HasToStringOverload(value.GetType()))
         {
             builder.Append(value);
         }
@@ -118,28 +168,19 @@ internal sealed class TraceLogWriter<T> : TraceLogWriter
         }
     }
 
-    private static bool HasToStringOverload(Type? type)
+    private static bool HasToStringOverload(Type type)
     {
-        if (type != null)
-        {
-            MethodInfo? toStringMethod = type.GetMethod("ToString", Array.Empty<Type>());
-
-            if (toStringMethod != null && toStringMethod.DeclaringType != typeof(object))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        MethodInfo? toStringMethod = type.GetMethod("ToString", Array.Empty<Type>());
+        return toStringMethod != null && toStringMethod.DeclaringType != typeof(object);
     }
 
-    private static string SerializeObject(object value)
+    private static string SerializeObject(object? value)
     {
         try
         {
             return JsonSerializer.Serialize(value, SerializerOptions);
         }
-        catch (JsonException)
+        catch (Exception exception) when (exception is JsonException or NotSupportedException)
         {
             // Never crash as a result of logging, this is best-effort only.
             return "object";

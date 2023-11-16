@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
@@ -30,9 +29,9 @@ public sealed class FakeLoggerFactory : ILoggerFactory, ILoggerProvider
     public sealed class FakeLogger : ILogger
     {
         private readonly LogLevel _minimumLevel;
-        private readonly ConcurrentBag<FakeLogMessage> _messages = new();
 
-        public IReadOnlyCollection<FakeLogMessage> Messages => _messages;
+        private readonly object _lockObject = new();
+        private readonly List<FakeLogMessage> _messages = new();
 
         public FakeLogger(LogLevel minimumLevel)
         {
@@ -46,7 +45,10 @@ public sealed class FakeLoggerFactory : ILoggerFactory, ILoggerProvider
 
         public void Clear()
         {
-            _messages.Clear();
+            lock (_lockObject)
+            {
+                _messages.Clear();
+            }
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
@@ -54,7 +56,11 @@ public sealed class FakeLoggerFactory : ILoggerFactory, ILoggerProvider
             if (IsEnabled(logLevel))
             {
                 string message = formatter(state, exception);
-                _messages.Add(new FakeLogMessage(logLevel, message));
+
+                lock (_lockObject)
+                {
+                    _messages.Add(new FakeLogMessage(logLevel, message));
+                }
             }
         }
 
@@ -62,6 +68,20 @@ public sealed class FakeLoggerFactory : ILoggerFactory, ILoggerProvider
             where TState : notnull
         {
             return NullScope.Instance;
+        }
+
+        public IReadOnlyList<FakeLogMessage> GetMessages()
+        {
+            lock (_lockObject)
+            {
+                List<FakeLogMessage> snapshot = _messages.ToList();
+                return snapshot.AsReadOnly();
+            }
+        }
+
+        public IReadOnlyList<string> GetLines()
+        {
+            return GetMessages().Select(message => message.ToString()).ToArray();
         }
 
         private sealed class NullScope : IDisposable
@@ -75,23 +95,6 @@ public sealed class FakeLoggerFactory : ILoggerFactory, ILoggerProvider
             public void Dispose()
             {
             }
-        }
-    }
-
-    public sealed class FakeLogMessage
-    {
-        public LogLevel LogLevel { get; }
-        public string Text { get; }
-
-        public FakeLogMessage(LogLevel logLevel, string text)
-        {
-            LogLevel = logLevel;
-            Text = text;
-        }
-
-        public override string ToString()
-        {
-            return $"[{LogLevel.ToString().ToUpperInvariant()}] {Text}";
         }
     }
 }

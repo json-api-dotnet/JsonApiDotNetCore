@@ -64,10 +64,11 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        loggerFactory.Logger.Messages.ShouldNotBeEmpty();
+        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        logLines.ShouldNotBeEmpty();
 
-        loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
-            message.Text.StartsWith("Received POST request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
+        logLines.Should().ContainSingle(line =>
+            line.StartsWith("[TRACE] Received POST request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -86,10 +87,11 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        loggerFactory.Logger.Messages.ShouldNotBeEmpty();
+        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        logLines.ShouldNotBeEmpty();
 
-        loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
-            message.Text.StartsWith("Sending 200 response for GET request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
+        logLines.Should().ContainSingle(line =>
+            line.StartsWith("[TRACE] Sending 200 response for GET request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -110,9 +112,9 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-        loggerFactory.Logger.Messages.ShouldNotBeEmpty();
+        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
+        logMessages.ShouldNotBeEmpty();
 
-        loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Information &&
-            message.Text.Contains("Failed to deserialize request body."));
+        logMessages.Should().ContainSingle(message => message.LogLevel == LogLevel.Information && message.Text.Contains("Failed to deserialize request body."));
     }
 }
