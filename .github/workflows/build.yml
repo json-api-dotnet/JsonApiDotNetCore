@@ -53,8 +53,7 @@ jobs:
     - name: Setup PowerShell (Ubuntu)
       if: matrix.os == 'ubuntu-latest'
       run: |
-        # Temporary version downgrade because .NET 8 is not installed on runner.
-        dotnet tool install --global PowerShell --version 7.3.10
+        dotnet tool install --global PowerShell
     - name: Find latest PowerShell version (Windows)
       if: matrix.os == 'windows-latest'
       shell: pwsh
