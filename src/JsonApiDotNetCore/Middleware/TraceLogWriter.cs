@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -25,6 +24,7 @@ internal abstract class TraceLogWriter
             new JsonStringEnumConverter(),
             new ResourceTypeInTraceJsonConverter(),
             new ResourceFieldInTraceJsonConverterFactory(),
+            new AbstractResourceWrapperInTraceJsonConverterFactory(),
             new IdentifiableInTraceJsonConverter()
         }
     };
@@ -51,11 +51,8 @@ internal abstract class TraceLogWriter
 
         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
         {
-            Type objectType = typeof(ResourceFieldInTraceJsonConverter<>);
-            Type converterType = objectType.MakeGenericType(typeToConvert);
-
-            return (JsonConverter)Activator.CreateInstance(converterType, BindingFlags.Instance | BindingFlags.Public, null, null,
-                CultureInfo.InvariantCulture)!;
+            Type converterType = typeof(ResourceFieldInTraceJsonConverter<>).MakeGenericType(typeToConvert);
+            return (JsonConverter)Activator.CreateInstance(converterType)!;
         }
 
         private sealed class ResourceFieldInTraceJsonConverter<TField> : JsonConverter<TField>
@@ -82,8 +79,41 @@ internal abstract class TraceLogWriter
 
         public override void Write(Utf8JsonWriter writer, IIdentifiable value, JsonSerializerOptions options)
         {
+            // Intentionally *not* calling GetClrType() because we need delegation to the wrapper converter.
             Type runtimeType = value.GetType();
+
             JsonSerializer.Serialize(writer, value, runtimeType, options);
+        }
+    }
+
+    private sealed class AbstractResourceWrapperInTraceJsonConverterFactory : JsonConverterFactory
+    {
+        public override bool CanConvert(Type typeToConvert)
+        {
+            return typeToConvert.IsAssignableTo(typeof(IAbstractResourceWrapper));
+        }
+
+        public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+        {
+            Type converterType = typeof(AbstractResourceWrapperInTraceJsonConverter<>).MakeGenericType(typeToConvert);
+            return (JsonConverter)Activator.CreateInstance(converterType)!;
+        }
+
+        private sealed class AbstractResourceWrapperInTraceJsonConverter<TWrapper> : JsonConverter<TWrapper>
+            where TWrapper : IAbstractResourceWrapper
+        {
+            public override TWrapper Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                throw new NotSupportedException();
+            }
+
+            public override void Write(Utf8JsonWriter writer, TWrapper value, JsonSerializerOptions options)
+            {
+                writer.WriteStartObject();
+                writer.WriteString("ClrType", value.AbstractType.FullName);
+                writer.WriteString("StringId", value.StringId);
+                writer.WriteEndObject();
+            }
         }
     }
 }

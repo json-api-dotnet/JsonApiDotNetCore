@@ -139,7 +139,7 @@ public abstract class BaseDataModelService : IDataModelService
                 return null;
             }
 
-            PropertyInfo rightKeyProperty = rightResource.GetType().GetProperty(TableSourceNode.IdColumnName)!;
+            PropertyInfo rightKeyProperty = rightResource.GetClrType().GetProperty(TableSourceNode.IdColumnName)!;
             return rightKeyProperty.GetValue(rightResource);
         }
 
@@ -150,7 +150,7 @@ public abstract class BaseDataModelService : IDataModelService
     private static void AssertSameType(ResourceType resourceType, IIdentifiable resource)
     {
         Type declaredType = resourceType.ClrType;
-        Type instanceType = resource.GetType();
+        Type instanceType = resource.GetClrType();
 
         if (instanceType != declaredType)
         {
