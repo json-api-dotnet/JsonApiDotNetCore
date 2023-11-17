@@ -53,7 +53,7 @@ public sealed class ResourceGraph : IResourceGraph
     {
         ArgumentGuard.NotNull(publicName);
 
-        return _resourceTypesByPublicName.TryGetValue(publicName, out ResourceType? resourceType) ? resourceType : null;
+        return _resourceTypesByPublicName.GetValueOrDefault(publicName);
     }
 
     /// <inheritdoc />
@@ -75,7 +75,7 @@ public sealed class ResourceGraph : IResourceGraph
         ArgumentGuard.NotNull(resourceClrType);
 
         Type typeToFind = IsLazyLoadingProxyForResourceType(resourceClrType) ? resourceClrType.BaseType! : resourceClrType;
-        return _resourceTypesByClrType.TryGetValue(typeToFind, out ResourceType? resourceType) ? resourceType : null;
+        return _resourceTypesByClrType.GetValueOrDefault(typeToFind);
     }
 
     private bool IsLazyLoadingProxyForResourceType(Type resourceClrType)

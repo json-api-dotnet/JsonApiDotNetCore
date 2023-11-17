@@ -436,7 +436,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
     private TableAccessorNode? FindRelatedTable(TableAccessorNode leftTableAccessor, RelationshipAttribute relationship)
     {
         Dictionary<RelationshipAttribute, TableAccessorNode> rightTableAccessors = _queryState.RelatedTables[leftTableAccessor];
-        return rightTableAccessors.TryGetValue(relationship, out TableAccessorNode? rightTableAccessor) ? rightTableAccessor : null;
+        return rightTableAccessors.GetValueOrDefault(relationship);
     }
 
     private SelectNode ToSelect(bool isSubQuery, bool createAlias)

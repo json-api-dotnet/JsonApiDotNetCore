@@ -1,4 +1,3 @@
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
@@ -24,7 +23,7 @@ public sealed class SingleOrManyDataConverterFactory : JsonConverterFactory
         Type objectType = typeToConvert.GetGenericArguments()[0];
         Type converterType = typeof(SingleOrManyDataConverter<>).MakeGenericType(objectType);
 
-        return (JsonConverter)Activator.CreateInstance(converterType, BindingFlags.Instance | BindingFlags.Public, null, null, null)!;
+        return (JsonConverter)Activator.CreateInstance(converterType)!;
     }
 
     private sealed class SingleOrManyDataConverter<T> : JsonObjectConverter<SingleOrManyData<T>>

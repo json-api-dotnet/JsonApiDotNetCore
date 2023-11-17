@@ -80,9 +80,10 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
         error.Source.ShouldNotBeNull();
         error.Source.Pointer.Should().Be("/atomic:operations[0]");
 
-        loggerFactory.Logger.Messages.ShouldNotBeEmpty();
+        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
+        logMessages.ShouldNotBeEmpty();
 
-        loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Error &&
+        logMessages.Should().ContainSingle(message => message.LogLevel == LogLevel.Error &&
             message.Text.Contains("Simulated failure.", StringComparison.Ordinal));
     }
 
@@ -117,9 +118,10 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
 
         responseDocument.Errors.ShouldHaveCount(1);
 
-        loggerFactory.Logger.Messages.ShouldNotBeEmpty();
+        IReadOnlyList<FakeLogMessage> logMessages = loggerFactory.Logger.GetMessages();
+        logMessages.ShouldNotBeEmpty();
 
-        loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Information &&
+        logMessages.Should().ContainSingle(message => message.LogLevel == LogLevel.Information &&
             message.Text.Contains("Failed to deserialize request body", StringComparison.Ordinal));
     }
 

@@ -263,11 +263,11 @@ public sealed class ResourceGraphBuilderTests
         builder.Add(typeof(NonResource));
 
         // Assert
-        loggerFactory.Logger.Messages.ShouldHaveCount(1);
+        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        logLines.ShouldHaveCount(1);
 
-        FakeLoggerFactory.FakeLogMessage message = loggerFactory.Logger.Messages.ElementAt(0);
-        message.LogLevel.Should().Be(LogLevel.Warning);
-        message.Text.Should().Be($"Skipping: Type '{typeof(NonResource)}' does not implement 'IIdentifiable'. Add [NoResource] to suppress this warning.");
+        logLines[0].Should().Be(
+            $"[WARNING] Skipping: Type '{typeof(NonResource)}' does not implement 'IIdentifiable'. Add [NoResource] to suppress this warning.");
     }
 
     [Fact]
@@ -282,7 +282,8 @@ public sealed class ResourceGraphBuilderTests
         builder.Add(typeof(NonResourceWithSuppression));
 
         // Assert
-        loggerFactory.Logger.Messages.Should().BeEmpty();
+        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        logLines.Should().BeEmpty();
     }
 
     [Fact]
@@ -297,11 +298,10 @@ public sealed class ResourceGraphBuilderTests
         builder.Add<ResourceWithHasOneRelationship, int>();
 
         // Assert
-        loggerFactory.Logger.Messages.ShouldHaveCount(1);
+        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        logLines.ShouldHaveCount(1);
 
-        FakeLoggerFactory.FakeLogMessage message = loggerFactory.Logger.Messages.ElementAt(0);
-        message.LogLevel.Should().Be(LogLevel.Warning);
-        message.Text.Should().Be($"Type '{typeof(ResourceWithHasOneRelationship)}' does not contain any attributes.");
+        logLines[0].Should().Be($"[WARNING] Type '{typeof(ResourceWithHasOneRelationship)}' does not contain any attributes.");
     }
 
     [Fact]
@@ -316,11 +316,10 @@ public sealed class ResourceGraphBuilderTests
         builder.Build();
 
         // Assert
-        loggerFactory.Logger.Messages.ShouldHaveCount(1);
+        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        logLines.ShouldHaveCount(1);
 
-        FakeLoggerFactory.FakeLogMessage message = loggerFactory.Logger.Messages.ElementAt(0);
-        message.LogLevel.Should().Be(LogLevel.Warning);
-        message.Text.Should().Be("The resource graph is empty.");
+        logLines[0].Should().Be("[WARNING] The resource graph is empty.");
     }
 
     [Fact]

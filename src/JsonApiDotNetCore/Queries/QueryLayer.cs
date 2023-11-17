@@ -42,7 +42,7 @@ public sealed class QueryLayer
 
         using (writer.Indent())
         {
-            if (Include != null)
+            if (Include != null && Include.Elements.Any())
             {
                 writer.WriteLine($"{nameof(Include)}: {Include}");
             }

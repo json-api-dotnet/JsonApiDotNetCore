@@ -38,10 +38,10 @@ public sealed class ApiControllerAttributeLogTests : IntegrationTestContext<Test
         _ = Factory;
 
         // Assert
-        _loggerFactory.Logger.Messages.ShouldHaveCount(1);
-        _loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Warning);
+        IReadOnlyList<string> logLines = _loggerFactory.Logger.GetLines();
+        logLines.ShouldHaveCount(1);
 
-        _loggerFactory.Logger.Messages.Single().Text.Should().Be(
-            $"Found JSON:API controller '{typeof(CiviliansController)}' with [ApiController]. Please remove this attribute for optimal JSON:API compliance.");
+        logLines[0].Should().Be(
+            $"[WARNING] Found JSON:API controller '{typeof(CiviliansController)}' with [ApiController]. Please remove this attribute for optimal JSON:API compliance.");
     }
 }

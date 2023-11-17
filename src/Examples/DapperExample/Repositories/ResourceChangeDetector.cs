@@ -209,7 +209,7 @@ internal sealed class ResourceChangeDetector
     private static void AssertSameType(ResourceType resourceType, IIdentifiable resource)
     {
         Type declaredType = resourceType.ClrType;
-        Type instanceType = resource.GetType();
+        Type instanceType = resource.GetClrType();
 
         if (instanceType != declaredType)
         {
