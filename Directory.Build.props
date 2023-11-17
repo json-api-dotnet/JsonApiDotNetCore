@@ -37,7 +37,7 @@
     <JetBrainsAnnotationsVersion>2023.3.*</JetBrainsAnnotationsVersion>
     <NpgsqlVersion>7.0.*</NpgsqlVersion>
     <SourceLinkVersion>8.0.*</SourceLinkVersion>
-    <SystemTextJsonVersion>7.0.*</SystemTextJsonVersion>
+    <SystemTextJsonVersion>8.0.*</SystemTextJsonVersion>
     <TestSdkVersion>17.8.*</TestSdkVersion>
     <XunitVersion>2.5.*</XunitVersion>
   </PropertyGroup>
