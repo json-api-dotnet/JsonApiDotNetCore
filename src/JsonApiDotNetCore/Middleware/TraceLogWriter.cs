@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -50,17 +51,22 @@ internal abstract class TraceLogWriter
 
         public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
         {
-            return new ResourceFieldInTraceJsonConverter();
+            Type objectType = typeof(ResourceFieldInTraceJsonConverter<>);
+            Type converterType = objectType.MakeGenericType(typeToConvert);
+
+            return (JsonConverter)Activator.CreateInstance(converterType, BindingFlags.Instance | BindingFlags.Public, null, null,
+                CultureInfo.InvariantCulture)!;
         }
 
-        private sealed class ResourceFieldInTraceJsonConverter : JsonConverter<ResourceFieldAttribute>
+        private sealed class ResourceFieldInTraceJsonConverter<TField> : JsonConverter<TField>
+            where TField : ResourceFieldAttribute
         {
-            public override ResourceFieldAttribute Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            public override TField Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
                 throw new NotSupportedException();
             }
 
-            public override void Write(Utf8JsonWriter writer, ResourceFieldAttribute value, JsonSerializerOptions options)
+            public override void Write(Utf8JsonWriter writer, TField value, JsonSerializerOptions options)
             {
                 writer.WriteStringValue(value.PublicName);
             }
