@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Queries.QueryableBuilding;
 [PublicAPI]
 public sealed class LambdaScopeFactory
 {
-    private readonly HashSet<string> _namesInScope = new();
+    private readonly HashSet<string> _namesInScope = [];
 
     /// <summary>
     /// Finds the next unique lambda parameter name. Dispose the returned scope to release the claimed name, so it can be reused.

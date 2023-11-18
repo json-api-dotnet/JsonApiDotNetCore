@@ -111,8 +111,8 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
     private static ICollection<IncludeTreeNode> LookupRelationshipName(string relationshipName, ICollection<IncludeTreeNode> parents, string source,
         int position)
     {
-        List<IncludeTreeNode> children = new();
-        HashSet<RelationshipAttribute> relationshipsFound = new();
+        List<IncludeTreeNode> children = [];
+        HashSet<RelationshipAttribute> relationshipsFound = [];
 
         foreach (IncludeTreeNode parent in parents)
         {

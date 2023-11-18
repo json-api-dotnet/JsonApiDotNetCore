@@ -16,8 +16,8 @@ namespace JsonApiDotNetCore.Configuration;
 [PublicAPI]
 public sealed class ServiceDiscoveryFacade
 {
-    internal static readonly HashSet<Type> ServiceUnboundInterfaces = new()
-    {
+    internal static readonly HashSet<Type> ServiceUnboundInterfaces =
+    [
         typeof(IResourceService<,>),
         typeof(IResourceCommandService<,>),
         typeof(IResourceQueryService<,>),
@@ -31,19 +31,16 @@ public sealed class ServiceDiscoveryFacade
         typeof(ISetRelationshipService<,>),
         typeof(IDeleteService<,>),
         typeof(IRemoveFromRelationshipService<,>)
-    };
+    ];
 
-    internal static readonly HashSet<Type> RepositoryUnboundInterfaces = new()
-    {
+    internal static readonly HashSet<Type> RepositoryUnboundInterfaces =
+    [
         typeof(IResourceRepository<,>),
         typeof(IResourceWriteRepository<,>),
         typeof(IResourceReadRepository<,>)
-    };
+    ];
 
-    internal static readonly HashSet<Type> ResourceDefinitionUnboundInterfaces = new()
-    {
-        typeof(IResourceDefinition<,>)
-    };
+    internal static readonly HashSet<Type> ResourceDefinitionUnboundInterfaces = [typeof(IResourceDefinition<,>)];
 
     private readonly ILogger<ServiceDiscoveryFacade> _logger;
     private readonly IServiceCollection _services;

@@ -3,11 +3,11 @@ namespace TestBuildingBlocks;
 public sealed class IgnoreLineEndingsComparer : IEqualityComparer<string>
 {
     private static readonly string[] LineSeparators =
-    {
+    [
         "\r\n",
         "\r",
         "\n"
-    };
+    ];
 
     public static readonly IgnoreLineEndingsComparer Instance = new();
 

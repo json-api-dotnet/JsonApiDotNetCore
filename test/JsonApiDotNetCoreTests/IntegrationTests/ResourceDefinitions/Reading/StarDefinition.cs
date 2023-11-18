@@ -26,11 +26,10 @@ public sealed class StarDefinition : HitCountingResourceDefinition<Star, int>
 
     private SortExpression GetDefaultSortOrder()
     {
-        return CreateSortExpressionFromLambda(new PropertySortOrder
-        {
+        return CreateSortExpressionFromLambda([
             (star => star.SolarMass, ListSortDirection.Descending),
             (star => star.SolarRadius, ListSortDirection.Descending)
-        });
+        ]);
     }
 
     public override PaginationExpression OnApplyPagination(PaginationExpression? existingPagination)

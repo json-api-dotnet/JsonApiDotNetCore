@@ -22,7 +22,7 @@ public class IncludeClauseBuilder : QueryClauseBuilder, IIncludeClauseBuilder
     public override Expression VisitInclude(IncludeExpression expression, QueryClauseBuilderContext context)
     {
         // De-duplicate chains coming from derived relationships.
-        HashSet<string> propertyPaths = new();
+        HashSet<string> propertyPaths = [];
 
         ApplyEagerLoads(context.ResourceType.EagerLoads, null, propertyPaths);
 

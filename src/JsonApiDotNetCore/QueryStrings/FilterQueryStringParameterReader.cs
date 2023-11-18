@@ -22,7 +22,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     private readonly IQueryStringParameterScopeParser _scopeParser;
     private readonly IFilterParser _filterParser;
     private readonly ImmutableArray<FilterExpression>.Builder _filtersInGlobalScope = ImmutableArray.CreateBuilder<FilterExpression>();
-    private readonly Dictionary<ResourceFieldChainExpression, ImmutableArray<FilterExpression>.Builder> _filtersPerScope = new();
+    private readonly Dictionary<ResourceFieldChainExpression, ImmutableArray<FilterExpression>.Builder> _filtersPerScope = [];
 
     public bool AllowEmptyValue => false;
 

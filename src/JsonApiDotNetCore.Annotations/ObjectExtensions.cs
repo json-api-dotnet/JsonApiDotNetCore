@@ -11,25 +11,16 @@ internal static class ObjectExtensions
 
     public static T[] AsArray<T>(this T element)
     {
-        return new[]
-        {
-            element
-        };
+        return [element];
     }
 
     public static List<T> AsList<T>(this T element)
     {
-        return new List<T>
-        {
-            element
-        };
+        return [element];
     }
 
     public static HashSet<T> AsHashSet<T>(this T element)
     {
-        return new HashSet<T>
-        {
-            element
-        };
+        return [element];
     }
 }

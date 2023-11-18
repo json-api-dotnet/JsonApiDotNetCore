@@ -17,7 +17,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
 {
     private readonly IQueryStringParameterScopeParser _scopeParser;
     private readonly ISortParser _sortParser;
-    private readonly List<ExpressionInScope> _constraints = new();
+    private readonly List<ExpressionInScope> _constraints = [];
 
     public bool AllowEmptyValue => false;
 

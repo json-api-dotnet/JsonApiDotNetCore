@@ -39,7 +39,7 @@ internal sealed class HexadecimalCodec
             bytes.Add(bt);
         }
 
-        char[] chars = Encoding.ASCII.GetChars(bytes.ToArray());
+        char[] chars = Encoding.ASCII.GetChars([.. bytes]);
         return new string(chars);
     }
 

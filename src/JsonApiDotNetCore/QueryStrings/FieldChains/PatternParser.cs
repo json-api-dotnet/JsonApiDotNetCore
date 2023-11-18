@@ -28,12 +28,12 @@ internal sealed class PatternParser
         [Token.Field] = FieldTypes.Field
     };
 
-    private static readonly HashSet<Token> QuantifierTokens = new(new[]
-    {
+    private static readonly HashSet<Token> QuantifierTokens =
+    [
         Token.QuestionMark,
         Token.Plus,
         Token.Asterisk
-    });
+    ];
 
     private string _source = null!;
     private Queue<Token> _tokenQueue = null!;

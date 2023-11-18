@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices;
 public abstract class MessagingUserDefinition : HitCountingResourceDefinition<DomainUser, Guid>
 {
     private readonly DbSet<DomainUser> _userSet;
-    private readonly List<OutgoingMessage> _pendingMessages = new();
+    private readonly List<OutgoingMessage> _pendingMessages = [];
 
     private string? _beforeLoginName;
     private string? _beforeDisplayName;

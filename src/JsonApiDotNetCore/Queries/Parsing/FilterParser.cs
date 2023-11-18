@@ -14,8 +14,8 @@ namespace JsonApiDotNetCore.Queries.Parsing;
 [PublicAPI]
 public class FilterParser : QueryExpressionParser, IFilterParser
 {
-    private static readonly HashSet<string> FilterKeywords = new(new[]
-    {
+    private static readonly HashSet<string> FilterKeywords =
+    [
         Keywords.Not,
         Keywords.And,
         Keywords.Or,
@@ -31,7 +31,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         Keywords.Count,
         Keywords.Has,
         Keywords.IsType
-    });
+    ];
 
     private readonly IResourceFactory _resourceFactory;
     private readonly Stack<ResourceType> _resourceTypeStack = new();

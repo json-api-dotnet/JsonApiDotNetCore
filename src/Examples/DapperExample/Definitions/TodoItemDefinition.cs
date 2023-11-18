@@ -29,11 +29,10 @@ public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem, lon
 
     private SortExpression GetDefaultSortOrder()
     {
-        return CreateSortExpressionFromLambda(new PropertySortOrder
-        {
+        return CreateSortExpressionFromLambda([
             (todoItem => todoItem.Priority, ListSortDirection.Ascending),
             (todoItem => todoItem.LastModifiedAt, ListSortDirection.Descending)
-        });
+        ]);
     }
 
     public override Task OnWritingAsync(TodoItem resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)

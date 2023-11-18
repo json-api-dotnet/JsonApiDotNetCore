@@ -30,7 +30,7 @@ public sealed class InvalidModelStateException : JsonApiException
         ArgumentGuard.NotNull(modelType);
         ArgumentGuard.NotNull(resourceGraph);
 
-        List<ErrorObject> errorObjects = new();
+        List<ErrorObject> errorObjects = [];
 
         foreach ((ModelStateEntry entry, string? sourcePointer) in ResolveSourcePointers(modelState, modelType, resourceGraph,
             getCollectionElementTypeCallback))

@@ -11,7 +11,7 @@ public abstract class MessagingGroupDefinition : HitCountingResourceDefinition<D
 {
     private readonly DbSet<DomainUser> _userSet;
     private readonly DbSet<DomainGroup> _groupSet;
-    private readonly List<OutgoingMessage> _pendingMessages = new();
+    private readonly List<OutgoingMessage> _pendingMessages = [];
 
     private string? _beforeGroupName;
 
