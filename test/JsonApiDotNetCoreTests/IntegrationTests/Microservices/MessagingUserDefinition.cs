@@ -118,8 +118,8 @@ public abstract class MessagingUserDefinition : HitCountingResourceDefinition<Do
 
     protected abstract Task FlushMessageAsync(OutgoingMessage message, CancellationToken cancellationToken);
 
-    protected virtual async Task<DomainUser?> GetUserToDeleteAsync(Guid userId, CancellationToken cancellationToken)
+    protected virtual Task<DomainUser?> GetUserToDeleteAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return await _userSet.Include(domainUser => domainUser.Group).FirstOrDefaultAsync(domainUser => domainUser.Id == userId, cancellationToken);
+        return _userSet.Include(domainUser => domainUser.Group).FirstOrDefaultAsync(domainUser => domainUser.Id == userId, cancellationToken);
     }
 }

@@ -44,14 +44,14 @@ public sealed class JsonApiWriter : IJsonApiWriter
     }
 
     /// <inheritdoc />
-    public async Task WriteAsync(object? model, HttpContext httpContext)
+    public Task WriteAsync(object? model, HttpContext httpContext)
     {
         ArgumentGuard.NotNull(httpContext);
 
         if (model == null && !CanWriteBody((HttpStatusCode)httpContext.Response.StatusCode))
         {
             // Prevent exception from Kestrel server, caused by writing data:null json response.
-            return;
+            return Task.CompletedTask;
         }
 
         string? responseBody = GetResponseBody(model, httpContext);
@@ -59,7 +59,7 @@ public sealed class JsonApiWriter : IJsonApiWriter
         if (httpContext.Request.Method == HttpMethod.Head.Method)
         {
             httpContext.Response.GetTypedHeaders().ContentLength = responseBody == null ? 0 : Encoding.UTF8.GetByteCount(responseBody);
-            return;
+            return Task.CompletedTask;
         }
 
         _traceWriter.LogMessage(() =>
@@ -70,7 +70,7 @@ public sealed class JsonApiWriter : IJsonApiWriter
             return $"Sending {httpContext.Response.StatusCode} response for {method} request at '{url}' with body: <<{responseBody}>>";
         });
 
-        await SendResponseBodyAsync(httpContext.Response, responseBody);
+        return SendResponseBodyAsync(httpContext.Response, responseBody);
     }
 
     private static bool CanWriteBody(HttpStatusCode statusCode)

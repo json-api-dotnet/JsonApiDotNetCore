@@ -10,17 +10,17 @@ public static class DbContextExtensions
         dbContext.AddRange(entities);
     }
 
-    public static async Task ClearTableAsync<TEntity>(this DbContext dbContext)
+    public static Task ClearTableAsync<TEntity>(this DbContext dbContext)
         where TEntity : class
     {
-        await ClearTablesAsync(dbContext, typeof(TEntity));
+        return ClearTablesAsync(dbContext, typeof(TEntity));
     }
 
-    public static async Task ClearTablesAsync<TEntity1, TEntity2>(this DbContext dbContext)
+    public static Task ClearTablesAsync<TEntity1, TEntity2>(this DbContext dbContext)
         where TEntity1 : class
         where TEntity2 : class
     {
-        await ClearTablesAsync(dbContext, typeof(TEntity1), typeof(TEntity2));
+        return ClearTablesAsync(dbContext, typeof(TEntity1), typeof(TEntity2));
     }
 
     private static async Task ClearTablesAsync(this DbContext dbContext, params Type[] modelTypes)

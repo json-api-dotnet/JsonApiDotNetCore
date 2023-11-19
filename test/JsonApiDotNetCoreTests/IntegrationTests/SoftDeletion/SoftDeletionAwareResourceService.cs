@@ -79,16 +79,14 @@ public class SoftDeletionAwareResourceService<TResource, TId> : JsonApiResourceS
         await base.AddToToManyRelationshipAsync(leftId, relationshipName, rightResourceIds, cancellationToken);
     }
 
-    public override async Task DeleteAsync(TId id, CancellationToken cancellationToken)
+    public override Task DeleteAsync(TId id, CancellationToken cancellationToken)
     {
         if (IsSoftDeletable(typeof(TResource)))
         {
-            await SoftDeleteAsync(id, cancellationToken);
+            return SoftDeleteAsync(id, cancellationToken);
         }
-        else
-        {
-            await base.DeleteAsync(id, cancellationToken);
-        }
+
+        return base.DeleteAsync(id, cancellationToken);
     }
 
     private async Task SoftDeleteAsync(TId id, CancellationToken cancellationToken)

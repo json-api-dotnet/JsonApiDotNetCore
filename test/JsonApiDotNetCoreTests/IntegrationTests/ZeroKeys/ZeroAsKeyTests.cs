@@ -96,9 +96,9 @@ public sealed class ZeroAsKeyTests : IClassFixture<IntegrationTestContext<Testab
         // Arrange
         string newTitle = _fakers.Game.Generate().Title;
 
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        await _testContext.RunOnDatabaseAsync(dbContext =>
         {
-            await dbContext.ClearTableAsync<Game>();
+            return dbContext.ClearTableAsync<Game>();
         });
 
         var requestBody = new
