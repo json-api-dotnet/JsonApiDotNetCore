@@ -155,10 +155,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
 
         string route = $"/meetings/{existingMeeting.StringId}";
 
-        Action<HttpRequestHeaders> setRequestHeaders = headers =>
-        {
-            headers.IfMatch.ParseAdd("\"12345\"");
-        };
+        Action<HttpRequestHeaders> setRequestHeaders = headers => headers.IfMatch.ParseAdd("\"12345\"");
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) =
@@ -196,10 +193,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
 
         string responseETag = httpResponse1.Headers.ETag!.Tag;
 
-        Action<HttpRequestHeaders> setRequestHeaders2 = headers =>
-        {
-            headers.IfNoneMatch.ParseAdd($"\"12345\", W/\"67890\", {responseETag}");
-        };
+        Action<HttpRequestHeaders> setRequestHeaders2 = headers => headers.IfNoneMatch.ParseAdd($"\"12345\", W/\"67890\", {responseETag}");
 
         // Act
         (HttpResponseMessage httpResponse2, string responseDocument2) = await _testContext.ExecuteGetAsync<string>(route, setRequestHeaders2);
@@ -229,10 +223,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<TestableSta
 
         const string route = "/meetings";
 
-        Action<HttpRequestHeaders> setRequestHeaders = headers =>
-        {
-            headers.IfNoneMatch.ParseAdd("\"Not-a-matching-value\"");
-        };
+        Action<HttpRequestHeaders> setRequestHeaders = headers => headers.IfNoneMatch.ParseAdd("\"Not-a-matching-value\"");
 
         // Act
         (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route, setRequestHeaders);

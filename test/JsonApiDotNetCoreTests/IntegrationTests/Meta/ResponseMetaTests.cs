@@ -19,10 +19,7 @@ public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<Tes
         testContext.UseController<ProductFamiliesController>();
         testContext.UseController<SupportTicketsController>();
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddSingleton<IResponseMeta, SupportResponseMeta>();
-        });
+        testContext.ConfigureServices(services => services.AddSingleton<IResponseMeta, SupportResponseMeta>());
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeTotalResourceCount = false;
@@ -32,10 +29,7 @@ public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Returns_top_level_meta()
     {
         // Arrange
-        await _testContext.RunOnDatabaseAsync(dbContext =>
-        {
-            return dbContext.ClearTableAsync<SupportTicket>();
-        });
+        await _testContext.RunOnDatabaseAsync(dbContext => dbContext.ClearTableAsync<SupportTicket>());
 
         const string route = "/supportTickets";
 

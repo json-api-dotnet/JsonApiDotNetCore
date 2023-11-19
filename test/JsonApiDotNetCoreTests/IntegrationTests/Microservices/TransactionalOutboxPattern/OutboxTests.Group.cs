@@ -19,10 +19,7 @@ public sealed partial class OutboxTests
 
         string newGroupName = _fakers.DomainGroup.Generate().Name;
 
-        await _testContext.RunOnDatabaseAsync(dbContext =>
-        {
-            return dbContext.ClearTableAsync<OutgoingMessage>();
-        });
+        await _testContext.RunOnDatabaseAsync(dbContext => dbContext.ClearTableAsync<OutgoingMessage>());
 
         var requestBody = new
         {

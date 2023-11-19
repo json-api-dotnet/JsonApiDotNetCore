@@ -29,10 +29,7 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
             options.AddFilter((category, _) => category != null && category.StartsWith("JsonApiDotNetCore.", StringComparison.Ordinal));
         });
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddSingleton(loggerFactory);
-        });
+        testContext.ConfigureServices(services => services.AddSingleton(loggerFactory));
     }
 
     [Fact]

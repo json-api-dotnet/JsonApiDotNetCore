@@ -27,10 +27,7 @@ public sealed class AtomicRollbackTests : IClassFixture<IntegrationTestContext<T
         DateTimeOffset newBornAt = _fakers.Performer.Generate().BornAt;
         string newTitle = _fakers.MusicTrack.Generate().Title;
 
-        await _testContext.RunOnDatabaseAsync(dbContext =>
-        {
-            return dbContext.ClearTablesAsync<Performer, MusicTrack>();
-        });
+        await _testContext.RunOnDatabaseAsync(dbContext => dbContext.ClearTablesAsync<Performer, MusicTrack>());
 
         string unknownPerformerId = Unknown.StringId.For<Performer, int>();
 
@@ -113,10 +110,7 @@ public sealed class AtomicRollbackTests : IClassFixture<IntegrationTestContext<T
         // Arrange
         string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
-        await _testContext.RunOnDatabaseAsync(dbContext =>
-        {
-            return dbContext.ClearTablesAsync<Performer, MusicTrack>();
-        });
+        await _testContext.RunOnDatabaseAsync(dbContext => dbContext.ClearTablesAsync<Performer, MusicTrack>());
 
         const string trackLid = "track-1";
 

@@ -26,10 +26,7 @@ public sealed class AtomicCreateResourceTests : IClassFixture<IntegrationTestCon
         testContext.UseController<MusicTracksController>();
         testContext.UseController<PlaylistsController>();
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddSingleton<ISystemClock, FrozenSystemClock>();
-        });
+        testContext.ConfigureServices(services => services.AddSingleton<ISystemClock, FrozenSystemClock>());
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.AllowUnknownFieldsInRequestBody = false;

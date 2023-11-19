@@ -396,10 +396,7 @@ WHERE ""Id"" = @p1"));
 
         const string personLocalId = "new-person";
 
-        await _testContext.RunOnDatabaseAsync(dbContext =>
-        {
-            return _testContext.ClearAllTablesAsync(dbContext);
-        });
+        await _testContext.RunOnDatabaseAsync(dbContext => _testContext.ClearAllTablesAsync(dbContext));
 
         var requestBody = new
         {

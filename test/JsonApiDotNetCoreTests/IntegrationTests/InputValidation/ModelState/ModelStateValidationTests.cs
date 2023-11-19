@@ -23,10 +23,8 @@ public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestCon
 
 #if NET6_0
         testContext.ConfigureServices(services =>
-        {
             // Polyfill for missing DateOnly/TimeOnly support in .NET 6 ModelState validation.
-            services.AddDateOnlyTimeOnlyStringConverters();
-        });
+            services.AddDateOnlyTimeOnlyStringConverters());
 #endif
     }
 

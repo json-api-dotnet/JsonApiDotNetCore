@@ -35,10 +35,7 @@ public abstract class ResourceInheritanceReadTests<TDbContext> : IClassFixture<I
         testContext.UseController<ChromeWheelsController>();
         testContext.UseController<CarbonWheelsController>();
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddResourceDefinition<WheelSortDefinition>();
-        });
+        testContext.ConfigureServices(services => services.AddResourceDefinition<WheelSortDefinition>());
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.UseRelativeLinks = true;

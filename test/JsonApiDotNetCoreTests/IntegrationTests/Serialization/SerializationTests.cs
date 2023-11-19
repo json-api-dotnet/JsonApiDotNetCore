@@ -23,10 +23,7 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         testContext.UseController<MeetingAttendeesController>();
         testContext.UseController<MeetingsController>();
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
-        });
+        testContext.ConfigureServices(services => services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>)));
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeExceptionStackTraceInErrors = false;

@@ -30,10 +30,7 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
             options.AddFilter((category, _) => category != null && category.StartsWith("JsonApiDotNetCore.", StringComparison.Ordinal));
         });
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddSingleton(loggerFactory);
-        });
+        testContext.ConfigureServices(services => services.AddSingleton(loggerFactory));
     }
 
     [Fact]

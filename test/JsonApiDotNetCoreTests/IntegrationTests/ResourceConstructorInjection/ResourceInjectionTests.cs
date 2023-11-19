@@ -21,10 +21,7 @@ public sealed class ResourceInjectionTests : IClassFixture<IntegrationTestContex
         testContext.UseController<GiftCertificatesController>();
         testContext.UseController<PostOfficesController>();
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddSingleton<ISystemClock, FrozenSystemClock>();
-        });
+        testContext.ConfigureServices(services => services.AddSingleton<ISystemClock, FrozenSystemClock>());
 
         _fakers = new InjectionFakers(testContext.Factory.Services);
     }

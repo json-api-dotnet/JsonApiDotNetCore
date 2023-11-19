@@ -20,10 +20,7 @@ public sealed partial class OutboxTests
         string newLoginName = _fakers.DomainUser.Generate().LoginName;
         string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
-        await _testContext.RunOnDatabaseAsync(dbContext =>
-        {
-            return dbContext.ClearTableAsync<OutgoingMessage>();
-        });
+        await _testContext.RunOnDatabaseAsync(dbContext => dbContext.ClearTableAsync<OutgoingMessage>());
 
         var requestBody = new
         {
