@@ -16,6 +16,4 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors;
 /// </typeparam>
 [PublicAPI]
 public interface ICreateProcessor<TResource, TId> : IOperationProcessor
-    where TResource : class, IIdentifiable<TId>
-{
-}
+    where TResource : class, IIdentifiable<TId>;

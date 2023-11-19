@@ -428,15 +428,11 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    private sealed class NonResource
-    {
-    }
+    private sealed class NonResource;
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     [NoResource]
-    private sealed class NonResourceWithSuppression
-    {
-    }
+    private sealed class NonResourceWithSuppression;
 
     // ReSharper disable once ClassCanBeSealed.Global
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

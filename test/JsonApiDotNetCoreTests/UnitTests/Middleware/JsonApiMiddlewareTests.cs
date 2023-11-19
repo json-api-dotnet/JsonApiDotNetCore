@@ -172,9 +172,7 @@ public sealed class JsonApiMiddlewareTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Itself)]
-    private sealed class Person : Identifiable<int>
-    {
-    }
+    private sealed class Person : Identifiable<int>;
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     private sealed class ItemTag : Identifiable<int>

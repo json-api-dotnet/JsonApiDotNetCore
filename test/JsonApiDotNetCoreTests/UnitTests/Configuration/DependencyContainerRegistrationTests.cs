@@ -153,9 +153,7 @@ public sealed class DependencyContainerRegistrationTests
     }
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    private sealed class SomeScopedService
-    {
-    }
+    private sealed class SomeScopedService;
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     private sealed class CircularServiceA
