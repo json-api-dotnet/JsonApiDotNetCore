@@ -247,7 +247,12 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
 
     private static Expression SelectExtensionMethodCall(Type extensionType, Expression source, Type elementType, Expression selectBody)
     {
-        Type[] typeArguments = ArrayFactory.Create(elementType, elementType);
+        Type[] typeArguments =
+        [
+            elementType,
+            elementType
+        ];
+
         return Expression.Call(extensionType, "Select", typeArguments, source, selectBody);
     }
 

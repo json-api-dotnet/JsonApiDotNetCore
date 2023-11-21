@@ -152,9 +152,11 @@ public sealed class ServiceDiscoveryFacade
 
     private void RegisterImplementations(Assembly assembly, Type interfaceType, ResourceDescriptor resourceDescriptor)
     {
-        Type[] typeArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2
-            ? ArrayFactory.Create(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType)
-            : ArrayFactory.Create(resourceDescriptor.ResourceClrType);
+        Type[] typeArguments =
+        [
+            resourceDescriptor.ResourceClrType,
+            resourceDescriptor.IdClrType
+        ];
 
         (Type implementationType, Type serviceInterface)? result = _typeLocator.GetContainerRegistrationFromAssembly(assembly, interfaceType, typeArguments);
 
