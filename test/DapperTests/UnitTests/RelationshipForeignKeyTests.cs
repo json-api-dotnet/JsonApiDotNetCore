@@ -25,7 +25,9 @@ public sealed class RelationshipForeignKeyTests
         var foreignKey = new RelationshipForeignKey(DatabaseProvider.PostgreSql, parentRelationship, true, "ParentId", true);
 
         // Assert
-        foreignKey.ToString().Should().Be(@"TestResource.Parent => ""TestResources"".""ParentId""?");
+        foreignKey.ToString().Should().Be("""
+            TestResource.Parent => "TestResources"."ParentId"?
+            """);
     }
 
     [Fact]
@@ -39,7 +41,9 @@ public sealed class RelationshipForeignKeyTests
         var foreignKey = new RelationshipForeignKey(DatabaseProvider.PostgreSql, childrenRelationship, false, "TestResourceId", false);
 
         // Assert
-        foreignKey.ToString().Should().Be(@"TestResource.Children => ""TestResources"".""TestResourceId""");
+        foreignKey.ToString().Should().Be("""
+            TestResource.Children => "TestResources"."TestResourceId"
+            """);
     }
 
     [UsedImplicitly]

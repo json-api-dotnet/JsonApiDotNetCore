@@ -161,58 +161,70 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
 
         logLines.Should().BeEquivalentTo(new[]
         {
-            $@"[TRACE] Received POST request at 'http://localhost/fruitBowls/{existingBowl.StringId}/relationships/fruits' with body: <<{{
-  ""data"": [
-    {{
-      ""type"": ""fruits"",
-      ""id"": ""{existingBanana.StringId}""
-    }}
-  ]
-}}>>",
-            $@"[TRACE] Entering PostRelationshipAsync(id: {existingBowl.StringId}, relationshipName: ""fruits"", rightResourceIds: [
-  {{
-    ""ClrType"": ""{typeof(Fruit).FullName}"",
-    ""StringId"": ""{existingBanana.StringId}""
-  }}
-])",
-            $@"[TRACE] Entering AddToToManyRelationshipAsync(leftId: {existingBowl.StringId}, relationshipName: ""fruits"", rightResourceIds: [
-  {{
-    ""ClrType"": ""{typeof(Fruit).FullName}"",
-    ""StringId"": ""{existingBanana.StringId}""
-  }}
-])",
-            $@"[TRACE] Entering GetAsync(queryLayer: QueryLayer<Fruit>
-{{
-  Filter: equals(id,'{existingBanana.Id}')
-  Selection
-  {{
-    FieldSelectors<Fruit>
-    {{
-      id
-    }}
-  }}
-}}
-)",
-            $@"[TRACE] Entering ApplyQueryLayer(queryLayer: QueryLayer<Fruit>
-{{
-  Filter: equals(id,'{existingBanana.Id}')
-  Selection
-  {{
-    FieldSelectors<Fruit>
-    {{
-      id
-    }}
-  }}
-}}
-)",
-            $@"[TRACE] Entering AddToToManyRelationshipAsync(leftResource: null, leftId: {existingBowl.Id}, rightResourceIds: [
-  {{
-    ""Color"": ""Yellow"",
-    ""LengthInCentimeters"": {existingBanana.LengthInCentimeters.ToString(CultureInfo.InvariantCulture)},
-    ""Id"": {existingBanana.Id},
-    ""StringId"": ""{existingBanana.StringId}""
-  }}
-])"
+            $$"""
+            [TRACE] Received POST request at 'http://localhost/fruitBowls/{{existingBowl.StringId}}/relationships/fruits' with body: <<{
+              "data": [
+                {
+                  "type": "fruits",
+                  "id": "{{existingBanana.StringId}}"
+                }
+              ]
+            }>>
+            """,
+            $$"""
+            [TRACE] Entering PostRelationshipAsync(id: {{existingBowl.StringId}}, relationshipName: "fruits", rightResourceIds: [
+              {
+                "ClrType": "{{typeof(Fruit).FullName}}",
+                "StringId": "{{existingBanana.StringId}}"
+              }
+            ])
+            """,
+            $$"""
+            [TRACE] Entering AddToToManyRelationshipAsync(leftId: {{existingBowl.StringId}}, relationshipName: "fruits", rightResourceIds: [
+              {
+                "ClrType": "{{typeof(Fruit).FullName}}",
+                "StringId": "{{existingBanana.StringId}}"
+              }
+            ])
+            """,
+            $$"""
+            [TRACE] Entering GetAsync(queryLayer: QueryLayer<Fruit>
+            {
+              Filter: equals(id,'{{existingBanana.Id}}')
+              Selection
+              {
+                FieldSelectors<Fruit>
+                {
+                  id
+                }
+              }
+            }
+            )
+            """,
+            $$"""
+            [TRACE] Entering ApplyQueryLayer(queryLayer: QueryLayer<Fruit>
+            {
+              Filter: equals(id,'{{existingBanana.Id}}')
+              Selection
+              {
+                FieldSelectors<Fruit>
+                {
+                  id
+                }
+              }
+            }
+            )
+            """,
+            $$"""
+            [TRACE] Entering AddToToManyRelationshipAsync(leftResource: null, leftId: {{existingBowl.Id}}, rightResourceIds: [
+              {
+                "Color": "Yellow",
+                "LengthInCentimeters": {{existingBanana.LengthInCentimeters.ToString(CultureInfo.InvariantCulture)}},
+                "Id": {{existingBanana.Id}},
+                "StringId": "{{existingBanana.StringId}}"
+              }
+            ])
+            """
         }, options => options.Using(IgnoreLineEndingsComparer.Instance).WithStrictOrdering());
     }
 
@@ -259,62 +271,74 @@ public sealed class LoggingTests : IClassFixture<IntegrationTestContext<Testable
 
         logLines.Should().BeEquivalentTo(new[]
         {
-            $@"[TRACE] Received POST request at 'http://localhost/fruitBowls/{existingBowl.StringId}/relationships/fruits' with body: <<{{
-  ""data"": [
-    {{
-      ""type"": ""peaches"",
-      ""id"": ""{existingPeach.StringId}""
-    }}
-  ]
-}}>>",
-            $@"[TRACE] Entering PostRelationshipAsync(id: {existingBowl.StringId}, relationshipName: ""fruits"", rightResourceIds: [
-  {{
-    ""Color"": ""Red/Yellow"",
-    ""DiameterInCentimeters"": 0,
-    ""Id"": {existingPeach.Id},
-    ""StringId"": ""{existingPeach.StringId}""
-  }}
-])",
-            $@"[TRACE] Entering AddToToManyRelationshipAsync(leftId: {existingBowl.StringId}, relationshipName: ""fruits"", rightResourceIds: [
-  {{
-    ""Color"": ""Red/Yellow"",
-    ""DiameterInCentimeters"": 0,
-    ""Id"": {existingPeach.Id},
-    ""StringId"": ""{existingPeach.StringId}""
-  }}
-])",
-            $@"[TRACE] Entering GetAsync(queryLayer: QueryLayer<Fruit>
-{{
-  Filter: equals(id,'{existingPeach.Id}')
-  Selection
-  {{
-    FieldSelectors<Fruit>
-    {{
-      id
-    }}
-  }}
-}}
-)",
-            $@"[TRACE] Entering ApplyQueryLayer(queryLayer: QueryLayer<Fruit>
-{{
-  Filter: equals(id,'{existingPeach.Id}')
-  Selection
-  {{
-    FieldSelectors<Fruit>
-    {{
-      id
-    }}
-  }}
-}}
-)",
-            $@"[TRACE] Entering AddToToManyRelationshipAsync(leftResource: null, leftId: {existingBowl.Id}, rightResourceIds: [
-  {{
-    ""Color"": ""Red/Yellow"",
-    ""DiameterInCentimeters"": 0,
-    ""Id"": {existingPeach.Id},
-    ""StringId"": ""{existingPeach.StringId}""
-  }}
-])"
+            $$"""
+            [TRACE] Received POST request at 'http://localhost/fruitBowls/{{existingBowl.StringId}}/relationships/fruits' with body: <<{
+              "data": [
+                {
+                  "type": "peaches",
+                  "id": "{{existingPeach.StringId}}"
+                }
+              ]
+            }>>
+            """,
+            $$"""
+            [TRACE] Entering PostRelationshipAsync(id: {{existingBowl.StringId}}, relationshipName: "fruits", rightResourceIds: [
+              {
+                "Color": "Red/Yellow",
+                "DiameterInCentimeters": 0,
+                "Id": {{existingPeach.Id}},
+                "StringId": "{{existingPeach.StringId}}"
+              }
+            ])
+            """,
+            $$"""
+            [TRACE] Entering AddToToManyRelationshipAsync(leftId: {{existingBowl.StringId}}, relationshipName: "fruits", rightResourceIds: [
+              {
+                "Color": "Red/Yellow",
+                "DiameterInCentimeters": 0,
+                "Id": {{existingPeach.Id}},
+                "StringId": "{{existingPeach.StringId}}"
+              }
+            ])
+            """,
+            $$"""
+            [TRACE] Entering GetAsync(queryLayer: QueryLayer<Fruit>
+            {
+              Filter: equals(id,'{{existingPeach.Id}}')
+              Selection
+              {
+                FieldSelectors<Fruit>
+                {
+                  id
+                }
+              }
+            }
+            )
+            """,
+            $$"""
+            [TRACE] Entering ApplyQueryLayer(queryLayer: QueryLayer<Fruit>
+            {
+              Filter: equals(id,'{{existingPeach.Id}}')
+              Selection
+              {
+                FieldSelectors<Fruit>
+                {
+                  id
+                }
+              }
+            }
+            )
+            """,
+            $$"""
+            [TRACE] Entering AddToToManyRelationshipAsync(leftResource: null, leftId: {{existingBowl.Id}}, rightResourceIds: [
+              {
+                "Color": "Red/Yellow",
+                "DiameterInCentimeters": 0,
+                "Id": {{existingPeach.Id}},
+                "StringId": "{{existingPeach.StringId}}"
+              }
+            ])
+            """
         }, options => options.Using(IgnoreLineEndingsComparer.Instance).WithStrictOrdering());
     }
 }

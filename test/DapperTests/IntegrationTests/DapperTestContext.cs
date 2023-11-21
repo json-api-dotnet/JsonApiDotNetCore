@@ -23,10 +23,11 @@ namespace DapperTests.IntegrationTests;
 [PublicAPI]
 public sealed class DapperTestContext : IntegrationTest
 {
-    private const string SqlServerClearAllTablesScript = @"
+    private const string SqlServerClearAllTablesScript = """
         EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL';
         EXEC sp_MSForEachTable 'SET QUOTED_IDENTIFIER ON; DELETE FROM ?';
-        EXEC sp_MSForEachTable 'ALTER TABLE ? CHECK CONSTRAINT ALL';";
+        EXEC sp_MSForEachTable 'ALTER TABLE ? CHECK CONSTRAINT ALL';
+        """;
 
     public static readonly DateTimeOffset FrozenTime = 29.September(2018).At(16, 41, 56).AsUtc().ToDateTimeOffset();
 

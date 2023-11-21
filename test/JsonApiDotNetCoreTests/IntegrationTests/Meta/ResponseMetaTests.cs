@@ -39,22 +39,24 @@ public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson(@"{
-  ""links"": {
-    ""self"": ""http://localhost/supportTickets"",
-    ""first"": ""http://localhost/supportTickets""
-  },
-  ""data"": [],
-  ""meta"": {
-    ""license"": ""MIT"",
-    ""projectUrl"": ""https://github.com/json-api-dotnet/JsonApiDotNetCore/"",
-    ""versions"": [
-      ""v4.0.0"",
-      ""v3.1.0"",
-      ""v2.5.2"",
-      ""v1.3.1""
-    ]
-  }
-}");
+        responseDocument.Should().BeJson("""
+            {
+              "links": {
+                "self": "http://localhost/supportTickets",
+                "first": "http://localhost/supportTickets"
+              },
+              "data": [],
+              "meta": {
+                "license": "MIT",
+                "projectUrl": "https://github.com/json-api-dotnet/JsonApiDotNetCore/",
+                "versions": [
+                  "v4.0.0",
+                  "v3.1.0",
+                  "v2.5.2",
+                  "v1.3.1"
+                ]
+              }
+            }
+            """);
     }
 }
