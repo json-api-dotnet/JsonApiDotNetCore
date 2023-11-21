@@ -10,6 +10,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
 using Xunit;
 
+// Workaround for Resharper bug at https://youtrack.jetbrains.com/issue/RSRP-494909/Breaking-UsedImplicitly-and-PublicAPI-on-types-no-longer-respected.
+// ReSharper disable PropertyCanBeMadeInitOnly.Local
+
 namespace JsonApiDotNetCoreTests.UnitTests.ModelStateValidation;
 
 public sealed class ModelStateValidationTests

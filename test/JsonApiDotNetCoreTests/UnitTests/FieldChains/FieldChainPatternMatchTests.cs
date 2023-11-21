@@ -11,6 +11,9 @@ using TestBuildingBlocks;
 using Xunit;
 using Xunit.Abstractions;
 
+// Workaround for Resharper bug at https://youtrack.jetbrains.com/issue/RSRP-494909/Breaking-UsedImplicitly-and-PublicAPI-on-types-no-longer-respected.
+// ReSharper disable PropertyCanBeMadeInitOnly.Local
+
 // ReSharper disable InconsistentNaming
 #pragma warning disable AV1706 // Identifier contains an abbreviation or is too short
 
