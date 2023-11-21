@@ -52,7 +52,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     {
         ArgumentGuard.NotNullNorEmpty(parameterName);
 
-        bool isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
+        bool isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith(']');
         return parameterName == "filter" || isNested;
     }
 

@@ -15,7 +15,7 @@ internal sealed class HexadecimalCodec
             return 0;
         }
 
-        if (!value.StartsWith("x", StringComparison.Ordinal))
+        if (!value.StartsWith('x'))
         {
             throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
             {

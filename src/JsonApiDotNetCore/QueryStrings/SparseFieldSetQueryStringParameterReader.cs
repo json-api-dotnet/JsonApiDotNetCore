@@ -50,7 +50,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
     {
         ArgumentGuard.NotNullNorEmpty(parameterName);
 
-        return parameterName.StartsWith("fields[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
+        return parameterName.StartsWith("fields[", StringComparison.Ordinal) && parameterName.EndsWith(']');
     }
 
     /// <inheritdoc />

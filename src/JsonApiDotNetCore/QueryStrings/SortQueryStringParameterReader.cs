@@ -45,7 +45,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
     {
         ArgumentGuard.NotNullNorEmpty(parameterName);
 
-        bool isNested = parameterName.StartsWith("sort[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
+        bool isNested = parameterName.StartsWith("sort[", StringComparison.Ordinal) && parameterName.EndsWith(']');
         return parameterName == "sort" || isNested;
     }
 
