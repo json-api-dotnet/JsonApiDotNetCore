@@ -100,17 +100,12 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
         Expression text = Visit(expression.TextValue, context);
 
-        if (expression.MatchKind == TextMatchKind.StartsWith)
+        return expression.MatchKind switch
         {
-            return Expression.Call(property, "StartsWith", null, text);
-        }
-
-        if (expression.MatchKind == TextMatchKind.EndsWith)
-        {
-            return Expression.Call(property, "EndsWith", null, text);
-        }
-
-        return Expression.Call(property, "Contains", null, text);
+            TextMatchKind.StartsWith => Expression.Call(property, "StartsWith", null, text),
+            TextMatchKind.EndsWith => Expression.Call(property, "EndsWith", null, text),
+            _ => Expression.Call(property, "Contains", null, text)
+        };
     }
 
     public override Expression VisitAny(AnyExpression expression, QueryClauseBuilderContext context)
@@ -137,17 +132,12 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
     {
         var termQueue = new Queue<Expression>(expression.Terms.Select(filter => Visit(filter, context)));
 
-        if (expression.Operator == LogicalOperator.And)
+        return expression.Operator switch
         {
-            return Compose(termQueue, Expression.AndAlso);
-        }
-
-        if (expression.Operator == LogicalOperator.Or)
-        {
-            return Compose(termQueue, Expression.OrElse);
-        }
-
-        throw new InvalidOperationException($"Unknown logical operator '{expression.Operator}'.");
+            LogicalOperator.And => Compose(termQueue, Expression.AndAlso),
+            LogicalOperator.Or => Compose(termQueue, Expression.OrElse),
+            _ => throw new InvalidOperationException($"Unknown logical operator '{expression.Operator}'.")
+        };
     }
 
     private static BinaryExpression Compose(Queue<Expression> argumentQueue, Func<Expression, Expression, BinaryExpression> applyOperator)
