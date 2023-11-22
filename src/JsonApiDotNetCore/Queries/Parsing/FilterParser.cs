@@ -514,7 +514,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         throw new QueryParseException("null expected.", position);
     }
 
-    protected static Func<string, int, object> GetConstantValueConverterForType(Type destinationType)
+    protected virtual Func<string, int, object> GetConstantValueConverterForType(Type destinationType)
     {
         return (stringValue, position) =>
         {
@@ -529,7 +529,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         };
     }
 
-    protected Func<string, int, object> GetConstantValueConverterForAttribute(AttrAttribute attribute)
+    private Func<string, int, object> GetConstantValueConverterForAttribute(AttrAttribute attribute)
     {
         if (attribute is { Property.Name: nameof(Identifiable<object>.Id) })
         {
