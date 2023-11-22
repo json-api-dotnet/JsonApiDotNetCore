@@ -38,6 +38,6 @@ public class SkipTakeClauseBuilder : QueryClauseBuilder, ISkipTakeClauseBuilder
     {
         Expression constant = value.CreateTupleAccessExpressionForConstant(typeof(int));
 
-        return Expression.Call(context.ExtensionType, operationName, context.LambdaScope.Parameter.Type.AsArray(), source, constant);
+        return Expression.Call(context.ExtensionType, operationName, [context.LambdaScope.Parameter.Type], source, constant);
     }
 }

@@ -14,6 +14,4 @@ namespace JsonApiDotNetCore.Services;
 public interface IResourceCommandService<TResource, in TId>
     : ICreateService<TResource, TId>, IAddToRelationshipService<TResource, TId>, IUpdateService<TResource, TId>, ISetRelationshipService<TResource, TId>,
         IDeleteService<TResource, TId>, IRemoveFromRelationshipService<TResource, TId>
-    where TResource : class, IIdentifiable<TId>
-{
-}
+    where TResource : class, IIdentifiable<TId>;

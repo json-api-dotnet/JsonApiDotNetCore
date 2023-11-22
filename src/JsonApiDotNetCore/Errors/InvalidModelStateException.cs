@@ -30,7 +30,7 @@ public sealed class InvalidModelStateException : JsonApiException
         ArgumentGuard.NotNull(modelType);
         ArgumentGuard.NotNull(resourceGraph);
 
-        List<ErrorObject> errorObjects = new();
+        List<ErrorObject> errorObjects = [];
 
         foreach ((ModelStateEntry entry, string? sourcePointer) in ResolveSourcePointers(modelState, modelType, resourceGraph,
             getCollectionElementTypeCallback))
@@ -207,7 +207,12 @@ public sealed class InvalidModelStateException : JsonApiException
         private const char Dot = '.';
         private const char BracketOpen = '[';
         private const char BracketClose = ']';
-        private static readonly char[] KeySegmentStartTokens = ArrayFactory.Create(Dot, BracketOpen);
+
+        private static readonly char[] KeySegmentStartTokens =
+        [
+            Dot,
+            BracketOpen
+        ];
 
         // The right part of the full key, which nested segments are produced from.
         private readonly string _nextKey;

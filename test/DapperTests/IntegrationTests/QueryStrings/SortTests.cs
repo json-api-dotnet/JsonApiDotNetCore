@@ -60,18 +60,21 @@ public sealed class SortTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT COUNT(*)
-FROM ""TodoItems"" AS t1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT COUNT(*)
+                FROM "TodoItems" AS t1
+                """));
 
             command.Parameters.Should().BeEmpty();
         });
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(
-                @"SELECT t1.""Id"", t1.""CreatedAt"", t1.""Description"", t1.""DurationInHours"", t1.""LastModifiedAt"", t1.""Priority""
-FROM ""TodoItems"" AS t1
-ORDER BY t1.""Description"" DESC, t1.""DurationInHours"", t1.""Id"""));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
+                FROM "TodoItems" AS t1
+                ORDER BY t1."Description" DESC, t1."DurationInHours", t1."Id"
+                """));
 
             command.Parameters.Should().BeEmpty();
         });
@@ -125,10 +128,12 @@ ORDER BY t1.""Description"" DESC, t1.""DurationInHours"", t1.""Id"""));
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT COUNT(*)
-FROM ""TodoItems"" AS t1
-INNER JOIN ""People"" AS t2 ON t1.""OwnerId"" = t2.""Id""
-WHERE t2.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT COUNT(*)
+                FROM "TodoItems" AS t1
+                INNER JOIN "People" AS t2 ON t1."OwnerId" = t2."Id"
+                WHERE t2."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
@@ -136,13 +141,14 @@ WHERE t2.""Id"" = @p1"));
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(
-                @"SELECT t1.""Id"", t2.""Id"", t2.""CreatedAt"", t2.""Description"", t2.""DurationInHours"", t2.""LastModifiedAt"", t2.""Priority"", t3.""Id"", t3.""Name""
-FROM ""People"" AS t1
-LEFT JOIN ""TodoItems"" AS t2 ON t1.""Id"" = t2.""OwnerId""
-LEFT JOIN ""Tags"" AS t3 ON t2.""Id"" = t3.""TodoItemId""
-WHERE t1.""Id"" = @p1
-ORDER BY t2.""DurationInHours"" DESC, t3.""Name"""));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority", t3."Id", t3."Name"
+                FROM "People" AS t1
+                LEFT JOIN "TodoItems" AS t2 ON t1."Id" = t2."OwnerId"
+                LEFT JOIN "Tags" AS t3 ON t2."Id" = t3."TodoItemId"
+                WHERE t1."Id" = @p1
+                ORDER BY t2."DurationInHours" DESC, t3."Name"
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
@@ -188,22 +194,25 @@ ORDER BY t2.""DurationInHours"" DESC, t3.""Name"""));
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT COUNT(*)
-FROM ""TodoItems"" AS t1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT COUNT(*)
+                FROM "TodoItems" AS t1
+                """));
 
             command.Parameters.Should().BeEmpty();
         });
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(
-                @"SELECT t1.""Id"", t1.""CreatedAt"", t1.""Description"", t1.""DurationInHours"", t1.""LastModifiedAt"", t1.""Priority""
-FROM ""TodoItems"" AS t1
-ORDER BY (
-    SELECT COUNT(*)
-    FROM ""Tags"" AS t2
-    WHERE t1.""Id"" = t2.""TodoItemId""
-) DESC, t1.""Id"""));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
+                FROM "TodoItems" AS t1
+                ORDER BY (
+                    SELECT COUNT(*)
+                    FROM "Tags" AS t2
+                    WHERE t1."Id" = t2."TodoItemId"
+                ) DESC, t1."Id"
+                """));
 
             command.Parameters.Should().BeEmpty();
         });
@@ -248,10 +257,12 @@ ORDER BY (
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT COUNT(*)
-FROM ""TodoItems"" AS t1
-INNER JOIN ""People"" AS t2 ON t1.""OwnerId"" = t2.""Id""
-WHERE t2.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT COUNT(*)
+                FROM "TodoItems" AS t1
+                INNER JOIN "People" AS t2 ON t1."OwnerId" = t2."Id"
+                WHERE t2."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
@@ -259,16 +270,17 @@ WHERE t2.""Id"" = @p1"));
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(
-                @"SELECT t1.""Id"", t2.""Id"", t2.""CreatedAt"", t2.""Description"", t2.""DurationInHours"", t2.""LastModifiedAt"", t2.""Priority""
-FROM ""People"" AS t1
-LEFT JOIN ""TodoItems"" AS t2 ON t1.""Id"" = t2.""OwnerId""
-WHERE t1.""Id"" = @p1
-ORDER BY (
-    SELECT COUNT(*)
-    FROM ""Tags"" AS t3
-    WHERE t2.""Id"" = t3.""TodoItemId""
-) DESC, t2.""Id"""));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"
+                FROM "People" AS t1
+                LEFT JOIN "TodoItems" AS t2 ON t1."Id" = t2."OwnerId"
+                WHERE t1."Id" = @p1
+                ORDER BY (
+                    SELECT COUNT(*)
+                    FROM "Tags" AS t3
+                    WHERE t2."Id" = t3."TodoItemId"
+                ) DESC, t2."Id"
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
@@ -314,10 +326,12 @@ ORDER BY (
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT COUNT(*)
-FROM ""TodoItems"" AS t1
-INNER JOIN ""People"" AS t2 ON t1.""OwnerId"" = t2.""Id""
-WHERE t2.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT COUNT(*)
+                FROM "TodoItems" AS t1
+                INNER JOIN "People" AS t2 ON t1."OwnerId" = t2."Id"
+                WHERE t2."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
@@ -325,17 +339,18 @@ WHERE t2.""Id"" = @p1"));
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(
-                @"SELECT t1.""Id"", t2.""Id"", t2.""CreatedAt"", t2.""Description"", t2.""DurationInHours"", t2.""LastModifiedAt"", t2.""Priority"", t4.""Id"", t4.""Name""
-FROM ""People"" AS t1
-LEFT JOIN ""TodoItems"" AS t2 ON t1.""Id"" = t2.""OwnerId""
-LEFT JOIN ""Tags"" AS t4 ON t2.""Id"" = t4.""TodoItemId""
-WHERE t1.""Id"" = @p1
-ORDER BY (
-    SELECT COUNT(*)
-    FROM ""Tags"" AS t3
-    WHERE t2.""Id"" = t3.""TodoItemId""
-) DESC, t2.""Id"", t4.""Id"""));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority", t4."Id", t4."Name"
+                FROM "People" AS t1
+                LEFT JOIN "TodoItems" AS t2 ON t1."Id" = t2."OwnerId"
+                LEFT JOIN "Tags" AS t4 ON t2."Id" = t4."TodoItemId"
+                WHERE t1."Id" = @p1
+                ORDER BY (
+                    SELECT COUNT(*)
+                    FROM "Tags" AS t3
+                    WHERE t2."Id" = t3."TodoItemId"
+                ) DESC, t2."Id", t4."Id"
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", person.Id);
@@ -386,23 +401,26 @@ ORDER BY (
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT COUNT(*)
-FROM ""People"" AS t1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT COUNT(*)
+                FROM "People" AS t1
+                """));
 
             command.Parameters.Should().BeEmpty();
         });
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(
-                @"SELECT t1.""Id"", t1.""FirstName"", t1.""LastName"", t2.""Id"", t2.""CreatedAt"", t2.""Description"", t2.""DurationInHours"", t2.""LastModifiedAt"", t2.""Priority""
-FROM ""People"" AS t1
-LEFT JOIN ""TodoItems"" AS t2 ON t1.""Id"" = t2.""OwnerId""
-ORDER BY t1.""Id"", (
-    SELECT COUNT(*)
-    FROM ""Tags"" AS t3
-    WHERE t2.""Id"" = t3.""TodoItemId""
-) DESC, t2.""Id"""));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"
+                FROM "People" AS t1
+                LEFT JOIN "TodoItems" AS t2 ON t1."Id" = t2."OwnerId"
+                ORDER BY t1."Id", (
+                    SELECT COUNT(*)
+                    FROM "Tags" AS t3
+                    WHERE t2."Id" = t3."TodoItemId"
+                ) DESC, t2."Id"
+                """));
 
             command.Parameters.Should().BeEmpty();
         });

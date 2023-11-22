@@ -15,6 +15,9 @@ using Microsoft.Extensions.Primitives;
 using TestBuildingBlocks;
 using Xunit;
 
+// Workaround for Resharper bug at https://youtrack.jetbrains.com/issue/RSRP-494909/Breaking-UsedImplicitly-and-PublicAPI-on-types-no-longer-respected.
+// ReSharper disable PropertyCanBeMadeInitOnly.Local
+
 namespace JsonApiDotNetCoreTests.UnitTests.Configuration;
 
 public sealed class DependencyContainerRegistrationTests
@@ -153,9 +156,7 @@ public sealed class DependencyContainerRegistrationTests
     }
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    private sealed class SomeScopedService
-    {
-    }
+    private sealed class SomeScopedService;
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     private sealed class CircularServiceA

@@ -25,10 +25,7 @@ public sealed class AbsoluteLinksWithoutNamespaceTests : IClassFixture<Integrati
         testContext.UseController<PhotoAlbumsController>();
         testContext.UseController<PhotosController>();
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
-        });
+        testContext.ConfigureServices(services => services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>)));
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeTotalResourceCount = true;

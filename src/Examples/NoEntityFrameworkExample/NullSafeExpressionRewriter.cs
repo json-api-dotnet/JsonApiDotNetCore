@@ -20,14 +20,14 @@ public sealed class NullSafeExpressionRewriter : ExpressionVisitor
     private static readonly ConstantExpression Int32MinValueConstant = Expression.Constant(int.MinValue, typeof(int));
 
     private static readonly ExpressionType[] ComparisonExpressionTypes =
-    {
+    [
         ExpressionType.LessThan,
         ExpressionType.LessThanOrEqual,
         ExpressionType.GreaterThan,
         ExpressionType.GreaterThanOrEqual,
         ExpressionType.Equal
         // ExpressionType.NotEqual is excluded because WhereClauseBuilder never produces that.
-    };
+    ];
 
     private readonly Stack<MethodType> _callStack = new();
 

@@ -245,7 +245,7 @@ internal sealed class MatchState
             current = current._parentMatch;
         }
 
-        List<ResourceFieldAttribute> fields = new();
+        List<ResourceFieldAttribute> fields = [];
 
         while (matchStack.Count > 0)
         {

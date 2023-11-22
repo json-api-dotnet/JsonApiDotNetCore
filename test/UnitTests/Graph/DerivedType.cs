@@ -1,5 +1,3 @@
 namespace UnitTests.Graph;
 
-internal sealed class DerivedType : BaseType<int>
-{
-}
+internal sealed class DerivedType : BaseType<int>;

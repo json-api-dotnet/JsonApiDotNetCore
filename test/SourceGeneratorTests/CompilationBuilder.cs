@@ -17,8 +17,8 @@ internal sealed class CompilationBuilder
             ["CS1701"] = ReportDiagnostic.Suppress
         });
 
-    private readonly HashSet<SyntaxTree> _syntaxTrees = new();
-    private readonly HashSet<MetadataReference> _references = new();
+    private readonly HashSet<SyntaxTree> _syntaxTrees = [];
+    private readonly HashSet<MetadataReference> _references = [];
 
     public Compilation Build()
     {

@@ -86,7 +86,7 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
         // that there's currently no way to include Products without Articles. We could add such optional upcast syntax
         // in the future, if desired.
 
-        ICollection<IncludeTreeNode> children = ParseRelationshipName(source, treeRoot.AsList());
+        ICollection<IncludeTreeNode> children = ParseRelationshipName(source, [treeRoot]);
 
         while (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Period)
         {
@@ -111,8 +111,8 @@ public class IncludeParser : QueryExpressionParser, IIncludeParser
     private static ICollection<IncludeTreeNode> LookupRelationshipName(string relationshipName, ICollection<IncludeTreeNode> parents, string source,
         int position)
     {
-        List<IncludeTreeNode> children = new();
-        HashSet<RelationshipAttribute> relationshipsFound = new();
+        List<IncludeTreeNode> children = [];
+        HashSet<RelationshipAttribute> relationshipsFound = [];
 
         foreach (IncludeTreeNode parent in parents)
         {
