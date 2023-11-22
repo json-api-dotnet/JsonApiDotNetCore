@@ -39,6 +39,8 @@ jobs:
     permissions:
       contents: read
     steps:
+    - name: Tune GitHub-hosted runner network
+      uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Setup PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v4
       with:
@@ -181,6 +183,8 @@ jobs:
     permissions:
       contents: read
     steps:
+    - name: Tune GitHub-hosted runner network
+      uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -234,6 +238,8 @@ jobs:
     permissions:
       contents: read
     steps:
+    - name: Tune GitHub-hosted runner network
+      uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -277,6 +283,8 @@ jobs:
       packages: write
       contents: write
     steps:
+    - name: Tune GitHub-hosted runner network
+      uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Download artifacts
       uses: actions/download-artifact@v3
     - name: Publish to GitHub Packages
