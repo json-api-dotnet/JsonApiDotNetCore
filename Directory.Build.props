@@ -27,6 +27,6 @@
     <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)tests.runsettings</RunSettingsFilePath>
-    <JsonApiDotNetCoreVersionPrefix>5.4.1</JsonApiDotNetCoreVersionPrefix>
+    <JsonApiDotNetCoreVersionPrefix>5.5.0</JsonApiDotNetCoreVersionPrefix>
   </PropertyGroup>
 </Project>
