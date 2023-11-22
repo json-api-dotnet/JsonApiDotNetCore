@@ -252,13 +252,13 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
             var leftAttribute = (AttrAttribute)leftLastField;
 
-            Func<string, int, object> constantValueConverter = GetConstantValueConverterForAttribute(leftAttribute);
+            ConstantValueConverter constantValueConverter = GetConstantValueConverterForAttribute(leftAttribute);
             return ParseTypedComparisonRightTerm(leftAttribute.Property.PropertyType, constantValueConverter);
         }
 
         if (leftTerm is FunctionExpression leftFunction)
         {
-            Func<string, int, object> constantValueConverter = GetConstantValueConverterForType(leftFunction.ReturnType);
+            ConstantValueConverter constantValueConverter = GetConstantValueConverterForType(leftFunction.ReturnType);
             return ParseTypedComparisonRightTerm(leftFunction.ReturnType, constantValueConverter);
         }
 
@@ -266,7 +266,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             $"Internal error: Expected left term to be a function or field chain, instead of '{leftTerm.GetType().Name}': '{leftTerm}'.");
     }
 
-    private QueryExpression ParseTypedComparisonRightTerm(Type leftType, Func<string, int, object> constantValueConverter)
+    private QueryExpression ParseTypedComparisonRightTerm(Type leftType, ConstantValueConverter constantValueConverter)
     {
         bool allowNull = RuntimeTypeConverter.CanContainNull(leftType);
 
@@ -329,7 +329,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         EatSingleCharacterToken(TokenKind.Comma);
 
-        Func<string, int, object> constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute);
+        ConstantValueConverter constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute);
         LiteralConstantExpression constant = ParseConstant(constantValueConverter);
 
         EatSingleCharacterToken(TokenKind.CloseParen);
@@ -352,7 +352,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         ImmutableHashSet<LiteralConstantExpression>.Builder constantsBuilder = ImmutableHashSet.CreateBuilder<LiteralConstantExpression>();
 
-        Func<string, int, object> constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute);
+        ConstantValueConverter constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute);
         LiteralConstantExpression constant = ParseConstant(constantValueConverter);
         constantsBuilder.Add(constant);
 
@@ -489,7 +489,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         return filter;
     }
 
-    private LiteralConstantExpression ParseConstant(Func<string, int, object> constantValueConverter)
+    private LiteralConstantExpression ParseConstant(ConstantValueConverter constantValueConverter)
     {
         int position = GetNextTokenPositionOrEnd();
 
@@ -514,7 +514,19 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         throw new QueryParseException("null expected.", position);
     }
 
-    protected virtual Func<string, int, object> GetConstantValueConverterForType(Type destinationType)
+    /// <summary>
+    /// Converts a constant value within a query string parameter to an <see cref="object" />.
+    /// </summary>
+    /// <param name="value">
+    /// The constant value to convert from.
+    /// </param>
+    /// <param name="position">The zero-based position of <paramref name="value" /> in the query string parameter value.
+    /// <returns>
+    /// The converted object instance.
+    /// </returns>
+    public delegate object ConstantValueConverter(string value, int position);
+
+    protected virtual ConstantValueConverter GetConstantValueConverterForType(Type destinationType)
     {
         return (stringValue, position) =>
         {
@@ -529,7 +541,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         };
     }
 
-    private Func<string, int, object> GetConstantValueConverterForAttribute(AttrAttribute attribute)
+    private ConstantValueConverter GetConstantValueConverterForAttribute(AttrAttribute attribute)
     {
         if (attribute is { Property.Name: nameof(Identifiable<object>.Id) })
         {
