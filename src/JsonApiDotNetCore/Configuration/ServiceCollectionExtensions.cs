@@ -36,7 +36,7 @@ public static class ServiceCollectionExtensions
         Action<ServiceDiscoveryFacade>? discovery = null, Action<ResourceGraphBuilder>? resources = null, IMvcCoreBuilder? mvcBuilder = null)
         where TDbContext : DbContext
     {
-        return AddJsonApi(services, options, discovery, resources, mvcBuilder, typeof(TDbContext).AsArray());
+        return AddJsonApi(services, options, discovery, resources, mvcBuilder, [typeof(TDbContext)]);
     }
 
     private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions>? configureOptions,

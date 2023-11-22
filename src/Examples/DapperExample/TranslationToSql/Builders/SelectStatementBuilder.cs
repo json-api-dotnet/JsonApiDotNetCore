@@ -23,16 +23,16 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
     private readonly QueryState _queryState;
 
     // The FROM/JOIN/sub-SELECT tables, along with their selectors (which usually are column references).
-    private readonly Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> _selectorsPerTable;
+    private readonly Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> _selectorsPerTable = [];
 
     // Used to assign unique names when adding selectors, in case tables are joined that would result in duplicate column names.
-    private readonly HashSet<string> _selectorNamesUsed;
+    private readonly HashSet<string> _selectorNamesUsed = [];
 
     // Filter constraints.
-    private readonly List<FilterNode> _whereFilters;
+    private readonly List<FilterNode> _whereFilters = [];
 
     // Sorting on columns, or COUNT(*) in a sub-query.
-    private readonly List<OrderByTermNode> _orderByTerms;
+    private readonly List<OrderByTermNode> _orderByTerms = [];
 
     // Indicates whether to select a set of columns, the number of rows, or only the first (unnamed) column.
     private SelectShape _selectShape;
@@ -45,10 +45,6 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
     private SelectStatementBuilder(QueryState queryState)
     {
         _queryState = queryState;
-        _selectorsPerTable = new Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>>();
-        _selectorNamesUsed = new HashSet<string>();
-        _whereFilters = new List<FilterNode>();
-        _orderByTerms = new List<OrderByTermNode>();
     }
 
     public SelectNode Build(QueryLayer queryLayer, SelectShape selectShape)
@@ -105,13 +101,13 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
             throw new InvalidOperationException("A primary table already exists.");
         }
 
-        _queryState.RelatedTables.Add(tableAccessor, new Dictionary<RelationshipAttribute, TableAccessorNode>());
+        _queryState.RelatedTables.Add(tableAccessor, []);
 
         _selectorsPerTable[tableAccessor] = _selectShape switch
         {
             SelectShape.Columns => Array.Empty<SelectorNode>(),
-            SelectShape.Count => new CountSelectorNode(null).AsArray(),
-            _ => new OneSelectorNode(null).AsArray()
+            SelectShape.Count => [new CountSelectorNode(null)],
+            _ => [new OneSelectorNode(null)]
         };
     }
 
@@ -146,8 +142,8 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
     private void ConvertFieldSelectors(FieldSelectors selectors, TableAccessorNode tableAccessor)
     {
-        HashSet<ColumnNode> selectedColumns = new();
-        Dictionary<RelationshipAttribute, QueryLayer> nextLayers = new();
+        HashSet<ColumnNode> selectedColumns = [];
+        Dictionary<RelationshipAttribute, QueryLayer> nextLayers = [];
 
         if (selectors.IsEmpty || selectors.ContainsReadOnlyAttribute || selectors.ContainsOnlyRelationships)
         {
@@ -204,7 +200,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
     private List<SelectorNode> PreserveColumnOrderEnsuringUniqueNames(IEnumerable<ColumnNode> columns)
     {
-        List<SelectorNode> selectors = new();
+        List<SelectorNode> selectors = [];
 
         foreach (ColumnNode column in columns)
         {
@@ -219,12 +215,12 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
     private List<SelectorNode> OrderColumnsWithIdAtFrontEnsuringUniqueNames(IEnumerable<ColumnNode> columns)
     {
-        Dictionary<string, List<SelectorNode>> selectorsPerTable = new();
+        Dictionary<string, List<SelectorNode>> selectorsPerTable = [];
 
         foreach (ColumnNode column in columns.OrderBy(column => column.GetTableAliasIndex()).ThenBy(column => column.Name))
         {
             string tableAlias = column.TableAlias ?? "!";
-            selectorsPerTable.TryAdd(tableAlias, new List<SelectorNode>());
+            selectorsPerTable.TryAdd(tableAlias, []);
 
             string uniqueName = GetUniqueSelectorName(column.Name);
             string? selectorAlias = uniqueName != column.Name ? uniqueName : null;
@@ -354,7 +350,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
     private void TrackRelatedTable(TableAccessorNode leftTableAccessor, RelationshipAttribute relationship, TableAccessorNode rightTableAccessor)
     {
-        _queryState.RelatedTables.Add(rightTableAccessor, new Dictionary<RelationshipAttribute, TableAccessorNode>());
+        _queryState.RelatedTables.Add(rightTableAccessor, []);
         _selectorsPerTable[rightTableAccessor] = Array.Empty<SelectorNode>();
 
         _queryState.RelatedTables[leftTableAccessor].Add(relationship, rightTableAccessor);
@@ -362,7 +358,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
     private IReadOnlyList<SelectorNode> MapSelectorsFromSubQuery(IEnumerable<SelectorNode> innerSelectorsToKeep, SelectNode select)
     {
-        List<ColumnNode> outerColumnsToKeep = new();
+        List<ColumnNode> outerColumnsToKeep = [];
 
         foreach (SelectorNode innerSelector in innerSelectorsToKeep)
         {
@@ -385,7 +381,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
     private IReadOnlyList<OrderByTermNode> MapOrderingsFromSubQuery(IEnumerable<OrderByTermNode> innerOrderingsToKeep, SelectNode select)
     {
-        List<OrderByTermNode> orderingsToKeep = new();
+        List<OrderByTermNode> orderingsToKeep = [];
 
         foreach (OrderByTermNode innerTerm in innerOrderingsToKeep)
         {
@@ -470,7 +466,7 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
     private static Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> AliasSelectorsToTableColumnNames(
         Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> selectorsPerTable)
     {
-        Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> aliasedSelectors = new();
+        Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> aliasedSelectors = [];
 
         foreach ((TableAccessorNode tableAccessor, IReadOnlyList<SelectorNode> tableSelectors) in selectorsPerTable)
         {
@@ -754,11 +750,11 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
 
         // Prevents importing a table multiple times and enables to reference a table imported by an inner/outer query.
         // In case of sub-queries, this may include temporary tables that won't survive in the final query.
-        public Dictionary<TableAccessorNode, Dictionary<RelationshipAttribute, TableAccessorNode>> RelatedTables { get; } = new();
+        public Dictionary<TableAccessorNode, Dictionary<RelationshipAttribute, TableAccessorNode>> RelatedTables { get; } = [];
 
         // In case of sub-queries, we track old/new table aliases, so we can rewrite stale references afterwards.
         // This cannot be done in the moment itself, because references to tables are on method call stacks.
-        public Dictionary<string, string> OldToNewTableAliasMap { get; } = new();
+        public Dictionary<string, string> OldToNewTableAliasMap { get; } = [];
 
         public QueryState(IDataModelService dataModelService, TableAliasGenerator tableAliasGenerator, ParameterGenerator parameterGenerator,
             ILoggerFactory loggerFactory)

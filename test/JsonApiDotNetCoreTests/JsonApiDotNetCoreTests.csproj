@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>$(TargetFrameworkName)</TargetFramework>
+    <TargetFrameworks>net8.0;net6.0</TargetFrameworks>
   </PropertyGroup>
+
+  <Import Project="..\..\package-versions.props" />
 
   <ItemGroup>
     <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
@@ -11,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All" />
-    <PackageReference Include="DateOnlyTimeOnly.AspNet" Version="$(DateOnlyTimeOnlyVersion)" />
+    <PackageReference Condition="'$(TargetFramework)' == 'net6.0'" Include="DateOnlyTimeOnly.AspNet" Version="$(DateOnlyTimeOnlyVersion)" />
     <PackageReference Include="GitHubActionsTestLogger" Version="$(GitHubActionsTestLoggerVersion)" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(EntityFrameworkCoreVersion)" />

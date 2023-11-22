@@ -50,7 +50,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
     {
         ArgumentGuard.NotNullNorEmpty(parameterName);
 
-        return parameterName.StartsWith("fields[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
+        return parameterName.StartsWith("fields[", StringComparison.Ordinal) && parameterName.EndsWith(']');
     }
 
     /// <inheritdoc />
@@ -100,7 +100,7 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
     public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
     {
         return _sparseFieldTableBuilder.Any()
-            ? new ExpressionInScope(null, new SparseFieldTableExpression(_sparseFieldTableBuilder.ToImmutable())).AsArray()
+            ? [new ExpressionInScope(null, new SparseFieldTableExpression(_sparseFieldTableBuilder.ToImmutable()))]
             : Array.Empty<ExpressionInScope>();
     }
 }

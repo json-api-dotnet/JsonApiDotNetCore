@@ -22,7 +22,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     private readonly IQueryStringParameterScopeParser _scopeParser;
     private readonly IFilterParser _filterParser;
     private readonly ImmutableArray<FilterExpression>.Builder _filtersInGlobalScope = ImmutableArray.CreateBuilder<FilterExpression>();
-    private readonly Dictionary<ResourceFieldChainExpression, ImmutableArray<FilterExpression>.Builder> _filtersPerScope = new();
+    private readonly Dictionary<ResourceFieldChainExpression, ImmutableArray<FilterExpression>.Builder> _filtersPerScope = [];
 
     public bool AllowEmptyValue => false;
 
@@ -52,7 +52,7 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     {
         ArgumentGuard.NotNullNorEmpty(parameterName);
 
-        bool isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
+        bool isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith(']');
         return parameterName == "filter" || isNested;
     }
 

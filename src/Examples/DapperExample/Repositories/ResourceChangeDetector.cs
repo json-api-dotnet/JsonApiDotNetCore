@@ -15,11 +15,11 @@ internal sealed class ResourceChangeDetector
     private readonly CollectionConverter _collectionConverter = new();
     private readonly IDataModelService _dataModelService;
 
-    private Dictionary<string, object?> _currentColumnValues = new();
-    private Dictionary<string, object?> _newColumnValues = new();
+    private Dictionary<string, object?> _currentColumnValues = [];
+    private Dictionary<string, object?> _newColumnValues = [];
 
-    private Dictionary<RelationshipAttribute, ISet<IIdentifiable>> _currentRightResourcesByRelationship = new();
-    private Dictionary<RelationshipAttribute, ISet<IIdentifiable>> _newRightResourcesByRelationship = new();
+    private Dictionary<RelationshipAttribute, ISet<IIdentifiable>> _currentRightResourcesByRelationship = [];
+    private Dictionary<RelationshipAttribute, ISet<IIdentifiable>> _newRightResourcesByRelationship = [];
 
     public ResourceType ResourceType { get; }
 
@@ -52,7 +52,7 @@ internal sealed class ResourceChangeDetector
 
     private Dictionary<string, object?> CaptureColumnValues(IIdentifiable resource)
     {
-        Dictionary<string, object?> columnValues = new();
+        Dictionary<string, object?> columnValues = [];
 
         foreach ((string columnName, ResourceFieldAttribute? _) in _dataModelService.GetColumnMappings(ResourceType))
         {
@@ -64,7 +64,7 @@ internal sealed class ResourceChangeDetector
 
     private Dictionary<RelationshipAttribute, ISet<IIdentifiable>> CaptureRightResourcesByRelationship(IIdentifiable resource)
     {
-        Dictionary<RelationshipAttribute, ISet<IIdentifiable>> relationshipValues = new();
+        Dictionary<RelationshipAttribute, ISet<IIdentifiable>> relationshipValues = [];
 
         foreach (RelationshipAttribute relationship in ResourceType.Relationships)
         {
@@ -107,7 +107,7 @@ internal sealed class ResourceChangeDetector
 
     public IReadOnlyDictionary<HasOneAttribute, (object? currentRightId, object newRightId)> GetOneToOneRelationshipsChangedToNotNull()
     {
-        Dictionary<HasOneAttribute, (object? currentRightId, object newRightId)> changes = new();
+        Dictionary<HasOneAttribute, (object? currentRightId, object newRightId)> changes = [];
 
         foreach ((RelationshipAttribute relationship, ISet<IIdentifiable> newRightResources) in _newRightResourcesByRelationship)
         {
@@ -135,7 +135,7 @@ internal sealed class ResourceChangeDetector
 
     public IReadOnlyDictionary<string, object?> GetChangedColumnValues()
     {
-        Dictionary<string, object?> changes = new();
+        Dictionary<string, object?> changes = [];
 
         foreach ((string columnName, object? newColumnValue) in _newColumnValues)
         {
@@ -152,7 +152,7 @@ internal sealed class ResourceChangeDetector
 
     public IReadOnlyDictionary<HasOneAttribute, (object? currentRightId, object? newRightId)> GetChangedToOneRelationshipsWithForeignKeyAtRightSide()
     {
-        Dictionary<HasOneAttribute, (object? currentRightId, object? newRightId)> changes = new();
+        Dictionary<HasOneAttribute, (object? currentRightId, object? newRightId)> changes = [];
 
         foreach ((RelationshipAttribute relationship, ISet<IIdentifiable> newRightResources) in _newRightResourcesByRelationship)
         {
@@ -183,7 +183,7 @@ internal sealed class ResourceChangeDetector
 
     public IReadOnlyDictionary<HasManyAttribute, (ISet<object> currentRightIds, ISet<object> newRightIds)> GetChangedToManyRelationships()
     {
-        Dictionary<HasManyAttribute, (ISet<object> currentRightIds, ISet<object> newRightIds)> changes = new();
+        Dictionary<HasManyAttribute, (ISet<object> currentRightIds, ISet<object> newRightIds)> changes = [];
 
         foreach ((RelationshipAttribute relationship, ISet<IIdentifiable> newRightResources) in _newRightResourcesByRelationship)
         {
@@ -194,7 +194,7 @@ internal sealed class ResourceChangeDetector
                 HashSet<object> currentRightIds =
                     _currentRightResourcesByRelationship.TryGetValue(hasManyRelationship, out ISet<IIdentifiable>? currentRightResources)
                         ? currentRightResources.Select(resource => resource.GetTypedId()).ToHashSet()
-                        : new HashSet<object>();
+                        : [];
 
                 if (!currentRightIds.SetEquals(newRightIds))
                 {

@@ -107,7 +107,7 @@ public class ResponseModelAdapter : IResponseModelAdapter
         }
         else if (model is ErrorObject errorObject)
         {
-            document.Errors = errorObject.AsArray();
+            document.Errors = [errorObject];
         }
         else
         {

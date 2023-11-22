@@ -29,10 +29,7 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
             options.AddFilter((category, _) => category != null && category.StartsWith("JsonApiDotNetCore.", StringComparison.Ordinal));
         });
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddSingleton(loggerFactory);
-        });
+        testContext.ConfigureServices(services => services.AddSingleton(loggerFactory));
     }
 
     [Fact]
@@ -123,196 +120,214 @@ public sealed class AtomicTraceLoggingTests : IClassFixture<IntegrationTestConte
 
         logLines.Should().BeEquivalentTo(new[]
         {
-            $@"[TRACE] Received POST request at 'http://localhost/operations' with body: <<{{
-  ""atomic:operations"": [
-    {{
-      ""op"": ""update"",
-      ""data"": {{
-        ""type"": ""musicTracks"",
-        ""id"": ""{existingTrack.StringId}"",
-        ""attributes"": {{
-          ""genre"": ""{newGenre}""
-        }},
-        ""relationships"": {{
-          ""lyric"": {{
-            ""data"": {{
-              ""type"": ""lyrics"",
-              ""id"": ""{existingLyric.StringId}""
-            }}
-          }},
-          ""ownedBy"": {{
-            ""data"": {{
-              ""type"": ""recordCompanies"",
-              ""id"": ""{existingCompany.StringId}""
-            }}
-          }},
-          ""performers"": {{
-            ""data"": [
-              {{
-                ""type"": ""performers"",
-                ""id"": ""{existingPerformer.StringId}""
-              }}
-            ]
-          }}
-        }}
-      }}
-    }}
-  ]
-}}>>",
-            $@"[TRACE] Entering PostOperationsAsync(operations: [
-  {{
-    ""Resource"": {{
-      ""Id"": ""{existingTrack.StringId}"",
-      ""Genre"": ""{newGenre}"",
-      ""ReleasedAt"": ""0001-01-01T00:00:00+00:00"",
-      ""Lyric"": {{
-        ""CreatedAt"": ""0001-01-01T00:00:00+00:00"",
-        ""Id"": {existingLyric.Id},
-        ""StringId"": ""{existingLyric.StringId}""
-      }},
-      ""OwnedBy"": {{
-        ""Tracks"": [],
-        ""Id"": {existingCompany.Id},
-        ""StringId"": ""{existingCompany.StringId}""
-      }},
-      ""Performers"": [
-        {{
-          ""BornAt"": ""0001-01-01T00:00:00+00:00"",
-          ""Id"": {existingPerformer.Id},
-          ""StringId"": ""{existingPerformer.StringId}""
-        }}
-      ],
-      ""OccursIn"": [],
-      ""StringId"": ""{existingTrack.StringId}""
-    }},
-    ""TargetedFields"": {{
-      ""Attributes"": [
-        ""genre""
-      ],
-      ""Relationships"": [
-        ""lyric"",
-        ""ownedBy"",
-        ""performers""
-      ]
-    }},
-    ""Request"": {{
-      ""Kind"": ""AtomicOperations"",
-      ""PrimaryId"": ""{existingTrack.StringId}"",
-      ""PrimaryResourceType"": ""musicTracks"",
-      ""IsCollection"": false,
-      ""IsReadOnly"": false,
-      ""WriteOperation"": ""UpdateResource""
-    }}
-  }}
-])",
-            $@"[TRACE] Entering UpdateAsync(id: {existingTrack.StringId}, resource: {{
-  ""Id"": ""{existingTrack.StringId}"",
-  ""Genre"": ""{newGenre}"",
-  ""ReleasedAt"": ""0001-01-01T00:00:00+00:00"",
-  ""Lyric"": {{
-    ""CreatedAt"": ""0001-01-01T00:00:00+00:00"",
-    ""Id"": {existingLyric.Id},
-    ""StringId"": ""{existingLyric.StringId}""
-  }},
-  ""OwnedBy"": {{
-    ""Tracks"": [],
-    ""Id"": {existingCompany.Id},
-    ""StringId"": ""{existingCompany.StringId}""
-  }},
-  ""Performers"": [
-    {{
-      ""BornAt"": ""0001-01-01T00:00:00+00:00"",
-      ""Id"": {existingPerformer.Id},
-      ""StringId"": ""{existingPerformer.StringId}""
-    }}
-  ],
-  ""OccursIn"": [],
-  ""StringId"": ""{existingTrack.StringId}""
-}})",
-            $@"[TRACE] Entering GetForUpdateAsync(queryLayer: QueryLayer<MusicTrack>
-{{
-  Include: lyric,ownedBy,performers
-  Filter: equals(id,'{existingTrack.StringId}')
-}}
-)",
-            $@"[TRACE] Entering GetAsync(queryLayer: QueryLayer<MusicTrack>
-{{
-  Include: lyric,ownedBy,performers
-  Filter: equals(id,'{existingTrack.StringId}')
-}}
-)",
-            $@"[TRACE] Entering ApplyQueryLayer(queryLayer: QueryLayer<MusicTrack>
-{{
-  Include: lyric,ownedBy,performers
-  Filter: equals(id,'{existingTrack.StringId}')
-}}
-)",
-            $@"[TRACE] Entering UpdateAsync(resourceFromRequest: {{
-  ""Id"": ""{existingTrack.StringId}"",
-  ""Genre"": ""{newGenre}"",
-  ""ReleasedAt"": ""0001-01-01T00:00:00+00:00"",
-  ""Lyric"": {{
-    ""CreatedAt"": ""0001-01-01T00:00:00+00:00"",
-    ""Id"": {existingLyric.Id},
-    ""StringId"": ""{existingLyric.StringId}""
-  }},
-  ""OwnedBy"": {{
-    ""Tracks"": [],
-    ""Id"": {existingCompany.Id},
-    ""StringId"": ""{existingCompany.StringId}""
-  }},
-  ""Performers"": [
-    {{
-      ""BornAt"": ""0001-01-01T00:00:00+00:00"",
-      ""Id"": {existingPerformer.Id},
-      ""StringId"": ""{existingPerformer.StringId}""
-    }}
-  ],
-  ""OccursIn"": [],
-  ""StringId"": ""{existingTrack.StringId}""
-}}, resourceFromDatabase: {{
-  ""Id"": ""{existingTrack.StringId}"",
-  ""Title"": ""{existingTrack.Title}"",
-  ""LengthInSeconds"": {JsonSerializer.Serialize(existingTrack.LengthInSeconds)},
-  ""Genre"": ""{existingTrack.Genre}"",
-  ""ReleasedAt"": {JsonSerializer.Serialize(existingTrack.ReleasedAt)},
-  ""Lyric"": {{
-    ""Format"": ""{existingTrack.Lyric.Format}"",
-    ""Text"": {JsonSerializer.Serialize(existingTrack.Lyric.Text)},
-    ""CreatedAt"": ""0001-01-01T00:00:00+00:00"",
-    ""Id"": {existingTrack.Lyric.Id},
-    ""StringId"": ""{existingTrack.Lyric.StringId}""
-  }},
-  ""OwnedBy"": {{
-    ""Name"": ""{existingTrack.OwnedBy.Name}"",
-    ""CountryOfResidence"": ""{existingTrack.OwnedBy.CountryOfResidence}"",
-    ""Tracks"": [
-      null
-    ],
-    ""Id"": {existingTrack.OwnedBy.Id},
-    ""StringId"": ""{existingTrack.OwnedBy.StringId}""
-  }},
-  ""Performers"": [
-    {{
-      ""ArtistName"": ""{existingTrack.Performers[0].ArtistName}"",
-      ""BornAt"": {JsonSerializer.Serialize(existingTrack.Performers[0].BornAt)},
-      ""Id"": {existingTrack.Performers[0].Id},
-      ""StringId"": ""{existingTrack.Performers[0].StringId}""
-    }}
-  ],
-  ""OccursIn"": [],
-  ""StringId"": ""{existingTrack.StringId}""
-}})",
-            $@"[TRACE] Entering GetAsync(queryLayer: QueryLayer<MusicTrack>
-{{
-  Filter: equals(id,'{existingTrack.StringId}')
-}}
-)",
-            $@"[TRACE] Entering ApplyQueryLayer(queryLayer: QueryLayer<MusicTrack>
-{{
-  Filter: equals(id,'{existingTrack.StringId}')
-}}
-)"
+            $$"""
+            [TRACE] Received POST request at 'http://localhost/operations' with body: <<{
+              "atomic:operations": [
+                {
+                  "op": "update",
+                  "data": {
+                    "type": "musicTracks",
+                    "id": "{{existingTrack.StringId}}",
+                    "attributes": {
+                      "genre": "{{newGenre}}"
+                    },
+                    "relationships": {
+                      "lyric": {
+                        "data": {
+                          "type": "lyrics",
+                          "id": "{{existingLyric.StringId}}"
+                        }
+                      },
+                      "ownedBy": {
+                        "data": {
+                          "type": "recordCompanies",
+                          "id": "{{existingCompany.StringId}}"
+                        }
+                      },
+                      "performers": {
+                        "data": [
+                          {
+                            "type": "performers",
+                            "id": "{{existingPerformer.StringId}}"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }>>
+            """,
+            $$"""
+            [TRACE] Entering PostOperationsAsync(operations: [
+              {
+                "Resource": {
+                  "Id": "{{existingTrack.StringId}}",
+                  "Genre": "{{newGenre}}",
+                  "ReleasedAt": "0001-01-01T00:00:00+00:00",
+                  "Lyric": {
+                    "CreatedAt": "0001-01-01T00:00:00+00:00",
+                    "Id": {{existingLyric.Id}},
+                    "StringId": "{{existingLyric.StringId}}"
+                  },
+                  "OwnedBy": {
+                    "Tracks": [],
+                    "Id": {{existingCompany.Id}},
+                    "StringId": "{{existingCompany.StringId}}"
+                  },
+                  "Performers": [
+                    {
+                      "BornAt": "0001-01-01T00:00:00+00:00",
+                      "Id": {{existingPerformer.Id}},
+                      "StringId": "{{existingPerformer.StringId}}"
+                    }
+                  ],
+                  "OccursIn": [],
+                  "StringId": "{{existingTrack.StringId}}"
+                },
+                "TargetedFields": {
+                  "Attributes": [
+                    "genre"
+                  ],
+                  "Relationships": [
+                    "lyric",
+                    "ownedBy",
+                    "performers"
+                  ]
+                },
+                "Request": {
+                  "Kind": "AtomicOperations",
+                  "PrimaryId": "{{existingTrack.StringId}}",
+                  "PrimaryResourceType": "musicTracks",
+                  "IsCollection": false,
+                  "IsReadOnly": false,
+                  "WriteOperation": "UpdateResource"
+                }
+              }
+            ])
+            """,
+            $$"""
+            [TRACE] Entering UpdateAsync(id: {{existingTrack.StringId}}, resource: {
+              "Id": "{{existingTrack.StringId}}",
+              "Genre": "{{newGenre}}",
+              "ReleasedAt": "0001-01-01T00:00:00+00:00",
+              "Lyric": {
+                "CreatedAt": "0001-01-01T00:00:00+00:00",
+                "Id": {{existingLyric.Id}},
+                "StringId": "{{existingLyric.StringId}}"
+              },
+              "OwnedBy": {
+                "Tracks": [],
+                "Id": {{existingCompany.Id}},
+                "StringId": "{{existingCompany.StringId}}"
+              },
+              "Performers": [
+                {
+                  "BornAt": "0001-01-01T00:00:00+00:00",
+                  "Id": {{existingPerformer.Id}},
+                  "StringId": "{{existingPerformer.StringId}}"
+                }
+              ],
+              "OccursIn": [],
+              "StringId": "{{existingTrack.StringId}}"
+            })
+            """,
+            $$"""
+            [TRACE] Entering GetForUpdateAsync(queryLayer: QueryLayer<MusicTrack>
+            {
+              Include: lyric,ownedBy,performers
+              Filter: equals(id,'{{existingTrack.StringId}}')
+            }
+            )
+            """,
+            $$"""
+            [TRACE] Entering GetAsync(queryLayer: QueryLayer<MusicTrack>
+            {
+              Include: lyric,ownedBy,performers
+              Filter: equals(id,'{{existingTrack.StringId}}')
+            }
+            )
+            """,
+            $$"""
+            [TRACE] Entering ApplyQueryLayer(queryLayer: QueryLayer<MusicTrack>
+            {
+              Include: lyric,ownedBy,performers
+              Filter: equals(id,'{{existingTrack.StringId}}')
+            }
+            )
+            """,
+            $$"""
+            [TRACE] Entering UpdateAsync(resourceFromRequest: {
+              "Id": "{{existingTrack.StringId}}",
+              "Genre": "{{newGenre}}",
+              "ReleasedAt": "0001-01-01T00:00:00+00:00",
+              "Lyric": {
+                "CreatedAt": "0001-01-01T00:00:00+00:00",
+                "Id": {{existingLyric.Id}},
+                "StringId": "{{existingLyric.StringId}}"
+              },
+              "OwnedBy": {
+                "Tracks": [],
+                "Id": {{existingCompany.Id}},
+                "StringId": "{{existingCompany.StringId}}"
+              },
+              "Performers": [
+                {
+                  "BornAt": "0001-01-01T00:00:00+00:00",
+                  "Id": {{existingPerformer.Id}},
+                  "StringId": "{{existingPerformer.StringId}}"
+                }
+              ],
+              "OccursIn": [],
+              "StringId": "{{existingTrack.StringId}}"
+            }, resourceFromDatabase: {
+              "Id": "{{existingTrack.StringId}}",
+              "Title": "{{existingTrack.Title}}",
+              "LengthInSeconds": {{JsonSerializer.Serialize(existingTrack.LengthInSeconds)}},
+              "Genre": "{{existingTrack.Genre}}",
+              "ReleasedAt": {{JsonSerializer.Serialize(existingTrack.ReleasedAt)}},
+              "Lyric": {
+                "Format": "{{existingTrack.Lyric.Format}}",
+                "Text": {{JsonSerializer.Serialize(existingTrack.Lyric.Text)}},
+                "CreatedAt": "0001-01-01T00:00:00+00:00",
+                "Id": {{existingTrack.Lyric.Id}},
+                "StringId": "{{existingTrack.Lyric.StringId}}"
+              },
+              "OwnedBy": {
+                "Name": "{{existingTrack.OwnedBy.Name}}",
+                "CountryOfResidence": "{{existingTrack.OwnedBy.CountryOfResidence}}",
+                "Tracks": [
+                  null
+                ],
+                "Id": {{existingTrack.OwnedBy.Id}},
+                "StringId": "{{existingTrack.OwnedBy.StringId}}"
+              },
+              "Performers": [
+                {
+                  "ArtistName": "{{existingTrack.Performers[0].ArtistName}}",
+                  "BornAt": {{JsonSerializer.Serialize(existingTrack.Performers[0].BornAt)}},
+                  "Id": {{existingTrack.Performers[0].Id}},
+                  "StringId": "{{existingTrack.Performers[0].StringId}}"
+                }
+              ],
+              "OccursIn": [],
+              "StringId": "{{existingTrack.StringId}}"
+            })
+            """,
+            $$"""
+            [TRACE] Entering GetAsync(queryLayer: QueryLayer<MusicTrack>
+            {
+              Filter: equals(id,'{{existingTrack.StringId}}')
+            }
+            )
+            """,
+            $$"""
+            [TRACE] Entering ApplyQueryLayer(queryLayer: QueryLayer<MusicTrack>
+            {
+              Filter: equals(id,'{{existingTrack.StringId}}')
+            }
+            )
+            """
         }, options => options.Using(IgnoreLineEndingsComparer.Instance).WithStrictOrdering());
     }
 }

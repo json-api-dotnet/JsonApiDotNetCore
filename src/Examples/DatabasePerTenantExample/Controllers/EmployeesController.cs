@@ -5,6 +5,4 @@ namespace DatabasePerTenantExample.Controllers;
 
 [DisableRoutingConvention]
 [Route("api/{tenantName}/employees")]
-partial class EmployeesController
-{
-}
+partial class EmployeesController;

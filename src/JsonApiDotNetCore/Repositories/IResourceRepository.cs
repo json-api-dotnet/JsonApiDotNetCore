@@ -14,6 +14,4 @@ namespace JsonApiDotNetCore.Repositories;
 /// </typeparam>
 [PublicAPI]
 public interface IResourceRepository<TResource, in TId> : IResourceReadRepository<TResource, TId>, IResourceWriteRepository<TResource, TId>
-    where TResource : class, IIdentifiable<TId>
-{
-}
+    where TResource : class, IIdentifiable<TId>;

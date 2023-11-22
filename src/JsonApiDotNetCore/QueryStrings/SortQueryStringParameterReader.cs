@@ -17,7 +17,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
 {
     private readonly IQueryStringParameterScopeParser _scopeParser;
     private readonly ISortParser _sortParser;
-    private readonly List<ExpressionInScope> _constraints = new();
+    private readonly List<ExpressionInScope> _constraints = [];
 
     public bool AllowEmptyValue => false;
 
@@ -45,7 +45,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
     {
         ArgumentGuard.NotNullNorEmpty(parameterName);
 
-        bool isNested = parameterName.StartsWith("sort[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
+        bool isNested = parameterName.StartsWith("sort[", StringComparison.Ordinal) && parameterName.EndsWith(']');
         return parameterName == "sort" || isNested;
     }
 

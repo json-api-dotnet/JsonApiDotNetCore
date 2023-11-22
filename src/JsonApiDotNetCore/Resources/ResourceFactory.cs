@@ -50,7 +50,7 @@ internal sealed class ResourceFactory : IResourceFactory
         Type wrapperClrType = typeof(AbstractResourceWrapper<>).MakeGenericType(descriptor.IdClrType);
         ConstructorInfo constructor = wrapperClrType.GetConstructors().Single();
 
-        object resource = constructor.Invoke(ArrayFactory.Create<object>(resourceClrType));
+        object resource = constructor.Invoke([resourceClrType]);
         return (IIdentifiable)resource;
     }
 

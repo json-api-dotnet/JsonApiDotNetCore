@@ -8,8 +8,8 @@ namespace DapperExample.TranslationToSql;
 /// </summary>
 internal sealed class ParameterFormatter
 {
-    private static readonly HashSet<Type> NumericTypes = new[]
-    {
+    private static readonly HashSet<Type> NumericTypes =
+    [
         typeof(bool),
         typeof(int),
         typeof(uint),
@@ -21,7 +21,7 @@ internal sealed class ParameterFormatter
         typeof(float),
         typeof(double),
         typeof(decimal)
-    }.ToHashSet();
+    ];
 
     public string Format(string parameterName, object? parameterValue)
     {

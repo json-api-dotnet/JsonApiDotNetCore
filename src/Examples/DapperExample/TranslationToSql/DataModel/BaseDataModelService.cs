@@ -16,7 +16,7 @@ namespace DapperExample.TranslationToSql.DataModel;
 /// </summary>
 public abstract class BaseDataModelService : IDataModelService
 {
-    private readonly Dictionary<ResourceType, IReadOnlyDictionary<string, ResourceFieldAttribute?>> _columnMappingsByType = new();
+    private readonly Dictionary<ResourceType, IReadOnlyDictionary<string, ResourceFieldAttribute?>> _columnMappingsByType = [];
 
     protected IResourceGraph ResourceGraph { get; }
 
@@ -54,7 +54,7 @@ public abstract class BaseDataModelService : IDataModelService
 
     private IReadOnlyDictionary<string, ResourceFieldAttribute?> ScanColumnMappings(ResourceType resourceType)
     {
-        Dictionary<string, ResourceFieldAttribute?> mappings = new();
+        Dictionary<string, ResourceFieldAttribute?> mappings = [];
 
         foreach (PropertyInfo property in resourceType.ClrType.GetProperties())
         {

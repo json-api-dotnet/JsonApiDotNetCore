@@ -16,11 +16,11 @@ public sealed class JsonApiOutputFormatter : IJsonApiOutputFormatter
     }
 
     /// <inheritdoc />
-    public async Task WriteAsync(OutputFormatterWriteContext context)
+    public Task WriteAsync(OutputFormatterWriteContext context)
     {
         ArgumentGuard.NotNull(context);
 
         var writer = context.HttpContext.RequestServices.GetRequiredService<IJsonApiWriter>();
-        await writer.WriteAsync(context.Object, context.HttpContext);
+        return writer.WriteAsync(context.Object, context.HttpContext);
     }
 }

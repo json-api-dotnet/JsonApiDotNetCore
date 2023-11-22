@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using JsonApiDotNetCore.Resources;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
+using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 

@@ -9,7 +9,7 @@ namespace DapperExample.Repositories;
 [PublicAPI]
 public sealed class SqlCaptureStore
 {
-    private readonly List<SqlCommand> _sqlCommands = new();
+    private readonly List<SqlCommand> _sqlCommands = [];
 
     public IReadOnlyList<SqlCommand> SqlCommands => _sqlCommands;
 

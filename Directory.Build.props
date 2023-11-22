@@ -13,43 +13,15 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <!-- Published dependencies (only update on major version change) -->
-    <TargetFrameworkName>net6.0</TargetFrameworkName>
-    <CodeAnalysisFrozenVersion>4.1.0</CodeAnalysisFrozenVersion>
-    <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
-    <EntityFrameworkCoreFrozenVersion>6.0.0</EntityFrameworkCoreFrozenVersion>
-    <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
-
-    <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
-    <AspNetCoreVersion>6.0.*</AspNetCoreVersion>
-    <BenchmarkDotNetVersion>0.13.*</BenchmarkDotNetVersion>
-    <BogusVersion>34.0.*</BogusVersion>
-    <CSharpGuidelinesAnalyzerVersion>3.8.*</CSharpGuidelinesAnalyzerVersion>
-    <CodeAnalysisVersion>4.7.*</CodeAnalysisVersion>
-    <CoverletVersion>6.0.*</CoverletVersion>
-    <DapperVersion>2.1.*</DapperVersion>
-    <DateOnlyTimeOnlyVersion>2.1.*</DateOnlyTimeOnlyVersion>
-    <EntityFrameworkCoreVersion>7.0.*</EntityFrameworkCoreVersion>
-    <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
-    <GitHubActionsTestLoggerVersion>2.3.*</GitHubActionsTestLoggerVersion>
-    <InheritDocVersion>1.3.*</InheritDocVersion>
-    <JetBrainsAnnotationsVersion>2023.3.*</JetBrainsAnnotationsVersion>
-    <NpgsqlVersion>7.0.*</NpgsqlVersion>
-    <SourceLinkVersion>8.0.*</SourceLinkVersion>
-    <SystemTextJsonVersion>7.0.*</SystemTextJsonVersion>
-    <TestSdkVersion>17.8.*</TestSdkVersion>
-    <XunitVersion>2.5.*</XunitVersion>
-  </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" PrivateAssets="All" />
-    <PackageReference Include="CSharpGuidelinesAnalyzer" Version="$(CSharpGuidelinesAnalyzerVersion)" PrivateAssets="All" />
+    <PackageReference Include="JetBrains.Annotations" Version="2023.3.*" PrivateAssets="All" />
+    <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.8.*" PrivateAssets="All" />
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)CSharpGuidelinesAnalyzer.config" Visible="False" />
   </ItemGroup>
 
   <PropertyGroup>
     <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>

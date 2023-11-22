@@ -21,10 +21,7 @@ public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<Testable
         testContext.UseController<TelevisionBroadcastsController>();
         testContext.UseController<BroadcastCommentsController>();
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddResourceDefinition<TelevisionBroadcastDefinition>();
-        });
+        testContext.ConfigureServices(services => services.AddResourceDefinition<TelevisionBroadcastDefinition>());
     }
 
     [Fact]

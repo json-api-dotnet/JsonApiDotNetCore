@@ -17,7 +17,13 @@ internal sealed class ETagGenerator : IETagGenerator
     /// <inheritdoc />
     public EntityTagHeaderValue Generate(string requestUrl, string responseBody)
     {
-        string fingerprint = _fingerprintGenerator.Generate(ArrayFactory.Create(requestUrl, responseBody));
+        string[] elements =
+        [
+            requestUrl,
+            responseBody
+        ];
+
+        string fingerprint = _fingerprintGenerator.Generate(elements);
         string eTagValue = $"\"{fingerprint}\"";
 
         return EntityTagHeaderValue.Parse(eTagValue);

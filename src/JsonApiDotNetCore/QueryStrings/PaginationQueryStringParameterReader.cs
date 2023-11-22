@@ -165,7 +165,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
     private sealed class PaginationState
     {
         private readonly MutablePaginationEntry _globalScope = new();
-        private readonly Dictionary<ResourceFieldChainExpression, MutablePaginationEntry> _nestedScopes = new();
+        private readonly Dictionary<ResourceFieldChainExpression, MutablePaginationEntry> _nestedScopes = [];
 
         public MutablePaginationEntry ResolveEntryInScope(ResourceFieldChainExpression? scope)
         {
