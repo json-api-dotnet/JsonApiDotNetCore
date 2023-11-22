@@ -514,20 +514,6 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         throw new QueryParseException("null expected.", position);
     }
 
-    /// <summary>
-    /// Converts a constant value within a query string parameter to an <see cref="object" />.
-    /// </summary>
-    /// <param name="value">
-    /// The constant value to convert from.
-    /// </param>
-    /// <param name="position">
-    /// The zero-based position of <paramref name="value" /> in the query string parameter value.
-    /// </param>
-    /// <returns>
-    /// The converted object instance.
-    /// </returns>
-    public delegate object ConstantValueConverter(string value, int position);
-
     protected virtual ConstantValueConverter GetConstantValueConverterForType(Type destinationType)
     {
         return (stringValue, position) =>
@@ -598,6 +584,20 @@ public class FilterParser : QueryExpressionParser, IFilterParser
                 $"Verify that {nameof(IDisposable.Dispose)}() is called on all return values of {nameof(InScopeOfResourceType)}().");
         }
     }
+
+    /// <summary>
+    /// Converts a constant value within a query string parameter to an <see cref="object" />.
+    /// </summary>
+    /// <param name="value">
+    /// The constant value to convert from.
+    /// </param>
+    /// <param name="position">
+    /// The zero-based position of <paramref name="value" /> in the query string parameter value.
+    /// </param>
+    /// <returns>
+    /// The converted object instance.
+    /// </returns>
+    public delegate object ConstantValueConverter(string value, int position);
 
     private sealed class PopResourceTypeOnDispose : IDisposable
     {
