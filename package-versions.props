@@ -1,14 +1,14 @@
 <Project>
   <PropertyGroup>
     <!-- Published dependencies (only update on major version change) -->
-    <CodeAnalysisFrozenVersion>4.1.0</CodeAnalysisFrozenVersion>
+    <CodeAnalysisFrozenVersion>4.8.0</CodeAnalysisFrozenVersion>
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <BenchmarkDotNetVersion>0.13.*</BenchmarkDotNetVersion>
     <BogusVersion>34.0.*</BogusVersion>
-    <CodeAnalysisVersion>4.7.*</CodeAnalysisVersion>
+    <CodeAnalysisVersion>4.8.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
     <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
