@@ -265,7 +265,7 @@ jobs:
       shell: pwsh
       run: |
         Write-Output "Running code cleanup on all files."
-        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version)--jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN --fail-on-diff --print-diff
+        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN --fail-on-diff --print-diff
 
   publish:
     timeout-minutes: 60
