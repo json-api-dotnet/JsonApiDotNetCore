@@ -520,7 +520,9 @@ public class FilterParser : QueryExpressionParser, IFilterParser
     /// <param name="value">
     /// The constant value to convert from.
     /// </param>
-    /// <param name="position">The zero-based position of <paramref name="value" /> in the query string parameter value.
+    /// <param name="position">
+    /// The zero-based position of <paramref name="value" /> in the query string parameter value.
+    /// </param>
     /// <returns>
     /// The converted object instance.
     /// </returns>
