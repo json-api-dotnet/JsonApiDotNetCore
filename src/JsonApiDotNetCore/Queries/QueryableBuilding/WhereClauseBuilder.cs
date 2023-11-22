@@ -33,7 +33,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
     private static Expression WhereExtensionMethodCall(LambdaExpression predicate, QueryClauseBuilderContext context)
     {
-        return Expression.Call(context.ExtensionType, "Where", context.LambdaScope.Parameter.Type.AsArray(), context.Source, predicate);
+        return Expression.Call(context.ExtensionType, "Where", [context.LambdaScope.Parameter.Type], context.Source, predicate);
     }
 
     public override Expression VisitHas(HasExpression expression, QueryClauseBuilderContext context)
@@ -67,8 +67,8 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
     private static MethodCallExpression AnyExtensionMethodCall(Type elementType, Expression source, Expression? predicate)
     {
         return predicate != null
-            ? Expression.Call(typeof(Enumerable), "Any", elementType.AsArray(), source, predicate)
-            : Expression.Call(typeof(Enumerable), "Any", elementType.AsArray(), source);
+            ? Expression.Call(typeof(Enumerable), "Any", [elementType], source, predicate)
+            : Expression.Call(typeof(Enumerable), "Any", [elementType], source);
     }
 
     public override Expression VisitIsType(IsTypeExpression expression, QueryClauseBuilderContext context)
@@ -125,7 +125,7 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
     private static Expression ContainsExtensionMethodCall(Expression collection, Expression value)
     {
-        return Expression.Call(typeof(Enumerable), "Contains", value.Type.AsArray(), collection, value);
+        return Expression.Call(typeof(Enumerable), "Contains", [value.Type], collection, value);
     }
 
     public override Expression VisitLogical(LogicalExpression expression, QueryClauseBuilderContext context)

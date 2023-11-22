@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using System.Reflection;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -42,7 +41,7 @@ internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object?>
                 }
 
                 string carStringId = (string)rightConstant.TypedValue;
-                return RewriteFilterOnCarStringIds(leftChain, carStringId.AsEnumerable());
+                return RewriteFilterOnCarStringIds(leftChain, [carStringId]);
             }
         }
 

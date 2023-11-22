@@ -1,6 +1,5 @@
 using System.Net;
 using FluentAssertions;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
@@ -916,7 +915,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
             dbContext.WorkItems.Add(existingWorkItem);
             await dbContext.SaveChangesAsync();
 
-            existingWorkItem.Children = existingWorkItem.AsList();
+            existingWorkItem.Children = [existingWorkItem];
             await dbContext.SaveChangesAsync();
         });
 

@@ -75,6 +75,6 @@ public class IncludeClauseBuilder : QueryClauseBuilder, IIncludeClauseBuilder
     {
         Expression navigationExpression = Expression.Constant(navigationPropertyPath);
 
-        return Expression.Call(typeof(EntityFrameworkQueryableExtensions), "Include", entityType.AsArray(), source, navigationExpression);
+        return Expression.Call(typeof(EntityFrameworkQueryableExtensions), "Include", [entityType], source, navigationExpression);
     }
 }

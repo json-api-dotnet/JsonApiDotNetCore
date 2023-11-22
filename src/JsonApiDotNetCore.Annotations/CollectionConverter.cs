@@ -74,7 +74,7 @@ internal sealed class CollectionConverter
             HashSet<IIdentifiable> resourceSet => resourceSet,
             IReadOnlyCollection<IIdentifiable> resourceCollection => resourceCollection,
             IEnumerable<IIdentifiable> resources => resources.ToList(),
-            IIdentifiable resource => resource.AsArray(),
+            IIdentifiable resource => [resource],
             _ => Array.Empty<IIdentifiable>()
         };
     }

@@ -1,6 +1,5 @@
 using FluentAssertions;
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources;
@@ -47,7 +46,7 @@ public sealed class FieldChainPatternInheritanceMatchTests
     public FieldChainPatternInheritanceMatchTests(ITestOutputHelper testOutputHelper)
     {
         var loggerProvider = new XUnitLoggerProvider(testOutputHelper, null, LogOutputFields.Message);
-        _loggerFactory = new LoggerFactory(loggerProvider.AsEnumerable());
+        _loggerFactory = new LoggerFactory([loggerProvider]);
 
         var options = new JsonApiOptions();
         _resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Base, long>().Add<DerivedQ, long>().Add<DerivedV, long>().Build();

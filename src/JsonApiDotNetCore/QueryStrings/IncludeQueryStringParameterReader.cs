@@ -72,6 +72,6 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
             ? new ExpressionInScope(null, _includeExpression)
             : new ExpressionInScope(null, IncludeExpression.Empty);
 
-        return expressionInScope.AsArray();
+        return [expressionInScope];
     }
 }

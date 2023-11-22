@@ -106,8 +106,8 @@ internal sealed class SelectStatementBuilder : QueryExpressionVisitor<TableAcces
         _selectorsPerTable[tableAccessor] = _selectShape switch
         {
             SelectShape.Columns => Array.Empty<SelectorNode>(),
-            SelectShape.Count => new CountSelectorNode(null).AsArray(),
-            _ => new OneSelectorNode(null).AsArray()
+            SelectShape.Count => [new CountSelectorNode(null)],
+            _ => [new OneSelectorNode(null)]
         };
     }
 

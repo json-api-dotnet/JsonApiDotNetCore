@@ -74,15 +74,21 @@ public class ExceptionHandler : IExceptionHandler
         IReadOnlyList<ErrorObject> errors = exception switch
         {
             JsonApiException jsonApiException => jsonApiException.Errors,
-            OperationCanceledException => new ErrorObject((HttpStatusCode)499)
-            {
-                Title = "Request execution was canceled."
-            }.AsArray(),
-            _ => new ErrorObject(HttpStatusCode.InternalServerError)
-            {
-                Title = "An unhandled error occurred while processing this request.",
-                Detail = exception.Message
-            }.AsArray()
+            OperationCanceledException =>
+            [
+                new ErrorObject((HttpStatusCode)499)
+                {
+                    Title = "Request execution was canceled."
+                }
+            ],
+            _ =>
+            [
+                new ErrorObject(HttpStatusCode.InternalServerError)
+                {
+                    Title = "An unhandled error occurred while processing this request.",
+                    Detail = exception.Message
+                }
+            ]
         };
 
         if (_options.IncludeExceptionStackTraceInErrors && exception is not InvalidModelStateException)
