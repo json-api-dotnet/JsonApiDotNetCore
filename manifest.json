@@ -1474,6 +1474,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.ConstantValueConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Queries.Parsing.ConstantValueConverter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Queries.Parsing.FilterParser.yml",
       "output": {
         ".html": {

@@ -9535,6 +9535,12 @@ references:
   commentId: N:JsonApiDotNetCore.Queries.Parsing
   fullName: JsonApiDotNetCore.Queries.Parsing
   nameWithType: JsonApiDotNetCore.Queries.Parsing
+- uid: JsonApiDotNetCore.Queries.Parsing.ConstantValueConverter
+  name: ConstantValueConverter
+  href: api/JsonApiDotNetCore.Queries.Parsing.ConstantValueConverter.html
+  commentId: T:JsonApiDotNetCore.Queries.Parsing.ConstantValueConverter
+  fullName: JsonApiDotNetCore.Queries.Parsing.ConstantValueConverter
+  nameWithType: ConstantValueConverter
 - uid: JsonApiDotNetCore.Queries.Parsing.FilterParser
   name: FilterParser
   href: api/JsonApiDotNetCore.Queries.Parsing.FilterParser.html
@@ -9560,6 +9566,19 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Parsing.FilterParser.New
   nameWithType: FilterParser.FilterParser
   nameWithType.vb: FilterParser.New
+- uid: JsonApiDotNetCore.Queries.Parsing.FilterParser.GetConstantValueConverterForType(System.Type)
+  name: GetConstantValueConverterForType(Type)
+  href: api/JsonApiDotNetCore.Queries.Parsing.FilterParser.html#JsonApiDotNetCore_Queries_Parsing_FilterParser_GetConstantValueConverterForType_System_Type_
+  commentId: M:JsonApiDotNetCore.Queries.Parsing.FilterParser.GetConstantValueConverterForType(System.Type)
+  fullName: JsonApiDotNetCore.Queries.Parsing.FilterParser.GetConstantValueConverterForType(System.Type)
+  nameWithType: FilterParser.GetConstantValueConverterForType(Type)
+- uid: JsonApiDotNetCore.Queries.Parsing.FilterParser.GetConstantValueConverterForType*
+  name: GetConstantValueConverterForType
+  href: api/JsonApiDotNetCore.Queries.Parsing.FilterParser.html#JsonApiDotNetCore_Queries_Parsing_FilterParser_GetConstantValueConverterForType_
+  commentId: Overload:JsonApiDotNetCore.Queries.Parsing.FilterParser.GetConstantValueConverterForType
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Parsing.FilterParser.GetConstantValueConverterForType
+  nameWithType: FilterParser.GetConstantValueConverterForType
 - uid: JsonApiDotNetCore.Queries.Parsing.FilterParser.InScopeOfResourceType(JsonApiDotNetCore.Configuration.ResourceType)
   name: InScopeOfResourceType(ResourceType)
   href: api/JsonApiDotNetCore.Queries.Parsing.FilterParser.html#JsonApiDotNetCore_Queries_Parsing_FilterParser_InScopeOfResourceType_JsonApiDotNetCore_Configuration_ResourceType_
