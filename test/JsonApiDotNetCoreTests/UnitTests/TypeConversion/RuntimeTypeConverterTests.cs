@@ -150,15 +150,9 @@ public sealed class RuntimeTypeConverterTests
         result.Should().Be(expectedValue);
     }
 
-    private interface IFace
-    {
-    }
+    private interface IFace;
 
-    private class BaseType : IFace
-    {
-    }
+    private class BaseType : IFace;
 
-    private sealed class DerivedType : BaseType
-    {
-    }
+    private sealed class DerivedType : BaseType;
 }

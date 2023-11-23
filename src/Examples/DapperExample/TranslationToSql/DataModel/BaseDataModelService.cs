@@ -16,7 +16,7 @@ namespace DapperExample.TranslationToSql.DataModel;
 /// </summary>
 public abstract class BaseDataModelService : IDataModelService
 {
-    private readonly Dictionary<ResourceType, IReadOnlyDictionary<string, ResourceFieldAttribute?>> _columnMappingsByType = new();
+    private readonly Dictionary<ResourceType, IReadOnlyDictionary<string, ResourceFieldAttribute?>> _columnMappingsByType = [];
 
     protected IResourceGraph ResourceGraph { get; }
 
@@ -54,7 +54,7 @@ public abstract class BaseDataModelService : IDataModelService
 
     private IReadOnlyDictionary<string, ResourceFieldAttribute?> ScanColumnMappings(ResourceType resourceType)
     {
-        Dictionary<string, ResourceFieldAttribute?> mappings = new();
+        Dictionary<string, ResourceFieldAttribute?> mappings = [];
 
         foreach (PropertyInfo property in resourceType.ClrType.GetProperties())
         {
@@ -139,7 +139,7 @@ public abstract class BaseDataModelService : IDataModelService
                 return null;
             }
 
-            PropertyInfo rightKeyProperty = rightResource.GetType().GetProperty(TableSourceNode.IdColumnName)!;
+            PropertyInfo rightKeyProperty = rightResource.GetClrType().GetProperty(TableSourceNode.IdColumnName)!;
             return rightKeyProperty.GetValue(rightResource);
         }
 
@@ -150,7 +150,7 @@ public abstract class BaseDataModelService : IDataModelService
     private static void AssertSameType(ResourceType resourceType, IIdentifiable resource)
     {
         Type declaredType = resourceType.ClrType;
-        Type instanceType = resource.GetType();
+        Type instanceType = resource.GetClrType();
 
         if (instanceType != declaredType)
         {

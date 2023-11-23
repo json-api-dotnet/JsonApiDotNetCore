@@ -14,8 +14,8 @@ namespace DapperExample.TranslationToSql.DataModel;
 /// </summary>
 public sealed class FromEntitiesDataModelService : BaseDataModelService
 {
-    private readonly Dictionary<RelationshipAttribute, RelationshipForeignKey> _foreignKeysByRelationship = new();
-    private readonly Dictionary<AttrAttribute, bool> _columnNullabilityPerAttribute = new();
+    private readonly Dictionary<RelationshipAttribute, RelationshipForeignKey> _foreignKeysByRelationship = [];
+    private readonly Dictionary<AttrAttribute, bool> _columnNullabilityPerAttribute = [];
     private string? _connectionString;
     private DatabaseProvider? _databaseProvider;
 

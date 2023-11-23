@@ -6,6 +6,4 @@ namespace DiscoveryTests;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource]
-public sealed class PrivateResource : Identifiable<int>
-{
-}
+public sealed class PrivateResource : Identifiable<int>;

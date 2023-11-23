@@ -214,9 +214,11 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"INSERT INTO ""People"" (""FirstName"", ""LastName"", ""AccountId"")
-VALUES (@p1, @p2, @p3)
-RETURNING ""Id"""));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                INSERT INTO "People" ("FirstName", "LastName", "AccountId")
+                VALUES (@p1, @p2, @p3)
+                RETURNING "Id"
+                """));
 
             command.Parameters.ShouldHaveCount(3);
             command.Parameters.Should().Contain("@p1", newOwner.FirstName);
@@ -226,9 +228,11 @@ RETURNING ""Id"""));
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT t1.""Id"", t1.""FirstName"", t1.""LastName""
-FROM ""People"" AS t1
-WHERE t1.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t1."FirstName", t1."LastName"
+                FROM "People" AS t1
+                WHERE t1."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", newOwnerId);
@@ -236,9 +240,11 @@ WHERE t1.""Id"" = @p1"));
 
         store.SqlCommands[2].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"INSERT INTO ""People"" (""FirstName"", ""LastName"", ""AccountId"")
-VALUES (@p1, @p2, @p3)
-RETURNING ""Id"""));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                INSERT INTO "People" ("FirstName", "LastName", "AccountId")
+                VALUES (@p1, @p2, @p3)
+                RETURNING "Id"
+                """));
 
             command.Parameters.ShouldHaveCount(3);
             command.Parameters.Should().Contain("@p1", newAssignee.FirstName);
@@ -248,9 +254,11 @@ RETURNING ""Id"""));
 
         store.SqlCommands[3].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT t1.""Id"", t1.""FirstName"", t1.""LastName""
-FROM ""People"" AS t1
-WHERE t1.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t1."FirstName", t1."LastName"
+                FROM "People" AS t1
+                WHERE t1."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", newAssigneeId);
@@ -258,9 +266,11 @@ WHERE t1.""Id"" = @p1"));
 
         store.SqlCommands[4].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"INSERT INTO ""Tags"" (""Name"", ""TodoItemId"")
-VALUES (@p1, @p2)
-RETURNING ""Id"""));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                INSERT INTO "Tags" ("Name", "TodoItemId")
+                VALUES (@p1, @p2)
+                RETURNING "Id"
+                """));
 
             command.Parameters.ShouldHaveCount(2);
             command.Parameters.Should().Contain("@p1", newTag.Name);
@@ -269,9 +279,11 @@ RETURNING ""Id"""));
 
         store.SqlCommands[5].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT t1.""Id"", t1.""Name""
-FROM ""Tags"" AS t1
-WHERE t1.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t1."Name"
+                FROM "Tags" AS t1
+                WHERE t1."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", newTagId);
@@ -279,10 +291,11 @@ WHERE t1.""Id"" = @p1"));
 
         store.SqlCommands[6].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(
-                @"INSERT INTO ""TodoItems"" (""Description"", ""Priority"", ""DurationInHours"", ""CreatedAt"", ""LastModifiedAt"", ""OwnerId"", ""AssigneeId"")
-VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7)
-RETURNING ""Id"""));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                INSERT INTO "TodoItems" ("Description", "Priority", "DurationInHours", "CreatedAt", "LastModifiedAt", "OwnerId", "AssigneeId")
+                VALUES (@p1, @p2, @p3, @p4, @p5, @p6, @p7)
+                RETURNING "Id"
+                """));
 
             command.Parameters.ShouldHaveCount(7);
             command.Parameters.Should().Contain("@p1", newTodoItem.Description);
@@ -296,10 +309,11 @@ RETURNING ""Id"""));
 
         store.SqlCommands[7].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(
-                @"SELECT t1.""Id"", t1.""CreatedAt"", t1.""Description"", t1.""DurationInHours"", t1.""LastModifiedAt"", t1.""Priority""
-FROM ""TodoItems"" AS t1
-WHERE t1.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
+                FROM "TodoItems" AS t1
+                WHERE t1."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", newTodoItemId);
@@ -307,11 +321,12 @@ WHERE t1.""Id"" = @p1"));
 
         store.SqlCommands[8].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(
-                @"SELECT t1.""Id"", t1.""CreatedAt"", t1.""Description"", t1.""DurationInHours"", t1.""LastModifiedAt"", t1.""Priority"", t2.""Id"", t2.""FirstName"", t2.""LastName""
-FROM ""TodoItems"" AS t1
-LEFT JOIN ""People"" AS t2 ON t1.""AssigneeId"" = t2.""Id""
-WHERE t1.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority", t2."Id", t2."FirstName", t2."LastName"
+                FROM "TodoItems" AS t1
+                LEFT JOIN "People" AS t2 ON t1."AssigneeId" = t2."Id"
+                WHERE t1."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", newTodoItemId);
@@ -319,9 +334,11 @@ WHERE t1.""Id"" = @p1"));
 
         store.SqlCommands[9].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""TodoItems""
-SET ""AssigneeId"" = @p1
-WHERE ""Id"" = @p2"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                UPDATE "TodoItems"
+                SET "AssigneeId" = @p1
+                WHERE "Id" = @p2
+                """));
 
             command.Parameters.ShouldHaveCount(2);
             command.Parameters.Should().Contain("@p1", newAssigneeId);
@@ -330,11 +347,12 @@ WHERE ""Id"" = @p2"));
 
         store.SqlCommands[10].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(
-                @"SELECT t1.""Id"", t1.""CreatedAt"", t1.""Description"", t1.""DurationInHours"", t1.""LastModifiedAt"", t1.""Priority"", t2.""Id"", t2.""Name""
-FROM ""TodoItems"" AS t1
-LEFT JOIN ""Tags"" AS t2 ON t1.""Id"" = t2.""TodoItemId""
-WHERE t1.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority", t2."Id", t2."Name"
+                FROM "TodoItems" AS t1
+                LEFT JOIN "Tags" AS t2 ON t1."Id" = t2."TodoItemId"
+                WHERE t1."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", newTodoItemId);
@@ -342,9 +360,11 @@ WHERE t1.""Id"" = @p1"));
 
         store.SqlCommands[11].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""TodoItems""
-SET ""LastModifiedAt"" = @p1
-WHERE ""Id"" = @p2"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                UPDATE "TodoItems"
+                SET "LastModifiedAt" = @p1
+                WHERE "Id" = @p2
+                """));
 
             command.Parameters.ShouldHaveCount(2);
             command.Parameters.Should().Contain("@p1", DapperTestContext.FrozenTime);
@@ -353,9 +373,11 @@ WHERE ""Id"" = @p2"));
 
         store.SqlCommands[12].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""Tags""
-SET ""TodoItemId"" = @p1
-WHERE ""Id"" = @p2"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                UPDATE "Tags"
+                SET "TodoItemId" = @p1
+                WHERE "Id" = @p2
+                """));
 
             command.Parameters.ShouldHaveCount(2);
             command.Parameters.Should().Contain("@p1", newTodoItemId);
@@ -364,10 +386,11 @@ WHERE ""Id"" = @p2"));
 
         store.SqlCommands[13].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(
-                @"SELECT t1.""Id"", t1.""CreatedAt"", t1.""Description"", t1.""DurationInHours"", t1.""LastModifiedAt"", t1.""Priority""
-FROM ""TodoItems"" AS t1
-WHERE t1.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
+                FROM "TodoItems" AS t1
+                WHERE t1."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", newTodoItemId);
@@ -375,8 +398,10 @@ WHERE t1.""Id"" = @p1"));
 
         store.SqlCommands[14].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"DELETE FROM ""People""
-WHERE ""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                DELETE FROM "People"
+                WHERE "Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", newAssigneeId);
@@ -396,10 +421,7 @@ WHERE ""Id"" = @p1"));
 
         const string personLocalId = "new-person";
 
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            await _testContext.ClearAllTablesAsync(dbContext);
-        });
+        await _testContext.RunOnDatabaseAsync(dbContext => _testContext.ClearAllTablesAsync(dbContext));
 
         var requestBody = new
         {
@@ -466,9 +488,11 @@ WHERE ""Id"" = @p1"));
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"INSERT INTO ""People"" (""FirstName"", ""LastName"", ""AccountId"")
-VALUES (@p1, @p2, @p3)
-RETURNING ""Id"""));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                INSERT INTO "People" ("FirstName", "LastName", "AccountId")
+                VALUES (@p1, @p2, @p3)
+                RETURNING "Id"
+                """));
 
             command.Parameters.ShouldHaveCount(3);
             command.Parameters.Should().Contain("@p1", null);
@@ -478,9 +502,11 @@ RETURNING ""Id"""));
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT t1.""Id"", t1.""FirstName"", t1.""LastName""
-FROM ""People"" AS t1
-WHERE t1.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t1."FirstName", t1."LastName"
+                FROM "People" AS t1
+                WHERE t1."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.ShouldContainKey("@p1").With(value => value.ShouldNotBeNull());
@@ -488,11 +514,12 @@ WHERE t1.""Id"" = @p1"));
 
         store.SqlCommands[2].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(
-                @"SELECT t1.""Id"", t1.""FirstName"", t1.""LastName"", t2.""Id"", t2.""CreatedAt"", t2.""Description"", t2.""DurationInHours"", t2.""LastModifiedAt"", t2.""Priority""
-FROM ""People"" AS t1
-LEFT JOIN ""TodoItems"" AS t2 ON t1.""Id"" = t2.""AssigneeId""
-WHERE t1.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"
+                FROM "People" AS t1
+                LEFT JOIN "TodoItems" AS t2 ON t1."Id" = t2."AssigneeId"
+                WHERE t1."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.ShouldContainKey("@p1").With(value => value.ShouldNotBeNull());
@@ -500,9 +527,11 @@ WHERE t1.""Id"" = @p1"));
 
         store.SqlCommands[3].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""TodoItems""
-SET ""AssigneeId"" = @p1
-WHERE ""Id"" = @p2"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                UPDATE "TodoItems"
+                SET "AssigneeId" = @p1
+                WHERE "Id" = @p2
+                """));
 
             command.Parameters.ShouldHaveCount(2);
             command.Parameters.ShouldContainKey("@p1").With(value => value.ShouldNotBeNull());
@@ -511,9 +540,11 @@ WHERE ""Id"" = @p2"));
 
         store.SqlCommands[4].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT t1.""Id""
-FROM ""TodoItems"" AS t1
-WHERE t1.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id"
+                FROM "TodoItems" AS t1
+                WHERE t1."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", unknownTodoItemId);

@@ -5,10 +5,12 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.OpenApi;
 using JsonApiDotNetCoreExample.Data;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+#if NET6_0
+using Microsoft.AspNetCore.Authentication;
+#endif
 
 [assembly: ExcludeFromCodeCoverage]
 
@@ -46,7 +48,11 @@ static void ConfigureServices(WebApplicationBuilder builder)
 {
     using IDisposable _ = CodeTimingSessionManager.Current.Measure("Configure services");
 
+#if NET6_0
     builder.Services.TryAddSingleton<ISystemClock, SystemClock>();
+#else
+    builder.Services.TryAddSingleton(TimeProvider.System);
+#endif
 
     builder.Services.AddDbContext<AppDbContext>(options =>
     {

@@ -10,8 +10,8 @@ internal sealed class SumFilterParser : FilterParser
 {
     private static readonly FieldChainPattern SingleToManyRelationshipChain = FieldChainPattern.Parse("M");
 
-    private static readonly HashSet<Type> NumericTypes = new(new[]
-    {
+    private static readonly HashSet<Type> NumericTypes =
+    [
         typeof(sbyte),
         typeof(byte),
         typeof(short),
@@ -23,7 +23,7 @@ internal sealed class SumFilterParser : FilterParser
         typeof(float),
         typeof(double),
         typeof(decimal)
-    });
+    ];
 
     public SumFilterParser(IResourceFactory resourceFactory)
         : base(resourceFactory)

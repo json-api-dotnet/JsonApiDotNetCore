@@ -225,10 +225,7 @@ public sealed class AcceptHeaderTests : IClassFixture<IntegrationTestContext<Tes
         const string route = "/operations";
         const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
-        Action<HttpRequestHeaders> setRequestHeaders = headers =>
-        {
-            headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType));
-        };
+        Action<HttpRequestHeaders> setRequestHeaders = headers => headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType));
 
         // Act
         (HttpResponseMessage httpResponse, Document responseDocument) =

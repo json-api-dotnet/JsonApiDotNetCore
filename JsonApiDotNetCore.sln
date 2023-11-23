@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		CSharpGuidelinesAnalyzer.config = CSharpGuidelinesAnalyzer.config
 		Directory.Build.props = Directory.Build.props
 		tests.runsettings = tests.runsettings
+		package-versions.props = package-versions.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{026FBC6C-AF76-4568-9B87-EC73457899FD}"

@@ -10,6 +10,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
 using Xunit;
 
+// Workaround for Resharper bug at https://youtrack.jetbrains.com/issue/RSRP-494909/Breaking-UsedImplicitly-and-PublicAPI-on-types-no-longer-respected.
+// ReSharper disable PropertyCanBeMadeInitOnly.Local
+
 namespace JsonApiDotNetCoreTests.UnitTests.ResourceGraph;
 
 public sealed class ResourceGraphBuilderTests
@@ -263,11 +266,11 @@ public sealed class ResourceGraphBuilderTests
         builder.Add(typeof(NonResource));
 
         // Assert
-        loggerFactory.Logger.Messages.ShouldHaveCount(1);
+        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        logLines.ShouldHaveCount(1);
 
-        FakeLoggerFactory.FakeLogMessage message = loggerFactory.Logger.Messages.ElementAt(0);
-        message.LogLevel.Should().Be(LogLevel.Warning);
-        message.Text.Should().Be($"Skipping: Type '{typeof(NonResource)}' does not implement 'IIdentifiable'. Add [NoResource] to suppress this warning.");
+        logLines[0].Should().Be(
+            $"[WARNING] Skipping: Type '{typeof(NonResource)}' does not implement 'IIdentifiable'. Add [NoResource] to suppress this warning.");
     }
 
     [Fact]
@@ -282,7 +285,8 @@ public sealed class ResourceGraphBuilderTests
         builder.Add(typeof(NonResourceWithSuppression));
 
         // Assert
-        loggerFactory.Logger.Messages.Should().BeEmpty();
+        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        logLines.Should().BeEmpty();
     }
 
     [Fact]
@@ -297,11 +301,10 @@ public sealed class ResourceGraphBuilderTests
         builder.Add<ResourceWithHasOneRelationship, int>();
 
         // Assert
-        loggerFactory.Logger.Messages.ShouldHaveCount(1);
+        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        logLines.ShouldHaveCount(1);
 
-        FakeLoggerFactory.FakeLogMessage message = loggerFactory.Logger.Messages.ElementAt(0);
-        message.LogLevel.Should().Be(LogLevel.Warning);
-        message.Text.Should().Be($"Type '{typeof(ResourceWithHasOneRelationship)}' does not contain any attributes.");
+        logLines[0].Should().Be($"[WARNING] Type '{typeof(ResourceWithHasOneRelationship)}' does not contain any attributes.");
     }
 
     [Fact]
@@ -316,11 +319,10 @@ public sealed class ResourceGraphBuilderTests
         builder.Build();
 
         // Assert
-        loggerFactory.Logger.Messages.ShouldHaveCount(1);
+        IReadOnlyList<string> logLines = loggerFactory.Logger.GetLines();
+        logLines.ShouldHaveCount(1);
 
-        FakeLoggerFactory.FakeLogMessage message = loggerFactory.Logger.Messages.ElementAt(0);
-        message.LogLevel.Should().Be(LogLevel.Warning);
-        message.Text.Should().Be("The resource graph is empty.");
+        logLines[0].Should().Be("[WARNING] The resource graph is empty.");
     }
 
     [Fact]
@@ -429,15 +431,11 @@ public sealed class ResourceGraphBuilderTests
     }
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    private sealed class NonResource
-    {
-    }
+    private sealed class NonResource;
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     [NoResource]
-    private sealed class NonResourceWithSuppression
-    {
-    }
+    private sealed class NonResourceWithSuppression;
 
     // ReSharper disable once ClassCanBeSealed.Global
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

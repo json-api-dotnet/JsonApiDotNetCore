@@ -57,7 +57,12 @@ public class OrderClauseBuilder : QueryClauseBuilder, IOrderClauseBuilder
     private static Expression ExtensionMethodCall(Expression source, string operationName, Type keyType, LambdaExpression keySelector,
         QueryClauseBuilderContext context)
     {
-        Type[] typeArguments = ArrayFactory.Create(context.LambdaScope.Parameter.Type, keyType);
+        Type[] typeArguments =
+        [
+            context.LambdaScope.Parameter.Type,
+            keyType
+        ];
+
         return Expression.Call(context.ExtensionType, operationName, typeArguments, source, keySelector);
     }
 }

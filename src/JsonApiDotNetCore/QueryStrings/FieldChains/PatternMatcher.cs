@@ -186,7 +186,7 @@ internal sealed class PatternMatcher
     /// </summary>
     private HashSet<ResourceFieldAttribute> LookupFields(ResourceType? resourceType, string publicName)
     {
-        HashSet<ResourceFieldAttribute> fields = new();
+        HashSet<ResourceFieldAttribute> fields = [];
 
         if (resourceType != null)
         {

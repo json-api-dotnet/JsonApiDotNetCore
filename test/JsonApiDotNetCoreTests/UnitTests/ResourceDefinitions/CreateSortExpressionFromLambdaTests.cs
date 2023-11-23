@@ -11,6 +11,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
 using Xunit;
 
+// Workaround for Resharper bug at https://youtrack.jetbrains.com/issue/RSRP-494909/Breaking-UsedImplicitly-and-PublicAPI-on-types-no-longer-respected.
+// ReSharper disable PropertyCanBeMadeInitOnly.Local
+
 namespace JsonApiDotNetCoreTests.UnitTests.ResourceDefinitions;
 
 public sealed class CreateSortExpressionFromLambdaTests
@@ -24,24 +27,23 @@ public sealed class CreateSortExpressionFromLambdaTests
         var resourceDefinition = new WrapperResourceDefinition<FileEntry, long>(resourceGraph);
 
         // Act
-        SortExpression expression = resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<FileEntry, long>.PropertySortOrder
-        {
+        SortExpression expression = resourceDefinition.GetSortExpressionFromLambda([
             (file => file.Content, ListSortDirection.Descending),
             (file => file.Name, ListSortDirection.Ascending),
             (file => file.Length, ListSortDirection.Ascending),
             (file => file.Parent.Name, ListSortDirection.Ascending),
             (file => file.Parent.Parent.Name, ListSortDirection.Ascending)
-        });
+        ]);
 
         // Assert
         string[] expected =
-        {
+        [
             "-fileEntries:content",
             "fileEntries:name",
             "fileEntries:length",
             "fileSystemEntries:parent.fileSystemEntries:name",
             "fileSystemEntries:parent.fileSystemEntries:parent.fileSystemEntries:name"
-        };
+        ];
 
         expression.ToFullString().Should().Be(string.Join(',', expected));
     }
@@ -55,25 +57,24 @@ public sealed class CreateSortExpressionFromLambdaTests
         var resourceDefinition = new WrapperResourceDefinition<DirectoryEntry, long>(resourceGraph);
 
         // Act
-        SortExpression expression = resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<DirectoryEntry, long>.PropertySortOrder
-        {
+        SortExpression expression = resourceDefinition.GetSortExpressionFromLambda([
             (directory => directory.Subdirectories.Count, ListSortDirection.Ascending),
             // ReSharper disable once UseCollectionCountProperty
             (directory => directory.Files.Count(), ListSortDirection.Descending),
             (directory => directory.Children.Count, ListSortDirection.Ascending),
             (directory => directory.Parent.Children.Count, ListSortDirection.Ascending),
             (directory => directory.Parent.Parent.Children.Count, ListSortDirection.Ascending)
-        });
+        ]);
 
         // Assert
         string[] expected =
-        {
+        [
             "count(directoryEntries:subdirectories)",
             "-count(directoryEntries:files)",
             "count(fileSystemEntries:children)",
             "count(fileSystemEntries:parent.fileSystemEntries:children)",
             "count(fileSystemEntries:parent.fileSystemEntries:parent.fileSystemEntries:children)"
-        };
+        ];
 
         expression.ToFullString().Should().Be(string.Join(',', expected));
     }
@@ -87,24 +88,23 @@ public sealed class CreateSortExpressionFromLambdaTests
         var resourceDefinition = new WrapperResourceDefinition<FileSystemEntry, long>(resourceGraph);
 
         // Act
-        SortExpression expression = resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<FileSystemEntry, long>.PropertySortOrder
-        {
+        SortExpression expression = resourceDefinition.GetSortExpressionFromLambda([
             (entry => ((FileEntry)entry).Content, ListSortDirection.Ascending),
             (entry => (entry.Parent as FileEntry)!.Content, ListSortDirection.Ascending),
             (entry => ((DirectoryEntry)entry).Subdirectories.Count, ListSortDirection.Ascending),
             (entry => ((DirectoryEntry)((FileEntry)entry).Parent).Files.Count, ListSortDirection.Ascending),
             (entry => ((DirectoryEntry)(FileSystemEntry)(FileEntry)entry).Name, ListSortDirection.Descending)
-        });
+        ]);
 
         // Assert
         string[] expected =
-        {
+        [
             "fileEntries:content",
             "fileSystemEntries:parent.fileEntries:content",
             "count(directoryEntries:subdirectories)",
             "count(fileSystemEntries:parent.directoryEntries:files)",
             "-directoryEntries:name"
-        };
+        ];
 
         expression.ToFullString().Should().Be(string.Join(',', expected));
     }
@@ -118,10 +118,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         var resourceDefinition = new WrapperResourceDefinition<FileEntry, long>(resourceGraph);
 
         // Act
-        Action action = () => resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<FileEntry, long>.PropertySortOrder
-        {
-            (file => file.IsCompressed, ListSortDirection.Ascending)
-        });
+        Action action = () => resourceDefinition.GetSortExpressionFromLambda([(file => file.IsCompressed, ListSortDirection.Ascending)]);
 
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
@@ -143,10 +140,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         var resourceDefinition = new WrapperResourceDefinition<FileEntry, long>(resourceGraph);
 
         // Act
-        Action action = () => resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<FileEntry, long>.PropertySortOrder
-        {
-            (file => file.Content.Length, ListSortDirection.Ascending)
-        });
+        Action action = () => resourceDefinition.GetSortExpressionFromLambda([(file => file.Content.Length, ListSortDirection.Ascending)]);
 
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
@@ -168,10 +162,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         var resourceDefinition = new WrapperResourceDefinition<FileEntry, long>(resourceGraph);
 
         // Act
-        Action action = () => resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<FileEntry, long>.PropertySortOrder
-        {
-            (file => file.ParentDirectory!.Name, ListSortDirection.Ascending)
-        });
+        Action action = () => resourceDefinition.GetSortExpressionFromLambda([(file => file.ParentDirectory!.Name, ListSortDirection.Ascending)]);
 
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
@@ -193,10 +184,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         var resourceDefinition = new WrapperResourceDefinition<FileSystemEntry, long>(resourceGraph);
 
         // Act
-        Action action = () => resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<FileSystemEntry, long>.PropertySortOrder
-        {
-            (entry => ((FileEntry)entry).Content, ListSortDirection.Ascending)
-        });
+        Action action = () => resourceDefinition.GetSortExpressionFromLambda([(entry => ((FileEntry)entry).Content, ListSortDirection.Ascending)]);
 
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
@@ -218,10 +206,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         var resourceDefinition = new WrapperResourceDefinition<DirectoryEntry, long>(resourceGraph);
 
         // Act
-        Action action = () => resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<DirectoryEntry, long>.PropertySortOrder
-        {
-            (directory => directory.Files.Count(_ => true), ListSortDirection.Ascending)
-        });
+        Action action = () => resourceDefinition.GetSortExpressionFromLambda([(directory => directory.Files.Count(_ => true), ListSortDirection.Ascending)]);
 
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
@@ -243,10 +228,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         var resourceDefinition = new WrapperResourceDefinition<FileSystemEntry, long>(resourceGraph);
 
         // Act
-        Action action = () => resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<FileSystemEntry, long>.PropertySortOrder
-        {
-            (_ => null, ListSortDirection.Ascending)
-        });
+        Action action = () => resourceDefinition.GetSortExpressionFromLambda([(_ => null, ListSortDirection.Ascending)]);
 
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
@@ -267,10 +249,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         var resourceDefinition = new WrapperResourceDefinition<FileSystemEntry, long>(resourceGraph);
 
         // Act
-        Action action = () => resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<FileSystemEntry, long>.PropertySortOrder
-        {
-            (entry => entry, ListSortDirection.Ascending)
-        });
+        Action action = () => resourceDefinition.GetSortExpressionFromLambda([(entry => entry, ListSortDirection.Ascending)]);
 
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
@@ -291,10 +270,8 @@ public sealed class CreateSortExpressionFromLambdaTests
         var resourceDefinition = new WrapperResourceDefinition<FileEntry, long>(resourceGraph);
 
         // Act
-        Action action = () => resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<FileEntry, long>.PropertySortOrder
-        {
-            (file => file.IsCompressed ? file.Content : file.Length, ListSortDirection.Ascending)
-        });
+        Action action = () =>
+            resourceDefinition.GetSortExpressionFromLambda([(file => file.IsCompressed ? file.Content : file.Length, ListSortDirection.Ascending)]);
 
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
@@ -315,10 +292,7 @@ public sealed class CreateSortExpressionFromLambdaTests
         var resourceDefinition = new WrapperResourceDefinition<FileEntry, long>(resourceGraph);
 
         // Act
-        Action action = () => resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<FileEntry, long>.PropertySortOrder
-        {
-            (file => file.Name + ":" + file.Content, ListSortDirection.Ascending)
-        });
+        Action action = () => resourceDefinition.GetSortExpressionFromLambda([(file => $"{file.Name}:{file.Content}", ListSortDirection.Ascending)]);
 
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;
@@ -339,14 +313,13 @@ public sealed class CreateSortExpressionFromLambdaTests
         var resourceDefinition = new WrapperResourceDefinition<FileEntry, long>(resourceGraph);
 
         // Act
-        Action action = () => resourceDefinition.GetSortExpressionFromLambda(new JsonApiResourceDefinition<FileEntry, long>.PropertySortOrder
-        {
+        Action action = () => resourceDefinition.GetSortExpressionFromLambda([
             (file => new
             {
                 file.Length,
                 file.Content
             }, ListSortDirection.Ascending)
-        });
+        ]);
 
         // Assert
         JsonApiException exception = action.Should().ThrowExactly<JsonApiException>().Which;

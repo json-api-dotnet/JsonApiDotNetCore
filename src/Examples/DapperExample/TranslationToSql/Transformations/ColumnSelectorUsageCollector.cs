@@ -8,7 +8,7 @@ namespace DapperExample.TranslationToSql.Transformations;
 /// </summary>
 internal sealed class ColumnSelectorUsageCollector : SqlTreeNodeVisitor<ColumnVisitMode, object?>
 {
-    private readonly HashSet<ColumnNode> _usedColumns = new();
+    private readonly HashSet<ColumnNode> _usedColumns = [];
     private readonly ILogger<ColumnSelectorUsageCollector> _logger;
 
     public ISet<ColumnNode> UsedColumns => _usedColumns;

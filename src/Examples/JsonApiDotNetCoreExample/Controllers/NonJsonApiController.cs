@@ -8,10 +8,7 @@ public sealed class NonJsonApiController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        string[] result =
-        {
-            "Welcome!"
-        };
+        string[] result = ["Welcome!"];
 
         return Ok(result);
     }

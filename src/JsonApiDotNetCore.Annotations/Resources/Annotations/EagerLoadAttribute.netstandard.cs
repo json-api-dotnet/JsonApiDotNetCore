@@ -7,6 +7,4 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Property)]
-public sealed class EagerLoadAttribute : Attribute
-{
-}
+public sealed class EagerLoadAttribute : Attribute;
