@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <!-- Published dependencies (only update on major version change) -->
-    <CodeAnalysisFrozenVersion>4.1.0</CodeAnalysisFrozenVersion>
+    <CodeAnalysisFrozenVersion>4.8.0</CodeAnalysisFrozenVersion>
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
 
