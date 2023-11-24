@@ -12,20 +12,20 @@ namespace DapperExample.Repositories;
 internal sealed class ResultSetMapper<TResource, TId>
     where TResource : class, IIdentifiable<TId>
 {
-    private readonly List<Type> _joinObjectTypes = new();
+    private readonly List<Type> _joinObjectTypes = [];
 
     // For each object type, we keep a map of ID/instance pairs.
     // Note we don't do full bidirectional relationship fix-up; this just avoids duplicate instances.
-    private readonly Dictionary<Type, Dictionary<object, object>> _resourceByTypeCache = new();
+    private readonly Dictionary<Type, Dictionary<object, object>> _resourceByTypeCache = [];
 
     // Optimization to avoid unneeded calls to expensive Activator.CreateInstance() method, which is needed multiple times per row.
-    private readonly Dictionary<Type, object?> _defaultValueByTypeCache = new();
+    private readonly Dictionary<Type, object?> _defaultValueByTypeCache = [];
 
     // Used to determine where in the tree of included relationships a join object belongs to.
     private readonly Dictionary<IncludeElementExpression, int> _includeElementToJoinObjectArrayIndexLookup = new(ReferenceEqualityComparer.Instance);
 
     // The return value of the mapping process.
-    private readonly List<TResource> _primaryResourcesInOrder = new();
+    private readonly List<TResource> _primaryResourcesInOrder = [];
 
     // The included relationships for which an INNER/LEFT JOIN statement was produced, which we're mapping.
     private readonly IncludeExpression _include;
@@ -36,7 +36,7 @@ internal sealed class ResultSetMapper<TResource, TId>
     {
         _include = include ?? IncludeExpression.Empty;
         _joinObjectTypes.Add(typeof(TResource));
-        _resourceByTypeCache[typeof(TResource)] = new Dictionary<object, object>();
+        _resourceByTypeCache[typeof(TResource)] = [];
 
         var walker = new IncludeElementWalker(_include);
         int index = 1;
@@ -44,7 +44,7 @@ internal sealed class ResultSetMapper<TResource, TId>
         foreach (IncludeElementExpression includeElement in walker.BreadthFirstEnumerate())
         {
             _joinObjectTypes.Add(includeElement.Relationship.RightType.ClrType);
-            _resourceByTypeCache[includeElement.Relationship.RightType.ClrType] = new Dictionary<object, object>();
+            _resourceByTypeCache[includeElement.Relationship.RightType.ClrType] = [];
             _includeElementToJoinObjectArrayIndexLookup[includeElement] = index;
 
             index++;

@@ -66,8 +66,10 @@ public sealed class DeleteResourceTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"DELETE FROM ""TodoItems""
-WHERE ""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                DELETE FROM "TodoItems"
+                WHERE "Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTodoItem.Id);
@@ -103,8 +105,10 @@ WHERE ""Id"" = @p1"));
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"DELETE FROM ""TodoItems""
-WHERE ""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                DELETE FROM "TodoItems"
+                WHERE "Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", unknownTodoItemId);
@@ -112,9 +116,11 @@ WHERE ""Id"" = @p1"));
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT t1.""Id""
-FROM ""TodoItems"" AS t1
-WHERE t1.""Id"" = @p1"));
+            command.Statement.Should().Be(_testContext.AdaptSql("""
+                SELECT t1."Id"
+                FROM "TodoItems" AS t1
+                WHERE t1."Id" = @p1
+                """));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", unknownTodoItemId);

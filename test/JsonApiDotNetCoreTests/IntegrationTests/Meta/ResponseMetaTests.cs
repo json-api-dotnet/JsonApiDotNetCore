@@ -19,10 +19,7 @@ public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<Tes
         testContext.UseController<ProductFamiliesController>();
         testContext.UseController<SupportTicketsController>();
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddSingleton<IResponseMeta, SupportResponseMeta>();
-        });
+        testContext.ConfigureServices(services => services.AddSingleton<IResponseMeta, SupportResponseMeta>());
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeTotalResourceCount = false;
@@ -32,10 +29,7 @@ public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<Tes
     public async Task Returns_top_level_meta()
     {
         // Arrange
-        await _testContext.RunOnDatabaseAsync(async dbContext =>
-        {
-            await dbContext.ClearTableAsync<SupportTicket>();
-        });
+        await _testContext.RunOnDatabaseAsync(dbContext => dbContext.ClearTableAsync<SupportTicket>());
 
         const string route = "/supportTickets";
 
@@ -45,22 +39,24 @@ public sealed class ResponseMetaTests : IClassFixture<IntegrationTestContext<Tes
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson(@"{
-  ""links"": {
-    ""self"": ""http://localhost/supportTickets"",
-    ""first"": ""http://localhost/supportTickets""
-  },
-  ""data"": [],
-  ""meta"": {
-    ""license"": ""MIT"",
-    ""projectUrl"": ""https://github.com/json-api-dotnet/JsonApiDotNetCore/"",
-    ""versions"": [
-      ""v4.0.0"",
-      ""v3.1.0"",
-      ""v2.5.2"",
-      ""v1.3.1""
-    ]
-  }
-}");
+        responseDocument.Should().BeJson("""
+            {
+              "links": {
+                "self": "http://localhost/supportTickets",
+                "first": "http://localhost/supportTickets"
+              },
+              "data": [],
+              "meta": {
+                "license": "MIT",
+                "projectUrl": "https://github.com/json-api-dotnet/JsonApiDotNetCore/",
+                "versions": [
+                  "v4.0.0",
+                  "v3.1.0",
+                  "v2.5.2",
+                  "v1.3.1"
+                ]
+              }
+            }
+            """);
     }
 }

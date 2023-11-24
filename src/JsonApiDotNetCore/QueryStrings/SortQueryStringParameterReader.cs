@@ -17,7 +17,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
 {
     private readonly IQueryStringParameterScopeParser _scopeParser;
     private readonly ISortParser _sortParser;
-    private readonly List<ExpressionInScope> _constraints = new();
+    private readonly List<ExpressionInScope> _constraints = [];
 
     public bool AllowEmptyValue => false;
 
@@ -45,7 +45,7 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
     {
         ArgumentGuard.NotNullNorEmpty(parameterName);
 
-        bool isNested = parameterName.StartsWith("sort[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
+        bool isNested = parameterName.StartsWith("sort[", StringComparison.Ordinal) && parameterName.EndsWith(']');
         return parameterName == "sort" || isNested;
     }
 
@@ -59,16 +59,12 @@ public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQ
             ResourceFieldChainExpression? scope = GetScope(parameterName);
             parameterNameIsValid = true;
 
-            // Workaround for https://youtrack.jetbrains.com/issue/RSRP-493256/Incorrect-possible-null-assignment
-            // ReSharper disable once AssignNullToNotNullAttribute
             SortExpression sort = GetSort(parameterValue.ToString(), scope);
             var expressionInScope = new ExpressionInScope(scope, sort);
             _constraints.Add(expressionInScope);
         }
         catch (QueryParseException exception)
         {
-            // Workaround for https://youtrack.jetbrains.com/issue/RSRP-493256/Incorrect-possible-null-assignment
-            // ReSharper disable once AssignNullToNotNullAttribute
             string specificMessage = exception.GetMessageWithPosition(parameterNameIsValid ? parameterValue.ToString() : parameterName);
             throw new InvalidQueryStringParameterException(parameterName, "The specified sort is invalid.", specificMessage, exception);
         }

@@ -19,9 +19,9 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
         _lazySwaggerDocument = new Lazy<Task<JsonElement>>(CreateSwaggerDocumentAsync, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    internal async Task<JsonElement> GetSwaggerDocumentAsync()
+    internal Task<JsonElement> GetSwaggerDocumentAsync()
     {
-        return await _lazySwaggerDocument.Value;
+        return _lazySwaggerDocument.Value;
     }
 
     private async Task<JsonElement> CreateSwaggerDocumentAsync()
@@ -63,9 +63,9 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
         return jsonDocument.RootElement.Clone();
     }
 
-    private static async Task WriteToDiskAsync(string path, JsonElement jsonElement)
+    private static Task WriteToDiskAsync(string path, JsonElement jsonElement)
     {
         string contents = jsonElement.ToString();
-        await File.WriteAllTextAsync(path, contents);
+        return File.WriteAllTextAsync(path, contents);
     }
 }

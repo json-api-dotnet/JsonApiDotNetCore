@@ -11,7 +11,7 @@ public abstract class MessagingGroupDefinition : HitCountingResourceDefinition<D
 {
     private readonly DbSet<DomainUser> _userSet;
     private readonly DbSet<DomainGroup> _groupSet;
-    private readonly List<OutgoingMessage> _pendingMessages = new();
+    private readonly List<OutgoingMessage> _pendingMessages = [];
 
     private string? _beforeGroupName;
 
@@ -172,8 +172,8 @@ public abstract class MessagingGroupDefinition : HitCountingResourceDefinition<D
 
     protected abstract Task FlushMessageAsync(OutgoingMessage message, CancellationToken cancellationToken);
 
-    protected virtual async Task<DomainGroup?> GetGroupToDeleteAsync(Guid groupId, CancellationToken cancellationToken)
+    protected virtual Task<DomainGroup?> GetGroupToDeleteAsync(Guid groupId, CancellationToken cancellationToken)
     {
-        return await _groupSet.Include(group => group.Users).FirstOrDefaultAsync(group => group.Id == groupId, cancellationToken);
+        return _groupSet.Include(group => group.Users).FirstOrDefaultAsync(group => group.Id == groupId, cancellationToken);
     }
 }

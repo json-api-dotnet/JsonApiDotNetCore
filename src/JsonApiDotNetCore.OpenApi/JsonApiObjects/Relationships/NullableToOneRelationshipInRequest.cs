@@ -6,6 +6,4 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 internal sealed class NullableToOneRelationshipInRequest<TResource> : NullableSingleData<ResourceIdentifierObject<TResource>>
-    where TResource : IIdentifiable
-{
-}
+    where TResource : IIdentifiable;

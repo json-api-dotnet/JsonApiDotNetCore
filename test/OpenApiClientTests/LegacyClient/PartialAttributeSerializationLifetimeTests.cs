@@ -31,24 +31,26 @@ public sealed class PartialAttributeSerializationLifetimeTests
         using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
             airplane => airplane.AirtimeInHours))
         {
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
+            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
         }
 
         wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
+        _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId + @""",
-    ""attributes"": {
-      ""is-in-maintenance"": false
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId}}",
+                "attributes": {
+                  "is-in-maintenance": false
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -76,26 +78,28 @@ public sealed class PartialAttributeSerializationLifetimeTests
         using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
             airplane => airplane.AirtimeInHours))
         {
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
+            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
 
             wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
             requestDocument.Data.Attributes.AirtimeInHours = null;
 
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
+            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId + @""",
-    ""attributes"": {
-      ""airtime-in-hours"": null
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId}}",
+                "attributes": {
+                  "airtime-in-hours": null
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -138,19 +142,21 @@ public sealed class PartialAttributeSerializationLifetimeTests
             }
 
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId2, null, requestDocument2));
+            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId2, null, requestDocument2));
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId2 + @""",
-    ""attributes"": {
-      ""is-in-maintenance"": false
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId2}}",
+                "attributes": {
+                  "is-in-maintenance": false
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -181,19 +187,21 @@ public sealed class PartialAttributeSerializationLifetimeTests
             requestDocument.Data.Attributes.IsInMaintenance = false;
 
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
+            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId + @""",
-    ""attributes"": {
-      ""is-in-maintenance"": false
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId}}",
+                "attributes": {
+                  "is-in-maintenance": false
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -231,20 +239,22 @@ public sealed class PartialAttributeSerializationLifetimeTests
                 airplane => airplane.AirtimeInHours))
             {
                 // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId1, null, requestDocument1));
+                _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId1, null, requestDocument1));
             }
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId1 + @""",
-    ""attributes"": {
-      ""is-in-maintenance"": false
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId1}}",
+                "attributes": {
+                  "is-in-maintenance": false
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -269,7 +279,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
         using (apiClient.WithPartialAttributeSerialization<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
             airplane => airplane.AirtimeInHours))
         {
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId1, null, requestDocument1));
+            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId1, null, requestDocument1));
         }
 
         const string airplaneId2 = "DJy1u";
@@ -293,20 +303,22 @@ public sealed class PartialAttributeSerializationLifetimeTests
             airplane => airplane.SerialNumber))
         {
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId2, null, requestDocument2));
+            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId2, null, requestDocument2));
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId2 + @""",
-    ""attributes"": {
-      ""serial-number"": null,
-      ""manufactured-in-city"": ""Everett""
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId2}}",
+                "attributes": {
+                  "serial-number": null,
+                  "manufactured-in-city": "Everett"
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -331,7 +343,7 @@ public sealed class PartialAttributeSerializationLifetimeTests
         using (apiClient.WithPartialAttributeSerialization<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument1,
             airplane => airplane.AirtimeInHours))
         {
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(null, requestDocument1));
+            _ = await ApiResponse.TranslateAsync(() => apiClient.PostAirplaneAsync(null, requestDocument1));
         }
 
         const string airplaneId = "DJy1u";
@@ -355,20 +367,22 @@ public sealed class PartialAttributeSerializationLifetimeTests
             airplane => airplane.SerialNumber))
         {
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument2));
+            _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument2));
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId + @""",
-    ""attributes"": {
-      ""serial-number"": null,
-      ""manufactured-in-city"": ""Everett""
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId}}",
+                "attributes": {
+                  "serial-number": null,
+                  "manufactured-in-city": "Everett"
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -409,20 +423,22 @@ public sealed class PartialAttributeSerializationLifetimeTests
                 airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))
             {
                 // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId2, null, requestDocument2));
+                _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId2, null, requestDocument2));
             }
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId2 + @""",
-    ""attributes"": {
-      ""airtime-in-hours"": null,
-      ""is-in-maintenance"": false
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId2}}",
+                "attributes": {
+                  "airtime-in-hours": null,
+                  "is-in-maintenance": false
+                }
+              }
+            }
+            """);
     }
 }

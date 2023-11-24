@@ -29,69 +29,71 @@ public sealed class ResponseTests
         const string topLevelLink = $"{HostPrefix}flights";
         const string flightResourceLink = $"{topLevelLink}/{flightId}";
 
-        const string responseBody = @"{
-  ""meta"": {
-    ""total-resources"": """ + documentMetaValue + @"""
-  },
-  ""links"": {
-    ""self"": """ + topLevelLink + @""",
-    ""first"": """ + topLevelLink + @""",
-    ""last"": """ + topLevelLink + @"""
-  },
-  ""data"": [
-    {
-      ""type"": ""flights"",
-      ""id"": """ + flightId + @""",
-      ""attributes"": {
-        ""final-destination"": """ + flightDestination + @""",
-        ""stop-over-destination"": null,
-        ""operated-by"": ""DeltaAirLines"",
-        ""departs-at"": """ + flightDepartsAt + @""",
-        ""arrives-at"": null,
-        ""services-on-board"": [
-          """ + flightServiceOnBoard + @""",
-          """",
-          null
-        ]
-      },
-      ""relationships"": {
-        ""purser"": {
-          ""links"": {
-            ""self"": """ + flightResourceLink + @"/relationships/purser"",
-            ""related"": """ + flightResourceLink + @"/purser""
-          },
-          ""meta"": {
-             ""docs"": """ + purserMetaValue + @"""
-          }
-        },
-        ""cabin-crew-members"": {
-          ""links"": {
-            ""self"": """ + flightResourceLink + @"/relationships/cabin-crew-members"",
-            ""related"": """ + flightResourceLink + @"/cabin-crew-members""
-          },
-          ""meta"": {
-             ""docs"": """ + cabinCrewMembersMetaValue + @"""
-          }
-        },
-        ""passengers"": {
-          ""links"": {
-            ""self"": """ + flightResourceLink + @"/relationships/passengers"",
-            ""related"": """ + flightResourceLink + @"/passengers""
-          },
-          ""meta"": {
-             ""docs"": """ + passengersMetaValue + @"""
-          }
-        }
-      },
-      ""links"": {
-        ""self"": """ + flightResourceLink + @"""
-      },
-      ""meta"": {
-        ""docs"": """ + flightMetaValue + @"""
-      }
-    }
-  ]
-}";
+        const string responseBody = $$"""
+            {
+              "meta": {
+                "total-resources": "{{documentMetaValue}}"
+              },
+              "links": {
+                "self": "{{topLevelLink}}",
+                "first": "{{topLevelLink}}",
+                "last": "{{topLevelLink}}"
+              },
+              "data": [
+                {
+                  "type": "flights",
+                  "id": "{{flightId}}",
+                  "attributes": {
+                    "final-destination": "{{flightDestination}}",
+                    "stop-over-destination": null,
+                    "operated-by": "DeltaAirLines",
+                    "departs-at": "{{flightDepartsAt}}",
+                    "arrives-at": null,
+                    "services-on-board": [
+                      "{{flightServiceOnBoard}}",
+                      "",
+                      null
+                    ]
+                  },
+                  "relationships": {
+                    "purser": {
+                      "links": {
+                        "self": "{{flightResourceLink}}/relationships/purser",
+                        "related": "{{flightResourceLink}}/purser"
+                      },
+                      "meta": {
+                         "docs": "{{purserMetaValue}}"
+                      }
+                    },
+                    "cabin-crew-members": {
+                      "links": {
+                        "self": "{{flightResourceLink}}/relationships/cabin-crew-members",
+                        "related": "{{flightResourceLink}}/cabin-crew-members"
+                      },
+                      "meta": {
+                         "docs": "{{cabinCrewMembersMetaValue}}"
+                      }
+                    },
+                    "passengers": {
+                      "links": {
+                        "self": "{{flightResourceLink}}/relationships/passengers",
+                        "related": "{{flightResourceLink}}/passengers"
+                      },
+                      "meta": {
+                         "docs": "{{passengersMetaValue}}"
+                      }
+                    }
+                  },
+                  "links": {
+                    "self": "{{flightResourceLink}}"
+                  },
+                  "meta": {
+                    "docs": "{{flightMetaValue}}"
+                  }
+                }
+              ]
+            }
+            """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
@@ -154,24 +156,26 @@ public sealed class ResponseTests
         const string arrivesAtWithUtcOffset = "2019-02-20T11:56:33.0721266+01:00";
         const string flightServiceOnBoard = "Movies";
 
-        const string responseBody = @"{
-  ""links"": {
-    ""self"": """ + HostPrefix + "flights/" + flightId + @"&fields[flights]=departs-at,arrives-at""
-  },
-  ""data"": {
-      ""type"": ""flights"",
-      ""id"": """ + flightId + @""",
-      ""attributes"": {
-        ""departs-at"": """ + departsAtInZuluTime + @""",
-        ""arrives-at"": """ + arrivesAtWithUtcOffset + @""",
-        ""final-destination"": """ + flightDestination + @""",
-        ""services-on-board"": [""" + flightServiceOnBoard + @"""]
-      },
-      ""links"": {
-        ""self"": """ + HostPrefix + "flights/" + flightId + @"""
-      }
-    }
-}";
+        const string responseBody = $$"""
+            {
+              "links": {
+                "self": "{{HostPrefix}}flights/{{flightId}}&fields[flights]=departs-at,arrives-at"
+              },
+              "data": {
+                  "type": "flights",
+                  "id": "{{flightId}}",
+                  "attributes": {
+                    "departs-at": "{{departsAtInZuluTime}}",
+                    "arrives-at": "{{arrivesAtWithUtcOffset}}",
+                    "final-destination": "{{flightDestination}}",
+                    "services-on-board": ["{{flightServiceOnBoard}}"]
+                  },
+                  "links": {
+                    "self": "{{HostPrefix}}flights/{{flightId}}"
+                  }
+                }
+            }
+            """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
@@ -198,22 +202,24 @@ public sealed class ResponseTests
         // Arrange
         const string flightId = "ZvuH1";
 
-        const string responseBody = @"{
-  ""errors"": [
-    {
-      ""id"": ""f1a520ac-02a0-466b-94ea-86cbaa86f02f"",
-      ""status"": ""404"",
-      ""destination"": ""The requested resource does not exist."",
-      ""detail"": ""Resource of type 'flights' with ID '" + flightId + @"' does not exist.""
-    }
-  ]
-}";
+        const string responseBody = $$"""
+            {
+              "errors": [
+                {
+                  "id": "f1a520ac-02a0-466b-94ea-86cbaa86f02f",
+                  "status": "404",
+                  "destination": "The requested resource does not exist.",
+                  "detail": "Resource of type 'flights' with ID '{{flightId}}' does not exist."
+                }
+              ]
+            }
+            """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NotFound, responseBody);
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        Func<Task<FlightPrimaryResponseDocument>> action = async () => await apiClient.GetFlightAsync(flightId, null);
+        Func<Task<FlightPrimaryResponseDocument>> action = () => apiClient.GetFlightAsync(flightId, null);
 
         // Assert
         ExceptionAssertions<ApiException> assertion = await action.Should().ThrowExactlyAsync<ApiException>();
@@ -229,49 +235,51 @@ public sealed class ResponseTests
         const string flightId = "ZvuH1";
         const string flightAttendantId = "bBJHu";
 
-        const string responseBody = @"{
-  ""links"": {
-    ""self"": """ + HostPrefix + "flights/" + flightId + @"&fields[flights]&include=purser,cabin-crew-members,passengers""
-  },
-  ""data"": {
-      ""type"": ""flights"",
-      ""id"": """ + flightId + @""",
-      ""relationships"": {
-        ""purser"": {
-          ""links"": {
-            ""self"": """ + HostPrefix + "flights/" + flightId + @"/relationships/purser"",
-            ""related"": """ + HostPrefix + "flights/" + flightId + @"/purser""
-          },
-          ""data"": {
-              ""type"": ""flight-attendants"",
-              ""id"": """ + flightAttendantId + @"""
-            }
-        },
-        ""cabin-crew-members"": {
-          ""links"": {
-            ""self"": """ + HostPrefix + "flights/" + flightId + @"/relationships/cabin-crew-members"",
-            ""related"": """ + HostPrefix + "flights/" + flightId + @"/cabin-crew-members""
-          },
-          ""data"": [
+        const string responseBody = $$"""
             {
-              ""type"": ""flight-attendants"",
-              ""id"": """ + flightAttendantId + @"""
+              "links": {
+                "self": "{{HostPrefix}}flights/{{flightId}}&fields[flights]&include=purser,cabin-crew-members,passengers"
+              },
+              "data": {
+                  "type": "flights",
+                  "id": "{{flightId}}",
+                  "relationships": {
+                    "purser": {
+                      "links": {
+                        "self": "{{HostPrefix}}flights/{{flightId}}/relationships/purser",
+                        "related": "{{HostPrefix}}flights/{{flightId}}/purser"
+                      },
+                      "data": {
+                          "type": "flight-attendants",
+                          "id": "{{flightAttendantId}}"
+                        }
+                    },
+                    "cabin-crew-members": {
+                      "links": {
+                        "self": "{{HostPrefix}}flights/{{flightId}}/relationships/cabin-crew-members",
+                        "related": "{{HostPrefix}}flights/{{flightId}}/cabin-crew-members"
+                      },
+                      "data": [
+                        {
+                          "type": "flight-attendants",
+                          "id": "{{flightAttendantId}}"
+                        }
+                      ],
+                    },
+                    "passengers": {
+                      "links": {
+                        "self": "{{HostPrefix}}flights/{{flightId}}/relationships/passengers",
+                        "related": "{{HostPrefix}}flights/{{flightId}}/passengers"
+                      },
+                      "data": [ ]
+                    }
+                  },
+                  "links": {
+                    "self": "{{HostPrefix}}flights/{{flightId}}&fields[flights]&include=purser,cabin-crew-members,passengers"
+                  }
+                }
             }
-          ],
-        },
-        ""passengers"": {
-          ""links"": {
-            ""self"": """ + HostPrefix + "flights/" + flightId + @"/relationships/passengers"",
-            ""related"": """ + HostPrefix + "flights/" + flightId + @"/passengers""
-          },
-          ""data"": [ ]
-        }
-      },
-      ""links"": {
-        ""self"": """ + HostPrefix + "flights/" + flightId + @"&fields[flights]&include=purser,cabin-crew-members,passengers""
-      }
-    }
-}";
+            """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.Created, responseBody);
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
@@ -312,18 +320,20 @@ public sealed class ResponseTests
         // Arrange
         const string flightId = "ZvuH1";
 
-        const string responseBody = @"{
-  ""links"": {
-    ""self"": """ + HostPrefix + "flights/" + flightId + @"&fields[flights]""
-  },
-  ""data"": {
-      ""type"": ""flights"",
-      ""id"": """ + flightId + @""",
-      ""links"": {
-        ""self"": """ + HostPrefix + "flights/" + flightId + @"&fields[flights]&include=purser,cabin-crew-members,passengers""
-      }
-    }
-}";
+        const string responseBody = $$"""
+            {
+              "links": {
+                "self": "{{HostPrefix}}flights/{{flightId}}&fields[flights]"
+              },
+              "data": {
+                  "type": "flights",
+                  "id": "{{flightId}}",
+                  "links": {
+                    "self": "{{HostPrefix}}flights/{{flightId}}&fields[flights]&include=purser,cabin-crew-members,passengers"
+                  }
+                }
+            }
+            """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
@@ -353,7 +363,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(async () => await apiClient.PatchFlightAsync(flightId, null,
+        FlightPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PatchFlightAsync(flightId, null,
             new FlightPatchRequestDocument
             {
                 Data = new FlightDataInPatchRequest
@@ -375,7 +385,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        Func<Task> action = async () => await apiClient.DeleteFlightAsync("ZvuH1");
+        Func<Task> action = () => apiClient.DeleteFlightAsync("ZvuH1");
 
         // Assert
         await action.Should().NotThrowAsync();
@@ -392,40 +402,42 @@ public sealed class ResponseTests
         const string profileImageUrl = "www.image.com";
         const string distanceTraveledInKilometer = "5000";
 
-        const string responseBody = @"{
-  ""links"": {
-    ""self"": """ + HostPrefix + "flights/" + flightId + @"/purser"",
-    ""first"": """ + HostPrefix + "flights/" + flightId + @"/purser"",
-    ""last"": """ + HostPrefix + "flights/" + flightId + @"/purser""
-  },
-  ""data"": {
-    ""type"": ""flight-attendants"",
-    ""id"": """ + purserId + @""",
-    ""attributes"": {
-      ""email-address"": """ + emailAddress + @""",
-      ""age"": """ + age + @""",
-      ""profile-image-url"": """ + profileImageUrl + @""",
-      ""distance-traveled-in-kilometers"": """ + distanceTraveledInKilometer + @""",
-    },
-    ""relationships"": {
-      ""scheduled-for-flights"": {
-        ""links"": {
-          ""self"": """ + HostPrefix + "flight-attendants/" + purserId + @"/relationships/scheduled-for-flights"",
-          ""related"": """ + HostPrefix + "flight-attendants/" + purserId + @"/scheduled-for-flights""
-        }
-      },
-      ""purser-on-flights"": {
-        ""links"": {
-          ""self"": """ + HostPrefix + "flight-attendants/" + purserId + @"/relationships/purser-on-flights"",
-          ""related"": """ + HostPrefix + "flight-attendants/" + purserId + @"/purser-on-flights""
-        }
-      },
-    },
-    ""links"": {
-      ""self"": """ + HostPrefix + "flight-attendants/" + purserId + @""",
-    }
-  }
-}";
+        const string responseBody = $$"""
+            {
+              "links": {
+                "self": "{{HostPrefix}}flights/{{flightId}}/purser",
+                "first": "{{HostPrefix}}flights/{{flightId}}/purser",
+                "last": "{{HostPrefix}}flights/{{flightId}}/purser"
+              },
+              "data": {
+                "type": "flight-attendants",
+                "id": "{{purserId}}",
+                "attributes": {
+                  "email-address": "{{emailAddress}}",
+                  "age": "{{age}}",
+                  "profile-image-url": "{{profileImageUrl}}",
+                  "distance-traveled-in-kilometers": "{{distanceTraveledInKilometer}}",
+                },
+                "relationships": {
+                  "scheduled-for-flights": {
+                    "links": {
+                      "self": "{{HostPrefix}}flight-attendants/{{purserId}}/relationships/scheduled-for-flights",
+                      "related": "{{HostPrefix}}flight-attendants/{{purserId}}/scheduled-for-flights"
+                    }
+                  },
+                  "purser-on-flights": {
+                    "links": {
+                      "self": "{{HostPrefix}}flight-attendants/{{purserId}}/relationships/purser-on-flights",
+                      "related": "{{HostPrefix}}flight-attendants/{{purserId}}/purser-on-flights"
+                    }
+                  },
+                },
+                "links": {
+                  "self": "{{HostPrefix}}flight-attendants/{{purserId}}",
+                }
+              }
+            }
+            """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
@@ -448,14 +460,16 @@ public sealed class ResponseTests
         // Arrange
         const string flightId = "ZvuH1";
 
-        const string responseBody = @"{
-  ""links"": {
-    ""self"": """ + HostPrefix + "flights/" + flightId + @"/backup-purser"",
-    ""first"": """ + HostPrefix + "flights/" + flightId + @"/backup-purser"",
-    ""last"": """ + HostPrefix + "flights/" + flightId + @"/backup-purser""
-  },
-  ""data"": null
-}";
+        const string responseBody = $$"""
+            {
+              "links": {
+                "self": "{{HostPrefix}}flights/{{flightId}}/backup-purser",
+                "first": "{{HostPrefix}}flights/{{flightId}}/backup-purser",
+                "last": "{{HostPrefix}}flights/{{flightId}}/backup-purser"
+              },
+              "data": null
+            }
+            """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
@@ -473,13 +487,15 @@ public sealed class ResponseTests
         // Arrange
         const string flightId = "ZvuH1";
 
-        const string responseBody = @"{
-  ""links"": {
-    ""self"": """ + HostPrefix + "flights/" + flightId + @"/cabin-crew-members"",
-    ""first"": """ + HostPrefix + "flights/" + flightId + @"/cabin-crew-members""
-  },
-  ""data"": [ ]
-}";
+        const string responseBody = $$"""
+            {
+              "links": {
+                "self": "{{HostPrefix}}flights/{{flightId}}/cabin-crew-members",
+                "first": "{{HostPrefix}}flights/{{flightId}}/cabin-crew-members"
+              },
+              "data": [ ]
+            }
+            """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
@@ -497,13 +513,15 @@ public sealed class ResponseTests
         // Arrange
         const string flightId = "ZvuH1";
 
-        const string responseBody = @"{
-  ""links"": {
-    ""self"": """ + HostPrefix + "flights/" + flightId + @"/relationships/backup-purser"",
-    ""related"": """ + HostPrefix + "flights/" + flightId + @"/relationships/backup-purser""
-  },
-  ""data"": null
-}";
+        const string responseBody = $$"""
+            {
+              "links": {
+                "self": "{{HostPrefix}}flights/{{flightId}}/relationships/backup-purser",
+                "related": "{{HostPrefix}}flights/{{flightId}}/relationships/backup-purser"
+              },
+              "data": null
+            }
+            """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
@@ -522,16 +540,18 @@ public sealed class ResponseTests
         const string flightId = "ZvuH1";
         const string purserId = "bBJHu";
 
-        const string responseBody = @"{
-  ""links"": {
-    ""self"": """ + HostPrefix + "flights/" + flightId + @"/relationships/purser"",
-    ""related"": """ + HostPrefix + "flights/" + flightId + @"/relationships/purser""
-  },
-  ""data"": {
-    ""type"": ""flight-attendants"",
-    ""id"": """ + purserId + @"""
-  }
-}";
+        const string responseBody = $$"""
+            {
+              "links": {
+                "self": "{{HostPrefix}}flights/{{flightId}}/relationships/purser",
+                "related": "{{HostPrefix}}flights/{{flightId}}/relationships/purser"
+              },
+              "data": {
+                "type": "flight-attendants",
+                "id": "{{purserId}}"
+              }
+            }
+            """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
@@ -571,21 +591,23 @@ public sealed class ResponseTests
         const string flightAttendantId1 = "bBJHu";
         const string flightAttendantId2 = "ZvuHNInmX1";
 
-        const string responseBody = @"{
-  ""links"": {
-    ""self"": """ + HostPrefix + "flights/" + flightId + @"/relationships/cabin-crew-members"",
-    ""related"": """ + HostPrefix + "flights/" + flightId + @"/relationships/cabin-crew-members"",
-    ""first"": """ + HostPrefix + "flights/" + flightId + @"/relationships/cabin-crew-members""
-  },
-  ""data"": [{
-    ""type"": ""flight-attendants"",
-    ""id"": """ + flightAttendantId1 + @"""
-  },
-  {
-    ""type"": ""flight-attendants"",
-    ""id"": """ + flightAttendantId2 + @"""
-  }]
-}";
+        const string responseBody = $$"""
+            {
+              "links": {
+                "self": "{{HostPrefix}}flights/{{flightId}}/relationships/cabin-crew-members",
+                "related": "{{HostPrefix}}flights/{{flightId}}/relationships/cabin-crew-members",
+                "first": "{{HostPrefix}}flights/{{flightId}}/relationships/cabin-crew-members"
+              },
+              "data": [{
+                "type": "flight-attendants",
+                "id": "{{flightAttendantId1}}"
+              },
+              {
+                "type": "flight-attendants",
+                "id": "{{flightAttendantId2}}"
+              }]
+            }
+            """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
@@ -609,7 +631,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        Func<Task> action = async () => await apiClient.PostFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
+        Func<Task> action = () => apiClient.PostFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
         {
             Data = new List<FlightAttendantIdentifier>
             {
@@ -638,7 +660,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        Func<Task> action = async () => await apiClient.PatchFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
+        Func<Task> action = () => apiClient.PatchFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
         {
             Data = new List<FlightAttendantIdentifier>
             {
@@ -667,7 +689,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        Func<Task> action = async () => await apiClient.DeleteFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
+        Func<Task> action = () => apiClient.DeleteFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
         {
             Data = new List<FlightAttendantIdentifier>
             {

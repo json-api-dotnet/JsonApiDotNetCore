@@ -242,12 +242,17 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
 
     private static Expression CopyCollectionExtensionMethodCall(Expression source, string operationName, Type elementType)
     {
-        return Expression.Call(typeof(Enumerable), operationName, elementType.AsArray(), source);
+        return Expression.Call(typeof(Enumerable), operationName, [elementType], source);
     }
 
     private static Expression SelectExtensionMethodCall(Type extensionType, Expression source, Type elementType, Expression selectBody)
     {
-        Type[] typeArguments = ArrayFactory.Create(elementType, elementType);
+        Type[] typeArguments =
+        [
+            elementType,
+            elementType
+        ];
+
         return Expression.Call(extensionType, "Select", typeArguments, source, selectBody);
     }
 

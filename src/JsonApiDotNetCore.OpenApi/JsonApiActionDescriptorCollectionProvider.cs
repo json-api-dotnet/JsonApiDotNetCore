@@ -42,9 +42,11 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
         {
             JsonApiEndpointMetadataContainer endpointMetadataContainer = _jsonApiEndpointMetadataProvider.Get(endpoint.GetActionMethod());
 
-            List<ActionDescriptor> replacementDescriptorsForEndpoint = new();
-            replacementDescriptorsForEndpoint.AddRange(AddJsonApiMetadataToAction(endpoint, endpointMetadataContainer.RequestMetadata));
-            replacementDescriptorsForEndpoint.AddRange(AddJsonApiMetadataToAction(endpoint, endpointMetadataContainer.ResponseMetadata));
+            List<ActionDescriptor> replacementDescriptorsForEndpoint =
+            [
+                .. AddJsonApiMetadataToAction(endpoint, endpointMetadataContainer.RequestMetadata),
+                .. AddJsonApiMetadataToAction(endpoint, endpointMetadataContainer.ResponseMetadata)
+            ];
 
             if (replacementDescriptorsForEndpoint.Any())
             {

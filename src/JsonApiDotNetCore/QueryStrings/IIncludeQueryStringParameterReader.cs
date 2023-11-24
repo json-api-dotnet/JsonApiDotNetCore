@@ -7,6 +7,4 @@ namespace JsonApiDotNetCore.QueryStrings;
 /// Reads the 'include' query string parameter and produces a set of query constraints from it.
 /// </summary>
 [PublicAPI]
-public interface IIncludeQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider
-{
-}
+public interface IIncludeQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider;

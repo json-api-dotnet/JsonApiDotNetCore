@@ -31,7 +31,7 @@ var patchRequest = new PersonPatchRequestDocument
 using (apiClient.WithPartialAttributeSerialization<PersonPatchRequestDocument, PersonAttributesInPatchRequest>(patchRequest, person => person.FirstName))
 {
     // Workaround for https://github.com/RicoSuter/NSwag/issues/2499.
-    await TranslateAsync(async () => await apiClient.PatchPersonAsync(1, null, patchRequest));
+    await TranslateAsync(() => apiClient.PatchPersonAsync(1, null, patchRequest));
 }
 
 Console.WriteLine("Press any key to close.");

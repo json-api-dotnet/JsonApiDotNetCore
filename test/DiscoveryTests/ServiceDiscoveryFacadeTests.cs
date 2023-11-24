@@ -15,7 +15,7 @@ namespace DiscoveryTests;
 
 public sealed class ServiceDiscoveryFacadeTests
 {
-    private readonly ServiceCollection _services = new();
+    private readonly ServiceCollection _services = [];
 
     public ServiceDiscoveryFacadeTests()
     {

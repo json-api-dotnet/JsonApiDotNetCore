@@ -4,7 +4,7 @@ internal abstract class RotatingList
 {
     public static RotatingList<T> Create<T>(int count, Func<int, T> createElement)
     {
-        List<T> elements = new();
+        List<T> elements = [];
 
         for (int index = 0; index < count; index++)
         {

@@ -7,6 +7,4 @@ namespace JsonApiDotNetCore.QueryStrings;
 /// Reads the 'fields' query string parameter and produces a set of query constraints from it.
 /// </summary>
 [PublicAPI]
-public interface ISparseFieldSetQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider
-{
-}
+public interface ISparseFieldSetQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider;

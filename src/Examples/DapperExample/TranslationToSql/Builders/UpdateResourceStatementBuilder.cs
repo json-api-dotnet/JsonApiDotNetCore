@@ -32,7 +32,7 @@ internal sealed class UpdateResourceStatementBuilder : StatementBuilder
 
     private List<ColumnAssignmentNode> GetColumnAssignments(IReadOnlyDictionary<string, object?> columnsToUpdate, TableNode table)
     {
-        List<ColumnAssignmentNode> assignments = new();
+        List<ColumnAssignmentNode> assignments = [];
 
         foreach ((string columnName, object? columnValue) in columnsToUpdate)
         {

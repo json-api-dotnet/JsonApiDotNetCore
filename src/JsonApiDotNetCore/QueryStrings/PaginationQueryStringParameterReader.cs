@@ -58,8 +58,6 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
 
         try
         {
-            // Workaround for https://youtrack.jetbrains.com/issue/RSRP-493256/Incorrect-possible-null-assignment
-            // ReSharper disable once AssignNullToNotNullAttribute
             PaginationQueryStringValueExpression constraint = GetPageConstraint(parameterValue.ToString());
 
             if (constraint.Elements.Any(element => element.Scope == null))
@@ -82,8 +80,6 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
         }
         catch (QueryParseException exception)
         {
-            // Workaround for https://youtrack.jetbrains.com/issue/RSRP-493256/Incorrect-possible-null-assignment
-            // ReSharper disable once AssignNullToNotNullAttribute
             string specificMessage = exception.GetMessageWithPosition(isParameterNameValid ? parameterValue.ToString() : parameterName);
             throw new InvalidQueryStringParameterException(parameterName, "The specified pagination is invalid.", specificMessage, exception);
         }
@@ -165,7 +161,7 @@ public class PaginationQueryStringParameterReader : QueryStringParameterReader, 
     private sealed class PaginationState
     {
         private readonly MutablePaginationEntry _globalScope = new();
-        private readonly Dictionary<ResourceFieldChainExpression, MutablePaginationEntry> _nestedScopes = new();
+        private readonly Dictionary<ResourceFieldChainExpression, MutablePaginationEntry> _nestedScopes = [];
 
         public MutablePaginationEntry ResolveEntryInScope(ResourceFieldChainExpression? scope)
         {

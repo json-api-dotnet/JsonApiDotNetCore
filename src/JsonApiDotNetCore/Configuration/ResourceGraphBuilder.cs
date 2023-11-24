@@ -17,7 +17,7 @@ public class ResourceGraphBuilder
 {
     private readonly IJsonApiOptions _options;
     private readonly ILogger<ResourceGraphBuilder> _logger;
-    private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = new();
+    private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = [];
     private readonly TypeLocator _typeLocator = new();
 
     public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
@@ -34,7 +34,7 @@ public class ResourceGraphBuilder
     /// </summary>
     public IResourceGraph Build()
     {
-        HashSet<ResourceType> resourceTypes = _resourceTypesByClrType.Values.ToHashSet();
+        HashSet<ResourceType> resourceTypes = [.. _resourceTypesByClrType.Values];
 
         if (!resourceTypes.Any())
         {
@@ -81,7 +81,7 @@ public class ResourceGraphBuilder
 
     private static void SetDirectlyDerivedTypes(ResourceGraph resourceGraph)
     {
-        Dictionary<ResourceType, HashSet<ResourceType>> directlyDerivedTypesPerBaseType = new();
+        Dictionary<ResourceType, HashSet<ResourceType>> directlyDerivedTypesPerBaseType = [];
 
         foreach (ResourceType resourceType in resourceGraph.GetResourceTypes())
         {
@@ -93,7 +93,7 @@ public class ResourceGraphBuilder
 
                 if (!directlyDerivedTypesPerBaseType.ContainsKey(baseType))
                 {
-                    directlyDerivedTypesPerBaseType[baseType] = new HashSet<ResourceType>();
+                    directlyDerivedTypesPerBaseType[baseType] = [];
                 }
 
                 directlyDerivedTypesPerBaseType[baseType].Add(resourceType);

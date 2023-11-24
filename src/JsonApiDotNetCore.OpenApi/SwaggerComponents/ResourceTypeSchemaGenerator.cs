@@ -12,7 +12,7 @@ internal sealed class ResourceTypeSchemaGenerator
     private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
     private readonly IResourceGraph _resourceGraph;
     private readonly JsonNamingPolicy? _namingPolicy;
-    private readonly Dictionary<Type, OpenApiSchema> _resourceClrTypeSchemaCache = new();
+    private readonly Dictionary<Type, OpenApiSchema> _resourceClrTypeSchemaCache = [];
 
     public ResourceTypeSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor, IResourceGraph resourceGraph, JsonNamingPolicy? namingPolicy)
     {

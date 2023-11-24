@@ -13,8 +13,8 @@ public sealed class ResourceGraph : IResourceGraph
     private static readonly Type? ProxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
 
     private readonly IReadOnlySet<ResourceType> _resourceTypeSet;
-    private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = new();
-    private readonly Dictionary<string, ResourceType> _resourceTypesByPublicName = new();
+    private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = [];
+    private readonly Dictionary<string, ResourceType> _resourceTypesByPublicName = [];
 
     public ResourceGraph(IReadOnlySet<ResourceType> resourceTypeSet)
     {
@@ -53,7 +53,7 @@ public sealed class ResourceGraph : IResourceGraph
     {
         ArgumentGuard.NotNull(publicName);
 
-        return _resourceTypesByPublicName.TryGetValue(publicName, out ResourceType? resourceType) ? resourceType : null;
+        return _resourceTypesByPublicName.GetValueOrDefault(publicName);
     }
 
     /// <inheritdoc />
@@ -75,7 +75,7 @@ public sealed class ResourceGraph : IResourceGraph
         ArgumentGuard.NotNull(resourceClrType);
 
         Type typeToFind = IsLazyLoadingProxyForResourceType(resourceClrType) ? resourceClrType.BaseType! : resourceClrType;
-        return _resourceTypesByClrType.TryGetValue(typeToFind, out ResourceType? resourceType) ? resourceType : null;
+        return _resourceTypesByClrType.GetValueOrDefault(typeToFind);
     }
 
     private bool IsLazyLoadingProxyForResourceType(Type resourceClrType)

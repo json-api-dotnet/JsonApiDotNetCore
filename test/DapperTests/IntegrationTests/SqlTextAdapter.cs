@@ -7,7 +7,7 @@ internal sealed class SqlTextAdapter
 {
     private static readonly Dictionary<Regex, string> SqlServerReplacements = new()
     {
-        [new Regex(@"""([^""]+)""", RegexOptions.Compiled)] = "[$+]",
+        [new Regex("\"([^\"]+)\"", RegexOptions.Compiled)] = "[$+]",
         [new Regex($@"(VALUES \([^)]*\)){Environment.NewLine}RETURNING \[Id\]", RegexOptions.Compiled)] = $"OUTPUT INSERTED.[Id]{Environment.NewLine}$1"
     };
 

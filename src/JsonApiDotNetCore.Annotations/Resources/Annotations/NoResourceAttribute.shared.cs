@@ -8,6 +8,4 @@ namespace JsonApiDotNetCore.Resources.Annotations;
 /// </summary>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-public sealed class NoResourceAttribute : Attribute
-{
-}
+public sealed class NoResourceAttribute : Attribute;

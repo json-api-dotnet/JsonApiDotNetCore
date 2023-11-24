@@ -99,7 +99,7 @@ public class OperationsProcessor : IOperationsProcessor
         return results;
     }
 
-    protected virtual async Task<OperationContainer?> ProcessOperationAsync(OperationContainer operation, CancellationToken cancellationToken)
+    protected virtual Task<OperationContainer?> ProcessOperationAsync(OperationContainer operation, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -108,7 +108,7 @@ public class OperationsProcessor : IOperationsProcessor
         _targetedFields.CopyFrom(operation.TargetedFields);
         _request.CopyFrom(operation.Request);
 
-        return await _operationProcessorAccessor.ProcessAsync(operation, cancellationToken);
+        return _operationProcessorAccessor.ProcessAsync(operation, cancellationToken);
     }
 
     protected void TrackLocalIdsForOperation(OperationContainer operation)

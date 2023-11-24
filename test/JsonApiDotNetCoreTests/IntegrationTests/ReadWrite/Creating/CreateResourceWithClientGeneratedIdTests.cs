@@ -22,10 +22,7 @@ public sealed class CreateResourceWithClientGeneratedIdTests : IClassFixture<Int
         testContext.UseController<WorkItemGroupsController>();
         testContext.UseController<RgbColorsController>();
 
-        testContext.ConfigureServices(services =>
-        {
-            services.AddResourceDefinition<ImplicitlyChangingWorkItemGroupDefinition>();
-        });
+        testContext.ConfigureServices(services => services.AddResourceDefinition<ImplicitlyChangingWorkItemGroupDefinition>());
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.ClientIdGeneration = ClientIdGenerationMode.Required;

@@ -13,5 +13,15 @@ internal sealed class LoggingFakers : FakerContainer
         .RuleFor(auditEntry => auditEntry.UserName, faker => faker.Internet.UserName())
         .RuleFor(auditEntry => auditEntry.CreatedAt, faker => faker.Date.PastOffset().TruncateToWholeMilliseconds()));
 
+    private readonly Lazy<Faker<Banana>> _lazyBananaFaker = new(() => new Faker<Banana>()
+        .UseSeed(GetFakerSeed())
+        .RuleFor(banana => banana.LengthInCentimeters, faker => faker.Random.Double(10, 25)));
+
+    private readonly Lazy<Faker<Peach>> _lazyPeachFaker = new(() => new Faker<Peach>()
+        .UseSeed(GetFakerSeed())
+        .RuleFor(peach => peach.DiameterInCentimeters, faker => faker.Random.Double(6, 7.5)));
+
     public Faker<AuditEntry> AuditEntry => _lazyAuditEntryFaker.Value;
+    public Faker<Banana> Banana => _lazyBananaFaker.Value;
+    public Faker<Peach> Peach => _lazyPeachFaker.Value;
 }

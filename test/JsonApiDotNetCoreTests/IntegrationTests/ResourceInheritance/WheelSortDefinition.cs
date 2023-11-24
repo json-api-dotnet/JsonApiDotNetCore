@@ -61,12 +61,11 @@ public sealed class WheelSortDefinition : JsonApiResourceDefinition<Wheel, long>
 
     private SortExpression CreateSortFromLambdaSyntax()
     {
-        return CreateSortExpressionFromLambda(new PropertySortOrder
-        {
+        return CreateSortExpressionFromLambda([
             (wheel => (wheel as ChromeWheel)!.PaintColor, ListSortDirection.Ascending),
             (wheel => ((CarbonWheel)wheel).HasTube, ListSortDirection.Descending),
             (wheel => ((GasolineEngine)((Car)wheel.Vehicle!).Engine).Cylinders.Count, ListSortDirection.Ascending),
             (wheel => wheel.Id, ListSortDirection.Ascending)
-        });
+        ]);
     }
 }

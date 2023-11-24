@@ -6,6 +6,4 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 internal sealed class ResourcePostRequestDocument<TResource> : SingleData<ResourceObjectInPostRequest<TResource>>
-    where TResource : IIdentifiable
-{
-}
+    where TResource : IIdentifiable;
