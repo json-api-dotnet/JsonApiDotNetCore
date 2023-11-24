@@ -99,25 +99,27 @@ public sealed class RequestTests
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
 
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""flights"",
-    ""relationships"": {
-      ""purser"": {
-        ""data"": {
-          ""type"": ""flight-attendants"",
-          ""id"": ""bBJHu""
-        }
-      },
-      ""backup-purser"": {
-        ""data"": {
-          ""type"": ""flight-attendants"",
-          ""id"": ""NInmX""
-        }
-      }
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson("""
+            {
+              "data": {
+                "type": "flights",
+                "relationships": {
+                  "purser": {
+                    "data": {
+                      "type": "flight-attendants",
+                      "id": "bBJHu"
+                    }
+                  },
+                  "backup-purser": {
+                    "data": {
+                      "type": "flight-attendants",
+                      "id": "NInmX"
+                    }
+                  }
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -169,16 +171,18 @@ public sealed class RequestTests
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
 
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""attributes"": {
-      ""name"": """ + name + @""",
-      ""serial-number"": null,
-      ""airtime-in-hours"": 800
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "attributes": {
+                  "name": "{{name}}",
+                  "serial-number": null,
+                  "airtime-in-hours": 800
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -220,18 +224,20 @@ public sealed class RequestTests
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
 
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": ""XUuiP"",
-    ""attributes"": {
-      ""serial-number"": null,
-      ""airtime-in-hours"": null,
-      ""last-serviced-at"": ""2021-01-01T15:23:05.033+04:00"",
-      ""is-in-maintenance"": false
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson("""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "XUuiP",
+                "attributes": {
+                  "serial-number": null,
+                  "airtime-in-hours": null,
+                  "last-serviced-at": "2021-01-01T15:23:05.033+04:00",
+                  "is-in-maintenance": false
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -342,12 +348,14 @@ public sealed class RequestTests
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
 
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""flight-attendants"",
-    ""id"": ""bBJHu""
-  }
-}");
+        wrapper.RequestBody.Should().BeJson("""
+            {
+              "data": {
+                "type": "flight-attendants",
+                "id": "bBJHu"
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -407,18 +415,20 @@ public sealed class RequestTests
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
 
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": [
-    {
-      ""type"": ""flight-attendants"",
-      ""id"": ""bBJHu""
-    },
-    {
-      ""type"": ""flight-attendants"",
-      ""id"": ""NInmX""
-    }
-  ]
-}");
+        wrapper.RequestBody.Should().BeJson("""
+            {
+              "data": [
+                {
+                  "type": "flight-attendants",
+                  "id": "bBJHu"
+                },
+                {
+                  "type": "flight-attendants",
+                  "id": "NInmX"
+                }
+              ]
+            }
+            """);
     }
 
     [Fact]
@@ -458,18 +468,20 @@ public sealed class RequestTests
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
 
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": [
-    {
-      ""type"": ""flight-attendants"",
-      ""id"": ""bBJHu""
-    },
-    {
-      ""type"": ""flight-attendants"",
-      ""id"": ""NInmX""
-    }
-  ]
-}");
+        wrapper.RequestBody.Should().BeJson("""
+            {
+              "data": [
+                {
+                  "type": "flight-attendants",
+                  "id": "bBJHu"
+                },
+                {
+                  "type": "flight-attendants",
+                  "id": "NInmX"
+                }
+              ]
+            }
+            """);
     }
 
     [Fact]
@@ -509,17 +521,19 @@ public sealed class RequestTests
         wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
         wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
 
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": [
-    {
-      ""type"": ""flight-attendants"",
-      ""id"": ""bBJHu""
-    },
-    {
-      ""type"": ""flight-attendants"",
-      ""id"": ""NInmX""
-    }
-  ]
-}");
+        wrapper.RequestBody.Should().BeJson("""
+            {
+              "data": [
+                {
+                  "type": "flight-attendants",
+                  "id": "bBJHu"
+                },
+                {
+                  "type": "flight-attendants",
+                  "id": "NInmX"
+                }
+              ]
+            }
+            """);
     }
 }

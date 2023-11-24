@@ -40,15 +40,17 @@ public sealed class PartialAttributeSerializationLifetimeTests
         _ = await ApiResponse.TranslateAsync(() => apiClient.PatchAirplaneAsync(airplaneId, null, requestDocument));
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId + @""",
-    ""attributes"": {
-      ""is-in-maintenance"": false
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId}}",
+                "attributes": {
+                  "is-in-maintenance": false
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -87,15 +89,17 @@ public sealed class PartialAttributeSerializationLifetimeTests
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId + @""",
-    ""attributes"": {
-      ""airtime-in-hours"": null
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId}}",
+                "attributes": {
+                  "airtime-in-hours": null
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -142,15 +146,17 @@ public sealed class PartialAttributeSerializationLifetimeTests
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId2 + @""",
-    ""attributes"": {
-      ""is-in-maintenance"": false
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId2}}",
+                "attributes": {
+                  "is-in-maintenance": false
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -185,15 +191,17 @@ public sealed class PartialAttributeSerializationLifetimeTests
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId + @""",
-    ""attributes"": {
-      ""is-in-maintenance"": false
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId}}",
+                "attributes": {
+                  "is-in-maintenance": false
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -236,15 +244,17 @@ public sealed class PartialAttributeSerializationLifetimeTests
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId1 + @""",
-    ""attributes"": {
-      ""is-in-maintenance"": false
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId1}}",
+                "attributes": {
+                  "is-in-maintenance": false
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -297,16 +307,18 @@ public sealed class PartialAttributeSerializationLifetimeTests
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId2 + @""",
-    ""attributes"": {
-      ""serial-number"": null,
-      ""manufactured-in-city"": ""Everett""
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId2}}",
+                "attributes": {
+                  "serial-number": null,
+                  "manufactured-in-city": "Everett"
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -359,16 +371,18 @@ public sealed class PartialAttributeSerializationLifetimeTests
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId + @""",
-    ""attributes"": {
-      ""serial-number"": null,
-      ""manufactured-in-city"": ""Everett""
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId}}",
+                "attributes": {
+                  "serial-number": null,
+                  "manufactured-in-city": "Everett"
+                }
+              }
+            }
+            """);
     }
 
     [Fact]
@@ -414,15 +428,17 @@ public sealed class PartialAttributeSerializationLifetimeTests
         }
 
         // Assert
-        wrapper.RequestBody.Should().BeJson(@"{
-  ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + airplaneId2 + @""",
-    ""attributes"": {
-      ""airtime-in-hours"": null,
-      ""is-in-maintenance"": false
-    }
-  }
-}");
+        wrapper.RequestBody.Should().BeJson($$"""
+            {
+              "data": {
+                "type": "airplanes",
+                "id": "{{airplaneId2}}",
+                "attributes": {
+                  "airtime-in-hours": null,
+                  "is-in-maintenance": false
+                }
+              }
+            }
+            """);
     }
 }
