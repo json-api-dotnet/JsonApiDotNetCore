@@ -124,8 +124,8 @@ public abstract class JsonApiClient : IJsonApiClient
     /// </summary>
     private sealed class DocumentJsonConverter : JsonConverter
     {
-        private readonly Dictionary<object, AlwaysIncludedAttributes> _alwaysIncludedAttributesByDocument = new();
-        private readonly Dictionary<Type, ISet<object>> _documentsByType = new();
+        private readonly Dictionary<object, AlwaysIncludedAttributes> _alwaysIncludedAttributesByDocument = [];
+        private readonly Dictionary<Type, ISet<object>> _documentsByType = [];
         private bool _isSerializing;
 
         public override bool CanRead => false;
