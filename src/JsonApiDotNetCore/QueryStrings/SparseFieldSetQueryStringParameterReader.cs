@@ -63,15 +63,11 @@ public class SparseFieldSetQueryStringParameterReader : QueryStringParameterRead
             ResourceType resourceType = GetScope(parameterName);
             parameterNameIsValid = true;
 
-            // Workaround for https://youtrack.jetbrains.com/issue/RSRP-493256/Incorrect-possible-null-assignment
-            // ReSharper disable once AssignNullToNotNullAttribute
             SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue.ToString(), resourceType);
             _sparseFieldTableBuilder[resourceType] = sparseFieldSet;
         }
         catch (QueryParseException exception)
         {
-            // Workaround for https://youtrack.jetbrains.com/issue/RSRP-493256/Incorrect-possible-null-assignment
-            // ReSharper disable once AssignNullToNotNullAttribute
             string specificMessage = exception.GetMessageWithPosition(parameterNameIsValid ? parameterValue.ToString() : parameterName);
             throw new InvalidQueryStringParameterException(parameterName, "The specified fieldset is invalid.", specificMessage, exception);
         }
