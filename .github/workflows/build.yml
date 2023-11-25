@@ -27,6 +27,7 @@ env:
   # This conflicts with the default password "postgres", which is used by ikalnytskyi/action-setup-postgres.
   # Because action-setup-postgres forgets to update the environment variable accordingly, we do so here.
   PGPASSWORD: "postgres"
+  DOTNET_SDK_FORCED_VERSION: "6.0.417"
 
 jobs:
   build-and-test:
@@ -47,7 +48,9 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: |
+          6.0.x
+          8.0.x
     - name: Setup PowerShell (Ubuntu)
       if: matrix.os == 'ubuntu-latest'
       run: |
@@ -182,7 +185,9 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: |
+          6.0.x
+          8.0.x
     - name: Git checkout
       uses: actions/checkout@v4
     - name: Restore tools
@@ -193,7 +198,7 @@ jobs:
       run: |
         $inspectCodeOutputPath = Join-Path $env:RUNNER_TEMP 'jetbrains-inspectcode-results.xml'
         Write-Output "INSPECT_CODE_OUTPUT_PATH=$inspectCodeOutputPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        dotnet jb inspectcode JsonApiDotNetCore.sln --build --output="$inspectCodeOutputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --properties:ContinuousIntegrationBuild=false --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+        dotnet jb inspectcode JsonApiDotNetCore.sln --build --dotnetcoresdk=$env:DOTNET_SDK_FORCED_VERSION --output="$inspectCodeOutputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --properties:ContinuousIntegrationBuild=false --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
     - name: Verify outcome
       shell: pwsh
       run: |
@@ -233,7 +238,9 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: |
+          6.0.x
+          8.0.x
     - name: Git checkout
       uses: actions/checkout@v4
       with:
@@ -260,7 +267,7 @@ jobs:
       shell: pwsh
       run: |
         Write-Output "Running code cleanup on all files."
-        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN --fail-on-diff --print-diff
+        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb --dotnetcoresdk=$env:DOTNET_SDK_FORCED_VERSION --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN --fail-on-diff --print-diff
 
   publish:
     timeout-minutes: 60
