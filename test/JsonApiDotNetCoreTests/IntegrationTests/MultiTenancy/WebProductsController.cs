@@ -5,4 +5,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy;
 
 [DisableRoutingConvention]
 [Route("{countryCode}/products")]
-partial class WebProductsController;
+partial class WebProductsController
+{
+}

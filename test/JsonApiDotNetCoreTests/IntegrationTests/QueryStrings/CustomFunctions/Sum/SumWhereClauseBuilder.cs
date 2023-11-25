@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.QueryableBuilding;
@@ -41,6 +42,6 @@ internal sealed class SumWhereClauseBuilder : WhereClauseBuilder
 
     private static Expression SumExtensionMethodCall(LambdaExpression selector, QueryClauseBuilderContext context)
     {
-        return Expression.Call(context.ExtensionType, "Sum", [context.LambdaScope.Parameter.Type], context.Source, selector);
+        return Expression.Call(context.ExtensionType, "Sum", context.LambdaScope.Parameter.Type.AsArray(), context.Source, selector);
     }
 }

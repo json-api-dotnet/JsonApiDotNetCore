@@ -4,7 +4,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Queries;
 
 internal sealed class TestableQueryExpressionRewriter : QueryExpressionRewriter<object?>
 {
-    public List<QueryExpression> ExpressionsVisited { get; } = [];
+    public List<QueryExpression> ExpressionsVisited { get; } = new();
 
     public override QueryExpression DefaultVisit(QueryExpression expression, object? argument)
     {

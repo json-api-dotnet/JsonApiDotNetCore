@@ -12,7 +12,7 @@ public sealed class MetaBuilder : IMetaBuilder
     private readonly IJsonApiOptions _options;
     private readonly IResponseMeta _responseMeta;
 
-    private Dictionary<string, object?> _meta = [];
+    private Dictionary<string, object?> _meta = new();
 
     public MetaBuilder(IPaginationContext paginationContext, IJsonApiOptions options, IResponseMeta responseMeta)
     {

@@ -8,6 +8,7 @@ using FluentAssertions.Common;
 using FluentAssertions.Extensions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -16,18 +17,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit.Abstractions;
-using IClock = DapperExample.IClock;
 
 namespace DapperTests.IntegrationTests;
 
 [PublicAPI]
 public sealed class DapperTestContext : IntegrationTest
 {
-    private const string SqlServerClearAllTablesScript = """
+    private const string SqlServerClearAllTablesScript = @"
         EXEC sp_MSForEachTable 'ALTER TABLE ? NOCHECK CONSTRAINT ALL';
         EXEC sp_MSForEachTable 'SET QUOTED_IDENTIFIER ON; DELETE FROM ?';
-        EXEC sp_MSForEachTable 'ALTER TABLE ? CHECK CONSTRAINT ALL';
-        """;
+        EXEC sp_MSForEachTable 'ALTER TABLE ? CHECK CONSTRAINT ALL';";
 
     public static readonly DateTimeOffset FrozenTime = 29.September(2018).At(16, 41, 56).AsUtc().ToDateTimeOffset();
 
@@ -75,7 +74,7 @@ public sealed class DapperTestContext : IntegrationTest
 
             builder.ConfigureServices(services =>
             {
-                services.AddSingleton<IClock>(new FrozenClock
+                services.AddSingleton<ISystemClock>(new FrozenSystemClock
                 {
                     UtcNow = FrozenTime
                 });
@@ -115,10 +114,7 @@ public sealed class DapperTestContext : IntegrationTest
                     _ => throw new NotSupportedException($"Unsupported database provider '{databaseProvider}'.")
                 };
 
-#pragma warning disable EF1002 // Risk of vulnerability to SQL injection.
-                // Justification: Table names cannot be parameterized.
                 await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM {escapedTableName}");
-#pragma warning restore EF1002 // Risk of vulnerability to SQL injection.
             }
         }
     }

@@ -9,4 +9,6 @@ namespace JsonApiDotNetCore.QueryStrings;
 /// query constraints from it.
 /// </summary>
 [PublicAPI]
-public interface IResourceDefinitionQueryableParameterReader : IQueryStringParameterReader, IQueryConstraintProvider;
+public interface IResourceDefinitionQueryableParameterReader : IQueryStringParameterReader, IQueryConstraintProvider
+{
+}

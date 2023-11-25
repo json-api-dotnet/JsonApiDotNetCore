@@ -16,4 +16,6 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors;
 /// </typeparam>
 [PublicAPI]
 public interface IAddToRelationshipProcessor<TResource, TId> : IOperationProcessor
-    where TResource : class, IIdentifiable<TId>;
+    where TResource : class, IIdentifiable<TId>
+{
+}

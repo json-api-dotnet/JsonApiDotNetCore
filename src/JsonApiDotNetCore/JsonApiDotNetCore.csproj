@@ -1,11 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net6.0</TargetFrameworks>
+    <TargetFramework>$(TargetFrameworkName)</TargetFramework>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
-
-  <Import Project="..\..\package-versions.props" />
 
   <PropertyGroup>
     <VersionPrefix>$(JsonApiDotNetCoreVersionPrefix)</VersionPrefix>

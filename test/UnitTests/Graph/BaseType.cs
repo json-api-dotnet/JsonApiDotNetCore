@@ -2,4 +2,6 @@
 
 namespace UnitTests.Graph;
 
-internal class BaseType<T>;
+internal class BaseType<T>
+{
+}

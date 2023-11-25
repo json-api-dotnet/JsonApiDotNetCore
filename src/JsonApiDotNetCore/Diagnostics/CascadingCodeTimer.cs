@@ -12,7 +12,7 @@ internal sealed class CascadingCodeTimer : ICodeTimer
 {
     private readonly Stopwatch _stopwatch = new();
     private readonly Stack<MeasureScope> _activeScopeStack = new();
-    private readonly List<MeasureScope> _completedScopes = [];
+    private readonly List<MeasureScope> _completedScopes = new();
 
     static CascadingCodeTimer()
     {

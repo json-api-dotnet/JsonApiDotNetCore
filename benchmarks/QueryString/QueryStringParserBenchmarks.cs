@@ -1,6 +1,7 @@
 using System.ComponentModel.Design;
 using BenchmarkDotNet.Attributes;
 using Benchmarks.Tools;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Parsing;
@@ -54,14 +55,8 @@ public class QueryStringParserBenchmarks
         var paginationParser = new PaginationParser();
         var paginationReader = new PaginationQueryStringParameterReader(paginationParser, request, resourceGraph, options);
 
-        IQueryStringParameterReader[] readers =
-        [
-            includeReader,
-            filterReader,
-            sortReader,
-            sparseFieldSetReader,
-            paginationReader
-        ];
+        IQueryStringParameterReader[] readers = ArrayFactory.Create<IQueryStringParameterReader>(includeReader, filterReader, sortReader,
+            sparseFieldSetReader, paginationReader);
 
         _queryStringReader = new QueryStringReader(options, _queryStringAccessor, readers, NullLoggerFactory.Instance);
     }

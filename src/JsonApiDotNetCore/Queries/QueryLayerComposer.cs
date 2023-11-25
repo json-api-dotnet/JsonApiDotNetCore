@@ -272,7 +272,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         QueryLayer queryLayer = ComposeFromConstraints(primaryResourceType);
         queryLayer.Sort = null;
         queryLayer.Pagination = null;
-        queryLayer.Filter = CreateFilterByIds([id], idAttribute, queryLayer.Filter);
+        queryLayer.Filter = CreateFilterByIds(id.AsArray(), idAttribute, queryLayer.Filter);
 
         if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
         {
@@ -342,7 +342,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         return new QueryLayer(primaryResourceType)
         {
             Include = RewriteIncludeForSecondaryEndpoint(innerInclude, relationship),
-            Filter = CreateFilterByIds([primaryId], primaryIdAttribute, primaryFilter),
+            Filter = CreateFilterByIds(primaryId.AsArray(), primaryIdAttribute, primaryFilter),
             Selection = primarySelection
         };
     }
@@ -390,7 +390,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         primaryLayer.Include = includeElements.Any() ? new IncludeExpression(includeElements) : IncludeExpression.Empty;
         primaryLayer.Sort = null;
         primaryLayer.Pagination = null;
-        primaryLayer.Filter = CreateFilterByIds([id], primaryIdAttribute, primaryLayer.Filter);
+        primaryLayer.Filter = CreateFilterByIds(id.AsArray(), primaryIdAttribute, primaryLayer.Filter);
         primaryLayer.Selection = null;
 
         return primaryLayer;
@@ -449,7 +449,7 @@ public class QueryLayerComposer : IQueryLayerComposer
         AttrAttribute rightIdAttribute = GetIdAttribute(hasManyRelationship.RightType);
         HashSet<object> rightTypedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToHashSet();
 
-        FilterExpression? leftFilter = CreateFilterByIds([leftId], leftIdAttribute, null);
+        FilterExpression? leftFilter = CreateFilterByIds(leftId.AsArray(), leftIdAttribute, null);
         FilterExpression? rightFilter = CreateFilterByIds(rightTypedIds, rightIdAttribute, null);
 
         var secondarySelection = new FieldSelection();

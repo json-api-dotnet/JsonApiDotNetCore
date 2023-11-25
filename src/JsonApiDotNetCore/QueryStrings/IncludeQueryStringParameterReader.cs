@@ -47,10 +47,14 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
     {
         try
         {
+            // Workaround for https://youtrack.jetbrains.com/issue/RSRP-493256/Incorrect-possible-null-assignment
+            // ReSharper disable once AssignNullToNotNullAttribute
             _includeExpression = GetInclude(parameterValue.ToString());
         }
         catch (QueryParseException exception)
         {
+            // Workaround for https://youtrack.jetbrains.com/issue/RSRP-493256/Incorrect-possible-null-assignment
+            // ReSharper disable once AssignNullToNotNullAttribute
             string specificMessage = exception.GetMessageWithPosition(parameterValue.ToString());
             throw new InvalidQueryStringParameterException(parameterName, "The specified include is invalid.", specificMessage, exception);
         }
@@ -68,6 +72,6 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
             ? new ExpressionInScope(null, _includeExpression)
             : new ExpressionInScope(null, IncludeExpression.Empty);
 
-        return [expressionInScope];
+        return expressionInScope.AsArray();
     }
 }

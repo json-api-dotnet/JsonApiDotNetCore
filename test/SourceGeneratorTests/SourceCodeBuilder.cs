@@ -4,7 +4,7 @@ namespace SourceGeneratorTests;
 
 internal sealed class SourceCodeBuilder
 {
-    private readonly HashSet<string> _namespaceImports = [];
+    private readonly HashSet<string> _namespaceImports = new();
     private string? _namespace;
     private string? _code;
 

@@ -38,7 +38,7 @@ internal sealed class DapperFacade
     {
         ArgumentGuard.NotNull(changeDetector);
 
-        List<CommandDefinition> sqlCommands = [];
+        List<CommandDefinition> sqlCommands = new();
 
         foreach ((HasOneAttribute relationship, (object? currentRightId, object newRightId)) in changeDetector.GetOneToOneRelationshipsChangedToNotNull())
         {
@@ -81,7 +81,7 @@ internal sealed class DapperFacade
     {
         ArgumentGuard.NotNull(changeDetector);
 
-        List<CommandDefinition> sqlCommands = [];
+        List<CommandDefinition> sqlCommands = new();
 
         foreach ((HasOneAttribute hasOneRelationship, (object? currentRightId, object? newRightId)) in changeDetector
             .GetChangedToOneRelationshipsWithForeignKeyAtRightSide())

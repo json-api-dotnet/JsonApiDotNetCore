@@ -14,7 +14,7 @@ internal sealed class AuthScopeSet
 
     public const string ScopesHeaderName = "X-Auth-Scopes";
 
-    private readonly Dictionary<string, Permission> _scopes = [];
+    private readonly Dictionary<string, Permission> _scopes = new();
 
     public static AuthScopeSet GetRequestedScopes(IHeaderDictionary requestHeaders)
     {

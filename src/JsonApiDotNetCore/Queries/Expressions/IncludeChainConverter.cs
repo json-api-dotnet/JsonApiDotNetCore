@@ -46,7 +46,7 @@ internal sealed class IncludeChainConverter
     {
         private readonly Stack<RelationshipAttribute> _parentRelationshipStack = new();
 
-        public List<ResourceFieldChainExpression> Chains { get; } = [];
+        public List<ResourceFieldChainExpression> Chains { get; } = new();
 
         public override object? VisitInclude(IncludeExpression expression, object? argument)
         {

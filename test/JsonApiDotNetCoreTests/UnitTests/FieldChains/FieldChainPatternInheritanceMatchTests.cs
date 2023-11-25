@@ -1,5 +1,6 @@
 using FluentAssertions;
 using JetBrains.Annotations;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.QueryStrings.FieldChains;
 using JsonApiDotNetCore.Resources;
@@ -9,9 +10,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
 using Xunit;
 using Xunit.Abstractions;
-
-// Workaround for Resharper bug at https://youtrack.jetbrains.com/issue/RSRP-494909/Breaking-UsedImplicitly-and-PublicAPI-on-types-no-longer-respected.
-// ReSharper disable PropertyCanBeMadeInitOnly.Local
 
 // ReSharper disable InconsistentNaming
 #pragma warning disable AV1706 // Identifier contains an abbreviation or is too short
@@ -46,7 +44,7 @@ public sealed class FieldChainPatternInheritanceMatchTests
     public FieldChainPatternInheritanceMatchTests(ITestOutputHelper testOutputHelper)
     {
         var loggerProvider = new XUnitLoggerProvider(testOutputHelper, null, LogOutputFields.Message);
-        _loggerFactory = new LoggerFactory([loggerProvider]);
+        _loggerFactory = new LoggerFactory(loggerProvider.AsEnumerable());
 
         var options = new JsonApiOptions();
         _resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<Base, long>().Add<DerivedQ, long>().Add<DerivedV, long>().Build();

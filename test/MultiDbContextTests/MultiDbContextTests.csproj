@@ -1,9 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net6.0</TargetFrameworks>
+    <TargetFramework>$(TargetFrameworkName)</TargetFramework>
   </PropertyGroup>
-
-  <Import Project="..\..\package-versions.props" />
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Examples\MultiDbContextExample\MultiDbContextExample.csproj" />

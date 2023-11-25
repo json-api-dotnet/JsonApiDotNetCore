@@ -11,4 +11,6 @@ namespace JsonApiDotNetCore.Controllers.Annotations;
 /// ]]></example>
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-public sealed class DisableRoutingConventionAttribute : Attribute;
+public sealed class DisableRoutingConventionAttribute : Attribute
+{
+}

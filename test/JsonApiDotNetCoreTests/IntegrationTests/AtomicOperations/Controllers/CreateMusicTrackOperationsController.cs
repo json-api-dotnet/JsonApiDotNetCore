@@ -22,11 +22,11 @@ public sealed class CreateMusicTrackOperationsController : JsonApiOperationsCont
     {
     }
 
-    public override Task<IActionResult> PostOperationsAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
+    public override async Task<IActionResult> PostOperationsAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
     {
         AssertOnlyCreatingMusicTracks(operations);
 
-        return base.PostOperationsAsync(operations, cancellationToken);
+        return await base.PostOperationsAsync(operations, cancellationToken);
     }
 
     private static void AssertOnlyCreatingMusicTracks(IEnumerable<OperationContainer> operations)

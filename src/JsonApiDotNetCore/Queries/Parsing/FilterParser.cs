@@ -14,8 +14,8 @@ namespace JsonApiDotNetCore.Queries.Parsing;
 [PublicAPI]
 public class FilterParser : QueryExpressionParser, IFilterParser
 {
-    private static readonly HashSet<string> FilterKeywords =
-    [
+    private static readonly HashSet<string> FilterKeywords = new(new[]
+    {
         Keywords.Not,
         Keywords.And,
         Keywords.Or,
@@ -31,7 +31,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         Keywords.Count,
         Keywords.Has,
         Keywords.IsType
-    ];
+    });
 
     private readonly IResourceFactory _resourceFactory;
     private readonly Stack<ResourceType> _resourceTypeStack = new();
@@ -252,13 +252,13 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
             var leftAttribute = (AttrAttribute)leftLastField;
 
-            ConstantValueConverter constantValueConverter = GetConstantValueConverterForAttribute(leftAttribute);
+            Func<string, int, object> constantValueConverter = GetConstantValueConverterForAttribute(leftAttribute);
             return ParseTypedComparisonRightTerm(leftAttribute.Property.PropertyType, constantValueConverter);
         }
 
         if (leftTerm is FunctionExpression leftFunction)
         {
-            ConstantValueConverter constantValueConverter = GetConstantValueConverterForType(leftFunction.ReturnType);
+            Func<string, int, object> constantValueConverter = GetConstantValueConverterForType(leftFunction.ReturnType);
             return ParseTypedComparisonRightTerm(leftFunction.ReturnType, constantValueConverter);
         }
 
@@ -266,7 +266,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
             $"Internal error: Expected left term to be a function or field chain, instead of '{leftTerm.GetType().Name}': '{leftTerm}'.");
     }
 
-    private QueryExpression ParseTypedComparisonRightTerm(Type leftType, ConstantValueConverter constantValueConverter)
+    private QueryExpression ParseTypedComparisonRightTerm(Type leftType, Func<string, int, object> constantValueConverter)
     {
         bool allowNull = RuntimeTypeConverter.CanContainNull(leftType);
 
@@ -329,7 +329,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         EatSingleCharacterToken(TokenKind.Comma);
 
-        ConstantValueConverter constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute);
+        Func<string, int, object> constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute);
         LiteralConstantExpression constant = ParseConstant(constantValueConverter);
 
         EatSingleCharacterToken(TokenKind.CloseParen);
@@ -352,7 +352,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
 
         ImmutableHashSet<LiteralConstantExpression>.Builder constantsBuilder = ImmutableHashSet.CreateBuilder<LiteralConstantExpression>();
 
-        ConstantValueConverter constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute);
+        Func<string, int, object> constantValueConverter = GetConstantValueConverterForAttribute(targetAttribute);
         LiteralConstantExpression constant = ParseConstant(constantValueConverter);
         constantsBuilder.Add(constant);
 
@@ -489,7 +489,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         return filter;
     }
 
-    private LiteralConstantExpression ParseConstant(ConstantValueConverter constantValueConverter)
+    private LiteralConstantExpression ParseConstant(Func<string, int, object> constantValueConverter)
     {
         int position = GetNextTokenPositionOrEnd();
 
@@ -514,7 +514,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         throw new QueryParseException("null expected.", position);
     }
 
-    protected virtual ConstantValueConverter GetConstantValueConverterForType(Type destinationType)
+    private static Func<string, int, object> GetConstantValueConverterForType(Type destinationType)
     {
         return (stringValue, position) =>
         {
@@ -529,7 +529,7 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         };
     }
 
-    private ConstantValueConverter GetConstantValueConverterForAttribute(AttrAttribute attribute)
+    private Func<string, int, object> GetConstantValueConverterForAttribute(AttrAttribute attribute)
     {
         if (attribute is { Property.Name: nameof(Identifiable<object>.Id) })
         {

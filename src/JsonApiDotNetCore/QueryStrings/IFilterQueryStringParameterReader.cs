@@ -7,4 +7,6 @@ namespace JsonApiDotNetCore.QueryStrings;
 /// Reads the 'filter' query string parameter and produces a set of query constraints from it.
 /// </summary>
 [PublicAPI]
-public interface IFilterQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider;
+public interface IFilterQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider
+{
+}

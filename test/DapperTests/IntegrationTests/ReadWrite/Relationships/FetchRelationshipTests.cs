@@ -56,12 +56,10 @@ public sealed class FetchRelationshipTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t2."Id"
-                FROM "TodoItems" AS t1
-                INNER JOIN "People" AS t2 ON t1."OwnerId" = t2."Id"
-                WHERE t1."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT t1.""Id"", t2.""Id""
+FROM ""TodoItems"" AS t1
+INNER JOIN ""People"" AS t2 ON t1.""OwnerId"" = t2.""Id""
+WHERE t1.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);
@@ -101,12 +99,10 @@ public sealed class FetchRelationshipTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t2."Id"
-                FROM "TodoItems" AS t1
-                LEFT JOIN "People" AS t2 ON t1."AssigneeId" = t2."Id"
-                WHERE t1."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT t1.""Id"", t2.""Id""
+FROM ""TodoItems"" AS t1
+LEFT JOIN ""People"" AS t2 ON t1.""AssigneeId"" = t2.""Id""
+WHERE t1.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);
@@ -150,12 +146,10 @@ public sealed class FetchRelationshipTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "Tags" AS t1
-                LEFT JOIN "TodoItems" AS t2 ON t1."TodoItemId" = t2."Id"
-                WHERE t2."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT COUNT(*)
+FROM ""Tags"" AS t1
+LEFT JOIN ""TodoItems"" AS t2 ON t1.""TodoItemId"" = t2.""Id""
+WHERE t2.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);
@@ -163,13 +157,11 @@ public sealed class FetchRelationshipTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t2."Id"
-                FROM "TodoItems" AS t1
-                LEFT JOIN "Tags" AS t2 ON t1."Id" = t2."TodoItemId"
-                WHERE t1."Id" = @p1
-                ORDER BY t2."Id"
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT t1.""Id"", t2.""Id""
+FROM ""TodoItems"" AS t1
+LEFT JOIN ""Tags"" AS t2 ON t1.""Id"" = t2.""TodoItemId""
+WHERE t1.""Id"" = @p1
+ORDER BY t2.""Id"""));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", todoItem.Id);

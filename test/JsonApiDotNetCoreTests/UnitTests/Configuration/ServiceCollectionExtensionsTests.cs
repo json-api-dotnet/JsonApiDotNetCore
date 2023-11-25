@@ -164,10 +164,14 @@ public sealed class ServiceCollectionExtensionsTests
         provider.GetRequiredService(typeof(IResourceDefinition<ResourceOfGuid, Guid>)).Should().BeOfType<ResourceDefinitionOfGuid>();
     }
 
-    private sealed class ResourceOfInt32 : Identifiable<int>;
+    private sealed class ResourceOfInt32 : Identifiable<int>
+    {
+    }
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    private sealed class ResourceOfGuid : Identifiable<Guid>;
+    private sealed class ResourceOfGuid : Identifiable<Guid>
+    {
+    }
 
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     private sealed class ResourceServiceOfInt32 : IResourceService<ResourceOfInt32, int>
@@ -580,5 +584,7 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [UsedImplicitly(ImplicitUseKindFlags.Access)]
-    private sealed class Person : Identifiable<int>;
+    private sealed class Person : Identifiable<int>
+    {
+    }
 }

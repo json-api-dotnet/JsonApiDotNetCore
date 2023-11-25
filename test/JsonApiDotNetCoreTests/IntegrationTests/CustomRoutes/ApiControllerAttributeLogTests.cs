@@ -22,7 +22,10 @@ public sealed class ApiControllerAttributeLogTests : IntegrationTestContext<Test
             options.AddProvider(_loggerFactory);
         });
 
-        ConfigureServices(services => services.AddSingleton(_loggerFactory));
+        ConfigureServices(services =>
+        {
+            services.AddSingleton(_loggerFactory);
+        });
     }
 
     [Fact]

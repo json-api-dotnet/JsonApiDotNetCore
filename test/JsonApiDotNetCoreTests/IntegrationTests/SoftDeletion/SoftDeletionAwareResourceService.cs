@@ -5,8 +5,8 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
-using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion;
 
@@ -79,14 +79,16 @@ public class SoftDeletionAwareResourceService<TResource, TId> : JsonApiResourceS
         await base.AddToToManyRelationshipAsync(leftId, relationshipName, rightResourceIds, cancellationToken);
     }
 
-    public override Task DeleteAsync(TId id, CancellationToken cancellationToken)
+    public override async Task DeleteAsync(TId id, CancellationToken cancellationToken)
     {
         if (IsSoftDeletable(typeof(TResource)))
         {
-            return SoftDeleteAsync(id, cancellationToken);
+            await SoftDeleteAsync(id, cancellationToken);
         }
-
-        return base.DeleteAsync(id, cancellationToken);
+        else
+        {
+            await base.DeleteAsync(id, cancellationToken);
+        }
     }
 
     private async Task SoftDeleteAsync(TId id, CancellationToken cancellationToken)

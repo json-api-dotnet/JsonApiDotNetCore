@@ -31,7 +31,7 @@ public sealed class FakeLoggerFactory : ILoggerFactory, ILoggerProvider
         private readonly LogLevel _minimumLevel;
 
         private readonly object _lockObject = new();
-        private readonly List<FakeLogMessage> _messages = [];
+        private readonly List<FakeLogMessage> _messages = new();
 
         public FakeLogger(LogLevel minimumLevel)
         {

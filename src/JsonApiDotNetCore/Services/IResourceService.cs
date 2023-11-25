@@ -12,4 +12,6 @@ namespace JsonApiDotNetCore.Services;
 /// The resource identifier type.
 /// </typeparam>
 public interface IResourceService<TResource, in TId> : IResourceCommandService<TResource, TId>, IResourceQueryService<TResource, TId>
-    where TResource : class, IIdentifiable<TId>;
+    where TResource : class, IIdentifiable<TId>
+{
+}

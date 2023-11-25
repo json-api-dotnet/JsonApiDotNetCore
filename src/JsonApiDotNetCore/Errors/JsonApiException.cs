@@ -26,7 +26,7 @@ public class JsonApiException : Exception
     {
         ArgumentGuard.NotNull(error);
 
-        Errors = [error];
+        Errors = error.AsArray();
     }
 
     public JsonApiException(IEnumerable<ErrorObject> errors, Exception? innerException = null)

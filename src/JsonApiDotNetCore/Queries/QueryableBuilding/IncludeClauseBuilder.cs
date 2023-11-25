@@ -22,7 +22,7 @@ public class IncludeClauseBuilder : QueryClauseBuilder, IIncludeClauseBuilder
     public override Expression VisitInclude(IncludeExpression expression, QueryClauseBuilderContext context)
     {
         // De-duplicate chains coming from derived relationships.
-        HashSet<string> propertyPaths = [];
+        HashSet<string> propertyPaths = new();
 
         ApplyEagerLoads(context.ResourceType.EagerLoads, null, propertyPaths);
 
@@ -75,6 +75,6 @@ public class IncludeClauseBuilder : QueryClauseBuilder, IIncludeClauseBuilder
     {
         Expression navigationExpression = Expression.Constant(navigationPropertyPath);
 
-        return Expression.Call(typeof(EntityFrameworkQueryableExtensions), "Include", [entityType], source, navigationExpression);
+        return Expression.Call(typeof(EntityFrameworkQueryableExtensions), "Include", entityType.AsArray(), source, navigationExpression);
     }
 }

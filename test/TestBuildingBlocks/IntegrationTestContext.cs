@@ -170,10 +170,17 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureServices(services => _configureServices?.Invoke(services));
+                    webBuilder.ConfigureServices(services =>
+                    {
+                        _configureServices?.Invoke(services);
+                    });
+
                     webBuilder.UseStartup<TStartup>();
                 })
-                .ConfigureLogging(options => _loggingConfiguration?.Invoke(options));
+                .ConfigureLogging(options =>
+                {
+                    _loggingConfiguration?.Invoke(options);
+                });
 
             // @formatter:wrap_before_first_method_call restore
             // @formatter:wrap_chained_method_calls restore

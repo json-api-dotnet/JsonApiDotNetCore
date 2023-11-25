@@ -17,7 +17,10 @@ public sealed class WorkflowTests : IClassFixture<IntegrationTestContext<Testabl
 
         testContext.UseController<WorkflowsController>();
 
-        testContext.ConfigureServices(services => services.AddResourceDefinition<WorkflowDefinition>());
+        testContext.ConfigureServices(services =>
+        {
+            services.AddResourceDefinition<WorkflowDefinition>();
+        });
     }
 
     [Fact]

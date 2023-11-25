@@ -1,5 +1,6 @@
 using System.Net;
 using FluentAssertions;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
@@ -879,7 +880,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
             dbContext.WorkItems.Add(existingWorkItem);
             await dbContext.SaveChangesAsync();
 
-            existingWorkItem.RelatedFrom = [existingWorkItem];
+            existingWorkItem.RelatedFrom = ArrayFactory.Create(existingWorkItem);
             await dbContext.SaveChangesAsync();
         });
 

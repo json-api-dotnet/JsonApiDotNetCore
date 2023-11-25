@@ -13,8 +13,8 @@ public sealed class ResourceGraph : IResourceGraph
     private static readonly Type? ProxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
 
     private readonly IReadOnlySet<ResourceType> _resourceTypeSet;
-    private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = [];
-    private readonly Dictionary<string, ResourceType> _resourceTypesByPublicName = [];
+    private readonly Dictionary<Type, ResourceType> _resourceTypesByClrType = new();
+    private readonly Dictionary<string, ResourceType> _resourceTypesByPublicName = new();
 
     public ResourceGraph(IReadOnlySet<ResourceType> resourceTypeSet)
     {

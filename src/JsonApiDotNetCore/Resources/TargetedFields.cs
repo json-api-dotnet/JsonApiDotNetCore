@@ -10,8 +10,8 @@ public sealed class TargetedFields : ITargetedFields
     IReadOnlySet<AttrAttribute> ITargetedFields.Attributes => Attributes;
     IReadOnlySet<RelationshipAttribute> ITargetedFields.Relationships => Relationships;
 
-    public HashSet<AttrAttribute> Attributes { get; } = [];
-    public HashSet<RelationshipAttribute> Relationships { get; } = [];
+    public HashSet<AttrAttribute> Attributes { get; } = new();
+    public HashSet<RelationshipAttribute> Relationships { get; } = new();
 
     /// <inheritdoc />
     public void CopyFrom(ITargetedFields other)

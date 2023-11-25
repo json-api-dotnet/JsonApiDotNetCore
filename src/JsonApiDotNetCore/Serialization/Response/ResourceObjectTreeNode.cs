@@ -55,7 +55,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     {
         ArgumentGuard.NotNull(treeNode);
 
-        _directChildren ??= [];
+        _directChildren ??= new List<ResourceObjectTreeNode>();
         _directChildren.Add(treeNode);
     }
 
@@ -63,11 +63,11 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
     {
         ArgumentGuard.NotNull(relationship);
 
-        _childrenByRelationship ??= [];
+        _childrenByRelationship ??= new Dictionary<RelationshipAttribute, HashSet<ResourceObjectTreeNode>>();
 
         if (!_childrenByRelationship.ContainsKey(relationship))
         {
-            _childrenByRelationship[relationship] = [];
+            _childrenByRelationship[relationship] = new HashSet<ResourceObjectTreeNode>();
         }
     }
 
@@ -182,7 +182,7 @@ internal sealed class ResourceObjectTreeNode : IEquatable<ResourceObjectTreeNode
         }
 
         ISet<ResourceObject> primaryResourceObjectSet = GetDirectChildren().Select(node => node.ResourceObject).ToHashSet(ResourceObjectComparer.Instance);
-        List<ResourceObject> includes = [];
+        List<ResourceObject> includes = new();
 
         foreach (ResourceObject include in visited.Select(node => node.ResourceObject))
         {

@@ -148,25 +148,22 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT COUNT(*)
+FROM ""TodoItems"" AS t1"));
 
             command.Parameters.Should().BeEmpty();
         });
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority", t2."Id", t2."FirstName", t2."LastName", t3."Id", t3."FirstName", t3."LastName", t4."Id", t4."CreatedAt", t4."Description", t4."DurationInHours", t4."LastModifiedAt", t4."Priority", t5."Id", t5."Name"
-                FROM "TodoItems" AS t1
-                LEFT JOIN "People" AS t2 ON t1."AssigneeId" = t2."Id"
-                INNER JOIN "People" AS t3 ON t1."OwnerId" = t3."Id"
-                LEFT JOIN "TodoItems" AS t4 ON t3."Id" = t4."AssigneeId"
-                LEFT JOIN "Tags" AS t5 ON t1."Id" = t5."TodoItemId"
-                ORDER BY t1."Priority", t1."LastModifiedAt" DESC, t4."Priority", t4."LastModifiedAt" DESC, t5."Id"
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(
+                @"SELECT t1.""Id"", t1.""CreatedAt"", t1.""Description"", t1.""DurationInHours"", t1.""LastModifiedAt"", t1.""Priority"", t2.""Id"", t2.""FirstName"", t2.""LastName"", t3.""Id"", t3.""FirstName"", t3.""LastName"", t4.""Id"", t4.""CreatedAt"", t4.""Description"", t4.""DurationInHours"", t4.""LastModifiedAt"", t4.""Priority"", t5.""Id"", t5.""Name""
+FROM ""TodoItems"" AS t1
+LEFT JOIN ""People"" AS t2 ON t1.""AssigneeId"" = t2.""Id""
+INNER JOIN ""People"" AS t3 ON t1.""OwnerId"" = t3.""Id""
+LEFT JOIN ""TodoItems"" AS t4 ON t3.""Id"" = t4.""AssigneeId""
+LEFT JOIN ""Tags"" AS t5 ON t1.""Id"" = t5.""TodoItemId""
+ORDER BY t1.""Priority"", t1.""LastModifiedAt"" DESC, t4.""Priority"", t4.""LastModifiedAt"" DESC, t5.""Id"""));
 
             command.Parameters.Should().BeEmpty();
         });
@@ -216,23 +213,20 @@ public sealed class IncludeTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT COUNT(*)
-                FROM "TodoItems" AS t1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT COUNT(*)
+FROM ""TodoItems"" AS t1"));
 
             command.Parameters.Should().BeEmpty();
         });
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority", t2."Id", t2."Name", t3."Id"
-                FROM "TodoItems" AS t1
-                LEFT JOIN "Tags" AS t2 ON t1."Id" = t2."TodoItemId"
-                LEFT JOIN "RgbColors" AS t3 ON t2."Id" = t3."TagId"
-                ORDER BY t1."Priority", t1."LastModifiedAt" DESC, t2."Id"
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(
+                @"SELECT t1.""Id"", t1.""CreatedAt"", t1.""Description"", t1.""DurationInHours"", t1.""LastModifiedAt"", t1.""Priority"", t2.""Id"", t2.""Name"", t3.""Id""
+FROM ""TodoItems"" AS t1
+LEFT JOIN ""Tags"" AS t2 ON t1.""Id"" = t2.""TodoItemId""
+LEFT JOIN ""RgbColors"" AS t3 ON t2.""Id"" = t3.""TagId""
+ORDER BY t1.""Priority"", t1.""LastModifiedAt"" DESC, t2.""Id"""));
 
             command.Parameters.Should().BeEmpty();
         });

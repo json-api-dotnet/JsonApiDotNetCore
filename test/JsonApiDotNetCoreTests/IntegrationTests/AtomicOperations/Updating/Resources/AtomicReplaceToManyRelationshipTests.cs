@@ -668,10 +668,10 @@ public sealed class AtomicReplaceToManyRelationshipTests : IClassFixture<Integra
         RecordCompany existingCompany = _fakers.RecordCompany.Generate();
 
         string[] trackIds =
-        [
+        {
             Unknown.StringId.For<MusicTrack, Guid>(),
             Unknown.StringId.AltFor<MusicTrack, Guid>()
-        ];
+        };
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {

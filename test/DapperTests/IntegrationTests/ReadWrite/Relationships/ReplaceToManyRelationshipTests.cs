@@ -63,12 +63,11 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"
-                FROM "People" AS t1
-                LEFT JOIN "TodoItems" AS t2 ON t1."Id" = t2."AssigneeId"
-                WHERE t1."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(
+                @"SELECT t1.""Id"", t1.""FirstName"", t1.""LastName"", t2.""Id"", t2.""CreatedAt"", t2.""Description"", t2.""DurationInHours"", t2.""LastModifiedAt"", t2.""Priority""
+FROM ""People"" AS t1
+LEFT JOIN ""TodoItems"" AS t2 ON t1.""Id"" = t2.""AssigneeId""
+WHERE t1.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
@@ -76,11 +75,9 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                UPDATE "TodoItems"
-                SET "AssigneeId" = @p1
-                WHERE "Id" IN (@p2, @p3)
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""TodoItems""
+SET ""AssigneeId"" = @p1
+WHERE ""Id"" IN (@p2, @p3)"));
 
             command.Parameters.ShouldHaveCount(3);
             command.Parameters.Should().Contain("@p1", null);
@@ -131,12 +128,11 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"
-                FROM "People" AS t1
-                LEFT JOIN "TodoItems" AS t2 ON t1."Id" = t2."OwnerId"
-                WHERE t1."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(
+                @"SELECT t1.""Id"", t1.""FirstName"", t1.""LastName"", t2.""Id"", t2.""CreatedAt"", t2.""Description"", t2.""DurationInHours"", t2.""LastModifiedAt"", t2.""Priority""
+FROM ""People"" AS t1
+LEFT JOIN ""TodoItems"" AS t2 ON t1.""Id"" = t2.""OwnerId""
+WHERE t1.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
@@ -144,10 +140,8 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                DELETE FROM "TodoItems"
-                WHERE "Id" IN (@p1, @p2)
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"DELETE FROM ""TodoItems""
+WHERE ""Id"" IN (@p1, @p2)"));
 
             command.Parameters.ShouldHaveCount(2);
             command.Parameters.Should().Contain("@p1", existingPerson.OwnedTodoItems.ElementAt(0).Id);
@@ -213,12 +207,11 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"
-                FROM "People" AS t1
-                LEFT JOIN "TodoItems" AS t2 ON t1."Id" = t2."AssigneeId"
-                WHERE t1."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(
+                @"SELECT t1.""Id"", t1.""FirstName"", t1.""LastName"", t2.""Id"", t2.""CreatedAt"", t2.""Description"", t2.""DurationInHours"", t2.""LastModifiedAt"", t2.""Priority""
+FROM ""People"" AS t1
+LEFT JOIN ""TodoItems"" AS t2 ON t1.""Id"" = t2.""AssigneeId""
+WHERE t1.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
@@ -226,11 +219,9 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                UPDATE "TodoItems"
-                SET "AssigneeId" = @p1
-                WHERE "Id" IN (@p2, @p3)
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""TodoItems""
+SET ""AssigneeId"" = @p1
+WHERE ""Id"" IN (@p2, @p3)"));
 
             command.Parameters.ShouldHaveCount(3);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
@@ -292,12 +283,11 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"
-                FROM "People" AS t1
-                LEFT JOIN "TodoItems" AS t2 ON t1."Id" = t2."AssigneeId"
-                WHERE t1."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(
+                @"SELECT t1.""Id"", t1.""FirstName"", t1.""LastName"", t2.""Id"", t2.""CreatedAt"", t2.""Description"", t2.""DurationInHours"", t2.""LastModifiedAt"", t2.""Priority""
+FROM ""People"" AS t1
+LEFT JOIN ""TodoItems"" AS t2 ON t1.""Id"" = t2.""AssigneeId""
+WHERE t1.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
@@ -305,11 +295,9 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                UPDATE "TodoItems"
-                SET "AssigneeId" = @p1
-                WHERE "Id" = @p2
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""TodoItems""
+SET ""AssigneeId"" = @p1
+WHERE ""Id"" = @p2"));
 
             command.Parameters.ShouldHaveCount(2);
             command.Parameters.Should().Contain("@p1", null);
@@ -318,11 +306,9 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
 
         store.SqlCommands[2].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                UPDATE "TodoItems"
-                SET "AssigneeId" = @p1
-                WHERE "Id" = @p2
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""TodoItems""
+SET ""AssigneeId"" = @p1
+WHERE ""Id"" = @p2"));
 
             command.Parameters.ShouldHaveCount(2);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
@@ -383,12 +369,11 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t1."FirstName", t1."LastName", t2."Id", t2."CreatedAt", t2."Description", t2."DurationInHours", t2."LastModifiedAt", t2."Priority"
-                FROM "People" AS t1
-                LEFT JOIN "TodoItems" AS t2 ON t1."Id" = t2."OwnerId"
-                WHERE t1."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(
+                @"SELECT t1.""Id"", t1.""FirstName"", t1.""LastName"", t2.""Id"", t2.""CreatedAt"", t2.""Description"", t2.""DurationInHours"", t2.""LastModifiedAt"", t2.""Priority""
+FROM ""People"" AS t1
+LEFT JOIN ""TodoItems"" AS t2 ON t1.""Id"" = t2.""OwnerId""
+WHERE t1.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);
@@ -396,10 +381,8 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                DELETE FROM "TodoItems"
-                WHERE "Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"DELETE FROM ""TodoItems""
+WHERE ""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", existingPerson.OwnedTodoItems.ElementAt(0).Id);
@@ -407,11 +390,9 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<DapperTestCon
 
         store.SqlCommands[2].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                UPDATE "TodoItems"
-                SET "OwnerId" = @p1
-                WHERE "Id" = @p2
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""TodoItems""
+SET ""OwnerId"" = @p1
+WHERE ""Id"" = @p2"));
 
             command.Parameters.ShouldHaveCount(2);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);

@@ -17,7 +17,7 @@ internal sealed class TableNode : TableSourceNode
 {
     private readonly ResourceType _resourceType;
     private readonly IReadOnlyDictionary<string, ResourceFieldAttribute?> _columnMappings;
-    private readonly List<ColumnInTableNode> _columns = [];
+    private readonly List<ColumnInTableNode> _columns = new();
 
     public string Name => _resourceType.ClrType.Name.Pluralize();
 

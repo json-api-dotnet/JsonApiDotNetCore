@@ -9,6 +9,7 @@ using DapperExample.TranslationToSql.DataModel;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -17,7 +18,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.TryAddSingleton<IClock, SystemClock>();
+builder.Services.TryAddSingleton<ISystemClock, SystemClock>();
 
 DatabaseProvider databaseProvider = GetDatabaseProvider(builder.Configuration);
 string? connectionString = builder.Configuration.GetConnectionString($"DapperExample{databaseProvider}");

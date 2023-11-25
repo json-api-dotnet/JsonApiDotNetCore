@@ -89,44 +89,42 @@ public sealed class AtomicSerializationTests : IClassFixture<IntegrationTestCont
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "jsonapi": {
-                "version": "1.1",
-                "ext": [
-                  "https://jsonapi.org/ext/atomic"
-                ]
-              },
-              "links": {
-                "self": "http://localhost/operations"
-              },
-              "atomic:results": [
-                {
-                  "data": null
-                },
-                {
-                  "data": {
-                    "type": "textLanguages",
-                    "id": "{{newLanguage.StringId}}",
-                    "attributes": {
-                      "isoCode": "{{newLanguage.IsoCode}} (changed)"
-                    },
-                    "relationships": {
-                      "lyrics": {
-                        "links": {
-                          "self": "http://localhost/textLanguages/{{newLanguage.StringId}}/relationships/lyrics",
-                          "related": "http://localhost/textLanguages/{{newLanguage.StringId}}/lyrics"
-                        }
-                      }
-                    },
-                    "links": {
-                      "self": "http://localhost/textLanguages/{{newLanguage.StringId}}"
-                    }
-                  }
-                }
-              ]
+        responseDocument.Should().BeJson(@"{
+  ""jsonapi"": {
+    ""version"": ""1.1"",
+    ""ext"": [
+      ""https://jsonapi.org/ext/atomic""
+    ]
+  },
+  ""links"": {
+    ""self"": ""http://localhost/operations""
+  },
+  ""atomic:results"": [
+    {
+      ""data"": null
+    },
+    {
+      ""data"": {
+        ""type"": ""textLanguages"",
+        ""id"": """ + newLanguage.StringId + @""",
+        ""attributes"": {
+          ""isoCode"": """ + newLanguage.IsoCode + @" (changed)""
+        },
+        ""relationships"": {
+          ""lyrics"": {
+            ""links"": {
+              ""self"": ""http://localhost/textLanguages/" + newLanguage.StringId + @"/relationships/lyrics"",
+              ""related"": ""http://localhost/textLanguages/" + newLanguage.StringId + @"/lyrics""
             }
-            """);
+          }
+        },
+        ""links"": {
+          ""self"": ""http://localhost/textLanguages/" + newLanguage.StringId + @"""
+        }
+      }
+    }
+  ]
+}");
     }
 
     [Fact]
@@ -161,29 +159,27 @@ public sealed class AtomicSerializationTests : IClassFixture<IntegrationTestCont
 
         string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "jsonapi": {
-                "version": "1.1",
-                "ext": [
-                  "https://jsonapi.org/ext/atomic"
-                ]
-              },
-              "links": {
-                "self": "http://localhost/operations"
-              },
-              "errors": [
-                {
-                  "id": "{{errorId}}",
-                  "status": "404",
-                  "title": "The requested resource does not exist.",
-                  "detail": "Resource of type 'musicTracks' with ID '{{musicTrackId}}' does not exist.",
-                  "source": {
-                    "pointer": "/atomic:operations[0]"
-                  }
-                }
-              ]
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""jsonapi"": {
+    ""version"": ""1.1"",
+    ""ext"": [
+      ""https://jsonapi.org/ext/atomic""
+    ]
+  },
+  ""links"": {
+    ""self"": ""http://localhost/operations""
+  },
+  ""errors"": [
+    {
+      ""id"": """ + errorId + @""",
+      ""status"": ""404"",
+      ""title"": ""The requested resource does not exist."",
+      ""detail"": ""Resource of type 'musicTracks' with ID '" + musicTrackId + @"' does not exist."",
+      ""source"": {
+        ""pointer"": ""/atomic:operations[0]""
+      }
+    }
+  ]
+}");
     }
 }

@@ -48,9 +48,9 @@ internal sealed class Database
             Name = "Business"
         };
 
-        TodoItems =
-        [
-            new TodoItem
+        TodoItems = new List<TodoItem>
+        {
+            new()
             {
                 Id = ++todoItemIndex,
                 Description = "Make homework",
@@ -63,7 +63,7 @@ internal sealed class Database
                     personalTag
                 }
             },
-            new TodoItem
+            new()
             {
                 Id = ++todoItemIndex,
                 Description = "Book vacation",
@@ -75,7 +75,7 @@ internal sealed class Database
                     personalTag
                 }
             },
-            new TodoItem
+            new()
             {
                 Id = ++todoItemIndex,
                 Description = "Cook dinner",
@@ -89,7 +89,7 @@ internal sealed class Database
                     personalTag
                 }
             },
-            new TodoItem
+            new()
             {
                 Id = ++todoItemIndex,
                 Description = "Check emails",
@@ -102,20 +102,20 @@ internal sealed class Database
                     businessTag
                 }
             }
-        ];
+        };
 
-        Tags =
-        [
+        Tags = new List<Tag>
+        {
             personalTag,
             familyTag,
             businessTag
-        ];
+        };
 
-        People =
-        [
+        People = new List<Person>
+        {
             john,
             jane
-        ];
+        };
 
         foreach (Tag tag in Tags)
         {

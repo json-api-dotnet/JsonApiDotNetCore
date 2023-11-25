@@ -18,10 +18,10 @@ public sealed class SqlTreeNodeVisitorTests
             .Where(method => method.Name.StartsWith("Visit", StringComparison.Ordinal) && method.Name != "Visit").ToArray();
 
         object?[] parameters =
-        [
+        {
             null,
             null
-        ];
+        };
 
         // Act
         foreach (MethodInfo method in visitMethods)

@@ -68,15 +68,32 @@ internal sealed class CollectionConverter
     /// </summary>
     public IReadOnlyCollection<IIdentifiable> ExtractResources(object? value)
     {
-        return value switch
+        if (value is List<IIdentifiable> resourceList)
         {
-            List<IIdentifiable> resourceList => resourceList,
-            HashSet<IIdentifiable> resourceSet => resourceSet,
-            IReadOnlyCollection<IIdentifiable> resourceCollection => resourceCollection,
-            IEnumerable<IIdentifiable> resources => resources.ToList(),
-            IIdentifiable resource => [resource],
-            _ => Array.Empty<IIdentifiable>()
-        };
+            return resourceList;
+        }
+
+        if (value is HashSet<IIdentifiable> resourceSet)
+        {
+            return resourceSet;
+        }
+
+        if (value is IReadOnlyCollection<IIdentifiable> resourceCollection)
+        {
+            return resourceCollection;
+        }
+
+        if (value is IEnumerable<IIdentifiable> resources)
+        {
+            return resources.ToList();
+        }
+
+        if (value is IIdentifiable resource)
+        {
+            return resource.AsArray();
+        }
+
+        return Array.Empty<IIdentifiable>();
     }
 
     /// <summary>

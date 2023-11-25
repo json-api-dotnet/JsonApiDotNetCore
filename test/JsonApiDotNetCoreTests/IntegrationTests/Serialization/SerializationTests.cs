@@ -1,7 +1,5 @@
 using System.Globalization;
 using System.Net;
-using System.Text.Encodings.Web;
-using System.Text.Json;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -15,11 +13,6 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
 {
     private const string JsonDateTimeOffsetFormatSpecifier = "yyyy-MM-ddTHH:mm:ss.FFFFFFFK";
 
-    private static readonly JsonSerializerOptions UnicodeSerializerOptions = new()
-    {
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-    };
-
     private readonly IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> _testContext;
     private readonly SerializationFakers _fakers = new();
 
@@ -30,7 +23,10 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         testContext.UseController<MeetingAttendeesController>();
         testContext.UseController<MeetingsController>();
 
-        testContext.ConfigureServices(services => services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>)));
+        testContext.ConfigureServices(services =>
+        {
+            services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
+        });
 
         var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
         options.IncludeExceptionStackTraceInErrors = false;
@@ -102,76 +98,74 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson($$"""
+        responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetings?include=attendees"",
+    ""first"": ""http://localhost/meetings?include=attendees"",
+    ""last"": ""http://localhost/meetings?include=attendees""
+  },
+  ""data"": [
+    {
+      ""type"": ""meetings"",
+      ""id"": """ + meeting.StringId + @""",
+      ""attributes"": {
+        ""title"": """ + meeting.Title + @""",
+        ""startTime"": """ + meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
+        ""duration"": """ + meeting.Duration + @""",
+        ""location"": {
+          ""lat"": " + meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
+          ""lng"": " + meeting.Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
+        }
+      },
+      ""relationships"": {
+        ""attendees"": {
+          ""links"": {
+            ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees"",
+            ""related"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees""
+          },
+          ""data"": [
             {
-              "links": {
-                "self": "http://localhost/meetings?include=attendees",
-                "first": "http://localhost/meetings?include=attendees",
-                "last": "http://localhost/meetings?include=attendees"
-              },
-              "data": [
-                {
-                  "type": "meetings",
-                  "id": "{{meeting.StringId}}",
-                  "attributes": {
-                    "title": "{{meeting.Title}}",
-                    "startTime": "{{meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier)}}",
-                    "duration": "{{meeting.Duration}}",
-                    "location": {
-                      "lat": {{meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture)}},
-                      "lng": {{meeting.Location.Longitude.ToString(CultureInfo.InvariantCulture)}}
-                    }
-                  },
-                  "relationships": {
-                    "attendees": {
-                      "links": {
-                        "self": "http://localhost/meetings/{{meeting.StringId}}/relationships/attendees",
-                        "related": "http://localhost/meetings/{{meeting.StringId}}/attendees"
-                      },
-                      "data": [
-                        {
-                          "type": "meetingAttendees",
-                          "id": "{{meeting.Attendees[0].StringId}}"
-                        }
-                      ]
-                    }
-                  },
-                  "links": {
-                    "self": "http://localhost/meetings/{{meeting.StringId}}"
-                  }
-                }
-              ],
-              "included": [
-                {
-                  "type": "meetingAttendees",
-                  "id": "{{meeting.Attendees[0].StringId}}",
-                  "attributes": {
-                    "displayName": {{JsonSerializer.Serialize(meeting.Attendees[0].DisplayName, UnicodeSerializerOptions)}},
-                    "homeAddress": {
-                      "street": "{{meeting.Attendees[0].HomeAddress.Street}}",
-                      "zipCode": "{{meeting.Attendees[0].HomeAddress.ZipCode}}",
-                      "city": "{{meeting.Attendees[0].HomeAddress.City}}",
-                      "country": "{{meeting.Attendees[0].HomeAddress.Country}}"
-                    }
-                  },
-                  "relationships": {
-                    "meeting": {
-                      "links": {
-                        "self": "http://localhost/meetingAttendees/{{meeting.Attendees[0].StringId}}/relationships/meeting",
-                        "related": "http://localhost/meetingAttendees/{{meeting.Attendees[0].StringId}}/meeting"
-                      }
-                    }
-                  },
-                  "links": {
-                    "self": "http://localhost/meetingAttendees/{{meeting.Attendees[0].StringId}}"
-                  }
-                }
-              ],
-              "meta": {
-                "total": 1
-              }
+              ""type"": ""meetingAttendees"",
+              ""id"": """ + meeting.Attendees[0].StringId + @"""
             }
-            """);
+          ]
+        }
+      },
+      ""links"": {
+        ""self"": ""http://localhost/meetings/" + meeting.StringId + @"""
+      }
+    }
+  ],
+  ""included"": [
+    {
+      ""type"": ""meetingAttendees"",
+      ""id"": """ + meeting.Attendees[0].StringId + @""",
+      ""attributes"": {
+        ""displayName"": """ + meeting.Attendees[0].DisplayName + @""",
+        ""homeAddress"": {
+          ""street"": """ + meeting.Attendees[0].HomeAddress.Street + @""",
+          ""zipCode"": """ + meeting.Attendees[0].HomeAddress.ZipCode + @""",
+          ""city"": """ + meeting.Attendees[0].HomeAddress.City + @""",
+          ""country"": """ + meeting.Attendees[0].HomeAddress.Country + @"""
+        }
+      },
+      ""relationships"": {
+        ""meeting"": {
+          ""links"": {
+            ""self"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"/relationships/meeting"",
+            ""related"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"/meeting""
+          }
+        }
+      },
+      ""links"": {
+        ""self"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"""
+      }
+    }
+  ],
+  ""meta"": {
+    ""total"": 1
+  }
+}");
     }
 
     [Fact]
@@ -194,39 +188,37 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "links": {
-                "self": "http://localhost/meetingAttendees/{{attendee.StringId}}?include=meeting"
-              },
-              "data": {
-                "type": "meetingAttendees",
-                "id": "{{attendee.StringId}}",
-                "attributes": {
-                  "displayName": {{JsonSerializer.Serialize(attendee.DisplayName, UnicodeSerializerOptions)}},
-                  "homeAddress": {
-                    "street": "{{attendee.HomeAddress.Street}}",
-                    "zipCode": "{{attendee.HomeAddress.ZipCode}}",
-                    "city": "{{attendee.HomeAddress.City}}",
-                    "country": "{{attendee.HomeAddress.Country}}"
-                  }
-                },
-                "relationships": {
-                  "meeting": {
-                    "links": {
-                      "self": "http://localhost/meetingAttendees/{{attendee.StringId}}/relationships/meeting",
-                      "related": "http://localhost/meetingAttendees/{{attendee.StringId}}/meeting"
-                    },
-                    "data": null
-                  }
-                },
-                "links": {
-                  "self": "http://localhost/meetingAttendees/{{attendee.StringId}}"
-                }
-              },
-              "included": []
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"?include=meeting""
+  },
+  ""data"": {
+    ""type"": ""meetingAttendees"",
+    ""id"": """ + attendee.StringId + @""",
+    ""attributes"": {
+      ""displayName"": """ + attendee.DisplayName + @""",
+      ""homeAddress"": {
+        ""street"": """ + attendee.HomeAddress.Street + @""",
+        ""zipCode"": """ + attendee.HomeAddress.ZipCode + @""",
+        ""city"": """ + attendee.HomeAddress.City + @""",
+        ""country"": """ + attendee.HomeAddress.Country + @"""
+      }
+    },
+    ""relationships"": {
+      ""meeting"": {
+        ""links"": {
+          ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/relationships/meeting"",
+          ""related"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/meeting""
+        },
+        ""data"": null
+      }
+    },
+    ""links"": {
+      ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"""
+    }
+  },
+  ""included"": []
+}");
     }
 
     [Fact]
@@ -250,46 +242,44 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "links": {
-                "self": "http://localhost/meetings/?include=attendees",
-                "first": "http://localhost/meetings/?include=attendees",
-                "last": "http://localhost/meetings/?include=attendees"
-              },
-              "data": [
-                {
-                  "type": "meetings",
-                  "id": "{{meeting.StringId}}",
-                  "attributes": {
-                    "title": "{{meeting.Title}}",
-                    "startTime": "{{meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier)}}",
-                    "duration": "{{meeting.Duration}}",
-                    "location": {
-                      "lat": {{meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture)}},
-                      "lng": {{meeting.Location.Longitude.ToString(CultureInfo.InvariantCulture)}}
-                    }
-                  },
-                  "relationships": {
-                    "attendees": {
-                      "links": {
-                        "self": "http://localhost/meetings/{{meeting.StringId}}/relationships/attendees",
-                        "related": "http://localhost/meetings/{{meeting.StringId}}/attendees"
-                      },
-                      "data": []
-                    }
-                  },
-                  "links": {
-                    "self": "http://localhost/meetings/{{meeting.StringId}}"
-                  }
-                }
-              ],
-              "included": [],
-              "meta": {
-                "total": 1
-              }
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetings/?include=attendees"",
+    ""first"": ""http://localhost/meetings/?include=attendees"",
+    ""last"": ""http://localhost/meetings/?include=attendees""
+  },
+  ""data"": [
+    {
+      ""type"": ""meetings"",
+      ""id"": """ + meeting.StringId + @""",
+      ""attributes"": {
+        ""title"": """ + meeting.Title + @""",
+        ""startTime"": """ + meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
+        ""duration"": """ + meeting.Duration + @""",
+        ""location"": {
+          ""lat"": " + meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
+          ""lng"": " + meeting.Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
+        }
+      },
+      ""relationships"": {
+        ""attendees"": {
+          ""links"": {
+            ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees"",
+            ""related"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees""
+          },
+          ""data"": []
+        }
+      },
+      ""links"": {
+        ""self"": ""http://localhost/meetings/" + meeting.StringId + @"""
+      }
+    }
+  ],
+  ""included"": [],
+  ""meta"": {
+    ""total"": 1
+  }
+}");
     }
 
     [Fact]
@@ -312,37 +302,35 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "links": {
-                "self": "http://localhost/meetings/{{meeting.StringId}}"
-              },
-              "data": {
-                "type": "meetings",
-                "id": "{{meeting.StringId}}",
-                "attributes": {
-                  "title": "{{meeting.Title}}",
-                  "startTime": "{{meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier)}}",
-                  "duration": "{{meeting.Duration}}",
-                  "location": {
-                    "lat": {{meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture)}},
-                    "lng": {{meeting.Location.Longitude.ToString(CultureInfo.InvariantCulture)}}
-                  }
-                },
-                "relationships": {
-                  "attendees": {
-                    "links": {
-                      "self": "http://localhost/meetings/{{meeting.StringId}}/relationships/attendees",
-                      "related": "http://localhost/meetings/{{meeting.StringId}}/attendees"
-                    }
-                  }
-                },
-                "links": {
-                  "self": "http://localhost/meetings/{{meeting.StringId}}"
-                }
-              }
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetings/" + meeting.StringId + @"""
+  },
+  ""data"": {
+    ""type"": ""meetings"",
+    ""id"": """ + meeting.StringId + @""",
+    ""attributes"": {
+      ""title"": """ + meeting.Title + @""",
+      ""startTime"": """ + meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
+      ""duration"": """ + meeting.Duration + @""",
+      ""location"": {
+        ""lat"": " + meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
+        ""lng"": " + meeting.Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
+      }
+    },
+    ""relationships"": {
+      ""attendees"": {
+        ""links"": {
+          ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees"",
+          ""related"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees""
+        }
+      }
+    },
+    ""links"": {
+      ""self"": ""http://localhost/meetings/" + meeting.StringId + @"""
+    }
+  }
+}");
     }
 
     [Fact]
@@ -361,21 +349,19 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
 
         string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "links": {
-                "self": "http://localhost/meetings/ffffffff-ffff-ffff-ffff-ffffffffffff"
-              },
-              "errors": [
-                {
-                  "id": "{{errorId}}",
-                  "status": "404",
-                  "title": "The requested resource does not exist.",
-                  "detail": "Resource of type 'meetings' with ID '{{meetingId}}' does not exist."
-                }
-              ]
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetings/ffffffff-ffff-ffff-ffff-ffffffffffff""
+  },
+  ""errors"": [
+    {
+      ""id"": """ + errorId + @""",
+      ""status"": ""404"",
+      ""title"": ""The requested resource does not exist."",
+      ""detail"": ""Resource of type 'meetings' with ID '" + meetingId + @"' does not exist.""
+    }
+  ]
+}");
     }
 
     [Fact]
@@ -399,37 +385,35 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "links": {
-                "self": "http://localhost/meetingAttendees/{{attendee.StringId}}/meeting"
-              },
-              "data": {
-                "type": "meetings",
-                "id": "{{attendee.Meeting.StringId}}",
-                "attributes": {
-                  "title": "{{attendee.Meeting.Title}}",
-                  "startTime": "{{attendee.Meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier)}}",
-                  "duration": "{{attendee.Meeting.Duration}}",
-                  "location": {
-                    "lat": {{attendee.Meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture)}},
-                    "lng": {{attendee.Meeting.Location.Longitude.ToString(CultureInfo.InvariantCulture)}}
-                  }
-                },
-                "relationships": {
-                  "attendees": {
-                    "links": {
-                      "self": "http://localhost/meetings/{{attendee.Meeting.StringId}}/relationships/attendees",
-                      "related": "http://localhost/meetings/{{attendee.Meeting.StringId}}/attendees"
-                    }
-                  }
-                },
-                "links": {
-                  "self": "http://localhost/meetings/{{attendee.Meeting.StringId}}"
-                }
-              }
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/meeting""
+  },
+  ""data"": {
+    ""type"": ""meetings"",
+    ""id"": """ + attendee.Meeting.StringId + @""",
+    ""attributes"": {
+      ""title"": """ + attendee.Meeting.Title + @""",
+      ""startTime"": """ + attendee.Meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
+      ""duration"": """ + attendee.Meeting.Duration + @""",
+      ""location"": {
+        ""lat"": " + attendee.Meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
+        ""lng"": " + attendee.Meeting.Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
+      }
+    },
+    ""relationships"": {
+      ""attendees"": {
+        ""links"": {
+          ""self"": ""http://localhost/meetings/" + attendee.Meeting.StringId + @"/relationships/attendees"",
+          ""related"": ""http://localhost/meetings/" + attendee.Meeting.StringId + @"/attendees""
+        }
+      }
+    },
+    ""links"": {
+      ""self"": ""http://localhost/meetings/" + attendee.Meeting.StringId + @"""
+    }
+  }
+}");
     }
 
     [Fact]
@@ -452,14 +436,12 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "links": {
-                "self": "http://localhost/meetingAttendees/{{attendee.StringId}}/meeting"
-              },
-              "data": null
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/meeting""
+  },
+  ""data"": null
+}");
     }
 
     [Fact]
@@ -483,44 +465,42 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "links": {
-                "self": "http://localhost/meetings/{{meeting.StringId}}/attendees",
-                "first": "http://localhost/meetings/{{meeting.StringId}}/attendees",
-                "last": "http://localhost/meetings/{{meeting.StringId}}/attendees"
-              },
-              "data": [
-                {
-                  "type": "meetingAttendees",
-                  "id": "{{meeting.Attendees[0].StringId}}",
-                  "attributes": {
-                    "displayName": {{JsonSerializer.Serialize(meeting.Attendees[0].DisplayName, UnicodeSerializerOptions)}},
-                    "homeAddress": {
-                      "street": "{{meeting.Attendees[0].HomeAddress.Street}}",
-                      "zipCode": "{{meeting.Attendees[0].HomeAddress.ZipCode}}",
-                      "city": "{{meeting.Attendees[0].HomeAddress.City}}",
-                      "country": "{{meeting.Attendees[0].HomeAddress.Country}}"
-                    }
-                  },
-                  "relationships": {
-                    "meeting": {
-                      "links": {
-                        "self": "http://localhost/meetingAttendees/{{meeting.Attendees[0].StringId}}/relationships/meeting",
-                        "related": "http://localhost/meetingAttendees/{{meeting.Attendees[0].StringId}}/meeting"
-                      }
-                    }
-                  },
-                  "links": {
-                    "self": "http://localhost/meetingAttendees/{{meeting.Attendees[0].StringId}}"
-                  }
-                }
-              ],
-              "meta": {
-                "total": 1
-              }
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees"",
+    ""first"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees"",
+    ""last"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees""
+  },
+  ""data"": [
+    {
+      ""type"": ""meetingAttendees"",
+      ""id"": """ + meeting.Attendees[0].StringId + @""",
+      ""attributes"": {
+        ""displayName"": """ + meeting.Attendees[0].DisplayName + @""",
+        ""homeAddress"": {
+          ""street"": """ + meeting.Attendees[0].HomeAddress.Street + @""",
+          ""zipCode"": """ + meeting.Attendees[0].HomeAddress.ZipCode + @""",
+          ""city"": """ + meeting.Attendees[0].HomeAddress.City + @""",
+          ""country"": """ + meeting.Attendees[0].HomeAddress.Country + @"""
+        }
+      },
+      ""relationships"": {
+        ""meeting"": {
+          ""links"": {
+            ""self"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"/relationships/meeting"",
+            ""related"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"/meeting""
+          }
+        }
+      },
+      ""links"": {
+        ""self"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"""
+      }
+    }
+  ],
+  ""meta"": {
+    ""total"": 1
+  }
+}");
     }
 
     [Fact]
@@ -543,18 +523,16 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "links": {
-                "self": "http://localhost/meetings/{{meeting.StringId}}/attendees",
-                "first": "http://localhost/meetings/{{meeting.StringId}}/attendees"
-              },
-              "data": [],
-              "meta": {
-                "total": 0
-              }
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees"",
+    ""first"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees""
+  },
+  ""data"": [],
+  ""meta"": {
+    ""total"": 0
+  }
+}");
     }
 
     [Fact]
@@ -578,18 +556,16 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "links": {
-                "self": "http://localhost/meetingAttendees/{{attendee.StringId}}/relationships/meeting",
-                "related": "http://localhost/meetingAttendees/{{attendee.StringId}}/meeting"
-              },
-              "data": {
-                "type": "meetings",
-                "id": "{{attendee.Meeting.StringId}}"
-              }
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/relationships/meeting"",
+    ""related"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/meeting""
+  },
+  ""data"": {
+    ""type"": ""meetings"",
+    ""id"": """ + attendee.Meeting.StringId + @"""
+  }
+}");
     }
 
     [Fact]
@@ -613,31 +589,29 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        string[] meetingIds = [.. meeting.Attendees.Select(attendee => attendee.StringId!).OrderBy(id => id)];
+        string[] meetingIds = meeting.Attendees.Select(attendee => attendee.StringId!).OrderBy(id => id).ToArray();
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "links": {
-                "self": "http://localhost/meetings/{{meeting.StringId}}/relationships/attendees",
-                "related": "http://localhost/meetings/{{meeting.StringId}}/attendees",
-                "first": "http://localhost/meetings/{{meeting.StringId}}/relationships/attendees",
-                "last": "http://localhost/meetings/{{meeting.StringId}}/relationships/attendees"
-              },
-              "data": [
-                {
-                  "type": "meetingAttendees",
-                  "id": "{{meetingIds[0]}}"
-                },
-                {
-                  "type": "meetingAttendees",
-                  "id": "{{meetingIds[1]}}"
-                }
-              ],
-              "meta": {
-                "total": 2
-              }
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees"",
+    ""related"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees"",
+    ""first"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees"",
+    ""last"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees""
+  },
+  ""data"": [
+    {
+      ""type"": ""meetingAttendees"",
+      ""id"": """ + meetingIds[0] + @"""
+    },
+    {
+      ""type"": ""meetingAttendees"",
+      ""id"": """ + meetingIds[1] + @"""
+    }
+  ],
+  ""meta"": {
+    ""total"": 2
+  }
+}");
     }
 
     [Fact]
@@ -675,37 +649,35 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.Created);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "links": {
-                "self": "http://localhost/meetings"
-              },
-              "data": {
-                "type": "meetings",
-                "id": "{{newMeeting.StringId}}",
-                "attributes": {
-                  "title": "{{newMeeting.Title}}",
-                  "startTime": "{{newMeeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier)}}",
-                  "duration": "{{newMeeting.Duration}}",
-                  "location": {
-                    "lat": {{newMeeting.Location.Latitude.ToString(CultureInfo.InvariantCulture)}},
-                    "lng": {{newMeeting.Location.Longitude.ToString(CultureInfo.InvariantCulture)}}
-                  }
-                },
-                "relationships": {
-                  "attendees": {
-                    "links": {
-                      "self": "http://localhost/meetings/{{newMeeting.StringId}}/relationships/attendees",
-                      "related": "http://localhost/meetings/{{newMeeting.StringId}}/attendees"
-                    }
-                  }
-                },
-                "links": {
-                  "self": "http://localhost/meetings/{{newMeeting.StringId}}"
-                }
-              }
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetings""
+  },
+  ""data"": {
+    ""type"": ""meetings"",
+    ""id"": """ + newMeeting.StringId + @""",
+    ""attributes"": {
+      ""title"": """ + newMeeting.Title + @""",
+      ""startTime"": """ + newMeeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
+      ""duration"": """ + newMeeting.Duration + @""",
+      ""location"": {
+        ""lat"": " + newMeeting.Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
+        ""lng"": " + newMeeting.Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
+      }
+    },
+    ""relationships"": {
+      ""attendees"": {
+        ""links"": {
+          ""self"": ""http://localhost/meetings/" + newMeeting.StringId + @"/relationships/attendees"",
+          ""related"": ""http://localhost/meetings/" + newMeeting.StringId + @"/attendees""
+        }
+      }
+    },
+    ""links"": {
+      ""self"": ""http://localhost/meetings/" + newMeeting.StringId + @"""
+    }
+  }
+}");
     }
 
     [Fact]
@@ -741,37 +713,35 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "links": {
-                "self": "http://localhost/meetingAttendees/{{existingAttendee.StringId}}"
-              },
-              "data": {
-                "type": "meetingAttendees",
-                "id": "{{existingAttendee.StringId}}",
-                "attributes": {
-                  "displayName": {{JsonSerializer.Serialize(existingAttendee.DisplayName, UnicodeSerializerOptions)}},
-                  "homeAddress": {
-                    "street": "{{existingAttendee.HomeAddress.Street}}",
-                    "zipCode": "{{existingAttendee.HomeAddress.ZipCode}}",
-                    "city": "{{existingAttendee.HomeAddress.City}}",
-                    "country": "{{existingAttendee.HomeAddress.Country}}"
-                  }
-                },
-                "relationships": {
-                  "meeting": {
-                    "links": {
-                      "self": "http://localhost/meetingAttendees/{{existingAttendee.StringId}}/relationships/meeting",
-                      "related": "http://localhost/meetingAttendees/{{existingAttendee.StringId}}/meeting"
-                    }
-                  }
-                },
-                "links": {
-                  "self": "http://localhost/meetingAttendees/{{existingAttendee.StringId}}"
-                }
-              }
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetingAttendees/" + existingAttendee.StringId + @"""
+  },
+  ""data"": {
+    ""type"": ""meetingAttendees"",
+    ""id"": """ + existingAttendee.StringId + @""",
+    ""attributes"": {
+      ""displayName"": """ + existingAttendee.DisplayName + @""",
+      ""homeAddress"": {
+        ""street"": """ + existingAttendee.HomeAddress.Street + @""",
+        ""zipCode"": """ + existingAttendee.HomeAddress.ZipCode + @""",
+        ""city"": """ + existingAttendee.HomeAddress.City + @""",
+        ""country"": """ + existingAttendee.HomeAddress.Country + @"""
+      }
+    },
+    ""relationships"": {
+      ""meeting"": {
+        ""links"": {
+          ""self"": ""http://localhost/meetingAttendees/" + existingAttendee.StringId + @"/relationships/meeting"",
+          ""related"": ""http://localhost/meetingAttendees/" + existingAttendee.StringId + @"/meeting""
+        }
+      }
+    },
+    ""links"": {
+      ""self"": ""http://localhost/meetingAttendees/" + existingAttendee.StringId + @"""
+    }
+  }
+}");
     }
 
     [Fact]
@@ -843,17 +813,15 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
         // Assert
         httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "jsonapi": {
-                "version": "1.1"
-              },
-              "links": {
-                "self": "http://localhost/meetingAttendees/{{attendee.StringId}}/meeting"
-              },
-              "data": null
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""jsonapi"": {
+    ""version"": ""1.1""
+  },
+  ""links"": {
+    ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/meeting""
+  },
+  ""data"": null
+}");
     }
 
     [Fact]
@@ -875,23 +843,21 @@ public sealed class SerializationTests : IClassFixture<IntegrationTestContext<Te
 
         string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
 
-        responseDocument.Should().BeJson($$"""
-            {
-              "jsonapi": {
-                "version": "1.1"
-              },
-              "links": {
-                "self": "http://localhost/meetingAttendees/ffffffff-ffff-ffff-ffff-ffffffffffff"
-              },
-              "errors": [
-                {
-                  "id": "{{errorId}}",
-                  "status": "404",
-                  "title": "The requested resource does not exist.",
-                  "detail": "Resource of type 'meetingAttendees' with ID '{{attendeeId}}' does not exist."
-                }
-              ]
-            }
-            """);
+        responseDocument.Should().BeJson(@"{
+  ""jsonapi"": {
+    ""version"": ""1.1""
+  },
+  ""links"": {
+    ""self"": ""http://localhost/meetingAttendees/ffffffff-ffff-ffff-ffff-ffffffffffff""
+  },
+  ""errors"": [
+    {
+      ""id"": """ + errorId + @""",
+      ""status"": ""404"",
+      ""title"": ""The requested resource does not exist."",
+      ""detail"": ""Resource of type 'meetingAttendees' with ID '" + attendeeId + @"' does not exist.""
+    }
+  ]
+}");
     }
 }

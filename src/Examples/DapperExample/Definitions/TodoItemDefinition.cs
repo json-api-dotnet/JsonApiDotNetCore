@@ -6,20 +6,21 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
+using Microsoft.AspNetCore.Authentication;
 
 namespace DapperExample.Definitions;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem, long>
 {
-    private readonly IClock _clock;
+    private readonly ISystemClock _systemClock;
 
-    public TodoItemDefinition(IResourceGraph resourceGraph, IClock clock)
+    public TodoItemDefinition(IResourceGraph resourceGraph, ISystemClock systemClock)
         : base(resourceGraph)
     {
-        ArgumentGuard.NotNull(clock);
+        ArgumentGuard.NotNull(systemClock);
 
-        _clock = clock;
+        _systemClock = systemClock;
     }
 
     public override SortExpression OnApplySort(SortExpression? existingSort)
@@ -29,21 +30,22 @@ public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem, lon
 
     private SortExpression GetDefaultSortOrder()
     {
-        return CreateSortExpressionFromLambda([
+        return CreateSortExpressionFromLambda(new PropertySortOrder
+        {
             (todoItem => todoItem.Priority, ListSortDirection.Ascending),
             (todoItem => todoItem.LastModifiedAt, ListSortDirection.Descending)
-        ]);
+        });
     }
 
     public override Task OnWritingAsync(TodoItem resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
     {
         if (writeOperation == WriteOperationKind.CreateResource)
         {
-            resource.CreatedAt = _clock.UtcNow;
+            resource.CreatedAt = _systemClock.UtcNow;
         }
         else if (writeOperation == WriteOperationKind.UpdateResource)
         {
-            resource.LastModifiedAt = _clock.UtcNow;
+            resource.LastModifiedAt = _systemClock.UtcNow;
         }
 
         return Task.CompletedTask;

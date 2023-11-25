@@ -28,7 +28,7 @@ internal sealed class InsertStatementBuilder : StatementBuilder
 
     private List<ColumnAssignmentNode> GetColumnAssignments(IReadOnlyDictionary<string, object?> columnsToSet, TableNode table)
     {
-        List<ColumnAssignmentNode> assignments = [];
+        List<ColumnAssignmentNode> assignments = new();
         ColumnNode idColumn = table.GetIdColumn(table.Alias);
 
         foreach ((string columnName, object? columnValue) in columnsToSet)

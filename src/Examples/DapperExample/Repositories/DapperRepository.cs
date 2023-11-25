@@ -161,7 +161,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
     }
 
     /// <inheritdoc />
-    public Task<int> CountAsync(FilterExpression? filter, CancellationToken cancellationToken)
+    public async Task<int> CountAsync(FilterExpression? filter, CancellationToken cancellationToken)
     {
         var queryLayer = new QueryLayer(ResourceType)
         {
@@ -173,7 +173,7 @@ public sealed class DapperRepository<TResource, TId> : IResourceRepository<TReso
         CommandDefinition sqlCommand = _dapperFacade.GetSqlCommand(selectNode, cancellationToken);
         LogSqlCommand(sqlCommand);
 
-        return ExecuteQueryAsync(connection => connection.ExecuteScalarAsync<int>(sqlCommand), cancellationToken);
+        return await ExecuteQueryAsync(async connection => await connection.ExecuteScalarAsync<int>(sqlCommand), cancellationToken);
     }
 
     /// <inheritdoc />

@@ -29,7 +29,7 @@ internal sealed class UpdateClearOneToOneStatementBuilder : StatementBuilder
         ColumnNode whereColumn = table.GetColumn(whereColumnName, null, table.Alias);
         WhereNode where = GetWhere(whereColumn, whereValue);
 
-        return new UpdateNode(table, [columnAssignment], where);
+        return new UpdateNode(table, columnAssignment.AsList(), where);
     }
 
     private WhereNode GetWhere(ColumnNode column, object? value)

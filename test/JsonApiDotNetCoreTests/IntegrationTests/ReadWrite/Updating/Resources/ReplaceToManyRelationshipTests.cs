@@ -1,5 +1,6 @@
 using System.Net;
 using FluentAssertions;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,10 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
         testContext.UseController<WorkItemGroupsController>();
         testContext.UseController<UserAccountsController>();
 
-        testContext.ConfigureServices(services => services.AddResourceDefinition<ImplicitlyChangingWorkItemDefinition>());
+        testContext.ConfigureServices(services =>
+        {
+            services.AddResourceDefinition<ImplicitlyChangingWorkItemDefinition>();
+        });
     }
 
     [Fact]
@@ -915,7 +919,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
             dbContext.WorkItems.Add(existingWorkItem);
             await dbContext.SaveChangesAsync();
 
-            existingWorkItem.Children = [existingWorkItem];
+            existingWorkItem.Children = existingWorkItem.AsList();
             await dbContext.SaveChangesAsync();
         });
 
@@ -964,7 +968,7 @@ public sealed class ReplaceToManyRelationshipTests : IClassFixture<IntegrationTe
             dbContext.WorkItems.Add(existingWorkItem);
             await dbContext.SaveChangesAsync();
 
-            existingWorkItem.RelatedFrom = [existingWorkItem];
+            existingWorkItem.RelatedFrom = ArrayFactory.Create(existingWorkItem);
             await dbContext.SaveChangesAsync();
         });
 

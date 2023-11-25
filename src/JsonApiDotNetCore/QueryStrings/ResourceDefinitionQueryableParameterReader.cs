@@ -15,7 +15,7 @@ public class ResourceDefinitionQueryableParameterReader : IResourceDefinitionQue
 {
     private readonly IJsonApiRequest _request;
     private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
-    private readonly List<ExpressionInScope> _constraints = [];
+    private readonly List<ExpressionInScope> _constraints = new();
 
     public bool AllowEmptyValue => false;
 

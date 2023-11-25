@@ -80,11 +80,9 @@ public sealed class AddToToManyRelationshipTests : IClassFixture<DapperTestConte
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                UPDATE "TodoItems"
-                SET "OwnerId" = @p1
-                WHERE "Id" IN (@p2, @p3)
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""TodoItems""
+SET ""OwnerId"" = @p1
+WHERE ""Id"" IN (@p2, @p3)"));
 
             command.Parameters.ShouldHaveCount(3);
             command.Parameters.Should().Contain("@p1", existingPerson.Id);

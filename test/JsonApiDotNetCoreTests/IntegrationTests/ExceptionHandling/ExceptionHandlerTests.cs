@@ -94,7 +94,7 @@ public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext
         var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
         loggerFactory.Logger.Clear();
 
-        const string requestBody = """{ "data": { "type": "" } }""";
+        const string requestBody = @"{ ""data"": { ""type"": """" } }";
 
         const string route = "/consumerArticles";
 

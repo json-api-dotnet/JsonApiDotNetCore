@@ -77,11 +77,9 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t1."Name"
-                FROM "Tags" AS t1
-                WHERE t1."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT t1.""Id"", t1.""Name""
+FROM ""Tags"" AS t1
+WHERE t1.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTag.Id);
@@ -89,11 +87,9 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t1."Name"
-                FROM "Tags" AS t1
-                WHERE t1."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"SELECT t1.""Id"", t1.""Name""
+FROM ""Tags"" AS t1
+WHERE t1.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTag.Id);
@@ -185,11 +181,10 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
-                FROM "TodoItems" AS t1
-                WHERE t1."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(
+                @"SELECT t1.""Id"", t1.""CreatedAt"", t1.""Description"", t1.""DurationInHours"", t1.""LastModifiedAt"", t1.""Priority""
+FROM ""TodoItems"" AS t1
+WHERE t1.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTodoItem.Id);
@@ -197,11 +192,9 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                UPDATE "TodoItems"
-                SET "Description" = @p1, "DurationInHours" = @p2, "LastModifiedAt" = @p3
-                WHERE "Id" = @p4
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""TodoItems""
+SET ""Description"" = @p1, ""DurationInHours"" = @p2, ""LastModifiedAt"" = @p3
+WHERE ""Id"" = @p4"));
 
             command.Parameters.ShouldHaveCount(4);
             command.Parameters.Should().Contain("@p1", newDescription);
@@ -212,11 +205,10 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[2].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
-                FROM "TodoItems" AS t1
-                WHERE t1."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(
+                @"SELECT t1.""Id"", t1.""CreatedAt"", t1.""Description"", t1.""DurationInHours"", t1.""LastModifiedAt"", t1.""Priority""
+FROM ""TodoItems"" AS t1
+WHERE t1.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTodoItem.Id);
@@ -342,14 +334,13 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[0].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority", t2."Id", t2."FirstName", t2."LastName", t3."Id", t3."FirstName", t3."LastName", t4."Id", t4."Name"
-                FROM "TodoItems" AS t1
-                LEFT JOIN "People" AS t2 ON t1."AssigneeId" = t2."Id"
-                INNER JOIN "People" AS t3 ON t1."OwnerId" = t3."Id"
-                LEFT JOIN "Tags" AS t4 ON t1."Id" = t4."TodoItemId"
-                WHERE t1."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(
+                @"SELECT t1.""Id"", t1.""CreatedAt"", t1.""Description"", t1.""DurationInHours"", t1.""LastModifiedAt"", t1.""Priority"", t2.""Id"", t2.""FirstName"", t2.""LastName"", t3.""Id"", t3.""FirstName"", t3.""LastName"", t4.""Id"", t4.""Name""
+FROM ""TodoItems"" AS t1
+LEFT JOIN ""People"" AS t2 ON t1.""AssigneeId"" = t2.""Id""
+INNER JOIN ""People"" AS t3 ON t1.""OwnerId"" = t3.""Id""
+LEFT JOIN ""Tags"" AS t4 ON t1.""Id"" = t4.""TodoItemId""
+WHERE t1.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTodoItem.Id);
@@ -357,11 +348,9 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[1].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                UPDATE "TodoItems"
-                SET "Description" = @p1, "Priority" = @p2, "DurationInHours" = @p3, "LastModifiedAt" = @p4, "OwnerId" = @p5, "AssigneeId" = @p6
-                WHERE "Id" = @p7
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""TodoItems""
+SET ""Description"" = @p1, ""Priority"" = @p2, ""DurationInHours"" = @p3, ""LastModifiedAt"" = @p4, ""OwnerId"" = @p5, ""AssigneeId"" = @p6
+WHERE ""Id"" = @p7"));
 
             command.Parameters.ShouldHaveCount(7);
             command.Parameters.Should().Contain("@p1", newTodoItem.Description);
@@ -375,11 +364,9 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[2].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                UPDATE "Tags"
-                SET "TodoItemId" = @p1
-                WHERE "Id" IN (@p2, @p3)
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""Tags""
+SET ""TodoItemId"" = @p1
+WHERE ""Id"" IN (@p2, @p3)"));
 
             command.Parameters.ShouldHaveCount(3);
             command.Parameters.Should().Contain("@p1", null);
@@ -389,11 +376,9 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[3].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                UPDATE "Tags"
-                SET "TodoItemId" = @p1
-                WHERE "Id" = @p2
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(@"UPDATE ""Tags""
+SET ""TodoItemId"" = @p1
+WHERE ""Id"" = @p2"));
 
             command.Parameters.ShouldHaveCount(2);
             command.Parameters.Should().Contain("@p1", existingTodoItem.Id);
@@ -402,11 +387,10 @@ public sealed class UpdateResourceTests : IClassFixture<DapperTestContext>
 
         store.SqlCommands[4].With(command =>
         {
-            command.Statement.Should().Be(_testContext.AdaptSql("""
-                SELECT t1."Id", t1."CreatedAt", t1."Description", t1."DurationInHours", t1."LastModifiedAt", t1."Priority"
-                FROM "TodoItems" AS t1
-                WHERE t1."Id" = @p1
-                """));
+            command.Statement.Should().Be(_testContext.AdaptSql(
+                @"SELECT t1.""Id"", t1.""CreatedAt"", t1.""Description"", t1.""DurationInHours"", t1.""LastModifiedAt"", t1.""Priority""
+FROM ""TodoItems"" AS t1
+WHERE t1.""Id"" = @p1"));
 
             command.Parameters.ShouldHaveCount(1);
             command.Parameters.Should().Contain("@p1", existingTodoItem.Id);

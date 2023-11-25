@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 

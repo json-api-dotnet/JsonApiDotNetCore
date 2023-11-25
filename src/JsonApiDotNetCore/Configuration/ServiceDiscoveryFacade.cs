@@ -16,8 +16,8 @@ namespace JsonApiDotNetCore.Configuration;
 [PublicAPI]
 public sealed class ServiceDiscoveryFacade
 {
-    internal static readonly HashSet<Type> ServiceUnboundInterfaces =
-    [
+    internal static readonly HashSet<Type> ServiceUnboundInterfaces = new()
+    {
         typeof(IResourceService<,>),
         typeof(IResourceCommandService<,>),
         typeof(IResourceQueryService<,>),
@@ -31,16 +31,19 @@ public sealed class ServiceDiscoveryFacade
         typeof(ISetRelationshipService<,>),
         typeof(IDeleteService<,>),
         typeof(IRemoveFromRelationshipService<,>)
-    ];
+    };
 
-    internal static readonly HashSet<Type> RepositoryUnboundInterfaces =
-    [
+    internal static readonly HashSet<Type> RepositoryUnboundInterfaces = new()
+    {
         typeof(IResourceRepository<,>),
         typeof(IResourceWriteRepository<,>),
         typeof(IResourceReadRepository<,>)
-    ];
+    };
 
-    internal static readonly HashSet<Type> ResourceDefinitionUnboundInterfaces = [typeof(IResourceDefinition<,>)];
+    internal static readonly HashSet<Type> ResourceDefinitionUnboundInterfaces = new()
+    {
+        typeof(IResourceDefinition<,>)
+    };
 
     private readonly ILogger<ServiceDiscoveryFacade> _logger;
     private readonly IServiceCollection _services;
@@ -152,11 +155,9 @@ public sealed class ServiceDiscoveryFacade
 
     private void RegisterImplementations(Assembly assembly, Type interfaceType, ResourceDescriptor resourceDescriptor)
     {
-        Type[] typeArguments =
-        [
-            resourceDescriptor.ResourceClrType,
-            resourceDescriptor.IdClrType
-        ];
+        Type[] typeArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2
+            ? ArrayFactory.Create(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType)
+            : ArrayFactory.Create(resourceDescriptor.ResourceClrType);
 
         (Type implementationType, Type serviceInterface)? result = _typeLocator.GetContainerRegistrationFromAssembly(assembly, interfaceType, typeArguments);
 

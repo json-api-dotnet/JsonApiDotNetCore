@@ -2,8 +2,8 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Primitives;
-using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings;
 

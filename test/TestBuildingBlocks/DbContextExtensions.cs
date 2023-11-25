@@ -10,17 +10,17 @@ public static class DbContextExtensions
         dbContext.AddRange(entities);
     }
 
-    public static Task ClearTableAsync<TEntity>(this DbContext dbContext)
+    public static async Task ClearTableAsync<TEntity>(this DbContext dbContext)
         where TEntity : class
     {
-        return ClearTablesAsync(dbContext, typeof(TEntity));
+        await ClearTablesAsync(dbContext, typeof(TEntity));
     }
 
-    public static Task ClearTablesAsync<TEntity1, TEntity2>(this DbContext dbContext)
+    public static async Task ClearTablesAsync<TEntity1, TEntity2>(this DbContext dbContext)
         where TEntity1 : class
         where TEntity2 : class
     {
-        return ClearTablesAsync(dbContext, typeof(TEntity1), typeof(TEntity2));
+        await ClearTablesAsync(dbContext, typeof(TEntity1), typeof(TEntity2));
     }
 
     private static async Task ClearTablesAsync(this DbContext dbContext, params Type[] modelTypes)
@@ -44,10 +44,7 @@ public static class DbContextExtensions
             }
             else
             {
-#pragma warning disable EF1002 // Risk of vulnerability to SQL injection.
-                // Justification: Table names cannot be parameterized.
                 await dbContext.Database.ExecuteSqlRawAsync($"DELETE FROM \"{tableName}\"");
-#pragma warning restore EF1002 // Risk of vulnerability to SQL injection.
             }
         }
     }

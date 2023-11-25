@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2023.3.0-eap08",
+      "version": "2023.2.3",
       "commands": [
         "jb"
       ]
@@ -15,13 +15,13 @@
       ]
     },
     "dotnet-reportgenerator-globaltool": {
-      "version": "5.2.0",
+      "version": "5.1.26",
       "commands": [
         "reportgenerator"
       ]
     },
     "docfx": {
-      "version": "2.74.0",
+      "version": "2.72.1",
       "commands": [
         "docfx"
       ]

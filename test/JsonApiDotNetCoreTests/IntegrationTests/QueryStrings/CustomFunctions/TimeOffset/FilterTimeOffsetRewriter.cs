@@ -1,5 +1,5 @@
 using JsonApiDotNetCore.Queries.Expressions;
-using TestBuildingBlocks;
+using Microsoft.AspNetCore.Authentication;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.TimeOffset;
 

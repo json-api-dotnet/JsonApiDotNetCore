@@ -32,9 +32,9 @@ public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
     private readonly IJsonApiOptions _options;
     private readonly IResourceGraph _resourceGraph;
     private readonly ILogger<JsonApiRoutingConvention> _logger;
-    private readonly Dictionary<string, string> _registeredControllerNameByTemplate = [];
-    private readonly Dictionary<Type, ResourceType> _resourceTypePerControllerTypeMap = [];
-    private readonly Dictionary<ResourceType, ControllerModel> _controllerPerResourceTypeMap = [];
+    private readonly Dictionary<string, string> _registeredControllerNameByTemplate = new();
+    private readonly Dictionary<Type, ResourceType> _resourceTypePerControllerTypeMap = new();
+    private readonly Dictionary<ResourceType, ControllerModel> _controllerPerResourceTypeMap = new();
 
     public JsonApiRoutingConvention(IJsonApiOptions options, IResourceGraph resourceGraph, ILogger<JsonApiRoutingConvention> logger)
     {

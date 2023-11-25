@@ -76,7 +76,7 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
 
     private IReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> VisitSelectors(SelectNode select, ISet<ColumnNode> usedColumns)
     {
-        Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> newSelectors = [];
+        Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> newSelectors = new();
 
         foreach ((TableAccessorNode tableAccessor, IReadOnlyList<SelectorNode> tableSelectors) in select.Selectors)
         {
@@ -90,7 +90,7 @@ internal sealed class UnusedSelectorsRewriter : SqlTreeNodeVisitor<ISet<ColumnNo
 
     private List<SelectorNode> VisitTableSelectors(IEnumerable<SelectorNode> selectors, ISet<ColumnNode> usedColumns)
     {
-        List<SelectorNode> newTableSelectors = [];
+        List<SelectorNode> newTableSelectors = new();
 
         foreach (SelectorNode selector in selectors)
         {

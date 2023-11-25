@@ -1,12 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net6.0;netstandard1.0</TargetFrameworks>
+    <TargetFrameworks>$(TargetFrameworkName);netstandard1.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RootNamespace>JsonApiDotNetCore</RootNamespace>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
-
-  <Import Project="..\..\package-versions.props" />
 
   <PropertyGroup>
     <VersionPrefix>$(JsonApiDotNetCoreVersionPrefix)</VersionPrefix>

@@ -41,7 +41,9 @@ public sealed class ResourceConstructionExpressionTests
             .WithMessage($"Failed to create an instance of '{typeof(ResourceWithStringConstructor).FullName}': Parameter 'text' could not be resolved.");
     }
 
-    private sealed class ResourceWithoutConstructor : Identifiable<int>;
+    private sealed class ResourceWithoutConstructor : Identifiable<int>
+    {
+    }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     private sealed class ResourceWithStringConstructor : Identifiable<int>

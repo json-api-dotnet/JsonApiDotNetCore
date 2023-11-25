@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using JsonApiDotNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
@@ -20,7 +21,7 @@ public abstract class TestableDbContext : DbContext
     [Conditional("DEBUG")]
     private static void WriteSqlStatementsToOutputWindow(DbContextOptionsBuilder builder)
     {
-        builder.LogTo(message => Debug.WriteLine(message), [DbLoggerCategory.Database.Name], LogLevel.Information);
+        builder.LogTo(message => Debug.WriteLine(message), DbLoggerCategory.Database.Name.AsArray(), LogLevel.Information);
     }
 
     protected override void OnModelCreating(ModelBuilder builder)

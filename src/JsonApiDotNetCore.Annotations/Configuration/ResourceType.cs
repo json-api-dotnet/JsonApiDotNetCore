@@ -9,8 +9,8 @@ namespace JsonApiDotNetCore.Configuration;
 [PublicAPI]
 public sealed class ResourceType
 {
-    private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPublicName = [];
-    private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPropertyName = [];
+    private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPublicName = new();
+    private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPropertyName = new();
     private readonly Lazy<IReadOnlySet<ResourceType>> _lazyAllConcreteDerivedTypes;
 
     /// <summary>
@@ -273,7 +273,7 @@ public sealed class ResourceType
 
         // Hiding base members using the 'new' keyword instead of 'override' (effectively breaking inheritance) is currently not supported.
         // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords
-        HashSet<AttrAttribute> attributesInDerivedTypes = [];
+        HashSet<AttrAttribute> attributesInDerivedTypes = new();
 
         foreach (AttrAttribute attributeInDerivedType in resourceType.DirectlyDerivedTypes
             .Select(derivedType => GetAttributesInTypeOrDerived(derivedType, publicName)).SelectMany(attributesInDerivedType => attributesInDerivedType))
@@ -300,7 +300,7 @@ public sealed class ResourceType
 
         // Hiding base members using the 'new' keyword instead of 'override' (effectively breaking inheritance) is currently not supported.
         // https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords
-        HashSet<RelationshipAttribute> relationshipsInDerivedTypes = [];
+        HashSet<RelationshipAttribute> relationshipsInDerivedTypes = new();
 
         foreach (RelationshipAttribute relationshipInDerivedType in resourceType.DirectlyDerivedTypes
             .Select(derivedType => GetRelationshipsInTypeOrDerived(derivedType, publicName))

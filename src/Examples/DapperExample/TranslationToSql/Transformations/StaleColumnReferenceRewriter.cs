@@ -88,7 +88,7 @@ internal sealed class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<ColumnVi
     {
         if (_tablesInScopeStack.Count == 0)
         {
-            return [];
+            return new Dictionary<string, TableSourceNode>();
         }
 
         Dictionary<string, TableSourceNode> topElement = _tablesInScopeStack.Peek();
@@ -98,7 +98,7 @@ internal sealed class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<ColumnVi
     private IReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> VisitSelectors(
         IReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> selectors, ColumnVisitMode mode)
     {
-        Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> newSelectors = [];
+        Dictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> newSelectors = new();
 
         foreach ((TableAccessorNode tableAccessor, IReadOnlyList<SelectorNode> tableSelectors) in selectors)
         {

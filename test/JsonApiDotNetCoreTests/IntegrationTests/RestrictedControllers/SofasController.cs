@@ -4,4 +4,6 @@ using JsonApiDotNetCore.QueryStrings;
 namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers;
 
 [DisableQueryString(JsonApiQueryStringParameters.Sort | JsonApiQueryStringParameters.Page)]
-partial class SofasController;
+partial class SofasController
+{
+}

@@ -30,130 +30,121 @@ public sealed class ResponseModelAdapterTests
         article.Author.FavoriteFood = fakers.Food.Generate();
         article.Author.Blogs.ElementAt(1).Reviewer.FavoriteFood = fakers.Food.Generate();
 
-        IJsonApiOptions options = new JsonApiOptions
-        {
-            SerializerOptions =
-            {
-                WriteIndented = true
-            }
-        };
-
+        IJsonApiOptions options = new JsonApiOptions();
         ResponseModelAdapter responseModelAdapter = CreateAdapter(options, article.StringId, "author.blogs.reviewer.favoriteFood");
 
         // Act
         Document document = responseModelAdapter.Convert(article);
 
         // Assert
-        string text = JsonSerializer.Serialize(document, options.SerializerWriteOptions);
+        string text = JsonSerializer.Serialize(document, new JsonSerializerOptions(options.SerializerWriteOptions));
 
         // ReSharper disable StringLiteralTypo
-        text.Should().BeJson("""
+        text.Should().BeJson(@"{
+  ""data"": {
+    ""type"": ""articles"",
+    ""id"": ""1"",
+    ""attributes"": {
+      ""title"": ""The SAS microchip is down, quantify the 1080p microchip so we can quantify the SAS microchip!""
+    },
+    ""relationships"": {
+      ""author"": {
+        ""data"": {
+          ""type"": ""people"",
+          ""id"": ""2""
+        }
+      }
+    }
+  },
+  ""included"": [
+    {
+      ""type"": ""people"",
+      ""id"": ""2"",
+      ""attributes"": {
+        ""name"": ""Ernestine Runte""
+      },
+      ""relationships"": {
+        ""blogs"": {
+          ""data"": [
             {
-              "data": {
-                "type": "articles",
-                "id": "1",
-                "attributes": {
-                  "title": "The SAS microchip is down, quantify the 1080p microchip so we can quantify the SAS microchip!"
-                },
-                "relationships": {
-                  "author": {
-                    "data": {
-                      "type": "people",
-                      "id": "2"
-                    }
-                  }
-                }
-              },
-              "included": [
-                {
-                  "type": "people",
-                  "id": "2",
-                  "attributes": {
-                    "name": "Ernestine Runte"
-                  },
-                  "relationships": {
-                    "blogs": {
-                      "data": [
-                        {
-                          "type": "blogs",
-                          "id": "3"
-                        },
-                        {
-                          "type": "blogs",
-                          "id": "4"
-                        }
-                      ]
-                    },
-                    "favoriteFood": {
-                      "data": {
-                        "type": "foods",
-                        "id": "6"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "blogs",
-                  "id": "3",
-                  "attributes": {
-                    "title": "The SAS microchip is down, quantify the 1080p microchip so we can quantify the SAS microchip!"
-                  },
-                  "relationships": {
-                    "reviewer": {
-                      "data": {
-                        "type": "people",
-                        "id": "2"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "blogs",
-                  "id": "4",
-                  "attributes": {
-                    "title": "I'll connect the mobile ADP card, that should card the ADP card!"
-                  },
-                  "relationships": {
-                    "reviewer": {
-                      "data": {
-                        "type": "people",
-                        "id": "5"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "people",
-                  "id": "5",
-                  "attributes": {
-                    "name": "Doug Shields"
-                  },
-                  "relationships": {
-                    "favoriteFood": {
-                      "data": {
-                        "type": "foods",
-                        "id": "7"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "foods",
-                  "id": "7",
-                  "attributes": {
-                    "dish": "Nostrum totam harum totam voluptatibus."
-                  }
-                },
-                {
-                  "type": "foods",
-                  "id": "6",
-                  "attributes": {
-                    "dish": "Illum assumenda iste quia natus et dignissimos reiciendis."
-                  }
-                }
-              ]
+              ""type"": ""blogs"",
+              ""id"": ""3""
+            },
+            {
+              ""type"": ""blogs"",
+              ""id"": ""4""
             }
-            """);
+          ]
+        },
+        ""favoriteFood"": {
+          ""data"": {
+            ""type"": ""foods"",
+            ""id"": ""6""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""blogs"",
+      ""id"": ""3"",
+      ""attributes"": {
+        ""title"": ""The SAS microchip is down, quantify the 1080p microchip so we can quantify the SAS microchip!""
+      },
+      ""relationships"": {
+        ""reviewer"": {
+          ""data"": {
+            ""type"": ""people"",
+            ""id"": ""2""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""blogs"",
+      ""id"": ""4"",
+      ""attributes"": {
+        ""title"": ""I'll connect the mobile ADP card, that should card the ADP card!""
+      },
+      ""relationships"": {
+        ""reviewer"": {
+          ""data"": {
+            ""type"": ""people"",
+            ""id"": ""5""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""people"",
+      ""id"": ""5"",
+      ""attributes"": {
+        ""name"": ""Doug Shields""
+      },
+      ""relationships"": {
+        ""favoriteFood"": {
+          ""data"": {
+            ""type"": ""foods"",
+            ""id"": ""7""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""foods"",
+      ""id"": ""7"",
+      ""attributes"": {
+        ""dish"": ""Nostrum totam harum totam voluptatibus.""
+      }
+    },
+    {
+      ""type"": ""foods"",
+      ""id"": ""6"",
+      ""attributes"": {
+        ""dish"": ""Illum assumenda iste quia natus et dignissimos reiciendis.""
+      }
+    }
+  ]
+}");
         // ReSharper restore StringLiteralTypo
     }
 
@@ -174,14 +165,7 @@ public sealed class ResponseModelAdapterTests
         Article article2 = fakers.Article.Generate();
         article2.Author = article1.Author;
 
-        IJsonApiOptions options = new JsonApiOptions
-        {
-            SerializerOptions =
-            {
-                WriteIndented = true
-            }
-        };
-
+        IJsonApiOptions options = new JsonApiOptions();
         ResponseModelAdapter responseModelAdapter = CreateAdapter(options, article1.StringId, "author.blogs.reviewer.favoriteFood");
 
         // Act
@@ -192,133 +176,131 @@ public sealed class ResponseModelAdapterTests
         });
 
         // Assert
-        string text = JsonSerializer.Serialize(document, options.SerializerWriteOptions);
+        string text = JsonSerializer.Serialize(document, new JsonSerializerOptions(options.SerializerWriteOptions));
 
         // ReSharper disable StringLiteralTypo
-        text.Should().BeJson("""
+        text.Should().BeJson(@"{
+  ""data"": [
+    {
+      ""type"": ""articles"",
+      ""id"": ""1"",
+      ""attributes"": {
+        ""title"": ""The SAS microchip is down, quantify the 1080p microchip so we can quantify the SAS microchip!""
+      },
+      ""relationships"": {
+        ""author"": {
+          ""data"": {
+            ""type"": ""people"",
+            ""id"": ""2""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""articles"",
+      ""id"": ""8"",
+      ""attributes"": {
+        ""title"": ""I'll connect the mobile ADP card, that should card the ADP card!""
+      },
+      ""relationships"": {
+        ""author"": {
+          ""data"": {
+            ""type"": ""people"",
+            ""id"": ""2""
+          }
+        }
+      }
+    }
+  ],
+  ""included"": [
+    {
+      ""type"": ""people"",
+      ""id"": ""2"",
+      ""attributes"": {
+        ""name"": ""Ernestine Runte""
+      },
+      ""relationships"": {
+        ""blogs"": {
+          ""data"": [
             {
-              "data": [
-                {
-                  "type": "articles",
-                  "id": "1",
-                  "attributes": {
-                    "title": "The SAS microchip is down, quantify the 1080p microchip so we can quantify the SAS microchip!"
-                  },
-                  "relationships": {
-                    "author": {
-                      "data": {
-                        "type": "people",
-                        "id": "2"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "articles",
-                  "id": "8",
-                  "attributes": {
-                    "title": "I'll connect the mobile ADP card, that should card the ADP card!"
-                  },
-                  "relationships": {
-                    "author": {
-                      "data": {
-                        "type": "people",
-                        "id": "2"
-                      }
-                    }
-                  }
-                }
-              ],
-              "included": [
-                {
-                  "type": "people",
-                  "id": "2",
-                  "attributes": {
-                    "name": "Ernestine Runte"
-                  },
-                  "relationships": {
-                    "blogs": {
-                      "data": [
-                        {
-                          "type": "blogs",
-                          "id": "3"
-                        },
-                        {
-                          "type": "blogs",
-                          "id": "4"
-                        }
-                      ]
-                    },
-                    "favoriteFood": {
-                      "data": {
-                        "type": "foods",
-                        "id": "6"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "blogs",
-                  "id": "3",
-                  "attributes": {
-                    "title": "The SAS microchip is down, quantify the 1080p microchip so we can quantify the SAS microchip!"
-                  },
-                  "relationships": {
-                    "reviewer": {
-                      "data": {
-                        "type": "people",
-                        "id": "2"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "blogs",
-                  "id": "4",
-                  "attributes": {
-                    "title": "I'll connect the mobile ADP card, that should card the ADP card!"
-                  },
-                  "relationships": {
-                    "reviewer": {
-                      "data": {
-                        "type": "people",
-                        "id": "5"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "people",
-                  "id": "5",
-                  "attributes": {
-                    "name": "Doug Shields"
-                  },
-                  "relationships": {
-                    "favoriteFood": {
-                      "data": {
-                        "type": "foods",
-                        "id": "7"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "foods",
-                  "id": "7",
-                  "attributes": {
-                    "dish": "Nostrum totam harum totam voluptatibus."
-                  }
-                },
-                {
-                  "type": "foods",
-                  "id": "6",
-                  "attributes": {
-                    "dish": "Illum assumenda iste quia natus et dignissimos reiciendis."
-                  }
-                }
-              ]
+              ""type"": ""blogs"",
+              ""id"": ""3""
+            },
+            {
+              ""type"": ""blogs"",
+              ""id"": ""4""
             }
-            """);
+          ]
+        },
+        ""favoriteFood"": {
+          ""data"": {
+            ""type"": ""foods"",
+            ""id"": ""6""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""blogs"",
+      ""id"": ""3"",
+      ""attributes"": {
+        ""title"": ""The SAS microchip is down, quantify the 1080p microchip so we can quantify the SAS microchip!""
+      },
+      ""relationships"": {
+        ""reviewer"": {
+          ""data"": {
+            ""type"": ""people"",
+            ""id"": ""2""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""blogs"",
+      ""id"": ""4"",
+      ""attributes"": {
+        ""title"": ""I'll connect the mobile ADP card, that should card the ADP card!""
+      },
+      ""relationships"": {
+        ""reviewer"": {
+          ""data"": {
+            ""type"": ""people"",
+            ""id"": ""5""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""people"",
+      ""id"": ""5"",
+      ""attributes"": {
+        ""name"": ""Doug Shields""
+      },
+      ""relationships"": {
+        ""favoriteFood"": {
+          ""data"": {
+            ""type"": ""foods"",
+            ""id"": ""7""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""foods"",
+      ""id"": ""7"",
+      ""attributes"": {
+        ""dish"": ""Nostrum totam harum totam voluptatibus.""
+      }
+    },
+    {
+      ""type"": ""foods"",
+      ""id"": ""6"",
+      ""attributes"": {
+        ""dish"": ""Illum assumenda iste quia natus et dignissimos reiciendis.""
+      }
+    }
+  ]
+}");
         // ReSharper restore StringLiteralTypo
     }
 
@@ -345,13 +327,7 @@ public sealed class ResponseModelAdapterTests
         article.Author.Blogs.ElementAt(1).Reviewer.FavoriteSong = fakers.Song.Generate();
         article.Reviewer.FavoriteSong = fakers.Song.Generate();
 
-        IJsonApiOptions options = new JsonApiOptions
-        {
-            SerializerOptions =
-            {
-                WriteIndented = true
-            }
-        };
+        IJsonApiOptions options = new JsonApiOptions();
 
         ResponseModelAdapter responseModelAdapter =
             CreateAdapter(options, article.StringId, "author.blogs.reviewer.favoriteFood,reviewer.blogs.author.favoriteSong");
@@ -360,190 +336,188 @@ public sealed class ResponseModelAdapterTests
         Document document = responseModelAdapter.Convert(article);
 
         // Assert
-        string text = JsonSerializer.Serialize(document, options.SerializerWriteOptions);
+        string text = JsonSerializer.Serialize(document, new JsonSerializerOptions(options.SerializerWriteOptions));
 
         // ReSharper disable StringLiteralTypo
-        text.Should().BeJson("""
+        text.Should().BeJson(@"{
+  ""data"": {
+    ""type"": ""articles"",
+    ""id"": ""1"",
+    ""attributes"": {
+      ""title"": ""The SAS microchip is down, quantify the 1080p microchip so we can quantify the SAS microchip!""
+    },
+    ""relationships"": {
+      ""reviewer"": {
+        ""data"": {
+          ""type"": ""people"",
+          ""id"": ""8""
+        }
+      },
+      ""author"": {
+        ""data"": {
+          ""type"": ""people"",
+          ""id"": ""2""
+        }
+      }
+    }
+  },
+  ""included"": [
+    {
+      ""type"": ""people"",
+      ""id"": ""8"",
+      ""attributes"": {
+        ""name"": ""Nettie Howell""
+      },
+      ""relationships"": {
+        ""blogs"": {
+          ""data"": [
             {
-              "data": {
-                "type": "articles",
-                "id": "1",
-                "attributes": {
-                  "title": "The SAS microchip is down, quantify the 1080p microchip so we can quantify the SAS microchip!"
-                },
-                "relationships": {
-                  "reviewer": {
-                    "data": {
-                      "type": "people",
-                      "id": "8"
-                    }
-                  },
-                  "author": {
-                    "data": {
-                      "type": "people",
-                      "id": "2"
-                    }
-                  }
-                }
-              },
-              "included": [
-                {
-                  "type": "people",
-                  "id": "8",
-                  "attributes": {
-                    "name": "Nettie Howell"
-                  },
-                  "relationships": {
-                    "blogs": {
-                      "data": [
-                        {
-                          "type": "blogs",
-                          "id": "9"
-                        },
-                        {
-                          "type": "blogs",
-                          "id": "3"
-                        }
-                      ]
-                    },
-                    "favoriteSong": {
-                      "data": {
-                        "type": "songs",
-                        "id": "11"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "blogs",
-                  "id": "9",
-                  "attributes": {
-                    "title": "The RSS bus is down, parse the mobile bus so we can parse the RSS bus!"
-                  },
-                  "relationships": {
-                    "author": {
-                      "data": {
-                        "type": "people",
-                        "id": "8"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "blogs",
-                  "id": "3",
-                  "attributes": {
-                    "title": "The SAS microchip is down, quantify the 1080p microchip so we can quantify the SAS microchip!"
-                  },
-                  "relationships": {
-                    "reviewer": {
-                      "data": {
-                        "type": "people",
-                        "id": "2"
-                      }
-                    },
-                    "author": {
-                      "data": {
-                        "type": "people",
-                        "id": "5"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "people",
-                  "id": "2",
-                  "attributes": {
-                    "name": "Ernestine Runte"
-                  },
-                  "relationships": {
-                    "blogs": {
-                      "data": [
-                        {
-                          "type": "blogs",
-                          "id": "3"
-                        },
-                        {
-                          "type": "blogs",
-                          "id": "4"
-                        }
-                      ]
-                    },
-                    "favoriteFood": {
-                      "data": {
-                        "type": "foods",
-                        "id": "6"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "blogs",
-                  "id": "4",
-                  "attributes": {
-                    "title": "I'll connect the mobile ADP card, that should card the ADP card!"
-                  },
-                  "relationships": {
-                    "reviewer": {
-                      "data": {
-                        "type": "people",
-                        "id": "5"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "people",
-                  "id": "5",
-                  "attributes": {
-                    "name": "Doug Shields"
-                  },
-                  "relationships": {
-                    "favoriteFood": {
-                      "data": {
-                        "type": "foods",
-                        "id": "7"
-                      }
-                    },
-                    "favoriteSong": {
-                      "data": {
-                        "type": "songs",
-                        "id": "10"
-                      }
-                    }
-                  }
-                },
-                {
-                  "type": "foods",
-                  "id": "7",
-                  "attributes": {
-                    "dish": "Nostrum totam harum totam voluptatibus."
-                  }
-                },
-                {
-                  "type": "songs",
-                  "id": "10",
-                  "attributes": {
-                    "title": "Illum assumenda iste quia natus et dignissimos reiciendis."
-                  }
-                },
-                {
-                  "type": "foods",
-                  "id": "6",
-                  "attributes": {
-                    "dish": "Illum assumenda iste quia natus et dignissimos reiciendis."
-                  }
-                },
-                {
-                  "type": "songs",
-                  "id": "11",
-                  "attributes": {
-                    "title": "Nostrum totam harum totam voluptatibus."
-                  }
-                }
-              ]
+              ""type"": ""blogs"",
+              ""id"": ""9""
+            },
+            {
+              ""type"": ""blogs"",
+              ""id"": ""3""
             }
-            """);
+          ]
+        },
+        ""favoriteSong"": {
+          ""data"": {
+            ""type"": ""songs"",
+            ""id"": ""11""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""blogs"",
+      ""id"": ""9"",
+      ""attributes"": {
+        ""title"": ""The RSS bus is down, parse the mobile bus so we can parse the RSS bus!""
+      },
+      ""relationships"": {
+        ""author"": {
+          ""data"": {
+            ""type"": ""people"",
+            ""id"": ""8""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""blogs"",
+      ""id"": ""3"",
+      ""attributes"": {
+        ""title"": ""The SAS microchip is down, quantify the 1080p microchip so we can quantify the SAS microchip!""
+      },
+      ""relationships"": {
+        ""reviewer"": {
+          ""data"": {
+            ""type"": ""people"",
+            ""id"": ""2""
+          }
+        },
+        ""author"": {
+          ""data"": {
+            ""type"": ""people"",
+            ""id"": ""5""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""people"",
+      ""id"": ""2"",
+      ""attributes"": {
+        ""name"": ""Ernestine Runte""
+      },
+      ""relationships"": {
+        ""blogs"": {
+          ""data"": [
+            {
+              ""type"": ""blogs"",
+              ""id"": ""3""
+            },
+            {
+              ""type"": ""blogs"",
+              ""id"": ""4""
+            }
+          ]
+        },
+        ""favoriteFood"": {
+          ""data"": {
+            ""type"": ""foods"",
+            ""id"": ""6""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""blogs"",
+      ""id"": ""4"",
+      ""attributes"": {
+        ""title"": ""I'll connect the mobile ADP card, that should card the ADP card!""
+      },
+      ""relationships"": {
+        ""reviewer"": {
+          ""data"": {
+            ""type"": ""people"",
+            ""id"": ""5""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""people"",
+      ""id"": ""5"",
+      ""attributes"": {
+        ""name"": ""Doug Shields""
+      },
+      ""relationships"": {
+        ""favoriteFood"": {
+          ""data"": {
+            ""type"": ""foods"",
+            ""id"": ""7""
+          }
+        },
+        ""favoriteSong"": {
+          ""data"": {
+            ""type"": ""songs"",
+            ""id"": ""10""
+          }
+        }
+      }
+    },
+    {
+      ""type"": ""foods"",
+      ""id"": ""7"",
+      ""attributes"": {
+        ""dish"": ""Nostrum totam harum totam voluptatibus.""
+      }
+    },
+    {
+      ""type"": ""songs"",
+      ""id"": ""10"",
+      ""attributes"": {
+        ""title"": ""Illum assumenda iste quia natus et dignissimos reiciendis.""
+      }
+    },
+    {
+      ""type"": ""foods"",
+      ""id"": ""6"",
+      ""attributes"": {
+        ""dish"": ""Illum assumenda iste quia natus et dignissimos reiciendis.""
+      }
+    },
+    {
+      ""type"": ""songs"",
+      ""id"": ""11"",
+      ""attributes"": {
+        ""title"": ""Nostrum totam harum totam voluptatibus.""
+      }
+    }
+  ]
+}");
         // ReSharper restore StringLiteralTypo
     }
 

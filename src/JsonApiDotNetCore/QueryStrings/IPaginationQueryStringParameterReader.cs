@@ -7,4 +7,6 @@ namespace JsonApiDotNetCore.QueryStrings;
 /// Reads the 'page' query string parameter and produces a set of query constraints from it.
 /// </summary>
 [PublicAPI]
-public interface IPaginationQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider;
+public interface IPaginationQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider
+{
+}

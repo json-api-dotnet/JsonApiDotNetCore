@@ -13,4 +13,6 @@ namespace JsonApiDotNetCore.Services;
 /// </typeparam>
 public interface IResourceQueryService<TResource, in TId>
     : IGetAllService<TResource, TId>, IGetByIdService<TResource, TId>, IGetRelationshipService<TResource, TId>, IGetSecondaryService<TResource, TId>
-    where TResource : class, IIdentifiable<TId>;
+    where TResource : class, IIdentifiable<TId>
+{
+}

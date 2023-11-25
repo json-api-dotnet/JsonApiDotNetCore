@@ -205,7 +205,7 @@ public sealed class JsonApiMiddleware
 
         var errorDocument = new Document
         {
-            Errors = [error]
+            Errors = error.AsList()
         };
 
         await JsonSerializer.SerializeAsync(httpResponse.Body, errorDocument, serializerOptions);

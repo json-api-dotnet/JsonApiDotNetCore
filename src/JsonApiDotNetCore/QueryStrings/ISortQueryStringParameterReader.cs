@@ -7,4 +7,6 @@ namespace JsonApiDotNetCore.QueryStrings;
 /// Reads the 'sort' query string parameter and produces a set of query constraints from it.
 /// </summary>
 [PublicAPI]
-public interface ISortQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider;
+public interface ISortQueryStringParameterReader : IQueryStringParameterReader, IQueryConstraintProvider
+{
+}

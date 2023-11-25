@@ -11,23 +11,23 @@ namespace DapperExample.TranslationToSql.Builders;
 internal sealed class SqlQueryBuilder : SqlTreeNodeVisitor<StringBuilder, object?>
 {
     private static readonly char[] SpecialCharactersInLikeDefault =
-    [
+    {
         '\\',
         '%',
         '_'
-    ];
+    };
 
     private static readonly char[] SpecialCharactersInLikeSqlServer =
-    [
+    {
         '\\',
         '%',
         '_',
         '[',
         ']'
-    ];
+    };
 
     private readonly DatabaseProvider _databaseProvider;
-    private readonly Dictionary<string, ParameterNode> _parametersByName = [];
+    private readonly Dictionary<string, ParameterNode> _parametersByName = new();
     private int _indentDepth;
 
     private char[] SpecialCharactersInLike =>

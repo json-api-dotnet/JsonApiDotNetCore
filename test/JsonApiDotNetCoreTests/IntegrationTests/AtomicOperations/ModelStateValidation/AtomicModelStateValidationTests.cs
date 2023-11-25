@@ -1,6 +1,7 @@
 using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -17,7 +18,10 @@ public sealed class AtomicModelStateValidationTests : IClassFixture<IntegrationT
     {
         _testContext = testContext;
 
-        _testContext.ConfigureServices(services => services.AddSingleton<ISystemClock, FrozenSystemClock>());
+        _testContext.ConfigureServices(services =>
+        {
+            services.AddSingleton<ISystemClock, FrozenSystemClock>();
+        });
 
         testContext.UseController<OperationsController>();
     }

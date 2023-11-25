@@ -177,5 +177,7 @@ public class JsonApiResourceDefinition<TResource, TId> : IResourceDefinition<TRe
     /// This is an alias type intended to simplify the implementation's method signature. See <see cref="CreateSortExpressionFromLambda" /> for usage
     /// details.
     /// </summary>
-    public sealed class PropertySortOrder : List<(Expression<Func<TResource, object?>> KeySelector, ListSortDirection SortDirection)>;
+    public sealed class PropertySortOrder : List<(Expression<Func<TResource, object?>> KeySelector, ListSortDirection SortDirection)>
+    {
+    }
 }

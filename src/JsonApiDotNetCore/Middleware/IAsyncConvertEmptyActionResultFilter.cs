@@ -14,4 +14,6 @@ namespace JsonApiDotNetCore.Middleware;
 /// https://github.com/dotnet/aspnetcore/issues/16969
 /// </summary>
 [PublicAPI]
-public interface IAsyncConvertEmptyActionResultFilter : IAsyncAlwaysRunResultFilter;
+public interface IAsyncConvertEmptyActionResultFilter : IAsyncAlwaysRunResultFilter
+{
+}

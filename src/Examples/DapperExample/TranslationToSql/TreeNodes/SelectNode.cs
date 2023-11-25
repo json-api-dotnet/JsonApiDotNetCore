@@ -13,7 +13,7 @@ namespace DapperExample.TranslationToSql.TreeNodes;
 /// </summary>
 internal sealed class SelectNode : TableSourceNode
 {
-    private readonly List<ColumnInSelectNode> _columns = [];
+    private readonly List<ColumnInSelectNode> _columns = new();
 
     public IReadOnlyDictionary<TableAccessorNode, IReadOnlyList<SelectorNode>> Selectors { get; }
     public WhereNode? Where { get; }

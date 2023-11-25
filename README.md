@@ -76,24 +76,17 @@ app.MapControllers();
 The following chart should help you pick the best version, based on your environment.
 See also our [versioning policy](./VERSIONING_POLICY.md).
 
-| JsonApiDotNetCore | Status       | .NET     | Entity Framework Core |
-| ----------------- | ------------ | -------- | --------------------- |
-| 3.x               | Stable       | Core 2.x | 2.x                   |
-| 4.x               | Stable       | Core 3.1 | 3.1, 5                |
-|                   |              | 5        | 5                     |
-|                   |              | 6        | 5                     |
-| 5.0.0-5.0.2       | Stable       | 6        | 6                     |
-| 5.0.3-5.4.0       | Stable       | 6        | 6, 7                  |
-|                   |              | 7        | 7                     |
-| 5.5+              | Stable       | 6        | 6, 7                  |
-|                   |              | 7        | 7                     |
-|                   |              | 8        | 8                     |
-| master            | Preview      | 6        | 6, 7                  |
-|                   |              | 7        | 7                     |
-|                   |              | 8        | 8                     |
-| openapi           | Experimental | 6        | 6, 7                  |
-|                   |              | 7        | 7                     |
-|                   |              | 8        | 8                     |
+| JsonApiDotNetCore | Status      | .NET     | Entity Framework Core |
+| ----------------- | ----------- | -------- | --------------------- |
+| 3.x               | Stable      | Core 2.x | 2.x                   |
+| 4.x               | Stable      | Core 3.1 | 3.1                   |
+|                   |             | Core 3.1 | 5                     |
+|                   |             | 5        | 5                     |
+|                   |             | 6        | 5                     |
+| 5.0.0-5.0.2       | Stable      | 6        | 6                     |
+| 5.0.3+            | Stable      | 6        | 6                     |
+|                   |             | 6        | 7                     |
+|                   |             | 7        | 7                     |
 
 ## Contributing
 

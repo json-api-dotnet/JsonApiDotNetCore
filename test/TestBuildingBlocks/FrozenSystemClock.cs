@@ -1,4 +1,5 @@
 using FluentAssertions.Extensions;
+using Microsoft.AspNetCore.Authentication;
 
 namespace TestBuildingBlocks;
 
