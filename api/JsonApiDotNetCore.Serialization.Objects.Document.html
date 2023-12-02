@@ -87,7 +87,7 @@
 
   <h1 id="JsonApiDotNetCore_Serialization_Objects_Document" data-uid="JsonApiDotNetCore.Serialization.Objects.Document" class="text-break">
     Class Document
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L8"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L9"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -100,7 +100,8 @@
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class Document</code></pre>
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public sealed class Document</code></pre>
   </div>
 
 
@@ -152,7 +153,7 @@
 
   <h3 id="JsonApiDotNetCore_Serialization_Objects_Document_Data" data-uid="JsonApiDotNetCore.Serialization.Objects.Document.Data">
   Data
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -184,7 +185,7 @@ public SingleOrManyData&lt;ResourceObject&gt; Data { get; set; }</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Objects_Document_Errors" data-uid="JsonApiDotNetCore.Serialization.Objects.Document.Errors">
   Errors
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -217,7 +218,7 @@ public IList&lt;ErrorObject&gt;? Errors { get; set; }</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Objects_Document_Included" data-uid="JsonApiDotNetCore.Serialization.Objects.Document.Included">
   Included
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -250,7 +251,7 @@ public IList&lt;ResourceObject&gt;? Included { get; set; }</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Objects_Document_JsonApi" data-uid="JsonApiDotNetCore.Serialization.Objects.Document.JsonApi">
   JsonApi
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L10"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L12"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -283,7 +284,7 @@ public JsonApiObject? JsonApi { get; set; }</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Objects_Document_Links" data-uid="JsonApiDotNetCore.Serialization.Objects.Document.Links">
   Links
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -316,7 +317,7 @@ public TopLevelLinks? Links { get; set; }</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Objects_Document_Meta" data-uid="JsonApiDotNetCore.Serialization.Objects.Document.Meta">
   Meta
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L40"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -349,7 +350,7 @@ public IDictionary&lt;string, object?&gt;? Meta { get; set; }</code></pre>
 
   <h3 id="JsonApiDotNetCore_Serialization_Objects_Document_Operations" data-uid="JsonApiDotNetCore.Serialization.Objects.Document.Operations">
   Operations
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L24"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -382,7 +383,7 @@ public IList&lt;AtomicOperationObject?&gt;? Operations { get; set; }</code></pre
 
   <h3 id="JsonApiDotNetCore_Serialization_Objects_Document_Results" data-uid="JsonApiDotNetCore.Serialization.Objects.Document.Results">
   Results
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -415,7 +416,7 @@ public IList&lt;AtomicResultObject&gt;? Results { get; set; }</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L8" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/Document.cs/#L9" class="edit-link">Edit this page</a>
         </div>
 
 
