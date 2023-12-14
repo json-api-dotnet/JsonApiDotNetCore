@@ -44,8 +44,7 @@ public enum JsonApiEndpointsCopy
     GetRelationship = 1 << 3,
 
     /// <summary>
-    /// Represents the endpoint to create a new resource with attributes, relationships or both. Example:
-    /// <code><![CDATA[
+    /// Represents the endpoint to create a new resource with attributes, relationships or both. Example: <code><![CDATA[
     /// POST /articles HTTP/1.1
     /// ]]></code>
     /// </summary>
