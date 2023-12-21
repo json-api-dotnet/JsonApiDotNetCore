@@ -145,7 +145,7 @@ jobs:
         dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages /p:VersionSuffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Upload packages to artifacts
       if: matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: packages
         path: artifacts/packages
@@ -168,7 +168,7 @@ jobs:
         Copy-Item -Recurse home/assets/* _site/styles/
     - name: Upload documentation to artifacts
       if: matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: documentation
         path: docs/_site

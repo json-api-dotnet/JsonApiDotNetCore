@@ -27,7 +27,7 @@ jobs:
         QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
     - name: Upload results to artifacts on failure
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: qodana_results
         path: ${{ runner.temp }}/qodana/results
