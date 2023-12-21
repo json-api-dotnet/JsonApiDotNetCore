@@ -41,6 +41,16 @@ jobs:
     steps:
     - name: Tune GitHub-hosted runner network
       uses: smorimoto/tune-github-hosted-runner-network@v1
+    - name: Print macOS system info
+      if: matrix.os == 'macos-latest'
+      run: |
+        uname -a
+        uname -p
+        uname -m
+        sw_vers
+        sysctl machdep.cpu.brand_string
+        sysctl machdep.cpu
+        machine
     - name: Setup PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v4
       with:
