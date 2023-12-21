@@ -23,17 +23,15 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Configuration;
 
 /// <summary>
-/// A utility class that builds a JsonApi application. It registers all required services and allows the user to override parts of the startup
+/// A utility class that builds a JSON:API application. It registers all required services and allows the user to override parts of the startup
 /// configuration.
 /// </summary>
-internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, IDisposable
+internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder
 {
-    private readonly JsonApiOptions _options = new();
     private readonly IServiceCollection _services;
     private readonly IMvcCoreBuilder _mvcBuilder;
-    private readonly ResourceGraphBuilder _resourceGraphBuilder;
-    private readonly ServiceDiscoveryFacade _serviceDiscoveryFacade;
-    private readonly ServiceProvider _intermediateProvider;
+    private readonly JsonApiOptions _options = new();
+    private readonly ResourceDescriptorAssemblyCache _assemblyCache = new();
 
     public Action<MvcOptions>? ConfigureMvcOptions { get; set; }
 
@@ -44,12 +42,6 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
 
         _services = services;
         _mvcBuilder = mvcBuilder;
-        _intermediateProvider = services.BuildServiceProvider();
-
-        var loggerFactory = _intermediateProvider.GetRequiredService<ILoggerFactory>();
-
-        _resourceGraphBuilder = new ResourceGraphBuilder(_options, loggerFactory);
-        _serviceDiscoveryFacade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, loggerFactory);
     }
 
     /// <summary>
@@ -61,35 +53,51 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
     }
 
     /// <summary>
-    /// Executes the action provided by the user to configure <see cref="ServiceDiscoveryFacade" />.
+    /// Executes the action provided by the user to configure auto-discovery.
     /// </summary>
     public void ConfigureAutoDiscovery(Action<ServiceDiscoveryFacade>? configureAutoDiscovery)
     {
-        configureAutoDiscovery?.Invoke(_serviceDiscoveryFacade);
+        if (configureAutoDiscovery != null)
+        {
+            var facade = new ServiceDiscoveryFacade(_assemblyCache);
+            configureAutoDiscovery.Invoke(facade);
+        }
     }
 
     /// <summary>
-    /// Configures and builds the resource graph with resources from the provided sources and adds it to the DI container.
+    /// Configures and builds the resource graph with resources from the provided sources and adds them to the IoC container.
     /// </summary>
     public void ConfigureResourceGraph(ICollection<Type> dbContextTypes, Action<ResourceGraphBuilder>? configureResourceGraph)
     {
         ArgumentGuard.NotNull(dbContextTypes);
 
-        _serviceDiscoveryFacade.DiscoverResources();
-
-        foreach (Type dbContextType in dbContextTypes)
+        _services.TryAddSingleton(serviceProvider =>
         {
-            var dbContext = (DbContext)_intermediateProvider.GetRequiredService(dbContextType);
-            _resourceGraphBuilder.Add(dbContext);
-        }
+            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+            var resourceGraphBuilder = new ResourceGraphBuilder(_options, loggerFactory);
 
-        configureResourceGraph?.Invoke(_resourceGraphBuilder);
+            var scanner = new ResourcesAssemblyScanner(_assemblyCache, resourceGraphBuilder);
+            scanner.DiscoverResources();
 
-        IResourceGraph resourceGraph = _resourceGraphBuilder.Build();
+            if (dbContextTypes.Count > 0)
+            {
+                using IServiceScope scope = serviceProvider.CreateScope();
 
-        _options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
+                foreach (Type dbContextType in dbContextTypes)
+                {
+                    var dbContext = (DbContext)scope.ServiceProvider.GetRequiredService(dbContextType);
+                    resourceGraphBuilder.Add(dbContext);
+                }
+            }
 
-        _services.TryAddSingleton(resourceGraph);
+            configureResourceGraph?.Invoke(resourceGraphBuilder);
+
+            IResourceGraph resourceGraph = resourceGraphBuilder.Build();
+
+            _options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
+
+            return resourceGraph;
+        });
     }
 
     /// <summary>
@@ -114,15 +122,16 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
     }
 
     /// <summary>
-    /// Discovers DI registrable services in the assemblies marked for discovery.
+    /// Registers injectables in the IoC container found in assemblies marked for auto-discovery.
     /// </summary>
     public void DiscoverInjectables()
     {
-        _serviceDiscoveryFacade.DiscoverInjectables();
+        var scanner = new InjectablesAssemblyScanner(_assemblyCache, _services);
+        scanner.DiscoverInjectables();
     }
 
     /// <summary>
-    /// Registers the remaining internals.
+    /// Registers the remaining internals in the IoC container.
     /// </summary>
     public void ConfigureServiceContainer(ICollection<Type> dbContextTypes)
     {
@@ -182,7 +191,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
 
     private void AddResourceLayer()
     {
-        RegisterImplementationForInterfaces(ServiceDiscoveryFacade.ResourceDefinitionUnboundInterfaces, typeof(JsonApiResourceDefinition<,>));
+        RegisterImplementationForInterfaces(InjectablesAssemblyScanner.ResourceDefinitionUnboundInterfaces, typeof(JsonApiResourceDefinition<,>));
 
         _services.TryAddScoped<IResourceDefinitionAccessor, ResourceDefinitionAccessor>();
         _services.TryAddScoped<IResourceFactory, ResourceFactory>();
@@ -190,7 +199,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
 
     private void AddRepositoryLayer()
     {
-        RegisterImplementationForInterfaces(ServiceDiscoveryFacade.RepositoryUnboundInterfaces, typeof(EntityFrameworkCoreRepository<,>));
+        RegisterImplementationForInterfaces(InjectablesAssemblyScanner.RepositoryUnboundInterfaces, typeof(EntityFrameworkCoreRepository<,>));
 
         _services.TryAddScoped<IResourceRepositoryAccessor, ResourceRepositoryAccessor>();
 
@@ -204,7 +213,7 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
 
     private void AddServiceLayer()
     {
-        RegisterImplementationForInterfaces(ServiceDiscoveryFacade.ServiceUnboundInterfaces, typeof(JsonApiResourceService<,>));
+        RegisterImplementationForInterfaces(InjectablesAssemblyScanner.ServiceUnboundInterfaces, typeof(JsonApiResourceService<,>));
     }
 
     private void RegisterImplementationForInterfaces(HashSet<Type> unboundInterfaces, Type unboundImplementationType)
@@ -290,10 +299,5 @@ internal sealed class JsonApiApplicationBuilder : IJsonApiApplicationBuilder, ID
         _services.TryAddScoped<IOperationsProcessor, OperationsProcessor>();
         _services.TryAddScoped<IOperationProcessorAccessor, OperationProcessorAccessor>();
         _services.TryAddScoped<ILocalIdTracker, LocalIdTracker>();
-    }
-
-    public void Dispose()
-    {
-        _intermediateProvider.Dispose();
     }
 }
