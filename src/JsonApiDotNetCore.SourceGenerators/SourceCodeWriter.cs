@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.SourceGenerators;
 /// <summary>
 /// Writes the source code for an ASP.NET controller for a JSON:API resource.
 /// </summary>
-internal sealed class SourceCodeWriter
+internal sealed class SourceCodeWriter(GeneratorExecutionContext context, DiagnosticDescriptor missingIndentInTableErrorDescriptor)
 {
     private const int SpacesPerIndent = 4;
 
@@ -41,17 +41,11 @@ internal sealed class SourceCodeWriter
             [JsonApiEndpointsCopy.DeleteRelationship] = ("IRemoveFromRelationshipService", "removeFromRelationship")
         };
 
-    private readonly GeneratorExecutionContext _context;
-    private readonly DiagnosticDescriptor _missingIndentInTableErrorDescriptor;
+    private readonly GeneratorExecutionContext _context = context;
+    private readonly DiagnosticDescriptor _missingIndentInTableErrorDescriptor = missingIndentInTableErrorDescriptor;
 
     private readonly StringBuilder _sourceBuilder = new();
     private int _depth;
-
-    public SourceCodeWriter(GeneratorExecutionContext context, DiagnosticDescriptor missingIndentInTableErrorDescriptor)
-    {
-        _context = context;
-        _missingIndentInTableErrorDescriptor = missingIndentInTableErrorDescriptor;
-    }
 
     public string Write(INamedTypeSymbol resourceType, ITypeSymbol idType, JsonApiEndpointsCopy endpointsToGenerate, string? controllerNamespace,
         string controllerName, INamedTypeSymbol loggerFactoryInterface)

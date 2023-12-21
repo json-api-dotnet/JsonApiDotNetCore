@@ -10,17 +10,12 @@ namespace DapperExample.TranslationToSql.TreeNodes;
 /// SELECT t2.Id AS Id0 FROM (SELECT t1.Id FROM Users AS t1) AS t2
 /// ]]></code>.
 /// </summary>
-internal sealed class ColumnInSelectNode : ColumnNode
+internal sealed class ColumnInSelectNode(ColumnSelectorNode selector, string? tableAlias) : ColumnNode(GetColumnName(selector), selector.Column.Type,
+    tableAlias)
 {
-    public ColumnSelectorNode Selector { get; }
+    public ColumnSelectorNode Selector { get; } = selector;
 
     public bool IsVirtual => Selector.Alias != null || Selector.Column is ColumnInSelectNode { IsVirtual: true };
-
-    public ColumnInSelectNode(ColumnSelectorNode selector, string? tableAlias)
-        : base(GetColumnName(selector), selector.Column.Type, tableAlias)
-    {
-        Selector = selector;
-    }
 
     private static string GetColumnName(ColumnSelectorNode selector)
     {

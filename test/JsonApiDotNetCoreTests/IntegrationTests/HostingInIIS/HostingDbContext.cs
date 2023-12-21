@@ -5,13 +5,8 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class HostingDbContext : TestableDbContext
+public sealed class HostingDbContext(DbContextOptions<HostingDbContext> options) : TestableDbContext(options)
 {
     public DbSet<ArtGallery> ArtGalleries => Set<ArtGallery>();
     public DbSet<Painting> Paintings => Set<Painting>();
-
-    public HostingDbContext(DbContextOptions<HostingDbContext> options)
-        : base(options)
-    {
-    }
 }

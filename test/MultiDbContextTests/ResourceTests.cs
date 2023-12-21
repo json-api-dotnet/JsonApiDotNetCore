@@ -10,9 +10,9 @@ using Xunit;
 
 namespace MultiDbContextTests;
 
-public sealed class ResourceTests : IntegrationTest, IClassFixture<NoLoggingWebApplicationFactory<ResourceA>>
+public sealed class ResourceTests(NoLoggingWebApplicationFactory<ResourceA> factory) : IntegrationTest, IClassFixture<NoLoggingWebApplicationFactory<ResourceA>>
 {
-    private readonly NoLoggingWebApplicationFactory<ResourceA> _factory;
+    private readonly NoLoggingWebApplicationFactory<ResourceA> _factory = factory;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -21,11 +21,6 @@ public sealed class ResourceTests : IntegrationTest, IClassFixture<NoLoggingWebA
             var options = _factory.Services.GetRequiredService<IJsonApiOptions>();
             return options.SerializerOptions;
         }
-    }
-
-    public ResourceTests(NoLoggingWebApplicationFactory<ResourceA> factory)
-    {
-        _factory = factory;
     }
 
     [Fact]

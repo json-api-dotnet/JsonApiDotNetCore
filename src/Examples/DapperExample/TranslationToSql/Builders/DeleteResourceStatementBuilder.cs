@@ -6,13 +6,8 @@ using JsonApiDotNetCore.Queries.Expressions;
 
 namespace DapperExample.TranslationToSql.Builders;
 
-internal sealed class DeleteResourceStatementBuilder : StatementBuilder
+internal sealed class DeleteResourceStatementBuilder(IDataModelService dataModelService) : StatementBuilder(dataModelService)
 {
-    public DeleteResourceStatementBuilder(IDataModelService dataModelService)
-        : base(dataModelService)
-    {
-    }
-
     public DeleteNode Build(ResourceType resourceType, params object[] idValues)
     {
         ArgumentGuard.NotNull(resourceType);

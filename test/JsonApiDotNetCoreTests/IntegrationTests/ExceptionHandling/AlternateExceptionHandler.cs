@@ -5,13 +5,8 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling;
 
-public sealed class AlternateExceptionHandler : ExceptionHandler
+public sealed class AlternateExceptionHandler(ILoggerFactory loggerFactory, IJsonApiOptions options) : ExceptionHandler(loggerFactory, options)
 {
-    public AlternateExceptionHandler(ILoggerFactory loggerFactory, IJsonApiOptions options)
-        : base(loggerFactory, options)
-    {
-    }
-
     protected override LogLevel GetLogLevel(Exception exception)
     {
         if (exception is ConsumerArticleIsNoLongerAvailableException)

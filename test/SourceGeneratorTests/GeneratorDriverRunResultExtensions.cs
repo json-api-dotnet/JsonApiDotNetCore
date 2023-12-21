@@ -12,14 +12,10 @@ internal static class GeneratorDriverRunResultExtensions
         return new GeneratorDriverRunResultAssertions(instance);
     }
 
-    internal sealed class GeneratorDriverRunResultAssertions : ReferenceTypeAssertions<GeneratorDriverRunResult, GeneratorDriverRunResultAssertions>
+    internal sealed class GeneratorDriverRunResultAssertions(GeneratorDriverRunResult subject)
+        : ReferenceTypeAssertions<GeneratorDriverRunResult, GeneratorDriverRunResultAssertions>(subject)
     {
         protected override string Identifier => nameof(GeneratorDriverRunResult);
-
-        public GeneratorDriverRunResultAssertions(GeneratorDriverRunResult subject)
-            : base(subject)
-        {
-        }
 
         public void NotHaveDiagnostics()
         {

@@ -8,9 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection")]
-public sealed class PostOffice : Identifiable<int>
+public sealed class PostOffice(InjectionDbContext injectionDbContext) : Identifiable<int>
 {
-    private readonly ISystemClock _systemClock;
+    private readonly ISystemClock _systemClock = injectionDbContext.SystemClock;
 
     [Attr]
     public string Address { get; set; } = null!;
@@ -21,11 +21,6 @@ public sealed class PostOffice : Identifiable<int>
 
     [HasMany]
     public IList<GiftCertificate> GiftCertificates { get; set; } = new List<GiftCertificate>();
-
-    public PostOffice(InjectionDbContext injectionDbContext)
-    {
-        _systemClock = injectionDbContext.SystemClock;
-    }
 
     private bool IsWithinOperatingHours()
     {

@@ -8,18 +8,13 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ReadWriteDbContext : TestableDbContext
+public sealed class ReadWriteDbContext(DbContextOptions<ReadWriteDbContext> options) : TestableDbContext(options)
 {
     public DbSet<WorkItem> WorkItems => Set<WorkItem>();
     public DbSet<WorkTag> WorkTags => Set<WorkTag>();
     public DbSet<WorkItemGroup> Groups => Set<WorkItemGroup>();
     public DbSet<RgbColor> RgbColors => Set<RgbColor>();
     public DbSet<UserAccount> UserAccounts => Set<UserAccount>();
-
-    public ReadWriteDbContext(DbContextOptions<ReadWriteDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

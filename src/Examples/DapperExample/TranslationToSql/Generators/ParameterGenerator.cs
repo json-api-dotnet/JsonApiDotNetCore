@@ -20,11 +20,5 @@ internal sealed class ParameterGenerator
         _nameGenerator.Reset();
     }
 
-    private sealed class ParameterNameGenerator : UniqueNameGenerator
-    {
-        public ParameterNameGenerator()
-            : base("@p")
-        {
-        }
-    }
+    private sealed class ParameterNameGenerator() : UniqueNameGenerator("@p");
 }

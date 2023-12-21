@@ -585,14 +585,9 @@ public class FilterParser : QueryExpressionParser, IFilterParser
         }
     }
 
-    private sealed class PopResourceTypeOnDispose : IDisposable
+    private sealed class PopResourceTypeOnDispose(Stack<ResourceType> resourceTypeStack) : IDisposable
     {
-        private readonly Stack<ResourceType> _resourceTypeStack;
-
-        public PopResourceTypeOnDispose(Stack<ResourceType> resourceTypeStack)
-        {
-            _resourceTypeStack = resourceTypeStack;
-        }
+        private readonly Stack<ResourceType> _resourceTypeStack = resourceTypeStack;
 
         public void Dispose()
         {

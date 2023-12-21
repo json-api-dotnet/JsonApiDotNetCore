@@ -10,20 +10,17 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public class MultiTenantResourceService<TResource, TId> : JsonApiResourceService<TResource, TId>
+public class MultiTenantResourceService<TResource, TId>(
+    ITenantProvider tenantProvider, IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
+    IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
+    IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
+    : JsonApiResourceService<TResource, TId>(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker,
+        resourceDefinitionAccessor)
     where TResource : class, IIdentifiable<TId>
 {
-    private readonly ITenantProvider _tenantProvider;
+    private readonly ITenantProvider _tenantProvider = tenantProvider;
 
     private static bool ResourceHasTenant => typeof(IHasTenant).IsAssignableFrom(typeof(TResource));
-
-    public MultiTenantResourceService(ITenantProvider tenantProvider, IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
-        IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
-        IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
-        : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker, resourceDefinitionAccessor)
-    {
-        _tenantProvider = tenantProvider;
-    }
 
     protected override async Task InitializeResourceAsync(TResource resourceForDatabase, CancellationToken cancellationToken)
     {

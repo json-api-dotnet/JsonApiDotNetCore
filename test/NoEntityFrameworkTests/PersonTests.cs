@@ -10,9 +10,9 @@ using Xunit;
 
 namespace NoEntityFrameworkTests;
 
-public sealed class PersonTests : IntegrationTest, IClassFixture<NoLoggingWebApplicationFactory<Person>>
+public sealed class PersonTests(NoLoggingWebApplicationFactory<Person> factory) : IntegrationTest, IClassFixture<NoLoggingWebApplicationFactory<Person>>
 {
-    private readonly NoLoggingWebApplicationFactory<Person> _factory;
+    private readonly NoLoggingWebApplicationFactory<Person> _factory = factory;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -21,11 +21,6 @@ public sealed class PersonTests : IntegrationTest, IClassFixture<NoLoggingWebApp
             var options = _factory.Services.GetRequiredService<IJsonApiOptions>();
             return options.SerializerOptions;
         }
-    }
-
-    public PersonTests(NoLoggingWebApplicationFactory<Person> factory)
-    {
-        _factory = factory;
     }
 
     [Fact]

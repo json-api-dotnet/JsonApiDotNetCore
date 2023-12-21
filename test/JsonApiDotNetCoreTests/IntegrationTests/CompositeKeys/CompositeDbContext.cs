@@ -7,16 +7,11 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class CompositeDbContext : TestableDbContext
+public sealed class CompositeDbContext(DbContextOptions<CompositeDbContext> options) : TestableDbContext(options)
 {
     public DbSet<Car> Cars => Set<Car>();
     public DbSet<Engine> Engines => Set<Engine>();
     public DbSet<Dealership> Dealerships => Set<Dealership>();
-
-    public CompositeDbContext(DbContextOptions<CompositeDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

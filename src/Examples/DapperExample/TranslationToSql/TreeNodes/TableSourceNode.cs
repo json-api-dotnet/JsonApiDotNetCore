@@ -5,17 +5,12 @@ namespace DapperExample.TranslationToSql.TreeNodes;
 /// <summary>
 /// Represents the base type for tabular data sources, such as database tables and sub-queries.
 /// </summary>
-internal abstract class TableSourceNode : SqlTreeNode
+internal abstract class TableSourceNode(string? alias) : SqlTreeNode
 {
     public const string IdColumnName = nameof(Identifiable<object>.Id);
 
     public abstract IReadOnlyList<ColumnNode> Columns { get; }
-    public string? Alias { get; }
-
-    protected TableSourceNode(string? alias)
-    {
-        Alias = alias;
-    }
+    public string? Alias { get; } = alias;
 
     public ColumnNode GetIdColumn(string? innerTableAlias)
     {

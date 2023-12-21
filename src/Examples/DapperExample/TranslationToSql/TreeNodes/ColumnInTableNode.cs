@@ -8,13 +8,8 @@ namespace DapperExample.TranslationToSql.TreeNodes;
 /// FROM Users AS t1
 /// ]]></code>.
 /// </summary>
-internal sealed class ColumnInTableNode : ColumnNode
+internal sealed class ColumnInTableNode(string name, ColumnType type, string? tableAlias) : ColumnNode(name, type, tableAlias)
 {
-    public ColumnInTableNode(string name, ColumnType type, string? tableAlias)
-        : base(name, type, tableAlias)
-    {
-    }
-
     public override TResult Accept<TArgument, TResult>(SqlTreeNodeVisitor<TArgument, TResult> visitor, TArgument argument)
     {
         return visitor.VisitColumnInTable(this, argument);

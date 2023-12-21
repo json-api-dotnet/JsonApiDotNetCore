@@ -10,14 +10,10 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Authorization.Scopes;
 
-public sealed class OperationsController : JsonApiOperationsController
+public sealed class OperationsController(
+    IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor, IJsonApiRequest request,
+    ITargetedFields targetedFields) : JsonApiOperationsController(options, resourceGraph, loggerFactory, processor, request, targetedFields)
 {
-    public OperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor,
-        IJsonApiRequest request, ITargetedFields targetedFields)
-        : base(options, resourceGraph, loggerFactory, processor, request, targetedFields)
-    {
-    }
-
     public override async Task<IActionResult> PostOperationsAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
     {
         AuthScopeSet requestedScopes = AuthScopeSet.GetRequestedScopes(HttpContext.Request.Headers);

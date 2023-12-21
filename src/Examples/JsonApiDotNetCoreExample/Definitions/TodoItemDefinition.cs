@@ -12,22 +12,19 @@ using Microsoft.AspNetCore.Authentication;
 namespace JsonApiDotNetCoreExample.Definitions;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem, long>
-{
-    private readonly Func<DateTimeOffset> _getUtcNow;
-
+public sealed class TodoItemDefinition(
+    IResourceGraph resourceGraph,
 #if NET6_0
-    public TodoItemDefinition(IResourceGraph resourceGraph, ISystemClock systemClock)
-        : base(resourceGraph)
-    {
-        _getUtcNow = () => systemClock.UtcNow;
-    }
+    ISystemClock systemClock
 #else
-    public TodoItemDefinition(IResourceGraph resourceGraph, TimeProvider timeProvider)
-        : base(resourceGraph)
-    {
-        _getUtcNow = timeProvider.GetUtcNow;
-    }
+    TimeProvider timeProvider
+#endif
+) : JsonApiResourceDefinition<TodoItem, long>(resourceGraph)
+{
+#if NET6_0
+    private readonly Func<DateTimeOffset> _getUtcNow = () => systemClock.UtcNow;
+#else
+    private readonly Func<DateTimeOffset> _getUtcNow = timeProvider.GetUtcNow;
 #endif
 
     public override SortExpression OnApplySort(SortExpression? existingSort)

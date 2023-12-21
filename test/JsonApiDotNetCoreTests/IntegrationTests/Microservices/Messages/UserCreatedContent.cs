@@ -3,18 +3,11 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class UserCreatedContent : IMessageContent
+public sealed class UserCreatedContent(Guid userId, string userLoginName, string? userDisplayName) : IMessageContent
 {
     public int FormatVersion => 1;
 
-    public Guid UserId { get; }
-    public string UserLoginName { get; }
-    public string? UserDisplayName { get; }
-
-    public UserCreatedContent(Guid userId, string userLoginName, string? userDisplayName)
-    {
-        UserId = userId;
-        UserLoginName = userLoginName;
-        UserDisplayName = userDisplayName;
-    }
+    public Guid UserId { get; } = userId;
+    public string UserLoginName { get; } = userLoginName;
+    public string? UserDisplayName { get; } = userDisplayName;
 }

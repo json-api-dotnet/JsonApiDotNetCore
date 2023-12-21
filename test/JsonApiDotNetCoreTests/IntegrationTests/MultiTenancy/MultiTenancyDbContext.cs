@@ -7,18 +7,12 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class MultiTenancyDbContext : TestableDbContext
+public sealed class MultiTenancyDbContext(DbContextOptions<MultiTenancyDbContext> options, ITenantProvider tenantProvider) : TestableDbContext(options)
 {
-    private readonly ITenantProvider _tenantProvider;
+    private readonly ITenantProvider _tenantProvider = tenantProvider;
 
     public DbSet<WebShop> WebShops => Set<WebShop>();
     public DbSet<WebProduct> WebProducts => Set<WebProduct>();
-
-    public MultiTenancyDbContext(DbContextOptions<MultiTenancyDbContext> options, ITenantProvider tenantProvider)
-        : base(options)
-    {
-        _tenantProvider = tenantProvider;
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
