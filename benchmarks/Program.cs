@@ -9,14 +9,13 @@ internal static class Program
 {
     private static void Main(string[] args)
     {
-        var switcher = new BenchmarkSwitcher(new[]
-        {
+        var switcher = new BenchmarkSwitcher([
             typeof(ResourceDeserializationBenchmarks),
             typeof(OperationsDeserializationBenchmarks),
             typeof(ResourceSerializationBenchmarks),
             typeof(OperationsSerializationBenchmarks),
             typeof(QueryStringParserBenchmarks)
-        });
+        ]);
 
         switcher.Run(args);
     }

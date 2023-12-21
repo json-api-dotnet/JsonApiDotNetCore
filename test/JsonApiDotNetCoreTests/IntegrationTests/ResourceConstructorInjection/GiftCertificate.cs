@@ -8,9 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection")]
-public sealed class GiftCertificate : Identifiable<int>
+public sealed class GiftCertificate(InjectionDbContext injectionDbContext) : Identifiable<int>
 {
-    private readonly ISystemClock _systemClock;
+    private readonly ISystemClock _systemClock = injectionDbContext.SystemClock;
 
     [Attr]
     public DateTimeOffset IssueDate { get; set; }
@@ -21,9 +21,4 @@ public sealed class GiftCertificate : Identifiable<int>
 
     [HasOne]
     public PostOffice? Issuer { get; set; }
-
-    public GiftCertificate(InjectionDbContext injectionDbContext)
-    {
-        _systemClock = injectionDbContext.SystemClock;
-    }
 }

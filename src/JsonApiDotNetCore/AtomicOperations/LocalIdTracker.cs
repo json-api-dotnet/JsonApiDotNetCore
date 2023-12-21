@@ -90,14 +90,9 @@ public sealed class LocalIdTracker : ILocalIdTracker
         }
     }
 
-    private sealed class LocalIdState
+    private sealed class LocalIdState(ResourceType resourceType)
     {
-        public ResourceType ResourceType { get; }
+        public ResourceType ResourceType { get; } = resourceType;
         public string? ServerId { get; set; }
-
-        public LocalIdState(ResourceType resourceType)
-        {
-            ResourceType = resourceType;
-        }
     }
 }

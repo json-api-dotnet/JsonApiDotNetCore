@@ -10,9 +10,9 @@ using Xunit;
 
 namespace NoEntityFrameworkTests;
 
-public sealed class TagTests : IntegrationTest, IClassFixture<NoLoggingWebApplicationFactory<Tag>>
+public sealed class TagTests(NoLoggingWebApplicationFactory<Tag> factory) : IntegrationTest, IClassFixture<NoLoggingWebApplicationFactory<Tag>>
 {
-    private readonly NoLoggingWebApplicationFactory<Tag> _factory;
+    private readonly NoLoggingWebApplicationFactory<Tag> _factory = factory;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -21,11 +21,6 @@ public sealed class TagTests : IntegrationTest, IClassFixture<NoLoggingWebApplic
             var options = _factory.Services.GetRequiredService<IJsonApiOptions>();
             return options.SerializerOptions;
         }
-    }
-
-    public TagTests(NoLoggingWebApplicationFactory<Tag> factory)
-    {
-        _factory = factory;
     }
 
     [Fact]

@@ -290,14 +290,9 @@ internal sealed class StaleColumnReferenceRewriter : SqlTreeNodeVisitor<ColumnVi
         return nodes.Select(element => TypedVisit(element, mode)).ToList();
     }
 
-    private sealed class PopStackOnDispose<T> : IDisposable
+    private sealed class PopStackOnDispose<T>(Stack<T> stack) : IDisposable
     {
-        private readonly Stack<T> _stack;
-
-        public PopStackOnDispose(Stack<T> stack)
-        {
-            _stack = stack;
-        }
+        private readonly Stack<T> _stack = stack;
 
         public void Dispose()
         {

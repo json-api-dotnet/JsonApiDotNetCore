@@ -8,13 +8,9 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters;
 
 /// <inheritdoc cref="IAtomicReferenceAdapter" />
 [PublicAPI]
-public sealed class AtomicReferenceAdapter : ResourceIdentityAdapter, IAtomicReferenceAdapter
+public sealed class AtomicReferenceAdapter(IResourceGraph resourceGraph, IResourceFactory resourceFactory)
+    : ResourceIdentityAdapter(resourceGraph, resourceFactory), IAtomicReferenceAdapter
 {
-    public AtomicReferenceAdapter(IResourceGraph resourceGraph, IResourceFactory resourceFactory)
-        : base(resourceGraph, resourceFactory)
-    {
-    }
-
     /// <inheritdoc />
     public AtomicReferenceResult Convert(AtomicReference atomicReference, ResourceIdentityRequirements requirements, RequestAdapterState state)
     {

@@ -6,11 +6,7 @@ namespace JsonApiDotNetCore.Serialization.Response;
 /// <inheritdoc cref="IFingerprintGenerator" />
 internal sealed class FingerprintGenerator : IFingerprintGenerator
 {
-#if NET6_0
-    private static readonly byte[] Separator = Encoding.UTF8.GetBytes("|");
-#else
     private static readonly byte[] Separator = "|"u8.ToArray();
-#endif
     private static readonly uint[] LookupTable = Enumerable.Range(0, 256).Select(ToLookupEntry).ToArray();
 
     private static uint ToLookupEntry(int index)

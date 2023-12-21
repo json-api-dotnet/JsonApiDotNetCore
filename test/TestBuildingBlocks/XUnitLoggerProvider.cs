@@ -38,18 +38,11 @@ public sealed class XUnitLoggerProvider : ILoggerProvider
     {
     }
 
-    private sealed class XUnitLogger : ILogger
+    private sealed class XUnitLogger(ITestOutputHelper testOutputHelper, LogOutputFields outputFields, string categoryName) : ILogger
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-        private readonly LogOutputFields _outputFields;
-        private readonly string _categoryName;
-
-        public XUnitLogger(ITestOutputHelper testOutputHelper, LogOutputFields outputFields, string categoryName)
-        {
-            _testOutputHelper = testOutputHelper;
-            _outputFields = outputFields;
-            _categoryName = categoryName;
-        }
+        private readonly ITestOutputHelper _testOutputHelper = testOutputHelper;
+        private readonly LogOutputFields _outputFields = outputFields;
+        private readonly string _categoryName = categoryName;
 
         public bool IsEnabled(LogLevel logLevel)
         {

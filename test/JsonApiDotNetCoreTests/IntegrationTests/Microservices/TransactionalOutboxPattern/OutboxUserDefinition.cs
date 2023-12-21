@@ -7,15 +7,10 @@ using Microsoft.EntityFrameworkCore;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOutboxPattern;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class OutboxUserDefinition : MessagingUserDefinition
+public sealed class OutboxUserDefinition(IResourceGraph resourceGraph, OutboxDbContext dbContext, ResourceDefinitionHitCounter hitCounter)
+    : MessagingUserDefinition(resourceGraph, dbContext.Users, hitCounter)
 {
-    private readonly DbSet<OutgoingMessage> _outboxMessageSet;
-
-    public OutboxUserDefinition(IResourceGraph resourceGraph, OutboxDbContext dbContext, ResourceDefinitionHitCounter hitCounter)
-        : base(resourceGraph, dbContext.Users, hitCounter)
-    {
-        _outboxMessageSet = dbContext.OutboxMessages;
-    }
+    private readonly DbSet<OutgoingMessage> _outboxMessageSet = dbContext.OutboxMessages;
 
     public override async Task OnWritingAsync(DomainUser user, WriteOperationKind writeOperation, CancellationToken cancellationToken)
     {

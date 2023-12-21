@@ -345,14 +345,9 @@ public sealed class CreateSortExpressionFromLambdaTests
         // @formatter:wrap_before_first_method_call restore
     }
 
-    private sealed class WrapperResourceDefinition<TResource, TId> : JsonApiResourceDefinition<TResource, TId>
+    private sealed class WrapperResourceDefinition<TResource, TId>(IResourceGraph resourceGraph) : JsonApiResourceDefinition<TResource, TId>(resourceGraph)
         where TResource : class, IIdentifiable<TId>
     {
-        public WrapperResourceDefinition(IResourceGraph resourceGraph)
-            : base(resourceGraph)
-        {
-        }
-
         public SortExpression GetSortExpressionFromLambda(PropertySortOrder sortOrder)
         {
             return CreateSortExpressionFromLambda(sortOrder);

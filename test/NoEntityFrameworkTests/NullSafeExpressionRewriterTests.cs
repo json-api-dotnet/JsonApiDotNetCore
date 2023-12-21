@@ -10,6 +10,8 @@ namespace NoEntityFrameworkTests;
 
 public sealed class NullSafeExpressionRewriterTests
 {
+    private const nint OnePointer = 1;
+
     [Fact]
     public void Can_rewrite_where_clause_with_constant_comparison()
     {
@@ -498,11 +500,7 @@ public sealed class NullSafeExpressionRewriterTests
                 Parent = new TestResource
                 {
                     Id = generator.GetNext(),
-#if NET6_0
-                    Pointer = (IntPtr)1
-#else
-                    Pointer = 1
-#endif
+                    Pointer = OnePointer
                 }
             }
         };

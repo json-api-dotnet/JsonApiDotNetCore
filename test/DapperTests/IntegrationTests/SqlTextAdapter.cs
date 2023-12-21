@@ -3,7 +3,7 @@ using DapperExample;
 
 namespace DapperTests.IntegrationTests;
 
-internal sealed class SqlTextAdapter
+internal sealed class SqlTextAdapter(DatabaseProvider databaseProvider)
 {
     private static readonly Dictionary<Regex, string> SqlServerReplacements = new()
     {
@@ -11,12 +11,7 @@ internal sealed class SqlTextAdapter
         [new Regex($@"(VALUES \([^)]*\)){Environment.NewLine}RETURNING \[Id\]", RegexOptions.Compiled)] = $"OUTPUT INSERTED.[Id]{Environment.NewLine}$1"
     };
 
-    private readonly DatabaseProvider _databaseProvider;
-
-    public SqlTextAdapter(DatabaseProvider databaseProvider)
-    {
-        _databaseProvider = databaseProvider;
-    }
+    private readonly DatabaseProvider _databaseProvider = databaseProvider;
 
     public string Adapt(string text, bool hasClientGeneratedId)
     {

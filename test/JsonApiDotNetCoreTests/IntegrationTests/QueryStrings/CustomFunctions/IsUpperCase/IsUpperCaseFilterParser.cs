@@ -6,13 +6,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.IsUpperCase;
 
-internal sealed class IsUpperCaseFilterParser : FilterParser
+internal sealed class IsUpperCaseFilterParser(IResourceFactory resourceFactory) : FilterParser(resourceFactory)
 {
-    public IsUpperCaseFilterParser(IResourceFactory resourceFactory)
-        : base(resourceFactory)
-    {
-    }
-
     protected override FilterExpression ParseFilter()
     {
         if (TokenStack.TryPeek(out Token? nextToken) && nextToken is { Kind: TokenKind.Text, Value: IsUpperCaseExpression.Keyword })

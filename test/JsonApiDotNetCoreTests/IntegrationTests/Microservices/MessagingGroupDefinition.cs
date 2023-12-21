@@ -7,23 +7,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices;
 
-public abstract class MessagingGroupDefinition : HitCountingResourceDefinition<DomainGroup, Guid>
+public abstract class MessagingGroupDefinition(
+    IResourceGraph resourceGraph, DbSet<DomainUser> userSet, DbSet<DomainGroup> groupSet, ResourceDefinitionHitCounter hitCounter)
+    : HitCountingResourceDefinition<DomainGroup, Guid>(resourceGraph, hitCounter)
 {
-    private readonly DbSet<DomainUser> _userSet;
-    private readonly DbSet<DomainGroup> _groupSet;
+    private readonly DbSet<DomainUser> _userSet = userSet;
+    private readonly DbSet<DomainGroup> _groupSet = groupSet;
     private readonly List<OutgoingMessage> _pendingMessages = [];
 
     private string? _beforeGroupName;
 
     protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Writing;
-
-    protected MessagingGroupDefinition(IResourceGraph resourceGraph, DbSet<DomainUser> userSet, DbSet<DomainGroup> groupSet,
-        ResourceDefinitionHitCounter hitCounter)
-        : base(resourceGraph, hitCounter)
-    {
-        _userSet = userSet;
-        _groupSet = groupSet;
-    }
 
     public override async Task OnPrepareWriteAsync(DomainGroup group, WriteOperationKind writeOperation, CancellationToken cancellationToken)
     {

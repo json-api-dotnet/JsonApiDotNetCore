@@ -16,16 +16,11 @@ internal abstract class RotatingList
     }
 }
 
-internal sealed class RotatingList<T>
+internal sealed class RotatingList<T>(IList<T> elements)
 {
     private int _index = -1;
 
-    public IList<T> Elements { get; }
-
-    public RotatingList(IList<T> elements)
-    {
-        Elements = elements;
-    }
+    public IList<T> Elements { get; } = elements;
 
     public T GetNext()
     {

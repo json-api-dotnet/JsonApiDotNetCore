@@ -5,12 +5,7 @@ using MultiDbContextExample.Models;
 namespace MultiDbContextExample.Data;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class DbContextA : DbContext
+public sealed class DbContextA(DbContextOptions<DbContextA> options) : DbContext(options)
 {
     public DbSet<ResourceA> ResourceAs => Set<ResourceA>();
-
-    public DbContextA(DbContextOptions<DbContextA> options)
-        : base(options)
-    {
-    }
 }

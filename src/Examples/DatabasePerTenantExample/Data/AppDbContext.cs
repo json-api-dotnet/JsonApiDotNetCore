@@ -8,20 +8,14 @@ using Microsoft.EntityFrameworkCore;
 namespace DatabasePerTenantExample.Data;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class AppDbContext : DbContext
+public sealed class AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+    : DbContext(options)
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IConfiguration _configuration;
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly IConfiguration _configuration = configuration;
     private string? _forcedTenantName;
 
     public DbSet<Employee> Employees => Set<Employee>();
-
-    public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
-        : base(options)
-    {
-        _httpContextAccessor = httpContextAccessor;
-        _configuration = configuration;
-    }
 
     public void SetTenantName(string tenantName)
     {

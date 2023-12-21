@@ -2,16 +2,11 @@ using System.Text;
 
 namespace JsonApiDotNetCore.Queries;
 
-internal sealed class IndentingStringWriter : IDisposable
+internal sealed class IndentingStringWriter(StringBuilder builder) : IDisposable
 {
-    private readonly StringBuilder _builder;
+    private readonly StringBuilder _builder = builder;
 
     private int _indentDepth;
-
-    public IndentingStringWriter(StringBuilder builder)
-    {
-        _builder = builder;
-    }
 
     public void WriteLine(string? line)
     {

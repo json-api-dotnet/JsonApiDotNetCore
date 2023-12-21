@@ -7,7 +7,7 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class QueryStringDbContext : TestableDbContext
+public sealed class QueryStringDbContext(DbContextOptions<QueryStringDbContext> options) : TestableDbContext(options)
 {
     public DbSet<Blog> Blogs => Set<Blog>();
     public DbSet<BlogPost> Posts => Set<BlogPost>();
@@ -22,11 +22,6 @@ public sealed class QueryStringDbContext : TestableDbContext
     public DbSet<Calendar> Calendars => Set<Calendar>();
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<Reminder> Reminders => Set<Reminder>();
-
-    public QueryStringDbContext(DbContextOptions<QueryStringDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

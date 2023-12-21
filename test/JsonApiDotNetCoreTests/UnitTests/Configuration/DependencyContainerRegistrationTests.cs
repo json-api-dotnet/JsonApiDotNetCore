@@ -176,14 +176,10 @@ public sealed class DependencyContainerRegistrationTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class DependencyContainerRegistrationDbContext : TestableDbContext
+    private sealed class DependencyContainerRegistrationDbContext(DbContextOptions<DependencyContainerRegistrationDbContext> options)
+        : TestableDbContext(options)
     {
         public DbSet<Resource> Resources => Set<Resource>();
-
-        public DependencyContainerRegistrationDbContext(DbContextOptions<DependencyContainerRegistrationDbContext> options)
-            : base(options)
-        {
-        }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

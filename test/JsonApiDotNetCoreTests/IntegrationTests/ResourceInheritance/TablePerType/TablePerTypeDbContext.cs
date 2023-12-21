@@ -7,13 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.TablePerType;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class TablePerTypeDbContext : ResourceInheritanceDbContext
+public sealed class TablePerTypeDbContext(DbContextOptions<TablePerTypeDbContext> options) : ResourceInheritanceDbContext(options)
 {
-    public TablePerTypeDbContext(DbContextOptions<TablePerTypeDbContext> options)
-        : base(options)
-    {
-    }
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Vehicle>()

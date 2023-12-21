@@ -9,14 +9,12 @@ using NoEntityFrameworkExample.Models;
 namespace NoEntityFrameworkExample.Services;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class TodoItemService : InMemoryResourceService<TodoItem, long>
+public sealed class TodoItemService(
+    IJsonApiOptions options, IResourceGraph resourceGraph, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
+    IEnumerable<IQueryConstraintProvider> constraintProviders, IQueryableBuilder queryableBuilder, ILoggerFactory loggerFactory)
+    : InMemoryResourceService<TodoItem, long>(options, resourceGraph, queryLayerComposer, paginationContext, constraintProviders, queryableBuilder,
+        loggerFactory)
 {
-    public TodoItemService(IJsonApiOptions options, IResourceGraph resourceGraph, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
-        IEnumerable<IQueryConstraintProvider> constraintProviders, IQueryableBuilder queryableBuilder, ILoggerFactory loggerFactory)
-        : base(options, resourceGraph, queryLayerComposer, paginationContext, constraintProviders, queryableBuilder, loggerFactory)
-    {
-    }
-
     protected override IEnumerable<IIdentifiable> GetDataSource(ResourceType resourceType)
     {
         if (resourceType.ClrType == typeof(TodoItem))

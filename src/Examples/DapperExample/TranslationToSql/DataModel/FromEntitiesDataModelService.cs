@@ -12,7 +12,7 @@ namespace DapperExample.TranslationToSql.DataModel;
 /// <summary>
 /// Derives foreign keys and connection strings from an existing Entity Framework Core model.
 /// </summary>
-public sealed class FromEntitiesDataModelService : BaseDataModelService
+public sealed class FromEntitiesDataModelService(IResourceGraph resourceGraph) : BaseDataModelService(resourceGraph)
 {
     private readonly Dictionary<RelationshipAttribute, RelationshipForeignKey> _foreignKeysByRelationship = [];
     private readonly Dictionary<AttrAttribute, bool> _columnNullabilityPerAttribute = [];
@@ -20,11 +20,6 @@ public sealed class FromEntitiesDataModelService : BaseDataModelService
     private DatabaseProvider? _databaseProvider;
 
     public override DatabaseProvider DatabaseProvider => AssertHasDatabaseProvider();
-
-    public FromEntitiesDataModelService(IResourceGraph resourceGraph)
-        : base(resourceGraph)
-    {
-    }
 
     public void Initialize(DbContext dbContext)
     {
