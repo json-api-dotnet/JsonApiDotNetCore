@@ -2723,25 +2723,6 @@ references:
   commentId: T:JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade
   fullName: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade
   nameWithType: ServiceDiscoveryFacade
-- uid: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,JsonApiDotNetCore.Configuration.ResourceGraphBuilder,Microsoft.Extensions.Logging.ILoggerFactory)
-  name: ServiceDiscoveryFacade(IServiceCollection, ResourceGraphBuilder, ILoggerFactory)
-  href: api/JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.html#JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade__ctor_Microsoft_Extensions_DependencyInjection_IServiceCollection_JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Microsoft_Extensions_Logging_ILoggerFactory_
-  commentId: M:JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,JsonApiDotNetCore.Configuration.ResourceGraphBuilder,Microsoft.Extensions.Logging.ILoggerFactory)
-  name.vb: New(IServiceCollection, ResourceGraphBuilder, ILoggerFactory)
-  fullName: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.ServiceDiscoveryFacade(Microsoft.Extensions.DependencyInjection.IServiceCollection, JsonApiDotNetCore.Configuration.ResourceGraphBuilder, Microsoft.Extensions.Logging.ILoggerFactory)
-  fullName.vb: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.New(Microsoft.Extensions.DependencyInjection.IServiceCollection, JsonApiDotNetCore.Configuration.ResourceGraphBuilder, Microsoft.Extensions.Logging.ILoggerFactory)
-  nameWithType: ServiceDiscoveryFacade.ServiceDiscoveryFacade(IServiceCollection, ResourceGraphBuilder, ILoggerFactory)
-  nameWithType.vb: ServiceDiscoveryFacade.New(IServiceCollection, ResourceGraphBuilder, ILoggerFactory)
-- uid: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor*
-  name: ServiceDiscoveryFacade
-  href: api/JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.html#JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade__ctor_
-  commentId: Overload:JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor
-  isSpec: "True"
-  name.vb: New
-  fullName: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.ServiceDiscoveryFacade
-  fullName.vb: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.New
-  nameWithType: ServiceDiscoveryFacade.ServiceDiscoveryFacade
-  nameWithType.vb: ServiceDiscoveryFacade.New
 - uid: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.AddAssembly(System.Reflection.Assembly)
   name: AddAssembly(Assembly)
   href: api/JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.html#JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade_AddAssembly_System_Reflection_Assembly_

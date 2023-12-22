@@ -87,7 +87,7 @@
 
   <h1 id="JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade" data-uid="JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade" class="text-break">
     Class ServiceDiscoveryFacade
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ServiceDiscoveryFacade.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ServiceDiscoveryFacade.cs/#L8"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -95,13 +95,12 @@
   <dl><dt>Assembly</dt><dd>JsonApiDotNetCore.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Scans for types like resources, services, repositories and resource definitions in an assembly and registers them to the IoC container.</p>
+  <div class="markdown summary"><p>Provides auto-discovery by scanning assemblies for resources and related injectables.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[PublicAPI]
-public sealed class ServiceDiscoveryFacade</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class ServiceDiscoveryFacade</code></pre>
   </div>
 
 
@@ -145,45 +144,6 @@ public sealed class ServiceDiscoveryFacade</code></pre>
 
 
 
-  <h2 class="section" id="constructors">Constructors
-</h2>
-
-
-  <a id="JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade__ctor_" data-uid="JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor*"></a>
-
-  <h3 id="JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade__ctor_Microsoft_Extensions_DependencyInjection_IServiceCollection_JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Microsoft_Extensions_Logging_ILoggerFactory_" data-uid="JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,JsonApiDotNetCore.Configuration.ResourceGraphBuilder,Microsoft.Extensions.Logging.ILoggerFactory)">
-  ServiceDiscoveryFacade(IServiceCollection, ResourceGraphBuilder, ILoggerFactory)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ServiceDiscoveryFacade.cs/#L51"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, ILoggerFactory loggerFactory)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>services</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.extensions.dependencyinjection.iservicecollection">IServiceCollection</a></dt>
-    <dd></dd>
-    <dt><code>resourceGraphBuilder</code> <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceGraphBuilder.html">ResourceGraphBuilder</a></dt>
-    <dd></dd>
-    <dt><code>loggerFactory</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.extensions.logging.iloggerfactory">ILoggerFactory</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="methods">Methods
 </h2>
 
@@ -192,10 +152,10 @@ public sealed class ServiceDiscoveryFacade</code></pre>
 
   <h3 id="JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade_AddAssembly_System_Reflection_Assembly_" data-uid="JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.AddAssembly(System.Reflection.Assembly)">
   AddAssembly(Assembly)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ServiceDiscoveryFacade.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ServiceDiscoveryFacade.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Mark the specified assembly for scanning of resources and injectables.</p>
+  <div class="markdown level1 summary"><p>Includes the specified assembly for auto-discovery of resources and related injectables.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -229,10 +189,10 @@ public sealed class ServiceDiscoveryFacade</code></pre>
 
   <h3 id="JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade_AddCurrentAssembly" data-uid="JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.AddCurrentAssembly">
   AddCurrentAssembly()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ServiceDiscoveryFacade.cs/#L65"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ServiceDiscoveryFacade.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Mark the calling assembly for scanning of resources and injectables.</p>
+  <div class="markdown level1 summary"><p>Includes the calling assembly for auto-discovery of resources and related injectables.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -261,7 +221,7 @@ public sealed class ServiceDiscoveryFacade</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ServiceDiscoveryFacade.cs/#L16" class="edit-link">Edit this page</a>
+          <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ServiceDiscoveryFacade.cs/#L8" class="edit-link">Edit this page</a>
         </div>
 
 
