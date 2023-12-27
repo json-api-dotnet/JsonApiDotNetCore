@@ -7,16 +7,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace NoEntityFrameworkExample;
 
-internal sealed class QueryLayerToLinqConverter
+internal sealed class QueryLayerToLinqConverter(IModel model, IQueryableBuilder queryableBuilder)
 {
-    private readonly IModel _model;
-    private readonly IQueryableBuilder _queryableBuilder;
-
-    public QueryLayerToLinqConverter(IModel model, IQueryableBuilder queryableBuilder)
-    {
-        _model = model;
-        _queryableBuilder = queryableBuilder;
-    }
+    private readonly IModel _model = model;
+    private readonly IQueryableBuilder _queryableBuilder = queryableBuilder;
 
     public IEnumerable<TResource> ApplyQueryLayer<TResource>(QueryLayer queryLayer, IEnumerable<TResource> resources)
         where TResource : class, IIdentifiable

@@ -11,24 +11,18 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public class SoftDeletionAwareResourceService<TResource, TId> : JsonApiResourceService<TResource, TId>
+public class SoftDeletionAwareResourceService<TResource, TId>(
+    ISystemClock systemClock, ITargetedFields targetedFields, IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
+    IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
+    IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
+    : JsonApiResourceService<TResource, TId>(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker,
+        resourceDefinitionAccessor)
     where TResource : class, IIdentifiable<TId>
 {
-    private readonly ISystemClock _systemClock;
-    private readonly ITargetedFields _targetedFields;
-    private readonly IResourceRepositoryAccessor _repositoryAccessor;
-    private readonly IJsonApiRequest _request;
-
-    public SoftDeletionAwareResourceService(ISystemClock systemClock, ITargetedFields targetedFields, IResourceRepositoryAccessor repositoryAccessor,
-        IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
-        : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker, resourceDefinitionAccessor)
-    {
-        _systemClock = systemClock;
-        _targetedFields = targetedFields;
-        _repositoryAccessor = repositoryAccessor;
-        _request = request;
-    }
+    private readonly ISystemClock _systemClock = systemClock;
+    private readonly ITargetedFields _targetedFields = targetedFields;
+    private readonly IResourceRepositoryAccessor _repositoryAccessor = repositoryAccessor;
+    private readonly IJsonApiRequest _request = request;
 
     // To optimize performance, the default resource service does not always fetch all resources on write operations.
     // We do that here, to assure a 404 error is thrown for soft-deleted resources.

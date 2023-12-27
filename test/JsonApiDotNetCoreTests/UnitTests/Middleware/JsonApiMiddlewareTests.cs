@@ -13,9 +13,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
 using Xunit;
 
-// Workaround for Resharper bug at https://youtrack.jetbrains.com/issue/RSRP-494909/Breaking-UsedImplicitly-and-PublicAPI-on-types-no-longer-respected.
-// ReSharper disable PropertyCanBeMadeInitOnly.Local
-
 #pragma warning disable AV1561 // Signature contains too many parameters
 
 namespace JsonApiDotNetCoreTests.UnitTests.Middleware;
@@ -194,16 +191,10 @@ public sealed class JsonApiMiddlewareTests
         public ISet<ItemTag> Tags { get; set; } = new HashSet<ItemTag>();
     }
 
-    private sealed class FakeJsonApiRoutingConvention : IJsonApiRoutingConvention
+    private sealed class FakeJsonApiRoutingConvention(IResourceGraph resourceGraph, string? resourceTypePublicName) : IJsonApiRoutingConvention
     {
-        private readonly IResourceGraph _resourceGraph;
-        private readonly string? _resourceTypePublicName;
-
-        public FakeJsonApiRoutingConvention(IResourceGraph resourceGraph, string? resourceTypePublicName)
-        {
-            _resourceGraph = resourceGraph;
-            _resourceTypePublicName = resourceTypePublicName;
-        }
+        private readonly IResourceGraph _resourceGraph = resourceGraph;
+        private readonly string? _resourceTypePublicName = resourceTypePublicName;
 
         public void Apply(ApplicationModel application)
         {

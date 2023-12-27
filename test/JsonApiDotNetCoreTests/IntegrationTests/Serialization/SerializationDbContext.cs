@@ -7,15 +7,10 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class SerializationDbContext : TestableDbContext
+public sealed class SerializationDbContext(DbContextOptions<SerializationDbContext> options) : TestableDbContext(options)
 {
     public DbSet<Meeting> Meetings => Set<Meeting>();
     public DbSet<MeetingAttendee> Attendees => Set<MeetingAttendee>();
-
-    public SerializationDbContext(DbContextOptions<SerializationDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

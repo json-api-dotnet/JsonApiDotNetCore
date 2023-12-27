@@ -15,9 +15,6 @@ using Microsoft.Extensions.Primitives;
 using TestBuildingBlocks;
 using Xunit;
 
-// Workaround for Resharper bug at https://youtrack.jetbrains.com/issue/RSRP-494909/Breaking-UsedImplicitly-and-PublicAPI-on-types-no-longer-respected.
-// ReSharper disable PropertyCanBeMadeInitOnly.Local
-
 namespace JsonApiDotNetCoreTests.UnitTests.Configuration;
 
 public sealed class DependencyContainerRegistrationTests
@@ -179,14 +176,10 @@ public sealed class DependencyContainerRegistrationTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class DependencyContainerRegistrationDbContext : TestableDbContext
+    private sealed class DependencyContainerRegistrationDbContext(DbContextOptions<DependencyContainerRegistrationDbContext> options)
+        : TestableDbContext(options)
     {
         public DbSet<Resource> Resources => Set<Resource>();
-
-        public DependencyContainerRegistrationDbContext(DbContextOptions<DependencyContainerRegistrationDbContext> options)
-            : base(options)
-        {
-        }
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

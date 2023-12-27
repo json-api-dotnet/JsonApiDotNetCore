@@ -1,9 +1,3 @@
 namespace JsonApiDotNetCore.OpenApi;
 
-internal sealed class UnreachableCodeException : Exception
-{
-    public UnreachableCodeException()
-        : base("This code should not be reachable.")
-    {
-    }
-}
+internal sealed class UnreachableCodeException() : Exception("This code should not be reachable.");

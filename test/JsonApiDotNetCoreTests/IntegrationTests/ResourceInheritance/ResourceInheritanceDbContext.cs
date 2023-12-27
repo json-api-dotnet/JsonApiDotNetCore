@@ -6,7 +6,7 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public abstract class ResourceInheritanceDbContext : TestableDbContext
+public abstract class ResourceInheritanceDbContext(DbContextOptions options) : TestableDbContext(options)
 {
     public DbSet<Vehicle> Vehicles => Set<Vehicle>();
     public DbSet<Bike> Bikes => Set<Bike>();
@@ -32,9 +32,4 @@ public abstract class ResourceInheritanceDbContext : TestableDbContext
     public DbSet<BicycleLight> BicycleLights => Set<BicycleLight>();
     public DbSet<NavigationSystem> NavigationSystems => Set<NavigationSystem>();
     public DbSet<GenericFeature> GenericFeatures => Set<GenericFeature>();
-
-    protected ResourceInheritanceDbContext(DbContextOptions options)
-        : base(options)
-    {
-    }
 }

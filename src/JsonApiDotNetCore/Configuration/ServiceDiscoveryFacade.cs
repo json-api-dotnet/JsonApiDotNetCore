@@ -1,66 +1,25 @@
 using System.Reflection;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Repositories;
-using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Configuration;
 
 /// <summary>
-/// Scans for types like resources, services, repositories and resource definitions in an assembly and registers them to the IoC container.
+/// Provides auto-discovery by scanning assemblies for resources and related injectables.
 /// </summary>
 [PublicAPI]
 public sealed class ServiceDiscoveryFacade
 {
-    internal static readonly HashSet<Type> ServiceUnboundInterfaces =
-    [
-        typeof(IResourceService<,>),
-        typeof(IResourceCommandService<,>),
-        typeof(IResourceQueryService<,>),
-        typeof(IGetAllService<,>),
-        typeof(IGetByIdService<,>),
-        typeof(IGetSecondaryService<,>),
-        typeof(IGetRelationshipService<,>),
-        typeof(ICreateService<,>),
-        typeof(IAddToRelationshipService<,>),
-        typeof(IUpdateService<,>),
-        typeof(ISetRelationshipService<,>),
-        typeof(IDeleteService<,>),
-        typeof(IRemoveFromRelationshipService<,>)
-    ];
+    private readonly ResourceDescriptorAssemblyCache _assemblyCache;
 
-    internal static readonly HashSet<Type> RepositoryUnboundInterfaces =
-    [
-        typeof(IResourceRepository<,>),
-        typeof(IResourceWriteRepository<,>),
-        typeof(IResourceReadRepository<,>)
-    ];
-
-    internal static readonly HashSet<Type> ResourceDefinitionUnboundInterfaces = [typeof(IResourceDefinition<,>)];
-
-    private readonly ILogger<ServiceDiscoveryFacade> _logger;
-    private readonly IServiceCollection _services;
-    private readonly ResourceGraphBuilder _resourceGraphBuilder;
-    private readonly ResourceDescriptorAssemblyCache _assemblyCache = new();
-    private readonly TypeLocator _typeLocator = new();
-
-    public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, ILoggerFactory loggerFactory)
+    internal ServiceDiscoveryFacade(ResourceDescriptorAssemblyCache assemblyCache)
     {
-        ArgumentGuard.NotNull(services);
-        ArgumentGuard.NotNull(resourceGraphBuilder);
-        ArgumentGuard.NotNull(loggerFactory);
+        ArgumentGuard.NotNull(assemblyCache);
 
-        _logger = loggerFactory.CreateLogger<ServiceDiscoveryFacade>();
-        _services = services;
-        _resourceGraphBuilder = resourceGraphBuilder;
+        _assemblyCache = assemblyCache;
     }
 
     /// <summary>
-    /// Mark the calling assembly for scanning of resources and injectables.
+    /// Includes the calling assembly for auto-discovery of resources and related injectables.
     /// </summary>
     public ServiceDiscoveryFacade AddCurrentAssembly()
     {
@@ -68,102 +27,13 @@ public sealed class ServiceDiscoveryFacade
     }
 
     /// <summary>
-    /// Mark the specified assembly for scanning of resources and injectables.
+    /// Includes the specified assembly for auto-discovery of resources and related injectables.
     /// </summary>
     public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
     {
         ArgumentGuard.NotNull(assembly);
 
         _assemblyCache.RegisterAssembly(assembly);
-        _logger.LogDebug($"Registering assembly '{assembly.FullName}' for discovery of resources and injectables.");
-
         return this;
-    }
-
-    internal void DiscoverResources()
-    {
-        foreach (ResourceDescriptor resourceDescriptor in _assemblyCache.GetResourceDescriptors())
-        {
-            AddResource(resourceDescriptor);
-        }
-    }
-
-    internal void DiscoverInjectables()
-    {
-        IReadOnlyCollection<ResourceDescriptor> descriptors = _assemblyCache.GetResourceDescriptors();
-        IReadOnlyCollection<Assembly> assemblies = _assemblyCache.GetAssemblies();
-
-        foreach (Assembly assembly in assemblies)
-        {
-            AddDbContextResolvers(assembly);
-            AddInjectables(descriptors, assembly);
-        }
-    }
-
-    private void AddInjectables(IReadOnlyCollection<ResourceDescriptor> resourceDescriptors, Assembly assembly)
-    {
-        foreach (ResourceDescriptor resourceDescriptor in resourceDescriptors)
-        {
-            AddServices(assembly, resourceDescriptor);
-            AddRepositories(assembly, resourceDescriptor);
-            AddResourceDefinitions(assembly, resourceDescriptor);
-        }
-    }
-
-    private void AddDbContextResolvers(Assembly assembly)
-    {
-        IEnumerable<Type> dbContextTypes = _typeLocator.GetDerivedTypes(assembly, typeof(DbContext));
-
-        foreach (Type dbContextType in dbContextTypes)
-        {
-            Type dbContextResolverClosedType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
-            _services.TryAddScoped(typeof(IDbContextResolver), dbContextResolverClosedType);
-        }
-    }
-
-    private void AddResource(ResourceDescriptor resourceDescriptor)
-    {
-        _resourceGraphBuilder.Add(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType);
-    }
-
-    private void AddServices(Assembly assembly, ResourceDescriptor resourceDescriptor)
-    {
-        foreach (Type serviceUnboundInterface in ServiceUnboundInterfaces)
-        {
-            RegisterImplementations(assembly, serviceUnboundInterface, resourceDescriptor);
-        }
-    }
-
-    private void AddRepositories(Assembly assembly, ResourceDescriptor resourceDescriptor)
-    {
-        foreach (Type repositoryUnboundInterface in RepositoryUnboundInterfaces)
-        {
-            RegisterImplementations(assembly, repositoryUnboundInterface, resourceDescriptor);
-        }
-    }
-
-    private void AddResourceDefinitions(Assembly assembly, ResourceDescriptor resourceDescriptor)
-    {
-        foreach (Type resourceDefinitionUnboundInterface in ResourceDefinitionUnboundInterfaces)
-        {
-            RegisterImplementations(assembly, resourceDefinitionUnboundInterface, resourceDescriptor);
-        }
-    }
-
-    private void RegisterImplementations(Assembly assembly, Type interfaceType, ResourceDescriptor resourceDescriptor)
-    {
-        Type[] typeArguments =
-        [
-            resourceDescriptor.ResourceClrType,
-            resourceDescriptor.IdClrType
-        ];
-
-        (Type implementationType, Type serviceInterface)? result = _typeLocator.GetContainerRegistrationFromAssembly(assembly, interfaceType, typeArguments);
-
-        if (result != null)
-        {
-            (Type implementationType, Type serviceInterface) = result.Value;
-            _services.TryAddScoped(serviceInterface, implementationType);
-        }
     }
 }

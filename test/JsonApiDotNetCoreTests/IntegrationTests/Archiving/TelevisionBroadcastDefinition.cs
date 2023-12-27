@@ -13,22 +13,15 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class TelevisionBroadcastDefinition : JsonApiResourceDefinition<TelevisionBroadcast, int>
+public sealed class TelevisionBroadcastDefinition(
+    IResourceGraph resourceGraph, TelevisionDbContext dbContext, IJsonApiRequest request, IEnumerable<IQueryConstraintProvider> constraintProviders)
+    : JsonApiResourceDefinition<TelevisionBroadcast, int>(resourceGraph)
 {
-    private readonly TelevisionDbContext _dbContext;
-    private readonly IJsonApiRequest _request;
-    private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
+    private readonly TelevisionDbContext _dbContext = dbContext;
+    private readonly IJsonApiRequest _request = request;
+    private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders = constraintProviders;
 
     private DateTimeOffset? _storedArchivedAt;
-
-    public TelevisionBroadcastDefinition(IResourceGraph resourceGraph, TelevisionDbContext dbContext, IJsonApiRequest request,
-        IEnumerable<IQueryConstraintProvider> constraintProviders)
-        : base(resourceGraph)
-    {
-        _dbContext = dbContext;
-        _request = request;
-        _constraintProviders = constraintProviders;
-    }
 
     public override FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
     {

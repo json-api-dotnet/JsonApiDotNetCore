@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Serialization.Objects;
 /// See https://jsonapi.org/format/#error-objects.
 /// </summary>
 [PublicAPI]
-public sealed class ErrorObject
+public sealed class ErrorObject(HttpStatusCode statusCode)
 {
     [JsonPropertyName("id")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -19,7 +19,7 @@ public sealed class ErrorObject
     public ErrorLinks? Links { get; set; }
 
     [JsonIgnore]
-    public HttpStatusCode StatusCode { get; set; }
+    public HttpStatusCode StatusCode { get; set; } = statusCode;
 
     [JsonPropertyName("status")]
     [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
@@ -48,11 +48,6 @@ public sealed class ErrorObject
     [JsonPropertyName("meta")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IDictionary<string, object?>? Meta { get; set; }
-
-    public ErrorObject(HttpStatusCode statusCode)
-    {
-        StatusCode = statusCode;
-    }
 
     public static HttpStatusCode GetResponseStatusCode(IReadOnlyList<ErrorObject> errorObjects)
     {

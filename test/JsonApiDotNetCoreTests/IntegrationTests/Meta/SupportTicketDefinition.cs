@@ -4,14 +4,10 @@ using JsonApiDotNetCore.Configuration;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Meta;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class SupportTicketDefinition : HitCountingResourceDefinition<SupportTicket, int>
+public sealed class SupportTicketDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
+    : HitCountingResourceDefinition<SupportTicket, int>(resourceGraph, hitCounter)
 {
     protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.GetMeta;
-
-    public SupportTicketDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
-        : base(resourceGraph, hitCounter)
-    {
-    }
 
     public override IDictionary<string, object?>? GetMeta(SupportTicket resource)
     {

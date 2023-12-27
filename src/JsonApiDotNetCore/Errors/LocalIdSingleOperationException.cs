@@ -8,14 +8,8 @@ namespace JsonApiDotNetCore.Errors;
 /// The error that is thrown when assigning and referencing a local ID within the same operation.
 /// </summary>
 [PublicAPI]
-public sealed class LocalIdSingleOperationException : JsonApiException
+public sealed class LocalIdSingleOperationException(string localId) : JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
 {
-    public LocalIdSingleOperationException(string localId)
-        : base(new ErrorObject(HttpStatusCode.BadRequest)
-        {
-            Title = "Local ID cannot be both defined and used within the same operation.",
-            Detail = $"Local ID '{localId}' cannot be both defined and used within the same operation."
-        })
-    {
-    }
-}
+    Title = "Local ID cannot be both defined and used within the same operation.",
+    Detail = $"Local ID '{localId}' cannot be both defined and used within the same operation."
+});

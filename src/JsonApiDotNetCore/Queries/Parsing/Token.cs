@@ -3,17 +3,11 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Parsing;
 
 [PublicAPI]
-public class Token
+public class Token(TokenKind kind, int position)
 {
-    public TokenKind Kind { get; }
+    public TokenKind Kind { get; } = kind;
     public string? Value { get; }
-    public int Position { get; }
-
-    public Token(TokenKind kind, int position)
-    {
-        Kind = kind;
-        Position = position;
-    }
+    public int Position { get; } = position;
 
     public Token(TokenKind kind, string value, int position)
         : this(kind, position)

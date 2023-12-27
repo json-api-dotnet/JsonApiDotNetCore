@@ -3,7 +3,7 @@ using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.TimeOffset;
 
-internal sealed class FilterTimeOffsetRewriter : QueryExpressionRewriter<object?>
+internal sealed class FilterTimeOffsetRewriter(ISystemClock systemClock) : QueryExpressionRewriter<object?>
 {
     private static readonly Dictionary<ComparisonOperator, ComparisonOperator> InverseComparisonOperatorTable = new()
     {
@@ -14,12 +14,7 @@ internal sealed class FilterTimeOffsetRewriter : QueryExpressionRewriter<object?
         [ComparisonOperator.LessOrEqual] = ComparisonOperator.GreaterOrEqual
     };
 
-    private readonly ISystemClock _systemClock;
-
-    public FilterTimeOffsetRewriter(ISystemClock systemClock)
-    {
-        _systemClock = systemClock;
-    }
+    private readonly ISystemClock _systemClock = systemClock;
 
     public override QueryExpression? VisitComparison(ComparisonExpression expression, object? argument)
     {

@@ -9,18 +9,14 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public class CarCompositeKeyAwareRepository<TResource, TId> : EntityFrameworkCoreRepository<TResource, TId>
+public class CarCompositeKeyAwareRepository<TResource, TId>(
+    ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
+    IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
+    : EntityFrameworkCoreRepository<TResource, TId>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory,
+        resourceDefinitionAccessor)
     where TResource : class, IIdentifiable<TId>
 {
-    private readonly CarExpressionRewriter _writer;
-
-    public CarCompositeKeyAwareRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
-        IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
-        IResourceDefinitionAccessor resourceDefinitionAccessor)
-        : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
-    {
-        _writer = new CarExpressionRewriter(resourceGraph);
-    }
+    private readonly CarExpressionRewriter _writer = new(resourceGraph);
 
     protected override IQueryable<TResource> ApplyQueryLayer(QueryLayer queryLayer)
     {

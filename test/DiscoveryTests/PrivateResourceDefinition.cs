@@ -5,10 +5,4 @@ using JsonApiDotNetCore.Resources;
 namespace DiscoveryTests;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class PrivateResourceDefinition : JsonApiResourceDefinition<PrivateResource, int>
-{
-    public PrivateResourceDefinition(IResourceGraph resourceGraph)
-        : base(resourceGraph)
-    {
-    }
-}
+public sealed class PrivateResourceDefinition(IResourceGraph resourceGraph) : JsonApiResourceDefinition<PrivateResource, int>(resourceGraph);

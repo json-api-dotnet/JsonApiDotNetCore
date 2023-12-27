@@ -11,24 +11,24 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 internal sealed class ResourceFieldObjectSchemaBuilder
 {
     private static readonly Type[] RelationshipSchemaInResponseOpenTypes =
-    {
+    [
         typeof(ToOneRelationshipInResponse<>),
         typeof(ToManyRelationshipInResponse<>),
         typeof(NullableToOneRelationshipInResponse<>)
-    };
+    ];
 
     private static readonly Type[] NullableRelationshipSchemaOpenTypes =
-    {
+    [
         typeof(NullableToOneRelationshipInRequest<>),
         typeof(NullableToOneRelationshipInResponse<>)
-    };
+    ];
 
     private static readonly string[] RelationshipObjectPropertyNamesInOrder =
-    {
+    [
         JsonApiPropertyName.Links,
         JsonApiPropertyName.Data,
         JsonApiPropertyName.Meta
-    };
+    ];
 
     private readonly ResourceTypeInfo _resourceTypeInfo;
     private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;

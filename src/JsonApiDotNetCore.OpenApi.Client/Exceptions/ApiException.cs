@@ -6,19 +6,11 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.OpenApi.Client.Exceptions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ApiException : Exception
+public sealed class ApiException(
+    string message, int statusCode, string? response, IReadOnlyDictionary<string, IEnumerable<string>> headers, Exception? innerException)
+    : Exception($"{message}\n\nStatus: {statusCode}\nResponse: \n{response ?? "(null)"}", innerException)
 {
-    public int StatusCode { get; }
-
-    public string? Response { get; }
-
-    public IReadOnlyDictionary<string, IEnumerable<string>> Headers { get; }
-
-    public ApiException(string message, int statusCode, string? response, IReadOnlyDictionary<string, IEnumerable<string>> headers, Exception? innerException)
-        : base($"{message}\n\nStatus: {statusCode}\nResponse: \n{response ?? "(null)"}", innerException)
-    {
-        StatusCode = statusCode;
-        Response = response;
-        Headers = headers;
-    }
+    public int StatusCode { get; } = statusCode;
+    public string? Response { get; } = response;
+    public IReadOnlyDictionary<string, IEnumerable<string>> Headers { get; } = headers;
 }
