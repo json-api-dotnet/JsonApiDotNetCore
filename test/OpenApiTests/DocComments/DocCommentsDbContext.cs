@@ -7,16 +7,11 @@ using TestBuildingBlocks;
 namespace OpenApiTests.DocComments;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class DocCommentsDbContext : TestableDbContext
+public sealed class DocCommentsDbContext(DbContextOptions<DocCommentsDbContext> options) : TestableDbContext(options)
 {
     public DbSet<Skyscraper> Skyscrapers => Set<Skyscraper>();
     public DbSet<Elevator> Elevators => Set<Elevator>();
     public DbSet<Space> Spaces => Set<Space>();
-
-    public DocCommentsDbContext(DbContextOptions<DocCommentsDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

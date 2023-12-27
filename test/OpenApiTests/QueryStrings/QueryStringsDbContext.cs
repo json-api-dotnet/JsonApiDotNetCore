@@ -5,12 +5,7 @@ using TestBuildingBlocks;
 namespace OpenApiTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class QueryStringsDbContext : TestableDbContext
+public sealed class QueryStringsDbContext(DbContextOptions<QueryStringsDbContext> options) : TestableDbContext(options)
 {
     public DbSet<Node> Nodes => Set<Node>();
-
-    public QueryStringsDbContext(DbContextOptions<QueryStringsDbContext> options)
-        : base(options)
-    {
-    }
 }

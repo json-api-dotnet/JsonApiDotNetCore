@@ -1,9 +1,4 @@
 namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 
-internal sealed class RelationshipRequestMetadata : NonPrimaryEndpointMetadata, IJsonApiRequestMetadata
-{
-    public RelationshipRequestMetadata(IDictionary<string, Type> documentTypesByRelationshipName)
-        : base(documentTypesByRelationshipName)
-    {
-    }
-}
+internal sealed class RelationshipRequestMetadata(IDictionary<string, Type> documentTypesByRelationshipName)
+    : NonPrimaryEndpointMetadata(documentTypesByRelationshipName), IJsonApiRequestMetadata;

@@ -7,16 +7,11 @@ using TestBuildingBlocks;
 namespace OpenApiTests.LegacyOpenApiIntegration;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class LegacyIntegrationDbContext : TestableDbContext
+public sealed class LegacyIntegrationDbContext(DbContextOptions<LegacyIntegrationDbContext> options) : TestableDbContext(options)
 {
     public DbSet<Airplane> Airplanes => Set<Airplane>();
     public DbSet<Flight> Flights => Set<Flight>();
     public DbSet<FlightAttendant> FlightAttendants => Set<FlightAttendant>();
-
-    public LegacyIntegrationDbContext(DbContextOptions<LegacyIntegrationDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
