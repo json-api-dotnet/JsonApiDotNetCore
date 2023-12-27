@@ -62,7 +62,7 @@ public sealed class LengthSortParseTests : BaseParseTests
     [InlineData("sort", "length(title),-length(platformName)", null)]
     [InlineData("sort", "length(owner.userName)", null)]
     [InlineData("sort[posts]", "length(author.userName)", "posts")]
-    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected)
+    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string? scopeExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);

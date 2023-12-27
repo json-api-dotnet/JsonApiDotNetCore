@@ -9,20 +9,21 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <BenchmarkDotNetVersion>0.13.*</BenchmarkDotNetVersion>
     <BlushingPenguinVersion>1.0.*</BlushingPenguinVersion>
-    <BogusVersion>34.0.*</BogusVersion>
+    <BogusVersion>35.2.*</BogusVersion>
     <CodeAnalysisVersion>4.8.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
     <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>2.3.*</GitHubActionsTestLoggerVersion>
-    <InheritDocVersion>1.4.*</InheritDocVersion>
+    <InheritDocVersion>2.0.*</InheritDocVersion>
     <MicrosoftApiClientVersion>8.0.*</MicrosoftApiClientVersion>
     <NSwagApiClientVersion>13.20.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>
     <SourceLinkVersion>8.0.*</SourceLinkVersion>
     <SwashbuckleVersion>6.5.*</SwashbuckleVersion>
     <TestSdkVersion>17.8.*</TestSdkVersion>
-    <XunitVersion>2.5.*</XunitVersion>
+    <XunitVersion>2.6.*</XunitVersion>
+    <XunitVisualStudioVersion>2.5.*</XunitVisualStudioVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
