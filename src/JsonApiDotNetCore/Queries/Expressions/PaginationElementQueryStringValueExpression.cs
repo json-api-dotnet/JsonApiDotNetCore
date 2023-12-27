@@ -10,29 +10,22 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 /// .
 /// </summary>
 [PublicAPI]
-public class PaginationElementQueryStringValueExpression : QueryExpression
+public class PaginationElementQueryStringValueExpression(ResourceFieldChainExpression? scope, int value, int position) : QueryExpression
 {
     /// <summary>
     /// The relationship this pagination applies to. Chain format: zero or more relationships, followed by a to-many relationship.
     /// </summary>
-    public ResourceFieldChainExpression? Scope { get; }
+    public ResourceFieldChainExpression? Scope { get; } = scope;
 
     /// <summary>
     /// The numeric pagination value.
     /// </summary>
-    public int Value { get; }
+    public int Value { get; } = value;
 
     /// <summary>
     /// The zero-based position in the text of the query string parameter value.
     /// </summary>
-    public int Position { get; }
-
-    public PaginationElementQueryStringValueExpression(ResourceFieldChainExpression? scope, int value, int position)
-    {
-        Scope = scope;
-        Value = value;
-        Position = position;
-    }
+    public int Position { get; } = position;
 
     public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
     {

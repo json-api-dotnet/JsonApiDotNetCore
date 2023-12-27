@@ -55,14 +55,9 @@ public sealed class RequestAdapterPosition
         return ToSourcePointer() ?? string.Empty;
     }
 
-    private sealed class PopStackOnDispose : IDisposable
+    private sealed class PopStackOnDispose(RequestAdapterPosition owner) : IDisposable
     {
-        private readonly RequestAdapterPosition _owner;
-
-        public PopStackOnDispose(RequestAdapterPosition owner)
-        {
-            _owner = owner;
-        }
+        private readonly RequestAdapterPosition _owner = owner;
 
         public void Dispose()
         {

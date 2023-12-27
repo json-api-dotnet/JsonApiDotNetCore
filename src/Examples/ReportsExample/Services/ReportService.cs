@@ -5,14 +5,9 @@ using ReportsExample.Models;
 namespace ReportsExample.Services;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public class ReportService : IGetAllService<Report, int>
+public class ReportService(ILoggerFactory loggerFactory) : IGetAllService<Report, int>
 {
-    private readonly ILogger<ReportService> _logger;
-
-    public ReportService(ILoggerFactory loggerFactory)
-    {
-        _logger = loggerFactory.CreateLogger<ReportService>();
-    }
+    private readonly ILogger<ReportService> _logger = loggerFactory.CreateLogger<ReportService>();
 
     public Task<IReadOnlyCollection<Report>> GetAsync(CancellationToken cancellationToken)
     {

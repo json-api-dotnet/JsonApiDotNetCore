@@ -5,13 +5,8 @@ using Microsoft.Extensions.Logging;
 
 namespace TestBuildingBlocks;
 
-public abstract class TestableDbContext : DbContext
+public abstract class TestableDbContext(DbContextOptions options) : DbContext(options)
 {
-    protected TestableDbContext(DbContextOptions options)
-        : base(options)
-    {
-    }
-
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
         WriteSqlStatementsToOutputWindow(builder);

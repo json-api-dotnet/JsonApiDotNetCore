@@ -6,13 +6,12 @@ using JsonApiDotNetCore.Resources.Annotations;
 using NoEntityFrameworkExample;
 using Xunit;
 
-// Workaround for Resharper bug at https://youtrack.jetbrains.com/issue/RSRP-494909/Breaking-UsedImplicitly-and-PublicAPI-on-types-no-longer-respected.
-// ReSharper disable PropertyCanBeMadeInitOnly.Local
-
 namespace NoEntityFrameworkTests;
 
 public sealed class NullSafeExpressionRewriterTests
 {
+    private const nint OnePointer = 1;
+
     [Fact]
     public void Can_rewrite_where_clause_with_constant_comparison()
     {
@@ -501,11 +500,7 @@ public sealed class NullSafeExpressionRewriterTests
                 Parent = new TestResource
                 {
                     Id = generator.GetNext(),
-#if NET6_0
-                    Pointer = (IntPtr)1
-#else
-                    Pointer = 1
-#endif
+                    Pointer = OnePointer
                 }
             }
         };

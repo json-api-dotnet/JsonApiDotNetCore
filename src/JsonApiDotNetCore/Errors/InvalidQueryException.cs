@@ -9,14 +9,8 @@ namespace JsonApiDotNetCore.Errors;
 /// The error that is thrown when translating a <see cref="QueryLayer" /> to Entity Framework Core fails.
 /// </summary>
 [PublicAPI]
-public sealed class InvalidQueryException : JsonApiException
+public sealed class InvalidQueryException(string reason, Exception? innerException) : JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
 {
-    public InvalidQueryException(string reason, Exception? innerException)
-        : base(new ErrorObject(HttpStatusCode.BadRequest)
-        {
-            Title = reason,
-            Detail = innerException?.Message
-        }, innerException)
-    {
-    }
-}
+    Title = reason,
+    Detail = innerException?.Message
+}, innerException);

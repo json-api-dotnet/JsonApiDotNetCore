@@ -4,14 +4,9 @@ using NoEntityFrameworkExample.Models;
 
 namespace NoEntityFrameworkExample;
 
-internal sealed class InMemoryInverseNavigationResolver : IInverseNavigationResolver
+internal sealed class InMemoryInverseNavigationResolver(IResourceGraph resourceGraph) : IInverseNavigationResolver
 {
-    private readonly IResourceGraph _resourceGraph;
-
-    public InMemoryInverseNavigationResolver(IResourceGraph resourceGraph)
-    {
-        _resourceGraph = resourceGraph;
-    }
+    private readonly IResourceGraph _resourceGraph = resourceGraph;
 
     /// <inheritdoc />
     public void Resolve()

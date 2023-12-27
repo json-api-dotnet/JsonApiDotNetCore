@@ -7,16 +7,11 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ZeroKeyDbContext : TestableDbContext
+public sealed class ZeroKeyDbContext(DbContextOptions<ZeroKeyDbContext> options) : TestableDbContext(options)
 {
     public DbSet<Game> Games => Set<Game>();
     public DbSet<Player> Players => Set<Player>();
     public DbSet<Map> Maps => Set<Map>();
-
-    public ZeroKeyDbContext(DbContextOptions<ZeroKeyDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

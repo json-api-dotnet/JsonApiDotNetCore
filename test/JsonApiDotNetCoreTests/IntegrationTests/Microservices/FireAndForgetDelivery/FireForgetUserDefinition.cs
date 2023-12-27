@@ -6,17 +6,12 @@ using JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDelivery;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class FireForgetUserDefinition : MessagingUserDefinition
+public sealed class FireForgetUserDefinition(
+    IResourceGraph resourceGraph, FireForgetDbContext dbContext, MessageBroker messageBroker, ResourceDefinitionHitCounter hitCounter)
+    : MessagingUserDefinition(resourceGraph, dbContext.Users, hitCounter)
 {
-    private readonly MessageBroker _messageBroker;
+    private readonly MessageBroker _messageBroker = messageBroker;
     private DomainUser? _userToDelete;
-
-    public FireForgetUserDefinition(IResourceGraph resourceGraph, FireForgetDbContext dbContext, MessageBroker messageBroker,
-        ResourceDefinitionHitCounter hitCounter)
-        : base(resourceGraph, dbContext.Users, hitCounter)
-    {
-        _messageBroker = messageBroker;
-    }
 
     public override async Task OnWritingAsync(DomainUser user, WriteOperationKind writeOperation, CancellationToken cancellationToken)
     {

@@ -7,16 +7,11 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ModelStateDbContext : TestableDbContext
+public sealed class ModelStateDbContext(DbContextOptions<ModelStateDbContext> options) : TestableDbContext(options)
 {
     public DbSet<SystemVolume> Volumes => Set<SystemVolume>();
     public DbSet<SystemDirectory> Directories => Set<SystemDirectory>();
     public DbSet<SystemFile> Files => Set<SystemFile>();
-
-    public ModelStateDbContext(DbContextOptions<ModelStateDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

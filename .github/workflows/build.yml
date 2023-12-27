@@ -39,13 +39,15 @@ jobs:
     permissions:
       contents: read
     steps:
+    - name: Tune GitHub-hosted runner network
+      uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Setup PostgreSQL
       uses: ikalnytskyi/action-setup-postgres@v4
       with:
         username: postgres
         password: postgres
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
           6.0.x
@@ -143,7 +145,7 @@ jobs:
         dotnet pack --no-build --configuration Release --output $env:GITHUB_WORKSPACE/artifacts/packages /p:VersionSuffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Upload packages to artifacts
       if: matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: packages
         path: artifacts/packages
@@ -166,7 +168,7 @@ jobs:
         Copy-Item -Recurse home/assets/* _site/styles/
     - name: Upload documentation to artifacts
       if: matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: documentation
         path: docs/_site
@@ -181,8 +183,10 @@ jobs:
     permissions:
       contents: read
     steps:
+    - name: Tune GitHub-hosted runner network
+      uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
           6.0.x
@@ -197,7 +201,7 @@ jobs:
       run: |
         $inspectCodeOutputPath = Join-Path $env:RUNNER_TEMP 'jetbrains-inspectcode-results.xml'
         Write-Output "INSPECT_CODE_OUTPUT_PATH=$inspectCodeOutputPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        dotnet jb inspectcode JsonApiDotNetCore.sln --build --dotnetcoresdk=$(dotnet --version) --output="$inspectCodeOutputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --properties:ContinuousIntegrationBuild=false --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+        dotnet jb inspectcode JsonApiDotNetCore.sln --build --dotnetcoresdk=$(dotnet --version) --output="$inspectCodeOutputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --properties:ContinuousIntegrationBuild=false --properties:RunAnalyzers=false --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
     - name: Verify outcome
       shell: pwsh
       run: |
@@ -234,8 +238,10 @@ jobs:
     permissions:
       contents: read
     steps:
+    - name: Tune GitHub-hosted runner network
+      uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
           6.0.x
@@ -260,13 +266,13 @@ jobs:
         $baseCommitHash = git rev-parse HEAD~1
 
         Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
-        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
+        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
     - name: CleanupCode (on branch)
       if: github.event_name == 'push' || github.event_name == 'release'
       shell: pwsh
       run: |
         Write-Output "Running code cleanup on all files."
-        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --verbosity=WARN --fail-on-diff --print-diff
+        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN --fail-on-diff --print-diff
 
   publish:
     timeout-minutes: 60
@@ -277,8 +283,10 @@ jobs:
       packages: write
       contents: write
     steps:
+    - name: Tune GitHub-hosted runner network
+      uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Download artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
     - name: Publish to GitHub Packages
       if: github.event_name == 'push' || github.event_name == 'release'
       env:

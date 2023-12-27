@@ -166,14 +166,9 @@ internal sealed class ResultSetMapper<TResource, TId>
         return _primaryResourcesInOrder.DistinctBy(resource => resource.Id).ToList();
     }
 
-    private sealed class IncludeElementWalker
+    private sealed class IncludeElementWalker(IncludeExpression include)
     {
-        private readonly IncludeExpression _include;
-
-        public IncludeElementWalker(IncludeExpression include)
-        {
-            _include = include;
-        }
+        private readonly IncludeExpression _include = include;
 
         public IEnumerable<IncludeElementExpression> BreadthFirstEnumerate()
         {

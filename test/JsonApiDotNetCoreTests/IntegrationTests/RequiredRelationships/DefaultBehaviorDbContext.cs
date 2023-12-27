@@ -7,16 +7,11 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class DefaultBehaviorDbContext : TestableDbContext
+public sealed class DefaultBehaviorDbContext(DbContextOptions<DefaultBehaviorDbContext> options) : TestableDbContext(options)
 {
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<Shipment> Shipments => Set<Shipment>();
-
-    public DefaultBehaviorDbContext(DbContextOptions<DefaultBehaviorDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -8,15 +8,12 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class BuildingRepository : EntityFrameworkCoreRepository<Building, int>
+public sealed class BuildingRepository(
+    ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
+    IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
+    : EntityFrameworkCoreRepository<Building, int>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory,
+        resourceDefinitionAccessor)
 {
-    public BuildingRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
-        IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
-        IResourceDefinitionAccessor resourceDefinitionAccessor)
-        : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
-    {
-    }
-
     public override async Task<Building> GetForCreateAsync(Type resourceClrType, int id, CancellationToken cancellationToken)
     {
         Building building = await base.GetForCreateAsync(resourceClrType, id, cancellationToken);

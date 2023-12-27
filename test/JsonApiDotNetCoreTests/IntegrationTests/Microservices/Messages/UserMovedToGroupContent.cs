@@ -3,18 +3,11 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class UserMovedToGroupContent : IMessageContent
+public sealed class UserMovedToGroupContent(Guid userId, Guid beforeGroupId, Guid afterGroupId) : IMessageContent
 {
     public int FormatVersion => 1;
 
-    public Guid UserId { get; }
-    public Guid BeforeGroupId { get; }
-    public Guid AfterGroupId { get; }
-
-    public UserMovedToGroupContent(Guid userId, Guid beforeGroupId, Guid afterGroupId)
-    {
-        UserId = userId;
-        BeforeGroupId = beforeGroupId;
-        AfterGroupId = afterGroupId;
-    }
+    public Guid UserId { get; } = userId;
+    public Guid BeforeGroupId { get; } = beforeGroupId;
+    public Guid AfterGroupId { get; } = afterGroupId;
 }

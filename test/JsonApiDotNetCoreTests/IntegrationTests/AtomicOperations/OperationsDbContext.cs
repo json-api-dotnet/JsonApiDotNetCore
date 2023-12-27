@@ -7,7 +7,7 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class OperationsDbContext : TestableDbContext
+public sealed class OperationsDbContext(DbContextOptions<OperationsDbContext> options) : TestableDbContext(options)
 {
     public DbSet<Playlist> Playlists => Set<Playlist>();
     public DbSet<MusicTrack> MusicTracks => Set<MusicTrack>();
@@ -15,11 +15,6 @@ public sealed class OperationsDbContext : TestableDbContext
     public DbSet<TextLanguage> TextLanguages => Set<TextLanguage>();
     public DbSet<Performer> Performers => Set<Performer>();
     public DbSet<RecordCompany> RecordCompanies => Set<RecordCompany>();
-
-    public OperationsDbContext(DbContextOptions<OperationsDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

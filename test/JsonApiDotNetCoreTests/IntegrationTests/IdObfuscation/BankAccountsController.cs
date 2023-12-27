@@ -4,11 +4,6 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation;
 
-public sealed class BankAccountsController : ObfuscatedIdentifiableController<BankAccount>
-{
-    public BankAccountsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-        IResourceService<BankAccount, int> resourceService)
-        : base(options, resourceGraph, loggerFactory, resourceService)
-    {
-    }
-}
+public sealed class BankAccountsController(
+    IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<BankAccount, int> resourceService)
+    : ObfuscatedIdentifiableController<BankAccount>(options, resourceGraph, loggerFactory, resourceService);

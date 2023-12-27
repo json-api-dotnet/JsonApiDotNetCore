@@ -11,9 +11,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
 using Xunit;
 
-// Workaround for Resharper bug at https://youtrack.jetbrains.com/issue/RSRP-494909/Breaking-UsedImplicitly-and-PublicAPI-on-types-no-longer-respected.
-// ReSharper disable PropertyCanBeMadeInitOnly.Local
-
 namespace JsonApiDotNetCoreTests.UnitTests.ResourceDefinitions;
 
 public sealed class CreateSortExpressionFromLambdaTests
@@ -348,14 +345,9 @@ public sealed class CreateSortExpressionFromLambdaTests
         // @formatter:wrap_before_first_method_call restore
     }
 
-    private sealed class WrapperResourceDefinition<TResource, TId> : JsonApiResourceDefinition<TResource, TId>
+    private sealed class WrapperResourceDefinition<TResource, TId>(IResourceGraph resourceGraph) : JsonApiResourceDefinition<TResource, TId>(resourceGraph)
         where TResource : class, IIdentifiable<TId>
     {
-        public WrapperResourceDefinition(IResourceGraph resourceGraph)
-            : base(resourceGraph)
-        {
-        }
-
         public SortExpression GetSortExpressionFromLambda(PropertySortOrder sortOrder)
         {
             return CreateSortExpressionFromLambda(sortOrder);

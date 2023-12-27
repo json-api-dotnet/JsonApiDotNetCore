@@ -5,12 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.ChangeTracking;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ChangeTrackingDbContext : ResourceInheritanceDbContext
+public sealed class ChangeTrackingDbContext(DbContextOptions<ChangeTrackingDbContext> options) : ResourceInheritanceDbContext(options)
 {
     public DbSet<AlwaysMovingTandem> AlwaysMovingTandems => Set<AlwaysMovingTandem>();
-
-    public ChangeTrackingDbContext(DbContextOptions<ChangeTrackingDbContext> options)
-        : base(options)
-    {
-    }
 }

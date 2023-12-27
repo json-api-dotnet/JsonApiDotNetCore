@@ -10,17 +10,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite;
 /// Used to simulate side effects that occur in the database while saving, typically caused by database triggers.
 /// </summary>
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class ImplicitlyChangingWorkItemGroupDefinition : JsonApiResourceDefinition<WorkItemGroup, Guid>
+public sealed class ImplicitlyChangingWorkItemGroupDefinition(IResourceGraph resourceGraph, ReadWriteDbContext dbContext)
+    : JsonApiResourceDefinition<WorkItemGroup, Guid>(resourceGraph)
 {
     internal const string Suffix = " (changed)";
 
-    private readonly ReadWriteDbContext _dbContext;
-
-    public ImplicitlyChangingWorkItemGroupDefinition(IResourceGraph resourceGraph, ReadWriteDbContext dbContext)
-        : base(resourceGraph)
-    {
-        _dbContext = dbContext;
-    }
+    private readonly ReadWriteDbContext _dbContext = dbContext;
 
     public override async Task OnWriteSucceededAsync(WorkItemGroup resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
     {

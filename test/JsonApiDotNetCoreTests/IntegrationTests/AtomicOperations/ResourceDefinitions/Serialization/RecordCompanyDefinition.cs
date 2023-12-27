@@ -4,14 +4,10 @@ using JsonApiDotNetCore.Configuration;
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefinitions.Serialization;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class RecordCompanyDefinition : HitCountingResourceDefinition<RecordCompany, short>
+public sealed class RecordCompanyDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
+    : HitCountingResourceDefinition<RecordCompany, short>(resourceGraph, hitCounter)
 {
     protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Serialization;
-
-    public RecordCompanyDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
-        : base(resourceGraph, hitCounter)
-    {
-    }
 
     public override void OnDeserialize(RecordCompany resource)
     {

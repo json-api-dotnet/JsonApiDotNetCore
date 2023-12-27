@@ -10,9 +10,9 @@ using Xunit;
 
 namespace NoEntityFrameworkTests;
 
-public sealed class TodoItemTests : IntegrationTest, IClassFixture<NoLoggingWebApplicationFactory<TodoItem>>
+public sealed class TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> factory) : IntegrationTest, IClassFixture<NoLoggingWebApplicationFactory<TodoItem>>
 {
-    private readonly NoLoggingWebApplicationFactory<TodoItem> _factory;
+    private readonly NoLoggingWebApplicationFactory<TodoItem> _factory = factory;
 
     protected override JsonSerializerOptions SerializerOptions
     {
@@ -21,11 +21,6 @@ public sealed class TodoItemTests : IntegrationTest, IClassFixture<NoLoggingWebA
             var options = _factory.Services.GetRequiredService<IJsonApiOptions>();
             return options.SerializerOptions;
         }
-    }
-
-    public TodoItemTests(NoLoggingWebApplicationFactory<TodoItem> factory)
-    {
-        _factory = factory;
     }
 
     [Fact]

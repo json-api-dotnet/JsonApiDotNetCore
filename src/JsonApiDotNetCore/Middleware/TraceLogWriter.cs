@@ -118,16 +118,11 @@ internal abstract class TraceLogWriter
     }
 }
 
-internal sealed class TraceLogWriter<T> : TraceLogWriter
+internal sealed class TraceLogWriter<T>(ILoggerFactory loggerFactory) : TraceLogWriter
 {
-    private readonly ILogger _logger;
+    private readonly ILogger _logger = loggerFactory.CreateLogger(typeof(T));
 
     private bool IsEnabled => _logger.IsEnabled(LogLevel.Trace);
-
-    public TraceLogWriter(ILoggerFactory loggerFactory)
-    {
-        _logger = loggerFactory.CreateLogger(typeof(T));
-    }
 
     public void LogMethodStart(object? parameters = null, [CallerMemberName] string memberName = "")
     {

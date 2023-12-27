@@ -15,14 +15,11 @@ namespace JsonApiDotNetCore.Errors;
 /// The error that is thrown when ASP.NET ModelState validation fails.
 /// </summary>
 [PublicAPI]
-public sealed class InvalidModelStateException : JsonApiException
+public sealed class InvalidModelStateException(
+    IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType, bool includeExceptionStackTraceInErrors, IResourceGraph resourceGraph,
+    Func<Type, int, Type?>? getCollectionElementTypeCallback = null) : JsonApiException(FromModelStateDictionary(modelState, modelType, resourceGraph,
+    includeExceptionStackTraceInErrors, getCollectionElementTypeCallback))
 {
-    public InvalidModelStateException(IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType, bool includeExceptionStackTraceInErrors,
-        IResourceGraph resourceGraph, Func<Type, int, Type?>? getCollectionElementTypeCallback = null)
-        : base(FromModelStateDictionary(modelState, modelType, resourceGraph, includeExceptionStackTraceInErrors, getCollectionElementTypeCallback))
-    {
-    }
-
     private static IEnumerable<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry?> modelState, Type modelType,
         IResourceGraph resourceGraph, bool includeExceptionStackTraceInErrors, Func<Type, int, Type?>? getCollectionElementTypeCallback)
     {
@@ -317,18 +314,14 @@ public sealed class InvalidModelStateException : JsonApiException
     /// <summary>
     /// Represents an array indexer in a ModelState key, such as "1" in "Customer.Orders[1].Amount".
     /// </summary>
-    private sealed class ArrayIndexerSegment : ModelStateKeySegment
+    private sealed class ArrayIndexerSegment(
+        int arrayIndex, Type modelType, bool isInComplexType, string nextKey, string? sourcePointer, ModelStateKeySegment? parent,
+        Func<Type, int, Type?>? getCollectionElementTypeCallback) : ModelStateKeySegment(modelType, isInComplexType, nextKey, sourcePointer, parent,
+        getCollectionElementTypeCallback)
     {
         private static readonly CollectionConverter CollectionConverter = new();
 
-        public int ArrayIndex { get; }
-
-        public ArrayIndexerSegment(int arrayIndex, Type modelType, bool isInComplexType, string nextKey, string? sourcePointer, ModelStateKeySegment? parent,
-            Func<Type, int, Type?>? getCollectionElementTypeCallback)
-            : base(modelType, isInComplexType, nextKey, sourcePointer, parent, getCollectionElementTypeCallback)
-        {
-            ArrayIndex = arrayIndex;
-        }
+        public int ArrayIndex { get; } = arrayIndex;
 
         public Type GetCollectionElementType()
         {
