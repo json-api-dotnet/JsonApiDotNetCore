@@ -1,10 +1,12 @@
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Configuration;
 
 /// <summary>
 /// Provides auto-discovery by scanning assemblies for resources and related injectables.
 /// </summary>
+[PublicAPI]
 public sealed class ServiceDiscoveryFacade
 {
     private readonly ResourceDescriptorAssemblyCache _assemblyCache;
