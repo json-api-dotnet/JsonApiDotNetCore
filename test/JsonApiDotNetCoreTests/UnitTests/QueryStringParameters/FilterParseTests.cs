@@ -202,7 +202,7 @@ public sealed class FilterParseTests : BaseParseTests
     [InlineData("filter", "isType(owner.person,men,equals(hasBeard,'true'))", null)]
     [InlineData("filter[posts.contributors]", "isType(,women)", "posts.contributors")]
     [InlineData("filter[posts.contributors]", "isType(,women,equals(maidenName,'Austen'))", "posts.contributors")]
-    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected)
+    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string? scopeExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);

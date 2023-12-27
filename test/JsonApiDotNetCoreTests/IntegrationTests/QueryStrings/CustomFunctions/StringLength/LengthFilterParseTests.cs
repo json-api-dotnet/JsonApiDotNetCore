@@ -66,7 +66,7 @@ public sealed class LengthFilterParseTests : BaseParseTests
     [InlineData("filter", "has(posts,lessThan(length(author.userName),'1'))", null)]
     [InlineData("filter", "or(equals(length(title),'1'),equals(length(platformName),'1'))", null)]
     [InlineData("filter[posts]", "equals(length(author.userName),'1')", "posts")]
-    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected)
+    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string? scopeExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);
