@@ -8,14 +8,14 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 internal sealed class ResourceObjectSchemaGenerator
 {
     private static readonly string[] ResourceObjectPropertyNamesInOrder =
-    {
+    [
         JsonApiPropertyName.Type,
         JsonApiPropertyName.Id,
         JsonApiPropertyName.Attributes,
         JsonApiPropertyName.Relationships,
         JsonApiPropertyName.Links,
         JsonApiPropertyName.Meta
-    };
+    ];
 
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly IResourceGraph _resourceGraph;

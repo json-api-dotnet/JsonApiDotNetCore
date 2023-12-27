@@ -10,13 +10,13 @@ namespace JsonApiDotNetCore.OpenApi;
 internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IApiRequestFormatMetadataProvider
 {
     private static readonly Type[] JsonApiRequestObjectOpenType =
-    {
+    [
         typeof(ToManyRelationshipInRequest<>),
         typeof(ToOneRelationshipInRequest<>),
         typeof(NullableToOneRelationshipInRequest<>),
         typeof(ResourcePostRequestDocument<>),
         typeof(ResourcePatchRequestDocument<>)
-    };
+    ];
 
     /// <inheritdoc />
     public bool CanRead(InputFormatterContext context)

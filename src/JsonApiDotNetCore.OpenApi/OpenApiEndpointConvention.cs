@@ -105,20 +105,20 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
     {
         return endpoint switch
         {
-            JsonApiEndpoint.GetCollection or JsonApiEndpoint.GetSingle or JsonApiEndpoint.GetSecondary or JsonApiEndpoint.GetRelationship => new[]
-            {
+            JsonApiEndpoint.GetCollection or JsonApiEndpoint.GetSingle or JsonApiEndpoint.GetSecondary or JsonApiEndpoint.GetRelationship =>
+            [
                 StatusCodes.Status200OK
-            },
-            JsonApiEndpoint.Post => new[]
-            {
+            ],
+            JsonApiEndpoint.Post =>
+            [
                 StatusCodes.Status201Created,
                 StatusCodes.Status204NoContent
-            },
-            JsonApiEndpoint.Patch => new[]
-            {
+            ],
+            JsonApiEndpoint.Patch =>
+            [
                 StatusCodes.Status200OK,
                 StatusCodes.Status204NoContent
-            },
+            ],
             JsonApiEndpoint.Delete or JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship => new[]
             {
                 StatusCodes.Status204NoContent

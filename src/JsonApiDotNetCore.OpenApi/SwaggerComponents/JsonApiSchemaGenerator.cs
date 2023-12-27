@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 {
     private static readonly Type[] JsonApiDocumentOpenTypes =
-    {
+    [
         typeof(ResourceCollectionResponseDocument<>),
         typeof(PrimaryResourceResponseDocument<>),
         typeof(SecondaryResourceResponseDocument<>),
@@ -25,24 +25,24 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         typeof(ToManyRelationshipInRequest<>),
         typeof(ToOneRelationshipInRequest<>),
         typeof(NullableToOneRelationshipInRequest<>)
-    };
+    ];
 
     private static readonly Type[] JsonApiDocumentWithNullableDataOpenTypes =
-    {
+    [
         typeof(NullableSecondaryResourceResponseDocument<>),
         typeof(NullableResourceIdentifierResponseDocument<>),
         typeof(NullableToOneRelationshipInRequest<>)
-    };
+    ];
 
     private static readonly string[] DocumentPropertyNamesInOrder =
-    {
+    [
         JsonApiPropertyName.Jsonapi,
         JsonApiPropertyName.Links,
         JsonApiPropertyName.Data,
         JsonApiPropertyName.Errors,
         JsonApiPropertyName.Included,
         JsonApiPropertyName.Meta
-    };
+    ];
 
     private readonly ISchemaGenerator _defaultSchemaGenerator;
     private readonly IJsonApiOptions _options;
