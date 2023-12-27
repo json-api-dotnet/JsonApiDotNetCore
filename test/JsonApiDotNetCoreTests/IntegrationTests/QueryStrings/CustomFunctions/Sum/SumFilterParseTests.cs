@@ -71,7 +71,7 @@ public sealed class SumFilterParseTests : BaseParseTests
     [InlineData("filter", "has(posts,greaterThan(sum(comments,numStars),'5'))", null)]
     [InlineData("filter[posts]", "equals(sum(comments,numStars),'11')", "posts")]
     [InlineData("filter[posts]", "equals(sum(labels,count(posts)),'8')", "posts")]
-    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected)
+    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string? scopeExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);

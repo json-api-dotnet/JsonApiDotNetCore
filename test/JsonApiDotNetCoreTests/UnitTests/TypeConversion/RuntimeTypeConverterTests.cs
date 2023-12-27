@@ -141,7 +141,7 @@ public sealed class RuntimeTypeConverterTests
     [InlineData(typeof(IFace), null)]
     [InlineData(typeof(BaseType), null)]
     [InlineData(typeof(DerivedType), null)]
-    public void Returns_default_value_for_empty_string(Type type, object expectedValue)
+    public void Returns_default_value_for_empty_string(Type type, object? expectedValue)
     {
         // Act
         object? result = RuntimeTypeConverter.ConvertType(string.Empty, type);
