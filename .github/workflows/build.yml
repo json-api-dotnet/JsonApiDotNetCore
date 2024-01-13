@@ -127,6 +127,13 @@ jobs:
       run: |
         dotnet build --no-restore --configuration Release /p:VersionSuffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Test
+      env:
+        # Override log levels, to reduce logging output when running tests in ci-build.
+        Logging__LogLevel__Microsoft.Hosting.Lifetime: 'None'
+        Logging__LogLevel__Microsoft.AspNetCore.Hosting.Diagnostics: 'None'
+        Logging__LogLevel__Microsoft.Extensions.Hosting.Internal.Host: 'None'
+        Logging__LogLevel__Microsoft.EntityFrameworkCore.Database.Command: 'None'
+        Logging__LogLevel__JsonApiDotNetCore: 'None'
       run: |
         dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true"
     - name: Upload coverage to codecov.io
