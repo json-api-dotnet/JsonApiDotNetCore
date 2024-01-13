@@ -83,8 +83,8 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
             });
         });
 
-        // We have placed an appsettings.json in the TestBuildingBlock project folder and set the content root to there. Note that controllers
-        // are not discovered in the content root but are registered manually using IntegrationTestContext.UseController.
+        // We have placed an appsettings.json in the TestBuildingBlocks project directory and set the content root to there. Note that
+        // controllers are not discovered in the content root, but are registered manually using IntegrationTestContext.UseController.
         WebApplicationFactory<TStartup> factoryWithConfiguredContentRoot =
             factory.WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot($"test/{nameof(TestBuildingBlocks)}"));
 
@@ -161,8 +161,8 @@ public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest
                 .CreateDefaultBuilder(null)
                 .ConfigureAppConfiguration(builder =>
                 {
-                    // For tests asserting on log output, we discard the logging settings from appsettings.json.
-                    // But using appsettings.json for all other tests makes it easy to quickly toggle when debugging.
+                    // For tests asserting on log output, we discard the log levels from appsettings.json and environment variables.
+                    // But using appsettings.json for all other tests makes it easy to quickly toggle when debugging tests.
                     if (_loggingConfiguration != null)
                     {
                         builder.Sources.Clear();

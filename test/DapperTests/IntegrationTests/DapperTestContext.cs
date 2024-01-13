@@ -69,6 +69,10 @@ public sealed class DapperTestContext : IntegrationTest
             {
                 if (_testOutputHelper != null)
                 {
+#if !DEBUG
+                    // Reduce logging output when running tests in ci-build.
+                    loggingBuilder.ClearProviders();
+#endif
                     loggingBuilder.Services.AddSingleton<ILoggerProvider>(_ => new XUnitLoggerProvider(_testOutputHelper, "DapperExample."));
                 }
             });

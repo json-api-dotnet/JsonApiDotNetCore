@@ -23,10 +23,6 @@ concurrency:
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  # The Windows runner image has PostgreSQL pre-installed and sets the PGPASSWORD environment variable to "root".
-  # This conflicts with the default password "postgres", which is used by ikalnytskyi/action-setup-postgres.
-  # Because action-setup-postgres forgets to update the environment variable accordingly, we do so here.
-  PGPASSWORD: "postgres"
 
 jobs:
   build-and-test:
@@ -42,7 +38,7 @@ jobs:
     - name: Tune GitHub-hosted runner network
       uses: smorimoto/tune-github-hosted-runner-network@v1
     - name: Setup PostgreSQL
-      uses: ikalnytskyi/action-setup-postgres@v4
+      uses: ikalnytskyi/action-setup-postgres@v5
       with:
         username: postgres
         password: postgres
@@ -131,6 +127,13 @@ jobs:
       run: |
         dotnet build --no-restore --configuration Release /p:VersionSuffix=$env:PACKAGE_VERSION_SUFFIX
     - name: Test
+      env:
+        # Override log levels, to reduce logging output when running tests in ci-build.
+        Logging__LogLevel__Microsoft.Hosting.Lifetime: 'None'
+        Logging__LogLevel__Microsoft.AspNetCore.Hosting.Diagnostics: 'None'
+        Logging__LogLevel__Microsoft.Extensions.Hosting.Internal.Host: 'None'
+        Logging__LogLevel__Microsoft.EntityFrameworkCore.Database.Command: 'None'
+        Logging__LogLevel__JsonApiDotNetCore: 'None'
       run: |
         dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true"
     - name: Upload coverage to codecov.io
