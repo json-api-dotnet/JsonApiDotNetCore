@@ -1,5 +1,6 @@
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
@@ -21,10 +22,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         typeof(ResourcePatchRequestDocument<>),
         typeof(ResourceIdentifierCollectionResponseDocument<>),
         typeof(ResourceIdentifierResponseDocument<>),
-        typeof(NullableResourceIdentifierResponseDocument<>),
-        typeof(ToManyRelationshipInRequest<>),
-        typeof(ToOneRelationshipInRequest<>),
-        typeof(NullableToOneRelationshipInRequest<>)
+        typeof(NullableResourceIdentifierResponseDocument<>)
     ];
 
     private static readonly Type[] JsonApiDocumentWithNullableDataOpenTypes =
@@ -43,6 +41,11 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         JsonApiPropertyName.Included,
         JsonApiPropertyName.Meta
     ];
+
+    private static readonly OpenApiSchema IdTypeSchema = new()
+    {
+        Type = "string"
+    };
 
     private readonly ISchemaGenerator _defaultSchemaGenerator;
     private readonly IJsonApiOptions _options;
@@ -72,6 +75,11 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
         _schemaRepositoryAccessor.Current = schemaRepository;
 
+        if (parameterInfo is { Name: "id" } && IsJsonApiParameter(parameterInfo))
+        {
+            return IdTypeSchema;
+        }
+
         if (schemaRepository.TryLookupByType(modelType, out OpenApiSchema jsonApiDocumentSchema))
         {
             // For unknown reasons, Swashbuckle chooses to wrap root request bodies, but not response bodies.
@@ -99,6 +107,11 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         }
 
         return _defaultSchemaGenerator.GenerateSchema(modelType, schemaRepository, memberInfo, parameterInfo, routeInfo);
+    }
+
+    private static bool IsJsonApiParameter(ParameterInfo parameter)
+    {
+        return parameter.Member.DeclaringType != null && parameter.Member.DeclaringType.IsAssignableTo(typeof(CoreJsonApiController));
     }
 
     private static bool IsJsonApiDocument(Type type)

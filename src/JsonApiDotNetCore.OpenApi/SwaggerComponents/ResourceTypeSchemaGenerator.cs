@@ -10,30 +10,25 @@ internal sealed class ResourceTypeSchemaGenerator
 {
     private const string ResourceTypeSchemaIdTemplate = "[ResourceName] Resource Type";
     private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
-    private readonly IResourceGraph _resourceGraph;
     private readonly JsonNamingPolicy? _namingPolicy;
     private readonly Dictionary<Type, OpenApiSchema> _resourceClrTypeSchemaCache = [];
 
-    public ResourceTypeSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor, IResourceGraph resourceGraph, JsonNamingPolicy? namingPolicy)
+    public ResourceTypeSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor, JsonNamingPolicy? namingPolicy)
     {
         ArgumentGuard.NotNull(schemaRepositoryAccessor);
-        ArgumentGuard.NotNull(resourceGraph);
 
         _schemaRepositoryAccessor = schemaRepositoryAccessor;
-        _resourceGraph = resourceGraph;
         _namingPolicy = namingPolicy;
     }
 
-    public OpenApiSchema Get(Type resourceClrType)
+    public OpenApiSchema Get(ResourceType resourceType)
     {
-        ArgumentGuard.NotNull(resourceClrType);
+        ArgumentGuard.NotNull(resourceType);
 
-        if (_resourceClrTypeSchemaCache.TryGetValue(resourceClrType, out OpenApiSchema? extendedReferenceSchema))
+        if (_resourceClrTypeSchemaCache.TryGetValue(resourceType.ClrType, out OpenApiSchema? extendedReferenceSchema))
         {
             return extendedReferenceSchema;
         }
-
-        ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
 
         var fullSchema = new OpenApiSchema
         {
@@ -41,7 +36,8 @@ internal sealed class ResourceTypeSchemaGenerator
             Enum = new List<IOpenApiAny>
             {
                 new OpenApiString(resourceType.PublicName)
-            }
+            },
+            AdditionalPropertiesAllowed = false
         };
 
         string schemaId = GetSchemaId(resourceType);
