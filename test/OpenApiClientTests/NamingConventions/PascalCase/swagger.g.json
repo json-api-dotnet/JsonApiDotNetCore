@@ -152,8 +152,7 @@
             "description": "The identifier of the Supermarket to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -203,8 +202,7 @@
             "description": "The identifier of the Supermarket to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -246,8 +244,7 @@
             "description": "The identifier of the Supermarket to update.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -319,8 +316,7 @@
             "description": "The identifier of the Supermarket to delete.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -348,8 +344,7 @@
             "description": "The identifier of the Supermarket whose related StaffMember to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -399,8 +394,7 @@
             "description": "The identifier of the Supermarket whose related StaffMember to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -444,8 +438,7 @@
             "description": "The identifier of the Supermarket whose related StaffMember identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -495,8 +488,7 @@
             "description": "The identifier of the Supermarket whose related StaffMember identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -538,8 +530,7 @@
             "description": "The identifier of the Supermarket whose BackupStoreManager relationship to assign or clear.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -587,8 +578,7 @@
             "description": "The identifier of the Supermarket whose related StaffMembers to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -638,8 +628,7 @@
             "description": "The identifier of the Supermarket whose related StaffMembers to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -683,8 +672,7 @@
             "description": "The identifier of the Supermarket whose related StaffMember identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -734,8 +722,7 @@
             "description": "The identifier of the Supermarket whose related StaffMember identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -777,8 +764,7 @@
             "description": "The identifier of the Supermarket to add StaffMembers to.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -824,8 +810,7 @@
             "description": "The identifier of the Supermarket whose Cashiers relationship to assign.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -871,8 +856,7 @@
             "description": "The identifier of the Supermarket to remove StaffMembers from.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -920,8 +904,7 @@
             "description": "The identifier of the Supermarket whose related StaffMember to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -971,8 +954,7 @@
             "description": "The identifier of the Supermarket whose related StaffMember to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -1016,8 +998,7 @@
             "description": "The identifier of the Supermarket whose related StaffMember identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -1067,8 +1048,7 @@
             "description": "The identifier of the Supermarket whose related StaffMember identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           },
           {
@@ -1110,8 +1090,7 @@
             "description": "The identifier of the Supermarket whose StoreManager relationship to assign.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],

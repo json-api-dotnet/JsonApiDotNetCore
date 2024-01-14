@@ -94,7 +94,7 @@ The next steps describe how to generate a JSON:API client library and use our pa
         person => person.FirstName))
     {
         // Workaround for https://github.com/RicoSuter/NSwag/issues/2499.
-        await TranslateAsync(async () => await apiClient.PatchPersonAsync(1, null, patchRequest));
+        await TranslateAsync(async () => await apiClient.PatchPersonAsync(patchRequest.Data.Id, null, patchRequest));
 
         // The sent request looks like this:
         // {

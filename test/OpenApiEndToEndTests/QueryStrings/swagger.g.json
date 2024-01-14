@@ -152,8 +152,7 @@
             "description": "The identifier of the node to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           },
           {
@@ -203,8 +202,7 @@
             "description": "The identifier of the node to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           },
           {
@@ -246,8 +244,7 @@
             "description": "The identifier of the node to update.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           },
           {
@@ -319,8 +316,7 @@
             "description": "The identifier of the node to delete.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -348,8 +344,7 @@
             "description": "The identifier of the node whose related nodes to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           },
           {
@@ -399,8 +394,7 @@
             "description": "The identifier of the node whose related nodes to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           },
           {
@@ -444,8 +438,7 @@
             "description": "The identifier of the node whose related node identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           },
           {
@@ -495,8 +488,7 @@
             "description": "The identifier of the node whose related node identities to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           },
           {
@@ -538,8 +530,7 @@
             "description": "The identifier of the node to add nodes to.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -585,8 +576,7 @@
             "description": "The identifier of the node whose children relationship to assign.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -632,8 +622,7 @@
             "description": "The identifier of the node to remove nodes from.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -681,8 +670,7 @@
             "description": "The identifier of the node whose related node to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           },
           {
@@ -732,8 +720,7 @@
             "description": "The identifier of the node whose related node to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           },
           {
@@ -777,8 +764,7 @@
             "description": "The identifier of the node whose related node identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           },
           {
@@ -828,8 +814,7 @@
             "description": "The identifier of the node whose related node identity to retrieve.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           },
           {
@@ -871,8 +856,7 @@
             "description": "The identifier of the node whose parent relationship to assign or clear.",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],

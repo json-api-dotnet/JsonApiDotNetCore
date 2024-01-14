@@ -39,7 +39,7 @@ public sealed class UpdateResourceTests : BaseOpenApiClientTests
         var apiClient = new NrtOnMsvOffClient(wrapper.HttpClient);
 
         // Act
-        Func<Task> action = async () => await apiClient.PatchResourceAsync(Unknown.TypedId.Int32, null, requestDocument);
+        Func<Task> action = async () => await apiClient.PatchResourceAsync(Unknown.StringId.Int32, null, requestDocument);
 
         // Assert
         ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
@@ -63,7 +63,7 @@ public sealed class UpdateResourceTests : BaseOpenApiClientTests
         {
             Data = new ResourceDataInPatchRequest
             {
-                Id = "1",
+                Id = Unknown.StringId.Int32,
                 Attributes = _fakers.PatchAttributes.Generate(),
                 Relationships = new ResourceRelationshipsInPatchRequest
                 {
@@ -85,7 +85,7 @@ public sealed class UpdateResourceTests : BaseOpenApiClientTests
         using IDisposable _ = apiClient.WithPartialAttributeSerialization<ResourcePatchRequestDocument, ResourceAttributesInPatchRequest>(requestDocument);
 
         // Act
-        await ApiResponse.TranslateAsync(() => apiClient.PatchResourceAsync(int.Parse(requestDocument.Data.Id), null, requestDocument));
+        await ApiResponse.TranslateAsync(() => apiClient.PatchResourceAsync(requestDocument.Data.Id, null, requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();
@@ -110,7 +110,7 @@ public sealed class UpdateResourceTests : BaseOpenApiClientTests
         {
             Data = new ResourceDataInPatchRequest
             {
-                Id = "1",
+                Id = Unknown.StringId.Int32,
                 Attributes = _fakers.PatchAttributes.Generate(),
                 Relationships = new ResourceRelationshipsInPatchRequest
                 {
@@ -130,7 +130,7 @@ public sealed class UpdateResourceTests : BaseOpenApiClientTests
         var apiClient = new NrtOnMsvOffClient(wrapper.HttpClient);
 
         // Act
-        await ApiResponse.TranslateAsync(() => apiClient.PatchResourceAsync(int.Parse(requestDocument.Data.Id), null, requestDocument));
+        await ApiResponse.TranslateAsync(() => apiClient.PatchResourceAsync(requestDocument.Data.Id, null, requestDocument));
 
         // Assert
         JsonElement document = wrapper.GetRequestBodyAsJson();

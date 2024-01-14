@@ -84,7 +84,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.Id, queryString);
+        NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
 
         // Assert
         response.Data.Should().HaveCount(1);
@@ -120,7 +120,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.Id, queryString);
+        NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString);
 
         // Assert
         response.Data.Should().HaveCount(1);
@@ -142,7 +142,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.GetNodeAsync(1, queryString);
+        Func<Task> action = async () => _ = await apiClient.GetNodeAsync(Unknown.StringId.Int64, queryString);
 
         // Assert
         ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
