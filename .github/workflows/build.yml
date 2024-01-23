@@ -206,7 +206,13 @@ jobs:
       run: |
         $inspectCodeOutputPath = Join-Path $env:RUNNER_TEMP 'jetbrains-inspectcode-results.xml'
         Write-Output "INSPECT_CODE_OUTPUT_PATH=$inspectCodeOutputPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        dotnet jb inspectcode JsonApiDotNetCore.sln --build --dotnetcoresdk=$(dotnet --version) --output="$inspectCodeOutputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --properties:ContinuousIntegrationBuild=false --properties:RunAnalyzers=false --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+        dotnet jb inspectcode JsonApiDotNetCore.sln --build --dotnetcoresdk=$(dotnet --version) --output="$inspectCodeOutputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --properties:ContinuousIntegrationBuild=false --properties:RunAnalyzers=false --severity=WARNING --verbosity=TRACE --LogFolder=$env:RUNNER_TEMP/inspect-code-logs --debug -dsl=GlobalAll -dsl=GlobalPerProduct -dsl=SolutionPersonal -dsl=ProjectPersonal
+    - name: Upload logs to artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: inspect-code-logs-${{ matrix.os }}
+        path: ${{ runner.temp }}/inspect-code-logs
     - name: Verify outcome
       shell: pwsh
       run: |
@@ -271,13 +277,19 @@ jobs:
         $baseCommitHash = git rev-parse HEAD~1
 
         Write-Output "Running code cleanup on commit range $baseCommitHash..$headCommitHash in pull request."
-        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
+        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --max-runs=5 --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=TRACE --jb --LogFolder=$env:RUNNER_TEMP/cleanup-code-logs --jb --debug -f commits -a $headCommitHash -b $baseCommitHash --fail-on-diff --print-diff
     - name: CleanupCode (on branch)
       if: github.event_name == 'push' || github.event_name == 'release'
       shell: pwsh
       run: |
         Write-Output "Running code cleanup on all files."
-        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=WARN --fail-on-diff --print-diff
+        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --skip-tool-check --jb --dotnetcoresdk=$(dotnet --version) --jb-profile="JADNC Full Cleanup" --jb --properties:Configuration=Release --jb --properties:RunAnalyzers=false --jb --verbosity=TRACE --jb --LogFolder=$env:RUNNER_TEMP/cleanup-code-logs --jb --debug --fail-on-diff --print-diff
+    - name: Upload logs to artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: cleanup-code-logs-${{ matrix.os }}
+        path: ${{ runner.temp }}/cleanup-code-logs
 
   publish:
     timeout-minutes: 60
