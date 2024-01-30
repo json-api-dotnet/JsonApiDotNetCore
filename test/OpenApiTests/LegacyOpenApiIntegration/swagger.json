@@ -3215,7 +3215,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -3331,7 +3331,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-object"
+                "$ref": "#/components/schemas/links-in-resource-data"
               }
             ]
           },
@@ -3387,7 +3387,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -3546,7 +3546,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -3662,7 +3662,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-object"
+                "$ref": "#/components/schemas/links-in-resource-data"
               }
             ]
           },
@@ -3703,7 +3703,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -3740,7 +3740,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -3810,7 +3810,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -3915,7 +3915,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -4013,7 +4013,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -4122,7 +4122,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-object"
+                "$ref": "#/components/schemas/links-in-resource-data"
               }
             ]
           },
@@ -4163,7 +4163,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -4232,7 +4232,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -4372,7 +4372,7 @@
         "type": "string",
         "additionalProperties": false
       },
-      "jsonapi-object": {
+      "jsonapi": {
         "type": "object",
         "properties": {
           "version": {
@@ -4400,7 +4400,7 @@
         },
         "additionalProperties": false
       },
-      "links-in-relationship-object": {
+      "links-in-relationship": {
         "required": [
           "related",
           "self"
@@ -4441,6 +4441,19 @@
             "type": "string"
           },
           "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "links-in-resource-data": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -4516,19 +4529,6 @@
         },
         "additionalProperties": false
       },
-      "links-in-resource-object": {
-        "required": [
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "nullable-flight-attendant-identifier-response-document": {
         "required": [
           "data",
@@ -4539,7 +4539,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -4578,7 +4578,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -4633,7 +4633,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-relationship-object"
+                "$ref": "#/components/schemas/links-in-relationship"
               }
             ]
           },
@@ -4682,7 +4682,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -4734,7 +4734,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-resource-object"
+                "$ref": "#/components/schemas/links-in-resource-data"
               }
             ]
           },
@@ -4775,7 +4775,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/jsonapi-object"
+                "$ref": "#/components/schemas/jsonapi"
               }
             ]
           },
@@ -4833,7 +4833,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-relationship-object"
+                "$ref": "#/components/schemas/links-in-relationship"
               }
             ]
           },
@@ -4877,7 +4877,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-relationship-object"
+                "$ref": "#/components/schemas/links-in-relationship"
               }
             ]
           },
@@ -4921,7 +4921,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-relationship-object"
+                "$ref": "#/components/schemas/links-in-relationship"
               }
             ]
           },
@@ -4966,7 +4966,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/links-in-relationship-object"
+                "$ref": "#/components/schemas/links-in-relationship"
               }
             ]
           },

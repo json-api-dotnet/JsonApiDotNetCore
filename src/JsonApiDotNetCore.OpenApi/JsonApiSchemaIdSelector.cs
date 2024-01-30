@@ -13,10 +13,10 @@ internal sealed class JsonApiSchemaIdSelector
     {
         [typeof(ResourcePostRequestDocument<>)] = "[ResourceName] Post Request Document",
         [typeof(ResourcePatchRequestDocument<>)] = "[ResourceName] Patch Request Document",
-        [typeof(ResourceObjectInPostRequest<>)] = "[ResourceName] Data In Post Request",
+        [typeof(ResourceDataInPostRequest<>)] = "[ResourceName] Data In Post Request",
         [typeof(AttributesInPostRequest<>)] = "[ResourceName] Attributes In Post Request",
         [typeof(RelationshipsInPostRequest<>)] = "[ResourceName] Relationships In Post Request",
-        [typeof(ResourceObjectInPatchRequest<>)] = "[ResourceName] Data In Patch Request",
+        [typeof(ResourceDataInPatchRequest<>)] = "[ResourceName] Data In Patch Request",
         [typeof(AttributesInPatchRequest<>)] = "[ResourceName] Attributes In Patch Request",
         [typeof(RelationshipsInPatchRequest<>)] = "[ResourceName] Relationships In Patch Request",
         [typeof(ToOneRelationshipInRequest<>)] = "To One [ResourceName] In Request",
@@ -32,10 +32,10 @@ internal sealed class JsonApiSchemaIdSelector
         [typeof(ToOneRelationshipInResponse<>)] = "To One [ResourceName] In Response",
         [typeof(NullableToOneRelationshipInResponse<>)] = "Nullable To One [ResourceName] In Response",
         [typeof(ToManyRelationshipInResponse<>)] = "To Many [ResourceName] In Response",
-        [typeof(ResourceObjectInResponse<>)] = "[ResourceName] Data In Response",
+        [typeof(ResourceDataInResponse<>)] = "[ResourceName] Data In Response",
         [typeof(AttributesInResponse<>)] = "[ResourceName] Attributes In Response",
         [typeof(RelationshipsInResponse<>)] = "[ResourceName] Relationships In Response",
-        [typeof(ResourceIdentifierObject<>)] = "[ResourceName] Identifier"
+        [typeof(ResourceIdentifier<>)] = "[ResourceName] Identifier"
     };
 
     private readonly JsonNamingPolicy? _namingPolicy;

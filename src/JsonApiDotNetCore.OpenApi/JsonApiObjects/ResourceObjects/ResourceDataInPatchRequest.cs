@@ -5,12 +5,12 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class ResourceObjectInPostRequest<TResource> : ResourceIdentifierObject
+internal sealed class ResourceDataInPatchRequest<TResource> : ResourceIdentifier
     where TResource : IIdentifiable
 {
     [JsonPropertyName("attributes")]
-    public AttributesInPostRequest<TResource> Attributes { get; set; } = null!;
+    public AttributesInPatchRequest<TResource> Attributes { get; set; } = null!;
 
     [JsonPropertyName("relationships")]
-    public RelationshipsInPostRequest<TResource> Relationships { get; set; } = null!;
+    public RelationshipsInPatchRequest<TResource> Relationships { get; set; } = null!;
 }

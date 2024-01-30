@@ -1969,7 +1969,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceObject"
+                "$ref": "#/components/schemas/linksInResourceData"
               }
             ]
           },
@@ -2099,7 +2099,7 @@
         },
         "additionalProperties": false
       },
-      "linksInRelationshipObject": {
+      "linksInRelationship": {
         "required": [
           "related",
           "self"
@@ -2140,6 +2140,19 @@
             "type": "string"
           },
           "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceData": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -2210,19 +2223,6 @@
             "type": "string"
           },
           "describedby": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "linksInResourceObject": {
-        "required": [
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
             "type": "string"
           }
         },
@@ -2318,7 +2318,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationshipObject"
+                "$ref": "#/components/schemas/linksInRelationship"
               }
             ]
           },
@@ -2579,7 +2579,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInResourceObject"
+                "$ref": "#/components/schemas/linksInResourceData"
               }
             ]
           },
@@ -2836,7 +2836,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationshipObject"
+                "$ref": "#/components/schemas/linksInRelationship"
               }
             ]
           },
@@ -2881,7 +2881,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationshipObject"
+                "$ref": "#/components/schemas/linksInRelationship"
               }
             ]
           },

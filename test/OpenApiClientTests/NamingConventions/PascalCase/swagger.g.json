@@ -1127,7 +1127,7 @@
   },
   "components": {
     "schemas": {
-      "JsonapiObject": {
+      "Jsonapi": {
         "type": "object",
         "properties": {
           "version": {
@@ -1155,7 +1155,7 @@
         },
         "additionalProperties": false
       },
-      "LinksInRelationshipObject": {
+      "LinksInRelationship": {
         "required": [
           "related",
           "self"
@@ -1196,6 +1196,19 @@
             "type": "string"
           },
           "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LinksInResourceData": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -1271,19 +1284,6 @@
         },
         "additionalProperties": false
       },
-      "LinksInResourceObject": {
-        "required": [
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "NullableStaffMemberIdentifierResponseDocument": {
         "required": [
           "data",
@@ -1294,7 +1294,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1333,7 +1333,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1388,7 +1388,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/LinksInRelationshipObject"
+                "$ref": "#/components/schemas/LinksInRelationship"
               }
             ]
           },
@@ -1433,7 +1433,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1485,7 +1485,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/LinksInResourceObject"
+                "$ref": "#/components/schemas/LinksInResourceData"
               }
             ]
           },
@@ -1526,7 +1526,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1563,7 +1563,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1608,7 +1608,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1697,7 +1697,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1813,7 +1813,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/LinksInResourceObject"
+                "$ref": "#/components/schemas/LinksInResourceData"
               }
             ]
           },
@@ -1869,7 +1869,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -2020,7 +2020,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/LinksInRelationshipObject"
+                "$ref": "#/components/schemas/LinksInRelationship"
               }
             ]
           },
@@ -2065,7 +2065,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/LinksInRelationshipObject"
+                "$ref": "#/components/schemas/LinksInRelationship"
               }
             ]
           },

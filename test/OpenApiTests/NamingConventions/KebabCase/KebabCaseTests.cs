@@ -43,7 +43,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
 
             schemasElement.Should().ContainPath($"{documentSchemaRefId}.properties").With(propertiesElement =>
             {
-                propertiesElement.Should().ContainPath("jsonapi.allOf[0].$ref").ShouldBeSchemaReferenceId("jsonapi-object");
+                propertiesElement.Should().ContainPath("jsonapi.allOf[0].$ref").ShouldBeSchemaReferenceId("jsonapi");
 
                 linksInResourceCollectionDocumentSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("links-in-resource-collection-document").SchemaReferenceId;
@@ -62,18 +62,18 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 propertiesElement.Should().ContainProperty("next");
             });
 
-            string? linksInResourceObjectSchemaRefId = null;
+            string? linksInResourceDataSchemaRefId = null;
             string? primaryResourceTypeSchemaRefId = null;
             string? resourceAttributesInResponseSchemaRefId = null;
             string? resourceRelationshipInResponseSchemaRefId = null;
 
             schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                linksInResourceObjectSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
-                    .ShouldBeSchemaReferenceId("links-in-resource-object").SchemaReferenceId;
+                linksInResourceDataSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
+                    .ShouldBeSchemaReferenceId("links-in-resource-data").SchemaReferenceId;
 
-                primaryResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.$ref")
-                    .ShouldBeSchemaReferenceId("supermarket-resource-type").SchemaReferenceId;
+                primaryResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.$ref").ShouldBeSchemaReferenceId("supermarket-resource-type")
+                    .SchemaReferenceId;
 
                 resourceAttributesInResponseSchemaRefId = propertiesElement.Should().ContainPath("attributes.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("supermarket-attributes-in-response").SchemaReferenceId;
@@ -82,7 +82,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                     .ShouldBeSchemaReferenceId("supermarket-relationships-in-response").SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{linksInResourceObjectSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{linksInResourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("self");
             });
@@ -114,19 +114,19 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
                 propertiesElement.Should().ContainPath("cashiers.allOf[0].$ref").ShouldBeSchemaReferenceId("to-many-staff-member-in-response");
             });
 
-            string? linksInRelationshipObjectSchemaRefId = null;
+            string? linksInRelationshipSchemaRefId = null;
             string? relatedResourceIdentifierSchemaRefId = null;
 
             schemasElement.Should().ContainPath($"{nullableToOneResourceResponseDataSchemaRefId}.properties").With(propertiesElement =>
             {
-                linksInRelationshipObjectSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
-                    .ShouldBeSchemaReferenceId("links-in-relationship-object").SchemaReferenceId;
+                linksInRelationshipSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref")
+                    .ShouldBeSchemaReferenceId("links-in-relationship").SchemaReferenceId;
 
                 relatedResourceIdentifierSchemaRefId = propertiesElement.Should().ContainPath("data.allOf[0].$ref")
                     .ShouldBeSchemaReferenceId("staff-member-identifier").SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{linksInRelationshipObjectSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{linksInRelationshipSchemaRefId}.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("self");
                 propertiesElement.Should().ContainProperty("related");
@@ -136,8 +136,8 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
 
             schemasElement.Should().ContainPath($"{relatedResourceIdentifierSchemaRefId}.properties").With(propertiesElement =>
             {
-                relatedResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.$ref")
-                    .ShouldBeSchemaReferenceId("staff-member-resource-type").SchemaReferenceId;
+                relatedResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.$ref").ShouldBeSchemaReferenceId("staff-member-resource-type")
+                    .SchemaReferenceId;
             });
 
             schemasElement.Should().ContainPath($"{relatedResourceTypeSchemaRefId}.enum[0]").ShouldBeSchemaReferenceId("staff-members");

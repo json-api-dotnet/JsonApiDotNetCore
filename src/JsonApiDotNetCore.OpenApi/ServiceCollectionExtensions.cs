@@ -110,9 +110,9 @@ public static class ServiceCollectionExtensions
 
     private static void SetSchemaIdSelector(SwaggerGenOptions swaggerGenOptions, IResourceGraph resourceGraph, JsonNamingPolicy? namingPolicy)
     {
-        JsonApiSchemaIdSelector jsonApiObjectSchemaSelector = new(namingPolicy, resourceGraph);
+        JsonApiSchemaIdSelector jsonApiSchemaIdSelector = new(namingPolicy, resourceGraph);
 
-        swaggerGenOptions.CustomSchemaIds(type => jsonApiObjectSchemaSelector.GetSchemaId(type));
+        swaggerGenOptions.CustomSchemaIds(type => jsonApiSchemaIdSelector.GetSchemaId(type));
     }
 
     private static void AddCustomSwaggerComponents(IServiceCollection services)

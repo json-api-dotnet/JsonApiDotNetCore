@@ -35,19 +35,19 @@ public sealed class GeneratedTypesTests
 
         _ = nameof(SupermarketCollectionResponseDocument);
         _ = nameof(LinksInResourceCollectionDocument);
-        _ = nameof(JsonapiObject);
+        _ = nameof(Jsonapi);
         _ = nameof(SupermarketDataInResponse);
         _ = nameof(SupermarketResourceType.Supermarkets);
         _ = nameof(SupermarketAttributesInResponse.NameOfCity);
         _ = nameof(SupermarketRelationshipsInResponse.StoreManager);
         _ = nameof(SupermarketRelationshipsInResponse.BackupStoreManager);
-        _ = nameof(LinksInResourceObject);
+        _ = nameof(LinksInResourceData);
         _ = nameof(SupermarketType);
         _ = nameof(CamelCaseClient.GetSupermarketAsync);
         _ = nameof(ToOneStaffMemberInResponse);
         _ = nameof(NullableToOneStaffMemberInResponse);
         _ = nameof(ToManyStaffMemberInResponse);
-        _ = nameof(LinksInRelationshipObject);
+        _ = nameof(LinksInRelationship);
         _ = nameof(StaffMemberIdentifier);
         _ = nameof(StaffMemberResourceType.StaffMembers);
         _ = nameof(SupermarketPrimaryResponseDocument);

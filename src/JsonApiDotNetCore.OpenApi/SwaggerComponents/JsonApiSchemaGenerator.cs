@@ -49,7 +49,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
     private readonly ISchemaGenerator _defaultSchemaGenerator;
     private readonly IJsonApiOptions _options;
-    private readonly ResourceObjectSchemaGenerator _resourceObjectSchemaGenerator;
+    private readonly ResourceDataSchemaGenerator _resourceDataSchemaGenerator;
     private readonly SchemaRepositoryAccessor _schemaRepositoryAccessor = new();
 
     public JsonApiSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options,
@@ -63,7 +63,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _options = options;
 
-        _resourceObjectSchemaGenerator = new ResourceObjectSchemaGenerator(defaultSchemaGenerator, _schemaRepositoryAccessor, resourceGraph, options,
+        _resourceDataSchemaGenerator = new ResourceDataSchemaGenerator(defaultSchemaGenerator, _schemaRepositoryAccessor, resourceGraph, options,
             resourceFieldValidationMetadataProvider);
     }
 
@@ -96,7 +96,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
             if (IsDataPropertyNullableInDocument(modelType))
             {
-                SetDataObjectSchemaToNullable(fullSchemaForDocument);
+                SetDataSchemaToNullable(fullSchemaForDocument);
             }
 
             fullSchemaForDocument.SetValuesInMetaToNullable();
@@ -121,21 +121,19 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
     private OpenApiSchema GenerateJsonApiDocumentSchema(Type documentType)
     {
-        Type resourceObjectType = documentType.BaseType!.GenericTypeArguments[0];
+        Type resourceDataType = documentType.BaseType!.GenericTypeArguments[0];
 
-        if (!_schemaRepositoryAccessor.Current.TryLookupByType(resourceObjectType, out OpenApiSchema referenceSchemaForResourceObject))
+        if (!_schemaRepositoryAccessor.Current.TryLookupByType(resourceDataType, out OpenApiSchema referenceSchemaForResourceData))
         {
-            referenceSchemaForResourceObject = _resourceObjectSchemaGenerator.GenerateSchema(resourceObjectType);
+            referenceSchemaForResourceData = _resourceDataSchemaGenerator.GenerateSchema(resourceDataType);
         }
 
         OpenApiSchema referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(documentType, _schemaRepositoryAccessor.Current);
         OpenApiSchema fullSchemaForDocument = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForDocument.Reference.Id];
 
-        OpenApiSchema referenceSchemaForDataObject = IsManyDataDocument(documentType)
-            ? CreateArrayTypeDataSchema(referenceSchemaForResourceObject)
-            : CreateExtendedReferenceSchema(referenceSchemaForResourceObject);
-
-        fullSchemaForDocument.Properties[JsonApiPropertyName.Data] = referenceSchemaForDataObject;
+        fullSchemaForDocument.Properties[JsonApiPropertyName.Data] = IsManyDataDocument(documentType)
+            ? CreateArrayTypeDataSchema(referenceSchemaForResourceData)
+            : CreateExtendedReferenceSchema(referenceSchemaForResourceData);
 
         fullSchemaForDocument.ReorderProperties(DocumentPropertyNamesInOrder);
 
@@ -154,16 +152,16 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         return JsonApiDocumentWithNullableDataOpenTypes.Contains(documentOpenType);
     }
 
-    private static OpenApiSchema CreateArrayTypeDataSchema(OpenApiSchema referenceSchemaForResourceObject)
+    private static OpenApiSchema CreateArrayTypeDataSchema(OpenApiSchema referenceSchemaForResourceData)
     {
         return new OpenApiSchema
         {
-            Items = referenceSchemaForResourceObject,
+            Items = referenceSchemaForResourceData,
             Type = "array"
         };
     }
 
-    private void SetDataObjectSchemaToNullable(OpenApiSchema fullSchemaForDocument)
+    private void SetDataSchemaToNullable(OpenApiSchema fullSchemaForDocument)
     {
         OpenApiSchema referenceSchemaForData = fullSchemaForDocument.Properties[JsonApiPropertyName.Data];
         referenceSchemaForData.Nullable = true;
@@ -189,13 +187,13 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         }
     }
 
-    private static OpenApiSchema CreateExtendedReferenceSchema(OpenApiSchema referenceSchemaForResourceObject)
+    private static OpenApiSchema CreateExtendedReferenceSchema(OpenApiSchema referenceSchema)
     {
         return new OpenApiSchema
         {
             AllOf = new List<OpenApiSchema>
             {
-                referenceSchemaForResourceObject
+                referenceSchema
             }
         };
     }

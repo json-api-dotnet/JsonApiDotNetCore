@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class JsonapiObject
+internal sealed class Jsonapi
 {
     [JsonPropertyName("version")]
     public string Version { get; set; } = null!;
