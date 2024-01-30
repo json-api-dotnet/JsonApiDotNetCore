@@ -38,8 +38,13 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
     private const string TextRequestBodyValidationFailed = "Validation of the request body failed.";
     private const string TextRequestBodyClientId = "Client-generated IDs cannot be used at this endpoint.";
 
-    private const string TextQueryStringParameters =
+    private const string ResourceQueryStringParameters =
         "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/" +
+        "[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/" +
+        "[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/" +
+        "[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
+
+    private const string RelationshipQueryStringParameters = "For syntax, see the documentation for the " +
         "[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/" +
         "[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/" +
         "[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
@@ -166,7 +171,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                     $"Successfully returns the found {resourceType}, or an empty array if none were found.");
             }
 
-            AddQueryStringParameters(operation);
+            AddQueryStringParameters(operation, false);
             SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         }
         else if (operation.Parameters.Count == 1)
@@ -186,7 +191,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             }
 
             SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularName} to retrieve.");
-            AddQueryStringParameters(operation);
+            AddQueryStringParameters(operation, false);
             SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
             SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularName} does not exist.");
         }
@@ -197,7 +202,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         string singularName = resourceType.PublicName.Singularize();
 
         SetOperationSummary(operation, $"Creates a new {singularName}.");
-        AddQueryStringParameters(operation);
+        AddQueryStringParameters(operation, false);
         SetRequestBodyDescription(operation.RequestBody, $"The attributes and relationships of the {singularName} to create.");
 
         SetResponseDescription(operation.Responses, HttpStatusCode.Created,
@@ -225,7 +230,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
         SetOperationSummary(operation, $"Updates an existing {singularName}.");
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularName} to update.");
-        AddQueryStringParameters(operation);
+        AddQueryStringParameters(operation, false);
 
         SetRequestBodyDescription(operation.RequestBody,
             $"The attributes and relationships of the {singularName} to update. Omitted fields are left unchanged.");
@@ -278,7 +283,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         }
 
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {rightName} to retrieve.");
-        AddQueryStringParameters(operation);
+        AddQueryStringParameters(operation, false);
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
     }
@@ -311,7 +316,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         }
 
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {singularRightName} {ident} to retrieve.");
-        AddQueryStringParameters(operation);
+        AddQueryStringParameters(operation, true);
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
     }
@@ -427,7 +432,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         response.Description = XmlCommentsTextHelper.Humanize(description);
     }
 
-    private static void AddQueryStringParameters(OpenApiOperation operation)
+    private static void AddQueryStringParameters(OpenApiOperation operation, bool isRelationshipEndpoint)
     {
         // The JSON:API query string parameters (include, filter, sort, page[size], page[number], fields[]) are too dynamic to represent in OpenAPI.
         // - The parameter names for fields[] require exploding to all resource types, because outcome of possible resource types depends on
@@ -454,7 +459,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 // Prevent SwaggerUI from producing sample, which fails when used because unknown query string parameters are blocked by default.
                 Example = new OpenApiNull()
             },
-            Description = TextQueryStringParameters
+            Description = isRelationshipEndpoint ? RelationshipQueryStringParameters : ResourceQueryStringParameters
         });
     }
 }

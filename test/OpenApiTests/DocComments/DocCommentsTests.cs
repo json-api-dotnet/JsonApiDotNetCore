@@ -8,8 +8,11 @@ namespace OpenApiTests.DocComments;
 
 public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocCommentsStartup<DocCommentsDbContext>, DocCommentsDbContext>>
 {
-    private const string TextQueryString =
+    private const string ResourceTextQueryString =
         "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
+
+    private const string RelationshipTextQueryString =
+        "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.";
 
     private readonly OpenApiTestContext<DocCommentsStartup<DocCommentsDbContext>, DocCommentsDbContext> _testContext;
 
@@ -66,7 +69,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                 {
                     parametersElement.EnumerateArray().ShouldHaveCount(1);
                     parametersElement.Should().HaveProperty("[0].in", "query");
-                    parametersElement.Should().HaveProperty("[0].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
                 });
 
                 getElement.Should().ContainPath("responses").With(responseElement =>
@@ -86,7 +89,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                 {
                     parametersElement.EnumerateArray().ShouldHaveCount(1);
                     parametersElement.Should().HaveProperty("[0].in", "query");
-                    parametersElement.Should().HaveProperty("[0].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
                 });
 
                 headElement.Should().ContainPath("responses").With(responseElement =>
@@ -105,7 +108,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                 {
                     parametersElement.EnumerateArray().ShouldHaveCount(1);
                     parametersElement.Should().HaveProperty("[0].in", "query");
-                    parametersElement.Should().HaveProperty("[0].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
                 });
 
                 postElement.Should().ContainPath("responses").With(responseElement =>
@@ -132,7 +135,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                 });
 
                 getElement.Should().ContainPath("responses").With(responseElement =>
@@ -155,7 +158,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                 });
 
                 headElement.Should().ContainPath("responses").With(responseElement =>
@@ -177,7 +180,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to update.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                 });
 
                 patchElement.Should().HaveProperty("requestBody.description", "The attributes and relationships of the skyscraper to update. Omitted fields are left unchanged.");
@@ -226,7 +229,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related elevator to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                 });
 
                 getElement.Should().ContainPath("responses").With(responseElement =>
@@ -249,7 +252,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related elevator to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                 });
 
                 headElement.Should().ContainPath("responses").With(responseElement =>
@@ -274,7 +277,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related elevator identity to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
                 });
 
                 getElement.Should().ContainPath("responses").With(responseElement =>
@@ -297,7 +300,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related elevator identity to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
                 });
 
                 headElement.Should().ContainPath("responses").With(responseElement =>
@@ -345,7 +348,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related spaces to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                 });
 
                 getElement.Should().ContainPath("responses").With(responseElement =>
@@ -368,7 +371,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related spaces to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                 });
 
                 headElement.Should().ContainPath("responses").With(responseElement =>
@@ -393,7 +396,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related space identities to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
                 });
 
                 getElement.Should().ContainPath("responses").With(responseElement =>
@@ -416,7 +419,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper whose related space identities to retrieve.");
                     parametersElement.Should().HaveProperty("[1].in", "query");
-                    parametersElement.Should().HaveProperty("[1].description", TextQueryString);
+                    parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
                 });
 
                 headElement.Should().ContainPath("responses").With(responseElement =>
