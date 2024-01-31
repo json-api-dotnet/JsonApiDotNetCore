@@ -1,6 +1,14 @@
 using JsonApiDotNetCoreExampleClient;
 
+#if DEBUG
+using var httpClient = new HttpClient(new ColoredConsoleLogDelegatingHandler
+{
+    InnerHandler = new HttpClientHandler()
+});
+#else
 using var httpClient = new HttpClient();
+#endif
+
 var apiClient = new ExampleApiClient(httpClient);
 
 PersonCollectionResponseDocument getResponse = await apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
