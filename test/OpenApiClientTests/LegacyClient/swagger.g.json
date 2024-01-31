@@ -4,6 +4,11 @@
     "title": "OpenApiTests",
     "version": "1.0"
   },
+  "servers": [
+    {
+      "url": "http://localhost"
+    }
+  ],
   "paths": {
     "/api/airplanes": {
       "get": {
@@ -23,7 +28,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -61,7 +66,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -91,7 +96,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -165,7 +170,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -215,7 +220,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -257,7 +262,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -357,7 +362,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -407,7 +412,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -451,7 +456,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -501,7 +506,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -674,7 +679,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -712,7 +717,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -742,7 +747,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -816,7 +821,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -866,7 +871,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -908,7 +913,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1008,7 +1013,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1058,7 +1063,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1102,7 +1107,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1152,7 +1157,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1334,7 +1339,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1384,7 +1389,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1428,7 +1433,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1478,7 +1483,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1651,7 +1656,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1689,7 +1694,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1719,7 +1724,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1793,7 +1798,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1843,7 +1848,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1885,7 +1890,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1985,7 +1990,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2035,7 +2040,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2079,7 +2084,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2129,7 +2134,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2219,7 +2224,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2269,7 +2274,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2313,7 +2318,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2363,7 +2368,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2545,7 +2550,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2595,7 +2600,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2639,7 +2644,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2689,7 +2694,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2871,7 +2876,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2921,7 +2926,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2965,7 +2970,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -3015,7 +3020,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],

@@ -30,7 +30,7 @@ The next steps describe how to generate a JSON:API client library and use our pa
 
     ```c#
     using var httpClient = new HttpClient();
-    var apiClient = new ExampleApiClient("http://localhost:14140", httpClient);
+    var apiClient = new ExampleApiClient(httpClient);
 
     PersonCollectionResponseDocument getResponse = await apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
     {
@@ -145,13 +145,13 @@ From here, continue from step 3 in the list of steps for Visual Studio.
 The `OpenApiReference` element in the project file accepts an `Options` element to pass additional settings to the client generator,
 which are listed [here](https://github.com/RicoSuter/NSwag/blob/master/src/NSwag.Commands/Commands/CodeGeneration/OpenApiToCSharpClientCommand.cs).
 
-For example, the next section puts the generated code in a namespace, removes the `baseUrl` parameter and generates an interface (which is handy for dependency injection):
+For example, the next section puts the generated code in a namespace and generates an interface (which is handy for dependency injection):
 
 ```xml
 <OpenApiReference Include="swagger.json">
   <Namespace>ExampleProject.GeneratedCode</Namespace>
   <ClassName>SalesApiClient</ClassName>
   <CodeGenerator>NSwagCSharp</CodeGenerator>
-  <Options>/UseBaseUrl:false /GenerateClientInterfaces:true</Options>
+  <Options>/GenerateClientInterfaces:true</Options>
 </OpenApiReference>
 ```

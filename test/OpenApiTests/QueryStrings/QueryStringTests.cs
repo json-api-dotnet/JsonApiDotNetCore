@@ -56,7 +56,7 @@ public sealed class QueryStringTests : IClassFixture<OpenApiTestContext<OpenApiS
                                 propertiesElement.Should().HaveProperty("nullable", true);
                             });
 
-                            schemaElement.Should().HaveProperty("example", null);
+                            schemaElement.Should().HaveProperty("example", string.Empty);
                         });
                     });
             });

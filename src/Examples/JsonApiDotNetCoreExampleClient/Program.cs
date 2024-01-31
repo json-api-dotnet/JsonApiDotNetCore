@@ -1,7 +1,7 @@
 using JsonApiDotNetCoreExampleClient;
 
 using var httpClient = new HttpClient();
-var apiClient = new ExampleApiClient("http://localhost:14140", httpClient);
+var apiClient = new ExampleApiClient(httpClient);
 
 PersonCollectionResponseDocument getResponse = await apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
 {

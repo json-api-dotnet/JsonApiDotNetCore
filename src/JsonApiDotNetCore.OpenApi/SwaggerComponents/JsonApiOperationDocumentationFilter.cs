@@ -457,7 +457,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                     Nullable = true
                 },
                 // Prevent SwaggerUI from producing sample, which fails when used because unknown query string parameters are blocked by default.
-                Example = new OpenApiNull()
+                Example = new OpenApiString(string.Empty)
             },
             Description = isRelationshipEndpoint ? RelationshipQueryStringParameters : ResourceQueryStringParameters
         });

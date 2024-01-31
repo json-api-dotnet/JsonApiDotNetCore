@@ -35,6 +35,7 @@ internal sealed class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenO
         SetOperationInfo(options, _controllerResourceMapping);
         SetSchemaIdSelector(options);
 
+        options.DocumentFilter<ServerDocumentFilter>();
         options.DocumentFilter<EndpointOrderingFilter>();
         options.OperationFilter<JsonApiOperationDocumentationFilter>();
     }
