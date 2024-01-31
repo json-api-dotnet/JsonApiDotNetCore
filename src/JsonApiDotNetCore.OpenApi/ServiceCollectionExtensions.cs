@@ -1,13 +1,11 @@
-using System.Reflection;
-using System.Text.Json;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.SwaggerComponents;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi;
@@ -23,14 +21,15 @@ public static class ServiceCollectionExtensions
         ArgumentGuard.NotNull(mvcBuilder);
 
         AddCustomApiExplorer(services, mvcBuilder);
-
         AddCustomSwaggerComponents(services);
+        AddSwaggerGenerator(services);
 
-        using ServiceProvider provider = services.BuildServiceProvider();
-        using IServiceScope scope = provider.CreateScope();
-        AddSwaggerGenerator(scope, services, setupSwaggerGenAction);
-        AddSwashbuckleCliCompatibility(scope, mvcBuilder);
-        AddOpenApiEndpointConvention(scope, mvcBuilder);
+        services.AddTransient<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
+
+        if (setupSwaggerGenAction != null)
+        {
+            services.Configure(setupSwaggerGenAction);
+        }
     }
 
     private static void AddCustomApiExplorer(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
@@ -44,10 +43,10 @@ public static class ServiceCollectionExtensions
             var apiDescriptionProviders = provider.GetRequiredService<IEnumerable<IApiDescriptionProvider>>();
             var resourceFieldValidationMetadataProvider = provider.GetRequiredService<ResourceFieldValidationMetadataProvider>();
 
-            JsonApiActionDescriptorCollectionProvider descriptorCollectionProviderWrapper =
+            JsonApiActionDescriptorCollectionProvider jsonApiActionDescriptorCollectionProvider =
                 new(controllerResourceMapping, actionDescriptorCollectionProvider, resourceFieldValidationMetadataProvider);
 
-            return new ApiDescriptionGroupCollectionProvider(descriptorCollectionProviderWrapper, apiDescriptionProviders);
+            return new ApiDescriptionGroupCollectionProvider(jsonApiActionDescriptorCollectionProvider, apiDescriptionProviders);
         });
 
         mvcBuilder.AddApiExplorer();
@@ -55,85 +54,30 @@ public static class ServiceCollectionExtensions
         mvcBuilder.AddMvcOptions(options => options.InputFormatters.Add(new JsonApiRequestFormatMetadataProvider()));
     }
 
-    private static void AddSwaggerGenerator(IServiceScope scope, IServiceCollection services, Action<SwaggerGenOptions>? setupSwaggerGenAction)
+    private static void AddCustomSwaggerComponents(IServiceCollection services)
     {
-        var controllerResourceMapping = scope.ServiceProvider.GetRequiredService<IControllerResourceMapping>();
-        var resourceGraph = scope.ServiceProvider.GetRequiredService<IResourceGraph>();
-        var jsonApiOptions = scope.ServiceProvider.GetRequiredService<IJsonApiOptions>();
-        JsonNamingPolicy? namingPolicy = jsonApiOptions.SerializerOptions.PropertyNamingPolicy;
-
-        AddSchemaGenerator(services);
-
-        services.AddSwaggerGen(swaggerGenOptions =>
-        {
-            swaggerGenOptions.SupportNonNullableReferenceTypes();
-            SetOperationInfo(swaggerGenOptions, controllerResourceMapping, namingPolicy);
-            SetSchemaIdSelector(swaggerGenOptions, resourceGraph, namingPolicy);
-            swaggerGenOptions.DocumentFilter<EndpointOrderingFilter>();
-            swaggerGenOptions.UseAllOfToExtendReferenceSchemas();
-            swaggerGenOptions.OperationFilter<JsonApiOperationDocumentationFilter>();
-
-            setupSwaggerGenAction?.Invoke(swaggerGenOptions);
-        });
+        services.TryAddSingleton<ISerializerDataContractResolver, JsonApiDataContractResolver>();
+        services.TryAddSingleton<ResourceDocumentationReader>();
+        services.TryAddSingleton<JsonApiOperationIdSelector>();
+        services.TryAddSingleton<JsonApiSchemaIdSelector>();
     }
 
-    private static void AddSchemaGenerator(IServiceCollection services)
+    private static void AddSwaggerGenerator(IServiceCollection services)
+    {
+        AddSchemaGenerators(services);
+
+        services.AddSwaggerGen();
+        services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
+    }
+
+    private static void AddSchemaGenerators(IServiceCollection services)
     {
         services.TryAddSingleton<SchemaGenerator>();
         services.TryAddSingleton<ISchemaGenerator, JsonApiSchemaGenerator>();
-    }
 
-    private static void SetOperationInfo(SwaggerGenOptions swaggerGenOptions, IControllerResourceMapping controllerResourceMapping,
-        JsonNamingPolicy? namingPolicy)
-    {
-        swaggerGenOptions.TagActionsBy(description => GetOperationTags(description, controllerResourceMapping));
-
-        JsonApiOperationIdSelector jsonApiOperationIdSelector = new(controllerResourceMapping, namingPolicy);
-        swaggerGenOptions.CustomOperationIds(jsonApiOperationIdSelector.GetOperationId);
-    }
-
-    private static IList<string> GetOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping)
-    {
-        MethodInfo actionMethod = description.ActionDescriptor.GetActionMethod();
-        ResourceType? resourceType = controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
-
-        if (resourceType == null)
-        {
-            throw new NotSupportedException("Only JsonApiDotNetCore endpoints are supported.");
-        }
-
-        return new[]
-        {
-            resourceType.PublicName
-        };
-    }
-
-    private static void SetSchemaIdSelector(SwaggerGenOptions swaggerGenOptions, IResourceGraph resourceGraph, JsonNamingPolicy? namingPolicy)
-    {
-        JsonApiSchemaIdSelector jsonApiSchemaIdSelector = new(namingPolicy, resourceGraph);
-
-        swaggerGenOptions.CustomSchemaIds(type => jsonApiSchemaIdSelector.GetSchemaId(type));
-    }
-
-    private static void AddCustomSwaggerComponents(IServiceCollection services)
-    {
-        services.TryAddSingleton<SwaggerGenerator>();
-        services.TryAddSingleton<ISwaggerProvider, CachingSwaggerProvider>();
-
-        services.TryAddSingleton<ISerializerDataContractResolver, JsonApiDataContractResolver>();
-    }
-
-    private static void AddSwashbuckleCliCompatibility(IServiceScope scope, IMvcCoreBuilder mvcBuilder)
-    {
-        // See https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1957 for why this is needed.
-        var routingConvention = scope.ServiceProvider.GetRequiredService<IJsonApiRoutingConvention>();
-        mvcBuilder.AddMvcOptions(options => options.Conventions.Insert(0, routingConvention));
-    }
-
-    private static void AddOpenApiEndpointConvention(IServiceScope scope, IMvcCoreBuilder mvcBuilder)
-    {
-        var controllerResourceMapping = scope.ServiceProvider.GetRequiredService<IControllerResourceMapping>();
-
-        mvcBuilder.AddMvcOptions(options => options.Conventions.Add(new OpenApiEndpointConvention(controllerResourceMapping)));
+        services.TryAddSingleton<DocumentSchemaGenerator>();
+        services.TryAddSingleton<ResourceTypeSchemaGenerator>();
+        services.TryAddSingleton<ResourceIdentifierSchemaGenerator>();
+        services.TryAddSingleton<ResourceDataSchemaGenerator>();
     }
 }

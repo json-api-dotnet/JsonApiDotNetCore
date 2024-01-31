@@ -9,32 +9,29 @@ internal sealed class ResourceIdentifierSchemaGenerator
 {
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
-    private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
 
-    public ResourceIdentifierSchemaGenerator(SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator,
-        ISchemaRepositoryAccessor schemaRepositoryAccessor)
+    public ResourceIdentifierSchemaGenerator(SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
-        ArgumentGuard.NotNull(schemaRepositoryAccessor);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceTypeSchemaGenerator = resourceTypeSchemaGenerator;
-        _schemaRepositoryAccessor = schemaRepositoryAccessor;
     }
 
-    public OpenApiSchema GenerateSchema(ResourceType resourceType)
+    public OpenApiSchema GenerateSchema(ResourceType resourceType, SchemaRepository schemaRepository)
     {
         ArgumentGuard.NotNull(resourceType);
+        ArgumentGuard.NotNull(schemaRepository);
 
         Type resourceIdentifierType = typeof(ResourceIdentifier<>).MakeGenericType(resourceType.ClrType);
 
-        if (!_schemaRepositoryAccessor.Current.TryLookupByType(resourceIdentifierType, out OpenApiSchema? referenceSchemaForIdentifier))
+        if (!schemaRepository.TryLookupByType(resourceIdentifierType, out OpenApiSchema? referenceSchemaForIdentifier))
         {
-            referenceSchemaForIdentifier = _defaultSchemaGenerator.GenerateSchema(resourceIdentifierType, _schemaRepositoryAccessor.Current);
-            OpenApiSchema fullSchemaForIdentifier = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForIdentifier.Reference.Id];
+            referenceSchemaForIdentifier = _defaultSchemaGenerator.GenerateSchema(resourceIdentifierType, schemaRepository);
+            OpenApiSchema fullSchemaForIdentifier = schemaRepository.Schemas[referenceSchemaForIdentifier.Reference.Id];
 
-            fullSchemaForIdentifier.Properties[JsonApiPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType);
+            fullSchemaForIdentifier.Properties[JsonApiPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType, schemaRepository);
         }
 
         return referenceSchemaForIdentifier;

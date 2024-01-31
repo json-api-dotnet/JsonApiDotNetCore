@@ -38,15 +38,16 @@ internal sealed class JsonApiSchemaIdSelector
         [typeof(ResourceIdentifier<>)] = "[ResourceName] Identifier"
     };
 
-    private readonly JsonNamingPolicy? _namingPolicy;
     private readonly IResourceGraph _resourceGraph;
+    private readonly IJsonApiOptions _options;
 
-    public JsonApiSchemaIdSelector(JsonNamingPolicy? namingPolicy, IResourceGraph resourceGraph)
+    public JsonApiSchemaIdSelector(IResourceGraph resourceGraph, IJsonApiOptions options)
     {
         ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(options);
 
-        _namingPolicy = namingPolicy;
         _resourceGraph = resourceGraph;
+        _options = options;
     }
 
     public string GetSchemaId(Type type)
@@ -60,23 +61,19 @@ internal sealed class JsonApiSchemaIdSelector
             return resourceType.PublicName.Singularize();
         }
 
+        JsonNamingPolicy? namingPolicy = _options.SerializerOptions.PropertyNamingPolicy;
+
         if (type.IsConstructedGenericType && OpenTypeToSchemaTemplateMap.ContainsKey(type.GetGenericTypeDefinition()))
         {
             Type openType = type.GetGenericTypeDefinition();
             Type resourceClrType = type.GetGenericArguments().First();
-            resourceType = _resourceGraph.FindResourceType(resourceClrType);
-
-            if (resourceType == null)
-            {
-                throw new UnreachableCodeException();
-            }
+            resourceType = _resourceGraph.GetResourceType(resourceClrType);
 
             string pascalCaseSchemaId = OpenTypeToSchemaTemplateMap[openType].Replace("[ResourceName]", resourceType.PublicName.Singularize()).ToPascalCase();
-
-            return _namingPolicy != null ? _namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
+            return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
         }
 
         // Used for a fixed set of types, such as JsonApiObject, LinksInResourceCollectionDocument etc.
-        return _namingPolicy != null ? _namingPolicy.ConvertName(type.Name) : type.Name;
+        return namingPolicy != null ? namingPolicy.ConvertName(type.Name) : type.Name;
     }
 }

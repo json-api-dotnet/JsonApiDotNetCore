@@ -32,28 +32,23 @@ internal sealed class ResourceFieldSchemaBuilder
 
     private readonly SchemaGenerator _defaultSchemaGenerator;
     private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
-    private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
     private readonly ResourceTypeInfo _resourceTypeInfo;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
     private readonly SchemaRepository _resourceSchemaRepository = new();
     private readonly RelationshipTypeFactory _relationshipTypeFactory;
     private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
-    private readonly NullabilityInfoContext _nullabilityInfoContext = new();
     private readonly ResourceDocumentationReader _resourceDocumentationReader;
 
     public ResourceFieldSchemaBuilder(SchemaGenerator defaultSchemaGenerator, ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator,
-        ISchemaRepositoryAccessor schemaRepositoryAccessor, ResourceTypeInfo resourceTypeInfo,
-        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
+        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, ResourceTypeInfo resourceTypeInfo)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(resourceIdentifierSchemaGenerator);
-        ArgumentGuard.NotNull(schemaRepositoryAccessor);
         ArgumentGuard.NotNull(resourceTypeInfo);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceIdentifierSchemaGenerator = resourceIdentifierSchemaGenerator;
-        _schemaRepositoryAccessor = schemaRepositoryAccessor;
         _resourceTypeInfo = resourceTypeInfo;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
 
@@ -73,9 +68,10 @@ internal sealed class ResourceFieldSchemaBuilder
         return fullSchemaForResource.Properties;
     }
 
-    public void SetMembersOfAttributes(OpenApiSchema fullSchemaForAttributes)
+    public void SetMembersOfAttributes(OpenApiSchema fullSchemaForAttributes, SchemaRepository schemaRepository)
     {
         ArgumentGuard.NotNull(fullSchemaForAttributes);
+        ArgumentGuard.NotNull(schemaRepository);
 
         AttrCapabilities requiredCapability = GetRequiredCapabilityForAttributes(_resourceTypeInfo.ResourceDataOpenType);
 
@@ -90,7 +86,7 @@ internal sealed class ResourceFieldSchemaBuilder
                 // Types like enum and complex attributes are not primitive and handled as reference schemas.
                 if (!isPrimitiveOpenApiType)
                 {
-                    EnsureAttributeSchemaIsExposed(resourceFieldSchema, matchingAttribute);
+                    EnsureAttributeSchemaIsExposed(resourceFieldSchema, matchingAttribute, schemaRepository);
                 }
 
                 fullSchemaForAttributes.Properties[matchingAttribute.PublicName] = resourceFieldSchema;
@@ -114,11 +110,11 @@ internal sealed class ResourceFieldSchemaBuilder
             resourceDataOpenType == typeof(ResourceDataInPatchRequest<>) ? AttrCapabilities.AllowChange : throw new UnreachableCodeException();
     }
 
-    private void EnsureAttributeSchemaIsExposed(OpenApiSchema attributeReferenceSchema, AttrAttribute attribute)
+    private void EnsureAttributeSchemaIsExposed(OpenApiSchema attributeReferenceSchema, AttrAttribute attribute, SchemaRepository schemaRepository)
     {
         Type nonNullableTypeInPropertyType = GetRepresentedTypeForAttributeSchema(attribute);
 
-        if (_schemaRepositoryAccessor.Current.TryLookupByType(nonNullableTypeInPropertyType, out _))
+        if (schemaRepository.TryLookupByType(nonNullableTypeInPropertyType, out _))
         {
             return;
         }
@@ -126,13 +122,14 @@ internal sealed class ResourceFieldSchemaBuilder
         string schemaId = attributeReferenceSchema.UnwrapExtendedReferenceSchema().Reference.Id;
 
         OpenApiSchema fullSchema = _resourceSchemaRepository.Schemas[schemaId];
-        _schemaRepositoryAccessor.Current.AddDefinition(schemaId, fullSchema);
-        _schemaRepositoryAccessor.Current.RegisterType(nonNullableTypeInPropertyType, schemaId);
+        schemaRepository.AddDefinition(schemaId, fullSchema);
+        schemaRepository.RegisterType(nonNullableTypeInPropertyType, schemaId);
     }
 
     private Type GetRepresentedTypeForAttributeSchema(AttrAttribute attribute)
     {
-        NullabilityInfo attributeNullabilityInfo = _nullabilityInfoContext.Create(attribute.Property);
+        NullabilityInfoContext nullabilityInfoContext = new();
+        NullabilityInfo attributeNullabilityInfo = nullabilityInfoContext.Create(attribute.Property);
 
         bool isNullable = attributeNullabilityInfo is { ReadState: NullabilityState.Nullable, WriteState: NullabilityState.Nullable };
 
@@ -149,9 +146,10 @@ internal sealed class ResourceFieldSchemaBuilder
         return isSchemaForPostResourceRequest && _resourceFieldValidationMetadataProvider.IsRequired(field);
     }
 
-    public void SetMembersOfRelationships(OpenApiSchema fullSchemaForRelationships)
+    public void SetMembersOfRelationships(OpenApiSchema fullSchemaForRelationships, SchemaRepository schemaRepository)
     {
         ArgumentGuard.NotNull(fullSchemaForRelationships);
+        ArgumentGuard.NotNull(schemaRepository);
 
         foreach (string fieldName in _schemasForResourceFields.Keys)
         {
@@ -159,18 +157,19 @@ internal sealed class ResourceFieldSchemaBuilder
 
             if (matchingRelationship != null)
             {
-                _ = _resourceIdentifierSchemaGenerator.GenerateSchema(matchingRelationship.RightType);
-                AddRelationshipSchemaToResourceData(matchingRelationship, fullSchemaForRelationships);
+                _ = _resourceIdentifierSchemaGenerator.GenerateSchema(matchingRelationship.RightType, schemaRepository);
+                AddRelationshipSchemaToResourceData(matchingRelationship, fullSchemaForRelationships, schemaRepository);
             }
         }
     }
 
-    private void AddRelationshipSchemaToResourceData(RelationshipAttribute relationship, OpenApiSchema fullSchemaForRelationships)
+    private void AddRelationshipSchemaToResourceData(RelationshipAttribute relationship, OpenApiSchema fullSchemaForRelationships,
+        SchemaRepository schemaRepository)
     {
         Type relationshipSchemaType = GetRelationshipSchemaType(relationship, _resourceTypeInfo.ResourceDataOpenType);
 
-        OpenApiSchema referenceSchemaForRelationship = GetReferenceSchemaForRelationship(relationshipSchemaType) ??
-            CreateRelationshipReferenceSchema(relationshipSchemaType);
+        OpenApiSchema referenceSchemaForRelationship = GetReferenceSchemaForRelationship(relationshipSchemaType, schemaRepository) ??
+            CreateRelationshipReferenceSchema(relationshipSchemaType, schemaRepository);
 
         var extendedReferenceSchemaForRelationship = new OpenApiSchema
         {
@@ -196,16 +195,16 @@ internal sealed class ResourceFieldSchemaBuilder
             : _relationshipTypeFactory.GetForRequest(relationship);
     }
 
-    private OpenApiSchema? GetReferenceSchemaForRelationship(Type relationshipSchemaType)
+    private OpenApiSchema? GetReferenceSchemaForRelationship(Type relationshipSchemaType, SchemaRepository schemaRepository)
     {
-        return _schemaRepositoryAccessor.Current.TryLookupByType(relationshipSchemaType, out OpenApiSchema? referenceSchema) ? referenceSchema : null;
+        return schemaRepository.TryLookupByType(relationshipSchemaType, out OpenApiSchema? referenceSchema) ? referenceSchema : null;
     }
 
-    private OpenApiSchema CreateRelationshipReferenceSchema(Type relationshipSchemaType)
+    private OpenApiSchema CreateRelationshipReferenceSchema(Type relationshipSchemaType, SchemaRepository schemaRepository)
     {
-        OpenApiSchema referenceSchema = _defaultSchemaGenerator.GenerateSchema(relationshipSchemaType, _schemaRepositoryAccessor.Current);
+        OpenApiSchema referenceSchema = _defaultSchemaGenerator.GenerateSchema(relationshipSchemaType, schemaRepository);
 
-        OpenApiSchema fullSchema = _schemaRepositoryAccessor.Current.Schemas[referenceSchema.Reference.Id];
+        OpenApiSchema fullSchema = schemaRepository.Schemas[referenceSchema.Reference.Id];
 
         if (IsDataPropertyNullableInRelationshipSchemaType(relationshipSchemaType))
         {

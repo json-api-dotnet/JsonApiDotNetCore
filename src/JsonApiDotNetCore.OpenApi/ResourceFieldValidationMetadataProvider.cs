@@ -9,8 +9,7 @@ namespace JsonApiDotNetCore.OpenApi;
 
 internal sealed class ResourceFieldValidationMetadataProvider
 {
-    private readonly bool _validateModelState;
-    private readonly NullabilityInfoContext _nullabilityContext = new();
+    private readonly IJsonApiOptions _options;
     private readonly IModelMetadataProvider _modelMetadataProvider;
 
     public ResourceFieldValidationMetadataProvider(IJsonApiOptions options, IModelMetadataProvider modelMetadataProvider)
@@ -18,7 +17,7 @@ internal sealed class ResourceFieldValidationMetadataProvider
         ArgumentGuard.NotNull(options);
         ArgumentGuard.NotNull(modelMetadataProvider);
 
-        _validateModelState = options.ValidateModelState;
+        _options = options;
         _modelMetadataProvider = modelMetadataProvider;
     }
 
@@ -33,12 +32,13 @@ internal sealed class ResourceFieldValidationMetadataProvider
 
         bool hasRequiredAttribute = field.Property.HasAttribute<RequiredAttribute>();
 
-        if (_validateModelState && hasRequiredAttribute)
+        if (_options.ValidateModelState && hasRequiredAttribute)
         {
             return false;
         }
 
-        NullabilityInfo nullabilityInfo = _nullabilityContext.Create(field.Property);
+        NullabilityInfoContext nullabilityContext = new();
+        NullabilityInfo nullabilityInfo = nullabilityContext.Create(field.Property);
         return nullabilityInfo.ReadState != NullabilityState.NotNull;
     }
 
@@ -48,7 +48,7 @@ internal sealed class ResourceFieldValidationMetadataProvider
 
         bool hasRequiredAttribute = field.Property.HasAttribute<RequiredAttribute>();
 
-        if (!_validateModelState)
+        if (!_options.ValidateModelState)
         {
             return hasRequiredAttribute;
         }
@@ -58,7 +58,8 @@ internal sealed class ResourceFieldValidationMetadataProvider
             return false;
         }
 
-        NullabilityInfo nullabilityInfo = _nullabilityContext.Create(field.Property);
+        NullabilityInfoContext nullabilityContext = new();
+        NullabilityInfo nullabilityInfo = nullabilityContext.Create(field.Property);
         bool isRequiredValueType = field.Property.PropertyType.IsValueType && hasRequiredAttribute && nullabilityInfo.ReadState == NullabilityState.NotNull;
 
         if (isRequiredValueType)
