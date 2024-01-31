@@ -141,7 +141,10 @@ public sealed class PascalCaseTests
                     .SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{relatedResourceTypeSchemaRefId}.enum[0]").ShouldBeSchemaReferenceId("StaffMembers");
+            schemasElement.Should().ContainPath($"{relatedResourceTypeSchemaRefId}.enum[0]").With(enumValueElement =>
+            {
+                enumValueElement.Should().Be("StaffMembers");
+            });
         });
     }
 

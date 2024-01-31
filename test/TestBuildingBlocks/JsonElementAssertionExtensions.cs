@@ -8,6 +8,8 @@ namespace TestBuildingBlocks;
 
 public static class JsonElementAssertionExtensions
 {
+    private const string ComponentSchemaPrefix = "#/components/schemas/";
+
     public static JsonElementAssertions Should(this JsonElement source)
     {
         return new JsonElementAssertions(source);
@@ -28,9 +30,9 @@ public static class JsonElementAssertionExtensions
         source.ValueKind.Should().Be(JsonValueKind.String);
 
         string? jsonElementValue = source.GetString();
-        jsonElementValue.ShouldNotBeNull();
+        jsonElementValue.Should().StartWith(ComponentSchemaPrefix);
 
-        return jsonElementValue.Split('/').Last();
+        return jsonElementValue![ComponentSchemaPrefix.Length..];
     }
 
     [CustomAssertion]
