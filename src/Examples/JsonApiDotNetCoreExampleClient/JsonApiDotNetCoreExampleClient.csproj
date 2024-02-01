@@ -24,8 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" ClassName="ExampleApiClient">
-      <SourceUri>http://localhost:14140/swagger/v1/swagger.json</SourceUri>
+    <OpenApiReference Include="..\JsonApiDotNetCoreExample\GeneratedSwagger\JsonApiDotNetCoreExample.json" CodeGenerator="NSwagCSharp" ClassName="ExampleApiClient">
     </OpenApiReference>
   </ItemGroup>
 </Project>

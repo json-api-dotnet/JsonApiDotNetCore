@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.OpenApi;
+using JsonApiDotNetCoreExample;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -16,7 +17,10 @@ using Microsoft.AspNetCore.Authentication;
 
 WebApplication app = CreateWebApplication(args);
 
-await CreateDatabaseAsync(app.Services);
+if (!IsGeneratingOpenApiDocumentAtBuildTime())
+{
+    await CreateDatabaseAsync(app.Services);
+}
 
 app.Run();
 
@@ -83,7 +87,7 @@ static void ConfigureServices(WebApplicationBuilder builder)
 
     using (CodeTimingSessionManager.Current.Measure("AddOpenApi()"))
     {
-        builder.Services.AddOpenApi(mvcCoreBuilder);
+        builder.Services.AddOpenApi(mvcCoreBuilder, options => options.DocumentFilter<SetOpenApiServerAtBuildTimeFilter>());
     }
 }
 
@@ -110,6 +114,11 @@ static void ConfigurePipeline(WebApplication app)
     app.UseSwaggerUI();
 
     app.MapControllers();
+}
+
+static bool IsGeneratingOpenApiDocumentAtBuildTime()
+{
+    return Environment.GetCommandLineArgs().Any(argument => argument.Contains("GetDocument.Insider"));
 }
 
 static async Task CreateDatabaseAsync(IServiceProvider serviceProvider)
