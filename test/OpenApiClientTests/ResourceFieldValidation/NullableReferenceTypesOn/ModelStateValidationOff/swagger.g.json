@@ -1926,6 +1926,32 @@
   },
   "components": {
     "schemas": {
+      "dataInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "empties": "#/components/schemas/emptyDataInResponse",
+            "resources": "#/components/schemas/resourceDataInResponse"
+          }
+        },
+        "x-abstract": true
+      },
       "emptyCollectionResponseDocument": {
         "required": [
           "data",
@@ -1946,6 +1972,12 @@
               "$ref": "#/components/schemas/emptyDataInResponse"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -1957,35 +1989,34 @@
         "additionalProperties": false
       },
       "emptyDataInResponse": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/emptyResourceType"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/linksInResourceData"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/linksInResourceData"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "emptyIdentifier": {
@@ -2093,6 +2124,12 @@
                 "$ref": "#/components/schemas/emptyDataInResponse"
               }
             ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
           },
           "meta": {
             "type": "object",
@@ -2286,6 +2323,12 @@
               }
             ],
             "nullable": true
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
           },
           "meta": {
             "type": "object",
@@ -2491,6 +2534,12 @@
               "$ref": "#/components/schemas/resourceDataInResponse"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -2559,49 +2608,48 @@
         "additionalProperties": false
       },
       "resourceDataInResponse": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/resourceResourceType"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceAttributesInResponse"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/resourceRelationshipsInResponse"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/linksInResourceData"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/resourceRelationshipsInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/linksInResourceData"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "resourcePatchRequestDocument": {
@@ -2656,6 +2704,12 @@
                 "$ref": "#/components/schemas/resourceDataInResponse"
               }
             ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
           },
           "meta": {
             "type": "object",

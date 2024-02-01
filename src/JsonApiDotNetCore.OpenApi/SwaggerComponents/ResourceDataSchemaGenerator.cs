@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using SchemaGenerator = Swashbuckle.AspNetCore.SwaggerGen.Patched.SchemaGenerator;
 
 namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
@@ -47,35 +48,42 @@ internal sealed class ResourceDataSchemaGenerator
         _resourceDocumentationReader = resourceDocumentationReader;
     }
 
-    public OpenApiSchema GenerateSchema(Type resourceDataType, SchemaRepository schemaRepository)
+    public OpenApiSchema GenerateSchema(Type resourceDataConstructedType, SchemaRepository schemaRepository)
     {
-        ArgumentGuard.NotNull(resourceDataType);
+        ArgumentGuard.NotNull(resourceDataConstructedType);
         ArgumentGuard.NotNull(schemaRepository);
 
-        if (schemaRepository.TryLookupByType(resourceDataType, out OpenApiSchema referenceSchemaForResourceData))
+        if (schemaRepository.TryLookupByType(resourceDataConstructedType, out OpenApiSchema referenceSchemaForResourceData))
         {
             return referenceSchemaForResourceData;
         }
 
-        referenceSchemaForResourceData = _defaultSchemaGenerator.GenerateSchema(resourceDataType, schemaRepository);
+        referenceSchemaForResourceData = _defaultSchemaGenerator.GenerateSchema(resourceDataConstructedType, schemaRepository);
         OpenApiSchema fullSchemaForResourceData = schemaRepository.Schemas[referenceSchemaForResourceData.Reference.Id];
+        fullSchemaForResourceData.AdditionalPropertiesAllowed = false;
 
-        var resourceTypeInfo = ResourceTypeInfo.Create(resourceDataType, _resourceGraph);
+        var resourceTypeInfo = ResourceTypeInfo.Create(resourceDataConstructedType, _resourceGraph);
 
         var fieldSchemaBuilder = new ResourceFieldSchemaBuilder(_defaultSchemaGenerator, _resourceIdentifierSchemaGenerator,
             _resourceFieldValidationMetadataProvider, resourceTypeInfo);
 
-        RemoveResourceIdIfPostResource(resourceTypeInfo, fullSchemaForResourceData);
-        SetResourceType(fullSchemaForResourceData, resourceTypeInfo.ResourceType, schemaRepository);
+        OpenApiSchema effectiveFullSchemaForResourceData =
+            fullSchemaForResourceData.AllOf.Count == 0 ? fullSchemaForResourceData : fullSchemaForResourceData.AllOf[1];
+
+        if (effectiveFullSchemaForResourceData == fullSchemaForResourceData)
+        {
+            RemoveResourceIdIfPostResource(resourceTypeInfo, fullSchemaForResourceData);
+            SetResourceType(fullSchemaForResourceData, resourceTypeInfo.ResourceType, schemaRepository);
+        }
 
         fullSchemaForResourceData.Description = _resourceDocumentationReader.GetDocumentationForType(resourceTypeInfo.ResourceType);
 
-        fullSchemaForResourceData.SetValuesInMetaToNullable();
+        effectiveFullSchemaForResourceData.SetValuesInMetaToNullable();
 
-        SetResourceAttributes(fullSchemaForResourceData, fieldSchemaBuilder, schemaRepository);
-        SetResourceRelationships(fullSchemaForResourceData, fieldSchemaBuilder, schemaRepository);
+        SetResourceAttributes(effectiveFullSchemaForResourceData, fieldSchemaBuilder, schemaRepository);
+        SetResourceRelationships(effectiveFullSchemaForResourceData, fieldSchemaBuilder, schemaRepository);
 
-        fullSchemaForResourceData.ReorderProperties(ResourceDataPropertyNamesInOrder);
+        effectiveFullSchemaForResourceData.ReorderProperties(ResourceDataPropertyNamesInOrder);
 
         return referenceSchemaForResourceData;
     }

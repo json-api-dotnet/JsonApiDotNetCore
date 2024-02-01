@@ -66,16 +66,21 @@ public sealed class PascalCaseTests
             });
 
             string? linksInResourceDataSchemaRefId = null;
-            string? primaryResourceTypeSchemaRefId = null;
             string? resourceAttributesInResponseSchemaRefId = null;
             string? resourceRelationshipInResponseSchemaRefId = null;
 
-            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
+            string abstractResourceDataSchemaRefId = schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.allOf[0].$ref")
+                .ShouldBeSchemaReferenceId("DataInResponse").SchemaReferenceId;
+
+            schemasElement.Should().ContainPath($"{abstractResourceDataSchemaRefId}.discriminator.mapping").With(mappingElement =>
+            {
+                mappingElement.Should().ContainPath("Supermarkets").ShouldBeSchemaReferenceId("SupermarketDataInResponse");
+                mappingElement.Should().ContainPath("StaffMembers").ShouldBeSchemaReferenceId("StaffMemberDataInResponse");
+            });
+
+            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.allOf[1].properties").With(propertiesElement =>
             {
                 linksInResourceDataSchemaRefId = propertiesElement.Should().ContainPath("links.allOf[0].$ref").ShouldBeSchemaReferenceId("LinksInResourceData")
-                    .SchemaReferenceId;
-
-                primaryResourceTypeSchemaRefId = propertiesElement.Should().ContainPath("type.$ref").ShouldBeSchemaReferenceId("SupermarketResourceType")
                     .SchemaReferenceId;
 
                 resourceAttributesInResponseSchemaRefId = propertiesElement.Should().ContainPath("attributes.allOf[0].$ref")
@@ -88,11 +93,6 @@ public sealed class PascalCaseTests
             schemasElement.Should().ContainPath($"{linksInResourceDataSchemaRefId}.properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainProperty("self");
-            });
-
-            schemasElement.Should().ContainPath($"{primaryResourceTypeSchemaRefId}.enum[0]").With(enumValueElement =>
-            {
-                enumValueElement.Should().Be("Supermarkets");
             });
 
             schemasElement.Should().ContainPath($"{resourceAttributesInResponseSchemaRefId}.properties").With(propertiesElement =>
@@ -218,7 +218,7 @@ public sealed class PascalCaseTests
                     .SchemaReferenceId;
             });
 
-            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.properties").With(propertiesElement =>
+            schemasElement.Should().ContainPath($"{resourceDataSchemaRefId}.allOf[1].properties").With(propertiesElement =>
             {
                 propertiesElement.Should().ContainPath("attributes.allOf[0].$ref").ShouldBeSchemaReferenceId("StaffMemberAttributesInResponse");
             });

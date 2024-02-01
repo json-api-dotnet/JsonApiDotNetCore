@@ -23,4 +23,18 @@ public static class ApiResponse
             return null;
         }
     }
+
+    public static async Task TranslateAsync(Func<Task> operation)
+    {
+        ArgumentGuard.NotNull(operation);
+
+        try
+        {
+            await operation();
+        }
+        catch (ApiException exception) when (exception.StatusCode == 204)
+        {
+            // Workaround for https://github.com/RicoSuter/NSwag/issues/2499
+        }
+    }
 }

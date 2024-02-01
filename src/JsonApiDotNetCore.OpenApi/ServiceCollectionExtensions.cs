@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using SchemaGenerator = Swashbuckle.AspNetCore.SwaggerGen.Patched.SchemaGenerator;
 
 namespace JsonApiDotNetCore.OpenApi;
 
@@ -60,6 +61,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<ResourceDocumentationReader>();
         services.TryAddSingleton<JsonApiOperationIdSelector>();
         services.TryAddSingleton<JsonApiSchemaIdSelector>();
+        services.TryAddSingleton<IncludeDependencyScanner>();
     }
 
     private static void AddSwaggerGenerator(IServiceCollection services)
@@ -78,6 +80,7 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<DocumentSchemaGenerator>();
         services.TryAddSingleton<ResourceTypeSchemaGenerator>();
         services.TryAddSingleton<ResourceIdentifierSchemaGenerator>();
+        services.TryAddSingleton<AbstractResourceDataSchemaGenerator>();
         services.TryAddSingleton<ResourceDataSchemaGenerator>();
     }
 }

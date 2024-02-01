@@ -18,6 +18,9 @@ internal sealed class ResourceCollectionResponseDocument<TResource> : ManyData<R
     [JsonPropertyName("links")]
     public LinksInResourceCollectionDocument Links { get; set; } = null!;
 
+    [JsonPropertyName("included")]
+    public IList<ResourceData> Included { get; set; } = null!;
+
     [JsonPropertyName("meta")]
     public IDictionary<string, object> Meta { get; set; } = null!;
 }

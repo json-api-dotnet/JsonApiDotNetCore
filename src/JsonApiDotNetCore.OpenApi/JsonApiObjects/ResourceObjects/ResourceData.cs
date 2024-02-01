@@ -1,12 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using JsonApiDotNetCore.Resources;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 
-// ReSharper disable once UnusedTypeParameter
-internal sealed class ResourceIdentifier<TResource> : IResourceIdentity
-    where TResource : IIdentifiable
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+internal abstract class ResourceData : IResourceIdentity
 {
     [Required]
     [JsonPropertyName("type")]

@@ -18,6 +18,9 @@ internal sealed class PrimaryResourceResponseDocument<TResource> : SingleData<Re
     [JsonPropertyName("links")]
     public LinksInResourceDocument Links { get; set; } = null!;
 
+    [JsonPropertyName("included")]
+    public IList<ResourceData> Included { get; set; } = null!;
+
     [JsonPropertyName("meta")]
     public IDictionary<string, object> Meta { get; set; } = null!;
 }

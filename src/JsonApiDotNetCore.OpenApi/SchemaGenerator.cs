@@ -1,4 +1,10 @@
 // This file is a copy of https://github.com/domaindrivendev/Swashbuckle.AspNetCore/blob/master/src/Swashbuckle.AspNetCore.SwaggerGen/SchemaGenerator/SchemaGenerator.cs
+// It was patched to fix broken inheritance using allOf. Changed code is marked with PATCH-START/PATCH-END comments.
+
+// PATCH-START
+#nullable disable
+#pragma warning disable
+// PATCH-END
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +20,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
 
-namespace Swashbuckle.AspNetCore.SwaggerGen
+// PATCH-START
+namespace Swashbuckle.AspNetCore.SwaggerGen.Patched
+//namespace Swashbuckle.AspNetCore.SwaggerGen
+// PATCH-END
 {
     public class SchemaGenerator : ISchemaGenerator
     {
@@ -350,6 +359,10 @@ namespace Swashbuckle.AspNetCore.SwaggerGen
                 AdditionalPropertiesAllowed = false
             };
 
+            // PATCH-START
+            OpenApiSchema root = schema;
+            // PATCH-END
+
             var applicableDataProperties = dataContract.ObjectProperties;
 
             if (_generatorOptions.UseAllOfForInheritance || _generatorOptions.UseOneOfForPolymorphism)
@@ -358,7 +371,11 @@ namespace Swashbuckle.AspNetCore.SwaggerGen
                 {
                     var baseTypeSchema = GenerateConcreteSchema(baseTypeDataContract, schemaRepository);
 
-                    schema.AllOf.Add(baseTypeSchema);
+                    // PATCH-START
+                    root = new OpenApiSchema();
+                    root.AllOf.Add(baseTypeSchema);
+                    //schema.AllOf.Add(baseTypeSchema);
+                    // PATCH-END
 
                     applicableDataProperties = applicableDataProperties
                         .Where(dataProperty => dataProperty.MemberInfo.DeclaringType == dataContract.UnderlyingType);
@@ -405,7 +422,15 @@ namespace Swashbuckle.AspNetCore.SwaggerGen
                 schema.AdditionalProperties = GenerateSchema(dataContract.ObjectExtensionDataType, schemaRepository);
             }
 
-            return schema;
+            // PATCH-START
+            if (root != schema)
+            {
+                root.AllOf.Add(schema);
+            }
+
+            return root;
+            //return schema;
+            // PATCH-END
         }
 
         private bool IsKnownSubType(DataContract dataContract, out DataContract baseTypeDataContract)

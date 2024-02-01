@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <OpenApiReference Include="..\JsonApiDotNetCoreExample\GeneratedSwagger\JsonApiDotNetCoreExample.json" CodeGenerator="NSwagCSharp" ClassName="ExampleApiClient">
+      <Options>/GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
     </OpenApiReference>
   </ItemGroup>
 </Project>

@@ -2,8 +2,10 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using SchemaGenerator = Swashbuckle.AspNetCore.SwaggerGen.Patched.SchemaGenerator;
 
 namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
@@ -27,17 +29,28 @@ internal sealed class DocumentSchemaGenerator
     ];
 
     private readonly SchemaGenerator _defaultSchemaGenerator;
+    private readonly AbstractResourceDataSchemaGenerator _abstractResourceDataSchemaGenerator;
     private readonly ResourceDataSchemaGenerator _resourceDataSchemaGenerator;
+    private readonly IncludeDependencyScanner _includeDependencyScanner;
+    private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiOptions _options;
 
-    public DocumentSchemaGenerator(SchemaGenerator defaultSchemaGenerator, ResourceDataSchemaGenerator resourceDataSchemaGenerator, IJsonApiOptions options)
+    public DocumentSchemaGenerator(SchemaGenerator defaultSchemaGenerator, AbstractResourceDataSchemaGenerator abstractResourceDataSchemaGenerator,
+        ResourceDataSchemaGenerator resourceDataSchemaGenerator, IncludeDependencyScanner includeDependencyScanner, IResourceGraph resourceGraph,
+        IJsonApiOptions options)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
+        ArgumentGuard.NotNull(abstractResourceDataSchemaGenerator);
         ArgumentGuard.NotNull(resourceDataSchemaGenerator);
+        ArgumentGuard.NotNull(includeDependencyScanner);
+        ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
+        _abstractResourceDataSchemaGenerator = abstractResourceDataSchemaGenerator;
         _resourceDataSchemaGenerator = resourceDataSchemaGenerator;
+        _includeDependencyScanner = includeDependencyScanner;
+        _resourceGraph = resourceGraph;
         _options = options;
     }
 
@@ -63,12 +76,19 @@ internal sealed class DocumentSchemaGenerator
 
     private OpenApiSchema GenerateJsonApiDocumentSchema(Type documentType, SchemaRepository schemaRepository)
     {
-        Type resourceDataType = documentType.BaseType!.GenericTypeArguments[0];
+        // There's no way to intercept in the Swashbuckle recursive component schema generation when using inheritance, which we need
+        // to perform generic type expansions. As a workaround, we generate an empty base schema upfront. Each time the schema
+        // for a derived type is generated, we'll add it to the discriminator mapping.
+        _ = _abstractResourceDataSchemaGenerator.Get(schemaRepository);
 
-        if (!schemaRepository.TryLookupByType(resourceDataType, out OpenApiSchema referenceSchemaForResourceData))
-        {
-            referenceSchemaForResourceData = _resourceDataSchemaGenerator.GenerateSchema(resourceDataType, schemaRepository);
-        }
+        Type resourceDataConstructedType = documentType.BaseType!.GenericTypeArguments[0];
+
+        // Ensure all reachable related resource types are available in the discriminator mapping so includes work.
+        // Doing this matters when not all endpoints are exposed.
+        EnsureResourceTypesAreMappedInDiscriminator(resourceDataConstructedType, schemaRepository);
+
+        OpenApiSchema referenceSchemaForResourceData = _resourceDataSchemaGenerator.GenerateSchema(resourceDataConstructedType, schemaRepository);
+        _abstractResourceDataSchemaGenerator.MapDiscriminator(resourceDataConstructedType, referenceSchemaForResourceData, schemaRepository);
 
         OpenApiSchema referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(documentType, schemaRepository);
         OpenApiSchema fullSchemaForDocument = schemaRepository.Schemas[referenceSchemaForDocument.Reference.Id];
@@ -80,6 +100,27 @@ internal sealed class DocumentSchemaGenerator
         fullSchemaForDocument.ReorderProperties(DocumentPropertyNamesInOrder);
 
         return referenceSchemaForDocument;
+    }
+
+    private void EnsureResourceTypesAreMappedInDiscriminator(Type resourceDataConstructedType, SchemaRepository schemaRepository)
+    {
+        Type resourceDataOpenType = resourceDataConstructedType.GetGenericTypeDefinition();
+
+        if (resourceDataOpenType == typeof(ResourceDataInResponse<>))
+        {
+            Type resourceClrType = resourceDataConstructedType.GetGenericArguments()[0];
+            ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
+
+            foreach (ResourceType nextResourceType in _includeDependencyScanner.GetReachableRelatedTypes(resourceType))
+            {
+                Type nextResourceDataConstructedType = typeof(ResourceDataInResponse<>).MakeGenericType(nextResourceType.ClrType);
+
+                OpenApiSchema nextReferenceSchemaForResourceData =
+                    _resourceDataSchemaGenerator.GenerateSchema(nextResourceDataConstructedType, schemaRepository);
+
+                _abstractResourceDataSchemaGenerator.MapDiscriminator(nextResourceDataConstructedType, nextReferenceSchemaForResourceData, schemaRepository);
+            }
+        }
     }
 
     private static bool IsManyDataDocument(Type documentType)

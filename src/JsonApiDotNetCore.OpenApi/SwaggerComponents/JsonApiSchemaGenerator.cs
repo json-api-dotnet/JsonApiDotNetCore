@@ -4,6 +4,7 @@ using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using SchemaGenerator = Swashbuckle.AspNetCore.SwaggerGen.Patched.SchemaGenerator;
 
 namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 

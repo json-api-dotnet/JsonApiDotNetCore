@@ -2,6 +2,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using SchemaGenerator = Swashbuckle.AspNetCore.SwaggerGen.Patched.SchemaGenerator;
 
 namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
@@ -24,11 +25,11 @@ internal sealed class ResourceIdentifierSchemaGenerator
         ArgumentGuard.NotNull(resourceType);
         ArgumentGuard.NotNull(schemaRepository);
 
-        Type resourceIdentifierType = typeof(ResourceIdentifier<>).MakeGenericType(resourceType.ClrType);
+        Type resourceIdentifierConstructedType = typeof(ResourceIdentifier<>).MakeGenericType(resourceType.ClrType);
 
-        if (!schemaRepository.TryLookupByType(resourceIdentifierType, out OpenApiSchema? referenceSchemaForIdentifier))
+        if (!schemaRepository.TryLookupByType(resourceIdentifierConstructedType, out OpenApiSchema? referenceSchemaForIdentifier))
         {
-            referenceSchemaForIdentifier = _defaultSchemaGenerator.GenerateSchema(resourceIdentifierType, schemaRepository);
+            referenceSchemaForIdentifier = _defaultSchemaGenerator.GenerateSchema(resourceIdentifierConstructedType, schemaRepository);
             OpenApiSchema fullSchemaForIdentifier = schemaRepository.Schemas[referenceSchemaForIdentifier.Reference.Id];
 
             fullSchemaForIdentifier.Properties[JsonApiPropertyName.Type] = _resourceTypeSchemaGenerator.Get(resourceType, schemaRepository);

@@ -112,7 +112,6 @@ public sealed class ResponseTests
 
         FlightDataInResponse flight = document.Data.First();
         flight.Id.Should().Be(flightId);
-        flight.Type.Should().Be(FlightResourceType.Flights);
         flight.Links.Self.Should().Be(flightResourceLink);
         flight.Meta.Should().HaveCount(1);
         flight.Meta["docs"].Should().Be(flightMetaValue);
@@ -349,7 +348,6 @@ public sealed class ResponseTests
         });
 
         // Assert
-        document.Data.Type.Should().Be(FlightResourceType.Flights);
         document.Data.Attributes.Should().BeNull();
         document.Data.Relationships.Should().BeNull();
     }

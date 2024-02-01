@@ -1783,6 +1783,32 @@
   },
   "components": {
     "schemas": {
+      "dataInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "nameValuePairs": "#/components/schemas/nameValuePairDataInResponse",
+            "nodes": "#/components/schemas/nodeDataInResponse"
+          }
+        },
+        "x-abstract": true
+      },
       "linksInRelationship": {
         "required": [
           "related",
@@ -1974,6 +2000,12 @@
               "$ref": "#/components/schemas/nameValuePairDataInResponse"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -2042,49 +2074,48 @@
         "additionalProperties": false
       },
       "nameValuePairDataInResponse": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/nameValuePairResourceType"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nameValuePairAttributesInResponse"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nameValuePairRelationshipsInResponse"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/linksInResourceData"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nameValuePairAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nameValuePairRelationshipsInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/linksInResourceData"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "nameValuePairIdentifier": {
@@ -2186,6 +2217,12 @@
                 "$ref": "#/components/schemas/nameValuePairDataInResponse"
               }
             ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
           },
           "meta": {
             "type": "object",
@@ -2308,6 +2345,12 @@
               "$ref": "#/components/schemas/nodeDataInResponse"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -2376,49 +2419,48 @@
         "additionalProperties": false
       },
       "nodeDataInResponse": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/nodeResourceType"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nodeAttributesInResponse"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/nodeRelationshipsInResponse"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/linksInResourceData"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nodeAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/nodeRelationshipsInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/linksInResourceData"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "nodeIdentifier": {
@@ -2552,6 +2594,12 @@
               }
             ]
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -2671,6 +2719,12 @@
               }
             ]
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -2734,6 +2788,12 @@
               }
             ],
             "nullable": true
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
           },
           "meta": {
             "type": "object",

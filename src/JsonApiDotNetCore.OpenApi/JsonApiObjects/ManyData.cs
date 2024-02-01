@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiObjects;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 internal abstract class ManyData<TData>
-    where TData : ResourceIdentifier
+    where TData : class, IResourceIdentity
 {
     [Required]
     [JsonPropertyName("data")]

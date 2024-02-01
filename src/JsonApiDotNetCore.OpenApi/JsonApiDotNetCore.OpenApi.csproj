@@ -25,13 +25,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="SchemaGenerator.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\..\logo.png" Visible="false" Pack="True" PackagePath="" />
     <None Include="..\..\PackageReadme.md" Visible="false" Pack="True" PackagePath="" />
-    <None Include="SchemaGenerator.cs" />
   </ItemGroup>
 
   <ItemGroup>

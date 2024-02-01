@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.OpenApi.Client;
 using JsonApiDotNetCoreExampleClient;
 
 #if DEBUG
@@ -15,12 +16,13 @@ PersonCollectionResponseDocument getResponse = await apiClient.GetPersonCollecti
 {
     ["filter"] = "has(assignedTodoItems)",
     ["sort"] = "-lastName",
-    ["page[size]"] = "5"
+    ["page[size]"] = "5",
+    ["include"] = "assignedTodoItems.tags"
 });
 
 foreach (PersonDataInResponse person in getResponse.Data)
 {
-    Console.WriteLine($"Found person {person.Id}: {person.Attributes.DisplayName}");
+    PrintPerson(person, getResponse.Included);
 }
 
 var patchRequest = new PersonPatchRequestDocument
@@ -39,23 +41,37 @@ var patchRequest = new PersonPatchRequestDocument
 using (apiClient.WithPartialAttributeSerialization<PersonPatchRequestDocument, PersonAttributesInPatchRequest>(patchRequest, person => person.FirstName))
 {
     // Workaround for https://github.com/RicoSuter/NSwag/issues/2499.
-    await TranslateAsync(() => apiClient.PatchPersonAsync(patchRequest.Data.Id, null, patchRequest));
+    await ApiResponse.TranslateAsync(() => apiClient.PatchPersonAsync(patchRequest.Data.Id, null, patchRequest));
 }
 
 Console.WriteLine("Press any key to close.");
 Console.ReadKey();
 
-// ReSharper disable once UnusedLocalFunctionReturnValue
-static async Task<TResponse?> TranslateAsync<TResponse>(Func<Task<TResponse>> operation)
-    where TResponse : class
+static void PrintPerson(PersonDataInResponse person, ICollection<DataInResponse> includes)
 {
-    try
+    ToManyTodoItemInResponse assignedTodoItems = person.Relationships.AssignedTodoItems;
+
+    Console.WriteLine($"Found person {person.Id}: {person.Attributes.DisplayName} with {assignedTodoItems.Data.Count} assigned todo-items:");
+
+    PrintRelatedTodoItems(assignedTodoItems.Data, includes);
+}
+
+static void PrintRelatedTodoItems(IEnumerable<TodoItemIdentifier> todoItemIdentifiers, ICollection<DataInResponse> includes)
+{
+    foreach (TodoItemIdentifier todoItemIdentifier in todoItemIdentifiers)
     {
-        return await operation();
+        TodoItemDataInResponse includedTodoItem = includes.OfType<TodoItemDataInResponse>().Single(include => include.Id == todoItemIdentifier.Id);
+        Console.WriteLine($"  TodoItem {includedTodoItem.Id}: {includedTodoItem.Attributes.Description}");
+
+        PrintRelatedTags(includedTodoItem.Relationships.Tags.Data, includes);
     }
-    catch (ApiException exception) when (exception.StatusCode == 204)
+}
+
+static void PrintRelatedTags(IEnumerable<TagIdentifier> tagIdentifiers, ICollection<DataInResponse> includes)
+{
+    foreach (TagIdentifier tagIdentifier in tagIdentifiers)
     {
-        // Workaround for https://github.com/RicoSuter/NSwag/issues/2499
-        return null;
+        TagDataInResponse includedTag = includes.OfType<TagDataInResponse>().Single(include => include.Id == tagIdentifier.Id);
+        Console.WriteLine($"    Tag  {includedTag.Id}: {includedTag.Attributes.Name}");
     }
 }

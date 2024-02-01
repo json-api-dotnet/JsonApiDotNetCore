@@ -11,7 +11,7 @@ internal sealed class JsonApiSchemaIdSelector
 {
     private const string ResourceTypeSchemaIdTemplate = "[ResourceName] Resource Type";
 
-    private static readonly IDictionary<Type, string> OpenTypeToSchemaTemplateMap = new Dictionary<Type, string>
+    private static readonly IDictionary<Type, string> TypeToSchemaTemplateMap = new Dictionary<Type, string>
     {
         [typeof(ResourcePostRequestDocument<>)] = "[ResourceName] Post Request Document",
         [typeof(ResourcePatchRequestDocument<>)] = "[ResourceName] Patch Request Document",
@@ -34,6 +34,7 @@ internal sealed class JsonApiSchemaIdSelector
         [typeof(ToOneRelationshipInResponse<>)] = "To One [ResourceName] In Response",
         [typeof(NullableToOneRelationshipInResponse<>)] = "Nullable To One [ResourceName] In Response",
         [typeof(ToManyRelationshipInResponse<>)] = "To Many [ResourceName] In Response",
+        [typeof(ResourceData)] = "Data In Response",
         [typeof(ResourceDataInResponse<>)] = "[ResourceName] Data In Response",
         [typeof(AttributesInResponse<>)] = "[ResourceName] Attributes In Response",
         [typeof(RelationshipsInResponse<>)] = "[ResourceName] Relationships In Response",
@@ -67,12 +68,19 @@ internal sealed class JsonApiSchemaIdSelector
         {
             Type openType = type.GetGenericTypeDefinition();
 
-            if (OpenTypeToSchemaTemplateMap.TryGetValue(openType, out string? schemaTemplate))
+            if (TypeToSchemaTemplateMap.TryGetValue(openType, out string? schemaTemplate))
             {
                 Type resourceClrType = type.GetGenericArguments().First();
                 resourceType = _resourceGraph.GetResourceType(resourceClrType);
 
                 return ApplySchemaTemplate(schemaTemplate, resourceType);
+            }
+        }
+        else
+        {
+            if (TypeToSchemaTemplateMap.TryGetValue(type, out string? schemaTemplate))
+            {
+                return ApplySchemaTemplate(schemaTemplate, null);
             }
         }
 

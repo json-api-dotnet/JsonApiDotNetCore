@@ -25,7 +25,7 @@ public static class JsonElementAssertionExtensions
     }
 
     [CustomAssertion]
-    private static string GetSchemaReferenceId(this JsonElement source)
+    public static string GetSchemaReferenceId(this JsonElement source)
     {
         source.ValueKind.Should().Be(JsonValueKind.String);
 

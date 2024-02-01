@@ -1457,6 +1457,32 @@
   },
   "components": {
     "schemas": {
+      "dataInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "staffMembers": "#/components/schemas/staffMemberDataInResponse",
+            "supermarkets": "#/components/schemas/supermarketDataInResponse"
+          }
+        },
+        "x-abstract": true
+      },
       "jsonapi": {
         "type": "object",
         "properties": {
@@ -1682,6 +1708,12 @@
             ],
             "nullable": true
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -1809,6 +1841,12 @@
               "$ref": "#/components/schemas/staffMemberDataInResponse"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -1863,42 +1901,41 @@
         "additionalProperties": false
       },
       "staffMemberDataInResponse": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/staffMemberResourceType"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/staffMemberAttributesInResponse"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/linksInResourceData"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/staffMemberAttributesInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/linksInResourceData"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "staffMemberIdentifier": {
@@ -2053,6 +2090,12 @@
               }
             ]
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -2097,6 +2140,12 @@
                 "$ref": "#/components/schemas/staffMemberDataInResponse"
               }
             ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
           },
           "meta": {
             "type": "object",
@@ -2186,6 +2235,12 @@
               "$ref": "#/components/schemas/supermarketDataInResponse"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -2254,49 +2309,48 @@
         "additionalProperties": false
       },
       "supermarketDataInResponse": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/supermarketResourceType"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/supermarketAttributesInResponse"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/supermarketRelationshipsInResponse"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/linksInResourceData"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/supermarketAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/supermarketRelationshipsInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/linksInResourceData"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "supermarketPatchRequestDocument": {
@@ -2358,6 +2412,12 @@
                 "$ref": "#/components/schemas/supermarketDataInResponse"
               }
             ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
           },
           "meta": {
             "type": "object",

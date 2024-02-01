@@ -3562,6 +3562,12 @@
               "$ref": "#/components/schemas/airplane-data-in-response"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/data-in-response"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -3630,49 +3636,48 @@
         "additionalProperties": false
       },
       "airplane-data-in-response": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/airplane-resource-type"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/data-in-response"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/airplane-attributes-in-response"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/airplane-relationships-in-response"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/links-in-resource-data"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/airplane-attributes-in-response"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/airplane-relationships-in-response"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/links-in-resource-data"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "airplane-patch-request-document": {
@@ -3734,6 +3739,12 @@
                 "$ref": "#/components/schemas/airplane-data-in-response"
               }
             ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/data-in-response"
+            }
           },
           "meta": {
             "type": "object",
@@ -3798,6 +3809,34 @@
           "EconomyClass"
         ],
         "type": "string"
+      },
+      "data-in-response": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "airplanes": "#/components/schemas/airplane-data-in-response",
+            "flight-attendants": "#/components/schemas/flight-attendant-data-in-response",
+            "flights": "#/components/schemas/flight-data-in-response",
+            "passengers": "#/components/schemas/passenger-data-in-response"
+          }
+        },
+        "x-abstract": true
       },
       "flight-attendant-attributes-in-patch-request": {
         "type": "object",
@@ -3893,6 +3932,12 @@
               "$ref": "#/components/schemas/flight-attendant-data-in-response"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/data-in-response"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -3961,49 +4006,48 @@
         "additionalProperties": false
       },
       "flight-attendant-data-in-response": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/flight-attendant-resource-type"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/data-in-response"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-attributes-in-response"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-attendant-relationships-in-response"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/links-in-resource-data"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/flight-attendant-attributes-in-response"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/flight-attendant-relationships-in-response"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/links-in-resource-data"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "flight-attendant-identifier": {
@@ -4158,6 +4202,12 @@
               }
             ]
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/data-in-response"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -4263,6 +4313,12 @@
               }
             ]
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/data-in-response"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -4360,6 +4416,12 @@
               "$ref": "#/components/schemas/flight-data-in-response"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/data-in-response"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -4421,49 +4483,48 @@
         "additionalProperties": false
       },
       "flight-data-in-response": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/flight-resource-type"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/data-in-response"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-attributes-in-response"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/flight-relationships-in-response"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/links-in-resource-data"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/flight-attributes-in-response"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/flight-relationships-in-response"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/links-in-resource-data"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "flight-identifier": {
@@ -4579,6 +4640,12 @@
                 "$ref": "#/components/schemas/flight-data-in-response"
               }
             ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/data-in-response"
+            }
           },
           "meta": {
             "type": "object",
@@ -4927,6 +4994,12 @@
             ],
             "nullable": true
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/data-in-response"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -5052,6 +5125,12 @@
               "$ref": "#/components/schemas/passenger-data-in-response"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/data-in-response"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -5106,42 +5185,41 @@
         "additionalProperties": false
       },
       "passenger-data-in-response": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/passenger-resource-type"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/data-in-response"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/passenger-attributes-in-response"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/links-in-resource-data"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/passenger-attributes-in-response"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/links-in-resource-data"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "passenger-identifier": {
@@ -5257,6 +5335,12 @@
                 "$ref": "#/components/schemas/passenger-data-in-response"
               }
             ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/data-in-response"
+            }
           },
           "meta": {
             "type": "object",
