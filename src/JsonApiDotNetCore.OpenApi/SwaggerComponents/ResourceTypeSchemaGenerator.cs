@@ -1,5 +1,3 @@
-using System.Text.Json;
-using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -9,14 +7,13 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class ResourceTypeSchemaGenerator
 {
-    private const string ResourceTypeSchemaIdTemplate = "[ResourceName] Resource Type";
-    private readonly IJsonApiOptions _options;
+    private readonly JsonApiSchemaIdSelector _schemaIdSelector;
 
-    public ResourceTypeSchemaGenerator(IJsonApiOptions options)
+    public ResourceTypeSchemaGenerator(JsonApiSchemaIdSelector schemaIdSelector)
     {
-        ArgumentGuard.NotNull(options);
+        ArgumentGuard.NotNull(schemaIdSelector);
 
-        _options = options;
+        _schemaIdSelector = schemaIdSelector;
     }
 
     public OpenApiSchema Get(ResourceType resourceType, SchemaRepository schemaRepository)
@@ -39,7 +36,7 @@ internal sealed class ResourceTypeSchemaGenerator
             AdditionalPropertiesAllowed = false
         };
 
-        string schemaId = GetSchemaId(resourceType);
+        string schemaId = _schemaIdSelector.GetSchemaId(resourceType);
 
         referenceSchema = new OpenApiSchema
         {
@@ -54,13 +51,5 @@ internal sealed class ResourceTypeSchemaGenerator
         schemaRepository.RegisterType(resourceType.ClrType, schemaId);
 
         return referenceSchema;
-    }
-
-    private string GetSchemaId(ResourceType resourceType)
-    {
-        string pascalCaseSchemaId = ResourceTypeSchemaIdTemplate.Replace("[ResourceName]", resourceType.PublicName.Singularize()).ToPascalCase();
-
-        JsonNamingPolicy? namingPolicy = _options.SerializerOptions.PropertyNamingPolicy;
-        return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
     }
 }

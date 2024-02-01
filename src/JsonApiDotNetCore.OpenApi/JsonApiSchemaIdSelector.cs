@@ -9,6 +9,8 @@ namespace JsonApiDotNetCore.OpenApi;
 
 internal sealed class JsonApiSchemaIdSelector
 {
+    private const string ResourceTypeSchemaIdTemplate = "[ResourceName] Resource Type";
+
     private static readonly IDictionary<Type, string> OpenTypeToSchemaTemplateMap = new Dictionary<Type, string>
     {
         [typeof(ResourcePostRequestDocument<>)] = "[ResourceName] Post Request Document",
@@ -61,19 +63,37 @@ internal sealed class JsonApiSchemaIdSelector
             return resourceType.PublicName.Singularize();
         }
 
-        JsonNamingPolicy? namingPolicy = _options.SerializerOptions.PropertyNamingPolicy;
-
-        if (type.IsConstructedGenericType && OpenTypeToSchemaTemplateMap.ContainsKey(type.GetGenericTypeDefinition()))
+        if (type.IsConstructedGenericType)
         {
             Type openType = type.GetGenericTypeDefinition();
-            Type resourceClrType = type.GetGenericArguments().First();
-            resourceType = _resourceGraph.GetResourceType(resourceClrType);
 
-            string pascalCaseSchemaId = OpenTypeToSchemaTemplateMap[openType].Replace("[ResourceName]", resourceType.PublicName.Singularize()).ToPascalCase();
-            return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
+            if (OpenTypeToSchemaTemplateMap.TryGetValue(openType, out string? schemaTemplate))
+            {
+                Type resourceClrType = type.GetGenericArguments().First();
+                resourceType = _resourceGraph.GetResourceType(resourceClrType);
+
+                return ApplySchemaTemplate(schemaTemplate, resourceType);
+            }
         }
 
-        // Used for a fixed set of types, such as JsonApiObject, LinksInResourceCollectionDocument etc.
-        return namingPolicy != null ? namingPolicy.ConvertName(type.Name) : type.Name;
+        // Used for a fixed set of non-generic types, such as Jsonapi, LinksInResourceCollectionDocument etc.
+        return ApplySchemaTemplate(type.Name, null);
+    }
+
+    private string ApplySchemaTemplate(string schemaTemplate, ResourceType? resourceType)
+    {
+        string pascalCaseSchemaId = resourceType != null
+            ? schemaTemplate.Replace("[ResourceName]", resourceType.PublicName.Singularize()).ToPascalCase()
+            : schemaTemplate.ToPascalCase();
+
+        JsonNamingPolicy? namingPolicy = _options.SerializerOptions.PropertyNamingPolicy;
+        return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
+    }
+
+    public string GetSchemaId(ResourceType resourceType)
+    {
+        ArgumentGuard.NotNull(resourceType);
+
+        return ApplySchemaTemplate(ResourceTypeSchemaIdTemplate, resourceType);
     }
 }
