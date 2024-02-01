@@ -6,20 +6,14 @@ namespace OpenApiTests.QueryStrings;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "OpenApiTests.QueryStrings")]
-public sealed class Node : Identifiable<long>
+public sealed class NameValuePair : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;
 
     [Attr]
-    public string? Comment { get; set; }
-
-    [HasMany]
-    public IList<NameValuePair> Values { get; set; } = new List<NameValuePair>();
+    public string? Value { get; set; }
 
     [HasOne]
-    public Node? Parent { get; set; }
-
-    [HasMany]
-    public ISet<Node> Children { get; set; } = new HashSet<Node>();
+    public Node Owner { get; set; } = null!;
 }

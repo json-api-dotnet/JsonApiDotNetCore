@@ -14,6 +14,8 @@ public sealed class QueryStringTests : IClassFixture<OpenApiTestContext<OpenApiS
         _testContext = testContext;
 
         testContext.UseController<NodesController>();
+        testContext.UseController<NameValuePairsController>();
+
         testContext.SwaggerDocumentOutputDirectory = "test/OpenApiEndToEndTests/QueryStrings";
     }
 

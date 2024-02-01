@@ -15,5 +15,11 @@ public sealed class QueryStringFakers : FakerContainer
         .RuleFor(node => node.Name, faker => faker.Lorem.Word())
         .RuleFor(node => node.Comment, faker => faker.Lorem.Sentence()));
 
+    private readonly Lazy<Faker<NameValuePair>> _lazyNameValuePairFaker = new(() => new Faker<NameValuePair>()
+        .UseSeed(GetFakerSeed())
+        .RuleFor(node => node.Name, faker => faker.Lorem.Word())
+        .RuleFor(node => node.Value, faker => faker.Lorem.Sentence()));
+
     public Faker<Node> Node => _lazyNodeFaker.Value;
+    public Faker<NameValuePair> NameValuePair => _lazyNameValuePairFaker.Value;
 }
