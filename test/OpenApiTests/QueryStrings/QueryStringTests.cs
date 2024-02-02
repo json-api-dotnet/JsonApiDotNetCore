@@ -14,6 +14,8 @@ public sealed class QueryStringTests : IClassFixture<OpenApiTestContext<OpenApiS
         _testContext = testContext;
 
         testContext.UseController<NodesController>();
+        testContext.UseController<NameValuePairsController>();
+
         testContext.SwaggerDocumentOutputDirectory = "test/OpenApiEndToEndTests/QueryStrings";
     }
 
@@ -56,7 +58,7 @@ public sealed class QueryStringTests : IClassFixture<OpenApiTestContext<OpenApiS
                                 propertiesElement.Should().HaveProperty("nullable", true);
                             });
 
-                            schemaElement.Should().HaveProperty("example", null);
+                            schemaElement.Should().HaveProperty("example", string.Empty);
                         });
                     });
             });

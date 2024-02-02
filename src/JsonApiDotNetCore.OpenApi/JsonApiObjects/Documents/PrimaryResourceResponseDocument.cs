@@ -8,15 +8,18 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class PrimaryResourceResponseDocument<TResource> : SingleData<ResourceObjectInResponse<TResource>>
+internal sealed class PrimaryResourceResponseDocument<TResource> : SingleData<ResourceDataInResponse<TResource>>
     where TResource : IIdentifiable
 {
     [JsonPropertyName("jsonapi")]
-    public JsonapiObject Jsonapi { get; set; } = null!;
+    public Jsonapi Jsonapi { get; set; } = null!;
 
     [Required]
     [JsonPropertyName("links")]
     public LinksInResourceDocument Links { get; set; } = null!;
+
+    [JsonPropertyName("included")]
+    public IList<ResourceData> Included { get; set; } = null!;
 
     [JsonPropertyName("meta")]
     public IDictionary<string, object> Meta { get; set; } = null!;

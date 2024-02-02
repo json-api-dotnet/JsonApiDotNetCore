@@ -13,6 +13,7 @@ public sealed class LegacyOpenApiIntegrationTests : OpenApiTestContext<LegacyOpe
         UseController<AirplanesController>();
         UseController<FlightsController>();
         UseController<FlightAttendantsController>();
+        UseController<PassengersController>();
 
         SwaggerDocumentOutputDirectory = "test/OpenApiClientTests/LegacyClient";
     }

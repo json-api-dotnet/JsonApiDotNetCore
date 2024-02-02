@@ -3,8 +3,9 @@
 You can generate a JSON:API client in various programming languages from the [OpenAPI specification](https://swagger.io/specification/) file that JsonApiDotNetCore APIs provide.
 
 For C# .NET clients generated using [NSwag](https://github.com/RicoSuter/NSwag), we provide an additional package
-that introduces support for partial PATCH/POST requests. The concern here is that a property on a generated C# class
-being `null` could mean "set the value to `null` in the request" or "this is `null` because I never touched it".
+that provides workarounds for NSwag bugs and introduces support for partial PATCH/POST requests.
+The concern here is that a property on a generated C# class being `null` could either mean: "set the value to `null`
+in the request" or: "this is `null` because I never touched it".
 
 ## Getting started
 
@@ -26,29 +27,19 @@ The next steps describe how to generate a JSON:API client library and use our pa
 
 3.  Although not strictly required, we recommend to run package update now, which fixes some issues.
 
-4.  Add code that calls one of your JSON:API endpoints.
+    > [!WARNING]
+    > NSwag v14 is currently *incompatible* with JsonApiDotNetCore (tracked [here](https://github.com/RicoSuter/NSwag/issues/4662)). Stick with v13.x for the moment.
 
-    ```c#
-    using var httpClient = new HttpClient();
-    var apiClient = new ExampleApiClient("http://localhost:14140", httpClient);
-
-    PersonCollectionResponseDocument getResponse = await apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
-    {
-        ["filter"] = "has(assignedTodoItems)",
-        ["sort"] = "-lastName",
-        ["page[size]"] = "5"
-    });
-
-    foreach (PersonDataInResponse person in getResponse.Data)
-    {
-        Console.WriteLine($"Found person {person.Id}: {person.Attributes.DisplayName}");
-    }
-    ```
-
-5.  Add our client package to your project:
+4.  Add our client package to your project:
 
     ```
     dotnet add package JsonApiDotNetCore.OpenApi.Client
+    ```
+
+5.  Add the next line inside the **OpenApiReference** section in your project file:
+
+    ```xml
+    <Options>/GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
     ```
 
 6.  Add the following glue code to connect our package with your generated code.
@@ -73,8 +64,28 @@ The next steps describe how to generate a JSON:API client library and use our pa
 
     > [!TIP]
     > The project at src/Examples/JsonApiDotNetCoreExampleClient contains an enhanced version that logs the HTTP requests and responses.
+    > Additionally, the example shows how to write the swagger.json file to disk when building the server, which is imported from the client project. This keeps the server and client automatically in sync, which is handy when both are in the same solution.
 
-7.  Extend your demo code to send a partial PATCH request with the help of our package:
+7.  Add code that calls one of your JSON:API endpoints.
+
+    ```c#
+    using var httpClient = new HttpClient();
+    var apiClient = new ExampleApiClient(httpClient);
+
+    var getResponse = await apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
+    {
+        ["filter"] = "has(assignedTodoItems)",
+        ["sort"] = "-lastName",
+        ["page[size]"] = "5"
+    });
+
+    foreach (var person in getResponse.Data)
+    {
+        Console.WriteLine($"Found person {person.Id}: {person.Attributes.DisplayName}");
+    }
+    ```
+
+8.  Extend your demo code to send a partial PATCH request with the help of our package:
 
     ```c#
     var patchRequest = new PersonPatchRequestDocument
@@ -94,7 +105,7 @@ The next steps describe how to generate a JSON:API client library and use our pa
         person => person.FirstName))
     {
         // Workaround for https://github.com/RicoSuter/NSwag/issues/2499.
-        await TranslateAsync(async () => await apiClient.PatchPersonAsync(patchRequest.Data.Id, null, patchRequest));
+        await ApiResponse.TranslateAsync(() => apiClient.PatchPersonAsync(patchRequest.Data.Id, null, patchRequest));
 
         // The sent request looks like this:
         // {
@@ -145,13 +156,13 @@ From here, continue from step 3 in the list of steps for Visual Studio.
 The `OpenApiReference` element in the project file accepts an `Options` element to pass additional settings to the client generator,
 which are listed [here](https://github.com/RicoSuter/NSwag/blob/master/src/NSwag.Commands/Commands/CodeGeneration/OpenApiToCSharpClientCommand.cs).
 
-For example, the next section puts the generated code in a namespace, removes the `baseUrl` parameter and generates an interface (which is handy for dependency injection):
+For example, the next section puts the generated code in a namespace and generates an interface (which is handy for dependency injection):
 
 ```xml
 <OpenApiReference Include="swagger.json">
   <Namespace>ExampleProject.GeneratedCode</Namespace>
   <ClassName>SalesApiClient</ClassName>
   <CodeGenerator>NSwagCSharp</CodeGenerator>
-  <Options>/UseBaseUrl:false /GenerateClientInterfaces:true</Options>
+  <Options>/GenerateClientInterfaces:true</Options>
 </OpenApiReference>
 ```

@@ -14,6 +14,9 @@ public sealed class Node : Identifiable<long>
     [Attr]
     public string? Comment { get; set; }
 
+    [HasMany]
+    public IList<NameValuePair> Values { get; set; } = new List<NameValuePair>();
+
     [HasOne]
     public Node? Parent { get; set; }
 

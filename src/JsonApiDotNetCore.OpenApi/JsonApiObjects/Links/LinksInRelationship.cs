@@ -5,9 +5,13 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Links;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class LinksInResourceObject
+internal sealed class LinksInRelationship
 {
     [Required]
     [JsonPropertyName("self")]
     public string Self { get; set; } = null!;
+
+    [Required]
+    [JsonPropertyName("related")]
+    public string Related { get; set; } = null!;
 }

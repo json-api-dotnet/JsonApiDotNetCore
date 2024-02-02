@@ -1,33 +1,29 @@
-using System.Text.Json;
-using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class ResourceTypeSchemaGenerator
 {
-    private const string ResourceTypeSchemaIdTemplate = "[ResourceName] Resource Type";
-    private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
-    private readonly JsonNamingPolicy? _namingPolicy;
-    private readonly Dictionary<Type, OpenApiSchema> _resourceClrTypeSchemaCache = [];
+    private readonly JsonApiSchemaIdSelector _schemaIdSelector;
 
-    public ResourceTypeSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor, JsonNamingPolicy? namingPolicy)
+    public ResourceTypeSchemaGenerator(JsonApiSchemaIdSelector schemaIdSelector)
     {
-        ArgumentGuard.NotNull(schemaRepositoryAccessor);
+        ArgumentGuard.NotNull(schemaIdSelector);
 
-        _schemaRepositoryAccessor = schemaRepositoryAccessor;
-        _namingPolicy = namingPolicy;
+        _schemaIdSelector = schemaIdSelector;
     }
 
-    public OpenApiSchema Get(ResourceType resourceType)
+    public OpenApiSchema Get(ResourceType resourceType, SchemaRepository schemaRepository)
     {
         ArgumentGuard.NotNull(resourceType);
+        ArgumentGuard.NotNull(schemaRepository);
 
-        if (_resourceClrTypeSchemaCache.TryGetValue(resourceType.ClrType, out OpenApiSchema? extendedReferenceSchema))
+        if (schemaRepository.TryLookupByType(resourceType.ClrType, out OpenApiSchema? referenceSchema))
         {
-            return extendedReferenceSchema;
+            return referenceSchema;
         }
 
         var fullSchema = new OpenApiSchema
@@ -40,9 +36,9 @@ internal sealed class ResourceTypeSchemaGenerator
             AdditionalPropertiesAllowed = false
         };
 
-        string schemaId = GetSchemaId(resourceType);
+        string schemaId = _schemaIdSelector.GetSchemaId(resourceType);
 
-        var referenceSchema = new OpenApiSchema
+        referenceSchema = new OpenApiSchema
         {
             Reference = new OpenApiReference
             {
@@ -51,24 +47,9 @@ internal sealed class ResourceTypeSchemaGenerator
             }
         };
 
-        extendedReferenceSchema = new OpenApiSchema
-        {
-            AllOf = new List<OpenApiSchema>
-            {
-                referenceSchema
-            }
-        };
+        schemaRepository.AddDefinition(schemaId, fullSchema);
+        schemaRepository.RegisterType(resourceType.ClrType, schemaId);
 
-        _schemaRepositoryAccessor.Current.AddDefinition(schemaId, fullSchema);
-        _resourceClrTypeSchemaCache.Add(resourceType.ClrType, extendedReferenceSchema);
-
-        return extendedReferenceSchema;
-    }
-
-    private string GetSchemaId(ResourceType resourceType)
-    {
-        string pascalCaseSchemaId = ResourceTypeSchemaIdTemplate.Replace("[ResourceName]", resourceType.PublicName.Singularize()).ToPascalCase();
-
-        return _namingPolicy != null ? _namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
+        return referenceSchema;
     }
 }

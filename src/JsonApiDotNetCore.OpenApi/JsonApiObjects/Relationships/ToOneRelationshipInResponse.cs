@@ -8,12 +8,12 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class ToOneRelationshipInResponse<TResource> : SingleData<ResourceIdentifierObject<TResource>>
+internal sealed class ToOneRelationshipInResponse<TResource> : SingleData<ResourceIdentifier<TResource>>
     where TResource : IIdentifiable
 {
     [Required]
     [JsonPropertyName("links")]
-    public LinksInRelationshipObject Links { get; set; } = null!;
+    public LinksInRelationship Links { get; set; } = null!;
 
     [JsonPropertyName("meta")]
     public IDictionary<string, object> Meta { get; set; } = null!;

@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
-internal sealed class ResourceObjectDocumentationReader
+internal sealed class ResourceDocumentationReader
 {
     private static readonly ConcurrentDictionary<string, XPathNavigator?> NavigatorsByAssemblyPath = new();
 

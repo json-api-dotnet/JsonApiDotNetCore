@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.OpenApi;
 
 internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IApiRequestFormatMetadataProvider
 {
-    private static readonly Type[] JsonApiRequestObjectOpenType =
+    private static readonly Type[] JsonApiRequestOpenTypes =
     [
         typeof(ToManyRelationshipInRequest<>),
         typeof(ToOneRelationshipInRequest<>),
@@ -36,8 +36,7 @@ internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IA
         ArgumentGuard.NotNullNorEmpty(contentType);
         ArgumentGuard.NotNull(objectType);
 
-        if (contentType == HeaderConstants.MediaType && objectType.IsGenericType &&
-            JsonApiRequestObjectOpenType.Contains(objectType.GetGenericTypeDefinition()))
+        if (contentType == HeaderConstants.MediaType && objectType.IsGenericType && JsonApiRequestOpenTypes.Contains(objectType.GetGenericTypeDefinition()))
         {
             return new MediaTypeCollection
             {

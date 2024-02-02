@@ -35,14 +35,15 @@ internal sealed class JsonApiOperationIdSelector
     };
 
     private readonly IControllerResourceMapping _controllerResourceMapping;
-    private readonly JsonNamingPolicy? _namingPolicy;
+    private readonly IJsonApiOptions _options;
 
-    public JsonApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, JsonNamingPolicy? namingPolicy)
+    public JsonApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, IJsonApiOptions options)
     {
         ArgumentGuard.NotNull(controllerResourceMapping);
+        ArgumentGuard.NotNull(options);
 
         _controllerResourceMapping = controllerResourceMapping;
-        _namingPolicy = namingPolicy;
+        _options = options;
     }
 
     public string GetOperationId(ApiDescription endpoint)
@@ -122,6 +123,7 @@ internal sealed class JsonApiOperationIdSelector
         // @formatter:wrap_before_first_method_call true restore
         // @formatter:wrap_chained_method_calls restore
 
-        return _namingPolicy != null ? _namingPolicy.ConvertName(pascalCaseOperationId) : pascalCaseOperationId;
+        JsonNamingPolicy? namingPolicy = _options.SerializerOptions.PropertyNamingPolicy;
+        return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseOperationId) : pascalCaseOperationId;
     }
 }

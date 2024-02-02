@@ -4,6 +4,11 @@
     "title": "JsonApiDotNetCoreExample",
     "version": "1.0"
   },
+  "servers": [
+    {
+      "url": "https://localhost:44340"
+    }
+  ],
   "paths": {
     "/api/people": {
       "get": {
@@ -23,7 +28,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -61,7 +66,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -91,7 +96,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -165,7 +170,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -215,7 +220,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -257,7 +262,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -357,7 +362,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -407,7 +412,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -444,14 +449,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -494,14 +499,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -683,7 +688,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -733,7 +738,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -770,14 +775,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -820,14 +825,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1000,7 +1005,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1038,7 +1043,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1068,7 +1073,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1142,7 +1147,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1192,7 +1197,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1234,7 +1239,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1334,7 +1339,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1384,7 +1389,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1421,14 +1426,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1471,14 +1476,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1651,7 +1656,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1689,7 +1694,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1719,7 +1724,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1793,7 +1798,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1843,7 +1848,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1885,7 +1890,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1985,7 +1990,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2035,7 +2040,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2072,14 +2077,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2122,14 +2127,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2219,7 +2224,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2269,7 +2274,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2306,14 +2311,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2356,14 +2361,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2453,7 +2458,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2503,7 +2508,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2540,14 +2545,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2590,14 +2595,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -2755,7 +2760,34 @@
   },
   "components": {
     "schemas": {
-      "linksInRelationshipObject": {
+      "dataInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "people": "#/components/schemas/personDataInResponse",
+            "tags": "#/components/schemas/tagDataInResponse",
+            "todoItems": "#/components/schemas/todoItemDataInResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "linksInRelationship": {
         "required": [
           "related",
           "self"
@@ -2796,6 +2828,19 @@
             "type": "string"
           },
           "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceData": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -2871,19 +2916,6 @@
         },
         "additionalProperties": false
       },
-      "linksInResourceObject": {
-        "required": [
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "nullablePersonIdentifierResponseDocument": {
         "required": [
           "data",
@@ -2938,6 +2970,12 @@
             ],
             "nullable": true
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -2974,7 +3012,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationshipObject"
+                "$ref": "#/components/schemas/linksInRelationship"
               }
             ]
           },
@@ -3062,6 +3100,12 @@
               "$ref": "#/components/schemas/personDataInResponse"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -3080,11 +3124,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/personResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/personResourceType"
           },
           "id": {
             "minLength": 1,
@@ -3114,11 +3154,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/personResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/personResourceType"
           },
           "attributes": {
             "allOf": [
@@ -3138,53 +3174,48 @@
         "additionalProperties": false
       },
       "personDataInResponse": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/personResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/personAttributesInResponse"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/personRelationshipsInResponse"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/linksInResourceObject"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/personRelationshipsInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/linksInResourceData"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "personIdentifier": {
@@ -3195,11 +3226,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/personResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/personResourceType"
           },
           "id": {
             "minLength": 1,
@@ -3292,6 +3319,12 @@
               }
             ]
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -3366,7 +3399,8 @@
         "enum": [
           "people"
         ],
-        "type": "string"
+        "type": "string",
+        "additionalProperties": false
       },
       "personSecondaryResponseDocument": {
         "required": [
@@ -3388,6 +3422,12 @@
                 "$ref": "#/components/schemas/personDataInResponse"
               }
             ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
           },
           "meta": {
             "type": "object",
@@ -3452,6 +3492,12 @@
               "$ref": "#/components/schemas/tagDataInResponse"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -3470,11 +3516,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/tagResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/tagResourceType"
           },
           "id": {
             "minLength": 1,
@@ -3504,11 +3546,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/tagResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/tagResourceType"
           },
           "attributes": {
             "allOf": [
@@ -3528,53 +3566,48 @@
         "additionalProperties": false
       },
       "tagDataInResponse": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/tagResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/tagAttributesInResponse"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/tagRelationshipsInResponse"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/linksInResourceObject"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/tagAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/tagRelationshipsInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/linksInResourceData"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "tagIdentifier": {
@@ -3585,11 +3618,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/tagResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/tagResourceType"
           },
           "id": {
             "minLength": 1,
@@ -3681,6 +3710,12 @@
               }
             ]
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -3734,7 +3769,8 @@
         "enum": [
           "tags"
         ],
-        "type": "string"
+        "type": "string",
+        "additionalProperties": false
       },
       "toManyTagInRequest": {
         "required": [
@@ -3760,7 +3796,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationshipObject"
+                "$ref": "#/components/schemas/linksInRelationship"
               }
             ]
           },
@@ -3804,7 +3840,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationshipObject"
+                "$ref": "#/components/schemas/linksInRelationship"
               }
             ]
           },
@@ -3849,7 +3885,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/linksInRelationshipObject"
+                "$ref": "#/components/schemas/linksInRelationship"
               }
             ]
           },
@@ -3966,6 +4002,12 @@
               "$ref": "#/components/schemas/todoItemDataInResponse"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -3984,11 +4026,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/todoItemResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/todoItemResourceType"
           },
           "id": {
             "minLength": 1,
@@ -4018,11 +4056,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/todoItemResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/todoItemResourceType"
           },
           "attributes": {
             "allOf": [
@@ -4042,53 +4076,48 @@
         "additionalProperties": false
       },
       "todoItemDataInResponse": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/todoItemResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/todoItemAttributesInResponse"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/todoItemRelationshipsInResponse"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/linksInResourceObject"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/todoItemRelationshipsInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/linksInResourceData"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "todoItemIdentifier": {
@@ -4099,11 +4128,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/todoItemResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/todoItemResourceType"
           },
           "id": {
             "minLength": 1,
@@ -4194,6 +4219,12 @@
                 "$ref": "#/components/schemas/todoItemDataInResponse"
               }
             ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
           },
           "meta": {
             "type": "object",
@@ -4301,7 +4332,8 @@
         "enum": [
           "todoItems"
         ],
-        "type": "string"
+        "type": "string",
+        "additionalProperties": false
       }
     }
   }

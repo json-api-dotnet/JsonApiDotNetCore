@@ -9,14 +9,16 @@ namespace JsonApiDotNetCore.OpenApi;
 
 internal sealed class JsonApiSchemaIdSelector
 {
-    private static readonly IDictionary<Type, string> OpenTypeToSchemaTemplateMap = new Dictionary<Type, string>
+    private const string ResourceTypeSchemaIdTemplate = "[ResourceName] Resource Type";
+
+    private static readonly IDictionary<Type, string> TypeToSchemaTemplateMap = new Dictionary<Type, string>
     {
         [typeof(ResourcePostRequestDocument<>)] = "[ResourceName] Post Request Document",
         [typeof(ResourcePatchRequestDocument<>)] = "[ResourceName] Patch Request Document",
-        [typeof(ResourceObjectInPostRequest<>)] = "[ResourceName] Data In Post Request",
+        [typeof(ResourceDataInPostRequest<>)] = "[ResourceName] Data In Post Request",
         [typeof(AttributesInPostRequest<>)] = "[ResourceName] Attributes In Post Request",
         [typeof(RelationshipsInPostRequest<>)] = "[ResourceName] Relationships In Post Request",
-        [typeof(ResourceObjectInPatchRequest<>)] = "[ResourceName] Data In Patch Request",
+        [typeof(ResourceDataInPatchRequest<>)] = "[ResourceName] Data In Patch Request",
         [typeof(AttributesInPatchRequest<>)] = "[ResourceName] Attributes In Patch Request",
         [typeof(RelationshipsInPatchRequest<>)] = "[ResourceName] Relationships In Patch Request",
         [typeof(ToOneRelationshipInRequest<>)] = "To One [ResourceName] In Request",
@@ -32,21 +34,23 @@ internal sealed class JsonApiSchemaIdSelector
         [typeof(ToOneRelationshipInResponse<>)] = "To One [ResourceName] In Response",
         [typeof(NullableToOneRelationshipInResponse<>)] = "Nullable To One [ResourceName] In Response",
         [typeof(ToManyRelationshipInResponse<>)] = "To Many [ResourceName] In Response",
-        [typeof(ResourceObjectInResponse<>)] = "[ResourceName] Data In Response",
+        [typeof(ResourceData)] = "Data In Response",
+        [typeof(ResourceDataInResponse<>)] = "[ResourceName] Data In Response",
         [typeof(AttributesInResponse<>)] = "[ResourceName] Attributes In Response",
         [typeof(RelationshipsInResponse<>)] = "[ResourceName] Relationships In Response",
-        [typeof(ResourceIdentifierObject<>)] = "[ResourceName] Identifier"
+        [typeof(ResourceIdentifier<>)] = "[ResourceName] Identifier"
     };
 
-    private readonly JsonNamingPolicy? _namingPolicy;
     private readonly IResourceGraph _resourceGraph;
+    private readonly IJsonApiOptions _options;
 
-    public JsonApiSchemaIdSelector(JsonNamingPolicy? namingPolicy, IResourceGraph resourceGraph)
+    public JsonApiSchemaIdSelector(IResourceGraph resourceGraph, IJsonApiOptions options)
     {
         ArgumentGuard.NotNull(resourceGraph);
+        ArgumentGuard.NotNull(options);
 
-        _namingPolicy = namingPolicy;
         _resourceGraph = resourceGraph;
+        _options = options;
     }
 
     public string GetSchemaId(Type type)
@@ -60,23 +64,44 @@ internal sealed class JsonApiSchemaIdSelector
             return resourceType.PublicName.Singularize();
         }
 
-        if (type.IsConstructedGenericType && OpenTypeToSchemaTemplateMap.ContainsKey(type.GetGenericTypeDefinition()))
+        if (type.IsConstructedGenericType)
         {
             Type openType = type.GetGenericTypeDefinition();
-            Type resourceClrType = type.GetGenericArguments().First();
-            resourceType = _resourceGraph.FindResourceType(resourceClrType);
 
-            if (resourceType == null)
+            if (TypeToSchemaTemplateMap.TryGetValue(openType, out string? schemaTemplate))
             {
-                throw new UnreachableCodeException();
+                Type resourceClrType = type.GetGenericArguments().First();
+                resourceType = _resourceGraph.GetResourceType(resourceClrType);
+
+                return ApplySchemaTemplate(schemaTemplate, resourceType);
             }
-
-            string pascalCaseSchemaId = OpenTypeToSchemaTemplateMap[openType].Replace("[ResourceName]", resourceType.PublicName.Singularize()).ToPascalCase();
-
-            return _namingPolicy != null ? _namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
+        }
+        else
+        {
+            if (TypeToSchemaTemplateMap.TryGetValue(type, out string? schemaTemplate))
+            {
+                return ApplySchemaTemplate(schemaTemplate, null);
+            }
         }
 
-        // Used for a fixed set of types, such as JsonApiObject, LinksInResourceCollectionDocument etc.
-        return _namingPolicy != null ? _namingPolicy.ConvertName(type.Name) : type.Name;
+        // Used for a fixed set of non-generic types, such as Jsonapi, LinksInResourceCollectionDocument etc.
+        return ApplySchemaTemplate(type.Name, null);
+    }
+
+    private string ApplySchemaTemplate(string schemaTemplate, ResourceType? resourceType)
+    {
+        string pascalCaseSchemaId = resourceType != null
+            ? schemaTemplate.Replace("[ResourceName]", resourceType.PublicName.Singularize()).ToPascalCase()
+            : schemaTemplate.ToPascalCase();
+
+        JsonNamingPolicy? namingPolicy = _options.SerializerOptions.PropertyNamingPolicy;
+        return namingPolicy != null ? namingPolicy.ConvertName(pascalCaseSchemaId) : pascalCaseSchemaId;
+    }
+
+    public string GetSchemaId(ResourceType resourceType)
+    {
+        ArgumentGuard.NotNull(resourceType);
+
+        return ApplySchemaTemplate(ResourceTypeSchemaIdTemplate, resourceType);
     }
 }

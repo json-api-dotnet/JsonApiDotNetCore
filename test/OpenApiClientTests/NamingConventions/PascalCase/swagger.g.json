@@ -4,7 +4,337 @@
     "title": "OpenApiTests",
     "version": "1.0"
   },
+  "servers": [
+    {
+      "url": "http://localhost"
+    }
+  ],
   "paths": {
+    "/StaffMembers": {
+      "get": {
+        "tags": [
+          "StaffMembers"
+        ],
+        "summary": "Retrieves a collection of StaffMembers.",
+        "operationId": "GetStaffMemberCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found StaffMembers, or an empty array if none were found.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffMemberCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "StaffMembers"
+        ],
+        "summary": "Retrieves a collection of StaffMembers without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "HeadStaffMemberCollection",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "StaffMembers"
+        ],
+        "summary": "Creates a new StaffMember.",
+        "operationId": "PostStaffMember",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the StaffMember to create.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/StaffMemberPostRequestDocument"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The StaffMember was successfully created, which resulted in additional changes. The newly created StaffMember is returned.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffMemberPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The StaffMember was successfully created, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
+          "403": {
+            "description": "Client-generated IDs cannot be used at this endpoint."
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
+          }
+        }
+      }
+    },
+    "/StaffMembers/{id}": {
+      "get": {
+        "tags": [
+          "StaffMembers"
+        ],
+        "summary": "Retrieves an individual StaffMember by its identifier.",
+        "operationId": "GetStaffMember",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the StaffMember to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found StaffMember.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffMemberPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The StaffMember does not exist."
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "StaffMembers"
+        ],
+        "summary": "Retrieves an individual StaffMember by its identifier without returning it.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "HeadStaffMember",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the StaffMember to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully."
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The StaffMember does not exist."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "StaffMembers"
+        ],
+        "summary": "Updates an existing StaffMember.",
+        "operationId": "PatchStaffMember",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the StaffMember to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The attributes and relationships of the StaffMember to update. Omitted fields are left unchanged.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/StaffMemberPatchRequestDocument"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The StaffMember was successfully updated, which resulted in additional changes. The updated StaffMember is returned.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StaffMemberPrimaryResponseDocument"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The StaffMember was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The query string is invalid or the request body is missing or malformed."
+          },
+          "404": {
+            "description": "The StaffMember or a related resource does not exist."
+          },
+          "409": {
+            "description": "A resource type or identifier in the request body is incompatible."
+          },
+          "422": {
+            "description": "Validation of the request body failed."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "StaffMembers"
+        ],
+        "summary": "Deletes an existing StaffMember by its identifier.",
+        "operationId": "DeleteStaffMember",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the StaffMember to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The StaffMember was successfully deleted."
+          },
+          "404": {
+            "description": "The StaffMember does not exist."
+          }
+        }
+      }
+    },
     "/Supermarkets": {
       "get": {
         "tags": [
@@ -23,7 +353,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -61,7 +391,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -91,7 +421,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -165,7 +495,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -215,7 +545,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -257,7 +587,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -357,7 +687,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -407,7 +737,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -444,14 +774,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -494,14 +824,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -591,7 +921,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -641,7 +971,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -678,14 +1008,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -728,14 +1058,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -917,7 +1247,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -967,7 +1297,7 @@
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1004,14 +1334,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1054,14 +1384,14 @@
           {
             "name": "query",
             "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
             "schema": {
               "type": "object",
               "additionalProperties": {
                 "type": "string",
                 "nullable": true
               },
-              "example": null
+              "example": ""
             }
           }
         ],
@@ -1127,7 +1457,33 @@
   },
   "components": {
     "schemas": {
-      "JsonapiObject": {
+      "DataInResponse": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "StaffMembers": "#/components/schemas/StaffMemberDataInResponse",
+            "Supermarkets": "#/components/schemas/SupermarketDataInResponse"
+          }
+        },
+        "x-abstract": true
+      },
+      "Jsonapi": {
         "type": "object",
         "properties": {
           "version": {
@@ -1155,7 +1511,7 @@
         },
         "additionalProperties": false
       },
-      "LinksInRelationshipObject": {
+      "LinksInRelationship": {
         "required": [
           "related",
           "self"
@@ -1196,6 +1552,19 @@
             "type": "string"
           },
           "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LinksInResourceData": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -1271,19 +1640,6 @@
         },
         "additionalProperties": false
       },
-      "LinksInResourceObject": {
-        "required": [
-          "self"
-        ],
-        "type": "object",
-        "properties": {
-          "self": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "NullableStaffMemberIdentifierResponseDocument": {
         "required": [
           "data",
@@ -1294,7 +1650,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1333,7 +1689,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1351,6 +1707,12 @@
               }
             ],
             "nullable": true
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataInResponse"
+            }
           },
           "meta": {
             "type": "object",
@@ -1388,7 +1750,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/LinksInRelationshipObject"
+                "$ref": "#/components/schemas/LinksInRelationship"
               }
             ]
           },
@@ -1406,6 +1768,35 @@
               "type": "object",
               "nullable": true
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "StaffMemberAttributesInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "Age": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StaffMemberAttributesInPostRequest": {
+        "required": [
+          "Name"
+        ],
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string"
+          },
+          "Age": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1433,7 +1824,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1450,6 +1841,12 @@
               "$ref": "#/components/schemas/StaffMemberDataInResponse"
             }
           },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataInResponse"
+            }
+          },
           "meta": {
             "type": "object",
             "additionalProperties": {
@@ -1460,20 +1857,15 @@
         },
         "additionalProperties": false
       },
-      "StaffMemberDataInResponse": {
+      "StaffMemberDataInPatchRequest": {
         "required": [
           "id",
-          "links",
           "type"
         ],
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/StaffMemberResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/StaffMemberResourceType"
           },
           "id": {
             "minLength": 1,
@@ -1482,25 +1874,68 @@
           "attributes": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/StaffMemberAttributesInResponse"
+                "$ref": "#/components/schemas/StaffMemberAttributesInPatchRequest"
               }
             ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/LinksInResourceObject"
-              }
-            ]
-          },
-          "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
           }
         },
+        "additionalProperties": false
+      },
+      "StaffMemberDataInPostRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/StaffMemberResourceType"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StaffMemberAttributesInPostRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "StaffMemberDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DataInResponse"
+          },
+          {
+            "required": [
+              "links"
+            ],
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/StaffMemberAttributesInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/LinksInResourceData"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
         "additionalProperties": false
       },
       "StaffMemberIdentifier": {
@@ -1511,11 +1946,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/StaffMemberResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/StaffMemberResourceType"
           },
           "id": {
             "minLength": 1,
@@ -1534,7 +1965,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1571,7 +2002,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1588,6 +2019,82 @@
                 "$ref": "#/components/schemas/StaffMemberIdentifier"
               }
             ]
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "StaffMemberPatchRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StaffMemberDataInPatchRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "StaffMemberPostRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StaffMemberDataInPostRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "StaffMemberPrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LinksInResourceDocument"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StaffMemberDataInResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataInResponse"
+            }
           },
           "meta": {
             "type": "object",
@@ -1616,7 +2123,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1633,6 +2140,12 @@
                 "$ref": "#/components/schemas/StaffMemberDataInResponse"
               }
             ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataInResponse"
+            }
           },
           "meta": {
             "type": "object",
@@ -1705,7 +2218,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1720,6 +2233,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SupermarketDataInResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataInResponse"
             }
           },
           "meta": {
@@ -1740,11 +2259,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SupermarketResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/SupermarketResourceType"
           },
           "id": {
             "minLength": 1,
@@ -1774,11 +2289,7 @@
         "type": "object",
         "properties": {
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SupermarketResourceType"
-              }
-            ]
+            "$ref": "#/components/schemas/SupermarketResourceType"
           },
           "attributes": {
             "allOf": [
@@ -1798,53 +2309,48 @@
         "additionalProperties": false
       },
       "SupermarketDataInResponse": {
-        "required": [
-          "id",
-          "links",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SupermarketResourceType"
-              }
-            ]
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DataInResponse"
           },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SupermarketAttributesInResponse"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SupermarketRelationshipsInResponse"
-              }
-            ]
-          },
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/LinksInResourceObject"
-              }
-            ]
-          },
-          "meta": {
+          {
+            "required": [
+              "links"
+            ],
             "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SupermarketAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SupermarketRelationshipsInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/LinksInResourceData"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
           }
-        },
+        ],
         "additionalProperties": false
       },
       "SupermarketPatchRequestDocument": {
@@ -1889,7 +2395,7 @@
           "jsonapi": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/JsonapiObject"
+                "$ref": "#/components/schemas/Jsonapi"
               }
             ]
           },
@@ -1906,6 +2412,12 @@
                 "$ref": "#/components/schemas/SupermarketDataInResponse"
               }
             ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataInResponse"
+            }
           },
           "meta": {
             "type": "object",
@@ -2040,7 +2552,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/LinksInRelationshipObject"
+                "$ref": "#/components/schemas/LinksInRelationship"
               }
             ]
           },
@@ -2085,7 +2597,7 @@
           "links": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/LinksInRelationshipObject"
+                "$ref": "#/components/schemas/LinksInRelationship"
               }
             ]
           },

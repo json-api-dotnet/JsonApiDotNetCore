@@ -5,5 +5,5 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.OpenApi.JsonApiObjects.Relationships;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-internal sealed class ToOneRelationshipInRequest<TResource> : SingleData<ResourceIdentifierObject<TResource>>
+internal sealed class ToOneRelationshipInRequest<TResource> : SingleData<ResourceIdentifier<TResource>>
     where TResource : IIdentifiable;
