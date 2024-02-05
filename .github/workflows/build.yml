@@ -138,7 +138,7 @@ jobs:
         dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage" --logger "GitHubActions;summary.includeSkippedTests=true"
     - name: Upload coverage to codecov.io
       if: matrix.os == 'ubuntu-latest'
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         fail_ci_if_error: true
         verbose: true
