@@ -5,6 +5,7 @@ namespace JsonApiDotNetCore;
 
 internal static class CollectionExtensions
 {
+    // Useless comment to trigger a build.
     [Pure]
     public static bool IsNullOrEmpty<T>([NotNullWhen(false)] this IEnumerable<T>? source)
     {
