@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -162,6 +163,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 SetOperationSummary(operation, $"Retrieves a collection of {resourceType} without returning them.");
                 SetOperationRemarks(operation, TextCompareETag);
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
             }
             else
             {
@@ -169,6 +171,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK,
                     $"Successfully returns the found {resourceType}, or an empty array if none were found.");
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
             }
 
             AddQueryStringParameters(operation, false);
@@ -183,11 +186,13 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 SetOperationSummary(operation, $"Retrieves an individual {singularName} by its identifier without returning it.");
                 SetOperationRemarks(operation, TextCompareETag);
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
             }
             else
             {
                 SetOperationSummary(operation, $"Retrieves an individual {singularName} by its identifier.");
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK, $"Successfully returns the found {singularName}.");
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
             }
 
             SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularName} to retrieve.");
@@ -207,6 +212,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
         SetResponseDescription(operation.Responses, HttpStatusCode.Created,
             $"The {singularName} was successfully created, which resulted in additional changes. The newly created {singularName} is returned.");
+        SetResponseHeaderLocation(operation.Responses, HttpStatusCode.Created);
 
         SetResponseDescription(operation.Responses, HttpStatusCode.NoContent,
             $"The {singularName} was successfully created, which did not result in additional changes.");
@@ -271,6 +277,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
             SetOperationRemarks(operation, TextCompareETag);
             SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
         }
         else
         {
@@ -280,6 +287,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 relationship is HasOneAttribute
                     ? $"Successfully returns the found {rightName}, or <c>null</c> if it was not found."
                     : $"Successfully returns the found {rightName}, or an empty array if none were found.");
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
         }
 
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {rightName} to retrieve.");
@@ -303,6 +311,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
             SetOperationRemarks(operation, TextCompareETag);
             SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
         }
         else
         {
@@ -313,6 +322,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 relationship is HasOneAttribute
                     ? $"Successfully returns the found {singularRightName} {ident}, or <c>null</c> if it was not found."
                     : $"Successfully returns the found {singularRightName} {ident}, or an empty array if none were found.");
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
         }
 
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {singularRightName} {ident} to retrieve.");
@@ -421,6 +431,31 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
     private static void SetResponseDescription(OpenApiResponses responses, HttpStatusCode statusCode, string description)
     {
+        OpenApiResponse response = GetOrCreateResponse(responses, statusCode);
+        response.Description = XmlCommentsTextHelper.Humanize(description);
+    }
+
+    private static void SetResponseHeaderETag(OpenApiResponses responses, HttpStatusCode statusCode)
+    {
+        OpenApiResponse response = GetOrCreateResponse(responses, statusCode);
+        response.Headers[HeaderNames.ETag] = new OpenApiHeader
+        {
+            Description = "ETag identifying the version of the fetched resource.",
+            Example = new OpenApiString("\"33a64df551425fcc55e4d42a148795d9f25f89d4\""),
+        };
+    }
+
+    private static void SetResponseHeaderLocation(OpenApiResponses responses, HttpStatusCode statusCode)
+    {
+        OpenApiResponse response = GetOrCreateResponse(responses, statusCode);
+        response.Headers[HeaderNames.Location] = new OpenApiHeader
+        {
+            Description = "Location of the newly created resource.",
+        };
+    }
+
+    private static OpenApiResponse GetOrCreateResponse(OpenApiResponses responses, HttpStatusCode statusCode)
+    {
         string responseCode = ((int)statusCode).ToString();
 
         if (!responses.TryGetValue(responseCode, out OpenApiResponse? response))
@@ -429,7 +464,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             responses.Add(responseCode, response);
         }
 
-        response.Description = XmlCommentsTextHelper.Humanize(description);
+        return response;
     }
 
     private static void AddQueryStringParameters(OpenApiOperation operation, bool isRelationshipEndpoint)
