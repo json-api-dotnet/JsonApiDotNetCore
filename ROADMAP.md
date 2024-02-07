@@ -21,3 +21,5 @@ Please give us feedback that will give us insight on the following points:
 * Existing features that are missing some capability or otherwise don't work well enough.
 * Missing features that should be added to the product.
 * Design choices for a feature that is currently in-progress.
+
+Please consider to [sponsor the project](https://github.com/sponsors/json-api-dotnet).
