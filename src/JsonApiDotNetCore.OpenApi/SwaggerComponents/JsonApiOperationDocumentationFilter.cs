@@ -447,6 +447,10 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         {
             Description = "ETag identifying the version of the fetched resource.",
             Required = true,
+            Schema = new OpenApiSchema
+            {
+                Type = "string"
+            },
             Example = new OpenApiString("\"33a64df551425fcc55e4d42a148795d9f25f89d4\"")
         };
     }
@@ -458,7 +462,11 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         response.Headers[HeaderNames.Location] = new OpenApiHeader
         {
             Description = "Location of the newly created resource.",
-            Required = true
+            Required = true,
+            Schema = new OpenApiSchema
+            {
+                Type = "string"
+            }
         };
     }
 
