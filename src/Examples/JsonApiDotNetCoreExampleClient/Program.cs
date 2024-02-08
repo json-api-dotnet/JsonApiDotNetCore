@@ -12,7 +12,7 @@ using var httpClient = new HttpClient();
 
 var apiClient = new ExampleApiClient(httpClient);
 
-PersonCollectionResponseDocument getResponse = await apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
+JsonApiResponse<PersonCollectionResponseDocument> getResponse = await apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
 {
     ["filter"] = "has(assignedTodoItems)",
     ["sort"] = "-lastName",
@@ -20,9 +20,9 @@ PersonCollectionResponseDocument getResponse = await apiClient.GetPersonCollecti
     ["include"] = "assignedTodoItems.tags"
 });
 
-foreach (PersonDataInResponse person in getResponse.Data)
+foreach (PersonDataInResponse person in getResponse.Result.Data)
 {
-    PrintPerson(person, getResponse.Included);
+    PrintPerson(person, getResponse.Result.Included);
 }
 
 var patchRequest = new PersonPatchRequestDocument
