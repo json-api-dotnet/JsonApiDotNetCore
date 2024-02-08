@@ -38,6 +38,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -89,6 +90,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
@@ -138,7 +140,8 @@
             "description": "The resource was successfully created, which resulted in additional changes. The newly created resource is returned.",
             "headers": {
               "Location": {
-                "description": "Location of the newly created resource."
+                "description": "Location of the newly created resource.",
+                "required": true
               }
             },
             "content": {
@@ -232,6 +235,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -302,6 +306,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
@@ -485,6 +490,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -555,6 +561,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
@@ -605,6 +612,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -675,6 +683,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
@@ -792,6 +801,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -862,6 +872,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
@@ -912,6 +923,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -982,6 +994,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
@@ -1099,6 +1112,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -1169,6 +1183,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
@@ -1219,6 +1234,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -1289,6 +1305,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
@@ -1406,6 +1423,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -1476,6 +1494,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
@@ -1526,6 +1545,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -1596,6 +1616,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
@@ -1713,6 +1734,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -1783,6 +1805,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
@@ -1833,6 +1856,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -1903,6 +1927,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
@@ -2154,6 +2179,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -2224,6 +2250,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
@@ -2274,6 +2301,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             },
@@ -2344,6 +2372,7 @@
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
