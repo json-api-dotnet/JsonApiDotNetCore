@@ -171,6 +171,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK,
                     $"Successfully returns the found {resourceType}, or an empty array if none were found.");
+
                 SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
             }
 
@@ -212,6 +213,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
         SetResponseDescription(operation.Responses, HttpStatusCode.Created,
             $"The {singularName} was successfully created, which resulted in additional changes. The newly created {singularName} is returned.");
+
         SetResponseHeaderLocation(operation.Responses, HttpStatusCode.Created);
 
         SetResponseDescription(operation.Responses, HttpStatusCode.NoContent,
@@ -287,6 +289,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 relationship is HasOneAttribute
                     ? $"Successfully returns the found {rightName}, or <c>null</c> if it was not found."
                     : $"Successfully returns the found {rightName}, or an empty array if none were found.");
+
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
         }
 
@@ -322,6 +325,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 relationship is HasOneAttribute
                     ? $"Successfully returns the found {singularRightName} {ident}, or <c>null</c> if it was not found."
                     : $"Successfully returns the found {singularRightName} {ident}, or an empty array if none were found.");
+
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
         }
 
@@ -438,21 +442,23 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
     private static void SetResponseHeaderETag(OpenApiResponses responses, HttpStatusCode statusCode)
     {
         OpenApiResponse response = GetOrCreateResponse(responses, statusCode);
+
         response.Headers[HeaderNames.ETag] = new OpenApiHeader
         {
             Description = "ETag identifying the version of the fetched resource.",
             Required = true,
-            Example = new OpenApiString("\"33a64df551425fcc55e4d42a148795d9f25f89d4\""),
+            Example = new OpenApiString("\"33a64df551425fcc55e4d42a148795d9f25f89d4\"")
         };
     }
 
     private static void SetResponseHeaderLocation(OpenApiResponses responses, HttpStatusCode statusCode)
     {
         OpenApiResponse response = GetOrCreateResponse(responses, statusCode);
+
         response.Headers[HeaderNames.Location] = new OpenApiHeader
         {
             Description = "Location of the newly created resource.",
-            Required = true,
+            Required = true
         };
     }
 
