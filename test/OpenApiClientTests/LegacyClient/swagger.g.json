@@ -35,6 +35,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found airplanes, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -79,7 +85,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -124,6 +136,11 @@
         "responses": {
           "201": {
             "description": "The airplane was successfully created, which resulted in additional changes. The newly created airplane is returned.",
+            "headers": {
+              "Location": {
+                "description": "Location of the newly created resource."
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -212,6 +229,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found airplane.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -275,7 +298,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -453,6 +482,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flights, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -516,7 +551,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -561,6 +602,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flight identities, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -624,7 +671,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -861,6 +914,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flight-attendants, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -905,7 +964,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -950,6 +1015,11 @@
         "responses": {
           "201": {
             "description": "The flight-attendant was successfully created, which resulted in additional changes. The newly created flight-attendant is returned.",
+            "headers": {
+              "Location": {
+                "description": "Location of the newly created resource."
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1038,6 +1108,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flight-attendant.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1101,7 +1177,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -1279,6 +1361,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flights, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1342,7 +1430,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -1387,6 +1481,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flight identities, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1450,7 +1550,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -1696,6 +1802,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flights, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1759,7 +1871,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -1804,6 +1922,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flight identities, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1867,7 +1991,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -2104,6 +2234,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flights, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2148,7 +2284,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -2193,6 +2335,11 @@
         "responses": {
           "201": {
             "description": "The flight was successfully created, which resulted in additional changes. The newly created flight is returned.",
+            "headers": {
+              "Location": {
+                "description": "Location of the newly created resource."
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2281,6 +2428,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flight.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2344,7 +2497,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -2522,6 +2681,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flight-attendant, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2585,7 +2750,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -2630,6 +2801,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flight-attendant identity, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2693,7 +2870,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -2805,6 +2988,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flight-attendants, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2868,7 +3057,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -2913,6 +3108,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flight-attendant identities, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2976,7 +3177,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -3222,6 +3429,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found passengers, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -3285,7 +3498,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -3330,6 +3549,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found passenger identities, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -3393,7 +3618,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -3639,6 +3870,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flight-attendant, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -3702,7 +3939,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -3747,6 +3990,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found flight-attendant identity, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -3810,7 +4059,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -3913,6 +4168,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found passengers, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -3957,7 +4218,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -4002,6 +4269,11 @@
         "responses": {
           "201": {
             "description": "The passenger was successfully created, which resulted in additional changes. The newly created passenger is returned.",
+            "headers": {
+              "Location": {
+                "description": "Location of the newly created resource."
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -4090,6 +4362,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found passenger.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -4153,7 +4431,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."

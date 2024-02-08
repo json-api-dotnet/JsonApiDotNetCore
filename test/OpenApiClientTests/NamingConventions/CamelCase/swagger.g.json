@@ -35,6 +35,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found staffMembers, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -79,7 +85,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -124,6 +136,11 @@
         "responses": {
           "201": {
             "description": "The staffMember was successfully created, which resulted in additional changes. The newly created staffMember is returned.",
+            "headers": {
+              "Location": {
+                "description": "Location of the newly created resource."
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -212,6 +229,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found staffMember.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -275,7 +298,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -444,6 +473,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found supermarkets, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -488,7 +523,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -533,6 +574,11 @@
         "responses": {
           "201": {
             "description": "The supermarket was successfully created, which resulted in additional changes. The newly created supermarket is returned.",
+            "headers": {
+              "Location": {
+                "description": "Location of the newly created resource."
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -621,6 +667,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found supermarket.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -684,7 +736,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -862,6 +920,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found staffMember, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -925,7 +989,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -970,6 +1040,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found staffMember identity, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1033,7 +1109,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -1145,6 +1227,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found staffMembers, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1208,7 +1296,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -1253,6 +1347,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found staffMember identities, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1316,7 +1416,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -1562,6 +1668,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found staffMember, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1625,7 +1737,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
@@ -1670,6 +1788,12 @@
         "responses": {
           "200": {
             "description": "Successfully returns the found staffMember identity, or `null` if it was not found.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            },
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1733,7 +1857,13 @@
         ],
         "responses": {
           "200": {
-            "description": "The operation completed successfully."
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
           },
           "400": {
             "description": "The query string is invalid."
