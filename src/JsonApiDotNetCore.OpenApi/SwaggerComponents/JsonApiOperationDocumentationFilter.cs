@@ -545,8 +545,11 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             Required = false,
             Schema = new OpenApiSchema
             {
-                Type = "string"
-            }
+                Type = "string",
+                Default = new OpenApiString(null),
+                Nullable = true,
+            },
+            Example = new OpenApiString("\"33a64df551425fcc55e4d42a148795d9f25f89d4\"")
         });
     }
 }

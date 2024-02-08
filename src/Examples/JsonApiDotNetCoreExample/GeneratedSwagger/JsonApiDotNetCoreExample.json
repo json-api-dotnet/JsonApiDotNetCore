@@ -36,8 +36,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -112,8 +115,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -284,8 +290,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -379,8 +388,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -587,8 +599,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -682,8 +697,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -757,8 +775,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -852,8 +873,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -1128,8 +1152,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -1223,8 +1250,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -1298,8 +1328,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -1393,8 +1426,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -1660,8 +1696,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -1736,8 +1775,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -1908,8 +1950,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -2003,8 +2048,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -2211,8 +2259,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -2306,8 +2357,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -2381,8 +2435,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -2476,8 +2533,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -2743,8 +2803,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -2819,8 +2882,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -2991,8 +3057,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -3086,8 +3155,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -3294,8 +3366,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -3389,8 +3464,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -3464,8 +3542,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -3559,8 +3640,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -3701,8 +3785,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -3796,8 +3883,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -3871,8 +3961,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -3966,8 +4059,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -4108,8 +4204,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -4203,8 +4302,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -4278,8 +4380,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -4373,8 +4478,11 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "default": null,
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {

@@ -1,5 +1,8 @@
 using JsonApiDotNetCore.OpenApi.Client;
+using JsonApiDotNetCore.OpenApi.Client.Exceptions;
 using JsonApiDotNetCoreExampleClient;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 
 #if DEBUG
 using var httpClient = new HttpClient(new ColoredConsoleLogDelegatingHandler
@@ -12,13 +15,15 @@ using var httpClient = new HttpClient();
 
 var apiClient = new ExampleApiClient(httpClient);
 
-JsonApiResponse<PersonCollectionResponseDocument> getResponse = await apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
+JsonApiResponse<PersonCollectionResponseDocument> getResponse = await GetPersonCollectionAsync(apiClient);
+
+try
 {
-    ["filter"] = "has(assignedTodoItems)",
-    ["sort"] = "-lastName",
-    ["page[size]"] = "5",
-    ["include"] = "assignedTodoItems.tags"
-});
+    getResponse = await GetPersonCollectionAsync(apiClient, getResponse.Headers[HeaderNames.ETag].First());
+}
+catch (ApiException exception) when (exception.StatusCode == StatusCodes.Status304NotModified)
+{
+}
 
 foreach (PersonDataInResponse person in getResponse.Result.Data)
 {
@@ -46,6 +51,19 @@ using (apiClient.WithPartialAttributeSerialization<PersonPatchRequestDocument, P
 
 Console.WriteLine("Press any key to close.");
 Console.ReadKey();
+
+#pragma warning disable AV1553
+static Task<JsonApiResponse<PersonCollectionResponseDocument>> GetPersonCollectionAsync(ExampleApiClient apiClient, string? ifNoneMatch = null)
+#pragma warning restore AV1553
+{
+    return apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
+    {
+        ["filter"] = "has(assignedTodoItems)",
+        ["sort"] = "-lastName",
+        ["page[size]"] = "5",
+        ["include"] = "assignedTodoItems.tags"
+    }, ifNoneMatch);
+}
 
 static void PrintPerson(PersonDataInResponse person, ICollection<DataInResponse> includes)
 {

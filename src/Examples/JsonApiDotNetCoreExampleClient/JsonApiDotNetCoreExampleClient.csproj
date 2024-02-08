@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <OpenApiReference Include="..\JsonApiDotNetCoreExample\GeneratedSwagger\JsonApiDotNetCoreExample.json" CodeGenerator="NSwagCSharp" ClassName="ExampleApiClient">
-      <Options>/GenerateExceptionClasses:false /WrapResponses:true /ResponseClass:JsonApiResponse /GenerateOptionalParameters:true /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+      <Options>/GenerateExceptionClasses:false /WrapResponses:true /ResponseClass:JsonApiResponse /GenerateOptionalParameters:true /GenerateNullableReferenceTypes:true /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
     </OpenApiReference>
   </ItemGroup>
 </Project>

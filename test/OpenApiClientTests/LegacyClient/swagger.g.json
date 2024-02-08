@@ -30,6 +30,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -50,6 +58,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/airplane-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -85,11 +106,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -236,6 +278,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -256,6 +306,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/airplane-primary-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -310,11 +373,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -497,6 +581,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -517,6 +609,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -571,11 +676,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -625,6 +751,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -645,6 +779,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-identifier-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -699,11 +846,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -945,6 +1113,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -965,6 +1141,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-attendant-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -1000,11 +1189,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -1151,6 +1361,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1171,6 +1389,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-attendant-primary-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -1225,11 +1456,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -1412,6 +1664,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1432,6 +1692,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -1486,11 +1759,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -1540,6 +1834,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1560,6 +1862,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-identifier-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -1614,11 +1929,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -1869,6 +2205,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1889,6 +2233,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -1943,11 +2300,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -1997,6 +2375,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2017,6 +2403,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-identifier-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -2071,11 +2470,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -2317,6 +2737,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2337,6 +2765,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -2372,11 +2813,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -2523,6 +2985,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2543,6 +3013,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-primary-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -2597,11 +3080,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -2784,6 +3288,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2804,6 +3316,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/nullable-flight-attendant-secondary-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -2858,11 +3383,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -2912,6 +3458,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2932,6 +3486,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/nullable-flight-attendant-identifier-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -2986,11 +3553,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -3107,6 +3695,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3127,6 +3723,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-attendant-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -3181,11 +3790,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -3235,6 +3865,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3255,6 +3893,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-attendant-identifier-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -3309,11 +3960,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -3564,6 +4236,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3584,6 +4264,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/passenger-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -3638,11 +4331,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -3692,6 +4406,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3712,6 +4434,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/passenger-identifier-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -3766,11 +4501,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -4021,6 +4777,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4041,6 +4805,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-attendant-secondary-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -4095,11 +4872,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -4149,6 +4947,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4169,6 +4975,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/flight-attendant-identifier-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -4223,11 +5042,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -4335,6 +5175,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4355,6 +5203,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/passenger-collection-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -4390,11 +5251,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
@@ -4541,6 +5423,14 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4561,6 +5451,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/passenger-primary-response-document"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           },
@@ -4615,11 +5518,32 @@
               },
               "example": ""
             }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "ETag identifying the version of the requested resource.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
             "headers": {
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
