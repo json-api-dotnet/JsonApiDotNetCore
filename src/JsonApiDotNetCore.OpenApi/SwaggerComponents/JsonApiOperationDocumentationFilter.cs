@@ -31,6 +31,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.";
 
     private const string TextCompletedSuccessfully = "The operation completed successfully.";
+    private const string TextNotModified = "The resource was not modified.";
     private const string TextQueryStringBad = "The query string is invalid.";
     private const string TextRequestBodyBad = "The request body is missing or malformed.";
     private const string TextQueryStringOrRequestBodyBad = "The query string is invalid or the request body is missing or malformed.";
@@ -164,6 +165,8 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 SetOperationRemarks(operation, TextCompareETag);
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
                 SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+                SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
             }
             else
             {
@@ -173,9 +176,12 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                     $"Successfully returns the found {resourceType}, or an empty array if none were found.");
 
                 SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+                SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
             }
 
             AddQueryStringParameters(operation, false);
+            AddHeaderParameterIfNoneMatch(operation);
             SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         }
         else if (operation.Parameters.Count == 1)
@@ -188,16 +194,21 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 SetOperationRemarks(operation, TextCompareETag);
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
                 SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+                SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
             }
             else
             {
                 SetOperationSummary(operation, $"Retrieves an individual {singularName} by its identifier.");
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK, $"Successfully returns the found {singularName}.");
                 SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+                SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
             }
 
             SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularName} to retrieve.");
             AddQueryStringParameters(operation, false);
+            AddHeaderParameterIfNoneMatch(operation);
             SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
             SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularName} does not exist.");
         }
@@ -280,6 +291,8 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             SetOperationRemarks(operation, TextCompareETag);
             SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+            SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
         }
         else
         {
@@ -291,10 +304,13 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                     : $"Successfully returns the found {rightName}, or an empty array if none were found.");
 
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+            SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
         }
 
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {rightName} to retrieve.");
         AddQueryStringParameters(operation, false);
+        AddHeaderParameterIfNoneMatch(operation);
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
     }
@@ -315,6 +331,8 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             SetOperationRemarks(operation, TextCompareETag);
             SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+            SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
         }
         else
         {
@@ -327,10 +345,13 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                     : $"Successfully returns the found {singularRightName} {ident}, or an empty array if none were found.");
 
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+            SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
         }
 
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {singularRightName} {ident} to retrieve.");
         AddQueryStringParameters(operation, true);
+        AddHeaderParameterIfNoneMatch(operation);
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
     }
@@ -435,13 +456,13 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
     private static void SetResponseDescription(OpenApiResponses responses, HttpStatusCode statusCode, string description)
     {
-        OpenApiResponse response = GetOrCreateResponse(responses, statusCode);
+        OpenApiResponse response = GetOrAddResponse(responses, statusCode);
         response.Description = XmlCommentsTextHelper.Humanize(description);
     }
 
     private static void SetResponseHeaderETag(OpenApiResponses responses, HttpStatusCode statusCode)
     {
-        OpenApiResponse response = GetOrCreateResponse(responses, statusCode);
+        OpenApiResponse response = GetOrAddResponse(responses, statusCode);
 
         response.Headers[HeaderNames.ETag] = new OpenApiHeader
         {
@@ -457,7 +478,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
     private static void SetResponseHeaderLocation(OpenApiResponses responses, HttpStatusCode statusCode)
     {
-        OpenApiResponse response = GetOrCreateResponse(responses, statusCode);
+        OpenApiResponse response = GetOrAddResponse(responses, statusCode);
 
         response.Headers[HeaderNames.Location] = new OpenApiHeader
         {
@@ -470,7 +491,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         };
     }
 
-    private static OpenApiResponse GetOrCreateResponse(OpenApiResponses responses, HttpStatusCode statusCode)
+    private static OpenApiResponse GetOrAddResponse(OpenApiResponses responses, HttpStatusCode statusCode)
     {
         string responseCode = ((int)statusCode).ToString();
 
@@ -511,6 +532,21 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 Example = new OpenApiString(string.Empty)
             },
             Description = isRelationshipEndpoint ? RelationshipQueryStringParameters : ResourceQueryStringParameters
+        });
+    }
+
+    private static void AddHeaderParameterIfNoneMatch(OpenApiOperation operation)
+    {
+        operation.Parameters.Add(new OpenApiParameter
+        {
+            In = ParameterLocation.Header,
+            Name = "If-None-Match",
+            Description = "ETag identifying the version of the requested resource.",
+            Required = false,
+            Schema = new OpenApiSchema
+            {
+                Type = "string"
+            }
         });
     }
 }

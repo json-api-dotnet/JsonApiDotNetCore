@@ -2,6 +2,7 @@
   <PropertyGroup>
     <!-- TargetFrameworks does not work, see https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2706 -->
     <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
@@ -25,7 +26,7 @@
 
   <ItemGroup>
     <OpenApiReference Include="..\JsonApiDotNetCoreExample\GeneratedSwagger\JsonApiDotNetCoreExample.json" CodeGenerator="NSwagCSharp" ClassName="ExampleApiClient">
-      <Options>/GenerateExceptionClasses:false /WrapResponses:true /ResponseClass:JsonApiResponse /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+      <Options>/GenerateExceptionClasses:false /WrapResponses:true /ResponseClass:JsonApiResponse /GenerateOptionalParameters:true /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
     </OpenApiReference>
   </ItemGroup>
 </Project>
