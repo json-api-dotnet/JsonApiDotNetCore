@@ -1,8 +1,6 @@
-using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.SwaggerComponents;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -36,18 +34,14 @@ public static class ServiceCollectionExtensions
     private static void AddCustomApiExplorer(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
     {
         services.TryAddSingleton<ResourceFieldValidationMetadataProvider>();
+        services.AddSingleton<JsonApiActionDescriptorCollectionProvider>();
 
-        services.TryAddSingleton<IApiDescriptionGroupCollectionProvider>(provider =>
+        services.TryAddSingleton<IApiDescriptionGroupCollectionProvider>(serviceProvider =>
         {
-            var controllerResourceMapping = provider.GetRequiredService<IControllerResourceMapping>();
-            var actionDescriptorCollectionProvider = provider.GetRequiredService<IActionDescriptorCollectionProvider>();
-            var apiDescriptionProviders = provider.GetRequiredService<IEnumerable<IApiDescriptionProvider>>();
-            var resourceFieldValidationMetadataProvider = provider.GetRequiredService<ResourceFieldValidationMetadataProvider>();
+            var actionDescriptorCollectionProvider = serviceProvider.GetRequiredService<JsonApiActionDescriptorCollectionProvider>();
+            var apiDescriptionProviders = serviceProvider.GetRequiredService<IEnumerable<IApiDescriptionProvider>>();
 
-            JsonApiActionDescriptorCollectionProvider jsonApiActionDescriptorCollectionProvider =
-                new(controllerResourceMapping, actionDescriptorCollectionProvider, resourceFieldValidationMetadataProvider);
-
-            return new ApiDescriptionGroupCollectionProvider(jsonApiActionDescriptorCollectionProvider, apiDescriptionProviders);
+            return new ApiDescriptionGroupCollectionProvider(actionDescriptorCollectionProvider, apiDescriptionProviders);
         });
 
         mvcBuilder.AddApiExplorer();
