@@ -15,7 +15,7 @@ public static class ApiResponse
 
         try
         {
-            return await operation();
+            return await operation().ConfigureAwait(false);
         }
         catch (ApiException exception) when (exception.StatusCode == 204)
         {
@@ -30,7 +30,7 @@ public static class ApiResponse
 
         try
         {
-            await operation();
+            await operation().ConfigureAwait(false);
         }
         catch (ApiException exception) when (exception.StatusCode == 204)
         {
