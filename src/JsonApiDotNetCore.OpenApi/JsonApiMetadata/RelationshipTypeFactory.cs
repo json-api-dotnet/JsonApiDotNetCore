@@ -5,14 +5,16 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 
 internal sealed class RelationshipTypeFactory
 {
-    private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
     private readonly NonPrimaryDocumentTypeFactory _nonPrimaryDocumentTypeFactory;
+    private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
 
-    public RelationshipTypeFactory(ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
+    public RelationshipTypeFactory(NonPrimaryDocumentTypeFactory nonPrimaryDocumentTypeFactory,
+        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
     {
+        ArgumentGuard.NotNull(nonPrimaryDocumentTypeFactory);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
 
-        _nonPrimaryDocumentTypeFactory = new NonPrimaryDocumentTypeFactory(resourceFieldValidationMetadataProvider);
+        _nonPrimaryDocumentTypeFactory = nonPrimaryDocumentTypeFactory;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
     }
 

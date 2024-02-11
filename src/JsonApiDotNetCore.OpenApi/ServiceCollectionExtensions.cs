@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.SwaggerComponents;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -23,8 +24,6 @@ public static class ServiceCollectionExtensions
         AddCustomSwaggerComponents(services);
         AddSwaggerGenerator(services);
 
-        services.AddTransient<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
-
         if (setupSwaggerGenAction != null)
         {
             services.Configure(setupSwaggerGenAction);
@@ -33,8 +32,13 @@ public static class ServiceCollectionExtensions
 
     private static void AddCustomApiExplorer(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
     {
+        services.TryAddSingleton<OpenApiEndpointConvention>();
+        services.TryAddSingleton<JsonApiRequestFormatMetadataProvider>();
+        services.TryAddSingleton<EndpointResolver>();
+        services.TryAddSingleton<JsonApiEndpointMetadataProvider>();
+        services.TryAddSingleton<JsonApiActionDescriptorCollectionProvider>();
+        services.TryAddSingleton<NonPrimaryDocumentTypeFactory>();
         services.TryAddSingleton<ResourceFieldValidationMetadataProvider>();
-        services.AddSingleton<JsonApiActionDescriptorCollectionProvider>();
 
         services.TryAddSingleton<IApiDescriptionGroupCollectionProvider>(serviceProvider =>
         {
@@ -46,7 +50,7 @@ public static class ServiceCollectionExtensions
 
         mvcBuilder.AddApiExplorer();
 
-        mvcBuilder.AddMvcOptions(options => options.InputFormatters.Add(new JsonApiRequestFormatMetadataProvider()));
+        services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
     }
 
     private static void AddCustomSwaggerComponents(IServiceCollection services)
@@ -61,6 +65,8 @@ public static class ServiceCollectionExtensions
     private static void AddSwaggerGenerator(IServiceCollection services)
     {
         AddSchemaGenerators(services);
+
+        services.TryAddSingleton<RelationshipTypeFactory>();
 
         services.AddSwaggerGen();
         services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();

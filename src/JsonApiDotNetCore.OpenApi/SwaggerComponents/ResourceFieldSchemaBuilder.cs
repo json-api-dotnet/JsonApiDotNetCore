@@ -35,27 +35,29 @@ internal sealed class ResourceFieldSchemaBuilder
     private readonly ResourceIdentifierSchemaGenerator _resourceIdentifierSchemaGenerator;
     private readonly ResourceTypeInfo _resourceTypeInfo;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
-    private readonly SchemaRepository _resourceSchemaRepository = new();
     private readonly RelationshipTypeFactory _relationshipTypeFactory;
+
+    private readonly SchemaRepository _resourceSchemaRepository = new();
+    private readonly ResourceDocumentationReader _resourceDocumentationReader = new();
     private readonly IDictionary<string, OpenApiSchema> _schemasForResourceFields;
-    private readonly ResourceDocumentationReader _resourceDocumentationReader;
 
     public ResourceFieldSchemaBuilder(SchemaGenerator defaultSchemaGenerator, ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator,
-        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, ResourceTypeInfo resourceTypeInfo)
+        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, RelationshipTypeFactory relationshipTypeFactory,
+        ResourceTypeInfo resourceTypeInfo)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(resourceIdentifierSchemaGenerator);
         ArgumentGuard.NotNull(resourceTypeInfo);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
+        ArgumentGuard.NotNull(relationshipTypeFactory);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
         _resourceIdentifierSchemaGenerator = resourceIdentifierSchemaGenerator;
         _resourceTypeInfo = resourceTypeInfo;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
+        _relationshipTypeFactory = relationshipTypeFactory;
 
-        _relationshipTypeFactory = new RelationshipTypeFactory(resourceFieldValidationMetadataProvider);
         _schemasForResourceFields = GetFieldSchemas();
-        _resourceDocumentationReader = new ResourceDocumentationReader();
     }
 
     private IDictionary<string, OpenApiSchema> GetFieldSchemas()

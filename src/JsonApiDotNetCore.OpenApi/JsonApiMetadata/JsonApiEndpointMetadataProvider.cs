@@ -12,18 +12,20 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 /// </summary>
 internal sealed class JsonApiEndpointMetadataProvider
 {
+    private readonly EndpointResolver _endpointResolver;
     private readonly IControllerResourceMapping _controllerResourceMapping;
-    private readonly EndpointResolver _endpointResolver = new();
     private readonly NonPrimaryDocumentTypeFactory _nonPrimaryDocumentTypeFactory;
 
-    public JsonApiEndpointMetadataProvider(IControllerResourceMapping controllerResourceMapping,
-        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
+    public JsonApiEndpointMetadataProvider(EndpointResolver endpointResolver, IControllerResourceMapping controllerResourceMapping,
+        NonPrimaryDocumentTypeFactory nonPrimaryDocumentTypeFactory)
     {
+        ArgumentGuard.NotNull(endpointResolver);
         ArgumentGuard.NotNull(controllerResourceMapping);
-        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
+        ArgumentGuard.NotNull(nonPrimaryDocumentTypeFactory);
 
-        _nonPrimaryDocumentTypeFactory = new NonPrimaryDocumentTypeFactory(resourceFieldValidationMetadataProvider);
+        _endpointResolver = endpointResolver;
         _controllerResourceMapping = controllerResourceMapping;
+        _nonPrimaryDocumentTypeFactory = nonPrimaryDocumentTypeFactory;
     }
 
     public JsonApiEndpointMetadataContainer Get(MethodInfo controllerAction)

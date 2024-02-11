@@ -7,22 +7,28 @@ namespace JsonApiDotNetCore.OpenApi;
 
 internal sealed class ConfigureMvcOptions : IConfigureOptions<MvcOptions>
 {
-    private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly IJsonApiRoutingConvention _jsonApiRoutingConvention;
+    private readonly OpenApiEndpointConvention _openApiEndpointConvention;
+    private readonly JsonApiRequestFormatMetadataProvider _jsonApiRequestFormatMetadataProvider;
 
-    public ConfigureMvcOptions(IControllerResourceMapping controllerResourceMapping, IJsonApiRoutingConvention jsonApiRoutingConvention)
+    public ConfigureMvcOptions(IJsonApiRoutingConvention jsonApiRoutingConvention, OpenApiEndpointConvention openApiEndpointConvention,
+        JsonApiRequestFormatMetadataProvider jsonApiRequestFormatMetadataProvider)
     {
-        ArgumentGuard.NotNull(controllerResourceMapping);
         ArgumentGuard.NotNull(jsonApiRoutingConvention);
+        ArgumentGuard.NotNull(openApiEndpointConvention);
+        ArgumentGuard.NotNull(jsonApiRequestFormatMetadataProvider);
 
-        _controllerResourceMapping = controllerResourceMapping;
         _jsonApiRoutingConvention = jsonApiRoutingConvention;
+        _openApiEndpointConvention = openApiEndpointConvention;
+        _jsonApiRequestFormatMetadataProvider = jsonApiRequestFormatMetadataProvider;
     }
 
     public void Configure(MvcOptions options)
     {
         AddSwashbuckleCliCompatibility(options);
-        AddOpenApiEndpointConvention(options);
+
+        options.InputFormatters.Add(_jsonApiRequestFormatMetadataProvider);
+        options.Conventions.Add(_openApiEndpointConvention);
     }
 
     private void AddSwashbuckleCliCompatibility(MvcOptions options)
@@ -32,11 +38,5 @@ internal sealed class ConfigureMvcOptions : IConfigureOptions<MvcOptions>
             // See https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1957 for why this is needed.
             options.Conventions.Insert(0, _jsonApiRoutingConvention);
         }
-    }
-
-    private void AddOpenApiEndpointConvention(MvcOptions options)
-    {
-        var convention = new OpenApiEndpointConvention(_controllerResourceMapping);
-        options.Conventions.Add(convention);
     }
 }

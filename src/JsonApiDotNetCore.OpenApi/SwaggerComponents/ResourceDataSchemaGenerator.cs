@@ -1,4 +1,5 @@
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -24,11 +25,13 @@ internal sealed class ResourceDataSchemaGenerator
     private readonly IResourceGraph _resourceGraph;
     private readonly IJsonApiOptions _options;
     private readonly ResourceFieldValidationMetadataProvider _resourceFieldValidationMetadataProvider;
+    private readonly RelationshipTypeFactory _relationshipTypeFactory;
     private readonly ResourceDocumentationReader _resourceDocumentationReader;
 
     public ResourceDataSchemaGenerator(SchemaGenerator defaultSchemaGenerator, ResourceTypeSchemaGenerator resourceTypeSchemaGenerator,
         ResourceIdentifierSchemaGenerator resourceIdentifierSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options,
-        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, ResourceDocumentationReader resourceDocumentationReader)
+        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider, RelationshipTypeFactory relationshipTypeFactory,
+        ResourceDocumentationReader resourceDocumentationReader)
     {
         ArgumentGuard.NotNull(defaultSchemaGenerator);
         ArgumentGuard.NotNull(resourceTypeSchemaGenerator);
@@ -36,6 +39,7 @@ internal sealed class ResourceDataSchemaGenerator
         ArgumentGuard.NotNull(resourceGraph);
         ArgumentGuard.NotNull(options);
         ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
+        ArgumentGuard.NotNull(relationshipTypeFactory);
         ArgumentGuard.NotNull(resourceDocumentationReader);
 
         _defaultSchemaGenerator = defaultSchemaGenerator;
@@ -44,7 +48,7 @@ internal sealed class ResourceDataSchemaGenerator
         _resourceGraph = resourceGraph;
         _options = options;
         _resourceFieldValidationMetadataProvider = resourceFieldValidationMetadataProvider;
-
+        _relationshipTypeFactory = relationshipTypeFactory;
         _resourceDocumentationReader = resourceDocumentationReader;
     }
 
@@ -65,7 +69,7 @@ internal sealed class ResourceDataSchemaGenerator
         var resourceTypeInfo = ResourceTypeInfo.Create(resourceDataConstructedType, _resourceGraph);
 
         var fieldSchemaBuilder = new ResourceFieldSchemaBuilder(_defaultSchemaGenerator, _resourceIdentifierSchemaGenerator,
-            _resourceFieldValidationMetadataProvider, resourceTypeInfo);
+            _resourceFieldValidationMetadataProvider, _relationshipTypeFactory, resourceTypeInfo);
 
         OpenApiSchema effectiveFullSchemaForResourceData =
             fullSchemaForResourceData.AllOf.Count == 0 ? fullSchemaForResourceData : fullSchemaForResourceData.AllOf[1];

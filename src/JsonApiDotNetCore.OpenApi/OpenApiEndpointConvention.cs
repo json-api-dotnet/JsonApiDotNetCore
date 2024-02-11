@@ -16,13 +16,15 @@ namespace JsonApiDotNetCore.OpenApi;
 internal sealed class OpenApiEndpointConvention : IActionModelConvention
 {
     private readonly IControllerResourceMapping _controllerResourceMapping;
-    private readonly EndpointResolver _endpointResolver = new();
+    private readonly EndpointResolver _endpointResolver;
 
-    public OpenApiEndpointConvention(IControllerResourceMapping controllerResourceMapping)
+    public OpenApiEndpointConvention(IControllerResourceMapping controllerResourceMapping, EndpointResolver endpointResolver)
     {
         ArgumentGuard.NotNull(controllerResourceMapping);
+        ArgumentGuard.NotNull(endpointResolver);
 
         _controllerResourceMapping = controllerResourceMapping;
+        _endpointResolver = endpointResolver;
     }
 
     public void Apply(ActionModel action)
