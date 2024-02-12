@@ -1,10 +1,10 @@
 using System.Globalization;
 using System.Net;
 using FluentAssertions;
-using FluentAssertions.Specialized;
 using JsonApiDotNetCore.OpenApi.Client;
 using JsonApiDotNetCore.OpenApi.Client.Exceptions;
 using OpenApiClientTests.LegacyClient.GeneratedCode;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace OpenApiClientTests.LegacyClient;
@@ -207,7 +207,7 @@ public sealed class ResponseTests
                 {
                   "id": "f1a520ac-02a0-466b-94ea-86cbaa86f02f",
                   "status": "404",
-                  "destination": "The requested resource does not exist.",
+                  "title": "The requested resource does not exist.",
                   "detail": "Resource of type 'flights' with ID '{{flightId}}' does not exist."
                 }
               ]
@@ -221,10 +221,16 @@ public sealed class ResponseTests
         Func<Task<FlightPrimaryResponseDocument>> action = () => apiClient.GetFlightAsync(flightId, null);
 
         // Assert
-        ExceptionAssertions<ApiException> assertion = await action.Should().ThrowExactlyAsync<ApiException>();
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        exception.Result.Errors.ShouldHaveCount(1);
 
-        assertion.Which.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
-        assertion.Which.Response.Should().Be(responseBody);
+        ErrorObject? error = exception.Result.Errors.ElementAt(0);
+        error.Id.Should().Be("f1a520ac-02a0-466b-94ea-86cbaa86f02f");
+        error.Status.Should().Be("404");
+        error.Title.Should().Be("The requested resource does not exist.");
+        error.Detail.Should().Be($"Resource of type 'flights' with ID '{flightId}' does not exist.");
+        error.Source.Should().BeNull();
     }
 
     [Fact]

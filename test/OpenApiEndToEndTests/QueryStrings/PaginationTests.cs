@@ -139,10 +139,17 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
         Func<Task> action = async () => _ = await apiClient.GetNodeAsync(Unknown.StringId.Int64, queryString);
 
         // Assert
-        ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        exception.Message.Should().StartWith("The query string is invalid.");
-        exception.Message.Should().Contain("Missing value for 'page[size]' query string parameter.");
+        exception.Message.Should().Be("HTTP 400: The query string is invalid.");
+        exception.Result.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("400");
+        error.Title.Should().Be("Missing query string parameter value.");
+        error.Detail.Should().Be("Missing value for 'page[size]' query string parameter.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("page[size]");
     }
 
     [Fact]
@@ -161,9 +168,16 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
         Func<Task> action = async () => _ = await apiClient.GetNodeAsync(Unknown.StringId.Int64, queryString);
 
         // Assert
-        ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        exception.Message.Should().StartWith("The query string is invalid.");
-        exception.Message.Should().Contain("Missing value for 'page[number]' query string parameter.");
+        exception.Message.Should().Be("HTTP 400: The query string is invalid.");
+        exception.Result.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("400");
+        error.Title.Should().Be("Missing query string parameter value.");
+        error.Detail.Should().Be("Missing value for 'page[number]' query string parameter.");
+        error.Source.ShouldNotBeNull();
+        error.Source.Parameter.Should().Be("page[number]");
     }
 }

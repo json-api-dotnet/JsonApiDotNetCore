@@ -1,10 +1,11 @@
+using System.Net;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using JsonApiDotNetCore.Resources.Annotations;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
@@ -17,14 +18,17 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 {
     private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly EndpointResolver _endpointResolver;
+    private readonly IJsonApiOptions _options;
 
-    public OpenApiEndpointConvention(IControllerResourceMapping controllerResourceMapping, EndpointResolver endpointResolver)
+    public OpenApiEndpointConvention(IControllerResourceMapping controllerResourceMapping, EndpointResolver endpointResolver, IJsonApiOptions options)
     {
         ArgumentGuard.NotNull(controllerResourceMapping);
         ArgumentGuard.NotNull(endpointResolver);
+        ArgumentGuard.NotNull(options);
 
         _controllerResourceMapping = controllerResourceMapping;
         _endpointResolver = endpointResolver;
+        _options = options;
     }
 
     public void Apply(ActionModel action)
@@ -41,25 +45,25 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             return;
         }
 
-        if (ShouldSuppressEndpoint(endpoint.Value, action.Controller.ControllerType))
-        {
-            action.ApiExplorer.IsVisible = false;
-            return;
-        }
-
-        SetResponseMetadata(action, endpoint.Value);
-        SetRequestMetadata(action, endpoint.Value);
-    }
-
-    private bool ShouldSuppressEndpoint(JsonApiEndpoint endpoint, Type controllerType)
-    {
-        ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(controllerType);
+        ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(action.Controller.ControllerType);
 
         if (resourceType == null)
         {
             throw new UnreachableCodeException();
         }
 
+        if (ShouldSuppressEndpoint(endpoint.Value, resourceType))
+        {
+            action.ApiExplorer.IsVisible = false;
+            return;
+        }
+
+        SetResponseMetadata(action, endpoint.Value, resourceType);
+        SetRequestMetadata(action, endpoint.Value);
+    }
+
+    private bool ShouldSuppressEndpoint(JsonApiEndpoint endpoint, ResourceType resourceType)
+    {
         if (!IsEndpointAvailable(endpoint, resourceType))
         {
             return true;
@@ -123,49 +127,84 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship;
     }
 
-    private static void SetResponseMetadata(ActionModel action, JsonApiEndpoint endpoint)
+    private void SetResponseMetadata(ActionModel action, JsonApiEndpoint endpoint, ResourceType resourceType)
     {
-        foreach (int statusCode in GetStatusCodesForEndpoint(endpoint))
-        {
-            action.Filters.Add(new ProducesResponseTypeAttribute(statusCode));
+        action.Filters.Add(new ProducesAttribute(HeaderConstants.MediaType));
 
-            switch (endpoint)
-            {
-                case JsonApiEndpoint.GetCollection when statusCode == StatusCodes.Status200OK:
-                case JsonApiEndpoint.Post when statusCode == StatusCodes.Status201Created:
-                case JsonApiEndpoint.Patch when statusCode == StatusCodes.Status200OK:
-                case JsonApiEndpoint.GetSingle when statusCode == StatusCodes.Status200OK:
-                case JsonApiEndpoint.GetSecondary when statusCode == StatusCodes.Status200OK:
-                case JsonApiEndpoint.GetRelationship when statusCode == StatusCodes.Status200OK:
-                {
-                    action.Filters.Add(new ProducesAttribute(HeaderConstants.MediaType));
-                    break;
-                }
-            }
+        foreach (HttpStatusCode statusCode in GetSuccessStatusCodesForEndpoint(endpoint))
+        {
+            // The return type is set later by JsonApiActionDescriptorCollectionProvider.
+            action.Filters.Add(new ProducesResponseTypeAttribute((int)statusCode));
+        }
+
+        foreach (HttpStatusCode statusCode in GetErrorStatusCodesForEndpoint(endpoint, resourceType))
+        {
+            action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ErrorResponseDocument), (int)statusCode));
         }
     }
 
-    private static IEnumerable<int> GetStatusCodesForEndpoint(JsonApiEndpoint endpoint)
+    private static IEnumerable<HttpStatusCode> GetSuccessStatusCodesForEndpoint(JsonApiEndpoint endpoint)
     {
         return endpoint switch
         {
-            JsonApiEndpoint.GetCollection or JsonApiEndpoint.GetSingle or JsonApiEndpoint.GetSecondary or JsonApiEndpoint.GetRelationship =>
-            [
-                StatusCodes.Status200OK
-            ],
+            JsonApiEndpoint.GetCollection or JsonApiEndpoint.GetSingle or JsonApiEndpoint.GetSecondary or JsonApiEndpoint.GetRelationship
+                => [HttpStatusCode.OK],
             JsonApiEndpoint.Post =>
             [
-                StatusCodes.Status201Created,
-                StatusCodes.Status204NoContent
+                HttpStatusCode.Created,
+                HttpStatusCode.NoContent
             ],
             JsonApiEndpoint.Patch =>
             [
-                StatusCodes.Status200OK,
-                StatusCodes.Status204NoContent
+                HttpStatusCode.OK,
+                HttpStatusCode.NoContent
             ],
-            JsonApiEndpoint.Delete or JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship => new[]
+            JsonApiEndpoint.Delete or JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship =>
+            [
+                HttpStatusCode.NoContent
+            ],
+            _ => throw new UnreachableCodeException()
+        };
+    }
+
+    private IEnumerable<HttpStatusCode> GetErrorStatusCodesForEndpoint(JsonApiEndpoint endpoint, ResourceType resourceType)
+    {
+        ClientIdGenerationMode clientIdGeneration = resourceType.ClientIdGeneration ?? _options.ClientIdGeneration;
+
+        return endpoint switch
+        {
+            JsonApiEndpoint.GetCollection => [HttpStatusCode.BadRequest],
+            JsonApiEndpoint.GetSingle or JsonApiEndpoint.GetSecondary or JsonApiEndpoint.GetRelationship =>
+            [
+                HttpStatusCode.BadRequest,
+                HttpStatusCode.NotFound
+            ],
+            JsonApiEndpoint.Post when clientIdGeneration == ClientIdGenerationMode.Forbidden =>
+            [
+                HttpStatusCode.BadRequest,
+                HttpStatusCode.Forbidden,
+                HttpStatusCode.Conflict,
+                HttpStatusCode.UnprocessableEntity
+            ],
+            JsonApiEndpoint.Post =>
+            [
+                HttpStatusCode.BadRequest,
+                HttpStatusCode.Conflict,
+                HttpStatusCode.UnprocessableEntity
+            ],
+            JsonApiEndpoint.Patch =>
+            [
+                HttpStatusCode.BadRequest,
+                HttpStatusCode.NotFound,
+                HttpStatusCode.Conflict,
+                HttpStatusCode.UnprocessableEntity
+            ],
+            JsonApiEndpoint.Delete => [HttpStatusCode.NotFound],
+            JsonApiEndpoint.PostRelationship or JsonApiEndpoint.PatchRelationship or JsonApiEndpoint.DeleteRelationship => new[]
             {
-                StatusCodes.Status204NoContent
+                HttpStatusCode.BadRequest,
+                HttpStatusCode.NotFound,
+                HttpStatusCode.Conflict
             },
             _ => throw new UnreachableCodeException()
         };

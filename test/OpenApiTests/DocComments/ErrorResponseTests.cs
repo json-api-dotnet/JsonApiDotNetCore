@@ -1,0 +1,301 @@
+using System.Text.Json;
+using FluentAssertions;
+using TestBuildingBlocks;
+using Xunit;
+
+namespace OpenApiTests.DocComments;
+
+public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<DocCommentsStartup<DocCommentsDbContext>, DocCommentsDbContext>>
+{
+    private const string EscapedJsonApiMediaType = "['application/vnd.api+json']";
+
+    private readonly OpenApiTestContext<DocCommentsStartup<DocCommentsDbContext>, DocCommentsDbContext> _testContext;
+
+    public ErrorResponseTests(OpenApiTestContext<DocCommentsStartup<DocCommentsDbContext>, DocCommentsDbContext> testContext)
+    {
+        _testContext = testContext;
+
+        testContext.UseController<SkyscrapersController>();
+        testContext.UseController<ElevatorsController>();
+        testContext.UseController<SpacesController>();
+    }
+
+    [Fact]
+    public async Task Applicable_error_status_codes_with_schema_are_provided_on_endpoints()
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath("paths./skyscrapers").With(skyscrapersElement =>
+        {
+            skyscrapersElement.Should().ContainPath("get.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(1);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+
+            skyscrapersElement.Should().ContainPath("head.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(1);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property => property.Value.Should().NotContainPath("content"));
+            });
+
+            skyscrapersElement.Should().ContainPath("post.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(3);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("409");
+                errorStatusCodeProperties[2].Name.Should().Be("422");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+        });
+
+        document.Should().ContainPath("paths./skyscrapers/{id}").With(idElement =>
+        {
+            idElement.Should().ContainPath("get.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(2);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+
+            idElement.Should().ContainPath("head.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(2);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property => property.Value.Should().NotContainPath("content"));
+            });
+
+            idElement.Should().ContainPath("patch.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(4);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+                errorStatusCodeProperties[2].Name.Should().Be("409");
+                errorStatusCodeProperties[3].Name.Should().Be("422");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+
+            idElement.Should().ContainPath("delete.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(1);
+
+                errorStatusCodeProperties[0].Name.Should().Be("404");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+        });
+
+        document.Should().ContainPath("paths./skyscrapers/{id}/elevator").With(elevatorElement =>
+        {
+            elevatorElement.Should().ContainPath("get.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(2);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+
+            elevatorElement.Should().ContainPath("head.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(2);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property => property.Value.Should().NotContainPath("content"));
+            });
+        });
+
+        document.Should().ContainPath("paths./skyscrapers/{id}/relationships/elevator").With(elevatorElement =>
+        {
+            elevatorElement.Should().ContainPath("get.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(2);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+
+            elevatorElement.Should().ContainPath("head.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(2);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property => property.Value.Should().NotContainPath("content"));
+            });
+
+            elevatorElement.Should().ContainPath("patch.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(3);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+                errorStatusCodeProperties[2].Name.Should().Be("409");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+        });
+
+        document.Should().ContainPath("paths./skyscrapers/{id}/spaces").With(spacesElement =>
+        {
+            spacesElement.Should().ContainPath("get.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(2);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+
+            spacesElement.Should().ContainPath("head.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(2);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property => property.Value.Should().NotContainPath("content"));
+            });
+        });
+
+        document.Should().ContainPath("paths./skyscrapers/{id}/relationships/spaces").With(spacesElement =>
+        {
+            spacesElement.Should().ContainPath("get.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(2);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+
+            spacesElement.Should().ContainPath("head.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(2);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property => property.Value.Should().NotContainPath("content"));
+            });
+
+            spacesElement.Should().ContainPath("post.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(3);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+                errorStatusCodeProperties[2].Name.Should().Be("409");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+
+            spacesElement.Should().ContainPath("patch.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(3);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+                errorStatusCodeProperties[2].Name.Should().Be("409");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+
+            spacesElement.Should().ContainPath("delete.responses").With(responsesElement =>
+            {
+                JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+                errorStatusCodeProperties.ShouldHaveCount(3);
+
+                errorStatusCodeProperties[0].Name.Should().Be("400");
+                errorStatusCodeProperties[1].Name.Should().Be("404");
+                errorStatusCodeProperties[2].Name.Should().Be("409");
+
+                errorStatusCodeProperties.Should().AllSatisfy(property =>
+                    property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+            });
+        });
+    }
+
+    [Fact]
+    public async Task Forbidden_status_is_added_when_client_generated_IDs_are_disabled()
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath("paths./elevators.post.responses").With(responsesElement =>
+        {
+            JsonProperty[] errorStatusCodeProperties = responsesElement.EnumerateObject().Where(IsErrorStatusCode).ToArray();
+            errorStatusCodeProperties.ShouldHaveCount(4);
+
+            errorStatusCodeProperties[0].Name.Should().Be("400");
+            errorStatusCodeProperties[1].Name.Should().Be("403");
+            errorStatusCodeProperties[2].Name.Should().Be("409");
+            errorStatusCodeProperties[3].Name.Should().Be("422");
+
+            errorStatusCodeProperties.Should().AllSatisfy(property =>
+                property.Value.Should().ContainPath($"content.{EscapedJsonApiMediaType}.schema.$ref").ShouldBeSchemaReferenceId("errorResponseDocument"));
+        });
+    }
+
+    private static bool IsErrorStatusCode(JsonProperty statusCodeProperty)
+    {
+        return int.TryParse(statusCodeProperty.Name, out int statusCodeValue) && statusCodeValue >= 400;
+    }
+}

@@ -6,11 +6,19 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.OpenApi.Client.Exceptions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ApiException(
-    string message, int statusCode, string? response, IReadOnlyDictionary<string, IEnumerable<string>> headers, Exception? innerException)
-    : Exception($"{message}\n\nStatus: {statusCode}\nResponse: \n{response ?? "(null)"}", innerException)
+public class ApiException(string message, int statusCode, string? response, IReadOnlyDictionary<string, IEnumerable<string>> headers, Exception? innerException)
+    : Exception($"HTTP {statusCode}: {message}", innerException)
 {
     public int StatusCode { get; } = statusCode;
-    public string? Response { get; } = response;
+    public virtual string? Response { get; } = string.IsNullOrEmpty(response) ? null : response;
     public IReadOnlyDictionary<string, IEnumerable<string>> Headers { get; } = headers;
+}
+
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+public sealed class ApiException<TResult>(
+    string message, int statusCode, string? response, IReadOnlyDictionary<string, IEnumerable<string>> headers, TResult result, Exception? innerException)
+    : ApiException(message, statusCode, response, headers, innerException)
+{
+    public TResult Result { get; } = result;
+    public override string Response => $"The response body is unavailable. Use the {nameof(Result)} property instead.";
 }
