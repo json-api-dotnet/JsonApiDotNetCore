@@ -107,6 +107,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "ETag identifying the version of the fetched resource.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.example", "\"33a64df551425fcc55e4d42a148795d9f25f89d4\"");
+                    responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the response body in bytes");
                     responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                 });
@@ -189,6 +190,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "ETag identifying the version of the fetched resource.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.example", "\"33a64df551425fcc55e4d42a148795d9f25f89d4\"");
+                    responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the response body in bytes");
                     responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
@@ -295,6 +297,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "ETag identifying the version of the fetched resource.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.example", "\"33a64df551425fcc55e4d42a148795d9f25f89d4\"");
+                    responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the response body in bytes");
                     responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
@@ -355,6 +358,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "ETag identifying the version of the fetched resource.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.example", "\"33a64df551425fcc55e4d42a148795d9f25f89d4\"");
+                    responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the response body in bytes");
                     responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
@@ -438,6 +442,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "ETag identifying the version of the fetched resource.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.example", "\"33a64df551425fcc55e4d42a148795d9f25f89d4\"");
+                    responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the response body in bytes");
                     responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
@@ -498,6 +503,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "ETag identifying the version of the fetched resource.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.example", "\"33a64df551425fcc55e4d42a148795d9f25f89d4\"");
+                    responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the response body in bytes");
                     responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");

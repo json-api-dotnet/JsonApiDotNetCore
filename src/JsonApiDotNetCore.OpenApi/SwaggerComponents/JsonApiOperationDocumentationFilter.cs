@@ -165,6 +165,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 SetOperationRemarks(operation, TextCompareETag);
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
                 SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+                SetResponseHeaderContentLength(operation.Responses, HttpStatusCode.OK);
                 SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
                 SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
             }
@@ -194,6 +195,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 SetOperationRemarks(operation, TextCompareETag);
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
                 SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+                SetResponseHeaderContentLength(operation.Responses, HttpStatusCode.OK);
                 SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
                 SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
             }
@@ -291,6 +293,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             SetOperationRemarks(operation, TextCompareETag);
             SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+            SetResponseHeaderContentLength(operation.Responses, HttpStatusCode.OK);
             SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
         }
@@ -330,6 +333,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
             SetOperationRemarks(operation, TextCompareETag);
             SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
+            SetResponseHeaderContentLength(operation.Responses, HttpStatusCode.OK);
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
             SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
@@ -473,6 +477,22 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 Type = "string"
             },
             Example = new OpenApiString("\"33a64df551425fcc55e4d42a148795d9f25f89d4\"")
+        };
+    }
+
+    private static void SetResponseHeaderContentLength(OpenApiResponses responses, HttpStatusCode statusCode)
+    {
+        OpenApiResponse response = GetOrAddResponse(responses, statusCode);
+
+        response.Headers[HeaderNames.ContentLength] = new OpenApiHeader
+        {
+            Description = "Size of the response body in bytes",
+            Required = true,
+            Schema = new OpenApiSchema
+            {
+                Type = "integer",
+            },
+            Example = new OpenApiInteger(322),
         };
     }
 
