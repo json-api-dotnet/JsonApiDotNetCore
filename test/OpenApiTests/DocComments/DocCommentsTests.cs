@@ -72,11 +72,11 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
                 });
 
-                getElement.Should().ContainPath("responses").With(responseElement =>
+                getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(2);
-                    responseElement.Should().HaveProperty("200.description", "Successfully returns the found skyscrapers, or an empty array if none were found.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(2);
+                    responsesElement.Should().HaveProperty("200.description", "Successfully returns the found skyscrapers, or an empty array if none were found.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                 });
             });
 
@@ -92,11 +92,11 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
                 });
 
-                headElement.Should().ContainPath("responses").With(responseElement =>
+                headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(2);
-                    responseElement.Should().HaveProperty("200.description", "The operation completed successfully.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(2);
+                    responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                 });
             });
 
@@ -111,21 +111,21 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[0].description", ResourceTextQueryString);
                 });
 
-                postElement.Should().ContainPath("responses").With(responseElement =>
+                postElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(5);
-                    responseElement.Should().HaveProperty("201.description", "The skyscraper was successfully created, which resulted in additional changes. The newly created skyscraper is returned.");
-                    responseElement.Should().HaveProperty("204.description", "The skyscraper was successfully created, which did not result in additional changes.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid or the request body is missing or malformed.");
-                    responseElement.Should().HaveProperty("409.description", "A resource type in the request body is incompatible.");
-                    responseElement.Should().HaveProperty("422.description", "Validation of the request body failed.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(5);
+                    responsesElement.Should().HaveProperty("201.description", "The skyscraper was successfully created, which resulted in additional changes. The newly created skyscraper is returned.");
+                    responsesElement.Should().HaveProperty("204.description", "The skyscraper was successfully created, which did not result in additional changes.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid or the request body is missing or malformed.");
+                    responsesElement.Should().HaveProperty("409.description", "A resource type in the request body is incompatible.");
+                    responsesElement.Should().HaveProperty("422.description", "Validation of the request body failed.");
                 });
             });
         });
 
-        document.Should().ContainPath("paths./skyscrapers/{id}").With(skyscrapersElement =>
+        document.Should().ContainPath("paths./skyscrapers/{id}").With(idElement =>
         {
-            skyscrapersElement.Should().ContainPath("get").With(getElement =>
+            idElement.Should().ContainPath("get").With(getElement =>
             {
                 getElement.Should().HaveProperty("summary", "Retrieves an individual skyscraper by its identifier.");
 
@@ -138,16 +138,16 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                 });
 
-                getElement.Should().ContainPath("responses").With(responseElement =>
+                getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(3);
-                    responseElement.Should().HaveProperty("200.description", "Successfully returns the found skyscraper.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(3);
+                    responsesElement.Should().HaveProperty("200.description", "Successfully returns the found skyscraper.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
             });
 
-            skyscrapersElement.Should().ContainPath("head").With(headElement =>
+            idElement.Should().ContainPath("head").With(headElement =>
             {
                 headElement.Should().HaveProperty("summary", "Retrieves an individual skyscraper by its identifier without returning it.");
                 headElement.Should().HaveProperty("description", "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.");
@@ -161,16 +161,16 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                 });
 
-                headElement.Should().ContainPath("responses").With(responseElement =>
+                headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(3);
-                    responseElement.Should().HaveProperty("200.description", "The operation completed successfully.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(3);
+                    responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
             });
 
-            skyscrapersElement.Should().ContainPath("patch").With(patchElement =>
+            idElement.Should().ContainPath("patch").With(patchElement =>
             {
                 patchElement.Should().HaveProperty("summary", "Updates an existing skyscraper.");
 
@@ -185,41 +185,41 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
 
                 patchElement.Should().HaveProperty("requestBody.description", "The attributes and relationships of the skyscraper to update. Omitted fields are left unchanged.");
 
-                patchElement.Should().ContainPath("responses").With(responseElement =>
+                patchElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(6);
-                    responseElement.Should().HaveProperty("200.description", "The skyscraper was successfully updated, which resulted in additional changes. The updated skyscraper is returned.");
-                    responseElement.Should().HaveProperty("204.description", "The skyscraper was successfully updated, which did not result in additional changes.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper or a related resource does not exist.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid or the request body is missing or malformed.");
-                    responseElement.Should().HaveProperty("409.description", "A resource type or identifier in the request body is incompatible.");
-                    responseElement.Should().HaveProperty("422.description", "Validation of the request body failed.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(6);
+                    responsesElement.Should().HaveProperty("200.description", "The skyscraper was successfully updated, which resulted in additional changes. The updated skyscraper is returned.");
+                    responsesElement.Should().HaveProperty("204.description", "The skyscraper was successfully updated, which did not result in additional changes.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid or the request body is missing or malformed.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper or a related resource does not exist.");
+                    responsesElement.Should().HaveProperty("409.description", "A resource type or identifier in the request body is incompatible.");
+                    responsesElement.Should().HaveProperty("422.description", "Validation of the request body failed.");
                 });
             });
 
-            skyscrapersElement.Should().ContainPath("delete").With(patchElement =>
+            idElement.Should().ContainPath("delete").With(deleteElement =>
             {
-                patchElement.Should().HaveProperty("summary", "Deletes an existing skyscraper by its identifier.");
+                deleteElement.Should().HaveProperty("summary", "Deletes an existing skyscraper by its identifier.");
 
-                patchElement.Should().ContainPath("parameters").With(parametersElement =>
+                deleteElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
                     parametersElement.EnumerateArray().ShouldHaveCount(1);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to delete.");
                 });
 
-                patchElement.Should().ContainPath("responses").With(responseElement =>
+                deleteElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(2);
-                    responseElement.Should().HaveProperty("204.description", "The skyscraper was successfully deleted.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(2);
+                    responsesElement.Should().HaveProperty("204.description", "The skyscraper was successfully deleted.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
             });
         });
 
-        document.Should().ContainPath("paths./skyscrapers/{id}/elevator").With(skyscrapersElement =>
+        document.Should().ContainPath("paths./skyscrapers/{id}/elevator").With(elevatorElement =>
         {
-            skyscrapersElement.Should().ContainPath("get").With(getElement =>
+            elevatorElement.Should().ContainPath("get").With(getElement =>
             {
                 getElement.Should().HaveProperty("summary", "Retrieves the related elevator of an individual skyscraper's elevator relationship.");
 
@@ -232,16 +232,16 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                 });
 
-                getElement.Should().ContainPath("responses").With(responseElement =>
+                getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(3);
-                    responseElement.Should().HaveProperty("200.description", "Successfully returns the found elevator, or `null` if it was not found.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(3);
+                    responsesElement.Should().HaveProperty("200.description", "Successfully returns the found elevator, or `null` if it was not found.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
             });
 
-            skyscrapersElement.Should().ContainPath("head").With(headElement =>
+            elevatorElement.Should().ContainPath("head").With(headElement =>
             {
                 headElement.Should().HaveProperty("summary", "Retrieves the related elevator of an individual skyscraper's elevator relationship without returning it.");
                 headElement.Should().HaveProperty("description", "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.");
@@ -255,19 +255,19 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                 });
 
-                headElement.Should().ContainPath("responses").With(responseElement =>
+                headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(3);
-                    responseElement.Should().HaveProperty("200.description", "The operation completed successfully.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(3);
+                    responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
             });
         });
 
-        document.Should().ContainPath("paths./skyscrapers/{id}/relationships/elevator").With(skyscrapersElement =>
+        document.Should().ContainPath("paths./skyscrapers/{id}/relationships/elevator").With(elevatorElement =>
         {
-            skyscrapersElement.Should().ContainPath("get").With(getElement =>
+            elevatorElement.Should().ContainPath("get").With(getElement =>
             {
                 getElement.Should().HaveProperty("summary", "Retrieves the related elevator identity of an individual skyscraper's elevator relationship.");
 
@@ -280,16 +280,16 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
                 });
 
-                getElement.Should().ContainPath("responses").With(responseElement =>
+                getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(3);
-                    responseElement.Should().HaveProperty("200.description", "Successfully returns the found elevator identity, or `null` if it was not found.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(3);
+                    responsesElement.Should().HaveProperty("200.description", "Successfully returns the found elevator identity, or `null` if it was not found.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
             });
 
-            skyscrapersElement.Should().ContainPath("head").With(headElement =>
+            elevatorElement.Should().ContainPath("head").With(headElement =>
             {
                 headElement.Should().HaveProperty("summary", "Retrieves the related elevator identity of an individual skyscraper's elevator relationship without returning it.");
                 headElement.Should().HaveProperty("description", "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.");
@@ -303,16 +303,16 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
                 });
 
-                headElement.Should().ContainPath("responses").With(responseElement =>
+                headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(3);
-                    responseElement.Should().HaveProperty("200.description", "The operation completed successfully.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(3);
+                    responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
             });
 
-            skyscrapersElement.Should().ContainPath("patch").With(patchElement =>
+            elevatorElement.Should().ContainPath("patch").With(patchElement =>
             {
                 patchElement.Should().HaveProperty("summary", "Clears or assigns an existing elevator to the elevator relationship of an individual skyscraper.");
 
@@ -325,20 +325,20 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
 
                 patchElement.Should().HaveProperty("requestBody.description", "The identity of the elevator to assign to the elevator relationship, or `null` to clear the relationship.");
 
-                patchElement.Should().ContainPath("responses").With(responseElement =>
+                patchElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(4);
-                    responseElement.Should().HaveProperty("204.description", "The elevator relationship was successfully updated, which did not result in additional changes.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
-                    responseElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
-                    responseElement.Should().HaveProperty("409.description", "A resource type in the request body is incompatible.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.Should().HaveProperty("204.description", "The elevator relationship was successfully updated, which did not result in additional changes.");
+                    responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.Should().HaveProperty("409.description", "A resource type in the request body is incompatible.");
                 });
             });
         });
 
-        document.Should().ContainPath("paths./skyscrapers/{id}/spaces").With(skyscrapersElement =>
+        document.Should().ContainPath("paths./skyscrapers/{id}/spaces").With(spacesElement =>
         {
-            skyscrapersElement.Should().ContainPath("get").With(getElement =>
+            spacesElement.Should().ContainPath("get").With(getElement =>
             {
                 getElement.Should().HaveProperty("summary", "Retrieves the related spaces of an individual skyscraper's spaces relationship.");
 
@@ -351,16 +351,16 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                 });
 
-                getElement.Should().ContainPath("responses").With(responseElement =>
+                getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(3);
-                    responseElement.Should().HaveProperty("200.description", "Successfully returns the found spaces, or an empty array if none were found.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(3);
+                    responsesElement.Should().HaveProperty("200.description", "Successfully returns the found spaces, or an empty array if none were found.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
             });
 
-            skyscrapersElement.Should().ContainPath("head").With(headElement =>
+            spacesElement.Should().ContainPath("head").With(headElement =>
             {
                 headElement.Should().HaveProperty("summary", "Retrieves the related spaces of an individual skyscraper's spaces relationship without returning them.");
                 headElement.Should().HaveProperty("description", "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.");
@@ -374,19 +374,19 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[1].description", ResourceTextQueryString);
                 });
 
-                headElement.Should().ContainPath("responses").With(responseElement =>
+                headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(3);
-                    responseElement.Should().HaveProperty("200.description", "The operation completed successfully.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(3);
+                    responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
             });
         });
 
-        document.Should().ContainPath("paths./skyscrapers/{id}/relationships/spaces").With(skyscrapersElement =>
+        document.Should().ContainPath("paths./skyscrapers/{id}/relationships/spaces").With(spacesElement =>
         {
-            skyscrapersElement.Should().ContainPath("get").With(getElement =>
+            spacesElement.Should().ContainPath("get").With(getElement =>
             {
                 getElement.Should().HaveProperty("summary", "Retrieves the related space identities of an individual skyscraper's spaces relationship.");
 
@@ -399,16 +399,16 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
                 });
 
-                getElement.Should().ContainPath("responses").With(responseElement =>
+                getElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(3);
-                    responseElement.Should().HaveProperty("200.description", "Successfully returns the found space identities, or an empty array if none were found.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(3);
+                    responsesElement.Should().HaveProperty("200.description", "Successfully returns the found space identities, or an empty array if none were found.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
             });
 
-            skyscrapersElement.Should().ContainPath("head").With(headElement =>
+            spacesElement.Should().ContainPath("head").With(headElement =>
             {
                 headElement.Should().HaveProperty("summary", "Retrieves the related space identities of an individual skyscraper's spaces relationship without returning them.");
                 headElement.Should().HaveProperty("description", "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.");
@@ -422,39 +422,39 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     parametersElement.Should().HaveProperty("[1].description", RelationshipTextQueryString);
                 });
 
-                headElement.Should().ContainPath("responses").With(responseElement =>
+                headElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(3);
-                    responseElement.Should().HaveProperty("200.description", "The operation completed successfully.");
-                    responseElement.Should().HaveProperty("400.description", "The query string is invalid.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(3);
+                    responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
+                    responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
             });
 
-            skyscrapersElement.Should().ContainPath("post").With(patchElement =>
+            spacesElement.Should().ContainPath("post").With(postElement =>
             {
-                patchElement.Should().HaveProperty("summary", "Adds existing spaces to the spaces relationship of an individual skyscraper.");
+                postElement.Should().HaveProperty("summary", "Adds existing spaces to the spaces relationship of an individual skyscraper.");
 
-                patchElement.Should().ContainPath("parameters").With(parametersElement =>
+                postElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
                     parametersElement.EnumerateArray().ShouldHaveCount(1);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to add spaces to.");
                 });
 
-                patchElement.Should().HaveProperty("requestBody.description", "The identities of the spaces to add to the spaces relationship.");
+                postElement.Should().HaveProperty("requestBody.description", "The identities of the spaces to add to the spaces relationship.");
 
-                patchElement.Should().ContainPath("responses").With(responseElement =>
+                postElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(4);
-                    responseElement.Should().HaveProperty("204.description", "The spaces were successfully added, which did not result in additional changes.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
-                    responseElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
-                    responseElement.Should().HaveProperty("409.description", "A resource type in the request body is incompatible.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.Should().HaveProperty("204.description", "The spaces were successfully added, which did not result in additional changes.");
+                    responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.Should().HaveProperty("409.description", "A resource type in the request body is incompatible.");
                 });
             });
 
-            skyscrapersElement.Should().ContainPath("patch").With(patchElement =>
+            spacesElement.Should().ContainPath("patch").With(patchElement =>
             {
                 patchElement.Should().HaveProperty("summary", "Assigns existing spaces to the spaces relationship of an individual skyscraper.");
 
@@ -467,36 +467,36 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
 
                 patchElement.Should().HaveProperty("requestBody.description", "The identities of the spaces to assign to the spaces relationship, or an empty array to clear the relationship.");
 
-                patchElement.Should().ContainPath("responses").With(responseElement =>
+                patchElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(4);
-                    responseElement.Should().HaveProperty("204.description", "The spaces relationship was successfully updated, which did not result in additional changes.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
-                    responseElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
-                    responseElement.Should().HaveProperty("409.description", "A resource type in the request body is incompatible.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.Should().HaveProperty("204.description", "The spaces relationship was successfully updated, which did not result in additional changes.");
+                    responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.Should().HaveProperty("409.description", "A resource type in the request body is incompatible.");
                 });
             });
 
-            skyscrapersElement.Should().ContainPath("delete").With(patchElement =>
+            spacesElement.Should().ContainPath("delete").With(deleteElement =>
             {
-                patchElement.Should().HaveProperty("summary", "Removes existing spaces from the spaces relationship of an individual skyscraper.");
+                deleteElement.Should().HaveProperty("summary", "Removes existing spaces from the spaces relationship of an individual skyscraper.");
 
-                patchElement.Should().ContainPath("parameters").With(parametersElement =>
+                deleteElement.Should().ContainPath("parameters").With(parametersElement =>
                 {
                     parametersElement.EnumerateArray().ShouldHaveCount(1);
                     parametersElement.Should().HaveProperty("[0].in", "path");
                     parametersElement.Should().HaveProperty("[0].description", "The identifier of the skyscraper to remove spaces from.");
                 });
 
-                patchElement.Should().HaveProperty("requestBody.description", "The identities of the spaces to remove from the spaces relationship.");
+                deleteElement.Should().HaveProperty("requestBody.description", "The identities of the spaces to remove from the spaces relationship.");
 
-                patchElement.Should().ContainPath("responses").With(responseElement =>
+                deleteElement.Should().ContainPath("responses").With(responsesElement =>
                 {
-                    responseElement.EnumerateObject().ShouldHaveCount(4);
-                    responseElement.Should().HaveProperty("204.description", "The spaces were successfully removed, which did not result in additional changes.");
-                    responseElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
-                    responseElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
-                    responseElement.Should().HaveProperty("409.description", "A resource type in the request body is incompatible.");
+                    responsesElement.EnumerateObject().ShouldHaveCount(4);
+                    responsesElement.Should().HaveProperty("204.description", "The spaces were successfully removed, which did not result in additional changes.");
+                    responsesElement.Should().HaveProperty("400.description", "The request body is missing or malformed.");
+                    responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
+                    responsesElement.Should().HaveProperty("409.description", "A resource type in the request body is incompatible.");
                 });
             });
         });
@@ -619,9 +619,9 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath("paths./elevators.post.responses").With(responseElement =>
+        document.Should().ContainPath("paths./elevators.post.responses").With(responsesElement =>
         {
-            responseElement.Should().HaveProperty("403.description", "Client-generated IDs cannot be used at this endpoint.");
+            responsesElement.Should().HaveProperty("403.description", "Client-generated IDs cannot be used at this endpoint.");
         });
     }
 }
