@@ -22,15 +22,14 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
     public ActionDescriptorCollection ActionDescriptors => GetActionDescriptors();
 
-    public JsonApiActionDescriptorCollectionProvider(IControllerResourceMapping controllerResourceMapping, IActionDescriptorCollectionProvider defaultProvider,
-        ResourceFieldValidationMetadataProvider resourceFieldValidationMetadataProvider)
+    public JsonApiActionDescriptorCollectionProvider(IActionDescriptorCollectionProvider defaultProvider,
+        JsonApiEndpointMetadataProvider jsonApiEndpointMetadataProvider)
     {
-        ArgumentGuard.NotNull(controllerResourceMapping);
         ArgumentGuard.NotNull(defaultProvider);
-        ArgumentGuard.NotNull(resourceFieldValidationMetadataProvider);
+        ArgumentGuard.NotNull(jsonApiEndpointMetadataProvider);
 
         _defaultProvider = defaultProvider;
-        _jsonApiEndpointMetadataProvider = new JsonApiEndpointMetadataProvider(controllerResourceMapping, resourceFieldValidationMetadataProvider);
+        _jsonApiEndpointMetadataProvider = jsonApiEndpointMetadataProvider;
     }
 
     private ActionDescriptorCollection GetActionDescriptors()
@@ -167,32 +166,32 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
     private static ActionDescriptor Clone(ActionDescriptor descriptor)
     {
-        var clonedDescriptor = (ActionDescriptor)descriptor.MemberwiseClone();
+        var clone = (ActionDescriptor)descriptor.MemberwiseClone();
 
-        clonedDescriptor.AttributeRouteInfo = (AttributeRouteInfo)descriptor.AttributeRouteInfo!.MemberwiseClone();
+        clone.AttributeRouteInfo = (AttributeRouteInfo)descriptor.AttributeRouteInfo!.MemberwiseClone();
 
-        clonedDescriptor.FilterDescriptors = new List<FilterDescriptor>();
+        clone.FilterDescriptors = new List<FilterDescriptor>();
 
         foreach (FilterDescriptor filter in descriptor.FilterDescriptors)
         {
-            clonedDescriptor.FilterDescriptors.Add(Clone(filter));
+            clone.FilterDescriptors.Add(Clone(filter));
         }
 
-        clonedDescriptor.Parameters = new List<ParameterDescriptor>();
+        clone.Parameters = new List<ParameterDescriptor>();
 
         foreach (ParameterDescriptor parameter in descriptor.Parameters)
         {
-            clonedDescriptor.Parameters.Add((ParameterDescriptor)parameter.MemberwiseClone());
+            clone.Parameters.Add((ParameterDescriptor)parameter.MemberwiseClone());
         }
 
-        return clonedDescriptor;
+        return clone;
     }
 
     private static FilterDescriptor Clone(FilterDescriptor descriptor)
     {
-        var clonedFilter = (IFilterMetadata)descriptor.Filter.MemberwiseClone();
+        var clone = (IFilterMetadata)descriptor.Filter.MemberwiseClone();
 
-        return new FilterDescriptor(clonedFilter, descriptor.Scope)
+        return new FilterDescriptor(clone, descriptor.Scope)
         {
             Order = descriptor.Order
         };

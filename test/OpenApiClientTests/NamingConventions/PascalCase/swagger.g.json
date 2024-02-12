@@ -44,7 +44,14 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -129,16 +136,44 @@
             "description": "The StaffMember was successfully created, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Client-generated IDs cannot be used at this endpoint."
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -186,10 +221,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The StaffMember does not exist."
+            "description": "The StaffMember does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -295,16 +344,44 @@
             "description": "The StaffMember was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The StaffMember or a related resource does not exist."
+            "description": "The StaffMember or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type or identifier in the request body is incompatible."
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -330,7 +407,14 @@
             "description": "The StaffMember was successfully deleted."
           },
           "404": {
-            "description": "The StaffMember does not exist."
+            "description": "The StaffMember does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -369,7 +453,14 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -454,16 +545,44 @@
             "description": "The Supermarket was successfully created, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Client-generated IDs cannot be used at this endpoint."
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -511,10 +630,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The Supermarket does not exist."
+            "description": "The Supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -620,16 +753,44 @@
             "description": "The Supermarket was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The Supermarket or a related resource does not exist."
+            "description": "The Supermarket or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type or identifier in the request body is incompatible."
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -655,7 +816,14 @@
             "description": "The Supermarket was successfully deleted."
           },
           "404": {
-            "description": "The Supermarket does not exist."
+            "description": "The Supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -703,10 +871,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The Supermarket does not exist."
+            "description": "The Supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -797,10 +979,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The Supermarket does not exist."
+            "description": "The Supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -883,13 +1079,34 @@
             "description": "The BackupStoreManager relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The Supermarket does not exist."
+            "description": "The Supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -937,10 +1154,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The Supermarket does not exist."
+            "description": "The Supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1031,10 +1262,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The Supermarket does not exist."
+            "description": "The Supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1117,13 +1362,34 @@
             "description": "The StaffMembers were successfully added, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The Supermarket does not exist."
+            "description": "The Supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1163,13 +1429,34 @@
             "description": "The Cashiers relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The Supermarket does not exist."
+            "description": "The Supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1209,13 +1496,34 @@
             "description": "The StaffMembers were successfully removed, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The Supermarket does not exist."
+            "description": "The Supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -1263,10 +1571,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The Supermarket does not exist."
+            "description": "The Supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1357,10 +1679,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The Supermarket does not exist."
+            "description": "The Supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1443,13 +1779,34 @@
             "description": "The StoreManager relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The Supermarket does not exist."
+            "description": "The Supermarket does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -1482,6 +1839,99 @@
           }
         },
         "x-abstract": true
+      },
+      "ErrorLinks": {
+        "type": "object",
+        "properties": {
+          "about": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ErrorObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ErrorLinks"
+              }
+            ],
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ErrorSource"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ErrorResponseDocument": {
+        "required": [
+          "errors"
+        ],
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorObject"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ErrorSource": {
+        "type": "object",
+        "properties": {
+          "pointer": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameter": {
+            "type": "string",
+            "nullable": true
+          },
+          "header": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "Jsonapi": {
         "type": "object",

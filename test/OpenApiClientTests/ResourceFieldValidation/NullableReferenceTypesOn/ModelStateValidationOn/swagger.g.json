@@ -44,7 +44,14 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -129,16 +136,44 @@
             "description": "The resource was successfully created, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Client-generated IDs cannot be used at this endpoint."
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -186,10 +221,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -295,16 +344,44 @@
             "description": "The resource was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource or a related resource does not exist."
+            "description": "The resource or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type or identifier in the request body is incompatible."
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -330,7 +407,14 @@
             "description": "The resource was successfully deleted."
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -378,10 +462,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -472,10 +570,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -558,13 +670,34 @@
             "description": "The nonNullableToOne relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -612,10 +745,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -706,10 +853,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -792,13 +953,34 @@
             "description": "The nullableToOne relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -846,10 +1028,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -940,10 +1136,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1026,13 +1236,34 @@
             "description": "The requiredNonNullableToOne relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -1080,10 +1311,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1174,10 +1419,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1260,13 +1519,34 @@
             "description": "The requiredNullableToOne relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -1314,10 +1594,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1408,10 +1702,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1494,13 +1802,34 @@
             "description": "The empties were successfully added, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1540,13 +1869,34 @@
             "description": "The requiredToMany relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1586,13 +1936,34 @@
             "description": "The empties were successfully removed, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -1640,10 +2011,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1734,10 +2119,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1820,13 +2219,34 @@
             "description": "The empties were successfully added, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1866,13 +2286,34 @@
             "description": "The toMany relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       },
@@ -1912,13 +2353,34 @@
             "description": "The empties were successfully removed, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The resource does not exist."
+            "description": "The resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
           }
         }
       }
@@ -2137,6 +2599,99 @@
               "type": "object",
               "nullable": true
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorLinks": {
+        "type": "object",
+        "properties": {
+          "about": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorLinks"
+              }
+            ],
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/errorSource"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorResponseDocument": {
+        "required": [
+          "errors"
+        ],
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/errorObject"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "errorSource": {
+        "type": "object",
+        "properties": {
+          "pointer": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameter": {
+            "type": "string",
+            "nullable": true
+          },
+          "header": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

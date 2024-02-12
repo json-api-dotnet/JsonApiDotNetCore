@@ -551,4 +551,14 @@ public sealed class PascalCaseTests
             });
         });
     }
+
+    [Fact]
+    public async Task Casing_convention_is_applied_to_error_schema()
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath("components.schemas.ErrorResponseDocument");
+    }
 }

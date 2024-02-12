@@ -44,7 +44,14 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -129,16 +136,44 @@
             "description": "The airplane was successfully created, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Client-generated IDs cannot be used at this endpoint."
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -186,10 +221,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The airplane does not exist."
+            "description": "The airplane does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -295,16 +344,44 @@
             "description": "The airplane was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The airplane or a related resource does not exist."
+            "description": "The airplane or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type or identifier in the request body is incompatible."
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -330,7 +407,14 @@
             "description": "The airplane was successfully deleted."
           },
           "404": {
-            "description": "The airplane does not exist."
+            "description": "The airplane does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -378,10 +462,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The airplane does not exist."
+            "description": "The airplane does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -472,10 +570,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The airplane does not exist."
+            "description": "The airplane does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -558,13 +670,34 @@
             "description": "The flights were successfully added, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The airplane does not exist."
+            "description": "The airplane does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -604,13 +737,34 @@
             "description": "The flights relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The airplane does not exist."
+            "description": "The airplane does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -650,13 +804,34 @@
             "description": "The flights were successfully removed, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The airplane does not exist."
+            "description": "The airplane does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -695,7 +870,14 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -780,16 +962,44 @@
             "description": "The flight-attendant was successfully created, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Client-generated IDs cannot be used at this endpoint."
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -837,10 +1047,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight-attendant does not exist."
+            "description": "The flight-attendant does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -946,16 +1170,44 @@
             "description": "The flight-attendant was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight-attendant or a related resource does not exist."
+            "description": "The flight-attendant or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type or identifier in the request body is incompatible."
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -981,7 +1233,14 @@
             "description": "The flight-attendant was successfully deleted."
           },
           "404": {
-            "description": "The flight-attendant does not exist."
+            "description": "The flight-attendant does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -1029,10 +1288,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight-attendant does not exist."
+            "description": "The flight-attendant does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -1123,10 +1396,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight-attendant does not exist."
+            "description": "The flight-attendant does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -1209,13 +1496,34 @@
             "description": "The flights were successfully added, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight-attendant does not exist."
+            "description": "The flight-attendant does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -1255,13 +1563,34 @@
             "description": "The purser-on-flights relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight-attendant does not exist."
+            "description": "The flight-attendant does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -1301,13 +1630,34 @@
             "description": "The flights were successfully removed, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight-attendant does not exist."
+            "description": "The flight-attendant does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -1355,10 +1705,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight-attendant does not exist."
+            "description": "The flight-attendant does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -1449,10 +1813,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight-attendant does not exist."
+            "description": "The flight-attendant does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -1535,13 +1913,34 @@
             "description": "The flights were successfully added, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight-attendant does not exist."
+            "description": "The flight-attendant does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -1581,13 +1980,34 @@
             "description": "The scheduled-for-flights relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight-attendant does not exist."
+            "description": "The flight-attendant does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -1627,13 +2047,34 @@
             "description": "The flights were successfully removed, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight-attendant does not exist."
+            "description": "The flight-attendant does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -1672,7 +2113,14 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -1757,16 +2205,44 @@
             "description": "The flight was successfully created, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Client-generated IDs cannot be used at this endpoint."
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -1814,10 +2290,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -1923,16 +2413,44 @@
             "description": "The flight was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight or a related resource does not exist."
+            "description": "The flight or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type or identifier in the request body is incompatible."
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -1958,7 +2476,14 @@
             "description": "The flight was successfully deleted."
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -2006,10 +2531,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -2100,10 +2639,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -2186,13 +2739,34 @@
             "description": "The backup-purser relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -2240,10 +2814,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -2334,10 +2922,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -2420,13 +3022,34 @@
             "description": "The flight-attendants were successfully added, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -2466,13 +3089,34 @@
             "description": "The cabin-crew-members relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -2512,13 +3156,34 @@
             "description": "The flight-attendants were successfully removed, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -2566,10 +3231,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -2660,10 +3339,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -2746,13 +3439,34 @@
             "description": "The passengers were successfully added, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -2792,13 +3506,34 @@
             "description": "The passengers relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -2838,13 +3573,34 @@
             "description": "The passengers were successfully removed, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -2892,10 +3648,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -2986,10 +3756,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -3072,13 +3856,34 @@
             "description": "The purser relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The request body is missing or malformed."
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The flight does not exist."
+            "description": "The flight does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -3117,7 +3922,14 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -3202,16 +4014,44 @@
             "description": "The passenger was successfully created, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "403": {
-            "description": "Client-generated IDs cannot be used at this endpoint."
+            "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible."
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -3259,10 +4099,24 @@
             }
           },
           "400": {
-            "description": "The query string is invalid."
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The passenger does not exist."
+            "description": "The passenger does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -3368,16 +4222,44 @@
             "description": "The passenger was successfully updated, which did not result in additional changes."
           },
           "400": {
-            "description": "The query string is invalid or the request body is missing or malformed."
+            "description": "The query string is invalid or the request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "404": {
-            "description": "The passenger or a related resource does not exist."
+            "description": "The passenger or a related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "409": {
-            "description": "A resource type or identifier in the request body is incompatible."
+            "description": "A resource type or identifier in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           },
           "422": {
-            "description": "Validation of the request body failed."
+            "description": "Validation of the request body failed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       },
@@ -3403,7 +4285,14 @@
             "description": "The passenger was successfully deleted."
           },
           "404": {
-            "description": "The passenger does not exist."
+            "description": "The passenger does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
+                }
+              }
+            }
           }
         }
       }
@@ -3837,6 +4726,99 @@
           }
         },
         "x-abstract": true
+      },
+      "error-links": {
+        "type": "object",
+        "properties": {
+          "about": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "error-object": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/error-links"
+              }
+            ],
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/error-source"
+              }
+            ],
+            "nullable": true
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": { },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "error-response-document": {
+        "required": [
+          "errors"
+        ],
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/error-object"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "error-source": {
+        "type": "object",
+        "properties": {
+          "pointer": {
+            "type": "string",
+            "nullable": true
+          },
+          "parameter": {
+            "type": "string",
+            "nullable": true
+          },
+          "header": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "flight-attendant-attributes-in-patch-request": {
         "type": "object",
