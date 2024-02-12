@@ -1,4 +1,6 @@
+using System.Reflection;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -29,48 +31,88 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
 
         JsonApiEndpoint? endpoint = _endpointResolver.Get(action.ActionMethod);
 
-        if (endpoint == null || ShouldSuppressEndpoint(endpoint.Value, action.Controller.ControllerType))
+        if (endpoint == null)
+        {
+            // Not a JSON:API controller, or a non-standard action method in a JSON:API controller, or an atomic:operations
+            // controller. None of these are yet implemented, so hide them to avoid downstream crashes.
+            action.ApiExplorer.IsVisible = false;
+            return;
+        }
+
+        if (ShouldSuppressEndpoint(endpoint.Value, action.Controller.ControllerType))
         {
             action.ApiExplorer.IsVisible = false;
-
             return;
         }
 
         SetResponseMetadata(action, endpoint.Value);
-
         SetRequestMetadata(action, endpoint.Value);
     }
 
     private bool ShouldSuppressEndpoint(JsonApiEndpoint endpoint, Type controllerType)
     {
+        ResourceType? resourceType = _controllerResourceMapping.GetResourceTypeForController(controllerType);
+
+        if (resourceType == null)
+        {
+            throw new UnreachableCodeException();
+        }
+
+        if (!IsEndpointAvailable(endpoint, resourceType))
+        {
+            return true;
+        }
+
         if (IsSecondaryOrRelationshipEndpoint(endpoint))
         {
-            IReadOnlyCollection<RelationshipAttribute> relationships = GetRelationshipsOfPrimaryResource(controllerType);
-
-            if (!relationships.Any())
+            if (!resourceType.Relationships.Any())
             {
                 return true;
             }
 
             if (endpoint is JsonApiEndpoint.DeleteRelationship or JsonApiEndpoint.PostRelationship)
             {
-                return !relationships.OfType<HasManyAttribute>().Any();
+                return !resourceType.Relationships.OfType<HasManyAttribute>().Any();
             }
         }
 
         return false;
     }
 
-    private IReadOnlyCollection<RelationshipAttribute> GetRelationshipsOfPrimaryResource(Type controllerType)
+    private static bool IsEndpointAvailable(JsonApiEndpoint endpoint, ResourceType resourceType)
     {
-        ResourceType? primaryResourceType = _controllerResourceMapping.GetResourceTypeForController(controllerType);
+        JsonApiEndpoints availableEndpoints = GetGeneratedControllerEndpoints(resourceType);
 
-        if (primaryResourceType == null)
+        if (availableEndpoints == JsonApiEndpoints.None)
         {
-            throw new UnreachableCodeException();
+            // Auto-generated controllers are disabled, so we can't know what to hide.
+            // It is assumed that a handwritten JSON:API controller only provides action methods for what it supports.
+            // To accomplish that, derive from BaseJsonApiController instead of JsonApiController.
+            return true;
         }
 
-        return primaryResourceType.Relationships;
+        // For an overridden JSON:API action method in a partial class to show up, it's flag must be turned on in [Resource].
+        // Otherwise, it is considered to be an action method that throws because the endpoint is unavailable.
+        return endpoint switch
+        {
+            JsonApiEndpoint.GetCollection => availableEndpoints.HasFlag(JsonApiEndpoints.GetCollection),
+            JsonApiEndpoint.GetSingle => availableEndpoints.HasFlag(JsonApiEndpoints.GetSingle),
+            JsonApiEndpoint.GetSecondary => availableEndpoints.HasFlag(JsonApiEndpoints.GetSecondary),
+            JsonApiEndpoint.GetRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.GetRelationship),
+            JsonApiEndpoint.Post => availableEndpoints.HasFlag(JsonApiEndpoints.Post),
+            JsonApiEndpoint.PostRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.PostRelationship),
+            JsonApiEndpoint.Patch => availableEndpoints.HasFlag(JsonApiEndpoints.Patch),
+            JsonApiEndpoint.PatchRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.PatchRelationship),
+            JsonApiEndpoint.Delete => availableEndpoints.HasFlag(JsonApiEndpoints.Delete),
+            JsonApiEndpoint.DeleteRelationship => availableEndpoints.HasFlag(JsonApiEndpoints.DeleteRelationship),
+            _ => throw new UnreachableCodeException()
+        };
+    }
+
+    private static JsonApiEndpoints GetGeneratedControllerEndpoints(ResourceType resourceType)
+    {
+        var resourceAttribute = resourceType.ClrType.GetCustomAttribute<ResourceAttribute>();
+        return resourceAttribute?.GenerateControllerEndpoints ?? JsonApiEndpoints.None;
     }
 
     private static bool IsSecondaryOrRelationshipEndpoint(JsonApiEndpoint endpoint)
