@@ -490,9 +490,9 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             Required = true,
             Schema = new OpenApiSchema
             {
-                Type = "integer",
+                Type = "integer"
             },
-            Example = new OpenApiInteger(322),
+            Example = new OpenApiInteger(891)
         };
     }
 
@@ -566,8 +566,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             Schema = new OpenApiSchema
             {
                 Type = "string",
-                Default = new OpenApiString(null),
-                Nullable = true,
+                Nullable = true
             },
             Example = new OpenApiString("\"33a64df551425fcc55e4d42a148795d9f25f89d4\"")
         });

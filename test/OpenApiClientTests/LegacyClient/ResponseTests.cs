@@ -99,7 +99,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightCollectionResponseDocument document = await apiClient.GetFlightCollectionAsync(null);
+        FlightCollectionResponseDocument document = await apiClient.GetFlightCollectionAsync();
 
         // Assert
         document.Jsonapi.Should().BeNull();
@@ -180,7 +180,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightPrimaryResponseDocument document = await apiClient.GetFlightAsync(flightId, null);
+        FlightPrimaryResponseDocument document = await apiClient.GetFlightAsync(flightId);
 
         // Assert
         document.Jsonapi.Should().BeNull();
@@ -218,7 +218,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        Func<Task<FlightPrimaryResponseDocument>> action = () => apiClient.GetFlightAsync(flightId, null);
+        Func<Task<FlightPrimaryResponseDocument>> action = () => apiClient.GetFlightAsync(flightId);
 
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
@@ -447,7 +447,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightPurserAsync(flightId, null);
+        FlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightPurserAsync(flightId);
 
         // Assert
         document.Data.Should().NotBeNull();
@@ -479,7 +479,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        NullableFlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightBackupPurserAsync(flightId, null);
+        NullableFlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightBackupPurserAsync(flightId);
 
         // Assert
         document.Data.Should().BeNull();
@@ -505,7 +505,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightAttendantCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersAsync(flightId, null);
+        FlightAttendantCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersAsync(flightId);
 
         // Assert
         document.Data.Should().BeEmpty();
@@ -531,7 +531,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        NullableFlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightBackupPurserRelationshipAsync(flightId, null);
+        NullableFlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightBackupPurserRelationshipAsync(flightId);
 
         // Assert
         document.Data.Should().BeNull();
@@ -561,7 +561,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightPurserRelationshipAsync(flightId, null);
+        FlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightPurserRelationshipAsync(flightId);
 
         // Assert
         document.Data.Should().NotBeNull();
@@ -617,7 +617,7 @@ public sealed class ResponseTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        FlightAttendantIdentifierCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId, null);
+        FlightAttendantIdentifierCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId);
 
         // Assert
         document.Data.Should().HaveCount(2);

@@ -36,8 +36,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -61,6 +63,16 @@
               }
             }
           },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
           "304": {
             "description": "The resource was not modified.",
             "headers": {
@@ -71,16 +83,6 @@
                   "type": "string"
                 },
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
-              }
-            }
-          },
-          "400": {
-            "description": "The query string is invalid.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
               }
             }
           }
@@ -112,8 +114,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -127,6 +131,14 @@
                   "type": "string"
                 },
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              },
+              "Content-Length": {
+                "description": "Size of the response body in bytes",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 891
               }
             }
           },
@@ -284,8 +296,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -309,19 +323,6 @@
               }
             }
           },
-          "304": {
-            "description": "The resource was not modified.",
-            "headers": {
-              "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
-              }
-            }
-          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -339,6 +340,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           }
@@ -379,8 +393,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -394,6 +410,14 @@
                   "type": "string"
                 },
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              },
+              "Content-Length": {
+                "description": "Size of the response body in bytes",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 891
               }
             }
           },
@@ -578,8 +602,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -603,6 +629,16 @@
               }
             }
           },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
           "304": {
             "description": "The resource was not modified.",
             "headers": {
@@ -613,16 +649,6 @@
                   "type": "string"
                 },
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
-              }
-            }
-          },
-          "400": {
-            "description": "The query string is invalid.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
               }
             }
           }
@@ -654,8 +680,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -669,6 +697,14 @@
                   "type": "string"
                 },
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              },
+              "Content-Length": {
+                "description": "Size of the response body in bytes",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 891
               }
             }
           },
@@ -826,8 +862,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -851,19 +889,6 @@
               }
             }
           },
-          "304": {
-            "description": "The resource was not modified.",
-            "headers": {
-              "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
-              }
-            }
-          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -881,6 +906,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           }
@@ -921,8 +959,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -936,6 +976,14 @@
                   "type": "string"
                 },
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              },
+              "Content-Length": {
+                "description": "Size of the response body in bytes",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 891
               }
             }
           },
@@ -1129,8 +1177,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -1154,19 +1204,6 @@
               }
             }
           },
-          "304": {
-            "description": "The resource was not modified.",
-            "headers": {
-              "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
-              }
-            }
-          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -1184,6 +1221,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           }
@@ -1224,8 +1274,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -1239,6 +1291,14 @@
                   "type": "string"
                 },
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              },
+              "Content-Length": {
+                "description": "Size of the response body in bytes",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 891
               }
             }
           },
@@ -1299,8 +1359,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -1324,19 +1386,6 @@
               }
             }
           },
-          "304": {
-            "description": "The resource was not modified.",
-            "headers": {
-              "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
-              }
-            }
-          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -1354,6 +1403,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           }
@@ -1394,14 +1456,24 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
+              "Content-Length": {
+                "description": "Size of the response body in bytes",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 891
+              },
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
                 "required": true,
@@ -1536,8 +1608,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -1561,19 +1635,6 @@
               }
             }
           },
-          "304": {
-            "description": "The resource was not modified.",
-            "headers": {
-              "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
-              }
-            }
-          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -1591,6 +1652,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           }
@@ -1631,8 +1705,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -1646,6 +1722,14 @@
                   "type": "string"
                 },
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              },
+              "Content-Length": {
+                "description": "Size of the response body in bytes",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 891
               }
             }
           },
@@ -1706,8 +1790,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -1731,19 +1817,6 @@
               }
             }
           },
-          "304": {
-            "description": "The resource was not modified.",
-            "headers": {
-              "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
-              }
-            }
-          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -1761,6 +1834,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           }
@@ -1801,14 +1887,24 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
+              "Content-Length": {
+                "description": "Size of the response body in bytes",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 891
+              },
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
                 "required": true,
@@ -2077,8 +2173,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -2102,19 +2200,6 @@
               }
             }
           },
-          "304": {
-            "description": "The resource was not modified.",
-            "headers": {
-              "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
-              }
-            }
-          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -2132,6 +2217,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           }
@@ -2172,8 +2270,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -2187,6 +2287,14 @@
                   "type": "string"
                 },
                 "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+              },
+              "Content-Length": {
+                "description": "Size of the response body in bytes",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 891
               }
             }
           },
@@ -2247,8 +2355,10 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
@@ -2272,19 +2382,6 @@
               }
             }
           },
-          "304": {
-            "description": "The resource was not modified.",
-            "headers": {
-              "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
-              }
-            }
-          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -2302,6 +2399,19 @@
                 "schema": {
                   "$ref": "#/components/schemas/errorResponseDocument"
                 }
+              }
+            }
+          },
+          "304": {
+            "description": "The resource was not modified.",
+            "headers": {
+              "ETag": {
+                "description": "ETag identifying the version of the fetched resource.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
               }
             }
           }
@@ -2342,14 +2452,24 @@
             "in": "header",
             "description": "ETag identifying the version of the requested resource.",
             "schema": {
-              "type": "string"
-            }
+              "type": "string",
+              "nullable": true
+            },
+            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
           }
         ],
         "responses": {
           "200": {
             "description": "The operation completed successfully.",
             "headers": {
+              "Content-Length": {
+                "description": "Size of the response body in bytes",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                },
+                "example": 891
+              },
               "ETag": {
                 "description": "ETag identifying the version of the fetched resource.",
                 "required": true,
