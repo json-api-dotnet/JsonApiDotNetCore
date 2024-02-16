@@ -40,13 +40,14 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<NonPrimaryDocumentTypeFactory>();
         services.TryAddSingleton<ResourceFieldValidationMetadataProvider>();
 
-        services.TryAddSingleton<IApiDescriptionGroupCollectionProvider>(serviceProvider =>
+        // Not using TryAddSingleton, see https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1463.
+        services.Replace(ServiceDescriptor.Singleton<IApiDescriptionGroupCollectionProvider>(serviceProvider =>
         {
             var actionDescriptorCollectionProvider = serviceProvider.GetRequiredService<JsonApiActionDescriptorCollectionProvider>();
             var apiDescriptionProviders = serviceProvider.GetRequiredService<IEnumerable<IApiDescriptionProvider>>();
 
             return new ApiDescriptionGroupCollectionProvider(actionDescriptorCollectionProvider, apiDescriptionProviders);
-        });
+        }));
 
         mvcBuilder.AddApiExplorer();
 
