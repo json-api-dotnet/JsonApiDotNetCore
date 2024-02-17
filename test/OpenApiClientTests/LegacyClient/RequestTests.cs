@@ -23,7 +23,7 @@ public sealed class RequestTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightCollectionAsync());
+        _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightCollectionAsync(null, null));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
@@ -43,7 +43,7 @@ public sealed class RequestTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightAsync(flightId));
+        _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightAsync(flightId, null, null));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
@@ -269,7 +269,7 @@ public sealed class RequestTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightPurserAsync(flightId));
+        _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightPurserAsync(flightId, null, null));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
@@ -289,7 +289,7 @@ public sealed class RequestTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightCabinCrewMembersAsync(flightId));
+        _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightCabinCrewMembersAsync(flightId, null, null));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
@@ -309,7 +309,7 @@ public sealed class RequestTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightPurserRelationshipAsync(flightId));
+        _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightPurserRelationshipAsync(flightId, null, null));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();
@@ -368,7 +368,7 @@ public sealed class RequestTests
         IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
         // Act
-        _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId));
+        _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId, null, null));
 
         // Assert
         wrapper.Request.ShouldNotBeNull();

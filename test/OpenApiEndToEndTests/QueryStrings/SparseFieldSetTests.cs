@@ -1,4 +1,5 @@
 using FluentAssertions;
+using JsonApiDotNetCore.OpenApi.Client;
 using OpenApiEndToEndTests.QueryStrings.GeneratedCode;
 using OpenApiTests;
 using OpenApiTests.QueryStrings;
@@ -45,14 +46,14 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString);
+        ApiResponse<NodeCollectionResponseDocument> response = await apiClient.GetNodeCollectionAsync(queryString);
 
         // Assert
-        response.Data.Should().HaveCount(1);
-        response.Data.ElementAt(0).Id.Should().Be(node.StringId);
-        response.Data.ElementAt(0).Attributes.Name.Should().Be(node.Name);
-        response.Data.ElementAt(0).Attributes.Comment.Should().BeNull();
-        response.Data.ElementAt(0).Relationships.Should().BeNull();
+        response.Result.Data.Should().HaveCount(1);
+        response.Result.Data.ElementAt(0).Id.Should().Be(node.StringId);
+        response.Result.Data.ElementAt(0).Attributes.Name.Should().Be(node.Name);
+        response.Result.Data.ElementAt(0).Attributes.Comment.Should().BeNull();
+        response.Result.Data.ElementAt(0).Relationships.Should().BeNull();
     }
 
     [Fact]
@@ -76,14 +77,14 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         };
 
         // Act
-        NodePrimaryResponseDocument response = await apiClient.GetNodeAsync(node.StringId!, queryString);
+        ApiResponse<NodePrimaryResponseDocument> response = await apiClient.GetNodeAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.Id.Should().Be(node.StringId);
-        response.Data.Attributes.Name.Should().BeNull();
-        response.Data.Attributes.Comment.Should().Be(node.Comment);
-        response.Data.Relationships.Parent.Should().NotBeNull();
-        response.Data.Relationships.Children.Should().BeNull();
+        response.Result.Data.Id.Should().Be(node.StringId);
+        response.Result.Data.Attributes.Name.Should().BeNull();
+        response.Result.Data.Attributes.Comment.Should().Be(node.Comment);
+        response.Result.Data.Relationships.Parent.Should().NotBeNull();
+        response.Result.Data.Relationships.Children.Should().BeNull();
     }
 
     [Fact]
@@ -109,15 +110,15 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
+        ApiResponse<NodeCollectionResponseDocument> response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.Should().HaveCount(1);
-        response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
-        response.Data.ElementAt(0).Attributes.Name.Should().BeNull();
-        response.Data.ElementAt(0).Attributes.Comment.Should().Be(node.Children.ElementAt(0).Comment);
-        response.Data.ElementAt(0).Relationships.Parent.Should().BeNull();
-        response.Data.ElementAt(0).Relationships.Children.Should().NotBeNull();
+        response.Result.Data.Should().HaveCount(1);
+        response.Result.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
+        response.Result.Data.ElementAt(0).Attributes.Name.Should().BeNull();
+        response.Result.Data.ElementAt(0).Attributes.Comment.Should().Be(node.Children.ElementAt(0).Comment);
+        response.Result.Data.ElementAt(0).Relationships.Parent.Should().BeNull();
+        response.Result.Data.ElementAt(0).Relationships.Children.Should().NotBeNull();
     }
 
     [Fact]
@@ -142,15 +143,15 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         };
 
         // Act
-        NullableNodeSecondaryResponseDocument response = await apiClient.GetNodeParentAsync(node.StringId!, queryString);
+        ApiResponse<NullableNodeSecondaryResponseDocument> response = await apiClient.GetNodeParentAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.ShouldNotBeNull();
-        response.Data.Id.Should().Be(node.Parent.StringId);
-        response.Data.Attributes.Name.Should().BeNull();
-        response.Data.Attributes.Comment.Should().Be(node.Parent.Comment);
-        response.Data.Relationships.Parent.Should().BeNull();
-        response.Data.Relationships.Children.Should().NotBeNull();
+        response.Result.Data.ShouldNotBeNull();
+        response.Result.Data.Id.Should().Be(node.Parent.StringId);
+        response.Result.Data.Attributes.Name.Should().BeNull();
+        response.Result.Data.Attributes.Comment.Should().Be(node.Parent.Comment);
+        response.Result.Data.Relationships.Parent.Should().BeNull();
+        response.Result.Data.Relationships.Children.Should().NotBeNull();
     }
 
     [Fact]
@@ -174,10 +175,10 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         };
 
         // Act
-        NodePrimaryResponseDocument response = await apiClient.GetNodeAsync(node.StringId!, queryString);
+        ApiResponse<NodePrimaryResponseDocument> response = await apiClient.GetNodeAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.Id.Should().Be(node.StringId);
-        response.Data.Attributes.Should().BeNull();
+        response.Result.Data.Id.Should().Be(node.StringId);
+        response.Result.Data.Attributes.Should().BeNull();
     }
 }

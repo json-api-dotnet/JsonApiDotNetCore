@@ -1,6 +1,6 @@
 using System.Net;
 using FluentAssertions;
-using JsonApiDotNetCore.OpenApi.Client.Exceptions;
+using JsonApiDotNetCore.OpenApi.Client;
 using OpenApiEndToEndTests.QueryStrings.GeneratedCode;
 using OpenApiTests;
 using OpenApiTests.QueryStrings;
@@ -48,12 +48,12 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString);
+        ApiResponse<NodeCollectionResponseDocument> response = await apiClient.GetNodeCollectionAsync(queryString);
 
         // Assert
-        response.Data.Should().HaveCount(2);
-        response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
-        response.Data.ElementAt(1).Id.Should().Be(nodes[0].StringId);
+        response.Result.Data.Should().HaveCount(2);
+        response.Result.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
+        response.Result.Data.ElementAt(1).Id.Should().Be(nodes[0].StringId);
     }
 
     [Fact]
@@ -81,12 +81,12 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
+        ApiResponse<NodeCollectionResponseDocument> response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.Should().HaveCount(2);
-        response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
-        response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(0).StringId);
+        response.Result.Data.Should().HaveCount(2);
+        response.Result.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
+        response.Result.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(0).StringId);
     }
 
     [Fact]
@@ -114,12 +114,12 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString);
+        ApiResponse<NodeIdentifierCollectionResponseDocument> response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.Should().HaveCount(2);
-        response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
-        response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(1).StringId);
+        response.Result.Data.Should().HaveCount(2);
+        response.Result.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
+        response.Result.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(1).StringId);
     }
 
     [Fact]

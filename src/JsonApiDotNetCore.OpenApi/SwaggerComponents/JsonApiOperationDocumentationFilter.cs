@@ -182,7 +182,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             }
 
             AddQueryStringParameters(operation, false);
-            AddHeaderParameterIfNoneMatch(operation);
+            AddRequestHeaderIfNoneMatch(operation);
             SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         }
         else if (operation.Parameters.Count == 1)
@@ -210,7 +210,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
             SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularName} to retrieve.");
             AddQueryStringParameters(operation, false);
-            AddHeaderParameterIfNoneMatch(operation);
+            AddRequestHeaderIfNoneMatch(operation);
             SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
             SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularName} does not exist.");
         }
@@ -313,7 +313,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {rightName} to retrieve.");
         AddQueryStringParameters(operation, false);
-        AddHeaderParameterIfNoneMatch(operation);
+        AddRequestHeaderIfNoneMatch(operation);
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
     }
@@ -355,7 +355,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {singularRightName} {ident} to retrieve.");
         AddQueryStringParameters(operation, true);
-        AddHeaderParameterIfNoneMatch(operation);
+        AddRequestHeaderIfNoneMatch(operation);
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
     }
@@ -470,13 +470,12 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
         response.Headers[HeaderNames.ETag] = new OpenApiHeader
         {
-            Description = "ETag identifying the version of the fetched resource.",
+            Description = "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
             Required = true,
             Schema = new OpenApiSchema
             {
                 Type = "string"
-            },
-            Example = new OpenApiString("\"33a64df551425fcc55e4d42a148795d9f25f89d4\"")
+            }
         };
     }
 
@@ -486,7 +485,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
         response.Headers[HeaderNames.ContentLength] = new OpenApiHeader
         {
-            Description = "Size of the response body in bytes",
+            Description = "Size of the HTTP response body, in bytes.",
             Required = true,
             Schema = new OpenApiSchema
             {
@@ -502,11 +501,11 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
         response.Headers[HeaderNames.Location] = new OpenApiHeader
         {
-            Description = "Location of the newly created resource.",
+            Description = "The URL at which the newly created JSON:API resource can be retrieved.",
             Required = true,
             Schema = new OpenApiSchema
             {
-                Type = "string"
+                Type = "uri"
             }
         };
     }
@@ -555,20 +554,18 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         });
     }
 
-    private static void AddHeaderParameterIfNoneMatch(OpenApiOperation operation)
+    private static void AddRequestHeaderIfNoneMatch(OpenApiOperation operation)
     {
         operation.Parameters.Add(new OpenApiParameter
         {
             In = ParameterLocation.Header,
             Name = "If-None-Match",
-            Description = "ETag identifying the version of the requested resource.",
-            Required = false,
+            Description = "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             Schema = new OpenApiSchema
             {
                 Type = "string",
                 Nullable = true
-            },
-            Example = new OpenApiString("\"33a64df551425fcc55e4d42a148795d9f25f89d4\"")
+            }
         });
     }
 }

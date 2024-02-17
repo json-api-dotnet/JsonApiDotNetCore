@@ -1,13 +1,21 @@
+using System.Net;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.OpenApi.Client.Exceptions;
-
-#pragma warning disable AV1008 // Class should not be static
 
 namespace JsonApiDotNetCore.OpenApi.Client;
 
 [PublicAPI]
-public static class ApiResponse
+public class ApiResponse
 {
+    public int StatusCode { get; private set; }
+
+    public IReadOnlyDictionary<string, IEnumerable<string>> Headers { get; private set; }
+
+    public ApiResponse(int statusCode, IReadOnlyDictionary<string, IEnumerable<string>> headers)
+    {
+        StatusCode = statusCode;
+        Headers = headers;
+    }
+
     public static async Task<TResponse?> TranslateAsync<TResponse>(Func<Task<TResponse>> operation)
         where TResponse : class
     {
@@ -17,7 +25,7 @@ public static class ApiResponse
         {
             return await operation().ConfigureAwait(false);
         }
-        catch (ApiException exception) when (exception.StatusCode == 204)
+        catch (ApiException exception) when (exception.StatusCode is (int)HttpStatusCode.NoContent or (int)HttpStatusCode.NotModified)
         {
             // Workaround for https://github.com/RicoSuter/NSwag/issues/2499
             return null;
@@ -32,9 +40,52 @@ public static class ApiResponse
         {
             await operation().ConfigureAwait(false);
         }
-        catch (ApiException exception) when (exception.StatusCode == 204)
+        catch (ApiException exception) when (exception.StatusCode is (int)HttpStatusCode.NoContent or (int)HttpStatusCode.NotModified)
         {
             // Workaround for https://github.com/RicoSuter/NSwag/issues/2499
         }
+    }
+
+    public static async Task<ApiResponse<TResult?>> TranslateAsync<TResult>(Func<Task<ApiResponse<TResult>>> operation)
+        where TResult : class
+    {
+        ArgumentGuard.NotNull(operation);
+
+        try
+        {
+            return (await operation().ConfigureAwait(false))!;
+        }
+        catch (ApiException exception) when (exception.StatusCode is (int)HttpStatusCode.NoContent or (int)HttpStatusCode.NotModified)
+        {
+            // Workaround for https://github.com/RicoSuter/NSwag/issues/2499
+            return new ApiResponse<TResult?>(exception.StatusCode, exception.Headers, null);
+        }
+    }
+
+    public static async Task<ApiResponse> TranslateAsync(Func<Task<ApiResponse>> operation)
+    {
+        ArgumentGuard.NotNull(operation);
+
+        try
+        {
+            return await operation().ConfigureAwait(false);
+        }
+        catch (ApiException exception) when (exception.StatusCode is (int)HttpStatusCode.NoContent or (int)HttpStatusCode.NotModified)
+        {
+            // Workaround for https://github.com/RicoSuter/NSwag/issues/2499
+            return new ApiResponse(exception.StatusCode, exception.Headers);
+        }
+    }
+}
+
+[PublicAPI]
+public class ApiResponse<TResult> : ApiResponse
+{
+    public TResult Result { get; private set; }
+
+    public ApiResponse(int statusCode, IReadOnlyDictionary<string, IEnumerable<string>> headers, TResult result)
+        : base(statusCode, headers)
+    {
+        Result = result;
     }
 }

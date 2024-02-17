@@ -1,6 +1,6 @@
 using System.Net;
 using FluentAssertions;
-using JsonApiDotNetCore.OpenApi.Client.Exceptions;
+using JsonApiDotNetCore.OpenApi.Client;
 using OpenApiEndToEndTests.QueryStrings.GeneratedCode;
 using OpenApiTests;
 using OpenApiTests.QueryStrings;
@@ -47,13 +47,13 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString);
+        ApiResponse<NodeCollectionResponseDocument> response = await apiClient.GetNodeCollectionAsync(queryString);
 
         // Assert
-        response.Data.Should().HaveCount(1);
-        response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
-        response.Meta.ShouldNotBeNull();
-        response.Meta.ShouldContainKey("total").With(total => total.Should().Be(3));
+        response.Result.Data.Should().HaveCount(1);
+        response.Result.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
+        response.Result.Meta.ShouldNotBeNull();
+        response.Result.Meta.ShouldContainKey("total").With(total => total.Should().Be(3));
     }
 
     [Fact]
@@ -80,14 +80,14 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
+        ApiResponse<NodeCollectionResponseDocument> response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.Should().HaveCount(2);
-        response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
-        response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(1).StringId);
-        response.Meta.ShouldNotBeNull();
-        response.Meta.ShouldContainKey("total").With(total => total.Should().Be(3));
+        response.Result.Data.Should().HaveCount(2);
+        response.Result.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
+        response.Result.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(1).StringId);
+        response.Result.Meta.ShouldNotBeNull();
+        response.Result.Meta.ShouldContainKey("total").With(total => total.Should().Be(3));
     }
 
     [Fact]
@@ -114,13 +114,13 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
         };
 
         // Act
-        NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString);
+        ApiResponse<NodeIdentifierCollectionResponseDocument> response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.Should().HaveCount(1);
-        response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(2).StringId);
-        response.Meta.ShouldNotBeNull();
-        response.Meta.ShouldContainKey("total").With(total => total.Should().Be(3));
+        response.Result.Data.Should().HaveCount(1);
+        response.Result.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(2).StringId);
+        response.Result.Meta.ShouldNotBeNull();
+        response.Result.Meta.ShouldContainKey("total").With(total => total.Should().Be(3));
     }
 
     [Fact]

@@ -1,4 +1,5 @@
 using FluentAssertions;
+using JsonApiDotNetCore.OpenApi.Client;
 using OpenApiEndToEndTests.QueryStrings.GeneratedCode;
 using OpenApiTests;
 using OpenApiTests.QueryStrings;
@@ -46,15 +47,15 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString);
+        ApiResponse<NodeCollectionResponseDocument> response = await apiClient.GetNodeCollectionAsync(queryString);
 
         // Assert
-        response.Data.ShouldHaveCount(1);
-        response.Data.ElementAt(0).Id.Should().Be(node.StringId);
+        response.Result.Data.ShouldHaveCount(1);
+        response.Result.Data.ElementAt(0).Id.Should().Be(node.StringId);
 
-        response.Included.Should().HaveCount(2);
-        response.Included.Should().ContainSingle(include => include is NameValuePairDataInResponse && include.Id == node.Values.ElementAt(0).StringId);
-        response.Included.Should().ContainSingle(include => include is NameValuePairDataInResponse && include.Id == node.Values.ElementAt(1).StringId);
+        response.Result.Included.Should().HaveCount(2);
+        response.Result.Included.Should().ContainSingle(include => include is NameValuePairDataInResponse && include.Id == node.Values.ElementAt(0).StringId);
+        response.Result.Included.Should().ContainSingle(include => include is NameValuePairDataInResponse && include.Id == node.Values.ElementAt(1).StringId);
     }
 
     [Fact]
@@ -81,15 +82,15 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NodePrimaryResponseDocument response = await apiClient.GetNodeAsync(node.StringId!, queryString);
+        ApiResponse<NodePrimaryResponseDocument> response = await apiClient.GetNodeAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.Id.Should().Be(node.StringId);
+        response.Result.Data.Id.Should().Be(node.StringId);
 
-        response.Included.Should().HaveCount(3);
-        response.Included.Should().ContainSingle(include => include is NodeDataInResponse && include.Id == node.Children.ElementAt(0).StringId);
-        response.Included.Should().ContainSingle(include => include is NodeDataInResponse && include.Id == node.Children.ElementAt(1).StringId);
-        response.Included.Should().ContainSingle(include => include is NameValuePairDataInResponse && include.Id == node.Values[0].StringId);
+        response.Result.Included.Should().HaveCount(3);
+        response.Result.Included.Should().ContainSingle(include => include is NodeDataInResponse && include.Id == node.Children.ElementAt(0).StringId);
+        response.Result.Included.Should().ContainSingle(include => include is NodeDataInResponse && include.Id == node.Children.ElementAt(1).StringId);
+        response.Result.Included.Should().ContainSingle(include => include is NameValuePairDataInResponse && include.Id == node.Values[0].StringId);
     }
 
     [Fact]
@@ -116,14 +117,14 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NameValuePairCollectionResponseDocument response = await apiClient.GetNodeValuesAsync(node.StringId!, queryString);
+        ApiResponse<NameValuePairCollectionResponseDocument> response = await apiClient.GetNodeValuesAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.ShouldHaveCount(2);
+        response.Result.Data.ShouldHaveCount(2);
 
-        response.Included.ShouldHaveCount(2);
-        response.Included.Should().ContainSingle(include => include is NodeDataInResponse && include.Id == node.StringId);
-        response.Included.Should().ContainSingle(include => include is NodeDataInResponse && include.Id == node.Parent.StringId);
+        response.Result.Included.ShouldHaveCount(2);
+        response.Result.Included.Should().ContainSingle(include => include is NodeDataInResponse && include.Id == node.StringId);
+        response.Result.Included.Should().ContainSingle(include => include is NodeDataInResponse && include.Id == node.Parent.StringId);
     }
 
     [Fact]
@@ -150,15 +151,15 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NullableNodeSecondaryResponseDocument response = await apiClient.GetNodeParentAsync(node.StringId!, queryString);
+        ApiResponse<NullableNodeSecondaryResponseDocument> response = await apiClient.GetNodeParentAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.ShouldNotBeNull();
-        response.Data.Id.Should().Be(node.Parent.StringId);
+        response.Result.Data.ShouldNotBeNull();
+        response.Result.Data.Id.Should().Be(node.Parent.StringId);
 
-        response.Included.Should().HaveCount(1);
+        response.Result.Included.Should().HaveCount(1);
 
-        NodeDataInResponse? include = response.Included.ElementAt(0).Should().BeOfType<NodeDataInResponse>().Subject;
+        NodeDataInResponse? include = response.Result.Included.ElementAt(0).Should().BeOfType<NodeDataInResponse>().Subject;
         include.Id.Should().Be(node.Parent.Parent.StringId);
         include.Attributes.Name.Should().Be(node.Parent.Parent.Name);
     }
@@ -184,11 +185,11 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NodePrimaryResponseDocument response = await apiClient.GetNodeAsync(node.StringId!, queryString);
+        ApiResponse<NodePrimaryResponseDocument> response = await apiClient.GetNodeAsync(node.StringId!, queryString);
 
         // Assert
-        response.Data.Id.Should().Be(node.StringId);
+        response.Result.Data.Id.Should().Be(node.StringId);
 
-        response.Included.Should().BeEmpty();
+        response.Result.Included.Should().BeEmpty();
     }
 }

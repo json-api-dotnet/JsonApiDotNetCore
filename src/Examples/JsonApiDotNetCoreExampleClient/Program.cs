@@ -1,7 +1,6 @@
+using System.Net;
 using JsonApiDotNetCore.OpenApi.Client;
-using JsonApiDotNetCore.OpenApi.Client.Exceptions;
 using JsonApiDotNetCoreExampleClient;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 
 #if DEBUG
@@ -15,19 +14,17 @@ using var httpClient = new HttpClient();
 
 var apiClient = new ExampleApiClient(httpClient);
 
-JsonApiResponse<PersonCollectionResponseDocument> getResponse = await GetPersonCollectionAsync(apiClient);
+ApiResponse<PersonCollectionResponseDocument?> getResponse1 = await GetPersonCollectionAsync(apiClient, null);
+ApiResponse<PersonCollectionResponseDocument?> getResponse2 = await GetPersonCollectionAsync(apiClient, getResponse1.Headers[HeaderNames.ETag].First());
 
-try
+if (getResponse2.StatusCode == (int)HttpStatusCode.NotModified)
 {
-    getResponse = await GetPersonCollectionAsync(apiClient, getResponse.Headers[HeaderNames.ETag].First());
-}
-catch (ApiException exception) when (exception.StatusCode == StatusCodes.Status304NotModified)
-{
+    // getResponse2.Result is null.
 }
 
-foreach (PersonDataInResponse person in getResponse.Result.Data)
+foreach (PersonDataInResponse person in getResponse1.Result!.Data)
 {
-    PrintPerson(person, getResponse.Result.Included);
+    PrintPerson(person, getResponse1.Result.Included);
 }
 
 var patchRequest = new PersonPatchRequestDocument
@@ -52,17 +49,15 @@ using (apiClient.WithPartialAttributeSerialization<PersonPatchRequestDocument, P
 Console.WriteLine("Press any key to close.");
 Console.ReadKey();
 
-#pragma warning disable AV1553
-static Task<JsonApiResponse<PersonCollectionResponseDocument>> GetPersonCollectionAsync(ExampleApiClient apiClient, string? ifNoneMatch = null)
-#pragma warning restore AV1553
+static Task<ApiResponse<PersonCollectionResponseDocument?>> GetPersonCollectionAsync(ExampleApiClient apiClient, string? ifNoneMatch)
 {
-    return apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
+    return ApiResponse.TranslateAsync(() => apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
     {
         ["filter"] = "has(assignedTodoItems)",
         ["sort"] = "-lastName",
         ["page[size]"] = "5",
         ["include"] = "assignedTodoItems.tags"
-    }, ifNoneMatch);
+    }, ifNoneMatch));
 }
 
 static void PrintPerson(PersonDataInResponse person, ICollection<DataInResponse> includes)

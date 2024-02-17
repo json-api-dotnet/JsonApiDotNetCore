@@ -34,12 +34,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -47,12 +46,11 @@
             "description": "Successfully returns the found staffMembers, or an empty array if none were found.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             },
             "content": {
@@ -77,12 +75,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           }
@@ -112,12 +109,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -125,15 +121,14 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               },
               "Content-Length": {
-                "description": "Size of the response body in bytes",
+                "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer"
@@ -146,12 +141,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           },
@@ -200,10 +194,10 @@
             "description": "The staffMember was successfully created, which resulted in additional changes. The newly created staffMember is returned.",
             "headers": {
               "Location": {
-                "description": "Location of the newly created resource.",
+                "description": "The URL at which the newly created JSON:API resource can be retrieved.",
                 "required": true,
                 "schema": {
-                  "type": "string"
+                  "type": "uri"
                 }
               }
             },
@@ -294,12 +288,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -307,12 +300,11 @@
             "description": "Successfully returns the found staffMember.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             },
             "content": {
@@ -347,12 +339,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           }
@@ -391,12 +382,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -404,15 +394,14 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               },
               "Content-Length": {
-                "description": "Size of the response body in bytes",
+                "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer"
@@ -425,12 +414,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           },
@@ -600,12 +588,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -613,12 +600,11 @@
             "description": "Successfully returns the found supermarkets, or an empty array if none were found.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             },
             "content": {
@@ -643,12 +629,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           }
@@ -678,12 +663,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -691,15 +675,14 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               },
               "Content-Length": {
-                "description": "Size of the response body in bytes",
+                "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer"
@@ -712,12 +695,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           },
@@ -766,10 +748,10 @@
             "description": "The supermarket was successfully created, which resulted in additional changes. The newly created supermarket is returned.",
             "headers": {
               "Location": {
-                "description": "Location of the newly created resource.",
+                "description": "The URL at which the newly created JSON:API resource can be retrieved.",
                 "required": true,
                 "schema": {
-                  "type": "string"
+                  "type": "uri"
                 }
               }
             },
@@ -860,12 +842,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -873,12 +854,11 @@
             "description": "Successfully returns the found supermarket.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             },
             "content": {
@@ -913,12 +893,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           }
@@ -957,12 +936,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -970,15 +948,14 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               },
               "Content-Length": {
-                "description": "Size of the response body in bytes",
+                "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer"
@@ -991,12 +968,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           },
@@ -1175,12 +1151,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -1188,12 +1163,11 @@
             "description": "Successfully returns the found staffMember, or `null` if it was not found.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             },
             "content": {
@@ -1228,12 +1202,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           }
@@ -1272,12 +1245,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -1285,15 +1257,14 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               },
               "Content-Length": {
-                "description": "Size of the response body in bytes",
+                "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer"
@@ -1306,12 +1277,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           },
@@ -1357,12 +1327,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -1370,12 +1339,11 @@
             "description": "Successfully returns the found staffMember identity, or `null` if it was not found.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             },
             "content": {
@@ -1410,12 +1378,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           }
@@ -1454,12 +1421,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -1467,7 +1433,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "Content-Length": {
-                "description": "Size of the response body in bytes",
+                "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer"
@@ -1475,12 +1441,11 @@
                 "example": 891
               },
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           },
@@ -1488,12 +1453,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           },
@@ -1606,12 +1570,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -1619,12 +1582,11 @@
             "description": "Successfully returns the found staffMembers, or an empty array if none were found.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             },
             "content": {
@@ -1659,12 +1621,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           }
@@ -1703,12 +1664,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -1716,15 +1676,14 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               },
               "Content-Length": {
-                "description": "Size of the response body in bytes",
+                "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer"
@@ -1737,12 +1696,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           },
@@ -1788,12 +1746,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -1801,12 +1758,11 @@
             "description": "Successfully returns the found staffMember identities, or an empty array if none were found.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             },
             "content": {
@@ -1841,12 +1797,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           }
@@ -1885,12 +1840,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -1898,7 +1852,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "Content-Length": {
-                "description": "Size of the response body in bytes",
+                "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer"
@@ -1906,12 +1860,11 @@
                 "example": 891
               },
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           },
@@ -1919,12 +1872,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           },
@@ -2171,12 +2123,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -2184,12 +2135,11 @@
             "description": "Successfully returns the found staffMember, or `null` if it was not found.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             },
             "content": {
@@ -2224,12 +2174,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           }
@@ -2268,12 +2217,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -2281,15 +2229,14 @@
             "description": "The operation completed successfully.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               },
               "Content-Length": {
-                "description": "Size of the response body in bytes",
+                "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer"
@@ -2302,12 +2249,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           },
@@ -2353,12 +2299,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -2366,12 +2311,11 @@
             "description": "Successfully returns the found staffMember identity, or `null` if it was not found.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             },
             "content": {
@@ -2406,12 +2350,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           }
@@ -2450,12 +2393,11 @@
           {
             "name": "If-None-Match",
             "in": "header",
-            "description": "ETag identifying the version of the requested resource.",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             "schema": {
               "type": "string",
               "nullable": true
-            },
-            "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+            }
           }
         ],
         "responses": {
@@ -2463,7 +2405,7 @@
             "description": "The operation completed successfully.",
             "headers": {
               "Content-Length": {
-                "description": "Size of the response body in bytes",
+                "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
                   "type": "integer"
@@ -2471,12 +2413,11 @@
                 "example": 891
               },
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           },
@@ -2484,12 +2425,11 @@
             "description": "The resource was not modified.",
             "headers": {
               "ETag": {
-                "description": "ETag identifying the version of the fetched resource.",
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
                 "required": true,
                 "schema": {
                   "type": "string"
-                },
-                "example": "\"33a64df551425fcc55e4d42a148795d9f25f89d4\""
+                }
               }
             }
           },

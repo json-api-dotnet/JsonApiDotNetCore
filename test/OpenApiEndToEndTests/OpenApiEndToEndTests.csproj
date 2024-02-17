@@ -29,7 +29,7 @@
       <ClassName>QueryStringsClient</ClassName>
       <OutputPath>QueryStringsClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateOptionalParameters:true /GenerateNullableReferenceTypes:true</Options>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /WrapResponses:true /GenerateResponseClasses:false /ResponseClass:ApiResponse /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client /GenerateOptionalParameters:true /GenerateNullableReferenceTypes:true</Options>
     </OpenApiReference>
   </ItemGroup>
 </Project>
