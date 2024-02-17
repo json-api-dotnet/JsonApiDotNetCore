@@ -4,17 +4,11 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.OpenApi.Client;
 
 [PublicAPI]
-public class ApiResponse
+public class ApiResponse(int statusCode, IReadOnlyDictionary<string, IEnumerable<string>> headers)
 {
-    public int StatusCode { get; private set; }
+    public int StatusCode { get; private set; } = statusCode;
 
-    public IReadOnlyDictionary<string, IEnumerable<string>> Headers { get; private set; }
-
-    public ApiResponse(int statusCode, IReadOnlyDictionary<string, IEnumerable<string>> headers)
-    {
-        StatusCode = statusCode;
-        Headers = headers;
-    }
+    public IReadOnlyDictionary<string, IEnumerable<string>> Headers { get; private set; } = headers;
 
     public static async Task<TResponse?> TranslateAsync<TResponse>(Func<Task<TResponse>> operation)
         where TResponse : class
@@ -79,13 +73,7 @@ public class ApiResponse
 }
 
 [PublicAPI]
-public class ApiResponse<TResult> : ApiResponse
+public class ApiResponse<TResult>(int statusCode, IReadOnlyDictionary<string, IEnumerable<string>> headers, TResult result) : ApiResponse(statusCode, headers)
 {
-    public TResult Result { get; private set; }
-
-    public ApiResponse(int statusCode, IReadOnlyDictionary<string, IEnumerable<string>> headers, TResult result)
-        : base(statusCode, headers)
-    {
-        Result = result;
-    }
+    public TResult Result { get; private set; } = result;
 }
