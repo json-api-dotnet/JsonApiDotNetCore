@@ -1,8 +1,6 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.Client;
 using Newtonsoft.Json;
-using NSwag;
-using NSwag.CodeGeneration;
 
 namespace JsonApiDotNetCoreExampleClient;
 
@@ -16,13 +14,5 @@ public partial class ExampleApiClient : JsonApiClient
 #if DEBUG
         settings.Formatting = Formatting.Indented;
 #endif
-    }
-}
-
-public class TestParameterNameGenerator : IParameterNameGenerator
-{
-    public string Generate(OpenApiParameter parameter, IEnumerable<OpenApiParameter> allParameters)
-    {
-        throw new NotImplementedException("TTEESSST");
     }
 }
