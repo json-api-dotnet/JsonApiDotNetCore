@@ -36,7 +36,7 @@ public class SkipTakeClauseBuilder : QueryClauseBuilder, ISkipTakeClauseBuilder
 
     private static Expression ExtensionMethodCall(Expression source, string operationName, int value, QueryClauseBuilderContext context)
     {
-        Expression constant = value.CreateTupleAccessExpressionForConstant(typeof(int));
+        Expression constant = SystemExpressionBuilder.CloseOver(value);
 
         return Expression.Call(context.ExtensionType, operationName, [context.LambdaScope.Parameter.Type], source, constant);
     }
