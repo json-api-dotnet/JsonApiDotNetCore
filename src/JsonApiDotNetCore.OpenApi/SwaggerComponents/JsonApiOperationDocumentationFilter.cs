@@ -491,7 +491,6 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             {
                 Type = "integer"
             },
-            Example = new OpenApiInteger(891)
         };
     }
 

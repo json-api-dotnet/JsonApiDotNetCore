@@ -2,7 +2,6 @@
   <PropertyGroup>
     <!-- TargetFrameworks does not work, see https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2706 -->
     <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <Import Project="..\..\package-versions.props" />
