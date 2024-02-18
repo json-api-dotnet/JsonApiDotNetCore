@@ -48,12 +48,12 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        ApiResponse<NodeCollectionResponseDocument> response = await apiClient.GetNodeCollectionAsync(queryString);
+        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString, null);
 
         // Assert
-        response.Result.Data.Should().HaveCount(2);
-        response.Result.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
-        response.Result.Data.ElementAt(1).Id.Should().Be(nodes[0].StringId);
+        response.Data.Should().HaveCount(2);
+        response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
+        response.Data.ElementAt(1).Id.Should().Be(nodes[0].StringId);
     }
 
     [Fact]
@@ -81,12 +81,12 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        ApiResponse<NodeCollectionResponseDocument> response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
+        NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString, null);
 
         // Assert
-        response.Result.Data.Should().HaveCount(2);
-        response.Result.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
-        response.Result.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(0).StringId);
+        response.Data.Should().HaveCount(2);
+        response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
+        response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(0).StringId);
     }
 
     [Fact]
@@ -114,12 +114,12 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        ApiResponse<NodeIdentifierCollectionResponseDocument> response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString);
+        NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString, null);
 
         // Assert
-        response.Result.Data.Should().HaveCount(2);
-        response.Result.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
-        response.Result.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(1).StringId);
+        response.Data.Should().HaveCount(2);
+        response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
+        response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(1).StringId);
     }
 
     [Fact]
@@ -135,7 +135,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.GetNodeAsync(Unknown.StringId.Int64, queryString);
+        Func<Task> action = async () => _ = await apiClient.GetNodeAsync(Unknown.StringId.Int64, queryString, null);
 
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;

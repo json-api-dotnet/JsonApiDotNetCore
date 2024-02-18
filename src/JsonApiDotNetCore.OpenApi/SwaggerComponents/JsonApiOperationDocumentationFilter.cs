@@ -490,7 +490,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             Schema = new OpenApiSchema
             {
                 Type = "integer"
-            },
+            }
         };
     }
 

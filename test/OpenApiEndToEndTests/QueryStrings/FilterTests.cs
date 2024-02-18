@@ -48,15 +48,15 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        ApiResponse<NodeCollectionResponseDocument> response = await apiClient.GetNodeCollectionAsync(queryString);
+        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString, null);
 
         // Assert
-        response.Result.Data.Should().HaveCount(1);
-        response.Result.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
-        response.Result.Data.ElementAt(0).Attributes.Name.Should().Be(nodes[1].Name);
-        response.Result.Data.ElementAt(0).Attributes.Comment.Should().Be(nodes[1].Comment);
-        response.Result.Meta.ShouldNotBeNull();
-        response.Result.Meta.ShouldContainKey("total").With(total => total.Should().Be(1));
+        response.Data.Should().HaveCount(1);
+        response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
+        response.Data.ElementAt(0).Attributes.Name.Should().Be(nodes[1].Name);
+        response.Data.ElementAt(0).Attributes.Comment.Should().Be(nodes[1].Comment);
+        response.Meta.ShouldNotBeNull();
+        response.Meta.ShouldContainKey("total").With(total => total.Should().Be(1));
     }
 
     [Fact]
@@ -84,15 +84,15 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        ApiResponse<NodeCollectionResponseDocument> response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
+        NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString, null);
 
         // Assert
-        response.Result.Data.Should().HaveCount(1);
-        response.Result.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
-        response.Result.Data.ElementAt(0).Attributes.Name.Should().Be(node.Children.ElementAt(1).Name);
-        response.Result.Data.ElementAt(0).Attributes.Comment.Should().Be(node.Children.ElementAt(1).Comment);
-        response.Result.Meta.ShouldNotBeNull();
-        response.Result.Meta.ShouldContainKey("total").With(total => total.Should().Be(1));
+        response.Data.Should().HaveCount(1);
+        response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
+        response.Data.ElementAt(0).Attributes.Name.Should().Be(node.Children.ElementAt(1).Name);
+        response.Data.ElementAt(0).Attributes.Comment.Should().Be(node.Children.ElementAt(1).Comment);
+        response.Meta.ShouldNotBeNull();
+        response.Meta.ShouldContainKey("total").With(total => total.Should().Be(1));
     }
 
     [Fact]
@@ -120,13 +120,13 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        ApiResponse<NodeIdentifierCollectionResponseDocument> response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString);
+        NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString, null);
 
         // Assert
-        response.Result.Data.Should().HaveCount(1);
-        response.Result.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
-        response.Result.Meta.ShouldNotBeNull();
-        response.Result.Meta.ShouldContainKey("total").With(total => total.Should().Be(1));
+        response.Data.Should().HaveCount(1);
+        response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
+        response.Meta.ShouldNotBeNull();
+        response.Meta.ShouldContainKey("total").With(total => total.Should().Be(1));
     }
 
     [Fact]
@@ -142,7 +142,7 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         };
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.GetNodeAsync(Unknown.StringId.Int64, queryString);
+        Func<Task> action = async () => _ = await apiClient.GetNodeAsync(Unknown.StringId.Int64, queryString, null);
 
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;

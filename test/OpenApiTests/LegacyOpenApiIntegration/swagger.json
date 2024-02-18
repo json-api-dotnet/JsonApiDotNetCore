@@ -132,8 +132,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -405,8 +404,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -714,8 +712,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -883,8 +880,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               },
               "ETag": {
                 "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
@@ -1239,8 +1235,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -1512,8 +1507,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -1821,8 +1815,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -1990,8 +1983,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               },
               "ETag": {
                 "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
@@ -2374,8 +2366,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -2543,8 +2534,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               },
               "ETag": {
                 "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
@@ -2899,8 +2889,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -3172,8 +3161,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -3481,8 +3469,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -3650,8 +3637,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               },
               "ETag": {
                 "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
@@ -3900,8 +3886,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -4069,8 +4054,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               },
               "ETag": {
                 "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
@@ -4453,8 +4437,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -4622,8 +4605,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               },
               "ETag": {
                 "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
@@ -5006,8 +4988,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -5175,8 +5156,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               },
               "ETag": {
                 "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
@@ -5397,8 +5377,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
@@ -5670,8 +5649,7 @@
                 "required": true,
                 "schema": {
                   "type": "integer"
-                },
-                "example": 891
+                }
               }
             }
           },
