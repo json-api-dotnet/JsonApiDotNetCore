@@ -93,9 +93,9 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     private static BinaryExpression CreateRuntimeTypeCheck(LambdaScope lambdaScope, Type concreteClrType)
     {
         // Emitting "resource.GetType() == typeof(Article)" instead of "resource is Article" so we don't need to check for most-derived
-        // types first. This way, we can fallback to "anything else" at the end without worrying about order.
+        // types first. This way, we can fall back to "anything else" at the end without worrying about order.
 
-        Expression concreteTypeConstant = concreteClrType.CreateTupleAccessExpressionForConstant(typeof(Type));
+        Expression concreteTypeConstant = SystemExpressionBuilder.CloseOver(concreteClrType);
         MethodCallExpression getTypeCall = Expression.Call(lambdaScope.Accessor, TypeGetTypeMethod);
 
         return Expression.MakeBinary(ExpressionType.Equal, getTypeCall, concreteTypeConstant, false, TypeOpEqualityMethod);
