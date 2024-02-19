@@ -80,7 +80,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.EnumerateObject().ShouldHaveCount(3);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found skyscrapers, or an empty array if none were found.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
-                    responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
+                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                 });
             });
@@ -106,7 +106,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
-                    responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
+                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                 });
             });
@@ -158,7 +158,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found skyscraper.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
-                    responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
+                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -187,7 +187,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
-                    responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
+                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -263,7 +263,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found elevator, or `null` if it was not found.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
-                    responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
+                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -292,7 +292,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
-                    responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
+                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -322,7 +322,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found elevator identity, or `null` if it was not found.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
-                    responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
+                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -351,7 +351,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
-                    responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
+                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -404,7 +404,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found spaces, or an empty array if none were found.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
-                    responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
+                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -433,7 +433,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
-                    responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
+                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -463,7 +463,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.EnumerateObject().ShouldHaveCount(4);
                     responsesElement.Should().HaveProperty("200.description", "Successfully returns the found space identities, or an empty array if none were found.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
-                    responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
+                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });
@@ -492,7 +492,7 @@ public sealed class DocCommentsTests : IClassFixture<OpenApiTestContext<DocComme
                     responsesElement.Should().HaveProperty("200.description", "The operation completed successfully.");
                     responsesElement.Should().HaveProperty("200.headers.ETag.description", "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
                     responsesElement.Should().HaveProperty("200.headers.Content-Length.description", "Size of the HTTP response body, in bytes.");
-                    responsesElement.Should().HaveProperty("304.description", "The resource was not modified.");
+                    responsesElement.Should().HaveProperty("304.description", "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.");
                     responsesElement.Should().HaveProperty("400.description", "The query string is invalid.");
                     responsesElement.Should().HaveProperty("404.description", "The skyscraper does not exist.");
                 });

@@ -12,5 +12,5 @@ public sealed class Country : Identifiable<Guid>
     public string Name { get; set; } = null!;
 
     [Attr]
-    public int Population { get; set; }
+    public long Population { get; set; }
 }

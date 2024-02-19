@@ -31,7 +31,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.";
 
     private const string TextCompletedSuccessfully = "The operation completed successfully.";
-    private const string TextNotModified = "The resource was not modified.";
+    private const string TextNotModified = "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.";
     private const string TextQueryStringBad = "The query string is invalid.";
     private const string TextRequestBodyBad = "The request body is missing or malformed.";
     private const string TextQueryStringOrRequestBodyBad = "The query string is invalid or the request body is missing or malformed.";
@@ -504,7 +504,8 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             Required = true,
             Schema = new OpenApiSchema
             {
-                Type = "uri"
+                Type = "string",
+                Format = "uri"
             }
         };
     }

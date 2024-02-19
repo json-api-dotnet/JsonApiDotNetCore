@@ -72,7 +72,7 @@
             }
           },
           "304": {
-            "description": "The resource was not modified.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
                 "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
@@ -137,7 +137,7 @@
             }
           },
           "304": {
-            "description": "The resource was not modified.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
                 "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
@@ -335,7 +335,7 @@
             }
           },
           "304": {
-            "description": "The resource was not modified.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
                 "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
@@ -409,7 +409,7 @@
             }
           },
           "304": {
-            "description": "The resource was not modified.",
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
               "ETag": {
                 "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",

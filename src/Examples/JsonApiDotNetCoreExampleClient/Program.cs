@@ -17,9 +17,9 @@ var apiClient = new ExampleApiClient(httpClient);
 ApiResponse<PersonCollectionResponseDocument?> getResponse1 = await GetPersonCollectionAsync(apiClient, null);
 ApiResponse<PersonCollectionResponseDocument?> getResponse2 = await GetPersonCollectionAsync(apiClient, getResponse1.Headers[HeaderNames.ETag].First());
 
-if (getResponse2.StatusCode == (int)HttpStatusCode.NotModified)
+if (getResponse2 is { StatusCode: (int)HttpStatusCode.NotModified, Result: null })
 {
-    // getResponse2.Result is null.
+    Console.WriteLine("The HTTP response hasn't changed, so no response body was returned.");
 }
 
 foreach (PersonDataInResponse person in getResponse1.Result!.Data)
