@@ -61,16 +61,6 @@
               }
             }
           },
-          "400": {
-            "description": "The query string is invalid.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
           "304": {
             "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
@@ -79,6 +69,16 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
                 }
               }
             }
@@ -196,7 +196,8 @@
                 "description": "The URL at which the newly created JSON:API resource can be retrieved.",
                 "required": true,
                 "schema": {
-                  "type": "uri"
+                  "type": "string",
+                  "format": "uri"
                 }
               }
             },
@@ -314,6 +315,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -330,18 +343,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -622,6 +623,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -638,18 +651,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -797,6 +798,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -813,18 +826,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -1164,16 +1165,6 @@
               }
             }
           },
-          "400": {
-            "description": "The query string is invalid.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
           "304": {
             "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
@@ -1182,6 +1173,16 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
                 }
               }
             }
@@ -1299,7 +1300,8 @@
                 "description": "The URL at which the newly created JSON:API resource can be retrieved.",
                 "required": true,
                 "schema": {
-                  "type": "uri"
+                  "type": "string",
+                  "format": "uri"
                 }
               }
             },
@@ -1417,6 +1419,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -1433,18 +1447,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -1725,6 +1727,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -1741,18 +1755,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -1900,6 +1902,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -1916,18 +1930,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -2276,6 +2278,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -2292,18 +2306,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -2451,6 +2453,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -2467,18 +2481,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -2818,16 +2820,6 @@
               }
             }
           },
-          "400": {
-            "description": "The query string is invalid.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
           "304": {
             "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
@@ -2836,6 +2828,16 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
                 }
               }
             }
@@ -2953,7 +2955,8 @@
                 "description": "The URL at which the newly created JSON:API resource can be retrieved.",
                 "required": true,
                 "schema": {
-                  "type": "uri"
+                  "type": "string",
+                  "format": "uri"
                 }
               }
             },
@@ -3071,6 +3074,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -3087,18 +3102,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -3379,6 +3382,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -3395,18 +3410,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -3554,6 +3557,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -3570,18 +3585,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -3796,6 +3799,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -3812,18 +3827,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -3971,6 +3974,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -3987,18 +4002,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -4347,6 +4350,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -4363,18 +4378,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -4522,6 +4525,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -4538,18 +4553,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -4898,6 +4901,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -4914,18 +4929,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -5073,6 +5076,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -5089,18 +5104,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -5306,16 +5309,6 @@
               }
             }
           },
-          "400": {
-            "description": "The query string is invalid.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
           "304": {
             "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
             "headers": {
@@ -5324,6 +5317,16 @@
                 "required": true,
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-response-document"
                 }
               }
             }
@@ -5441,7 +5444,8 @@
                 "description": "The URL at which the newly created JSON:API resource can be retrieved.",
                 "required": true,
                 "schema": {
-                  "type": "uri"
+                  "type": "string",
+                  "format": "uri"
                 }
               }
             },
@@ -5559,6 +5563,18 @@
               }
             }
           },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "400": {
             "description": "The query string is invalid.",
             "content": {
@@ -5575,18 +5591,6 @@
               "application/vnd.api+json": {
                 "schema": {
                   "$ref": "#/components/schemas/error-response-document"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
                 }
               }
             }

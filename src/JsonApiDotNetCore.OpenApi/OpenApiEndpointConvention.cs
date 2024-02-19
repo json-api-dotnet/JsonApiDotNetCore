@@ -147,8 +147,11 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
     {
         return endpoint switch
         {
-            JsonApiEndpoint.GetCollection or JsonApiEndpoint.GetSingle or JsonApiEndpoint.GetSecondary or JsonApiEndpoint.GetRelationship
-                => [HttpStatusCode.OK, HttpStatusCode.NotModified],
+            JsonApiEndpoint.GetCollection or JsonApiEndpoint.GetSingle or JsonApiEndpoint.GetSecondary or JsonApiEndpoint.GetRelationship =>
+            [
+                HttpStatusCode.OK,
+                HttpStatusCode.NotModified
+            ],
             JsonApiEndpoint.Post =>
             [
                 HttpStatusCode.Created,

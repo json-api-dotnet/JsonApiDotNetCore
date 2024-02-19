@@ -23,15 +23,15 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     }
 
     [Fact]
-    public async Task Get_should_return_etag()
+    public async Task Returns_ETag_for_HEAD_request()
     {
         // Arrange
-        Country country = _fakers.Country.Generate();
+        List<Country> countries = _fakers.Country.Generate(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             await dbContext.ClearTableAsync<Country>();
-            dbContext.Countries.Add(country);
+            dbContext.Countries.AddRange(countries);
             await dbContext.SaveChangesAsync();
         });
 
@@ -39,23 +39,24 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse<CountryPrimaryResponseDocument?> response = await ApiResponse.TranslateAsync(() => apiClient.GetCountryAsync(country.StringId!));
+        ApiResponse response = await ApiResponse.TranslateAsync(() => apiClient.HeadCountryCollectionAsync(null, null));
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
+
         response.Headers.Should().ContainKey(HeaderNames.ETag);
     }
 
     [Fact]
-    public async Task Getting_twice_unmodified_resource_should_return_304()
+    public async Task Returns_ETag_for_GET_request()
     {
         // Arrange
-        Country country = _fakers.Country.Generate();
+        List<Country> countries = _fakers.Country.Generate(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             await dbContext.ClearTableAsync<Country>();
-            dbContext.Countries.Add(country);
+            dbContext.Countries.AddRange(countries);
             await dbContext.SaveChangesAsync();
         });
 
@@ -63,27 +64,100 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse<CountryPrimaryResponseDocument?> response1 = await ApiResponse.TranslateAsync(() => apiClient.GetCountryAsync(country.StringId!));
-        string etag = response1.Headers[HeaderNames.ETag].First();
-
-        ApiResponse<CountryPrimaryResponseDocument?> response2 =
-            await ApiResponse.TranslateAsync(() => apiClient.GetCountryAsync(country.StringId!, if_None_Match: etag));
+        ApiResponse response = await ApiResponse.TranslateAsync(() => apiClient.HeadCountryCollectionAsync(null, null));
 
         // Assert
-        response2.StatusCode.Should().Be((int)HttpStatusCode.NotModified);
-        response2.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().Equal([etag]);
+        response.StatusCode.Should().Be((int)HttpStatusCode.OK);
+
+        response.Headers.Should().ContainKey(HeaderNames.ETag);
     }
 
     [Fact]
-    public async Task Getting_twice_modified_resource_should_return_200()
+    public async Task Returns_no_ETag_for_failed_GET_request()
     {
         // Arrange
-        Country country = _fakers.Country.Generate();
+        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        var apiClient = new HeadersClient(httpClient);
+
+        // Act
+        Func<Task<ApiResponse<CountryPrimaryResponseDocument?>>> act = () =>
+            ApiResponse.TranslateAsync(() => apiClient.GetCountryAsync(Unknown.StringId.For<Country, Guid>(), null, null));
+
+        // Assert
+        ApiException<ErrorResponseDocument>? exception = (await act.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).And;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        exception.Headers.Should().NotContainKey(HeaderNames.ETag);
+    }
+
+    [Fact]
+    public async Task Returns_no_ETag_for_POST_request()
+    {
+        // Arrange
+        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        var apiClient = new HeadersClient(httpClient);
+
+        // Act
+        ApiResponse<CountryPrimaryResponseDocument?> response = await ApiResponse.TranslateAsync(() => apiClient.PostCountryAsync(null,
+            new CountryPostRequestDocument
+            {
+                Data = new CountryDataInPostRequest
+                {
+                    Attributes = new CountryAttributesInPostRequest
+                    {
+                        Name = _fakers.Country.Generate().Name,
+                        Population = _fakers.Country.Generate().Population
+                    }
+                }
+            }));
+
+        // Assert
+        response.StatusCode.Should().Be((int)HttpStatusCode.Created);
+
+        response.Headers.Should().NotContainKey(HeaderNames.ETag);
+    }
+
+    [Fact]
+    public async Task Returns_NotModified_for_matching_ETag()
+    {
+        // Arrange
+        List<Country> countries = _fakers.Country.Generate(2);
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
             await dbContext.ClearTableAsync<Country>();
-            dbContext.Countries.Add(country);
+            dbContext.Countries.AddRange(countries);
+            await dbContext.SaveChangesAsync();
+        });
+
+        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        var apiClient = new HeadersClient(httpClient);
+
+        ApiResponse<CountryCollectionResponseDocument?> response1 = await ApiResponse.TranslateAsync(() => apiClient.GetCountryCollectionAsync(null, null));
+
+        string responseETag = response1.Headers[HeaderNames.ETag].First();
+
+        // Act
+        ApiResponse<CountryCollectionResponseDocument?> response2 =
+            await ApiResponse.TranslateAsync(() => apiClient.GetCountryCollectionAsync(null, responseETag));
+
+        // Assert
+        response2.StatusCode.Should().Be((int)HttpStatusCode.NotModified);
+
+        response2.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().Equal([responseETag]);
+
+        response2.Result.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Returns_content_for_mismatching_ETag()
+    {
+        // Arrange
+        List<Country> countries = _fakers.Country.Generate(2);
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<Country>();
+            dbContext.Countries.AddRange(countries);
             await dbContext.SaveChangesAsync();
         });
 
@@ -91,26 +165,14 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse<CountryPrimaryResponseDocument?> response1 = await ApiResponse.TranslateAsync(() => apiClient.GetCountryAsync(country.StringId!));
-        string etag = response1.Headers[HeaderNames.ETag].First();
-
-        await ApiResponse.TranslateAsync(() => apiClient.PatchCountryAsync(country.StringId!, body: new CountryPatchRequestDocument
-        {
-            Data = new CountryDataInPatchRequest
-            {
-                Id = country.StringId!,
-                Attributes = new CountryAttributesInPatchRequest
-                {
-                    Name = _fakers.Country.Generate().Name
-                }
-            }
-        }));
-
-        ApiResponse<CountryPrimaryResponseDocument?> response3 =
-            await ApiResponse.TranslateAsync(() => apiClient.GetCountryAsync(country.StringId!, if_None_Match: etag));
+        ApiResponse<CountryCollectionResponseDocument?> response2 =
+            await ApiResponse.TranslateAsync(() => apiClient.GetCountryCollectionAsync(null, "\"Not-a-matching-value\""));
 
         // Assert
-        response3.StatusCode.Should().Be((int)HttpStatusCode.OK);
-        response3.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotEqual([etag]);
+        response2.StatusCode.Should().Be((int)HttpStatusCode.OK);
+
+        response2.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+
+        response2.Result.ShouldNotBeNull();
     }
 }
