@@ -245,7 +245,6 @@ public class WhereClauseBuilder : QueryClauseBuilder, IWhereClauseBuilder
 
     public override Expression VisitLiteralConstant(LiteralConstantExpression expression, QueryClauseBuilderContext context)
     {
-        Type type = expression.TypedValue.GetType();
-        return expression.TypedValue.CreateTupleAccessExpressionForConstant(type);
+        return SystemExpressionBuilder.CloseOver(expression.TypedValue);
     }
 }
