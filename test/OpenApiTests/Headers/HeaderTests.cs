@@ -56,7 +56,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
 
         return;
 
-        void AssertETag(JsonElement etagElement)
+        static void AssertETag(JsonElement etagElement)
         {
             etagElement.Should().HaveProperty("description",
                 "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
