@@ -102,7 +102,7 @@ internal sealed class ResourceFactory : IResourceFactory
             {
                 object constructorArgument = ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, constructorParameter.ParameterType);
 
-                Expression argumentExpression = constructorArgument.CreateTupleAccessExpressionForConstant(constructorArgument.GetType());
+                Expression argumentExpression = SystemExpressionBuilder.CloseOver(constructorArgument);
                 constructorArguments.Add(argumentExpression);
             }
 #pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
