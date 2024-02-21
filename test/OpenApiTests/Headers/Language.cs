@@ -6,14 +6,11 @@ namespace OpenApiTests.Headers;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "OpenApiTests.Headers")]
-public sealed class Country : Identifiable<Guid>
+public sealed class Language : Identifiable<Guid>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public string Code { get; set; } = null!;
 
     [Attr]
-    public long Population { get; set; }
-
-    [HasMany]
-    public ISet<Language> Languages { get; set; } = new HashSet<Language>();
+    public string Name { get; set; } = null!;
 }

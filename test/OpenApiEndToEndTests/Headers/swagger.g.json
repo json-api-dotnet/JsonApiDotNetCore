@@ -562,6 +562,557 @@
           }
         }
       }
+    },
+    "/countries/{id}/languages": {
+      "get": {
+        "tags": [
+          "countries"
+        ],
+        "summary": "Retrieves the related languages of an individual country's languages relationship.",
+        "operationId": "getCountryLanguages",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the country whose related languages to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found languages, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/languageCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The country does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "countries"
+        ],
+        "summary": "Retrieves the related languages of an individual country's languages relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headCountryLanguages",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the country whose related languages to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The country does not exist."
+          }
+        }
+      }
+    },
+    "/countries/{id}/relationships/languages": {
+      "get": {
+        "tags": [
+          "countries"
+        ],
+        "summary": "Retrieves the related language identities of an individual country's languages relationship.",
+        "operationId": "getCountryLanguagesRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the country whose related language identities to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found language identities, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/languageIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The country does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "countries"
+        ],
+        "summary": "Retrieves the related language identities of an individual country's languages relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headCountryLanguagesRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the country whose related language identities to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The country does not exist."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "countries"
+        ],
+        "summary": "Adds existing languages to the languages relationship of an individual country.",
+        "operationId": "postCountryLanguagesRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the country to add languages to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the languages to add to the languages relationship.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyLanguageInRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The languages were successfully added, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The country does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "countries"
+        ],
+        "summary": "Assigns existing languages to the languages relationship of an individual country.",
+        "operationId": "patchCountryLanguagesRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the country whose languages relationship to assign.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the languages to assign to the languages relationship, or an empty array to clear the relationship.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyLanguageInRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The languages relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The country does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "countries"
+        ],
+        "summary": "Removes existing languages from the languages relationship of an individual country.",
+        "operationId": "deleteCountryLanguagesRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the country to remove languages from.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the languages to remove from the languages relationship.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyLanguageInRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The languages were successfully removed, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The country does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -664,6 +1215,13 @@
                 "$ref": "#/components/schemas/countryAttributesInPatchRequest"
               }
             ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/countryRelationshipsInPatchRequest"
+              }
+            ]
           }
         },
         "additionalProperties": false
@@ -681,6 +1239,13 @@
             "allOf": [
               {
                 "$ref": "#/components/schemas/countryAttributesInPostRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/countryRelationshipsInPostRequest"
               }
             ]
           }
@@ -702,6 +1267,13 @@
                 "allOf": [
                   {
                     "$ref": "#/components/schemas/countryAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/countryRelationshipsInResponse"
                   }
                 ]
               },
@@ -794,6 +1366,45 @@
         },
         "additionalProperties": false
       },
+      "countryRelationshipsInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "languages": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyLanguageInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "countryRelationshipsInPostRequest": {
+        "type": "object",
+        "properties": {
+          "languages": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyLanguageInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "countryRelationshipsInResponse": {
+        "type": "object",
+        "properties": {
+          "languages": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyLanguageInResponse"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "countryResourceType": {
         "enum": [
           "countries"
@@ -821,7 +1432,8 @@
         "discriminator": {
           "propertyName": "type",
           "mapping": {
-            "countries": "#/components/schemas/countryDataInResponse"
+            "countries": "#/components/schemas/countryDataInResponse",
+            "languages": "#/components/schemas/languageDataInResponse"
           }
         },
         "x-abstract": true
@@ -919,6 +1531,164 @@
         },
         "additionalProperties": false
       },
+      "languageAttributesInResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "languageCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/languageDataInResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "languageDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
+          },
+          {
+            "required": [
+              "links"
+            ],
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/languageAttributesInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/linksInResourceData"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "languageIdentifier": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/languageResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "languageIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/languageIdentifier"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "languageResourceType": {
+        "enum": [
+          "languages"
+        ],
+        "type": "string",
+        "additionalProperties": false
+      },
+      "linksInRelationship": {
+        "required": [
+          "related",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "related": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "linksInResourceCollectionDocument": {
         "required": [
           "self"
@@ -972,6 +1742,83 @@
           },
           "describedby": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInResourceIdentifierCollectionDocument": {
+        "required": [
+          "related",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "related": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyLanguageInRequest": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/languageIdentifier"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "toManyLanguageInResponse": {
+        "required": [
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInRelationship"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/languageIdentifier"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
           }
         },
         "additionalProperties": false
