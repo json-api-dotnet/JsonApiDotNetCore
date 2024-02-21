@@ -563,8 +563,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             Description = "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
             Schema = new OpenApiSchema
             {
-                Type = "string",
-                Nullable = true
+                Type = "string"
             }
         });
     }

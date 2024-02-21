@@ -15,5 +15,11 @@ public sealed class HeaderFakers : FakerContainer
         .RuleFor(country => country.Name, faker => faker.Address.Country())
         .RuleFor(country => country.Population, faker => faker.Random.Long(0, 2_000_000_000)));
 
+    private readonly Lazy<Faker<Language>> _lazyLanguageFaker = new(() => new Faker<Language>()
+        .UseSeed(GetFakerSeed())
+        .RuleFor(country => country.Name, faker => faker.Random.Word())
+        .RuleFor(country => country.Code, faker => faker.Random.String(3)));
+
     public Faker<Country> Country => _lazyCountryFaker.Value;
+    public Faker<Language> Language => _lazyLanguageFaker.Value;
 }

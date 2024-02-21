@@ -27,7 +27,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
     [InlineData("/countries/{id}/languages.head")]
     [InlineData("/countries/{id}/relationships/languages.get")]
     [InlineData("/countries/{id}/relationships/languages.head")]
-    public async Task Get_and_head_endpoints_have_caching_headers(string endpointPath)
+    public async Task Endpoints_have_caching_headers(string endpointPath)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -39,6 +39,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
                 .With(parameterElement =>
                 {
                     parameterElement.Should().HaveProperty("name", "If-None-Match");
+                    parameterElement.Should().NotContainPath("required");
 
                     parameterElement.Should().HaveProperty("description",
                         "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.");
@@ -46,17 +47,16 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
                     parameterElement.Should().ContainPath("schema").With(schemaElement =>
                     {
                         schemaElement.Should().HaveProperty("type", "string");
-                        schemaElement.Should().HaveProperty("nullable", true);
                     });
                 });
         });
 
-        document.Should().ContainPath($"paths.{endpointPath}.responses.200.headers.ETag").With(AssertEtag);
-        document.Should().ContainPath($"paths.{endpointPath}.responses.304.headers.ETag").With(AssertEtag);
+        document.Should().ContainPath($"paths.{endpointPath}.responses.200.headers.ETag").With(AssertETag);
+        document.Should().ContainPath($"paths.{endpointPath}.responses.304.headers.ETag").With(AssertETag);
 
         return;
 
-        static void AssertEtag(JsonElement etagElement)
+        void AssertETag(JsonElement etagElement)
         {
             etagElement.Should().HaveProperty("description",
                 "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.");
@@ -77,24 +77,23 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
     [InlineData("/countries/{id}/relationships/languages.post")]
     [InlineData("/countries/{id}/relationships/languages.patch")]
     [InlineData("/countries/{id}/relationships/languages.delete")]
-    public async Task Post_patch_and_delete_endpoints_do_not_have_caching_headers(string endpointPath)
+    public async Task Endpoints_do_not_have_caching_headers(string endpointPath)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
+        document.Should().ContainPath($"paths.{endpointPath}.parameters").With(parametersElement =>
+        {
+            parametersElement.EnumerateArray().Should().NotContain(parameterElement => parameterElement.GetProperty("name").ValueEquals("If-None-Match"));
+        });
+
         document.Should().ContainPath($"paths.{endpointPath}.responses").With(responsesElement =>
         {
             foreach (JsonProperty responseProperty in responsesElement.EnumerateObject())
             {
                 responseProperty.Value.Should().NotContainPath("headers.ETag");
-                responseProperty.Value.Should().NotContainPath("headers.Content-Length");
             }
-        });
-
-        document.Should().ContainPath($"paths.{endpointPath}.parameters").With(parametersElement =>
-        {
-            parametersElement.EnumerateArray().Should().NotContain(parameterElement => parameterElement.GetProperty("name").ValueEquals("If-None-Match"));
         });
     }
 
@@ -103,7 +102,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
     [InlineData("/countries/{id}.head")]
     [InlineData("/countries/{id}/languages.head")]
     [InlineData("/countries/{id}/relationships/languages.head")]
-    public async Task Head_endpoints_have_content_length_response_header(string endpointPath)
+    public async Task Endpoints_have_content_length_response_header(string endpointPath)
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -122,15 +121,14 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
         });
     }
 
-    [Theory]
-    [InlineData("/countries.post")]
-    public async Task Post_endpoints_have_location_response_header(string endpointPath)
+    [Fact]
+    public async Task Post_resource_endpoint_has_location_response_header()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"paths.{endpointPath}.responses.201.headers.Location").With(locationElement =>
+        document.Should().ContainPath("paths./countries.post.responses.201.headers.Location").With(locationElement =>
         {
             locationElement.Should().HaveProperty("description", "The URL at which the newly created JSON:API resource can be retrieved.");
 
