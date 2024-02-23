@@ -96,6 +96,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     {
         // Arrange
         Country newCountry = _fakers.Country.Generate();
+
         using HttpClient httpClient = _testContext.Factory.CreateClient();
         var apiClient = new HeadersClient(httpClient);
 
