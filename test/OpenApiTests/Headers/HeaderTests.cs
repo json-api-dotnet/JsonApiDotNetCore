@@ -117,6 +117,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
             contentLengthElement.Should().ContainPath("schema").With(schemaElement =>
             {
                 schemaElement.Should().HaveProperty("type", "integer");
+                schemaElement.Should().HaveProperty("format", "int64");
             });
         });
     }
