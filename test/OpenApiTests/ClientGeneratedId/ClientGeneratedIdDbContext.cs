@@ -9,4 +9,5 @@ public sealed class ClientGeneratedIdDbContext(DbContextOptions<ClientGeneratedI
 {
     public DbSet<Player> Players => Set<Player>();
     public DbSet<Game> Games => Set<Game>();
+    public DbSet<Group> Groups => Set<Group>();
 }

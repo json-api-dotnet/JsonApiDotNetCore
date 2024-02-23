@@ -28,7 +28,7 @@
       <ClassName>ClientGeneratedIdClient</ClassName>
       <OutputPath>ClientGeneratedIdClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:true</Options>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client /GenerateNullableReferenceTypes:true</Options>
     </OpenApiReference>
     <OpenApiReference Include="Headers\swagger.g.json">
       <Namespace>OpenApiEndToEndTests.Headers.GeneratedCode</Namespace>

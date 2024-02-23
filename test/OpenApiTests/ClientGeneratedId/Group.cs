@@ -6,15 +6,12 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace OpenApiTests.ClientGeneratedId;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.ClientGeneratedId", ClientIdGeneration = ClientIdGenerationMode.Required)]
-public sealed class Player : Identifiable<Guid>
+[Resource(ControllerNamespace = "OpenApiTests.ClientGeneratedId", ClientIdGeneration = ClientIdGenerationMode.Forbidden)]
+public sealed class Group : Identifiable<Guid>
 {
     [Attr]
     public string Name { get; set; } = null!;
 
     [HasMany]
-    public List<Game> Games { get; set; } = [];
-
-    [HasMany]
-    public List<Group> Groups { get; set; } = [];
+    public List<Player> Players { get; set; } = [];
 }

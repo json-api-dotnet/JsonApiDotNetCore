@@ -7,7 +7,7 @@ namespace OpenApiTests.ClientGeneratedId;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "OpenApiTests.ClientGeneratedId", ClientIdGeneration = ClientIdGenerationMode.Allowed)]
-public sealed class Game : Identifiable<long>
+public sealed class Game : Identifiable<Guid>
 {
     [Attr]
     public string Name { get; set; } = null!;

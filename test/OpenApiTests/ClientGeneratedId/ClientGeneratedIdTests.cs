@@ -14,6 +14,7 @@ public sealed class ClientGeneratedIdTests : IClassFixture<OpenApiTestContext<Op
 
         testContext.UseController<PlayersController>();
         testContext.UseController<GamesController>();
+        testContext.UseController<GroupsController>();
 
         testContext.SwaggerDocumentOutputDirectory = "test/OpenApiEndToEndTests/ClientGeneratedId";
     }
@@ -25,7 +26,7 @@ public sealed class ClientGeneratedIdTests : IClassFixture<OpenApiTestContext<Op
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.playerDataInPostRequest").With(resourceDataInPostRequestElement =>
+        document.Should().ContainPath("components.schemas.playerDataInPostRequest").With(resourceDataInPostRequestElement =>
         {
             resourceDataInPostRequestElement.Should().ContainPath("required").With(requiredElement =>
             {
@@ -43,7 +44,7 @@ public sealed class ClientGeneratedIdTests : IClassFixture<OpenApiTestContext<Op
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
 
         // Assert
-        document.Should().ContainPath($"components.schemas.gameDataInPostRequest").With(resourceDataInPostRequestElement =>
+        document.Should().ContainPath("components.schemas.gameDataInPostRequest").With(resourceDataInPostRequestElement =>
         {
             resourceDataInPostRequestElement.Should().ContainPath("required").With(requiredElement =>
             {
@@ -51,6 +52,24 @@ public sealed class ClientGeneratedIdTests : IClassFixture<OpenApiTestContext<Op
             });
 
             resourceDataInPostRequestElement.Should().ContainPath("properties.id");
+        });
+    }
+
+    [Fact]
+    public async Task Post_data_should_not_have_id()
+    {
+        // Act
+        JsonElement document = await _testContext.GetSwaggerDocumentAsync();
+
+        // Assert
+        document.Should().ContainPath("components.schemas.groupDataInPostRequest").With(resourceDataInPostRequestElement =>
+        {
+            resourceDataInPostRequestElement.Should().ContainPath("required").With(requiredElement =>
+            {
+                requiredElement.Should().NotContainArrayElement("id");
+            });
+
+            resourceDataInPostRequestElement.Should().NotContainPath("properties.id");
         });
     }
 }

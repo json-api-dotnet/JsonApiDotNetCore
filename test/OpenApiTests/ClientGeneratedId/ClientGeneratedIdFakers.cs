@@ -19,6 +19,11 @@ public sealed class ClientGeneratedIdFakers : FakerContainer
         .RuleFor(player => player.Name, faker => faker.Commerce.ProductName())
         .RuleFor(player => player.Price, faker => decimal.Parse(faker.Commerce.Price())));
 
+    private readonly Lazy<Faker<Group>> _lazyGroupFaker = new(() => new Faker<Group>()
+        .UseSeed(GetFakerSeed())
+        .RuleFor(group => group.Name, faker => faker.Person.Company.Name));
+
     public Faker<Player> Player => _lazyPlayerFaker.Value;
     public Faker<Game> Game => _lazyGameFaker.Value;
+    public Faker<Group> Group => _lazyGroupFaker.Value;
 }
