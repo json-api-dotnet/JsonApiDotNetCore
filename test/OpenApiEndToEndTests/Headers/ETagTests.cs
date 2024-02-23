@@ -64,7 +64,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse response = await ApiResponse.TranslateAsync(() => apiClient.HeadCountryCollectionAsync(null, null));
+        ApiResponse<CountryCollectionResponseDocument?> response = await ApiResponse.TranslateAsync(() => apiClient.GetCountryCollectionAsync(null, null));
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
