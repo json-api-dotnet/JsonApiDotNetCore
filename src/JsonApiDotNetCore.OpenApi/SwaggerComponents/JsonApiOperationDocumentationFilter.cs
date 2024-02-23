@@ -333,8 +333,8 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
             SetOperationRemarks(operation, TextCompareETag);
             SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
-            SetResponseHeaderContentLength(operation.Responses, HttpStatusCode.OK);
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+            SetResponseHeaderContentLength(operation.Responses, HttpStatusCode.OK);
             SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
             SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
         }
