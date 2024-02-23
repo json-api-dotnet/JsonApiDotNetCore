@@ -129,7 +129,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -191,7 +192,7 @@
             "description": "The country was successfully created, which resulted in additional changes. The newly created country is returned.",
             "headers": {
               "Location": {
-                "description": "The URL at which the newly created JSON:API resource can be retrieved.",
+                "description": "The URL at which the newly created country can be retrieved.",
                 "required": true,
                 "schema": {
                   "type": "string",
@@ -400,7 +401,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -706,7 +708,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -872,7 +875,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {

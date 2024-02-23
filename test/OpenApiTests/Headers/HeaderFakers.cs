@@ -1,3 +1,4 @@
+using System.Globalization;
 using Bogus;
 using JetBrains.Annotations;
 using TestBuildingBlocks;
@@ -10,6 +11,16 @@ namespace OpenApiTests.Headers;
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class HeaderFakers : FakerContainer
 {
+    private static readonly Lazy<string[]> LazyLanguageNames = new(() => CultureInfo
+        .GetCultures(CultureTypes.NeutralCultures)
+        .Select(culture => culture.DisplayName)
+        .ToArray());
+
+    private static readonly Lazy<string[]> LazyLanguageCodes = new(() => CultureInfo
+        .GetCultures(CultureTypes.NeutralCultures)
+        .Select(culture => culture.ThreeLetterISOLanguageName)
+        .ToArray());
+
     private readonly Lazy<Faker<Country>> _lazyCountryFaker = new(() => new Faker<Country>()
         .UseSeed(GetFakerSeed())
         .RuleFor(country => country.Name, faker => faker.Address.Country())
@@ -17,8 +28,8 @@ public sealed class HeaderFakers : FakerContainer
 
     private readonly Lazy<Faker<Language>> _lazyLanguageFaker = new(() => new Faker<Language>()
         .UseSeed(GetFakerSeed())
-        .RuleFor(country => country.Name, faker => faker.Random.Word())
-        .RuleFor(country => country.Code, faker => faker.Random.String(3)));
+        .RuleFor(textLanguage => textLanguage.Name, faker => faker.PickRandom(LazyLanguageNames.Value))
+        .RuleFor(textLanguage => textLanguage.Code, faker => faker.PickRandom(LazyLanguageCodes.Value)));
 
     public Faker<Country> Country => _lazyCountryFaker.Value;
     public Faker<Language> Language => _lazyLanguageFaker.Value;

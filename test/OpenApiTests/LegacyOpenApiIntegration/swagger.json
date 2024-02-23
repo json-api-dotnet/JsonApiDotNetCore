@@ -129,7 +129,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -191,7 +192,7 @@
             "description": "The airplane was successfully created, which resulted in additional changes. The newly created airplane is returned.",
             "headers": {
               "Location": {
-                "description": "The URL at which the newly created JSON:API resource can be retrieved.",
+                "description": "The URL at which the newly created airplane can be retrieved.",
                 "required": true,
                 "schema": {
                   "type": "string",
@@ -400,7 +401,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -706,7 +708,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -872,7 +875,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -1225,7 +1229,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -1287,7 +1292,7 @@
             "description": "The flight-attendant was successfully created, which resulted in additional changes. The newly created flight-attendant is returned.",
             "headers": {
               "Location": {
-                "description": "The URL at which the newly created JSON:API resource can be retrieved.",
+                "description": "The URL at which the newly created flight-attendant can be retrieved.",
                 "required": true,
                 "schema": {
                   "type": "string",
@@ -1496,7 +1501,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -1802,7 +1808,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -1968,7 +1975,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -2349,7 +2357,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -2515,7 +2524,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -2868,7 +2878,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -2930,7 +2941,7 @@
             "description": "The flight was successfully created, which resulted in additional changes. The newly created flight is returned.",
             "headers": {
               "Location": {
-                "description": "The URL at which the newly created JSON:API resource can be retrieved.",
+                "description": "The URL at which the newly created flight can be retrieved.",
                 "required": true,
                 "schema": {
                   "type": "string",
@@ -3139,7 +3150,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -3445,7 +3457,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -3611,7 +3624,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -3858,7 +3872,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -4024,7 +4039,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -4405,7 +4421,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -4571,7 +4588,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -4952,7 +4970,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -5118,7 +5137,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -5337,7 +5357,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -5399,7 +5420,7 @@
             "description": "The passenger was successfully created, which resulted in additional changes. The newly created passenger is returned.",
             "headers": {
               "Location": {
-                "description": "The URL at which the newly created JSON:API resource can be retrieved.",
+                "description": "The URL at which the newly created passenger can be retrieved.",
                 "required": true,
                 "schema": {
                   "type": "string",
@@ -5608,7 +5629,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -6251,7 +6273,7 @@
           },
           "meta": {
             "type": "object",
-            "additionalProperties": {},
+            "additionalProperties": { },
             "nullable": true
           }
         },

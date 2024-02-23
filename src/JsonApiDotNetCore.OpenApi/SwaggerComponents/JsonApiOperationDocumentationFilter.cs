@@ -227,7 +227,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         SetResponseDescription(operation.Responses, HttpStatusCode.Created,
             $"The {singularName} was successfully created, which resulted in additional changes. The newly created {singularName} is returned.");
 
-        SetResponseHeaderLocation(operation.Responses, HttpStatusCode.Created);
+        SetResponseHeaderLocation(operation.Responses, HttpStatusCode.Created, singularName);
 
         SetResponseDescription(operation.Responses, HttpStatusCode.NoContent,
             $"The {singularName} was successfully created, which did not result in additional changes.");
@@ -489,18 +489,19 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             Required = true,
             Schema = new OpenApiSchema
             {
-                Type = "integer"
+                Type = "integer",
+                Format = "int64"
             }
         };
     }
 
-    private static void SetResponseHeaderLocation(OpenApiResponses responses, HttpStatusCode statusCode)
+    private static void SetResponseHeaderLocation(OpenApiResponses responses, HttpStatusCode statusCode, string resourceName)
     {
         OpenApiResponse response = GetOrAddResponse(responses, statusCode);
 
         response.Headers[HeaderNames.Location] = new OpenApiHeader
         {
-            Description = "The URL at which the newly created JSON:API resource can be retrieved.",
+            Description = $"The URL at which the newly created {resourceName} can be retrieved.",
             Required = true,
             Schema = new OpenApiSchema
             {

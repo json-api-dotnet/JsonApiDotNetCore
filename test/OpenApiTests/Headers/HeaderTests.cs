@@ -131,7 +131,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
         // Assert
         document.Should().ContainPath("paths./countries.post.responses.201.headers.Location").With(locationElement =>
         {
-            locationElement.Should().HaveProperty("description", "The URL at which the newly created JSON:API resource can be retrieved.");
+            locationElement.Should().HaveProperty("description", "The URL at which the newly created country can be retrieved.");
 
             locationElement.Should().HaveProperty("required", true);
 

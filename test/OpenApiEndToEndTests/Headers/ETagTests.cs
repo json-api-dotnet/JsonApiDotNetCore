@@ -83,11 +83,11 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        Func<Task<ApiResponse<CountryPrimaryResponseDocument?>>> act = () =>
+        Func<Task<ApiResponse<CountryPrimaryResponseDocument?>>> action = () =>
             ApiResponse.TranslateAsync(() => apiClient.GetCountryAsync(Unknown.StringId.For<Country, Guid>(), null, null));
 
         // Assert
-        ApiException<ErrorResponseDocument> exception = (await act.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Headers.Should().NotContainKey(HeaderNames.ETag);
     }
@@ -96,6 +96,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Returns_no_ETag_for_POST_request()
     {
         // Arrange
+        Country country = _fakers.Country.Generate();
         using HttpClient httpClient = _testContext.Factory.CreateClient();
         var apiClient = new HeadersClient(httpClient);
 
@@ -107,8 +108,8 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
                 {
                     Attributes = new CountryAttributesInPostRequest
                     {
-                        Name = _fakers.Country.Generate().Name,
-                        Population = _fakers.Country.Generate().Population
+                        Name = country.Name,
+                        Population = country.Population
                     }
                 }
             }));
@@ -139,7 +140,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
 
         ApiResponse<CountryCollectionResponseDocument?> response1 = await ApiResponse.TranslateAsync(() => apiClient.GetCountryCollectionAsync(null, null));
 
-        string responseETag = response1.Headers[HeaderNames.ETag].First();
+        string responseETag = response1.Headers[HeaderNames.ETag].Single();
 
         // Act
         ApiResponse<CountryCollectionResponseDocument?> response2 =

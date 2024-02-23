@@ -129,7 +129,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -191,7 +192,7 @@
             "description": "The staffMember was successfully created, which resulted in additional changes. The newly created staffMember is returned.",
             "headers": {
               "Location": {
-                "description": "The URL at which the newly created JSON:API resource can be retrieved.",
+                "description": "The URL at which the newly created staffMember can be retrieved.",
                 "required": true,
                 "schema": {
                   "type": "string",
@@ -400,7 +401,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -678,7 +680,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -740,7 +743,7 @@
             "description": "The supermarket was successfully created, which resulted in additional changes. The newly created supermarket is returned.",
             "headers": {
               "Location": {
-                "description": "The URL at which the newly created JSON:API resource can be retrieved.",
+                "description": "The URL at which the newly created supermarket can be retrieved.",
                 "required": true,
                 "schema": {
                   "type": "string",
@@ -949,7 +952,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -1255,7 +1259,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -1421,7 +1426,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -1668,7 +1674,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -1834,7 +1841,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -2215,7 +2223,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -2381,7 +2390,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {

@@ -129,7 +129,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -191,7 +192,7 @@
             "description": "The person was successfully created, which resulted in additional changes. The newly created person is returned.",
             "headers": {
               "Location": {
-                "description": "The URL at which the newly created JSON:API resource can be retrieved.",
+                "description": "The URL at which the newly created person can be retrieved.",
                 "required": true,
                 "schema": {
                   "type": "string",
@@ -400,7 +401,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -706,7 +708,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -872,7 +875,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -1253,7 +1257,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -1419,7 +1424,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -1772,7 +1778,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -1834,7 +1841,7 @@
             "description": "The tag was successfully created, which resulted in additional changes. The newly created tag is returned.",
             "headers": {
               "Location": {
-                "description": "The URL at which the newly created JSON:API resource can be retrieved.",
+                "description": "The URL at which the newly created tag can be retrieved.",
                 "required": true,
                 "schema": {
                   "type": "string",
@@ -2043,7 +2050,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -2349,7 +2357,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -2515,7 +2524,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -2868,7 +2878,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -2930,7 +2941,7 @@
             "description": "The todoItem was successfully created, which resulted in additional changes. The newly created todoItem is returned.",
             "headers": {
               "Location": {
-                "description": "The URL at which the newly created JSON:API resource can be retrieved.",
+                "description": "The URL at which the newly created todoItem can be retrieved.",
                 "required": true,
                 "schema": {
                   "type": "string",
@@ -3139,7 +3150,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -3445,7 +3457,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -3611,7 +3624,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -3858,7 +3872,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -4024,7 +4039,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
@@ -4271,7 +4287,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               }
             }
@@ -4437,7 +4454,8 @@
                 "description": "Size of the HTTP response body, in bytes.",
                 "required": true,
                 "schema": {
-                  "type": "integer"
+                  "type": "integer",
+                  "format": "int64"
                 }
               },
               "ETag": {
