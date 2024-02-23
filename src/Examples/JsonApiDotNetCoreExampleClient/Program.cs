@@ -1,5 +1,7 @@
+using System.Net;
 using JsonApiDotNetCore.OpenApi.Client;
 using JsonApiDotNetCoreExampleClient;
+using Microsoft.Net.Http.Headers;
 
 #if DEBUG
 using var httpClient = new HttpClient(new ColoredConsoleLogDelegatingHandler
@@ -12,17 +14,17 @@ using var httpClient = new HttpClient();
 
 var apiClient = new ExampleApiClient(httpClient);
 
-PersonCollectionResponseDocument getResponse = await apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
-{
-    ["filter"] = "has(assignedTodoItems)",
-    ["sort"] = "-lastName",
-    ["page[size]"] = "5",
-    ["include"] = "assignedTodoItems.tags"
-});
+ApiResponse<PersonCollectionResponseDocument?> getResponse1 = await GetPersonCollectionAsync(apiClient, null);
+ApiResponse<PersonCollectionResponseDocument?> getResponse2 = await GetPersonCollectionAsync(apiClient, getResponse1.Headers[HeaderNames.ETag].First());
 
-foreach (PersonDataInResponse person in getResponse.Data)
+if (getResponse2 is { StatusCode: (int)HttpStatusCode.NotModified, Result: null })
 {
-    PrintPerson(person, getResponse.Included);
+    Console.WriteLine("The HTTP response hasn't changed, so no response body was returned.");
+}
+
+foreach (PersonDataInResponse person in getResponse1.Result!.Data)
+{
+    PrintPerson(person, getResponse1.Result.Included);
 }
 
 var patchRequest = new PersonPatchRequestDocument
@@ -46,6 +48,17 @@ using (apiClient.WithPartialAttributeSerialization<PersonPatchRequestDocument, P
 
 Console.WriteLine("Press any key to close.");
 Console.ReadKey();
+
+static Task<ApiResponse<PersonCollectionResponseDocument?>> GetPersonCollectionAsync(ExampleApiClient apiClient, string? ifNoneMatch)
+{
+    return ApiResponse.TranslateAsync(() => apiClient.GetPersonCollectionAsync(new Dictionary<string, string?>
+    {
+        ["filter"] = "has(assignedTodoItems)",
+        ["sort"] = "-lastName",
+        ["page[size]"] = "5",
+        ["include"] = "assignedTodoItems.tags"
+    }, ifNoneMatch));
+}
 
 static void PrintPerson(PersonDataInResponse person, ICollection<DataInResponse> includes)
 {

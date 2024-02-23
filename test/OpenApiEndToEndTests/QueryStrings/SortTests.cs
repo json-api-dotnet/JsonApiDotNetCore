@@ -1,6 +1,6 @@
 using System.Net;
 using FluentAssertions;
-using JsonApiDotNetCore.OpenApi.Client.Exceptions;
+using JsonApiDotNetCore.OpenApi.Client;
 using OpenApiEndToEndTests.QueryStrings.GeneratedCode;
 using OpenApiTests;
 using OpenApiTests.QueryStrings;
@@ -48,7 +48,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString);
+        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString, null);
 
         // Assert
         response.Data.Should().HaveCount(2);
@@ -81,7 +81,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString);
+        NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString, null);
 
         // Assert
         response.Data.Should().HaveCount(2);
@@ -114,7 +114,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString);
+        NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString, null);
 
         // Assert
         response.Data.Should().HaveCount(2);
@@ -135,7 +135,7 @@ public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStar
         };
 
         // Act
-        Func<Task> action = async () => _ = await apiClient.GetNodeAsync(Unknown.StringId.Int64, queryString);
+        Func<Task> action = async () => _ = await apiClient.GetNodeAsync(Unknown.StringId.Int64, queryString, null);
 
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;

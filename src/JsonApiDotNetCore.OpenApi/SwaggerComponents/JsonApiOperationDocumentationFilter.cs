@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -30,6 +31,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
         "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.";
 
     private const string TextCompletedSuccessfully = "The operation completed successfully.";
+    private const string TextNotModified = "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.";
     private const string TextQueryStringBad = "The query string is invalid.";
     private const string TextRequestBodyBad = "The request body is missing or malformed.";
     private const string TextQueryStringOrRequestBodyBad = "The query string is invalid or the request body is missing or malformed.";
@@ -162,6 +164,10 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 SetOperationSummary(operation, $"Retrieves a collection of {resourceType} without returning them.");
                 SetOperationRemarks(operation, TextCompareETag);
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+                SetResponseHeaderContentLength(operation.Responses, HttpStatusCode.OK);
+                SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
             }
             else
             {
@@ -169,9 +175,14 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK,
                     $"Successfully returns the found {resourceType}, or an empty array if none were found.");
+
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+                SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
             }
 
             AddQueryStringParameters(operation, false);
+            AddRequestHeaderIfNoneMatch(operation);
             SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         }
         else if (operation.Parameters.Count == 1)
@@ -183,15 +194,23 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 SetOperationSummary(operation, $"Retrieves an individual {singularName} by its identifier without returning it.");
                 SetOperationRemarks(operation, TextCompareETag);
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+                SetResponseHeaderContentLength(operation.Responses, HttpStatusCode.OK);
+                SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
             }
             else
             {
                 SetOperationSummary(operation, $"Retrieves an individual {singularName} by its identifier.");
                 SetResponseDescription(operation.Responses, HttpStatusCode.OK, $"Successfully returns the found {singularName}.");
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+                SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+                SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
             }
 
             SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularName} to retrieve.");
             AddQueryStringParameters(operation, false);
+            AddRequestHeaderIfNoneMatch(operation);
             SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
             SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularName} does not exist.");
         }
@@ -207,6 +226,8 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
         SetResponseDescription(operation.Responses, HttpStatusCode.Created,
             $"The {singularName} was successfully created, which resulted in additional changes. The newly created {singularName} is returned.");
+
+        SetResponseHeaderLocation(operation.Responses, HttpStatusCode.Created, singularName);
 
         SetResponseDescription(operation.Responses, HttpStatusCode.NoContent,
             $"The {singularName} was successfully created, which did not result in additional changes.");
@@ -271,6 +292,10 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
             SetOperationRemarks(operation, TextCompareETag);
             SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+            SetResponseHeaderContentLength(operation.Responses, HttpStatusCode.OK);
+            SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
         }
         else
         {
@@ -280,10 +305,15 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 relationship is HasOneAttribute
                     ? $"Successfully returns the found {rightName}, or <c>null</c> if it was not found."
                     : $"Successfully returns the found {rightName}, or an empty array if none were found.");
+
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+            SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
         }
 
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {rightName} to retrieve.");
         AddQueryStringParameters(operation, false);
+        AddRequestHeaderIfNoneMatch(operation);
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
     }
@@ -303,6 +333,10 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
             SetOperationRemarks(operation, TextCompareETag);
             SetResponseDescription(operation.Responses, HttpStatusCode.OK, TextCompletedSuccessfully);
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+            SetResponseHeaderContentLength(operation.Responses, HttpStatusCode.OK);
+            SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
         }
         else
         {
@@ -313,10 +347,15 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 relationship is HasOneAttribute
                     ? $"Successfully returns the found {singularRightName} {ident}, or <c>null</c> if it was not found."
                     : $"Successfully returns the found {singularRightName} {ident}, or an empty array if none were found.");
+
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.OK);
+            SetResponseDescription(operation.Responses, HttpStatusCode.NotModified, TextNotModified);
+            SetResponseHeaderETag(operation.Responses, HttpStatusCode.NotModified);
         }
 
         SetParameterDescription(operation.Parameters[0], $"The identifier of the {singularLeftName} whose related {singularRightName} {ident} to retrieve.");
         AddQueryStringParameters(operation, true);
+        AddRequestHeaderIfNoneMatch(operation);
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextQueryStringBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
     }
@@ -421,6 +460,59 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
     private static void SetResponseDescription(OpenApiResponses responses, HttpStatusCode statusCode, string description)
     {
+        OpenApiResponse response = GetOrAddResponse(responses, statusCode);
+        response.Description = XmlCommentsTextHelper.Humanize(description);
+    }
+
+    private static void SetResponseHeaderETag(OpenApiResponses responses, HttpStatusCode statusCode)
+    {
+        OpenApiResponse response = GetOrAddResponse(responses, statusCode);
+
+        response.Headers[HeaderNames.ETag] = new OpenApiHeader
+        {
+            Description = "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+            Required = true,
+            Schema = new OpenApiSchema
+            {
+                Type = "string"
+            }
+        };
+    }
+
+    private static void SetResponseHeaderContentLength(OpenApiResponses responses, HttpStatusCode statusCode)
+    {
+        OpenApiResponse response = GetOrAddResponse(responses, statusCode);
+
+        response.Headers[HeaderNames.ContentLength] = new OpenApiHeader
+        {
+            Description = "Size of the HTTP response body, in bytes.",
+            Required = true,
+            Schema = new OpenApiSchema
+            {
+                Type = "integer",
+                Format = "int64"
+            }
+        };
+    }
+
+    private static void SetResponseHeaderLocation(OpenApiResponses responses, HttpStatusCode statusCode, string resourceName)
+    {
+        OpenApiResponse response = GetOrAddResponse(responses, statusCode);
+
+        response.Headers[HeaderNames.Location] = new OpenApiHeader
+        {
+            Description = $"The URL at which the newly created {resourceName} can be retrieved.",
+            Required = true,
+            Schema = new OpenApiSchema
+            {
+                Type = "string",
+                Format = "uri"
+            }
+        };
+    }
+
+    private static OpenApiResponse GetOrAddResponse(OpenApiResponses responses, HttpStatusCode statusCode)
+    {
         string responseCode = ((int)statusCode).ToString();
 
         if (!responses.TryGetValue(responseCode, out OpenApiResponse? response))
@@ -429,7 +521,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             responses.Add(responseCode, response);
         }
 
-        response.Description = XmlCommentsTextHelper.Humanize(description);
+        return response;
     }
 
     private static void AddQueryStringParameters(OpenApiOperation operation, bool isRelationshipEndpoint)
@@ -460,6 +552,20 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
                 Example = new OpenApiString(string.Empty)
             },
             Description = isRelationshipEndpoint ? RelationshipQueryStringParameters : ResourceQueryStringParameters
+        });
+    }
+
+    private static void AddRequestHeaderIfNoneMatch(OpenApiOperation operation)
+    {
+        operation.Parameters.Add(new OpenApiParameter
+        {
+            In = ParameterLocation.Header,
+            Name = "If-None-Match",
+            Description = "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            Schema = new OpenApiSchema
+            {
+                Type = "string"
+            }
         });
     }
 }

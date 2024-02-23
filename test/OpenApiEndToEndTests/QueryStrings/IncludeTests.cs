@@ -46,7 +46,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString);
+        NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString, null);
 
         // Assert
         response.Data.ShouldHaveCount(1);
@@ -81,7 +81,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NodePrimaryResponseDocument response = await apiClient.GetNodeAsync(node.StringId!, queryString);
+        NodePrimaryResponseDocument response = await apiClient.GetNodeAsync(node.StringId!, queryString, null);
 
         // Assert
         response.Data.Id.Should().Be(node.StringId);
@@ -116,7 +116,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NameValuePairCollectionResponseDocument response = await apiClient.GetNodeValuesAsync(node.StringId!, queryString);
+        NameValuePairCollectionResponseDocument response = await apiClient.GetNodeValuesAsync(node.StringId!, queryString, null);
 
         // Assert
         response.Data.ShouldHaveCount(2);
@@ -150,7 +150,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NullableNodeSecondaryResponseDocument response = await apiClient.GetNodeParentAsync(node.StringId!, queryString);
+        NullableNodeSecondaryResponseDocument response = await apiClient.GetNodeParentAsync(node.StringId!, queryString, null);
 
         // Assert
         response.Data.ShouldNotBeNull();
@@ -184,7 +184,7 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
         };
 
         // Act
-        NodePrimaryResponseDocument response = await apiClient.GetNodeAsync(node.StringId!, queryString);
+        NodePrimaryResponseDocument response = await apiClient.GetNodeAsync(node.StringId!, queryString, null);
 
         // Assert
         response.Data.Id.Should().Be(node.StringId);

@@ -28,56 +28,56 @@
       <ClassName>OpenApiClient</ClassName>
       <OutputPath>OpenApiClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/GenerateClientInterfaces:true /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+      <Options>/GenerateClientInterfaces:true /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client</Options>
     </OpenApiReference>
     <OpenApiReference Include="NamingConventions\KebabCase\swagger.g.json">
       <Namespace>OpenApiClientTests.NamingConventions.KebabCase.GeneratedCode</Namespace>
       <ClassName>KebabCaseClient</ClassName>
       <OutputPath>KebabCaseClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client</Options>
     </OpenApiReference>
     <OpenApiReference Include="NamingConventions\CamelCase\swagger.g.json">
       <Namespace>OpenApiClientTests.NamingConventions.CamelCase.GeneratedCode</Namespace>
       <ClassName>CamelCaseClient</ClassName>
       <OutputPath>CamelCaseClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client</Options>
     </OpenApiReference>
     <OpenApiReference Include="NamingConventions\PascalCase\swagger.g.json">
       <Namespace>OpenApiClientTests.NamingConventions.PascalCase.GeneratedCode</Namespace>
       <ClassName>PascalCaseClient</ClassName>
       <OutputPath>PascalCaseClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client</Options>
     </OpenApiReference>
     <OpenApiReference Include="ResourceFieldValidation\NullableReferenceTypesOff\ModelStateValidationOff\swagger.g.json">
       <ClassName>NrtOffMsvOffClient</ClassName>
       <OutputPath>NrtOffMsvOffClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Namespace>OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOff.ModelStateValidationOff.GeneratedCode</Namespace>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:false</Options>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client /GenerateNullableReferenceTypes:false</Options>
     </OpenApiReference>
     <OpenApiReference Include="ResourceFieldValidation\NullableReferenceTypesOff\ModelStateValidationOn\swagger.g.json">
       <ClassName>NrtOffMsvOnClient</ClassName>
       <OutputPath>NrtOffMsvOnClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Namespace>OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOff.ModelStateValidationOn.GeneratedCode</Namespace>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:false</Options>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client /GenerateNullableReferenceTypes:false</Options>
     </OpenApiReference>
     <OpenApiReference Include="ResourceFieldValidation\NullableReferenceTypesOn\ModelStateValidationOff\swagger.g.json">
       <ClassName>NrtOnMsvOffClient</ClassName>
       <OutputPath>NrtOnMsvOffClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Namespace>OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOn.ModelStateValidationOff.GeneratedCode</Namespace>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:true</Options>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client /GenerateNullableReferenceTypes:true</Options>
     </OpenApiReference>
     <OpenApiReference Include="ResourceFieldValidation\NullableReferenceTypesOn\ModelStateValidationOn\swagger.g.json">
       <ClassName>NrtOnMsvOnClient</ClassName>
       <OutputPath>NrtOnMsvOnClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Namespace>OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOn.ModelStateValidationOn.GeneratedCode</Namespace>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:true</Options>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client /GenerateNullableReferenceTypes:true</Options>
     </OpenApiReference>
   </ItemGroup>
 </Project>

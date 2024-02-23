@@ -23,12 +23,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <OpenApiReference Include="Headers\swagger.g.json">
+      <Namespace>OpenApiEndToEndTests.Headers.GeneratedCode</Namespace>
+      <ClassName>HeadersClient</ClassName>
+      <OutputPath>HeadersClient.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /WrapResponses:true /GenerateResponseClasses:false /ResponseClass:ApiResponse /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client /GenerateNullableReferenceTypes:true</Options>
+    </OpenApiReference>
     <OpenApiReference Include="QueryStrings\swagger.g.json">
       <Namespace>OpenApiEndToEndTests.QueryStrings.GeneratedCode</Namespace>
       <ClassName>QueryStringsClient</ClassName>
       <OutputPath>QueryStringsClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions /GenerateNullableReferenceTypes:true</Options>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client /GenerateNullableReferenceTypes:true</Options>
     </OpenApiReference>
   </ItemGroup>
 </Project>
