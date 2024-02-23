@@ -39,7 +39,7 @@ The next steps describe how to generate a JSON:API client library and use our pa
 5.  Add the next line inside the **OpenApiReference** section in your project file:
 
     ```xml
-    <Options>/GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.Exceptions</Options>
+    <Options>/GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client</Options>
     ```
 
 6.  Add the following glue code to connect our package with your generated code.
@@ -77,7 +77,7 @@ The next steps describe how to generate a JSON:API client library and use our pa
         ["filter"] = "has(assignedTodoItems)",
         ["sort"] = "-lastName",
         ["page[size]"] = "5"
-    });
+    }, null);
 
     foreach (var person in getResponse.Data)
     {
@@ -166,3 +166,34 @@ For example, the next section puts the generated code in a namespace and generat
   <Options>/GenerateClientInterfaces:true</Options>
 </OpenApiReference>
 ```
+
+## Headers and caching
+
+To use [ETags for caching](~/usage/caching.md), NSwag needs extra settings to make response headers accessible.
+Specify the following in the `<Options>` element of your project file:
+
+```
+/GenerateExceptionClasses:false /WrapResponses:true /GenerateResponseClasses:false /ResponseClass:ApiResponse /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client
+```
+
+This enables the following code, which is explained below:
+
+```c#
+var getResponse = await ApiResponse.TranslateAsync(() => apiClient.GetPersonCollectionAsync(null, null));
+string eTag = getResponse.Headers[HeaderNames.ETag].Single();
+Console.WriteLine($"Retrieved {getResponse.Result.Data.Count} people.");
+
+// wait some time...
+
+getResponse = await ApiResponse.TranslateAsync(() => apiClient.GetPersonCollectionAsync(null, eTag));
+
+if (getResponse is { StatusCode: (int)HttpStatusCode.NotModified, Result: null })
+{
+    Console.WriteLine("The HTTP response hasn't changed, so no response body was returned.");
+}
+```
+
+The response of the first API call contains both data and an ETag header, which is a fingerprint of the response.
+That ETag gets passed to the second API call. This enables the server to detect if something changed, which optimizes
+network usage: no data is sent back, unless is has changed.
+If you only want to ask whether data has changed without fetching it, use a HEAD request instead.
