@@ -28,8 +28,8 @@ public sealed class HeaderFakers : FakerContainer
 
     private readonly Lazy<Faker<Language>> _lazyLanguageFaker = new(() => new Faker<Language>()
         .UseSeed(GetFakerSeed())
-        .RuleFor(textLanguage => textLanguage.Name, faker => faker.PickRandom(LazyLanguageNames.Value))
-        .RuleFor(textLanguage => textLanguage.Code, faker => faker.PickRandom(LazyLanguageCodes.Value)));
+        .RuleFor(language => language.Name, faker => faker.PickRandom(LazyLanguageNames.Value))
+        .RuleFor(language => language.Code, faker => faker.PickRandom(LazyLanguageCodes.Value)));
 
     public Faker<Country> Country => _lazyCountryFaker.Value;
     public Faker<Language> Language => _lazyLanguageFaker.Value;

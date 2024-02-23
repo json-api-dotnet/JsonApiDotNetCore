@@ -44,7 +44,6 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-        response.Headers.Should().ContainKey(HeaderNames.ETag);
         response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
     }
 
@@ -96,7 +95,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Returns_no_ETag_for_POST_request()
     {
         // Arrange
-        Country country = _fakers.Country.Generate();
+        Country newCountry = _fakers.Country.Generate();
         using HttpClient httpClient = _testContext.Factory.CreateClient();
         var apiClient = new HeadersClient(httpClient);
 
@@ -108,8 +107,8 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
                 {
                     Attributes = new CountryAttributesInPostRequest
                     {
-                        Name = country.Name,
-                        Population = country.Population
+                        Name = newCountry.Name,
+                        Population = newCountry.Population
                     }
                 }
             }));
