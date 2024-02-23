@@ -70,7 +70,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-        response.Headers.Should().ContainKey(HeaderNames.ETag);
+        response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+
+        response.Result.ShouldNotBeNull();
     }
 
     [Fact]
