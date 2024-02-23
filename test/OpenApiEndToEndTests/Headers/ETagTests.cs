@@ -87,7 +87,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
             ApiResponse.TranslateAsync(() => apiClient.GetCountryAsync(Unknown.StringId.For<Country, Guid>(), null, null));
 
         // Assert
-        ApiException<ErrorResponseDocument>? exception = (await act.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).And;
+        ApiException<ErrorResponseDocument> exception = (await act.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         exception.Headers.Should().NotContainKey(HeaderNames.ETag);
     }
