@@ -3,7 +3,7 @@ using FluentAssertions;
 using FluentAssertions.Common;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCore.OpenApi.Client;
+using JsonApiDotNetCore.OpenApi.Client.NSwag;
 using Microsoft.Net.Http.Headers;
 using OpenApiClientTests.LegacyClient.GeneratedCode;
 using TestBuildingBlocks;

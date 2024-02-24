@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.OpenApi.Client;
+using JsonApiDotNetCore.OpenApi.Client.NSwag;
 using Newtonsoft.Json;
 
 namespace OpenApiClientTests.ResourceFieldValidation.NullableReferenceTypesOn.ModelStateValidationOff.GeneratedCode;

@@ -1,5 +1,5 @@
 using System.Net;
-using JsonApiDotNetCore.OpenApi.Client;
+using JsonApiDotNetCore.OpenApi.Client.NSwag;
 using JsonApiDotNetCoreExampleClient;
 using Microsoft.Net.Http.Headers;
 

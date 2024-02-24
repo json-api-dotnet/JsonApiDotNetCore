@@ -11,7 +11,7 @@
   <PropertyGroup>
     <VersionPrefix>$(JsonApiDotNetCoreVersionPrefix)</VersionPrefix>
     <PackageTags>jsonapidotnetcore;jsonapi;json:api;dotnet;asp.net;rest;web-api;openapi;swagger;client;nswag</PackageTags>
-    <Description>Provides support for OpenAPI generated clients in sending partial POST/PATCH requests against JSON:API endpoints.</Description>
+    <Description>Provides OpenAPI support for JSON:API generated clients using NSwag.</Description>
     <Authors>json-api-dotnet</Authors>
     <PackageProjectUrl>https://www.jsonapi.net/</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

@@ -66,7 +66,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore.OpenApi",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiTests", "test\OpenApiTests\OpenApiTests.csproj", "{B693DE14-BB28-496F-AB39-B4E674ABCA80}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore.OpenApi.Client", "src\JsonApiDotNetCore.OpenApi.Client\JsonApiDotNetCore.OpenApi.Client.csproj", "{5ADAA902-5A75-4ECB-B4B4-03291D63CE9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore.OpenApi.Client.NSwag", "src\JsonApiDotNetCore.OpenApi.Client.NSwag\JsonApiDotNetCore.OpenApi.Client.NSwag.csproj", "{5ADAA902-5A75-4ECB-B4B4-03291D63CE9C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCoreExampleClient", "src\Examples\JsonApiDotNetCoreExampleClient\JsonApiDotNetCoreExampleClient.csproj", "{7FC5DFA3-6F66-4FD8-820D-81E93856F252}"
 EndProject

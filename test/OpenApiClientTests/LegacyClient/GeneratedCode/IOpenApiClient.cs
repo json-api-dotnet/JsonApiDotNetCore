@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.OpenApi.Client;
+using JsonApiDotNetCore.OpenApi.Client.NSwag;
 
 namespace OpenApiClientTests.LegacyClient.GeneratedCode;
 

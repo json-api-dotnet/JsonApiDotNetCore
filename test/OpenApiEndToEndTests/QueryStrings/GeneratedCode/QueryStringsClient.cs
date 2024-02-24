@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.OpenApi.Client;
+using JsonApiDotNetCore.OpenApi.Client.NSwag;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using TestBuildingBlocks;

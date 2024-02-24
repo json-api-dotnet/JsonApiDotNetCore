@@ -1,7 +1,9 @@
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.OpenApi.Client;
+namespace JsonApiDotNetCore.OpenApi.Client.NSwag;
 
+[PublicAPI]
 public interface IJsonApiClient
 {
     /// <summary>

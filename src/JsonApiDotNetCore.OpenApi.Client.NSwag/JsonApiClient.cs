@@ -3,7 +3,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace JsonApiDotNetCore.OpenApi.Client;
+namespace JsonApiDotNetCore.OpenApi.Client.NSwag;
 
 /// <summary>
 /// Base class to inherit auto-generated OpenAPI clients from. Provides support for partial POST/PATCH in JSON:API requests.

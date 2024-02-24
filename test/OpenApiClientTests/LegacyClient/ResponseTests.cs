@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.Net;
 using FluentAssertions;
-using JsonApiDotNetCore.OpenApi.Client;
+using JsonApiDotNetCore.OpenApi.Client.NSwag;
 using OpenApiClientTests.LegacyClient.GeneratedCode;
 using TestBuildingBlocks;
 using Xunit;

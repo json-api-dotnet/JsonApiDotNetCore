@@ -1,6 +1,6 @@
 using System.Net;
 using FluentAssertions;
-using JsonApiDotNetCore.OpenApi.Client;
+using JsonApiDotNetCore.OpenApi.Client.NSwag;
 using OpenApiEndToEndTests.QueryStrings.GeneratedCode;
 using OpenApiTests;
 using OpenApiTests.QueryStrings;

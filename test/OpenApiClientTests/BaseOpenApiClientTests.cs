@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using System.Reflection;
-using JsonApiDotNetCore.OpenApi.Client;
+using JsonApiDotNetCore.OpenApi.Client.NSwag;
 
 namespace OpenApiClientTests;
 

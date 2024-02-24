@@ -4,7 +4,7 @@ using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 #pragma warning disable AV1008 // Class should not be static
 
-namespace JsonApiDotNetCore.OpenApi.Client;
+namespace JsonApiDotNetCore.OpenApi.Client.NSwag;
 
 internal static class ArgumentGuard
 {

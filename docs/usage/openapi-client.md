@@ -33,13 +33,13 @@ The next steps describe how to generate a JSON:API client library and use our pa
 4.  Add our client package to your project:
 
     ```
-    dotnet add package JsonApiDotNetCore.OpenApi.Client
+    dotnet add package JsonApiDotNetCore.OpenApi.Client.NSwag
     ```
 
 5.  Add the next line inside the **OpenApiReference** section in your project file:
 
     ```xml
-    <Options>/GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client</Options>
+    <Options>/GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag</Options>
     ```
 
 6.  Add the following glue code to connect our package with your generated code.
@@ -50,7 +50,7 @@ The next steps describe how to generate a JSON:API client library and use our pa
     > For example, add `namespace GeneratedCode;` below the `using` lines.
 
     ```c#
-    using JsonApiDotNetCore.OpenApi.Client;
+    using JsonApiDotNetCore.OpenApi.Client.NSwag;
     using Newtonsoft.Json;
 
     partial class ExampleApiClient : JsonApiClient
@@ -173,7 +173,7 @@ To use [ETags for caching](~/usage/caching.md), NSwag needs extra settings to ma
 Specify the following in the `<Options>` element of your project file:
 
 ```
-/GenerateExceptionClasses:false /WrapResponses:true /GenerateResponseClasses:false /ResponseClass:ApiResponse /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client
+/GenerateExceptionClasses:false /WrapResponses:true /GenerateResponseClasses:false /ResponseClass:ApiResponse /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag
 ```
 
 This enables the following code, which is explained below:

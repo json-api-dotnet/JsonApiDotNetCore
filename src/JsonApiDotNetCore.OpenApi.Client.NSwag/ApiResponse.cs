@@ -1,7 +1,7 @@
 using System.Net;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCore.OpenApi.Client;
+namespace JsonApiDotNetCore.OpenApi.Client.NSwag;
 
 [PublicAPI]
 public class ApiResponse(int statusCode, IReadOnlyDictionary<string, IEnumerable<string>> headers)

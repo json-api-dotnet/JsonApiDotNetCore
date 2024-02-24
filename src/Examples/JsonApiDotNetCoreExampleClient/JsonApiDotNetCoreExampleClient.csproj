@@ -8,7 +8,7 @@
   <Import Project="..\..\..\package-versions.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\..\JsonApiDotNetCore.OpenApi.Client\JsonApiDotNetCore.OpenApi.Client.csproj" />
+    <ProjectReference Include="..\..\JsonApiDotNetCore.OpenApi.Client.NSwag\JsonApiDotNetCore.OpenApi.Client.NSwag.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <OpenApiReference Include="..\JsonApiDotNetCoreExample\GeneratedSwagger\JsonApiDotNetCoreExample.json" CodeGenerator="NSwagCSharp" ClassName="ExampleApiClient">
-      <Options>/GenerateExceptionClasses:false /WrapResponses:true /GenerateResponseClasses:false /ResponseClass:ApiResponse /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client</Options>
+      <Options>/GenerateExceptionClasses:false /WrapResponses:true /GenerateResponseClasses:false /ResponseClass:ApiResponse /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag</Options>
     </OpenApiReference>
   </ItemGroup>
 </Project>
