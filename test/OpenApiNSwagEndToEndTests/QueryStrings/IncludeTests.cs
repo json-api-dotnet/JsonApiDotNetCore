@@ -11,13 +11,13 @@ namespace OpenApiNSwagEndToEndTests.QueryStrings;
 public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext>>
 {
     private readonly IntegrationTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext> _testContext;
-    private readonly ITestOutputHelper _testOutputHelper;
+    private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
     private readonly QueryStringFakers _fakers = new();
 
     public IncludeTests(IntegrationTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
-        _testOutputHelper = testOutputHelper;
+        _logHttpMessageHandler = new XUnitLogHttpMessageHandler(testOutputHelper);
 
         testContext.UseController<NodesController>();
         testContext.UseController<NameValuePairsController>();
@@ -37,8 +37,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
             await dbContext.SaveChangesAsync();
         });
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new QueryStringsClient(httpClient, _testOutputHelper);
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new QueryStringsClient(httpClient);
 
         var queryString = new Dictionary<string, string?>
         {
@@ -72,8 +72,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
             await dbContext.SaveChangesAsync();
         });
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new QueryStringsClient(httpClient, _testOutputHelper);
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new QueryStringsClient(httpClient);
 
         var queryString = new Dictionary<string, string?>
         {
@@ -107,8 +107,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
             await dbContext.SaveChangesAsync();
         });
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new QueryStringsClient(httpClient, _testOutputHelper);
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new QueryStringsClient(httpClient);
 
         var queryString = new Dictionary<string, string?>
         {
@@ -141,8 +141,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
             await dbContext.SaveChangesAsync();
         });
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new QueryStringsClient(httpClient, _testOutputHelper);
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new QueryStringsClient(httpClient);
 
         var queryString = new Dictionary<string, string?>
         {
@@ -175,8 +175,8 @@ public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiS
             await dbContext.SaveChangesAsync();
         });
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
-        var apiClient = new QueryStringsClient(httpClient, _testOutputHelper);
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        var apiClient = new QueryStringsClient(httpClient);
 
         var queryString = new Dictionary<string, string?>
         {

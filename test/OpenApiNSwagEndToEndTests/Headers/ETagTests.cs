@@ -7,17 +7,20 @@ using OpenApiTests;
 using OpenApiTests.Headers;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.Headers;
 
 public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext>>
 {
     private readonly IntegrationTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext> _testContext;
+    private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
     private readonly HeaderFakers _fakers = new();
 
-    public ETagTests(IntegrationTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext> testContext)
+    public ETagTests(IntegrationTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
+        _logHttpMessageHandler = new XUnitLogHttpMessageHandler(testOutputHelper);
 
         testContext.UseController<CountriesController>();
     }
@@ -35,7 +38,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
             await dbContext.SaveChangesAsync();
         });
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
 
         // Act
@@ -60,7 +63,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
             await dbContext.SaveChangesAsync();
         });
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
 
         // Act
@@ -78,7 +81,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
     public async Task Returns_no_ETag_for_failed_GET_request()
     {
         // Arrange
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
 
         // Act
@@ -97,7 +100,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         // Arrange
         Country newCountry = _fakers.Country.Generate();
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
 
         // Act
@@ -135,7 +138,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
             await dbContext.SaveChangesAsync();
         });
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
 
         ApiResponse<CountryCollectionResponseDocument?> response1 = await ApiResponse.TranslateAsync(() => apiClient.GetCountryCollectionAsync(null, null));
@@ -167,7 +170,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
             await dbContext.SaveChangesAsync();
         });
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
 
         // Act
