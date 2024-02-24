@@ -23,10 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="ClientGeneratedId\swagger.g.json">
-      <Namespace>OpenApiEndToEndTests.ClientGeneratedId.GeneratedCode</Namespace>
-      <ClassName>ClientGeneratedIdClient</ClassName>
-      <OutputPath>ClientGeneratedIdClient.cs</OutputPath>
+    <OpenApiReference Include="ClientIdGenerationModes\swagger.g.json">
+      <Namespace>OpenApiEndToEndTests.ClientIdGenerationModes.GeneratedCode</Namespace>
+      <ClassName>ClientIdGenerationModesClient</ClassName>
+      <OutputPath>ClientIdGenerationModesClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client /GenerateNullableReferenceTypes:true</Options>
     </OpenApiReference>

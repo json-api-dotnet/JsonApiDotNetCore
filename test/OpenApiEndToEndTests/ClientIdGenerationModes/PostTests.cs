@@ -2,36 +2,36 @@ using FluentAssertions;
 using FluentAssertions.Specialized;
 using JsonApiDotNetCore.OpenApi.Client;
 using Newtonsoft.Json;
-using OpenApiEndToEndTests.ClientGeneratedId.GeneratedCode;
+using OpenApiEndToEndTests.ClientIdGenerationModes.GeneratedCode;
 using OpenApiTests;
-using OpenApiTests.ClientGeneratedId;
+using OpenApiTests.ClientIdGenerationModes;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace OpenApiEndToEndTests.ClientGeneratedId;
+namespace OpenApiEndToEndTests.ClientIdGenerationModes;
 
-public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStartup<ClientGeneratedIdDbContext>, ClientGeneratedIdDbContext>>
+public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext>>
 {
-    private readonly IntegrationTestContext<OpenApiStartup<ClientGeneratedIdDbContext>, ClientGeneratedIdDbContext> _testContext;
-    private readonly ClientGeneratedIdFakers _fakers = new();
+    private readonly IntegrationTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext> _testContext;
+    private readonly ClientIdGenerationModesFakers _fakers = new();
 
-    public PostTests(IntegrationTestContext<OpenApiStartup<ClientGeneratedIdDbContext>, ClientGeneratedIdDbContext> testContext)
+    public PostTests(IntegrationTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext> testContext)
     {
         _testContext = testContext;
 
         testContext.UseController<PlayersController>();
         testContext.UseController<GamesController>();
-        testContext.UseController<GroupsController>();
+        testContext.UseController<PlayerGroupsController>();
     }
 
     [Fact]
-    public async Task Omit_required_id()
+    public async Task Cannot_create_resource_without_ID_when_mode_is_required()
     {
         // Arrange
         Player player = _fakers.Player.Generate();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        ClientGeneratedIdClient apiClient = new(httpClient);
+        ClientIdGenerationModesClient apiClient = new(httpClient);
 
         // Act
         Func<Task<PlayerPrimaryResponseDocument?>> action = () => ApiResponse.TranslateAsync(() => apiClient.PostPlayerAsync(null, new PlayerPostRequestDocument
@@ -41,7 +41,7 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
                 Id = null!,
                 Attributes = new PlayerAttributesInPostRequest
                 {
-                    Name = player.Name
+                    UserName = player.UserName
                 }
             }
         }));
@@ -52,14 +52,14 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
     }
 
     [Fact]
-    public async Task Pass_required_id()
+    public async Task Can_create_resource_with_ID_when_mode_is_required()
     {
         // Arrange
         Player player = _fakers.Player.Generate();
         player.Id = Guid.NewGuid();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        ClientGeneratedIdClient apiClient = new(httpClient);
+        ClientIdGenerationModesClient apiClient = new(httpClient);
 
         // Act
         Func<Task<PlayerPrimaryResponseDocument?>> action = () => ApiResponse.TranslateAsync(() => apiClient.PostPlayerAsync(null, new PlayerPostRequestDocument
@@ -69,7 +69,7 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
                 Id = player.StringId!,
                 Attributes = new PlayerAttributesInPostRequest
                 {
-                    Name = player.Name
+                    UserName = player.UserName
                 }
             }
         }));
@@ -80,13 +80,13 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
     }
 
     [Fact]
-    public async Task Omit_allowed_id()
+    public async Task Can_create_resource_without_ID_when_mode_is_allowed()
     {
         // Arrange
         Game game = _fakers.Game.Generate();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        ClientGeneratedIdClient apiClient = new(httpClient);
+        ClientIdGenerationModesClient apiClient = new(httpClient);
 
         // Act
         Func<Task<GamePrimaryResponseDocument?>> action = () => ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, new GamePostRequestDocument
@@ -96,8 +96,8 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
                 Id = null!,
                 Attributes = new GameAttributesInPostRequest
                 {
-                    Name = game.Name,
-                    Price = (double)game.Price
+                    Title = game.Title,
+                    PurchasePrice = (double)game.PurchasePrice
                 }
             }
         }));
@@ -108,14 +108,14 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
     }
 
     [Fact]
-    public async Task Pass_allowed_id()
+    public async Task Can_create_resource_with_ID_when_mode_is_allowed()
     {
         // Arrange
         Game game = _fakers.Game.Generate();
         game.Id = Guid.NewGuid();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        ClientGeneratedIdClient apiClient = new(httpClient);
+        ClientIdGenerationModesClient apiClient = new(httpClient);
 
         // Act
         Func<Task<GamePrimaryResponseDocument?>> action = () => ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, new GamePostRequestDocument
@@ -125,8 +125,8 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
                 Id = game.StringId!,
                 Attributes = new GameAttributesInPostRequest
                 {
-                    Name = game.Name,
-                    Price = (double)game.Price
+                    Title = game.Title,
+                    PurchasePrice = (double)game.PurchasePrice
                 }
             }
         }));
@@ -137,28 +137,29 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
     }
 
     [Fact]
-    public async Task Omit_forbidden_id()
+    public async Task Can_create_resource_without_ID_when_mode_is_forbidden()
     {
         // Arrange
-        Group group = _fakers.Group.Generate();
+        PlayerGroup playerGroup = _fakers.Group.Generate();
 
         using HttpClient httpClient = _testContext.Factory.CreateClient();
-        ClientGeneratedIdClient apiClient = new(httpClient);
+        ClientIdGenerationModesClient apiClient = new(httpClient);
 
         // Act
-        Func<Task<GroupPrimaryResponseDocument?>> action = () => ApiResponse.TranslateAsync(() => apiClient.PostGroupAsync(null, new GroupPostRequestDocument
-        {
-            Data = new GroupDataInPostRequest
+        Func<Task<PlayerGroupPrimaryResponseDocument?>> action = () => ApiResponse.TranslateAsync(() => apiClient.PostPlayerGroupAsync(null,
+            new PlayerGroupPostRequestDocument
             {
-                Attributes = new GroupAttributesInPostRequest
+                Data = new PlayerGroupDataInPostRequest
                 {
-                    Name = group.Name
+                    Attributes = new PlayerGroupAttributesInPostRequest
+                    {
+                        Name = playerGroup.Name
+                    }
                 }
-            }
-        }));
+            }));
 
         // Assert
-        GroupPrimaryResponseDocument? doc = (await action.Should().NotThrowAsync()).Subject;
+        PlayerGroupPrimaryResponseDocument? doc = (await action.Should().NotThrowAsync()).Subject;
         doc?.Data.Id.Should().NotBeNullOrEmpty();
     }
 }

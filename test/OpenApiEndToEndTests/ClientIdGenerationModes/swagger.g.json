@@ -551,13 +551,13 @@
         }
       }
     },
-    "/groups": {
+    "/playerGroups": {
       "get": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Retrieves a collection of groups.",
-        "operationId": "getGroupCollection",
+        "summary": "Retrieves a collection of playerGroups.",
+        "operationId": "getPlayerGroupCollection",
         "parameters": [
           {
             "name": "query",
@@ -583,7 +583,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully returns the found groups, or an empty array if none were found.",
+            "description": "Successfully returns the found playerGroups, or an empty array if none were found.",
             "headers": {
               "ETag": {
                 "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
@@ -596,7 +596,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/groupCollectionResponseDocument"
+                  "$ref": "#/components/schemas/playerGroupCollectionResponseDocument"
                 }
               }
             }
@@ -627,11 +627,11 @@
       },
       "head": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Retrieves a collection of groups without returning them.",
+        "summary": "Retrieves a collection of playerGroups without returning them.",
         "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
-        "operationId": "headGroupCollection",
+        "operationId": "headPlayerGroupCollection",
         "parameters": [
           {
             "name": "query",
@@ -695,10 +695,10 @@
       },
       "post": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Creates a new group.",
-        "operationId": "postGroup",
+        "summary": "Creates a new playerGroup.",
+        "operationId": "postPlayerGroup",
         "parameters": [
           {
             "name": "query",
@@ -715,13 +715,13 @@
           }
         ],
         "requestBody": {
-          "description": "The attributes and relationships of the group to create.",
+          "description": "The attributes and relationships of the playerGroup to create.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/groupPostRequestDocument"
+                    "$ref": "#/components/schemas/playerGroupPostRequestDocument"
                   }
                 ]
               }
@@ -730,10 +730,10 @@
         },
         "responses": {
           "201": {
-            "description": "The group was successfully created, which resulted in additional changes. The newly created group is returned.",
+            "description": "The playerGroup was successfully created, which resulted in additional changes. The newly created playerGroup is returned.",
             "headers": {
               "Location": {
-                "description": "The URL at which the newly created group can be retrieved.",
+                "description": "The URL at which the newly created playerGroup can be retrieved.",
                 "required": true,
                 "schema": {
                   "type": "string",
@@ -744,13 +744,13 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/groupPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/playerGroupPrimaryResponseDocument"
                 }
               }
             }
           },
           "204": {
-            "description": "The group was successfully created, which did not result in additional changes."
+            "description": "The playerGroup was successfully created, which did not result in additional changes."
           },
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
@@ -795,18 +795,18 @@
         }
       }
     },
-    "/groups/{id}": {
+    "/playerGroups/{id}": {
       "get": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Retrieves an individual group by its identifier.",
-        "operationId": "getGroup",
+        "summary": "Retrieves an individual playerGroup by its identifier.",
+        "operationId": "getPlayerGroup",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the group to retrieve.",
+            "description": "The identifier of the playerGroup to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -836,7 +836,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully returns the found group.",
+            "description": "Successfully returns the found playerGroup.",
             "headers": {
               "ETag": {
                 "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
@@ -849,7 +849,7 @@
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/groupPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/playerGroupPrimaryResponseDocument"
                 }
               }
             }
@@ -877,7 +877,7 @@
             }
           },
           "404": {
-            "description": "The group does not exist.",
+            "description": "The playerGroup does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -890,16 +890,16 @@
       },
       "head": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Retrieves an individual group by its identifier without returning it.",
+        "summary": "Retrieves an individual playerGroup by its identifier without returning it.",
         "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
-        "operationId": "headGroup",
+        "operationId": "headPlayerGroup",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the group to retrieve.",
+            "description": "The identifier of the playerGroup to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -964,21 +964,21 @@
             "description": "The query string is invalid."
           },
           "404": {
-            "description": "The group does not exist."
+            "description": "The playerGroup does not exist."
           }
         }
       },
       "patch": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Updates an existing group.",
-        "operationId": "patchGroup",
+        "summary": "Updates an existing playerGroup.",
+        "operationId": "patchPlayerGroup",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the group to update.",
+            "description": "The identifier of the playerGroup to update.",
             "required": true,
             "schema": {
               "type": "string"
@@ -999,13 +999,13 @@
           }
         ],
         "requestBody": {
-          "description": "The attributes and relationships of the group to update. Omitted fields are left unchanged.",
+          "description": "The attributes and relationships of the playerGroup to update. Omitted fields are left unchanged.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/groupPatchRequestDocument"
+                    "$ref": "#/components/schemas/playerGroupPatchRequestDocument"
                   }
                 ]
               }
@@ -1014,17 +1014,17 @@
         },
         "responses": {
           "200": {
-            "description": "The group was successfully updated, which resulted in additional changes. The updated group is returned.",
+            "description": "The playerGroup was successfully updated, which resulted in additional changes. The updated playerGroup is returned.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
-                  "$ref": "#/components/schemas/groupPrimaryResponseDocument"
+                  "$ref": "#/components/schemas/playerGroupPrimaryResponseDocument"
                 }
               }
             }
           },
           "204": {
-            "description": "The group was successfully updated, which did not result in additional changes."
+            "description": "The playerGroup was successfully updated, which did not result in additional changes."
           },
           "400": {
             "description": "The query string is invalid or the request body is missing or malformed.",
@@ -1037,7 +1037,7 @@
             }
           },
           "404": {
-            "description": "The group or a related resource does not exist.",
+            "description": "The playerGroup or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1070,15 +1070,15 @@
       },
       "delete": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Deletes an existing group by its identifier.",
-        "operationId": "deleteGroup",
+        "summary": "Deletes an existing playerGroup by its identifier.",
+        "operationId": "deletePlayerGroup",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the group to delete.",
+            "description": "The identifier of the playerGroup to delete.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1087,10 +1087,10 @@
         ],
         "responses": {
           "204": {
-            "description": "The group was successfully deleted."
+            "description": "The playerGroup was successfully deleted."
           },
           "404": {
-            "description": "The group does not exist.",
+            "description": "The playerGroup does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1102,18 +1102,18 @@
         }
       }
     },
-    "/groups/{id}/players": {
+    "/playerGroups/{id}/players": {
       "get": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Retrieves the related players of an individual group's players relationship.",
-        "operationId": "getGroupPlayers",
+        "summary": "Retrieves the related players of an individual playerGroup's players relationship.",
+        "operationId": "getPlayerGroupPlayers",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the group whose related players to retrieve.",
+            "description": "The identifier of the playerGroup whose related players to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1184,7 +1184,7 @@
             }
           },
           "404": {
-            "description": "The group does not exist.",
+            "description": "The playerGroup does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1197,16 +1197,16 @@
       },
       "head": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Retrieves the related players of an individual group's players relationship without returning them.",
+        "summary": "Retrieves the related players of an individual playerGroup's players relationship without returning them.",
         "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
-        "operationId": "headGroupPlayers",
+        "operationId": "headPlayerGroupPlayers",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the group whose related players to retrieve.",
+            "description": "The identifier of the playerGroup whose related players to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1271,23 +1271,23 @@
             "description": "The query string is invalid."
           },
           "404": {
-            "description": "The group does not exist."
+            "description": "The playerGroup does not exist."
           }
         }
       }
     },
-    "/groups/{id}/relationships/players": {
+    "/playerGroups/{id}/relationships/players": {
       "get": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Retrieves the related player identities of an individual group's players relationship.",
-        "operationId": "getGroupPlayersRelationship",
+        "summary": "Retrieves the related player identities of an individual playerGroup's players relationship.",
+        "operationId": "getPlayerGroupPlayersRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the group whose related player identities to retrieve.",
+            "description": "The identifier of the playerGroup whose related player identities to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1358,7 +1358,7 @@
             }
           },
           "404": {
-            "description": "The group does not exist.",
+            "description": "The playerGroup does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1371,16 +1371,16 @@
       },
       "head": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Retrieves the related player identities of an individual group's players relationship without returning them.",
+        "summary": "Retrieves the related player identities of an individual playerGroup's players relationship without returning them.",
         "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
-        "operationId": "headGroupPlayersRelationship",
+        "operationId": "headPlayerGroupPlayersRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the group whose related player identities to retrieve.",
+            "description": "The identifier of the playerGroup whose related player identities to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1445,21 +1445,21 @@
             "description": "The query string is invalid."
           },
           "404": {
-            "description": "The group does not exist."
+            "description": "The playerGroup does not exist."
           }
         }
       },
       "post": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Adds existing players to the players relationship of an individual group.",
-        "operationId": "postGroupPlayersRelationship",
+        "summary": "Adds existing players to the players relationship of an individual playerGroup.",
+        "operationId": "postPlayerGroupPlayersRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the group to add players to.",
+            "description": "The identifier of the playerGroup to add players to.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1495,7 +1495,7 @@
             }
           },
           "404": {
-            "description": "The group does not exist.",
+            "description": "The playerGroup does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1518,15 +1518,15 @@
       },
       "patch": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Assigns existing players to the players relationship of an individual group.",
-        "operationId": "patchGroupPlayersRelationship",
+        "summary": "Assigns existing players to the players relationship of an individual playerGroup.",
+        "operationId": "patchPlayerGroupPlayersRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the group whose players relationship to assign.",
+            "description": "The identifier of the playerGroup whose players relationship to assign.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1562,7 +1562,7 @@
             }
           },
           "404": {
-            "description": "The group does not exist.",
+            "description": "The playerGroup does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1585,15 +1585,15 @@
       },
       "delete": {
         "tags": [
-          "groups"
+          "playerGroups"
         ],
-        "summary": "Removes existing players from the players relationship of an individual group.",
-        "operationId": "deleteGroupPlayersRelationship",
+        "summary": "Removes existing players from the players relationship of an individual playerGroup.",
+        "operationId": "deletePlayerGroupPlayersRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the group to remove players from.",
+            "description": "The identifier of the playerGroup to remove players from.",
             "required": true,
             "schema": {
               "type": "string"
@@ -1629,7 +1629,7 @@
             }
           },
           "404": {
-            "description": "The group does not exist.",
+            "description": "The playerGroup does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2192,13 +2192,562 @@
         }
       }
     },
-    "/players/{id}/games": {
+    "/players/{id}/groupMemberships": {
       "get": {
         "tags": [
           "players"
         ],
-        "summary": "Retrieves the related games of an individual player's games relationship.",
-        "operationId": "getPlayerGames",
+        "summary": "Retrieves the related playerGroups of an individual player's groupMemberships relationship.",
+        "operationId": "getPlayerGroupMemberships",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the player whose related playerGroups to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found playerGroups, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/playerGroupCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The player does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "players"
+        ],
+        "summary": "Retrieves the related playerGroups of an individual player's groupMemberships relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headPlayerGroupMemberships",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the player whose related playerGroups to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The player does not exist."
+          }
+        }
+      }
+    },
+    "/players/{id}/relationships/groupMemberships": {
+      "get": {
+        "tags": [
+          "players"
+        ],
+        "summary": "Retrieves the related playerGroup identities of an individual player's groupMemberships relationship.",
+        "operationId": "getPlayerGroupMembershipsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the player whose related playerGroup identities to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returns the found playerGroup identities, or an empty array if none were found.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/playerGroupIdentifierCollectionResponseDocument"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The player does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "players"
+        ],
+        "summary": "Retrieves the related playerGroup identities of an individual player's groupMemberships relationship without returning them.",
+        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
+        "operationId": "headPlayerGroupMembershipsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the player whose related playerGroup identities to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "nullable": true
+              },
+              "example": ""
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation completed successfully.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Size of the HTTP response body, in bytes.",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
+            "headers": {
+              "ETag": {
+                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The query string is invalid."
+          },
+          "404": {
+            "description": "The player does not exist."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "players"
+        ],
+        "summary": "Adds existing playerGroups to the groupMemberships relationship of an individual player.",
+        "operationId": "postPlayerGroupMembershipsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the player to add playerGroups to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the playerGroups to add to the groupMemberships relationship.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyPlayerGroupInRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The playerGroups were successfully added, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The player does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "players"
+        ],
+        "summary": "Assigns existing playerGroups to the groupMemberships relationship of an individual player.",
+        "operationId": "patchPlayerGroupMembershipsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the player whose groupMemberships relationship to assign.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the playerGroups to assign to the groupMemberships relationship, or an empty array to clear the relationship.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyPlayerGroupInRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The groupMemberships relationship was successfully updated, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The player does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "players"
+        ],
+        "summary": "Removes existing playerGroups from the groupMemberships relationship of an individual player.",
+        "operationId": "deletePlayerGroupMembershipsRelationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier of the player to remove playerGroups from.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The identities of the playerGroups to remove from the groupMemberships relationship.",
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/toManyPlayerGroupInRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "The playerGroups were successfully removed, which did not result in additional changes."
+          },
+          "400": {
+            "description": "The request body is missing or malformed.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The player does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A resource type in the request body is incompatible.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/players/{id}/ownedGames": {
+      "get": {
+        "tags": [
+          "players"
+        ],
+        "summary": "Retrieves the related games of an individual player's ownedGames relationship.",
+        "operationId": "getPlayerOwnedGames",
         "parameters": [
           {
             "name": "id",
@@ -2289,9 +2838,9 @@
         "tags": [
           "players"
         ],
-        "summary": "Retrieves the related games of an individual player's games relationship without returning them.",
+        "summary": "Retrieves the related games of an individual player's ownedGames relationship without returning them.",
         "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
-        "operationId": "headPlayerGames",
+        "operationId": "headPlayerOwnedGames",
         "parameters": [
           {
             "name": "id",
@@ -2366,13 +2915,13 @@
         }
       }
     },
-    "/players/{id}/relationships/games": {
+    "/players/{id}/relationships/ownedGames": {
       "get": {
         "tags": [
           "players"
         ],
-        "summary": "Retrieves the related game identities of an individual player's games relationship.",
-        "operationId": "getPlayerGamesRelationship",
+        "summary": "Retrieves the related game identities of an individual player's ownedGames relationship.",
+        "operationId": "getPlayerOwnedGamesRelationship",
         "parameters": [
           {
             "name": "id",
@@ -2463,9 +3012,9 @@
         "tags": [
           "players"
         ],
-        "summary": "Retrieves the related game identities of an individual player's games relationship without returning them.",
+        "summary": "Retrieves the related game identities of an individual player's ownedGames relationship without returning them.",
         "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
-        "operationId": "headPlayerGamesRelationship",
+        "operationId": "headPlayerOwnedGamesRelationship",
         "parameters": [
           {
             "name": "id",
@@ -2543,8 +3092,8 @@
         "tags": [
           "players"
         ],
-        "summary": "Adds existing games to the games relationship of an individual player.",
-        "operationId": "postPlayerGamesRelationship",
+        "summary": "Adds existing games to the ownedGames relationship of an individual player.",
+        "operationId": "postPlayerOwnedGamesRelationship",
         "parameters": [
           {
             "name": "id",
@@ -2557,7 +3106,7 @@
           }
         ],
         "requestBody": {
-          "description": "The identities of the games to add to the games relationship.",
+          "description": "The identities of the games to add to the ownedGames relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -2610,13 +3159,13 @@
         "tags": [
           "players"
         ],
-        "summary": "Assigns existing games to the games relationship of an individual player.",
-        "operationId": "patchPlayerGamesRelationship",
+        "summary": "Assigns existing games to the ownedGames relationship of an individual player.",
+        "operationId": "patchPlayerOwnedGamesRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the player whose games relationship to assign.",
+            "description": "The identifier of the player whose ownedGames relationship to assign.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2624,7 +3173,7 @@
           }
         ],
         "requestBody": {
-          "description": "The identities of the games to assign to the games relationship, or an empty array to clear the relationship.",
+          "description": "The identities of the games to assign to the ownedGames relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -2639,7 +3188,7 @@
         },
         "responses": {
           "204": {
-            "description": "The games relationship was successfully updated, which did not result in additional changes."
+            "description": "The ownedGames relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
             "description": "The request body is missing or malformed.",
@@ -2677,8 +3226,8 @@
         "tags": [
           "players"
         ],
-        "summary": "Removes existing games from the games relationship of an individual player.",
-        "operationId": "deletePlayerGamesRelationship",
+        "summary": "Removes existing games from the ownedGames relationship of an individual player.",
+        "operationId": "deletePlayerOwnedGamesRelationship",
         "parameters": [
           {
             "name": "id",
@@ -2691,7 +3240,7 @@
           }
         ],
         "requestBody": {
-          "description": "The identities of the games to remove from the games relationship.",
+          "description": "The identities of the games to remove from the ownedGames relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -2707,555 +3256,6 @@
         "responses": {
           "204": {
             "description": "The games were successfully removed, which did not result in additional changes."
-          },
-          "400": {
-            "description": "The request body is missing or malformed.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "The player does not exist.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "A resource type in the request body is incompatible.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/players/{id}/groups": {
-      "get": {
-        "tags": [
-          "players"
-        ],
-        "summary": "Retrieves the related groups of an individual player's groups relationship.",
-        "operationId": "getPlayerGroups",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The identifier of the player whose related groups to retrieve.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "query",
-            "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
-            "schema": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string",
-                "nullable": true
-              },
-              "example": ""
-            }
-          },
-          {
-            "name": "If-None-Match",
-            "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully returns the found groups, or an empty array if none were found.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/groupCollectionResponseDocument"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "The query string is invalid.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "The player does not exist.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
-              }
-            }
-          }
-        }
-      },
-      "head": {
-        "tags": [
-          "players"
-        ],
-        "summary": "Retrieves the related groups of an individual player's groups relationship without returning them.",
-        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
-        "operationId": "headPlayerGroups",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The identifier of the player whose related groups to retrieve.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "query",
-            "in": "query",
-            "description": "For syntax, see the documentation for the [`include`](https://www.jsonapi.net/usage/reading/including-relationships.html)/[`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
-            "schema": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string",
-                "nullable": true
-              },
-              "example": ""
-            }
-          },
-          {
-            "name": "If-None-Match",
-            "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation completed successfully.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "Content-Length": {
-                "description": "Size of the HTTP response body, in bytes.",
-                "required": true,
-                "schema": {
-                  "type": "integer",
-                  "format": "int64"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "The query string is invalid."
-          },
-          "404": {
-            "description": "The player does not exist."
-          }
-        }
-      }
-    },
-    "/players/{id}/relationships/groups": {
-      "get": {
-        "tags": [
-          "players"
-        ],
-        "summary": "Retrieves the related group identities of an individual player's groups relationship.",
-        "operationId": "getPlayerGroupsRelationship",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The identifier of the player whose related group identities to retrieve.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "query",
-            "in": "query",
-            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
-            "schema": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string",
-                "nullable": true
-              },
-              "example": ""
-            }
-          },
-          {
-            "name": "If-None-Match",
-            "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully returns the found group identities, or an empty array if none were found.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/groupIdentifierCollectionResponseDocument"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "The query string is invalid.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "The player does not exist.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
-              }
-            }
-          }
-        }
-      },
-      "head": {
-        "tags": [
-          "players"
-        ],
-        "summary": "Retrieves the related group identities of an individual player's groups relationship without returning them.",
-        "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
-        "operationId": "headPlayerGroupsRelationship",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The identifier of the player whose related group identities to retrieve.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "query",
-            "in": "query",
-            "description": "For syntax, see the documentation for the [`filter`](https://www.jsonapi.net/usage/reading/filtering.html)/[`sort`](https://www.jsonapi.net/usage/reading/sorting.html)/[`page`](https://www.jsonapi.net/usage/reading/pagination.html)/[`fields`](https://www.jsonapi.net/usage/reading/sparse-fieldset-selection.html) query string parameters.",
-            "schema": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string",
-                "nullable": true
-              },
-              "example": ""
-            }
-          },
-          {
-            "name": "If-None-Match",
-            "in": "header",
-            "description": "A list of ETags, resulting in HTTP status 304 without a body, if one of them matches the current fingerprint.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The operation completed successfully.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "Content-Length": {
-                "description": "Size of the HTTP response body, in bytes.",
-                "required": true,
-                "schema": {
-                  "type": "integer",
-                  "format": "int64"
-                }
-              }
-            }
-          },
-          "304": {
-            "description": "The fingerprint of the HTTP response matches one of the ETags from the incoming If-None-Match header.",
-            "headers": {
-              "ETag": {
-                "description": "A fingerprint of the HTTP response, which can be used in an If-None-Match header to only fetch changes.",
-                "required": true,
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "The query string is invalid."
-          },
-          "404": {
-            "description": "The player does not exist."
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "players"
-        ],
-        "summary": "Adds existing groups to the groups relationship of an individual player.",
-        "operationId": "postPlayerGroupsRelationship",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The identifier of the player to add groups to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The identities of the groups to add to the groups relationship.",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/toManyGroupInRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "The groups were successfully added, which did not result in additional changes."
-          },
-          "400": {
-            "description": "The request body is missing or malformed.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "The player does not exist.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "A resource type in the request body is incompatible.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "players"
-        ],
-        "summary": "Assigns existing groups to the groups relationship of an individual player.",
-        "operationId": "patchPlayerGroupsRelationship",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The identifier of the player whose groups relationship to assign.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The identities of the groups to assign to the groups relationship, or an empty array to clear the relationship.",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/toManyGroupInRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "The groups relationship was successfully updated, which did not result in additional changes."
-          },
-          "400": {
-            "description": "The request body is missing or malformed.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "The player does not exist.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "A resource type in the request body is incompatible.",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorResponseDocument"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "players"
-        ],
-        "summary": "Removes existing groups from the groups relationship of an individual player.",
-        "operationId": "deletePlayerGroupsRelationship",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The identifier of the player to remove groups from.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The identities of the groups to remove from the groups relationship.",
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/toManyGroupInRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "The groups were successfully removed, which did not result in additional changes."
           },
           "400": {
             "description": "The request body is missing or malformed.",
@@ -3314,7 +3314,7 @@
           "propertyName": "type",
           "mapping": {
             "games": "#/components/schemas/gameDataInResponse",
-            "groups": "#/components/schemas/groupDataInResponse",
+            "playerGroups": "#/components/schemas/playerGroupDataInResponse",
             "players": "#/components/schemas/playerDataInResponse"
           }
         },
@@ -3416,10 +3416,10 @@
       "gameAttributesInPatchRequest": {
         "type": "object",
         "properties": {
-          "name": {
+          "title": {
             "type": "string"
           },
-          "price": {
+          "purchasePrice": {
             "type": "number",
             "format": "double"
           }
@@ -3428,14 +3428,14 @@
       },
       "gameAttributesInPostRequest": {
         "required": [
-          "name"
+          "title"
         ],
         "type": "object",
         "properties": {
-          "name": {
+          "title": {
             "type": "string"
           },
-          "price": {
+          "purchasePrice": {
             "type": "number",
             "format": "double"
           }
@@ -3445,10 +3445,10 @@
       "gameAttributesInResponse": {
         "type": "object",
         "properties": {
-          "name": {
+          "title": {
             "type": "string"
           },
-          "price": {
+          "purchasePrice": {
             "type": "number",
             "format": "double"
           }
@@ -3699,336 +3699,6 @@
         "type": "string",
         "additionalProperties": false
       },
-      "groupAttributesInPatchRequest": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupAttributesInPostRequest": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupAttributesInResponse": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupCollectionResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
-              }
-            ]
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/groupDataInResponse"
-            }
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupDataInPatchRequest": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/groupResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/groupAttributesInPatchRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/groupRelationshipsInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupDataInPostRequest": {
-        "required": [
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/groupResourceType"
-          },
-          "attributes": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/groupAttributesInPostRequest"
-              }
-            ]
-          },
-          "relationships": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/groupRelationshipsInPostRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupDataInResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/dataInResponse"
-          },
-          {
-            "required": [
-              "links"
-            ],
-            "type": "object",
-            "properties": {
-              "attributes": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/groupAttributesInResponse"
-                  }
-                ]
-              },
-              "relationships": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/groupRelationshipsInResponse"
-                  }
-                ]
-              },
-              "links": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/linksInResourceData"
-                  }
-                ]
-              },
-              "meta": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "nullable": true
-                }
-              }
-            },
-            "additionalProperties": false
-          }
-        ],
-        "additionalProperties": false
-      },
-      "groupIdentifier": {
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "type": {
-            "$ref": "#/components/schemas/groupResourceType"
-          },
-          "id": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupIdentifierCollectionResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
-              }
-            ]
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/groupIdentifier"
-            }
-          },
-          "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupPatchRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/groupDataInPatchRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupPostRequestDocument": {
-        "required": [
-          "data"
-        ],
-        "type": "object",
-        "properties": {
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/groupDataInPostRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupPrimaryResponseDocument": {
-        "required": [
-          "data",
-          "links"
-        ],
-        "type": "object",
-        "properties": {
-          "links": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/linksInResourceDocument"
-              }
-            ]
-          },
-          "data": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/groupDataInResponse"
-              }
-            ]
-          },
-          "included": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/dataInResponse"
-            }
-          },
-          "meta": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "nullable": true
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupRelationshipsInPatchRequest": {
-        "type": "object",
-        "properties": {
-          "players": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyPlayerInRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupRelationshipsInPostRequest": {
-        "type": "object",
-        "properties": {
-          "players": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyPlayerInRequest"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupRelationshipsInResponse": {
-        "type": "object",
-        "properties": {
-          "players": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/toManyPlayerInResponse"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "groupResourceType": {
-        "enum": [
-          "groups"
-        ],
-        "type": "string",
-        "additionalProperties": false
-      },
       "linksInRelationship": {
         "required": [
           "related",
@@ -4140,7 +3810,7 @@
       "playerAttributesInPatchRequest": {
         "type": "object",
         "properties": {
-          "name": {
+          "userName": {
             "type": "string"
           }
         },
@@ -4148,11 +3818,11 @@
       },
       "playerAttributesInPostRequest": {
         "required": [
-          "name"
+          "userName"
         ],
         "type": "object",
         "properties": {
-          "name": {
+          "userName": {
             "type": "string"
           }
         },
@@ -4161,7 +3831,7 @@
       "playerAttributesInResponse": {
         "type": "object",
         "properties": {
-          "name": {
+          "userName": {
             "type": "string"
           }
         },
@@ -4310,6 +3980,336 @@
         ],
         "additionalProperties": false
       },
+      "playerGroupAttributesInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupAttributesInPostRequest": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupAttributesInResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceCollectionDocument"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/playerGroupDataInResponse"
+            }
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupDataInPatchRequest": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/playerGroupResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/playerGroupAttributesInPatchRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/playerGroupRelationshipsInPatchRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupDataInPostRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/playerGroupResourceType"
+          },
+          "attributes": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/playerGroupAttributesInPostRequest"
+              }
+            ]
+          },
+          "relationships": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/playerGroupRelationshipsInPostRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupDataInResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/dataInResponse"
+          },
+          {
+            "required": [
+              "links"
+            ],
+            "type": "object",
+            "properties": {
+              "attributes": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/playerGroupAttributesInResponse"
+                  }
+                ]
+              },
+              "relationships": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/playerGroupRelationshipsInResponse"
+                  }
+                ]
+              },
+              "links": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/linksInResourceData"
+                  }
+                ]
+              },
+              "meta": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "nullable": true
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        ],
+        "additionalProperties": false
+      },
+      "playerGroupIdentifier": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/playerGroupResourceType"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupIdentifierCollectionResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceIdentifierCollectionDocument"
+              }
+            ]
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/playerGroupIdentifier"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupPatchRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/playerGroupDataInPatchRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupPostRequestDocument": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/playerGroupDataInPostRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupPrimaryResponseDocument": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInResourceDocument"
+              }
+            ]
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/playerGroupDataInResponse"
+              }
+            ]
+          },
+          "included": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/dataInResponse"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupRelationshipsInPatchRequest": {
+        "type": "object",
+        "properties": {
+          "players": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyPlayerInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupRelationshipsInPostRequest": {
+        "type": "object",
+        "properties": {
+          "players": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyPlayerInRequest"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupRelationshipsInResponse": {
+        "type": "object",
+        "properties": {
+          "players": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/toManyPlayerInResponse"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "playerGroupResourceType": {
+        "enum": [
+          "playerGroups"
+        ],
+        "type": "string",
+        "additionalProperties": false
+      },
       "playerIdentifier": {
         "required": [
           "id",
@@ -4429,17 +4429,17 @@
       "playerRelationshipsInPatchRequest": {
         "type": "object",
         "properties": {
-          "games": {
+          "ownedGames": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/toManyGameInRequest"
               }
             ]
           },
-          "groups": {
+          "groupMemberships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toManyGroupInRequest"
+                "$ref": "#/components/schemas/toManyPlayerGroupInRequest"
               }
             ]
           }
@@ -4449,17 +4449,17 @@
       "playerRelationshipsInPostRequest": {
         "type": "object",
         "properties": {
-          "games": {
+          "ownedGames": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/toManyGameInRequest"
               }
             ]
           },
-          "groups": {
+          "groupMemberships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toManyGroupInRequest"
+                "$ref": "#/components/schemas/toManyPlayerGroupInRequest"
               }
             ]
           }
@@ -4469,17 +4469,17 @@
       "playerRelationshipsInResponse": {
         "type": "object",
         "properties": {
-          "games": {
+          "ownedGames": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/toManyGameInResponse"
               }
             ]
           },
-          "groups": {
+          "groupMemberships": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/toManyGroupInResponse"
+                "$ref": "#/components/schemas/toManyPlayerGroupInResponse"
               }
             ]
           }
@@ -4537,7 +4537,7 @@
         },
         "additionalProperties": false
       },
-      "toManyGroupInRequest": {
+      "toManyPlayerGroupInRequest": {
         "required": [
           "data"
         ],
@@ -4546,13 +4546,13 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/groupIdentifier"
+              "$ref": "#/components/schemas/playerGroupIdentifier"
             }
           }
         },
         "additionalProperties": false
       },
-      "toManyGroupInResponse": {
+      "toManyPlayerGroupInResponse": {
         "required": [
           "links"
         ],
@@ -4568,7 +4568,7 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/groupIdentifier"
+              "$ref": "#/components/schemas/playerGroupIdentifier"
             }
           },
           "meta": {

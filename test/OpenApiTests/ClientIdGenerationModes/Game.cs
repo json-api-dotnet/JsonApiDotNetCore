@@ -3,15 +3,15 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.ClientGeneratedId;
+namespace OpenApiTests.ClientIdGenerationModes;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.ClientGeneratedId", ClientIdGeneration = ClientIdGenerationMode.Allowed)]
+[Resource(ControllerNamespace = "OpenApiTests.ClientIdGenerationModes", ClientIdGeneration = ClientIdGenerationMode.Allowed)]
 public sealed class Game : Identifiable<Guid>
 {
     [Attr]
-    public string Name { get; set; } = null!;
+    public string Title { get; set; } = null!;
 
     [Attr]
-    public decimal Price { get; set; }
+    public decimal PurchasePrice { get; set; }
 }
