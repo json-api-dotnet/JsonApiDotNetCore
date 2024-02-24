@@ -31,9 +31,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(SourceLinkVersion)" PrivateAssets="All" />
+    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonFrozenVersion)" />
     <PackageReference Include="SauceControl.InheritDoc" Version="$(InheritDocVersion)" PrivateAssets="All" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleFrozenVersion)" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="$(SwashbuckleFrozenVersion)" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="$(SwashbuckleFrozenVersion)" />
   </ItemGroup>
 </Project>

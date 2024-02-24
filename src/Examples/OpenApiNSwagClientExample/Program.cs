@@ -1,6 +1,5 @@
 using System.Net;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
-using Microsoft.Net.Http.Headers;
 using OpenApiNSwagClientExample;
 
 #if DEBUG
@@ -15,7 +14,7 @@ using var httpClient = new HttpClient();
 var apiClient = new ExampleApiClient(httpClient);
 
 ApiResponse<PersonCollectionResponseDocument?> getResponse1 = await GetPersonCollectionAsync(apiClient, null);
-ApiResponse<PersonCollectionResponseDocument?> getResponse2 = await GetPersonCollectionAsync(apiClient, getResponse1.Headers[HeaderNames.ETag].First());
+ApiResponse<PersonCollectionResponseDocument?> getResponse2 = await GetPersonCollectionAsync(apiClient, getResponse1.Headers["ETag"].First());
 
 if (getResponse2 is { StatusCode: (int)HttpStatusCode.NotModified, Result: null })
 {

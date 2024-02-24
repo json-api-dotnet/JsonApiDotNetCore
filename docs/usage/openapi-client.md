@@ -180,7 +180,7 @@ This enables the following code, which is explained below:
 
 ```c#
 var getResponse = await ApiResponse.TranslateAsync(() => apiClient.GetPersonCollectionAsync(null, null));
-string eTag = getResponse.Headers[HeaderNames.ETag].Single();
+string eTag = getResponse.Headers["ETag"].Single();
 Console.WriteLine($"Retrieved {getResponse.Result.Data.Count} people.");
 
 // wait some time...

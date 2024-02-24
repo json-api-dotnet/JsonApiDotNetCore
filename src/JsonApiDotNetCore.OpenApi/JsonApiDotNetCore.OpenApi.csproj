@@ -37,6 +37,5 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(SourceLinkVersion)" PrivateAssets="All" />
     <PackageReference Include="SauceControl.InheritDoc" Version="$(InheritDocVersion)" PrivateAssets="All" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleFrozenVersion)" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="$(SwashbuckleFrozenVersion)" />
   </ItemGroup>
 </Project>
