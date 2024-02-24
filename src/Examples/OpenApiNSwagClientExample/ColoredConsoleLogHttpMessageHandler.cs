@@ -5,20 +5,24 @@ namespace OpenApiNSwagClientExample;
 /// <summary>
 /// Writes incoming and outgoing HTTP messages to the console.
 /// </summary>
-[UsedImplicitly]
-internal sealed class ColoredConsoleLogDelegatingHandler : DelegatingHandler
+internal sealed class ColoredConsoleLogHttpMessageHandler : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+#if DEBUG
         await LogRequestAsync(request, cancellationToken);
+#endif
 
         HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
 
+#if DEBUG
         await LogResponseAsync(response, cancellationToken);
+#endif
 
         return response;
     }
 
+    [UsedImplicitly]
     private static async Task LogRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         using var _ = new ConsoleColorScope(ConsoleColor.Green);
@@ -33,6 +37,7 @@ internal sealed class ColoredConsoleLogDelegatingHandler : DelegatingHandler
         }
     }
 
+    [UsedImplicitly]
     private static async Task LogResponseAsync(HttpResponseMessage response, CancellationToken cancellationToken)
     {
         using var _ = new ConsoleColorScope(ConsoleColor.Cyan);
