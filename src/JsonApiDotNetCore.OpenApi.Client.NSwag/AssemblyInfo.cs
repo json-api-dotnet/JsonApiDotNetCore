@@ -1,3 +1,3 @@
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("OpenApiClientTests")]
+[assembly: InternalsVisibleTo("OpenApiNSwagClientTests")]

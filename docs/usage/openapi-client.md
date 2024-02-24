@@ -63,7 +63,7 @@ The next steps describe how to generate a JSON:API client library and use our pa
     ```
 
     > [!TIP]
-    > The project at src/Examples/JsonApiDotNetCoreExampleClient contains an enhanced version that logs the HTTP requests and responses.
+    > The project at src/Examples/OpenApiNSwagClientExample contains an enhanced version that logs the HTTP requests and responses.
     > Additionally, the example shows how to write the swagger.json file to disk when building the server, which is imported from the client project. This keeps the server and client automatically in sync, which is handy when both are in the same solution.
 
 7.  Add code that calls one of your JSON:API endpoints.

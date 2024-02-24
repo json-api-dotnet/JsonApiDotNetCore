@@ -15,7 +15,7 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
         testContext.UseController<SupermarketsController>();
         testContext.UseController<StaffMembersController>();
 
-        testContext.SwaggerDocumentOutputDirectory = "test/OpenApiClientTests/NamingConventions/CamelCase";
+        testContext.SwaggerDocumentOutputDirectory = "test/OpenApiNSwagClientTests/NamingConventions/CamelCase";
     }
 
     [Fact]

@@ -68,11 +68,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiTests", "test\OpenAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore.OpenApi.Client.NSwag", "src\JsonApiDotNetCore.OpenApi.Client.NSwag\JsonApiDotNetCore.OpenApi.Client.NSwag.csproj", "{5ADAA902-5A75-4ECB-B4B4-03291D63CE9C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCoreExampleClient", "src\Examples\JsonApiDotNetCoreExampleClient\JsonApiDotNetCoreExampleClient.csproj", "{7FC5DFA3-6F66-4FD8-820D-81E93856F252}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiNSwagClientExample", "src\Examples\OpenApiNSwagClientExample\OpenApiNSwagClientExample.csproj", "{7FC5DFA3-6F66-4FD8-820D-81E93856F252}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiClientTests", "test\OpenApiClientTests\OpenApiClientTests.csproj", "{77F98215-3085-422E-B99D-4C404C2114CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiNSwagClientTests", "test\OpenApiNSwagClientTests\OpenApiNSwagClientTests.csproj", "{77F98215-3085-422E-B99D-4C404C2114CF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiEndToEndTests", "test\OpenApiEndToEndTests\OpenApiEndToEndTests.csproj", "{3BA4F9B9-3D90-44B5-B09C-28D98E0B4225}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiNSwagEndToEndTests", "test\OpenApiNSwagEndToEndTests\OpenApiNSwagEndToEndTests.csproj", "{3BA4F9B9-3D90-44B5-B09C-28D98E0B4225}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
