@@ -12,7 +12,7 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
 {
     private readonly Lazy<Task<JsonElement>> _lazySwaggerDocument;
 
-    internal string? SwaggerDocumentOutputDirectory { private get; set; }
+    internal string? SwaggerDocumentOutputDirectory { get; set; }
 
     public OpenApiTestContext()
     {
@@ -41,8 +41,8 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
 
     private static string GetSwaggerDocumentAbsoluteOutputPath(string relativePath)
     {
-        string solutionRoot = Path.Combine(Assembly.GetExecutingAssembly().Location, "../../../../../../");
-        string outputPath = Path.Combine(solutionRoot, relativePath, "swagger.g.json");
+        string testRootDirectory = Path.Combine(Assembly.GetExecutingAssembly().Location, "../../../../../");
+        string outputPath = Path.Combine(testRootDirectory, relativePath, "swagger.g.json");
 
         return Path.GetFullPath(outputPath);
     }
@@ -65,6 +65,9 @@ public class OpenApiTestContext<TStartup, TDbContext> : IntegrationTestContext<T
 
     private static Task WriteToDiskAsync(string path, JsonElement jsonElement)
     {
+        string directory = Path.GetDirectoryName(path)!;
+        Directory.CreateDirectory(directory);
+
         string contents = jsonElement.ToString();
         return File.WriteAllTextAsync(path, contents);
     }

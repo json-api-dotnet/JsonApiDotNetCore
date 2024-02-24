@@ -16,7 +16,7 @@ public sealed class PascalCaseTests
         testContext.UseController<SupermarketsController>();
         testContext.UseController<StaffMembersController>();
 
-        testContext.SwaggerDocumentOutputDirectory = "test/OpenApiNSwagClientTests/NamingConventions/PascalCase";
+        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Fact]

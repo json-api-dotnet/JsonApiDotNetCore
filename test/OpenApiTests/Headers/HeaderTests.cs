@@ -15,7 +15,7 @@ public sealed class HeaderTests : IClassFixture<OpenApiTestContext<OpenApiStartu
 
         testContext.UseController<CountriesController>();
 
-        testContext.SwaggerDocumentOutputDirectory = "test/OpenApiNSwagEndToEndTests/Headers";
+        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]

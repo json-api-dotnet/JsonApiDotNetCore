@@ -15,7 +15,7 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
         testContext.UseController<SupermarketsController>();
         testContext.UseController<StaffMembersController>();
 
-        testContext.SwaggerDocumentOutputDirectory = "test/OpenApiNSwagClientTests/NamingConventions/KebabCase";
+        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Fact]

@@ -15,7 +15,7 @@ public sealed class LegacyOpenApiIntegrationTests : OpenApiTestContext<LegacyOpe
         UseController<FlightAttendantsController>();
         UseController<PassengersController>();
 
-        SwaggerDocumentOutputDirectory = "test/OpenApiNSwagClientTests/LegacyClient";
+        SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Fact]
@@ -30,9 +30,9 @@ public sealed class LegacyOpenApiIntegrationTests : OpenApiTestContext<LegacyOpe
         actualJsonText.Should().BeJson(expectedJsonText);
     }
 
-    private static async Task<string> GetExpectedSwaggerDocumentAsync()
+    private async Task<string> GetExpectedSwaggerDocumentAsync()
     {
-        const string embeddedResourceName = $"{nameof(OpenApiTests)}.{nameof(LegacyOpenApiIntegration)}.swagger.json";
+        string embeddedResourceName = $"{GetType().Namespace!.Replace('/', '.')}.swagger.json";
         var assembly = Assembly.GetExecutingAssembly();
 
         await using Stream? stream = assembly.GetManifestResourceStream(embeddedResourceName);
