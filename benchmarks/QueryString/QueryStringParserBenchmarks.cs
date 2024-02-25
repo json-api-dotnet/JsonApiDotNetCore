@@ -6,6 +6,8 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Parsing;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Benchmarks.QueryString;
@@ -17,14 +19,12 @@ namespace Benchmarks.QueryString;
 public class QueryStringParserBenchmarks
 {
     private readonly FakeRequestQueryStringAccessor _queryStringAccessor = new();
-    private readonly QueryStringReader _queryStringReader;
+    private QueryStringReader _queryStringReader = default!;
 
-    public QueryStringParserBenchmarks()
+    [GlobalSetup]
+    public void GlobalSetup()
     {
-        IJsonApiOptions options = new JsonApiOptions
-        {
-            EnableLegacyFilterNotation = true
-        };
+        IJsonApiOptions options = new JsonApiOptions();
 
         IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<QueryableResource, int>("alt-resource-name").Build();
 
@@ -67,29 +67,34 @@ public class QueryStringParserBenchmarks
     }
 
     [Benchmark]
-    public void AscendingSort()
+    [ArgumentsSource(nameof(QueryStrings))]
+    public void ReadAll(QueryStringArgument argument)
     {
-        const string queryString = "?sort=alt-attr-name";
-
-        _queryStringAccessor.SetQueryString(queryString);
+        _queryStringAccessor.Query = argument.Query;
         _queryStringReader.ReadAll(null);
     }
 
-    [Benchmark]
-    public void DescendingSort()
+    public IEnumerable<object> QueryStrings()
     {
-        const string queryString = "?sort=-alt-attr-name";
-
-        _queryStringAccessor.SetQueryString(queryString);
-        _queryStringReader.ReadAll(null);
+        foreach (string queryString in new[]
+        {
+            "sort=alt-attr-name",
+            "sort=-alt-attr-name",
+            "filter=equals(alt-attr-name,'abc')&sort=-alt-attr-name&include=child&page[size]=1&fields[alt-resource-name]=alt-attr-name"
+        })
+        {
+            yield return new QueryStringArgument(queryString);
+        }
     }
 
-    [Benchmark]
-    public void ComplexQuery()
+    public sealed class QueryStringArgument(string queryString)
     {
-        const string queryString = "?filter[alt-attr-name]=abc,eq:abc&sort=-alt-attr-name&include=child&page[size]=1&fields[alt-resource-name]=alt-attr-name";
+        public string QueryString { get; } = queryString;
+        public IQueryCollection Query { get; } = new QueryCollection(QueryHelpers.ParseQuery(queryString));
 
-        _queryStringAccessor.SetQueryString(queryString);
-        _queryStringReader.ReadAll(null);
+        public override string ToString()
+        {
+            return QueryString;
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace Benchmarks.Tools;
 /// </summary>
 internal sealed class FakeRequestQueryStringAccessor : IRequestQueryStringAccessor
 {
-    public IQueryCollection Query { get; private set; } = new QueryCollection();
+    public IQueryCollection Query { get; set; } = new QueryCollection();
 
     public void SetQueryString(string queryString)
     {
