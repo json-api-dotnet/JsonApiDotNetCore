@@ -15,12 +15,11 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// Adds the OpenAPI integration to JsonApiDotNetCore by configuring Swashbuckle.
     /// </summary>
-    public static void AddOpenApi(this IServiceCollection services, IMvcCoreBuilder mvcBuilder, Action<SwaggerGenOptions>? setupSwaggerGenAction = null)
+    public static void AddOpenApi(this IServiceCollection services, Action<SwaggerGenOptions>? setupSwaggerGenAction = null)
     {
         ArgumentGuard.NotNull(services);
-        ArgumentGuard.NotNull(mvcBuilder);
 
-        AddCustomApiExplorer(services, mvcBuilder);
+        AddCustomApiExplorer(services);
         AddCustomSwaggerComponents(services);
         AddSwaggerGenerator(services);
 
@@ -30,7 +29,7 @@ public static class ServiceCollectionExtensions
         }
     }
 
-    private static void AddCustomApiExplorer(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
+    private static void AddCustomApiExplorer(IServiceCollection services)
     {
         services.TryAddSingleton<OpenApiEndpointConvention>();
         services.TryAddSingleton<JsonApiRequestFormatMetadataProvider>();
@@ -49,9 +48,17 @@ public static class ServiceCollectionExtensions
             return new ApiDescriptionGroupCollectionProvider(actionDescriptorCollectionProvider, apiDescriptionProviders);
         }));
 
-        mvcBuilder.AddApiExplorer();
+        AddApiExplorer(services);
 
         services.AddSingleton<IConfigureOptions<MvcOptions>, ConfigureMvcOptions>();
+    }
+
+    private static void AddApiExplorer(IServiceCollection services)
+    {
+        // The code below was copied from the implementation of MvcApiExplorerMvcCoreBuilderExtensions.AddApiExplorer(),
+        // so we don't need to take IMvcCoreBuilder as an input parameter.
+
+        services.TryAddEnumerable(ServiceDescriptor.Transient<IApiDescriptionProvider, DefaultApiDescriptionProvider>());
     }
 
     private static void AddCustomSwaggerComponents(IServiceCollection services)
