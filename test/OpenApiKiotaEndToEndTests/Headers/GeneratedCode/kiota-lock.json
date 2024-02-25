@@ -1,0 +1,32 @@
+{
+  "descriptionHash": "4E10B5FF054EFC6638B4B0DC82E44855E006FBF1BE6F91CA3917010995158FB79BB8E78A6885A677D33DCC43304E5205013C9E549F6E008736EAF5C9FD689FAA",
+  "descriptionLocation": "..\\..\\..\\OpenApiTests\\Headers\\GeneratedSwagger\\swagger.g.json",
+  "lockFileVersion": "1.0.0",
+  "kiotaVersion": "1.11.1",
+  "clientClassName": "HeadersClient",
+  "clientNamespaceName": "OpenApiNSwagEndToEndTests.Headers.GeneratedCode",
+  "language": "CSharp",
+  "usesBackingStore": true,
+  "excludeBackwardCompatible": true,
+  "includeAdditionalData": true,
+  "serializers": [
+    "Microsoft.Kiota.Serialization.Json.JsonSerializationWriterFactory",
+    "Microsoft.Kiota.Serialization.Text.TextSerializationWriterFactory",
+    "Microsoft.Kiota.Serialization.Form.FormSerializationWriterFactory",
+    "Microsoft.Kiota.Serialization.Multipart.MultipartSerializationWriterFactory"
+  ],
+  "deserializers": [
+    "Microsoft.Kiota.Serialization.Json.JsonParseNodeFactory",
+    "Microsoft.Kiota.Serialization.Text.TextParseNodeFactory",
+    "Microsoft.Kiota.Serialization.Form.FormParseNodeFactory"
+  ],
+  "structuredMimeTypes": [
+    "application/json",
+    "text/plain;q=0.9",
+    "application/x-www-form-urlencoded;q=0.2",
+    "multipart/form-data;q=0.1"
+  ],
+  "includePatterns": [],
+  "excludePatterns": [],
+  "disabledValidationRules": []
+}

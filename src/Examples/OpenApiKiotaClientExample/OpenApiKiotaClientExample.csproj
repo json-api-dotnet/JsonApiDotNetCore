@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="..\..\..\package-versions.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\JsonApiDotNetCore.OpenApi.Client.Kiota\JsonApiDotNetCore.OpenApi.Client.Kiota.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Abstractions" Version="$(KiotaVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="$(KiotaVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Form" Version="$(KiotaVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Json" Version="$(KiotaVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Multipart" Version="$(KiotaVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Text" Version="$(KiotaVersion)" />
+  </ItemGroup>
+
+  <Target Name="KiotaRunTool" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
+    <!--
+      Created from sources:
+      - https://github.com/microsoft/kiota/issues/3005#issuecomment-1657806848
+      - https://github.com/dotnet/project-system/blob/main/docs/design-time-builds.md#determining-whether-a-target-is-running-in-a-design-time-build
+      - https://learn.microsoft.com/en-us/visualstudio/msbuild/tutorial-custom-task-code-generation?view=vs-2022
+      - https://gist.github.com/KirillOsenkov/f20cb84d37a89b01db63f8aafe03f19b
+    -->
+    <Exec
+      Command="dotnet kiota generate --language CSharp --class-name ExampleApiClient --namespace-name OpenApiKiotaClientExample.GeneratedCode --output ./GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../JsonApiDotNetCoreExample/GeneratedSwagger/JsonApiDotNetCoreExample.json" />
+
+    <ItemGroup>
+      <!-- This isn't entirely reliable: may require a second build after the source swagger.json has changed, to get rid of compile errors. -->
+      <Compile Remove="**\GeneratedCode\**\*.cs" />
+      <Compile Include="**\GeneratedCode\**\*.cs" />
+    </ItemGroup>
+  </Target>
+</Project>
