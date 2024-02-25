@@ -50,7 +50,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
         NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString, null);
 
         // Assert
-        response.Data.Should().HaveCount(1);
+        response.Data.ShouldHaveCount(1);
         response.Data.ElementAt(0).Id.Should().Be(nodes[1].StringId);
         response.Meta.ShouldNotBeNull();
         response.Meta.ShouldContainKey("total").With(total => total.Should().Be(3));
@@ -83,7 +83,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
         NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString, null);
 
         // Assert
-        response.Data.Should().HaveCount(2);
+        response.Data.ShouldHaveCount(2);
         response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
         response.Data.ElementAt(1).Id.Should().Be(node.Children.ElementAt(1).StringId);
         response.Meta.ShouldNotBeNull();
@@ -117,7 +117,7 @@ public sealed class PaginationTests : IClassFixture<IntegrationTestContext<OpenA
         NodeIdentifierCollectionResponseDocument response = await apiClient.GetNodeChildrenRelationshipAsync(node.StringId!, queryString, null);
 
         // Assert
-        response.Data.Should().HaveCount(1);
+        response.Data.ShouldHaveCount(1);
         response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(2).StringId);
         response.Meta.ShouldNotBeNull();
         response.Meta.ShouldContainKey("total").With(total => total.Should().Be(3));

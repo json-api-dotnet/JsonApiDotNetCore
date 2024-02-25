@@ -310,7 +310,7 @@ public sealed class ResponseTests
 
         // Assert
         document.Data.Attributes.Should().BeNull();
-        document.Data.Relationships.Purser.Data.Should().NotBeNull();
+        document.Data.Relationships.Purser.Data.ShouldNotBeNull();
         document.Data.Relationships.Purser.Data.Id.Should().Be(flightAttendantId);
         document.Data.Relationships.CabinCrewMembers.Data.Should().HaveCount(1);
         document.Data.Relationships.CabinCrewMembers.Data.First().Id.Should().Be(flightAttendantId);
@@ -449,7 +449,7 @@ public sealed class ResponseTests
         FlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightPurserAsync(flightId, null, null);
 
         // Assert
-        document.Data.Should().NotBeNull();
+        document.Data.ShouldNotBeNull();
         document.Data.Id.Should().Be(purserId);
         document.Data.Attributes.EmailAddress.Should().Be(emailAddress);
         document.Data.Attributes.Age.Should().Be(int.Parse(age));
@@ -563,7 +563,7 @@ public sealed class ResponseTests
         FlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightPurserRelationshipAsync(flightId, null, null);
 
         // Assert
-        document.Data.Should().NotBeNull();
+        document.Data.ShouldNotBeNull();
         document.Data.Id.Should().Be(purserId);
         document.Data.Type.Should().Be(FlightAttendantResourceType.FlightAttendants);
     }

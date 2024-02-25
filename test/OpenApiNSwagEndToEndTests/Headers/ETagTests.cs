@@ -174,14 +174,14 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         var apiClient = new HeadersClient(httpClient);
 
         // Act
-        ApiResponse<CountryCollectionResponseDocument?> response2 =
+        ApiResponse<CountryCollectionResponseDocument?> response =
             await ApiResponse.TranslateAsync(() => apiClient.GetCountryCollectionAsync(null, "\"Not-a-matching-value\""));
 
         // Assert
-        response2.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-        response2.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+        response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
 
-        response2.Result.ShouldNotBeNull();
+        response.Result.ShouldNotBeNull();
     }
 }

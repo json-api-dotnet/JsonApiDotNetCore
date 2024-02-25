@@ -48,7 +48,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         NodeCollectionResponseDocument response = await apiClient.GetNodeCollectionAsync(queryString, null);
 
         // Assert
-        response.Data.Should().HaveCount(1);
+        response.Data.ShouldHaveCount(1);
         response.Data.ElementAt(0).Id.Should().Be(node.StringId);
         response.Data.ElementAt(0).Attributes.Name.Should().Be(node.Name);
         response.Data.ElementAt(0).Attributes.Comment.Should().BeNull();
@@ -82,7 +82,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         response.Data.Id.Should().Be(node.StringId);
         response.Data.Attributes.Name.Should().BeNull();
         response.Data.Attributes.Comment.Should().Be(node.Comment);
-        response.Data.Relationships.Parent.Should().NotBeNull();
+        response.Data.Relationships.Parent.ShouldNotBeNull();
         response.Data.Relationships.Children.Should().BeNull();
     }
 
@@ -112,12 +112,12 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         NodeCollectionResponseDocument response = await apiClient.GetNodeChildrenAsync(node.StringId!, queryString, null);
 
         // Assert
-        response.Data.Should().HaveCount(1);
+        response.Data.ShouldHaveCount(1);
         response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(0).StringId);
         response.Data.ElementAt(0).Attributes.Name.Should().BeNull();
         response.Data.ElementAt(0).Attributes.Comment.Should().Be(node.Children.ElementAt(0).Comment);
         response.Data.ElementAt(0).Relationships.Parent.Should().BeNull();
-        response.Data.ElementAt(0).Relationships.Children.Should().NotBeNull();
+        response.Data.ElementAt(0).Relationships.Children.ShouldNotBeNull();
     }
 
     [Fact]
@@ -150,7 +150,7 @@ public sealed class SparseFieldSetTests : IClassFixture<IntegrationTestContext<O
         response.Data.Attributes.Name.Should().BeNull();
         response.Data.Attributes.Comment.Should().Be(node.Parent.Comment);
         response.Data.Relationships.Parent.Should().BeNull();
-        response.Data.Relationships.Children.Should().NotBeNull();
+        response.Data.Relationships.Children.ShouldNotBeNull();
     }
 
     [Fact]
