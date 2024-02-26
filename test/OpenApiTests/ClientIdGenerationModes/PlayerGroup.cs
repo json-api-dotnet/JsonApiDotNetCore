@@ -7,7 +7,7 @@ namespace OpenApiTests.ClientIdGenerationModes;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 [Resource(ControllerNamespace = "OpenApiTests.ClientIdGenerationModes", ClientIdGeneration = ClientIdGenerationMode.Forbidden)]
-public sealed class PlayerGroup : Identifiable<Guid>
+public sealed class PlayerGroup : Identifiable<long>
 {
     [Attr]
     public string Name { get; set; } = null!;

@@ -9,5 +9,5 @@ public sealed class ClientIdGenerationModesDbContext(DbContextOptions<ClientIdGe
 {
     public DbSet<Player> Players => Set<Player>();
     public DbSet<Game> Games => Set<Game>();
-    public DbSet<PlayerGroup> Groups => Set<PlayerGroup>();
+    public DbSet<PlayerGroup> PlayerGroups => Set<PlayerGroup>();
 }

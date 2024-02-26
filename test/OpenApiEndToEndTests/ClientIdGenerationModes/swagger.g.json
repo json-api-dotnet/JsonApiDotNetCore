@@ -2192,13 +2192,13 @@
         }
       }
     },
-    "/players/{id}/groupMemberships": {
+    "/players/{id}/memberOf": {
       "get": {
         "tags": [
           "players"
         ],
-        "summary": "Retrieves the related playerGroups of an individual player's groupMemberships relationship.",
-        "operationId": "getPlayerGroupMemberships",
+        "summary": "Retrieves the related playerGroups of an individual player's memberOf relationship.",
+        "operationId": "getPlayerMemberOf",
         "parameters": [
           {
             "name": "id",
@@ -2289,9 +2289,9 @@
         "tags": [
           "players"
         ],
-        "summary": "Retrieves the related playerGroups of an individual player's groupMemberships relationship without returning them.",
+        "summary": "Retrieves the related playerGroups of an individual player's memberOf relationship without returning them.",
         "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
-        "operationId": "headPlayerGroupMemberships",
+        "operationId": "headPlayerMemberOf",
         "parameters": [
           {
             "name": "id",
@@ -2366,13 +2366,13 @@
         }
       }
     },
-    "/players/{id}/relationships/groupMemberships": {
+    "/players/{id}/relationships/memberOf": {
       "get": {
         "tags": [
           "players"
         ],
-        "summary": "Retrieves the related playerGroup identities of an individual player's groupMemberships relationship.",
-        "operationId": "getPlayerGroupMembershipsRelationship",
+        "summary": "Retrieves the related playerGroup identities of an individual player's memberOf relationship.",
+        "operationId": "getPlayerMemberOfRelationship",
         "parameters": [
           {
             "name": "id",
@@ -2463,9 +2463,9 @@
         "tags": [
           "players"
         ],
-        "summary": "Retrieves the related playerGroup identities of an individual player's groupMemberships relationship without returning them.",
+        "summary": "Retrieves the related playerGroup identities of an individual player's memberOf relationship without returning them.",
         "description": "Compare the returned ETag HTTP header with an earlier one to determine if the response has changed since it was fetched.",
-        "operationId": "headPlayerGroupMembershipsRelationship",
+        "operationId": "headPlayerMemberOfRelationship",
         "parameters": [
           {
             "name": "id",
@@ -2543,8 +2543,8 @@
         "tags": [
           "players"
         ],
-        "summary": "Adds existing playerGroups to the groupMemberships relationship of an individual player.",
-        "operationId": "postPlayerGroupMembershipsRelationship",
+        "summary": "Adds existing playerGroups to the memberOf relationship of an individual player.",
+        "operationId": "postPlayerMemberOfRelationship",
         "parameters": [
           {
             "name": "id",
@@ -2557,7 +2557,7 @@
           }
         ],
         "requestBody": {
-          "description": "The identities of the playerGroups to add to the groupMemberships relationship.",
+          "description": "The identities of the playerGroups to add to the memberOf relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -2610,13 +2610,13 @@
         "tags": [
           "players"
         ],
-        "summary": "Assigns existing playerGroups to the groupMemberships relationship of an individual player.",
-        "operationId": "patchPlayerGroupMembershipsRelationship",
+        "summary": "Assigns existing playerGroups to the memberOf relationship of an individual player.",
+        "operationId": "patchPlayerMemberOfRelationship",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "The identifier of the player whose groupMemberships relationship to assign.",
+            "description": "The identifier of the player whose memberOf relationship to assign.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2624,7 +2624,7 @@
           }
         ],
         "requestBody": {
-          "description": "The identities of the playerGroups to assign to the groupMemberships relationship, or an empty array to clear the relationship.",
+          "description": "The identities of the playerGroups to assign to the memberOf relationship, or an empty array to clear the relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -2639,7 +2639,7 @@
         },
         "responses": {
           "204": {
-            "description": "The groupMemberships relationship was successfully updated, which did not result in additional changes."
+            "description": "The memberOf relationship was successfully updated, which did not result in additional changes."
           },
           "400": {
             "description": "The request body is missing or malformed.",
@@ -2677,8 +2677,8 @@
         "tags": [
           "players"
         ],
-        "summary": "Removes existing playerGroups from the groupMemberships relationship of an individual player.",
-        "operationId": "deletePlayerGroupMembershipsRelationship",
+        "summary": "Removes existing playerGroups from the memberOf relationship of an individual player.",
+        "operationId": "deletePlayerMemberOfRelationship",
         "parameters": [
           {
             "name": "id",
@@ -2691,7 +2691,7 @@
           }
         ],
         "requestBody": {
-          "description": "The identities of the playerGroups to remove from the groupMemberships relationship.",
+          "description": "The identities of the playerGroups to remove from the memberOf relationship.",
           "content": {
             "application/vnd.api+json": {
               "schema": {
@@ -4436,7 +4436,7 @@
               }
             ]
           },
-          "groupMemberships": {
+          "memberOf": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/toManyPlayerGroupInRequest"
@@ -4456,7 +4456,7 @@
               }
             ]
           },
-          "groupMemberships": {
+          "memberOf": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/toManyPlayerGroupInRequest"
@@ -4476,7 +4476,7 @@
               }
             ]
           },
-          "groupMemberships": {
+          "memberOf": {
             "allOf": [
               {
                 "$ref": "#/components/schemas/toManyPlayerGroupInResponse"

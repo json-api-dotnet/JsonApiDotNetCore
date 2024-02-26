@@ -16,5 +16,5 @@ public sealed class Player : Identifiable<Guid>
     public List<Game> OwnedGames { get; set; } = [];
 
     [HasMany]
-    public List<PlayerGroup> GroupMemberships { get; set; } = [];
+    public List<PlayerGroup> MemberOf { get; set; } = [];
 }

@@ -21,7 +21,7 @@ public sealed class ClientIdGenerationModesTests
     }
 
     [Fact]
-    public async Task Post_data_should_have_required_id()
+    public async Task Schema_property_for_ID_is_required_in_post_request()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -39,7 +39,7 @@ public sealed class ClientIdGenerationModesTests
     }
 
     [Fact]
-    public async Task Post_data_should_have_non_required_id()
+    public async Task Schema_property_for_ID_is_optional_in_post_request()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();
@@ -57,7 +57,7 @@ public sealed class ClientIdGenerationModesTests
     }
 
     [Fact]
-    public async Task Post_data_should_not_have_id()
+    public async Task Schema_property_for_ID_is_omitted_in_post_request()
     {
         // Act
         JsonElement document = await _testContext.GetSwaggerDocumentAsync();

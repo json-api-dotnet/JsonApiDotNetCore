@@ -10,12 +10,13 @@ using Xunit;
 
 namespace OpenApiEndToEndTests.ClientIdGenerationModes;
 
-public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext>>
+public sealed class ClientIdGenerationModesTests
+    : IClassFixture<IntegrationTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext>>
 {
     private readonly IntegrationTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext> _testContext;
     private readonly ClientIdGenerationModesFakers _fakers = new();
 
-    public PostTests(IntegrationTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext> testContext)
+    public ClientIdGenerationModesTests(IntegrationTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext> testContext)
     {
         _testContext = testContext;
 
@@ -25,7 +26,7 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
     }
 
     [Fact]
-    public async Task Cannot_create_resource_without_ID_when_mode_is_required()
+    public async Task Cannot_create_resource_without_ID_when_supplying_ID_is_required()
     {
         // Arrange
         Player player = _fakers.Player.Generate();
@@ -52,7 +53,7 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
     }
 
     [Fact]
-    public async Task Can_create_resource_with_ID_when_mode_is_required()
+    public async Task Can_create_resource_with_ID_when_supplying_ID_is_required()
     {
         // Arrange
         Player player = _fakers.Player.Generate();
@@ -62,7 +63,7 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
         // Act
-        Func<Task<PlayerPrimaryResponseDocument?>> action = () => ApiResponse.TranslateAsync(() => apiClient.PostPlayerAsync(null, new PlayerPostRequestDocument
+        PlayerPrimaryResponseDocument? doc = await ApiResponse.TranslateAsync(() => apiClient.PostPlayerAsync(null, new PlayerPostRequestDocument
         {
             Data = new PlayerDataInPostRequest
             {
@@ -75,12 +76,18 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
         }));
 
         // Assert
-        PlayerPrimaryResponseDocument? doc = (await action.Should().NotThrowAsync()).Subject;
         doc.Should().BeNull();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Player playerInDatabase = await dbContext.Players.FirstWithIdAsync(player.Id);
+
+            playerInDatabase.UserName.Should().Be(player.UserName);
+        });
     }
 
     [Fact]
-    public async Task Can_create_resource_without_ID_when_mode_is_allowed()
+    public async Task Can_create_resource_without_ID_when_supplying_ID_is_allowed()
     {
         // Arrange
         Game game = _fakers.Game.Generate();
@@ -89,7 +96,7 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
         // Act
-        Func<Task<GamePrimaryResponseDocument?>> action = () => ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, new GamePostRequestDocument
+        GamePrimaryResponseDocument? doc = await ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, new GamePostRequestDocument
         {
             Data = new GameDataInPostRequest
             {
@@ -103,12 +110,19 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
         }));
 
         // Assert
-        GamePrimaryResponseDocument? doc = (await action.Should().NotThrowAsync()).Subject;
         doc?.Data.Id.Should().NotBeNullOrEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Game gameInDatabase = await dbContext.Games.FirstWithIdAsync(Guid.Parse(doc!.Data.Id));
+
+            gameInDatabase.Title.Should().Be(game.Title);
+            gameInDatabase.PurchasePrice.Should().Be(game.PurchasePrice);
+        });
     }
 
     [Fact]
-    public async Task Can_create_resource_with_ID_when_mode_is_allowed()
+    public async Task Can_create_resource_with_ID_when_supplying_ID_is_allowed()
     {
         // Arrange
         Game game = _fakers.Game.Generate();
@@ -118,7 +132,7 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
         // Act
-        Func<Task<GamePrimaryResponseDocument?>> action = () => ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, new GamePostRequestDocument
+        GamePrimaryResponseDocument? doc = await ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, new GamePostRequestDocument
         {
             Data = new GameDataInPostRequest
             {
@@ -132,12 +146,19 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
         }));
 
         // Assert
-        GamePrimaryResponseDocument? doc = (await action.Should().NotThrowAsync()).Subject;
         doc.Should().BeNull();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            Game gameInDatabase = await dbContext.Games.FirstWithIdAsync(game.Id);
+
+            gameInDatabase.Title.Should().Be(game.Title);
+            gameInDatabase.PurchasePrice.Should().Be(game.PurchasePrice);
+        });
     }
 
     [Fact]
-    public async Task Can_create_resource_without_ID_when_mode_is_forbidden()
+    public async Task Can_create_resource_without_ID_when_supplying_ID_is_forbidden()
     {
         // Arrange
         PlayerGroup playerGroup = _fakers.Group.Generate();
@@ -146,20 +167,25 @@ public sealed class PostTests : IClassFixture<IntegrationTestContext<OpenApiStar
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
         // Act
-        Func<Task<PlayerGroupPrimaryResponseDocument?>> action = () => ApiResponse.TranslateAsync(() => apiClient.PostPlayerGroupAsync(null,
-            new PlayerGroupPostRequestDocument
+        PlayerGroupPrimaryResponseDocument? doc = await ApiResponse.TranslateAsync(() => apiClient.PostPlayerGroupAsync(null, new PlayerGroupPostRequestDocument
+        {
+            Data = new PlayerGroupDataInPostRequest
             {
-                Data = new PlayerGroupDataInPostRequest
+                Attributes = new PlayerGroupAttributesInPostRequest
                 {
-                    Attributes = new PlayerGroupAttributesInPostRequest
-                    {
-                        Name = playerGroup.Name
-                    }
+                    Name = playerGroup.Name
                 }
-            }));
+            }
+        }));
 
         // Assert
-        PlayerGroupPrimaryResponseDocument? doc = (await action.Should().NotThrowAsync()).Subject;
         doc?.Data.Id.Should().NotBeNullOrEmpty();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            PlayerGroup playerGroupInDatabase = await dbContext.PlayerGroups.FirstWithIdAsync(long.Parse(doc!.Data.Id));
+
+            playerGroupInDatabase.Name.Should().Be(playerGroup.Name);
+        });
     }
 }

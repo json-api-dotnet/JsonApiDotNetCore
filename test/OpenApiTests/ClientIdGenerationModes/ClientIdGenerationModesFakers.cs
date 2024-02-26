@@ -17,7 +17,7 @@ public sealed class ClientIdGenerationModesFakers : FakerContainer
     private readonly Lazy<Faker<Game>> _lazyGameFaker = new(() => new Faker<Game>()
         .UseSeed(GetFakerSeed())
         .RuleFor(game => game.Title, faker => faker.Commerce.ProductName())
-        .RuleFor(game => game.PurchasePrice, faker => decimal.Parse(faker.Commerce.Price())));
+        .RuleFor(game => game.PurchasePrice, faker => faker.Finance.Amount(1, 80)));
 
     private readonly Lazy<Faker<PlayerGroup>> _lazyGroupFaker = new(() => new Faker<PlayerGroup>()
         .UseSeed(GetFakerSeed())
