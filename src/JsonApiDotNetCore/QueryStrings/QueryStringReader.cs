@@ -40,7 +40,7 @@ public sealed class QueryStringReader : IQueryStringReader
         {
             if (parameterName.Length == 0)
             {
-                throw new InvalidQueryException("Empty query string parameter name.", null);
+                continue;
             }
 
             IQueryStringParameterReader? reader = _parameterReaders.FirstOrDefault(nextReader => nextReader.CanRead(parameterName));
