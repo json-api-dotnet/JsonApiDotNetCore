@@ -66,7 +66,7 @@ public sealed class IsUpperCaseFilterParseTests : BaseParseTests
     [InlineData("filter", "has(posts,isUpperCase(author.userName))", null)]
     [InlineData("filter", "or(isUpperCase(title),isUpperCase(platformName))", null)]
     [InlineData("filter[posts]", "isUpperCase(author.userName)", "posts")]
-    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected)
+    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string? scopeExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);

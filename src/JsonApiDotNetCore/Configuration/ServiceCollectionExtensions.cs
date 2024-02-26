@@ -43,7 +43,7 @@ public static class ServiceCollectionExtensions
         Action<ServiceDiscoveryFacade>? configureAutoDiscovery, Action<ResourceGraphBuilder>? configureResources, IMvcCoreBuilder? mvcBuilder,
         ICollection<Type> dbContextTypes)
     {
-        using var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
+        var applicationBuilder = new JsonApiApplicationBuilder(services, mvcBuilder ?? services.AddMvcCore());
 
         applicationBuilder.ConfigureJsonApiOptions(configureOptions);
         applicationBuilder.ConfigureAutoDiscovery(configureAutoDiscovery);
@@ -61,7 +61,7 @@ public static class ServiceCollectionExtensions
     {
         ArgumentGuard.NotNull(services);
 
-        RegisterTypeForUnboundInterfaces(services, typeof(TService), ServiceDiscoveryFacade.ServiceUnboundInterfaces);
+        RegisterTypeForUnboundInterfaces(services, typeof(TService), InjectablesAssemblyScanner.ServiceUnboundInterfaces);
 
         return services;
     }
@@ -74,7 +74,7 @@ public static class ServiceCollectionExtensions
     {
         ArgumentGuard.NotNull(services);
 
-        RegisterTypeForUnboundInterfaces(services, typeof(TRepository), ServiceDiscoveryFacade.RepositoryUnboundInterfaces);
+        RegisterTypeForUnboundInterfaces(services, typeof(TRepository), InjectablesAssemblyScanner.RepositoryUnboundInterfaces);
 
         return services;
     }
@@ -87,7 +87,7 @@ public static class ServiceCollectionExtensions
     {
         ArgumentGuard.NotNull(services);
 
-        RegisterTypeForUnboundInterfaces(services, typeof(TResourceDefinition), ServiceDiscoveryFacade.ResourceDefinitionUnboundInterfaces);
+        RegisterTypeForUnboundInterfaces(services, typeof(TResourceDefinition), InjectablesAssemblyScanner.ResourceDefinitionUnboundInterfaces);
 
         return services;
     }

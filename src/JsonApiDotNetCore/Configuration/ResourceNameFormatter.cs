@@ -5,14 +5,9 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Configuration;
 
-internal sealed class ResourceNameFormatter
+internal sealed class ResourceNameFormatter(JsonNamingPolicy? namingPolicy)
 {
-    private readonly JsonNamingPolicy? _namingPolicy;
-
-    public ResourceNameFormatter(JsonNamingPolicy? namingPolicy)
-    {
-        _namingPolicy = namingPolicy;
-    }
+    private readonly JsonNamingPolicy? _namingPolicy = namingPolicy;
 
     /// <summary>
     /// Gets the publicly exposed resource name by applying the configured naming convention on the pluralized CLR type name.

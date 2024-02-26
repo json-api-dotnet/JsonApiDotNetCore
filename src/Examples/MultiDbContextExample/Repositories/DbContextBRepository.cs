@@ -8,13 +8,9 @@ using MultiDbContextExample.Data;
 namespace MultiDbContextExample.Repositories;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class DbContextBRepository<TResource> : EntityFrameworkCoreRepository<TResource, int>
-    where TResource : class, IIdentifiable<int>
-{
-    public DbContextBRepository(ITargetedFields targetedFields, DbContextResolver<DbContextB> dbContextResolver, IResourceGraph resourceGraph,
-        IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
-        IResourceDefinitionAccessor resourceDefinitionAccessor)
-        : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
-    {
-    }
-}
+public sealed class DbContextBRepository<TResource>(
+    ITargetedFields targetedFields, DbContextResolver<DbContextB> dbContextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
+    IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
+    : EntityFrameworkCoreRepository<TResource, int>(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory,
+        resourceDefinitionAccessor)
+    where TResource : class, IIdentifiable<int>;

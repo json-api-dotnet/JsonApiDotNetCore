@@ -7,16 +7,11 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.CustomFunctions.TimeOffset;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public class FilterRewritingResourceDefinition<TResource, TId> : JsonApiResourceDefinition<TResource, TId>
+public class FilterRewritingResourceDefinition<TResource, TId>(IResourceGraph resourceGraph, ISystemClock systemClock)
+    : JsonApiResourceDefinition<TResource, TId>(resourceGraph)
     where TResource : class, IIdentifiable<TId>
 {
-    private readonly FilterTimeOffsetRewriter _rewriter;
-
-    public FilterRewritingResourceDefinition(IResourceGraph resourceGraph, ISystemClock systemClock)
-        : base(resourceGraph)
-    {
-        _rewriter = new FilterTimeOffsetRewriter(systemClock);
-    }
+    private readonly FilterTimeOffsetRewriter _rewriter = new(systemClock);
 
     public override FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
     {

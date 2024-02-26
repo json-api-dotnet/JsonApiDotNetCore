@@ -567,16 +567,11 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    private sealed class TestDbContext : TestableDbContext
+    private sealed class TestDbContext(DbContextOptions<TestDbContext> options) : TestableDbContext(options)
     {
         public DbSet<ResourceOfInt32> ResourcesOfInt32 => Set<ResourceOfInt32>();
         public DbSet<ResourceOfGuid> ResourcesOfGuid => Set<ResourceOfGuid>();
         public DbSet<Person> SetOfPersons => Set<Person>();
-
-        public TestDbContext(DbContextOptions<TestDbContext> options)
-            : base(options)
-        {
-        }
     }
 
     [UsedImplicitly(ImplicitUseKindFlags.Access)]

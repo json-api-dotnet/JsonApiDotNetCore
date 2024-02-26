@@ -5,13 +5,8 @@ namespace DapperExample.TranslationToSql.TreeNodes;
 /// FROM Customers AS t1
 /// ]]></code>.
 /// </summary>
-internal sealed class FromNode : TableAccessorNode
+internal sealed class FromNode(TableSourceNode source) : TableAccessorNode(source)
 {
-    public FromNode(TableSourceNode source)
-        : base(source)
-    {
-    }
-
     public override TResult Accept<TArgument, TResult>(SqlTreeNodeVisitor<TArgument, TResult> visitor, TArgument argument)
     {
         return visitor.VisitFrom(this, argument);

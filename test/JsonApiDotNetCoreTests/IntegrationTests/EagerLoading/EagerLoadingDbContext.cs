@@ -7,17 +7,12 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class EagerLoadingDbContext : TestableDbContext
+public sealed class EagerLoadingDbContext(DbContextOptions<EagerLoadingDbContext> options) : TestableDbContext(options)
 {
     public DbSet<State> States => Set<State>();
     public DbSet<Street> Streets => Set<Street>();
     public DbSet<Building> Buildings => Set<Building>();
     public DbSet<Door> Doors => Set<Door>();
-
-    public EagerLoadingDbContext(DbContextOptions<EagerLoadingDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

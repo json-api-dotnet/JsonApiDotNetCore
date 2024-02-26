@@ -135,16 +135,11 @@ public sealed class AtomicLoggingTests : IClassFixture<IntegrationTestContext<Te
             return Task.FromResult(transaction);
         }
 
-        private sealed class ThrowingOperationsTransaction : IOperationsTransaction
+        private sealed class ThrowingOperationsTransaction(ThrowingOperationsTransactionFactory owner) : IOperationsTransaction
         {
-            private readonly ThrowingOperationsTransactionFactory _owner;
+            private readonly ThrowingOperationsTransactionFactory _owner = owner;
 
             public string TransactionId => "some";
-
-            public ThrowingOperationsTransaction(ThrowingOperationsTransactionFactory owner)
-            {
-                _owner = owner;
-            }
 
             public ValueTask DisposeAsync()
             {

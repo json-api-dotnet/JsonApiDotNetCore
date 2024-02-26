@@ -4,14 +4,9 @@ using Microsoft.Extensions.Logging;
 namespace TestBuildingBlocks;
 
 [PublicAPI]
-public sealed class FakeLoggerFactory : ILoggerFactory, ILoggerProvider
+public sealed class FakeLoggerFactory(LogLevel minimumLevel) : ILoggerFactory, ILoggerProvider
 {
-    public FakeLogger Logger { get; }
-
-    public FakeLoggerFactory(LogLevel minimumLevel)
-    {
-        Logger = new FakeLogger(minimumLevel);
-    }
+    public FakeLogger Logger { get; } = new(minimumLevel);
 
     public ILogger CreateLogger(string categoryName)
     {
@@ -26,17 +21,12 @@ public sealed class FakeLoggerFactory : ILoggerFactory, ILoggerProvider
     {
     }
 
-    public sealed class FakeLogger : ILogger
+    public sealed class FakeLogger(LogLevel minimumLevel) : ILogger
     {
-        private readonly LogLevel _minimumLevel;
+        private readonly LogLevel _minimumLevel = minimumLevel;
 
         private readonly object _lockObject = new();
         private readonly List<FakeLogMessage> _messages = [];
-
-        public FakeLogger(LogLevel minimumLevel)
-        {
-            _minimumLevel = minimumLevel;
-        }
 
         public bool IsEnabled(LogLevel logLevel)
         {

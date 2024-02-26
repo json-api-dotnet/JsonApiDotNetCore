@@ -9,17 +9,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations;
 /// Used to simulate side effects that occur in the database while saving, typically caused by database triggers.
 /// </summary>
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public class ImplicitlyChangingTextLanguageDefinition : HitCountingResourceDefinition<TextLanguage, Guid>
+public class ImplicitlyChangingTextLanguageDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter, OperationsDbContext dbContext)
+    : HitCountingResourceDefinition<TextLanguage, Guid>(resourceGraph, hitCounter)
 {
     internal const string Suffix = " (changed)";
 
-    private readonly OperationsDbContext _dbContext;
-
-    public ImplicitlyChangingTextLanguageDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter, OperationsDbContext dbContext)
-        : base(resourceGraph, hitCounter)
-    {
-        _dbContext = dbContext;
-    }
+    private readonly OperationsDbContext _dbContext = dbContext;
 
     public override async Task OnWriteSucceededAsync(TextLanguage resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
     {

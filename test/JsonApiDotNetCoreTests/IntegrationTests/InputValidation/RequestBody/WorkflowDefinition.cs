@@ -9,7 +9,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class WorkflowDefinition : JsonApiResourceDefinition<Workflow, Guid>
+public sealed class WorkflowDefinition(IResourceGraph resourceGraph) : JsonApiResourceDefinition<Workflow, Guid>(resourceGraph)
 {
     private static readonly Dictionary<WorkflowStage, ICollection<WorkflowStage>> StageTransitionTable = new()
     {
@@ -32,11 +32,6 @@ public sealed class WorkflowDefinition : JsonApiResourceDefinition<Workflow, Gui
     };
 
     private WorkflowStage _previousStage;
-
-    public WorkflowDefinition(IResourceGraph resourceGraph)
-        : base(resourceGraph)
-    {
-    }
 
     public override Task OnPrepareWriteAsync(Workflow resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
     {

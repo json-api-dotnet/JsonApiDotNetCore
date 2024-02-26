@@ -7,14 +7,9 @@ using TestBuildingBlocks;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class FilterDbContext : TestableDbContext
+public sealed class FilterDbContext(DbContextOptions<FilterDbContext> options) : TestableDbContext(options)
 {
     public DbSet<FilterableResource> FilterableResources => Set<FilterableResource>();
-
-    public FilterDbContext(DbContextOptions<FilterDbContext> options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

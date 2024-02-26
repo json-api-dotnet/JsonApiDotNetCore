@@ -6,16 +6,11 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class StarDefinition : HitCountingResourceDefinition<Star, int>
+// The constructor parameters will be resolved from the container, which means you can take on any dependency that is also defined in the container.
+public sealed class StarDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
+    : HitCountingResourceDefinition<Star, int>(resourceGraph, hitCounter)
 {
     protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.Reading;
-
-    public StarDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
-        : base(resourceGraph, hitCounter)
-    {
-        // This constructor will be resolved from the container, which means
-        // you can take on any dependency that is also defined in the container.
-    }
 
     public override SortExpression OnApplySort(SortExpression? existingSort)
     {

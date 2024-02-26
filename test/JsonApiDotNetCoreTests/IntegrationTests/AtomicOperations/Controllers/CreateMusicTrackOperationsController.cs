@@ -14,14 +14,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers;
 
 [DisableRoutingConvention]
 [Route("/operations/musicTracks/create")]
-public sealed class CreateMusicTrackOperationsController : JsonApiOperationsController
+public sealed class CreateMusicTrackOperationsController(
+    IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor, IJsonApiRequest request,
+    ITargetedFields targetedFields) : JsonApiOperationsController(options, resourceGraph, loggerFactory, processor, request, targetedFields)
 {
-    public CreateMusicTrackOperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-        IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
-        : base(options, resourceGraph, loggerFactory, processor, request, targetedFields)
-    {
-    }
-
     public override Task<IActionResult> PostOperationsAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
     {
         AssertOnlyCreatingMusicTracks(operations);

@@ -8,7 +8,7 @@ namespace DapperExample.TranslationToSql.Builders;
 /// <summary>
 /// Converts <see cref="SqlTreeNode" />s into SQL text.
 /// </summary>
-internal sealed class SqlQueryBuilder : SqlTreeNodeVisitor<StringBuilder, object?>
+internal sealed class SqlQueryBuilder(DatabaseProvider databaseProvider) : SqlTreeNodeVisitor<StringBuilder, object?>
 {
     private static readonly char[] SpecialCharactersInLikeDefault =
     [
@@ -26,7 +26,7 @@ internal sealed class SqlQueryBuilder : SqlTreeNodeVisitor<StringBuilder, object
         ']'
     ];
 
-    private readonly DatabaseProvider _databaseProvider;
+    private readonly DatabaseProvider _databaseProvider = databaseProvider;
     private readonly Dictionary<string, ParameterNode> _parametersByName = [];
     private int _indentDepth;
 
@@ -34,11 +34,6 @@ internal sealed class SqlQueryBuilder : SqlTreeNodeVisitor<StringBuilder, object
         _databaseProvider == DatabaseProvider.SqlServer ? SpecialCharactersInLikeSqlServer : SpecialCharactersInLikeDefault;
 
     public IDictionary<string, object?> Parameters => _parametersByName.Values.ToDictionary(parameter => parameter.Name, parameter => parameter.Value);
-
-    public SqlQueryBuilder(DatabaseProvider databaseProvider)
-    {
-        _databaseProvider = databaseProvider;
-    }
 
     public string GetCommand(SqlTreeNode node)
     {
@@ -488,14 +483,9 @@ internal sealed class SqlQueryBuilder : SqlTreeNodeVisitor<StringBuilder, object
         return new RevertIndentOnDispose(this);
     }
 
-    private sealed class RevertIndentOnDispose : IDisposable
+    private sealed class RevertIndentOnDispose(SqlQueryBuilder owner) : IDisposable
     {
-        private readonly SqlQueryBuilder _owner;
-
-        public RevertIndentOnDispose(SqlQueryBuilder owner)
-        {
-            _owner = owner;
-        }
+        private readonly SqlQueryBuilder _owner = owner;
 
         public void Dispose()
         {

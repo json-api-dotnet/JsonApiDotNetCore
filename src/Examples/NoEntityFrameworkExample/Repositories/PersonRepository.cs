@@ -7,13 +7,9 @@ using NoEntityFrameworkExample.Models;
 namespace NoEntityFrameworkExample.Repositories;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class PersonRepository : InMemoryResourceRepository<Person, long>
+public sealed class PersonRepository(IResourceGraph resourceGraph, IQueryableBuilder queryableBuilder)
+    : InMemoryResourceRepository<Person, long>(resourceGraph, queryableBuilder)
 {
-    public PersonRepository(IResourceGraph resourceGraph, IQueryableBuilder queryableBuilder)
-        : base(resourceGraph, queryableBuilder)
-    {
-    }
-
     protected override IEnumerable<Person> GetDataSource()
     {
         return Database.People;

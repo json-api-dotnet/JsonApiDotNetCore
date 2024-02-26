@@ -152,7 +152,7 @@ public sealed class SortParseTests : BaseParseTests
     [InlineData("sort[posts.contributors]", "count(wife.husband.drinkingBuddies)", "posts.contributors")]
     [InlineData("sort[posts.contributors]", "wife.age", "posts.contributors")]
     [InlineData("sort[posts.contributors]", "count(father.friends)", "posts.contributors")]
-    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected)
+    public void Reader_Read_Succeeds(string parameterName, string parameterValue, string? scopeExpected)
     {
         // Act
         _reader.Read(parameterName, parameterValue);

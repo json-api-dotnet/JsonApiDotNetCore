@@ -4,16 +4,10 @@ using Microsoft.Extensions.Logging;
 namespace TestBuildingBlocks;
 
 [PublicAPI]
-public sealed class FakeLogMessage
+public sealed class FakeLogMessage(LogLevel logLevel, string text)
 {
-    public LogLevel LogLevel { get; }
-    public string Text { get; }
-
-    public FakeLogMessage(LogLevel logLevel, string text)
-    {
-        LogLevel = logLevel;
-        Text = text;
-    }
+    public LogLevel LogLevel { get; } = logLevel;
+    public string Text { get; } = text;
 
     public override string ToString()
     {

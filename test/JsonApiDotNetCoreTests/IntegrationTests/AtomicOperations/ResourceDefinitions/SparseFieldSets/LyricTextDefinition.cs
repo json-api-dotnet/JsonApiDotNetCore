@@ -5,17 +5,12 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefinitions.SparseFieldSets;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class LyricTextDefinition : HitCountingResourceDefinition<Lyric, long>
+public sealed class LyricTextDefinition(IResourceGraph resourceGraph, LyricPermissionProvider lyricPermissionProvider, ResourceDefinitionHitCounter hitCounter)
+    : HitCountingResourceDefinition<Lyric, long>(resourceGraph, hitCounter)
 {
-    private readonly LyricPermissionProvider _lyricPermissionProvider;
+    private readonly LyricPermissionProvider _lyricPermissionProvider = lyricPermissionProvider;
 
     protected override ResourceDefinitionExtensibilityPoints ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoints.OnApplySparseFieldSet;
-
-    public LyricTextDefinition(IResourceGraph resourceGraph, LyricPermissionProvider lyricPermissionProvider, ResourceDefinitionHitCounter hitCounter)
-        : base(resourceGraph, hitCounter)
-    {
-        _lyricPermissionProvider = lyricPermissionProvider;
-    }
 
     public override SparseFieldSetExpression? OnApplySparseFieldSet(SparseFieldSetExpression? existingSparseFieldSet)
     {

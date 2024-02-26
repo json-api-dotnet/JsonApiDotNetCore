@@ -8,14 +8,8 @@ namespace JsonApiDotNetCore.Errors;
 /// The error that is thrown when creating a resource with an ID that already exists.
 /// </summary>
 [PublicAPI]
-public sealed class ResourceAlreadyExistsException : JsonApiException
+public sealed class ResourceAlreadyExistsException(string resourceId, string resourceType) : JsonApiException(new ErrorObject(HttpStatusCode.Conflict)
 {
-    public ResourceAlreadyExistsException(string resourceId, string resourceType)
-        : base(new ErrorObject(HttpStatusCode.Conflict)
-        {
-            Title = "Another resource with the specified ID already exists.",
-            Detail = $"Another resource of type '{resourceType}' with ID '{resourceId}' already exists."
-        })
-    {
-    }
-}
+    Title = "Another resource with the specified ID already exists.",
+    Detail = $"Another resource of type '{resourceType}' with ID '{resourceId}' already exists."
+});

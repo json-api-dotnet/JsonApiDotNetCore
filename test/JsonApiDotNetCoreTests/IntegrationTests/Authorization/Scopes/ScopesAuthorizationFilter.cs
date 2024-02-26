@@ -60,14 +60,9 @@ internal sealed class ScopesAuthorizationFilter : IActionFilter
         return requiredScopes;
     }
 
-    private sealed class QueryStringWalker : QueryExpressionRewriter<object?>
+    private sealed class QueryStringWalker(AuthScopeSet authScopeSet) : QueryExpressionRewriter<object?>
     {
-        private readonly AuthScopeSet _authScopeSet;
-
-        public QueryStringWalker(AuthScopeSet authScopeSet)
-        {
-            _authScopeSet = authScopeSet;
-        }
+        private readonly AuthScopeSet _authScopeSet = authScopeSet;
 
         public void IncludeScopesFrom(IEnumerable<IQueryConstraintProvider> constraintProviders)
         {
