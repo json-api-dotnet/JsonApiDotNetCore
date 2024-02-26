@@ -95,8 +95,8 @@
   }
 }
 </code></pre>
-<p>When using client-generated IDs and only attributes from the request have changed, the server returns <code>204 No Content</code>.
-Otherwise, the server returns <code>201 Created</code>, along with the updated resource and its newly assigned ID.</p>
+<p>When using client-generated IDs and all attributes of the created resource are the same as in the request, the server
+returns <code>204 No Content</code>. Otherwise, the server returns <code>201 Created</code>, along with the stored attributes and its newly assigned ID.</p>
 <p>In both cases, a <code>Location</code> header is returned that contains the URL to the new resource.</p>
 <h1 id="creating-resources-with-relationships">Creating resources with relationships</h1>
 <p>It is possible to create a new resource and establish relationships to existing resources in a single request.
