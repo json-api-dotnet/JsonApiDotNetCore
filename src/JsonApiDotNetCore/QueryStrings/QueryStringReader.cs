@@ -38,6 +38,11 @@ public sealed class QueryStringReader : IQueryStringReader
 
         foreach ((string parameterName, StringValues parameterValue) in _queryStringAccessor.Query)
         {
+            if (parameterName.Length == 0)
+            {
+                throw new InvalidQueryException("Empty query string parameter name.", null);
+            }
+
             IQueryStringParameterReader? reader = _parameterReaders.FirstOrDefault(nextReader => nextReader.CanRead(parameterName));
 
             if (reader != null)
