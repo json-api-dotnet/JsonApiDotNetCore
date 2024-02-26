@@ -25,7 +25,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
-    <OpenApiCodeDirectory>GeneratedCode</OpenApiCodeDirectory>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)tests.runsettings</RunSettingsFilePath>
     <JsonApiDotNetCoreVersionPrefix>5.5.2</JsonApiDotNetCoreVersionPrefix>
