@@ -63,7 +63,7 @@ public sealed class ClientIdGenerationModesTests
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
         // Act
-        PlayerPrimaryResponseDocument? doc = await ApiResponse.TranslateAsync(() => apiClient.PostPlayerAsync(null, new PlayerPostRequestDocument
+        PlayerPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PostPlayerAsync(null, new PlayerPostRequestDocument
         {
             Data = new PlayerDataInPostRequest
             {
@@ -76,7 +76,7 @@ public sealed class ClientIdGenerationModesTests
         }));
 
         // Assert
-        doc.Should().BeNull();
+        document.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -96,7 +96,7 @@ public sealed class ClientIdGenerationModesTests
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
         // Act
-        GamePrimaryResponseDocument? doc = await ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, new GamePostRequestDocument
+        GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, new GamePostRequestDocument
         {
             Data = new GameDataInPostRequest
             {
@@ -110,11 +110,12 @@ public sealed class ClientIdGenerationModesTests
         }));
 
         // Assert
-        doc?.Data.Id.Should().NotBeNullOrEmpty();
+        document.ShouldNotBeNull();
+        document.Data.Id.Should().NotBeNullOrEmpty();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            Game gameInDatabase = await dbContext.Games.FirstWithIdAsync(Guid.Parse(doc!.Data.Id));
+            Game gameInDatabase = await dbContext.Games.FirstWithIdAsync(Guid.Parse(document.Data.Id));
 
             gameInDatabase.Title.Should().Be(game.Title);
             gameInDatabase.PurchasePrice.Should().Be(game.PurchasePrice);
@@ -132,7 +133,7 @@ public sealed class ClientIdGenerationModesTests
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
         // Act
-        GamePrimaryResponseDocument? doc = await ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, new GamePostRequestDocument
+        GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, new GamePostRequestDocument
         {
             Data = new GameDataInPostRequest
             {
@@ -146,7 +147,7 @@ public sealed class ClientIdGenerationModesTests
         }));
 
         // Assert
-        doc.Should().BeNull();
+        document.Should().BeNull();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
@@ -167,23 +168,25 @@ public sealed class ClientIdGenerationModesTests
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
         // Act
-        PlayerGroupPrimaryResponseDocument? doc = await ApiResponse.TranslateAsync(() => apiClient.PostPlayerGroupAsync(null, new PlayerGroupPostRequestDocument
-        {
-            Data = new PlayerGroupDataInPostRequest
+        PlayerGroupPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PostPlayerGroupAsync(null,
+            new PlayerGroupPostRequestDocument
             {
-                Attributes = new PlayerGroupAttributesInPostRequest
+                Data = new PlayerGroupDataInPostRequest
                 {
-                    Name = playerGroup.Name
+                    Attributes = new PlayerGroupAttributesInPostRequest
+                    {
+                        Name = playerGroup.Name
+                    }
                 }
-            }
-        }));
+            }));
 
         // Assert
-        doc?.Data.Id.Should().NotBeNullOrEmpty();
+        document.ShouldNotBeNull();
+        document.Data.Id.Should().NotBeNullOrEmpty();
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            PlayerGroup playerGroupInDatabase = await dbContext.PlayerGroups.FirstWithIdAsync(long.Parse(doc!.Data.Id));
+            PlayerGroup playerGroupInDatabase = await dbContext.PlayerGroups.FirstWithIdAsync(long.Parse(document.Data.Id));
 
             playerGroupInDatabase.Name.Should().Be(playerGroup.Name);
         });
