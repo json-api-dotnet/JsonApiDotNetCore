@@ -59,27 +59,35 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
     /// <inheritdoc />
     public virtual void Read(string parameterName, StringValues parameterValue)
     {
-        foreach (string value in parameterValue.SelectMany(ExtractParameterValue))
+        if (!_options.EnableLegacyFilterNotation)
         {
-            ReadSingleValue(parameterName, value);
+            foreach (string? value in parameterValue)
+            {
+                if (value != null)
+                {
+                    ReadSingleValue(parameterName, value);
+                }
+            }
+        }
+        else
+        {
+            foreach (string value in parameterValue.SelectMany(ExtractParameterValue))
+            {
+                ReadSingleValue(parameterName, value);
+            }
         }
     }
 
     private IEnumerable<string> ExtractParameterValue(string? parameterValue)
     {
-        if (parameterValue != null)
+        if (parameterValue == null)
         {
-            if (_options.EnableLegacyFilterNotation)
-            {
-                foreach (string condition in LegacyConverter.ExtractConditions(parameterValue))
-                {
-                    yield return condition;
-                }
-            }
-            else
-            {
-                yield return parameterValue;
-            }
+            yield break;
+        }
+
+        foreach (string condition in LegacyConverter.ExtractConditions(parameterValue))
+        {
+            yield return condition;
         }
     }
 
@@ -140,12 +148,13 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
         }
         else
         {
-            if (!_filtersPerScope.ContainsKey(scope))
+            if (!_filtersPerScope.TryGetValue(scope, out ImmutableArray<FilterExpression>.Builder? filters))
             {
-                _filtersPerScope[scope] = ImmutableArray.CreateBuilder<FilterExpression>();
+                filters = ImmutableArray.CreateBuilder<FilterExpression>();
+                _filtersPerScope[scope] = filters;
             }
 
-            _filtersPerScope[scope].Add(filter);
+            filters.Add(filter);
         }
     }
 
@@ -172,6 +181,6 @@ public class FilterQueryStringParameterReader : QueryStringParameterReader, IFil
 
     private static FilterExpression MergeFilters(IImmutableList<FilterExpression> filters)
     {
-        return filters.Count > 1 ? new LogicalExpression(LogicalOperator.Or, filters) : filters.First();
+        return filters.Count > 1 ? new LogicalExpression(LogicalOperator.Or, filters) : filters[0];
     }
 }
