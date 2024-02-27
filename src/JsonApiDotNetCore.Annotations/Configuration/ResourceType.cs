@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -11,6 +12,8 @@ public sealed class ResourceType
 {
     private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPublicName = [];
     private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPropertyName = [];
+    private readonly ConcurrentDictionary<string, IReadOnlySet<AttrAttribute>> _attributesInTypeOrDerivedByPublicName = [];
+    private readonly ConcurrentDictionary<string, IReadOnlySet<RelationshipAttribute>> _relationshipsInTypeOrDerivedByPublicName = [];
     private readonly Lazy<IReadOnlySet<ResourceType>> _lazyAllConcreteDerivedTypes;
 
     /// <summary>
@@ -259,10 +262,10 @@ public sealed class ResourceType
 
     internal IReadOnlySet<AttrAttribute> GetAttributesInTypeOrDerived(string publicName)
     {
-        return GetAttributesInTypeOrDerived(this, publicName);
+        return _attributesInTypeOrDerivedByPublicName.GetOrAdd(publicName, GetAttributesInTypeOrDerived, this);
     }
 
-    private static IReadOnlySet<AttrAttribute> GetAttributesInTypeOrDerived(ResourceType resourceType, string publicName)
+    private static IReadOnlySet<AttrAttribute> GetAttributesInTypeOrDerived(string publicName, ResourceType resourceType)
     {
         AttrAttribute? attribute = resourceType.FindAttributeByPublicName(publicName);
 
@@ -276,7 +279,7 @@ public sealed class ResourceType
         HashSet<AttrAttribute> attributesInDerivedTypes = [];
 
         foreach (AttrAttribute attributeInDerivedType in resourceType.DirectlyDerivedTypes
-            .Select(derivedType => GetAttributesInTypeOrDerived(derivedType, publicName)).SelectMany(attributesInDerivedType => attributesInDerivedType))
+            .Select(derivedType => GetAttributesInTypeOrDerived(publicName, derivedType)).SelectMany(attributesInDerivedType => attributesInDerivedType))
         {
             attributesInDerivedTypes.Add(attributeInDerivedType);
         }
@@ -286,10 +289,10 @@ public sealed class ResourceType
 
     internal IReadOnlySet<RelationshipAttribute> GetRelationshipsInTypeOrDerived(string publicName)
     {
-        return GetRelationshipsInTypeOrDerived(this, publicName);
+        return _relationshipsInTypeOrDerivedByPublicName.GetOrAdd(publicName, GetRelationshipsInTypeOrDerived, this);
     }
 
-    private static IReadOnlySet<RelationshipAttribute> GetRelationshipsInTypeOrDerived(ResourceType resourceType, string publicName)
+    private static IReadOnlySet<RelationshipAttribute> GetRelationshipsInTypeOrDerived(string publicName, ResourceType resourceType)
     {
         RelationshipAttribute? relationship = resourceType.FindRelationshipByPublicName(publicName);
 
@@ -303,7 +306,7 @@ public sealed class ResourceType
         HashSet<RelationshipAttribute> relationshipsInDerivedTypes = [];
 
         foreach (RelationshipAttribute relationshipInDerivedType in resourceType.DirectlyDerivedTypes
-            .Select(derivedType => GetRelationshipsInTypeOrDerived(derivedType, publicName))
+            .Select(derivedType => GetRelationshipsInTypeOrDerived(publicName, derivedType))
             .SelectMany(relationshipsInDerivedType => relationshipsInDerivedType))
         {
             relationshipsInDerivedTypes.Add(relationshipInDerivedType);
