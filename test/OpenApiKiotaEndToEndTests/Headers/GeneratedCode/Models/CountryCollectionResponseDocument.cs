@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiNSwagEndToEndTests.Headers.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.Headers.GeneratedCode.Models {
     public class CountryCollectionResponseDocument : IBackedModel, IParsable {
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }

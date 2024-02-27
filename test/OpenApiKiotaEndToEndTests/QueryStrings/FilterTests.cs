@@ -1,8 +1,8 @@
 using System.Net;
 using FluentAssertions;
 using Microsoft.Kiota.Http.HttpClientLibrary;
-using OpenApiNSwagEndToEndTests.QueryStrings.GeneratedCode;
-using OpenApiNSwagEndToEndTests.QueryStrings.GeneratedCode.Models;
+using OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode;
+using OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models;
 using OpenApiTests;
 using OpenApiTests.QueryStrings;
 using TestBuildingBlocks;

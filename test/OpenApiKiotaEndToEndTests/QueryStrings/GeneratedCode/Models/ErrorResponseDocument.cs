@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System;
-namespace OpenApiNSwagEndToEndTests.QueryStrings.GeneratedCode.Models {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
     public class ErrorResponseDocument : ApiException, IBackedModel, IParsable {
         /// <summary>Stores model information.</summary>
         public IBackingStore BackingStore { get; private set; }

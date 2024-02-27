@@ -27,9 +27,9 @@
 
   <Target Name="KiotaRunTool" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
     <Exec
-      Command="dotnet kiota generate --language CSharp --class-name HeadersClient --namespace-name OpenApiNSwagEndToEndTests.Headers.GeneratedCode --output ./Headers/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/Headers/GeneratedSwagger/swagger.g.json" />
+      Command="dotnet kiota generate --language CSharp --class-name HeadersClient --namespace-name OpenApiKiotaEndToEndTests.Headers.GeneratedCode --output ./Headers/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/Headers/GeneratedSwagger/swagger.g.json" />
     <Exec
-      Command="dotnet kiota generate --language CSharp --class-name QueryStringsClient --namespace-name OpenApiNSwagEndToEndTests.QueryStrings.GeneratedCode --output ./QueryStrings/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/QueryStrings/GeneratedSwagger/swagger.g.json" />
+      Command="dotnet kiota generate --language CSharp --class-name QueryStringsClient --namespace-name OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode --output ./QueryStrings/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/QueryStrings/GeneratedSwagger/swagger.g.json" />
 
     <ItemGroup>
       <!-- This isn't entirely reliable: may require a second build after the source swagger.json has changed, to get rid of compile errors. -->

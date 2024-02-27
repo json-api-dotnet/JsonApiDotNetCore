@@ -6,14 +6,14 @@ using Microsoft.Kiota.Serialization.Form;
 using Microsoft.Kiota.Serialization.Json;
 using Microsoft.Kiota.Serialization.Multipart;
 using Microsoft.Kiota.Serialization.Text;
-using OpenApiNSwagEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs;
-using OpenApiNSwagEndToEndTests.QueryStrings.GeneratedCode.Nodes;
+using OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.NameValuePairs;
+using OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Nodes;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
-namespace OpenApiNSwagEndToEndTests.QueryStrings.GeneratedCode {
+namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode {
     /// <summary>
     /// The main entry point of the SDK, exposes the configuration and the fluent API.
     /// </summary>
