@@ -157,24 +157,36 @@ internal sealed class PatternMatcher
 
             HashSet<ResourceFieldAttribute> fields = LookupFields(state.ResourceType, publicName);
 
-            if (!fields.Any())
+            if (fields.Count == 0)
             {
                 return state.FailureForUnknownField(publicName, _allowDerivedTypes);
             }
 
-            chosenField = fields.First();
+            ResourceFieldAttribute? firstField = null;
 
-            fields.RemoveWhere(field => !IsTypeMatch(field, choices));
-
-            if (fields.Count == 1)
+            foreach (ResourceFieldAttribute field in fields)
             {
-                return state.SuccessMoveForwardOneField(fields.First());
+                firstField ??= field;
+
+                if (!IsTypeMatch(field, choices))
+                {
+                    continue;
+                }
+
+                if (chosenField != null)
+                {
+                    return state.FailureForMultipleDerivedTypes(publicName);
+                }
+
+                chosenField = field;
             }
 
-            if (fields.Count > 1)
+            if (chosenField != null)
             {
-                return state.FailureForMultipleDerivedTypes(publicName);
+                return state.SuccessMoveForwardOneField(chosenField);
             }
+
+            chosenField = firstField;
         }
 
         FieldTypes chosenFieldType = GetFieldType(chosenField);
