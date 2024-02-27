@@ -42,7 +42,10 @@ public sealed class QueryStringReader : IQueryStringReader
 
             if (reader != null)
             {
-                _logger.LogDebug($"Query string parameter '{parameterName}' with value '{parameterValue}' was accepted by {reader.GetType().Name}.");
+                if (_logger.IsEnabled(LogLevel.Debug))
+                {
+                    _logger.LogDebug($"Query string parameter '{parameterName}' with value '{parameterValue}' was accepted by {reader.GetType().Name}.");
+                }
 
                 if (!reader.AllowEmptyValue && string.IsNullOrEmpty(parameterValue))
                 {
@@ -58,7 +61,11 @@ public sealed class QueryStringReader : IQueryStringReader
                 }
 
                 reader.Read(parameterName, parameterValue);
-                _logger.LogDebug($"Query string parameter '{parameterName}' was successfully read.");
+
+                if (_logger.IsEnabled(LogLevel.Debug))
+                {
+                    _logger.LogDebug($"Query string parameter '{parameterName}' was successfully read.");
+                }
             }
             else if (!_options.AllowUnknownQueryStringParameters)
             {
