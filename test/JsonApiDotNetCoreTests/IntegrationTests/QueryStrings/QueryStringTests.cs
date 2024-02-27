@@ -65,8 +65,8 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
 
     [Theory]
     [InlineData("")]
-    [InlineData("foo")]
-    public async Task Should_ignore_query_parameter_with_empty_name(string parameterValue)
+    [InlineData("bar")]
+    public async Task Can_use_empty_query_string_parameter_name(string parameterValue)
     {
         // Arrange
         var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
