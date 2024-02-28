@@ -64,6 +64,24 @@ public sealed class QueryStringTests : IClassFixture<IntegrationTestContext<Test
     }
 
     [Theory]
+    [InlineData("")]
+    [InlineData("bar")]
+    public async Task Can_use_empty_query_string_parameter_name(string parameterValue)
+    {
+        // Arrange
+        var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+        options.AllowUnknownQueryStringParameters = false;
+
+        string route = $"calendars?={parameterValue}";
+
+        // Act
+        (HttpResponseMessage httpResponse, Document _) = await _testContext.ExecuteGetAsync<Document>(route);
+
+        // Assert
+        httpResponse.ShouldHaveStatusCode(HttpStatusCode.OK);
+    }
+
+    [Theory]
     [InlineData("filter")]
     [InlineData("sort")]
     [InlineData("page[size]")]
