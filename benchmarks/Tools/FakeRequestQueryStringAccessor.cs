@@ -1,6 +1,5 @@
 using JsonApiDotNetCore.QueryStrings;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace Benchmarks.Tools;
 
@@ -10,9 +9,4 @@ namespace Benchmarks.Tools;
 internal sealed class FakeRequestQueryStringAccessor : IRequestQueryStringAccessor
 {
     public IQueryCollection Query { get; set; } = new QueryCollection();
-
-    public void SetQueryString(string queryString)
-    {
-        Query = new QueryCollection(QueryHelpers.ParseQuery(queryString));
-    }
 }

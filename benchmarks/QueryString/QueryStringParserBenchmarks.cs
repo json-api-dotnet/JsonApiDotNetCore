@@ -89,12 +89,13 @@ public class QueryStringParserBenchmarks
 
     public sealed class QueryStringArgument(string queryString)
     {
-        public string QueryString { get; } = queryString;
-        public IQueryCollection Query { get; } = new QueryCollection(QueryHelpers.ParseQuery(queryString));
+        private readonly string _queryString = queryString;
+
+        internal IQueryCollection Query { get; } = new QueryCollection(QueryHelpers.ParseQuery(queryString));
 
         public override string ToString()
         {
-            return QueryString;
+            return _queryString;
         }
     }
 }
