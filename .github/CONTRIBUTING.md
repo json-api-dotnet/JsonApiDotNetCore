@@ -39,7 +39,7 @@ When you are creating an enhancement suggestion, please include as many details 
 
 - **Use a clear and descriptive title** for the issue to identify the suggestion.
 - **Provide a step-by-step description of the suggested enhancement** in as many details as possible.
-- **Provide specific examples to demonstrate the usage.** Include copy/pasteable snippets which you use in those examples, as [Markdown code blocks](https://docs.github.com/en/github/writing-on-github/creating-and-highlighting-code-blocks).
+- **Provide specific examples to demonstrate the usage.** Include copy/pasteable snippets which you use in those examples as [Markdown code blocks](https://docs.github.com/en/github/writing-on-github/creating-and-highlighting-code-blocks).
 - **Describe the current behavior and explain which behavior you expected to see instead** and why.
 - **Explain why this enhancement would be useful** to most users and isn't something that can or should be implemented in your API project directly.
 - **Verify that your enhancement does not conflict** with the [JSON:API specification](https://jsonapi.org/).
@@ -56,7 +56,7 @@ Please follow these steps to have your contribution considered by the maintainer
 - Follow all instructions in the template. Don't forget to add tests and update documentation.
 - After you submit your pull request, verify that all status checks are passing. In release builds, all compiler warnings are treated as errors, so you should address them before push.
 
-We use [CSharpGuidelines](https://csharpcodingguidelines.com/) as our coding standard (with a few minor exceptions). Coding style is validated during PR build, where we inject an extra settings layer that promotes various suggestions to warning level. This ensures a high-quality codebase without interfering too much when editing code.
+We use [CSharpGuidelines](https://csharpcodingguidelines.com/) as our coding standard. Coding style is validated during PR build, where we inject an extra settings layer that promotes various IDE suggestions to warning level. This ensures a high-quality codebase without interfering too much while editing code.
 You can run the following [PowerShell scripts](https://github.com/PowerShell/PowerShell/releases) locally:
 - `pwsh ./inspectcode.ps1`: Scans the code for style violations and opens the result in your web browser.
 - `pwsh ./cleanupcode.ps1 [branch-name-or-commit-hash]`: Reformats the codebase to match with our configured style, optionally only changed files since the specified branch (usually master).
@@ -86,13 +86,39 @@ public sealed class AppDbContext : DbContext
 }
 ```
 
+### Pull request workflow
+
+Please follow the steps and guidelines below for a smooth experience.
+
+Authors:
+- When opening a new pull request, create it in **Draft** mode.
+- After you've completed the work *and* all checks are green, click the **Ready for review** button.
+  - If you have permissions to do so, ask a team member for review.
+- Once the review has started, don't force-push anymore.
+- When you've addressed feedback from a conversation, mark it with a thumbs-up or add a some text.
+- Don't close a conversation you didn't start. The creator closes it after verifying the concern has been addressed.
+- Apply suggestions in a batch, instead of individual commits (to minimize email notifications).
+- Re-request review when you're ready for another round.
+- If you want to clean up your commits before merge, let the reviewer know in time. This is optional.
+
+Reviewers:
+- If you're unable to review within a few days, let the author know what to expect.
+- Use **Start a review** instead of **Add single comment** (to minimize email notifications).
+- Consider to use suggestions (the &#177; button).
+- Don't close a conversation you didn't start. Close the ones you opened after verifying the concern has been addressed.
+- Once approved, use a merge commit only if all commits are clean. Otherwise, squash them into a single commit.
+  A commit is considered clean when:
+    - It is properly documented and covers all aspects of an isolated change (code, style, tests, docs).
+    - Checking out the commit results in a green build.
+    - Having this commit show up in the history is helpful (and can potentially be reverted).
+
 ## Creating a release (for maintainers)
 
 - Verify documentation is up-to-date
-- Bump the package version in Directory.Build.props
+- Bump the package version in `Directory.Build.props`
 - Create a GitHub release
-- Update https://github.com/json-api-dotnet/JsonApiDotNetCore.MongoDb to consume the new version and release
-- Create a new branch in https://github.com/json-api-dotnet/MigrationGuide and update README.md in master
+- Update [JsonApiDotNetCore.MongoDb](https://github.com/json-api-dotnet/JsonApiDotNetCore.MongoDb) to consume the new version and release
+- Create a new branch in [MigrationGuide](https://github.com/json-api-dotnet/MigrationGuide) and update README.md in master, if major version change
 
 ## Backporting and hotfixes (for maintainers)
 
@@ -101,7 +127,7 @@ public sealed class AppDbContext : DbContext
   git checkout tags/v2.5.1 -b release/2.5.2
   ```
 - Cherrypick the merge commit: `git cherry-pick {git commit SHA}`
-- Bump the package version in Directory.Build.props
+- Bump the package version in `Directory.Build.props`
 - Make any other compatibility, documentation, or tooling related changes
 - Push the branch to origin and verify the build
 - Once the build is verified, create a GitHub release, tagging the release branch
