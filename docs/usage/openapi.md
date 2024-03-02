@@ -16,13 +16,10 @@ The package provides an integration with [Swashbuckle](https://github.com/domain
 2.  Add the integration in your `Program.cs` file.
 
     ```c#
-    IMvcCoreBuilder mvcCoreBuilder = builder.Services.AddMvcCore();
-
-    // Include the mvcBuilder parameter.
-    builder.Services.AddJsonApi<AppDbContext>(mvcBuilder: mvcCoreBuilder);
+    builder.Services.AddJsonApi<AppDbContext>();
 
     // Configure Swashbuckle for JSON:API.
-    builder.Services.AddOpenApi(mvcCoreBuilder);
+    builder.Services.AddOpenApi();
 
     var app = builder.Build();
 

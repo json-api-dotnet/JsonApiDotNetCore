@@ -66,8 +66,6 @@ static void ConfigureServices(WebApplicationBuilder builder)
         SetDbContextDebugOptions(options);
     });
 
-    IMvcCoreBuilder mvcCoreBuilder = builder.Services.AddMvcCore();
-
     using (CodeTimingSessionManager.Current.Measure("AddJsonApi()"))
     {
         builder.Services.AddJsonApi<AppDbContext>(options =>
@@ -82,12 +80,12 @@ static void ConfigureServices(WebApplicationBuilder builder)
             options.IncludeRequestBodyInErrors = true;
             options.SerializerOptions.WriteIndented = true;
 #endif
-        }, discovery => discovery.AddCurrentAssembly(), mvcBuilder: mvcCoreBuilder);
+        }, discovery => discovery.AddCurrentAssembly());
     }
 
     using (CodeTimingSessionManager.Current.Measure("AddOpenApi()"))
     {
-        builder.Services.AddOpenApi(mvcCoreBuilder, options => options.DocumentFilter<SetOpenApiServerAtBuildTimeFilter>());
+        builder.Services.AddOpenApi(options => options.DocumentFilter<SetOpenApiServerAtBuildTimeFilter>());
     }
 }
 

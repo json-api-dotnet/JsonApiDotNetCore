@@ -14,7 +14,7 @@ public sealed class NullabilityTests : IClassFixture<OpenApiTestContext<MsvOffSt
         _testContext = testContext;
 
         testContext.UseController<NrtOffResourcesController>();
-        testContext.SwaggerDocumentOutputDirectory = "test/OpenApiClientTests/ResourceFieldValidation/NullableReferenceTypesOff/ModelStateValidationOff";
+        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Theory]

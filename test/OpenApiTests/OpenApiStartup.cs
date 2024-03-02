@@ -13,11 +13,9 @@ public class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
 {
     public override void ConfigureServices(IServiceCollection services)
     {
-        IMvcCoreBuilder mvcBuilder = services.AddMvcCore();
+        base.ConfigureServices(services);
 
-        services.AddJsonApi<TDbContext>(SetJsonApiOptions, mvcBuilder: mvcBuilder);
-
-        services.AddOpenApi(mvcBuilder, SetupSwaggerGenAction);
+        services.AddOpenApi(SetupSwaggerGenAction);
     }
 
     protected override void SetJsonApiOptions(JsonApiOptions options)

@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- TargetFrameworks does not work, see https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/2706 -->
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="..\..\package-versions.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi.Client.NSwag\JsonApiDotNetCore.OpenApi.Client.NSwag.csproj" />
+    <ProjectReference Include="..\OpenApiTests\OpenApiTests.csproj" />
+    <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All" />
+    <PackageReference Include="GitHubActionsTestLogger" Version="$(GitHubActionsTestLoggerVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
+    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="$(NSwagApiClientVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="$(MicrosoftApiClientVersion)" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <OpenApiReference Include="..\OpenApiTests\Headers\GeneratedSwagger\swagger.g.json">
+      <Namespace>OpenApiNSwagEndToEndTests.Headers.GeneratedCode</Namespace>
+      <ClassName>HeadersClient</ClassName>
+      <OutputPath>HeadersClient.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /WrapResponses:true /GenerateResponseClasses:false /ResponseClass:ApiResponse /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
+    </OpenApiReference>
+    <OpenApiReference Include="..\OpenApiTests\QueryStrings\GeneratedSwagger\swagger.g.json">
+      <Namespace>OpenApiNSwagEndToEndTests.QueryStrings.GeneratedCode</Namespace>
+      <ClassName>QueryStringsClient</ClassName>
+      <OutputPath>QueryStringsClient.cs</OutputPath>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag /GenerateNullableReferenceTypes:true</Options>
+    </OpenApiReference>
+  </ItemGroup>
+</Project>

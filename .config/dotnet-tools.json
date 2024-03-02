@@ -25,6 +25,12 @@
       "commands": [
         "docfx"
       ]
+    },
+    "microsoft.openapi.kiota": {
+      "version": "1.11.1",
+      "commands": [
+        "kiota"
+      ]
     }
   }
 }
