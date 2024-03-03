@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 namespace JsonApiDotNetCore.Repositories;
 
 /// <inheritdoc cref="IDbContextResolver" />
+/// <typeparam name="TDbContext">
+/// The type of the <see cref="DbContext" /> to resolve.
+/// </typeparam>
 [PublicAPI]
 public sealed class DbContextResolver<TDbContext> : IDbContextResolver
     where TDbContext : DbContext
