@@ -3,6 +3,9 @@ namespace JsonApiDotNetCore.Resources;
 /// <summary>
 /// Used to determine whether additional changes to a resource (side effects), not specified in a POST or PATCH request, have been applied.
 /// </summary>
+/// <typeparam name="TResource">
+/// The resource type.
+/// </typeparam>
 public interface IResourceChangeTracker<in TResource>
     where TResource : class, IIdentifiable
 {
