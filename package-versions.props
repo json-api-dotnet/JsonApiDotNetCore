@@ -8,7 +8,7 @@
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <BenchmarkDotNetVersion>0.13.*</BenchmarkDotNetVersion>
     <BogusVersion>35.2.*</BogusVersion>
-    <CodeAnalysisVersion>4.8.*</CodeAnalysisVersion>
+    <CodeAnalysisVersion>4.9.*</CodeAnalysisVersion>
     <CoverletVersion>6.0.*</CoverletVersion>
     <DapperVersion>2.1.*</DapperVersion>
     <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
