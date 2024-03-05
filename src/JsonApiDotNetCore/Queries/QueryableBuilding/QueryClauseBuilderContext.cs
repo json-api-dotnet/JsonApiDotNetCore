@@ -29,7 +29,7 @@ public sealed class QueryClauseBuilderContext
     /// <summary>
     /// The Entity Framework Core entity model.
     /// </summary>
-    public IModel EntityModel { get; }
+    public IReadOnlyModel EntityModel { get; }
 
     /// <summary>
     /// Used to produce unique names for lambda parameters.
@@ -51,7 +51,7 @@ public sealed class QueryClauseBuilderContext
     /// </summary>
     public object? State { get; }
 
-    public QueryClauseBuilderContext(Expression source, ResourceType resourceType, Type extensionType, IModel entityModel,
+    public QueryClauseBuilderContext(Expression source, ResourceType resourceType, Type extensionType, IReadOnlyModel entityModel,
         LambdaScopeFactory lambdaScopeFactory, LambdaScope lambdaScope, IQueryableBuilder queryableBuilder, object? state)
     {
         ArgumentGuard.NotNull(source);
