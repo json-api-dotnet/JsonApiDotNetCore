@@ -151,8 +151,8 @@ public sealed class QueryClauseBuilderContext</code></pre>
 
   <a id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilderContext__ctor_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilderContext__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Configuration_ResourceType_System_Type_Microsoft_EntityFrameworkCore_Metadata_IModel_JsonApiDotNetCore_Queries_QueryableBuilding_LambdaScopeFactory_JsonApiDotNetCore_Queries_QueryableBuilding_LambdaScope_JsonApiDotNetCore_Queries_QueryableBuilding_IQueryableBuilder_System_Object_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Configuration.ResourceType,System.Type,Microsoft.EntityFrameworkCore.Metadata.IModel,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScope,JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder,System.Object)">
-  QueryClauseBuilderContext(Expression, ResourceType, Type, IModel, LambdaScopeFactory, LambdaScope, IQueryableBuilder, object?)
+  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilderContext__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Configuration_ResourceType_System_Type_Microsoft_EntityFrameworkCore_Metadata_IReadOnlyModel_JsonApiDotNetCore_Queries_QueryableBuilding_LambdaScopeFactory_JsonApiDotNetCore_Queries_QueryableBuilding_LambdaScope_JsonApiDotNetCore_Queries_QueryableBuilding_IQueryableBuilder_System_Object_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Configuration.ResourceType,System.Type,Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScope,JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder,System.Object)">
+  QueryClauseBuilderContext(Expression, ResourceType, Type, IReadOnlyModel, LambdaScopeFactory, LambdaScope, IQueryableBuilder, object?)
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryClauseBuilderContext.cs/#L54"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -160,7 +160,7 @@ public sealed class QueryClauseBuilderContext</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public QueryClauseBuilderContext(Expression source, ResourceType resourceType, Type extensionType, IModel entityModel, LambdaScopeFactory lambdaScopeFactory, LambdaScope lambdaScope, IQueryableBuilder queryableBuilder, object? state)</code></pre>
+    <pre><code class="lang-csharp hljs">public QueryClauseBuilderContext(Expression source, ResourceType resourceType, Type extensionType, IReadOnlyModel entityModel, LambdaScopeFactory lambdaScopeFactory, LambdaScope lambdaScope, IQueryableBuilder queryableBuilder, object? state)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -171,7 +171,7 @@ public sealed class QueryClauseBuilderContext</code></pre>
     <dd></dd>
     <dt><code>extensionType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
     <dd></dd>
-    <dt><code>entityModel</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.imodel">IModel</a></dt>
+    <dt><code>entityModel</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.ireadonlymodel">IReadOnlyModel</a></dt>
     <dd></dd>
     <dt><code>lambdaScopeFactory</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory.html">LambdaScopeFactory</a></dt>
     <dd></dd>
@@ -210,7 +210,7 @@ public sealed class QueryClauseBuilderContext</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IModel EntityModel { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlyModel EntityModel { get; }</code></pre>
   </div>
 
 
@@ -219,7 +219,7 @@ public sealed class QueryClauseBuilderContext</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.imodel">IModel</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.ireadonlymodel">IReadOnlyModel</a></dt>
     <dd></dd>
   </dl>
 

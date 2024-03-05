@@ -11442,15 +11442,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext
   fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext
   nameWithType: QueryClauseBuilderContext
-- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Configuration.ResourceType,System.Type,Microsoft.EntityFrameworkCore.Metadata.IModel,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScope,JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder,System.Object)
-  name: QueryClauseBuilderContext(Expression, ResourceType, Type, IModel, LambdaScopeFactory, LambdaScope, IQueryableBuilder, object?)
-  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilderContext__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Configuration_ResourceType_System_Type_Microsoft_EntityFrameworkCore_Metadata_IModel_JsonApiDotNetCore_Queries_QueryableBuilding_LambdaScopeFactory_JsonApiDotNetCore_Queries_QueryableBuilding_LambdaScope_JsonApiDotNetCore_Queries_QueryableBuilding_IQueryableBuilder_System_Object_
-  commentId: M:JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Configuration.ResourceType,System.Type,Microsoft.EntityFrameworkCore.Metadata.IModel,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScope,JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder,System.Object)
-  name.vb: New(Expression, ResourceType, Type, IModel, LambdaScopeFactory, LambdaScope, IQueryableBuilder, Object)
-  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.QueryClauseBuilderContext(System.Linq.Expressions.Expression, JsonApiDotNetCore.Configuration.ResourceType, System.Type, Microsoft.EntityFrameworkCore.Metadata.IModel, JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory, JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScope, JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder, object?)
-  fullName.vb: JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.New(System.Linq.Expressions.Expression, JsonApiDotNetCore.Configuration.ResourceType, System.Type, Microsoft.EntityFrameworkCore.Metadata.IModel, JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory, JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScope, JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder, Object)
-  nameWithType: QueryClauseBuilderContext.QueryClauseBuilderContext(Expression, ResourceType, Type, IModel, LambdaScopeFactory, LambdaScope, IQueryableBuilder, object?)
-  nameWithType.vb: QueryClauseBuilderContext.New(Expression, ResourceType, Type, IModel, LambdaScopeFactory, LambdaScope, IQueryableBuilder, Object)
+- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Configuration.ResourceType,System.Type,Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScope,JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder,System.Object)
+  name: QueryClauseBuilderContext(Expression, ResourceType, Type, IReadOnlyModel, LambdaScopeFactory, LambdaScope, IQueryableBuilder, object?)
+  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilderContext__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Configuration_ResourceType_System_Type_Microsoft_EntityFrameworkCore_Metadata_IReadOnlyModel_JsonApiDotNetCore_Queries_QueryableBuilding_LambdaScopeFactory_JsonApiDotNetCore_Queries_QueryableBuilding_LambdaScope_JsonApiDotNetCore_Queries_QueryableBuilding_IQueryableBuilder_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Configuration.ResourceType,System.Type,Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScope,JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder,System.Object)
+  name.vb: New(Expression, ResourceType, Type, IReadOnlyModel, LambdaScopeFactory, LambdaScope, IQueryableBuilder, Object)
+  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.QueryClauseBuilderContext(System.Linq.Expressions.Expression, JsonApiDotNetCore.Configuration.ResourceType, System.Type, Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel, JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory, JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScope, JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder, object?)
+  fullName.vb: JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.New(System.Linq.Expressions.Expression, JsonApiDotNetCore.Configuration.ResourceType, System.Type, Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel, JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory, JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScope, JsonApiDotNetCore.Queries.QueryableBuilding.IQueryableBuilder, Object)
+  nameWithType: QueryClauseBuilderContext.QueryClauseBuilderContext(Expression, ResourceType, Type, IReadOnlyModel, LambdaScopeFactory, LambdaScope, IQueryableBuilder, object?)
+  nameWithType.vb: QueryClauseBuilderContext.New(Expression, ResourceType, Type, IReadOnlyModel, LambdaScopeFactory, LambdaScope, IQueryableBuilder, Object)
 - uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.#ctor*
   name: QueryClauseBuilderContext
   href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryClauseBuilderContext.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryClauseBuilderContext__ctor_
@@ -11764,15 +11764,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext
   fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext
   nameWithType: QueryableBuilderContext
-- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.#ctor(System.Linq.Expressions.Expression,System.Type,System.Type,Microsoft.EntityFrameworkCore.Metadata.IModel,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory,System.Object)
-  name: QueryableBuilderContext(Expression, Type, Type, IModel, LambdaScopeFactory, object?)
-  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext__ctor_System_Linq_Expressions_Expression_System_Type_System_Type_Microsoft_EntityFrameworkCore_Metadata_IModel_JsonApiDotNetCore_Queries_QueryableBuilding_LambdaScopeFactory_System_Object_
-  commentId: M:JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.#ctor(System.Linq.Expressions.Expression,System.Type,System.Type,Microsoft.EntityFrameworkCore.Metadata.IModel,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory,System.Object)
-  name.vb: New(Expression, Type, Type, IModel, LambdaScopeFactory, Object)
-  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.QueryableBuilderContext(System.Linq.Expressions.Expression, System.Type, System.Type, Microsoft.EntityFrameworkCore.Metadata.IModel, JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory, object?)
-  fullName.vb: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.New(System.Linq.Expressions.Expression, System.Type, System.Type, Microsoft.EntityFrameworkCore.Metadata.IModel, JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory, Object)
-  nameWithType: QueryableBuilderContext.QueryableBuilderContext(Expression, Type, Type, IModel, LambdaScopeFactory, object?)
-  nameWithType.vb: QueryableBuilderContext.New(Expression, Type, Type, IModel, LambdaScopeFactory, Object)
+- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.#ctor(System.Linq.Expressions.Expression,System.Type,System.Type,Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory,System.Object)
+  name: QueryableBuilderContext(Expression, Type, Type, IReadOnlyModel, LambdaScopeFactory, object?)
+  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext__ctor_System_Linq_Expressions_Expression_System_Type_System_Type_Microsoft_EntityFrameworkCore_Metadata_IReadOnlyModel_JsonApiDotNetCore_Queries_QueryableBuilding_LambdaScopeFactory_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.#ctor(System.Linq.Expressions.Expression,System.Type,System.Type,Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory,System.Object)
+  name.vb: New(Expression, Type, Type, IReadOnlyModel, LambdaScopeFactory, Object)
+  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.QueryableBuilderContext(System.Linq.Expressions.Expression, System.Type, System.Type, Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel, JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory, object?)
+  fullName.vb: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.New(System.Linq.Expressions.Expression, System.Type, System.Type, Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel, JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory, Object)
+  nameWithType: QueryableBuilderContext.QueryableBuilderContext(Expression, Type, Type, IReadOnlyModel, LambdaScopeFactory, object?)
+  nameWithType.vb: QueryableBuilderContext.New(Expression, Type, Type, IReadOnlyModel, LambdaScopeFactory, Object)
 - uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.#ctor*
   name: QueryableBuilderContext
   href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext__ctor_
@@ -11796,15 +11796,15 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.CreateClauseContext
   nameWithType: QueryableBuilderContext.CreateClauseContext
-- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.CreateRoot(System.Linq.IQueryable,System.Type,Microsoft.EntityFrameworkCore.Metadata.IModel,System.Object)
-  name: CreateRoot(IQueryable, Type, IModel, object?)
-  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext_CreateRoot_System_Linq_IQueryable_System_Type_Microsoft_EntityFrameworkCore_Metadata_IModel_System_Object_
-  commentId: M:JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.CreateRoot(System.Linq.IQueryable,System.Type,Microsoft.EntityFrameworkCore.Metadata.IModel,System.Object)
-  name.vb: CreateRoot(IQueryable, Type, IModel, Object)
-  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.CreateRoot(System.Linq.IQueryable, System.Type, Microsoft.EntityFrameworkCore.Metadata.IModel, object?)
-  fullName.vb: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.CreateRoot(System.Linq.IQueryable, System.Type, Microsoft.EntityFrameworkCore.Metadata.IModel, Object)
-  nameWithType: QueryableBuilderContext.CreateRoot(IQueryable, Type, IModel, object?)
-  nameWithType.vb: QueryableBuilderContext.CreateRoot(IQueryable, Type, IModel, Object)
+- uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.CreateRoot(System.Linq.IQueryable,System.Type,Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,System.Object)
+  name: CreateRoot(IQueryable, Type, IReadOnlyModel, object?)
+  href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext_CreateRoot_System_Linq_IQueryable_System_Type_Microsoft_EntityFrameworkCore_Metadata_IReadOnlyModel_System_Object_
+  commentId: M:JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.CreateRoot(System.Linq.IQueryable,System.Type,Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,System.Object)
+  name.vb: CreateRoot(IQueryable, Type, IReadOnlyModel, Object)
+  fullName: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.CreateRoot(System.Linq.IQueryable, System.Type, Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel, object?)
+  fullName.vb: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.CreateRoot(System.Linq.IQueryable, System.Type, Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel, Object)
+  nameWithType: QueryableBuilderContext.CreateRoot(IQueryable, Type, IReadOnlyModel, object?)
+  nameWithType.vb: QueryableBuilderContext.CreateRoot(IQueryable, Type, IReadOnlyModel, Object)
 - uid: JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.CreateRoot*
   name: CreateRoot
   href: api/JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.html#JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext_CreateRoot_

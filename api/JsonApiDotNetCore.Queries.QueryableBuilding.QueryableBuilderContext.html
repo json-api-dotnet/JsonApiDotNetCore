@@ -151,8 +151,8 @@ public sealed class QueryableBuilderContext</code></pre>
 
   <a id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext__ctor_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.#ctor*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext__ctor_System_Linq_Expressions_Expression_System_Type_System_Type_Microsoft_EntityFrameworkCore_Metadata_IModel_JsonApiDotNetCore_Queries_QueryableBuilding_LambdaScopeFactory_System_Object_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.#ctor(System.Linq.Expressions.Expression,System.Type,System.Type,Microsoft.EntityFrameworkCore.Metadata.IModel,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory,System.Object)">
-  QueryableBuilderContext(Expression, Type, Type, IModel, LambdaScopeFactory, object?)
+  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext__ctor_System_Linq_Expressions_Expression_System_Type_System_Type_Microsoft_EntityFrameworkCore_Metadata_IReadOnlyModel_JsonApiDotNetCore_Queries_QueryableBuilding_LambdaScopeFactory_System_Object_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.#ctor(System.Linq.Expressions.Expression,System.Type,System.Type,Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory,System.Object)">
+  QueryableBuilderContext(Expression, Type, Type, IReadOnlyModel, LambdaScopeFactory, object?)
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilderContext.cs/#L44"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -160,7 +160,7 @@ public sealed class QueryableBuilderContext</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public QueryableBuilderContext(Expression source, Type elementType, Type extensionType, IModel entityModel, LambdaScopeFactory lambdaScopeFactory, object? state)</code></pre>
+    <pre><code class="lang-csharp hljs">public QueryableBuilderContext(Expression source, Type elementType, Type extensionType, IReadOnlyModel entityModel, LambdaScopeFactory lambdaScopeFactory, object? state)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -171,7 +171,7 @@ public sealed class QueryableBuilderContext</code></pre>
     <dd></dd>
     <dt><code>extensionType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
     <dd></dd>
-    <dt><code>entityModel</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.imodel">IModel</a></dt>
+    <dt><code>entityModel</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.ireadonlymodel">IReadOnlyModel</a></dt>
     <dd></dd>
     <dt><code>lambdaScopeFactory</code> <a class="xref" href="JsonApiDotNetCore.Queries.QueryableBuilding.LambdaScopeFactory.html">LambdaScopeFactory</a></dt>
     <dd></dd>
@@ -238,7 +238,7 @@ public sealed class QueryableBuilderContext</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IModel EntityModel { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlyModel EntityModel { get; }</code></pre>
   </div>
 
 
@@ -247,7 +247,7 @@ public sealed class QueryableBuilderContext</code></pre>
 
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.imodel">IModel</a></dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.ireadonlymodel">IReadOnlyModel</a></dt>
     <dd></dd>
   </dl>
 
@@ -434,8 +434,8 @@ public sealed class QueryableBuilderContext</code></pre>
 
   <a id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext_CreateRoot_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.CreateRoot*"></a>
 
-  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext_CreateRoot_System_Linq_IQueryable_System_Type_Microsoft_EntityFrameworkCore_Metadata_IModel_System_Object_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.CreateRoot(System.Linq.IQueryable,System.Type,Microsoft.EntityFrameworkCore.Metadata.IModel,System.Object)">
-  CreateRoot(IQueryable, Type, IModel, object?)
+  <h3 id="JsonApiDotNetCore_Queries_QueryableBuilding_QueryableBuilderContext_CreateRoot_System_Linq_IQueryable_System_Type_Microsoft_EntityFrameworkCore_Metadata_IReadOnlyModel_System_Object_" data-uid="JsonApiDotNetCore.Queries.QueryableBuilding.QueryableBuilderContext.CreateRoot(System.Linq.IQueryable,System.Type,Microsoft.EntityFrameworkCore.Metadata.IReadOnlyModel,System.Object)">
+  CreateRoot(IQueryable, Type, IReadOnlyModel, object?)
   <a class="header-action link-secondary" title="View source" href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/QueryableBuilding/QueryableBuilderContext.cs/#L61"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -443,7 +443,7 @@ public sealed class QueryableBuilderContext</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static QueryableBuilderContext CreateRoot(IQueryable source, Type extensionType, IModel model, object? state)</code></pre>
+    <pre><code class="lang-csharp hljs">public static QueryableBuilderContext CreateRoot(IQueryable source, Type extensionType, IReadOnlyModel entityModel, object? state)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -452,7 +452,7 @@ public sealed class QueryableBuilderContext</code></pre>
     <dd></dd>
     <dt><code>extensionType</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.type">Type</a></dt>
     <dd></dd>
-    <dt><code>model</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.imodel">IModel</a></dt>
+    <dt><code>entityModel</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.ireadonlymodel">IReadOnlyModel</a></dt>
     <dd></dd>
     <dt><code>state</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
     <dd></dd>
