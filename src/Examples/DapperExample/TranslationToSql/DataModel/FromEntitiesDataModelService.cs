@@ -38,12 +38,12 @@ public sealed class FromEntitiesDataModelService(IResourceGraph resourceGraph) :
         Initialize();
     }
 
-    private void ScanForeignKeys(IModel entityModel)
+    private void ScanForeignKeys(IReadOnlyModel entityModel)
     {
         foreach (RelationshipAttribute relationship in ResourceGraph.GetResourceTypes().SelectMany(resourceType => resourceType.Relationships))
         {
-            IEntityType? leftEntityType = entityModel.FindEntityType(relationship.LeftType.ClrType);
-            INavigation? navigation = leftEntityType?.FindNavigation(relationship.Property.Name);
+            IReadOnlyEntityType? leftEntityType = entityModel.FindEntityType(relationship.LeftType.ClrType);
+            IReadOnlyNavigation? navigation = leftEntityType?.FindNavigation(relationship.Property.Name);
 
             if (navigation != null)
             {
@@ -57,7 +57,7 @@ public sealed class FromEntitiesDataModelService(IResourceGraph resourceGraph) :
         }
     }
 
-    private void ScanColumnNullability(IModel entityModel)
+    private void ScanColumnNullability(IReadOnlyModel entityModel)
     {
         foreach (ResourceType resourceType in ResourceGraph.GetResourceTypes())
         {
@@ -65,15 +65,15 @@ public sealed class FromEntitiesDataModelService(IResourceGraph resourceGraph) :
         }
     }
 
-    private void ScanColumnNullability(ResourceType resourceType, IModel entityModel)
+    private void ScanColumnNullability(ResourceType resourceType, IReadOnlyModel entityModel)
     {
-        IEntityType? entityType = entityModel.FindEntityType(resourceType.ClrType);
+        IReadOnlyEntityType? entityType = entityModel.FindEntityType(resourceType.ClrType);
 
         if (entityType != null)
         {
             foreach (AttrAttribute attribute in resourceType.Attributes)
             {
-                IProperty? property = entityType.FindProperty(attribute.Property.Name);
+                IReadOnlyProperty? property = entityType.FindProperty(attribute.Property.Name);
 
                 if (property != null)
                 {

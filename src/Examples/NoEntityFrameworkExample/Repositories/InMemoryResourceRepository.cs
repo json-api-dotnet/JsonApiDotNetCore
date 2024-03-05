@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
-using NoEntityFrameworkExample.Data;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace NoEntityFrameworkExample.Repositories;
 
@@ -19,19 +19,12 @@ namespace NoEntityFrameworkExample.Repositories;
 /// <typeparam name="TId">
 /// The resource identifier type.
 /// </typeparam>
-public abstract class InMemoryResourceRepository<TResource, TId> : IResourceReadRepository<TResource, TId>
+public abstract class InMemoryResourceRepository<TResource, TId>(IResourceGraph resourceGraph, IQueryableBuilder queryableBuilder, IReadOnlyModel entityModel)
+    : IResourceReadRepository<TResource, TId>
     where TResource : class, IIdentifiable<TId>
 {
-    private readonly ResourceType _resourceType;
-    private readonly QueryLayerToLinqConverter _queryLayerToLinqConverter;
-
-    protected InMemoryResourceRepository(IResourceGraph resourceGraph, IQueryableBuilder queryableBuilder)
-    {
-        _resourceType = resourceGraph.GetResourceType<TResource>();
-
-        var model = new InMemoryModel(resourceGraph);
-        _queryLayerToLinqConverter = new QueryLayerToLinqConverter(model, queryableBuilder);
-    }
+    private readonly ResourceType _resourceType = resourceGraph.GetResourceType<TResource>();
+    private readonly QueryLayerToLinqConverter _queryLayerToLinqConverter = new(entityModel, queryableBuilder);
 
     /// <inheritdoc />
     public Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken)

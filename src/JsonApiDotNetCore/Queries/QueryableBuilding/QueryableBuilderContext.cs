@@ -29,7 +29,7 @@ public sealed class QueryableBuilderContext
     /// <summary>
     /// The Entity Framework Core entity model.
     /// </summary>
-    public IModel EntityModel { get; }
+    public IReadOnlyModel EntityModel { get; }
 
     /// <summary>
     /// Used to produce unique names for lambda parameters.
@@ -41,7 +41,7 @@ public sealed class QueryableBuilderContext
     /// </summary>
     public object? State { get; }
 
-    public QueryableBuilderContext(Expression source, Type elementType, Type extensionType, IModel entityModel, LambdaScopeFactory lambdaScopeFactory,
+    public QueryableBuilderContext(Expression source, Type elementType, Type extensionType, IReadOnlyModel entityModel, LambdaScopeFactory lambdaScopeFactory,
         object? state)
     {
         ArgumentGuard.NotNull(source);
@@ -58,15 +58,15 @@ public sealed class QueryableBuilderContext
         State = state;
     }
 
-    public static QueryableBuilderContext CreateRoot(IQueryable source, Type extensionType, IModel model, object? state)
+    public static QueryableBuilderContext CreateRoot(IQueryable source, Type extensionType, IReadOnlyModel entityModel, object? state)
     {
         ArgumentGuard.NotNull(source);
         ArgumentGuard.NotNull(extensionType);
-        ArgumentGuard.NotNull(model);
+        ArgumentGuard.NotNull(entityModel);
 
         var lambdaScopeFactory = new LambdaScopeFactory();
 
-        return new QueryableBuilderContext(source.Expression, source.ElementType, extensionType, model, lambdaScopeFactory, state);
+        return new QueryableBuilderContext(source.Expression, source.ElementType, extensionType, entityModel, lambdaScopeFactory, state);
     }
 
     public QueryClauseBuilderContext CreateClauseContext(IQueryableBuilder queryableBuilder, Expression source, ResourceType resourceType,

@@ -40,8 +40,8 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     private Expression CreateLambdaBodyInitializer(FieldSelection selection, ResourceType resourceType, LambdaScope lambdaScope,
         bool lambdaAccessorRequiresTestForNull, QueryClauseBuilderContext context)
     {
-        IEntityType entityType = context.EntityModel.FindEntityType(resourceType.ClrType)!;
-        IEntityType[] concreteEntityTypes = entityType.GetConcreteDerivedTypesInclusive().ToArray();
+        IReadOnlyEntityType entityType = context.EntityModel.FindEntityType(resourceType.ClrType)!;
+        IReadOnlyEntityType[] concreteEntityTypes = entityType.GetConcreteDerivedTypesInclusive().ToArray();
 
         Expression bodyInitializer = concreteEntityTypes.Length > 1
             ? CreateLambdaBodyInitializerForTypeHierarchy(selection, resourceType, concreteEntityTypes, lambdaScope, context)
@@ -56,12 +56,12 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     }
 
     private Expression CreateLambdaBodyInitializerForTypeHierarchy(FieldSelection selection, ResourceType baseResourceType,
-        IEnumerable<IEntityType> concreteEntityTypes, LambdaScope lambdaScope, QueryClauseBuilderContext context)
+        IEnumerable<IReadOnlyEntityType> concreteEntityTypes, LambdaScope lambdaScope, QueryClauseBuilderContext context)
     {
         IReadOnlySet<ResourceType> resourceTypes = selection.GetResourceTypes();
         Expression rootCondition = lambdaScope.Accessor;
 
-        foreach (IEntityType entityType in concreteEntityTypes)
+        foreach (IReadOnlyEntityType entityType in concreteEntityTypes)
         {
             ResourceType? resourceType = resourceTypes.SingleOrDefault(type => type.ClrType == entityType.ClrType);
 
@@ -115,7 +115,7 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
     }
 
     private static ICollection<PropertySelector> ToPropertySelectors(FieldSelectors fieldSelectors, ResourceType resourceType, Type elementType,
-        IModel entityModel)
+        IReadOnlyModel entityModel)
     {
         var propertySelectors = new Dictionary<PropertyInfo, PropertySelector>();
 
@@ -134,17 +134,18 @@ public class SelectClauseBuilder : QueryClauseBuilder, ISelectClauseBuilder
         return propertySelectors.Values;
     }
 
-    private static void IncludeAllScalarProperties(Type elementType, Dictionary<PropertyInfo, PropertySelector> propertySelectors, IModel entityModel)
+    private static void IncludeAllScalarProperties(Type elementType, Dictionary<PropertyInfo, PropertySelector> propertySelectors, IReadOnlyModel entityModel)
     {
-        IEntityType entityType = entityModel.GetEntityTypes().Single(type => type.ClrType == elementType);
+        IReadOnlyEntityType entityType = entityModel.GetEntityTypes().Single(type => type.ClrType == elementType);
 
-        foreach (IProperty property in entityType.GetProperties().Where(property => !property.IsShadowProperty()))
+        foreach (IReadOnlyProperty property in entityType.GetProperties().Where(property => !property.IsShadowProperty()))
         {
             var propertySelector = new PropertySelector(property.PropertyInfo!);
             IncludeWritableProperty(propertySelector, propertySelectors);
         }
 
-        foreach (INavigation navigation in entityType.GetNavigations().Where(navigation => navigation.ForeignKey.IsOwnership && !navigation.IsShadowProperty()))
+        foreach (IReadOnlyNavigation navigation in entityType.GetNavigations()
+            .Where(navigation => navigation.ForeignKey.IsOwnership && !navigation.IsShadowProperty()))
         {
             var propertySelector = new PropertySelector(navigation.PropertyInfo!);
             IncludeWritableProperty(propertySelector, propertySelectors);

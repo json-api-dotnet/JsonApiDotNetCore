@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace NoEntityFrameworkExample;
 
-internal sealed class QueryLayerToLinqConverter(IModel model, IQueryableBuilder queryableBuilder)
+internal sealed class QueryLayerToLinqConverter(IReadOnlyModel entityModel, IQueryableBuilder queryableBuilder)
 {
-    private readonly IModel _model = model;
+    private readonly IReadOnlyModel _entityModel = entityModel;
     private readonly IQueryableBuilder _queryableBuilder = queryableBuilder;
 
     public IEnumerable<TResource> ApplyQueryLayer<TResource>(QueryLayer queryLayer, IEnumerable<TResource> resources)
@@ -21,7 +21,7 @@ internal sealed class QueryLayerToLinqConverter(IModel model, IQueryableBuilder 
 
         // Convert QueryLayer into LINQ expression.
         IQueryable source = ((IEnumerable)resources).AsQueryable();
-        var context = QueryableBuilderContext.CreateRoot(source, typeof(Enumerable), _model, null);
+        var context = QueryableBuilderContext.CreateRoot(source, typeof(Enumerable), _entityModel, null);
         Expression expression = _queryableBuilder.ApplyQuery(queryLayer, context);
 
         // Insert null checks to prevent a NullReferenceException during execution of expressions such as:
