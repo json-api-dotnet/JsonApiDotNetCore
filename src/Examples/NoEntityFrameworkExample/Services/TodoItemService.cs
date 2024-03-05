@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Resources;
+using Microsoft.EntityFrameworkCore.Metadata;
 using NoEntityFrameworkExample.Data;
 using NoEntityFrameworkExample.Models;
 
@@ -11,8 +12,8 @@ namespace NoEntityFrameworkExample.Services;
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class TodoItemService(
     IJsonApiOptions options, IResourceGraph resourceGraph, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
-    IEnumerable<IQueryConstraintProvider> constraintProviders, IQueryableBuilder queryableBuilder, ILoggerFactory loggerFactory)
-    : InMemoryResourceService<TodoItem, long>(options, resourceGraph, queryLayerComposer, paginationContext, constraintProviders, queryableBuilder,
+    IEnumerable<IQueryConstraintProvider> constraintProviders, IQueryableBuilder queryableBuilder, IReadOnlyModel entityModel, ILoggerFactory loggerFactory)
+    : InMemoryResourceService<TodoItem, long>(options, resourceGraph, queryLayerComposer, paginationContext, constraintProviders, queryableBuilder, entityModel,
         loggerFactory)
 {
     protected override IEnumerable<IIdentifiable> GetDataSource(ResourceType resourceType)

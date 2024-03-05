@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Queries.QueryableBuilding;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Services;
-using NoEntityFrameworkExample.Data;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace NoEntityFrameworkExample.Services;
 
@@ -30,32 +30,19 @@ namespace NoEntityFrameworkExample.Services;
 /// <typeparam name="TId">
 /// The resource identifier type.
 /// </typeparam>
-public abstract class InMemoryResourceService<TResource, TId> : IResourceQueryService<TResource, TId>
+public abstract class InMemoryResourceService<TResource, TId>(
+    IJsonApiOptions options, IResourceGraph resourceGraph, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
+    IEnumerable<IQueryConstraintProvider> constraintProviders, IQueryableBuilder queryableBuilder, IReadOnlyModel entityModel,
+    ILoggerFactory loggerFactory) : IResourceQueryService<TResource, TId>
     where TResource : class, IIdentifiable<TId>
 {
-    private readonly IJsonApiOptions _options;
-    private readonly IQueryLayerComposer _queryLayerComposer;
-    private readonly IPaginationContext _paginationContext;
-    private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
-    private readonly ILogger<InMemoryResourceService<TResource, TId>> _logger;
-    private readonly ResourceType _resourceType;
-    private readonly QueryLayerToLinqConverter _queryLayerToLinqConverter;
-
-    protected InMemoryResourceService(IJsonApiOptions options, IResourceGraph resourceGraph, IQueryLayerComposer queryLayerComposer,
-        IPaginationContext paginationContext, IEnumerable<IQueryConstraintProvider> constraintProviders, IQueryableBuilder queryableBuilder,
-        ILoggerFactory loggerFactory)
-    {
-        _options = options;
-        _queryLayerComposer = queryLayerComposer;
-        _paginationContext = paginationContext;
-        _constraintProviders = constraintProviders;
-
-        _logger = loggerFactory.CreateLogger<InMemoryResourceService<TResource, TId>>();
-        _resourceType = resourceGraph.GetResourceType<TResource>();
-
-        var model = new InMemoryModel(resourceGraph);
-        _queryLayerToLinqConverter = new QueryLayerToLinqConverter(model, queryableBuilder);
-    }
+    private readonly IJsonApiOptions _options = options;
+    private readonly IQueryLayerComposer _queryLayerComposer = queryLayerComposer;
+    private readonly IPaginationContext _paginationContext = paginationContext;
+    private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders = constraintProviders;
+    private readonly ILogger<InMemoryResourceService<TResource, TId>> _logger = loggerFactory.CreateLogger<InMemoryResourceService<TResource, TId>>();
+    private readonly ResourceType _resourceType = resourceGraph.GetResourceType<TResource>();
+    private readonly QueryLayerToLinqConverter _queryLayerToLinqConverter = new(entityModel, queryableBuilder);
 
     /// <inheritdoc />
     public Task<IReadOnlyCollection<TResource>> GetAsync(CancellationToken cancellationToken)
