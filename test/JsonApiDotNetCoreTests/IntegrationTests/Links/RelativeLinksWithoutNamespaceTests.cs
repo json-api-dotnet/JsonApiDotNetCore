@@ -58,6 +58,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Last.Should().BeNull();
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().BeNull();
+        responseDocument.Links.DescribedBy.Should().BeNull();
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
@@ -101,6 +102,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().BeNull();
+        responseDocument.Links.DescribedBy.Should().BeNull();
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
 
@@ -167,6 +169,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Last.Should().BeNull();
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().BeNull();
+        responseDocument.Links.DescribedBy.Should().BeNull();
 
         string albumLink = $"{HostPrefix}{PathPrefix}/photoAlbums/{photo.Album.StringId}";
 
@@ -211,6 +214,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().BeNull();
+        responseDocument.Links.DescribedBy.Should().BeNull();
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
 
@@ -259,6 +263,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Last.Should().BeNull();
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().BeNull();
+        responseDocument.Links.DescribedBy.Should().BeNull();
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Links.Should().BeNull();
@@ -293,6 +298,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().BeNull();
+        responseDocument.Links.DescribedBy.Should().BeNull();
 
         responseDocument.Data.ManyValue.ShouldHaveCount(1);
         responseDocument.Data.ManyValue[0].Links.Should().BeNull();
@@ -354,6 +360,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Last.Should().BeNull();
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().BeNull();
+        responseDocument.Links.DescribedBy.Should().BeNull();
 
         responseDocument.Data.SingleValue.ShouldNotBeNull();
         responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
@@ -437,6 +444,7 @@ public sealed class RelativeLinksWithoutNamespaceTests : IClassFixture<Integrati
         responseDocument.Links.Last.Should().BeNull();
         responseDocument.Links.Prev.Should().BeNull();
         responseDocument.Links.Next.Should().BeNull();
+        responseDocument.Links.DescribedBy.Should().BeNull();
 
         string photoLink = $"{HostPrefix}{PathPrefix}/photos/{existingPhoto.StringId}";
 

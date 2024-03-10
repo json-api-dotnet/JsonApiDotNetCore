@@ -16,8 +16,8 @@ POST /articles HTTP/1.1
 }
 ```
 
-When using client-generated IDs and only attributes from the request have changed, the server returns `204 No Content`.
-Otherwise, the server returns `200 OK`, along with the updated resource and its newly assigned ID.
+When using client-generated IDs and all attributes of the created resource are the same as in the request, the server
+returns `204 No Content`. Otherwise, the server returns `201 Created`, along with the stored attributes and its newly assigned ID.
 
 In both cases, a `Location` header is returned that contains the URL to the new resource.
 

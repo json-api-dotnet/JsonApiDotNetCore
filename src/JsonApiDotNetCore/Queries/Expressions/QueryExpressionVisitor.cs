@@ -5,6 +5,12 @@ namespace JsonApiDotNetCore.Queries.Expressions;
 /// <summary>
 /// Implements the visitor design pattern that enables traversing a <see cref="QueryExpression" /> tree.
 /// </summary>
+/// <typeparam name="TArgument">
+/// The type to use for passing custom state between visit methods.
+/// </typeparam>
+/// <typeparam name="TResult">
+/// The type that is returned from visit methods.
+/// </typeparam>
 [PublicAPI]
 public abstract class QueryExpressionVisitor<TArgument, TResult>
 {

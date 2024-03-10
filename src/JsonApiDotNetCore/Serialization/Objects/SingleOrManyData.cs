@@ -9,6 +9,9 @@ namespace JsonApiDotNetCore.Serialization.Objects;
 /// Represents the value of the "data" element, which is either null, a single object or an array of objects. Add
 /// <see cref="SingleOrManyDataConverterFactory" /> to <see cref="JsonSerializerOptions.Converters" /> to properly roundtrip.
 /// </summary>
+/// <typeparam name="T">
+/// The type of elements being wrapped, typically <see cref="ResourceIdentifierObject" /> or <see cref="ResourceObject" />.
+/// </typeparam>
 [PublicAPI]
 public readonly struct SingleOrManyData<T>
     // The "new()" constraint exists for parity with SingleOrManyDataConverterFactory, which creates empty instances

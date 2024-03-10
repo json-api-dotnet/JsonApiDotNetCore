@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.Configuration;
 using NoEntityFrameworkExample;
+using NoEntityFrameworkExample.Data;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,12 @@ builder.Services.AddJsonApi(options =>
     options.SerializerOptions.WriteIndented = true;
 #endif
 }, discovery => discovery.AddCurrentAssembly());
+
+builder.Services.AddSingleton(serviceProvider =>
+{
+    var resourceGraph = serviceProvider.GetRequiredService<IResourceGraph>();
+    return resourceGraph.ToEntityModel();
+});
 
 WebApplication app = builder.Build();
 
