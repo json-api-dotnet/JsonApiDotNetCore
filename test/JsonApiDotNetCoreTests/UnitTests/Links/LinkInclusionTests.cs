@@ -88,7 +88,10 @@ public sealed class LinkInclusionTests
         var linkGenerator = new FakeLinkGenerator();
         var controllerResourceMapping = new FakeControllerResourceMapping();
         var paginationParser = new PaginationParser();
-        var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping, paginationParser);
+        var documentDescriptionLinkProvider = new NoDocumentDescriptionLinkProvider();
+
+        var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping, paginationParser,
+            documentDescriptionLinkProvider);
 
         // Act
         TopLevelLinks? topLevelLinks = linkBuilder.GetTopLevelLinks();
@@ -171,7 +174,10 @@ public sealed class LinkInclusionTests
         var linkGenerator = new FakeLinkGenerator();
         var controllerResourceMapping = new FakeControllerResourceMapping();
         var paginationParser = new PaginationParser();
-        var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping, paginationParser);
+        var documentDescriptionLinkProvider = new NoDocumentDescriptionLinkProvider();
+
+        var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping, paginationParser,
+            documentDescriptionLinkProvider);
 
         // Act
         ResourceLinks? resourceLinks = linkBuilder.GetResourceLinks(exampleResourceType, new ExampleResource());
@@ -332,7 +338,10 @@ public sealed class LinkInclusionTests
         var linkGenerator = new FakeLinkGenerator();
         var controllerResourceMapping = new FakeControllerResourceMapping();
         var paginationParser = new PaginationParser();
-        var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping, paginationParser);
+        var documentDescriptionLinkProvider = new NoDocumentDescriptionLinkProvider();
+
+        var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping, paginationParser,
+            documentDescriptionLinkProvider);
 
         var relationship = new HasOneAttribute
         {
