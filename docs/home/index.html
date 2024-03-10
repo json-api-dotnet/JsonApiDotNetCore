@@ -9,7 +9,7 @@
   <link href="favicon.ico" rel="icon">
   <link href="favicon.ico" rel="apple-touch-icon">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.4.0/styles/default.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
@@ -22,7 +22,10 @@
       <div class="row">
         <div class="col-lg-7 pt-5 pt-lg-0 order-2 order-lg-1">
           <h1>JsonApiDotNetCore</h1>
-          <h2>A framework for building <a href="https://jsonapi.org/" target="_blank">JSON:API</a> compliant REST APIs using .NET Core and Entity Framework Core. Includes support for <a href="https://jsonapi.org/ext/atomic/" target="_blank">Atomic Operations</a>.</h2>
+          <h2>
+            A framework for building <a href="https://jsonapi.org/" target="_blank">JSON:API</a> compliant REST APIs using .NET Core and Entity Framework Core.
+            Includes support for <a href="https://jsonapi.org/ext/atomic/" target="_blank">Atomic Operations</a>.
+          </h2>
           <a href="#about" class="btn-get-started scrollto">Read more</a>
           <a href="../../getting-started/install.html" class="btn-get-started">Getting started</a>
           <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/" target="_blank" class="btn-get-started">Contribute on GitHub</a>
@@ -43,12 +46,13 @@
           <div class="col-lg-6 pt-5 pt-lg-0">
             <h3 data-aos="fade-up">Objectives</h3>
             <p data-aos="fade-up" data-aos-delay="100">
-              The goal of this library is to simplify the development of APIs that leverage the full range of features provided by the <a href="https://jsonapi.org/" target="_blank">JSON:API</a> specification.
+              The goal of this library is to simplify the development of APIs that leverage the full range of features
+              provided by the <a href="https://jsonapi.org/" target="_blank">JSON:API</a> specification.
               You just need to focus on defining the resources and implementing your custom business logic.
             </p>
             <div class="row">
               <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
-                <i class='bx bxs-package'></i>
+                <i class="bx bxs-package"></i>
                 <h4>Eliminate boilerplate</h4>
                 <p>We strive to eliminate as much boilerplate as possible by offering out-of-the-box features such as sorting, filtering and pagination.</p>
               </div>
@@ -69,28 +73,28 @@
           <p>The following features are supported, from HTTP all the way down to the database</p>
         </div>
         <div class="row">
-          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100" id='filter'>
+          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100" id="filter">
             <div class="icon-box">
               <div class="icon"><i class="bx bxs-filter-alt"></i></div>
               <h4 class="title">Filtering</h4>
               <p class="description">Perform compound filtering using the <code>filter</code> query string parameter</p>
             </div>
           </div>
-          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="200" id='sort'>
+          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="200" id="sort">
             <div class="icon-box">
-              <div class="icon"><i class="bx bx-sort-z-a"></i></div>
+              <div class="icon"><i class="bx bx-sort-a-z"></i></div>
               <h4 class="title">Sorting</h4>
               <p class="description">Order resources on one or multiple attributes using the <code>sort</code> query string parameter</p>
             </div>
           </div>
-          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="300" id='pagination'>
+          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="300" id="pagination">
             <div class="icon-box">
               <div class="icon"><i class="bx bx-note"></i></div>
               <h4 class="title">Pagination</h4>
               <p class="description">Leverage the benefits of paginated resources with the <code>page</code> query string parameter</p>
             </div>
           </div>
-          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="400" id='selection'>
+          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="400" id="selection">
             <div class="icon-box">
               <div class="icon"><i class="bx bxs-select-multiple"></i></div>
               <h4 class="title">Sparse fieldset selection</h4>
@@ -99,30 +103,30 @@
           </div>
         </div>
         <div class="row">
-          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100" id='include'>
+          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="500" id="include">
             <div class="icon-box">
               <div class="icon"><i class="bx bxs-vector"></i></div>
               <h4 class="title">Relationship inclusion</h4>
               <p class="description">Side-load related resources of nested relationships using the <code>include</code> query string parameter</p>
             </div>
           </div>
-          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100" id='security'>
+          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="600" id="security">
             <div class="icon-box">
-              <div class="icon"><i class='bx bxs-lock'></i></div>
+              <div class="icon"><i class="bx bxs-lock"></i></div>
               <h4 class="title">Security</h4>
-              <p class="description">Configure permissions, such as view/create/change/sort/filter of attributes and relationships</p>
+              <p class="description">Configure permissions, such as viewing, creating, modifying, sorting and filtering of attributes and relationships</p>
             </div>
           </div>
-          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100" id='validation'>
+          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="700" id="validation">
             <div class="icon-box">
-              <div class="icon"><i class='bx bx-check-double'></i></div>
+              <div class="icon"><i class="bx bx-check-double"></i></div>
               <h4 class="title">Validation</h4>
-              <p class="description">Validate incoming requests using built-in ASP.NET Core <code>ModelState</code> validation, which works seamlessly with partial updates</p>
+              <p class="description">Validate incoming requests using built-in ASP.NET Model Validation, which works seamlessly with partial updates</p>
             </div>
           </div>
-          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="200" id='customizable'>
+          <div feature class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="800" id="customizable">
             <div class="icon-box">
-              <div class="icon"><i class='bx bxs-category-alt'></i></div>
+              <div class="icon"><i class="bx bxs-category-alt"></i></div>
               <h4 class="title">Customizable</h4>
               <p class="description">Use various extensibility points to intercept and run custom code, besides just model annotations</p>
             </div>
@@ -139,7 +143,7 @@
         <div class="row">
           <div code-example class="col-md-12 col-lg-12 d-flex d-flex justify-content-center" data-aos="zoom-in" data-aos-delay="100">
             <div class="icon-box code-example">
-              <div class="icon"><i class='bx bx-detail'></i></div>
+              <div class="icon"><i class="bx bx-detail"></i></div>
               <h4 class="title">Resource</h4>
               <pre>
 <code>#nullable enable
@@ -179,16 +183,16 @@ public class Article : Identifiable&lt;long&gt;
         <div class="row">
           <div code-example class="col-md-12 col-lg-12 d-flex d-flex justify-content-center" data-aos="zoom-in" data-aos-delay="100">
             <div class="icon-box code-example">
-              <div class="icon"><i class='bx bx-message-rounded-detail'></i></div>
+              <div class="icon"><i class="bx bx-message-rounded-detail"></i></div>
               <h4 class="title">Request</h4>
               <pre><code>GET /articles?filter=contains(summary,'web')&sort=-lastModifiedAt&fields[articles]=title,summary&include=author HTTP/1.1</code></pre>
             </div>
           </div>
         </div>
         <div class="row">
-          <div code-example class="col-md-12 col-lg-12 d-flex d-flex justify-content-center" data-aos="zoom-in" data-aos-delay="100">
+          <div code-example class="col-md-12 col-lg-12 d-flex d-flex justify-content-center" data-aos="zoom-in" data-aos-delay="200">
             <div class="icon-box code-example">
-              <div class="icon"><i class='bx bx-message-rounded-detail bx-flip-horizontal'></i></div>
+              <div class="icon"><i class="bx bx-message-rounded-detail bx-flip-horizontal"></i></div>
               <h4 class="title">Response</h4>
               <pre>
 <code>{
@@ -259,15 +263,15 @@ public class Article : Identifiable&lt;long&gt;
           <h2>Sponsors</h2>
         </div>
         <div class="row justify-content-center">
-          <div sponsor class="col-md-4 col-lg-3 d-flex align-items-stretch justify-content-center aos-init aos-animate" data-aos="zoom-in" data-aos-delay="100" id="jetbrains">
-            <div class="icon-box d-flex align-items-center">
+          <div sponsor class="col-md-4 col-lg-3 d-flex align-items-stretch justify-content-center aos-init aos-animate" id="jetbrains">
+            <div class="icon-box d-flex align-items-center" data-aos="zoom-in" data-aos-delay="100">
               <div class="icon">
                 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg" alt="JetBrains Logo" style="width:150px">
               </div>
             </div>
           </div>
-          <div sponsor class="col-md-4 col-lg-3 d-flex align-items-stretch justify-content-center aos-init aos-animate" data-aos="zoom-in" data-aos-delay="100" id="araxis">
-            <div class="icon-box d-flex align-items-center" style="background-color: rgb(116, 125, 139)">
+          <div sponsor class="col-md-4 col-lg-3 d-flex align-items-stretch justify-content-center aos-init aos-animate" id="araxis">
+            <div class="icon-box d-flex align-items-center" style="background-color: rgb(116, 125, 139)" data-aos="zoom-in" data-aos-delay="200">
               <div class="icon">
                 <img src="https://www.araxis.com/theme/37/img/araxis-logo-lg.svg" alt="Araxis Logo" style="width:150px">
               </div>

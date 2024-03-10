@@ -34,7 +34,7 @@ public abstract class FakerContainer
         if (testMethod == null)
         {
             // If called after the first await statement, the test method is no longer on the stack,
-            // but has been replaced with the compiler-generated async/wait state machine.
+            // but has been replaced with the compiler-generated async/await state machine.
             throw new InvalidOperationException("Fakers can only be used from within (the start of) a test method.");
         }
 

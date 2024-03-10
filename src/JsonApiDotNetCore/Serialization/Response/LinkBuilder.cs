@@ -28,6 +28,8 @@ public class LinkBuilder : ILinkBuilder
     private static readonly string GetRelationshipControllerActionName =
         NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable<int>, int>.GetRelationshipAsync));
 
+    private static readonly UriNormalizer UriNormalizer = new();
+
     private readonly IJsonApiOptions _options;
     private readonly IJsonApiRequest _request;
     private readonly IPaginationContext _paginationContext;
@@ -35,6 +37,7 @@ public class LinkBuilder : ILinkBuilder
     private readonly LinkGenerator _linkGenerator;
     private readonly IControllerResourceMapping _controllerResourceMapping;
     private readonly IPaginationParser _paginationParser;
+    private readonly IDocumentDescriptionLinkProvider _documentDescriptionLinkProvider;
 
     private HttpContext HttpContext
     {
@@ -50,7 +53,8 @@ public class LinkBuilder : ILinkBuilder
     }
 
     public LinkBuilder(IJsonApiOptions options, IJsonApiRequest request, IPaginationContext paginationContext, IHttpContextAccessor httpContextAccessor,
-        LinkGenerator linkGenerator, IControllerResourceMapping controllerResourceMapping, IPaginationParser paginationParser)
+        LinkGenerator linkGenerator, IControllerResourceMapping controllerResourceMapping, IPaginationParser paginationParser,
+        IDocumentDescriptionLinkProvider documentDescriptionLinkProvider)
     {
         ArgumentGuard.NotNull(options);
         ArgumentGuard.NotNull(request);
@@ -58,6 +62,7 @@ public class LinkBuilder : ILinkBuilder
         ArgumentGuard.NotNull(linkGenerator);
         ArgumentGuard.NotNull(controllerResourceMapping);
         ArgumentGuard.NotNull(paginationParser);
+        ArgumentGuard.NotNull(documentDescriptionLinkProvider);
 
         _options = options;
         _request = request;
@@ -66,6 +71,7 @@ public class LinkBuilder : ILinkBuilder
         _linkGenerator = linkGenerator;
         _controllerResourceMapping = controllerResourceMapping;
         _paginationParser = paginationParser;
+        _documentDescriptionLinkProvider = documentDescriptionLinkProvider;
     }
 
     private static string NoAsyncSuffix(string actionName)
@@ -92,6 +98,14 @@ public class LinkBuilder : ILinkBuilder
         if (_request.IsCollection && _paginationContext.PageSize != null && ShouldIncludeTopLevelLink(LinkTypes.Pagination, resourceType))
         {
             SetPaginationInTopLevelLinks(resourceType!, links);
+        }
+
+        string? documentDescriptionUrl = _documentDescriptionLinkProvider.GetUrl();
+
+        if (!string.IsNullOrEmpty(documentDescriptionUrl))
+        {
+            var requestUri = new Uri(HttpContext.Request.GetEncodedUrl());
+            links.DescribedBy = UriNormalizer.Normalize(documentDescriptionUrl, _options.UseRelativeLinks, requestUri);
         }
 
         return links.HasValue() ? links : null;

@@ -21,6 +21,12 @@ namespace JsonApiDotNetCore.Repositories;
 /// <summary>
 /// Implements the foundational Repository layer in the JsonApiDotNetCore architecture that uses Entity Framework Core.
 /// </summary>
+/// <typeparam name="TResource">
+/// The resource type.
+/// </typeparam>
+/// <typeparam name="TId">
+/// The resource identifier type.
+/// </typeparam>
 [PublicAPI]
 public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository<TResource, TId>, IRepositorySupportsTransaction
     where TResource : class, IIdentifiable<TId>
