@@ -66,13 +66,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore.OpenApi",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiTests", "test\OpenApiTests\OpenApiTests.csproj", "{B693DE14-BB28-496F-AB39-B4E674ABCA80}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore.OpenApi.Client", "src\JsonApiDotNetCore.OpenApi.Client\JsonApiDotNetCore.OpenApi.Client.csproj", "{5ADAA902-5A75-4ECB-B4B4-03291D63CE9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore.OpenApi.Client.NSwag", "src\JsonApiDotNetCore.OpenApi.Client.NSwag\JsonApiDotNetCore.OpenApi.Client.NSwag.csproj", "{5ADAA902-5A75-4ECB-B4B4-03291D63CE9C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCoreExampleClient", "src\Examples\JsonApiDotNetCoreExampleClient\JsonApiDotNetCoreExampleClient.csproj", "{7FC5DFA3-6F66-4FD8-820D-81E93856F252}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiNSwagClientExample", "src\Examples\OpenApiNSwagClientExample\OpenApiNSwagClientExample.csproj", "{7FC5DFA3-6F66-4FD8-820D-81E93856F252}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiClientTests", "test\OpenApiClientTests\OpenApiClientTests.csproj", "{77F98215-3085-422E-B99D-4C404C2114CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiNSwagClientTests", "test\OpenApiNSwagClientTests\OpenApiNSwagClientTests.csproj", "{77F98215-3085-422E-B99D-4C404C2114CF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiEndToEndTests", "test\OpenApiEndToEndTests\OpenApiEndToEndTests.csproj", "{3BA4F9B9-3D90-44B5-B09C-28D98E0B4225}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiNSwagEndToEndTests", "test\OpenApiNSwagEndToEndTests\OpenApiNSwagEndToEndTests.csproj", "{3BA4F9B9-3D90-44B5-B09C-28D98E0B4225}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore.OpenApi.Client.Kiota", "src\JsonApiDotNetCore.OpenApi.Client.Kiota\JsonApiDotNetCore.OpenApi.Client.Kiota.csproj", "{617FCA5D-A2DE-4083-B373-ADCA9901059F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiKiotaClientExample", "src\Examples\OpenApiKiotaClientExample\OpenApiKiotaClientExample.csproj", "{39DEAFE8-AE29-48E5-A67D-73776D70FC82}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenApiKiotaEndToEndTests", "test\OpenApiKiotaEndToEndTests\OpenApiKiotaEndToEndTests.csproj", "{FD86C676-3D80-4971-8D8C-B0729B2251F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -396,6 +402,42 @@ Global
 		{3BA4F9B9-3D90-44B5-B09C-28D98E0B4225}.Release|x64.Build.0 = Release|Any CPU
 		{3BA4F9B9-3D90-44B5-B09C-28D98E0B4225}.Release|x86.ActiveCfg = Release|Any CPU
 		{3BA4F9B9-3D90-44B5-B09C-28D98E0B4225}.Release|x86.Build.0 = Release|Any CPU
+		{617FCA5D-A2DE-4083-B373-ADCA9901059F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{617FCA5D-A2DE-4083-B373-ADCA9901059F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{617FCA5D-A2DE-4083-B373-ADCA9901059F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{617FCA5D-A2DE-4083-B373-ADCA9901059F}.Debug|x64.Build.0 = Debug|Any CPU
+		{617FCA5D-A2DE-4083-B373-ADCA9901059F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{617FCA5D-A2DE-4083-B373-ADCA9901059F}.Debug|x86.Build.0 = Debug|Any CPU
+		{617FCA5D-A2DE-4083-B373-ADCA9901059F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{617FCA5D-A2DE-4083-B373-ADCA9901059F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{617FCA5D-A2DE-4083-B373-ADCA9901059F}.Release|x64.ActiveCfg = Release|Any CPU
+		{617FCA5D-A2DE-4083-B373-ADCA9901059F}.Release|x64.Build.0 = Release|Any CPU
+		{617FCA5D-A2DE-4083-B373-ADCA9901059F}.Release|x86.ActiveCfg = Release|Any CPU
+		{617FCA5D-A2DE-4083-B373-ADCA9901059F}.Release|x86.Build.0 = Release|Any CPU
+		{39DEAFE8-AE29-48E5-A67D-73776D70FC82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39DEAFE8-AE29-48E5-A67D-73776D70FC82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39DEAFE8-AE29-48E5-A67D-73776D70FC82}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{39DEAFE8-AE29-48E5-A67D-73776D70FC82}.Debug|x64.Build.0 = Debug|Any CPU
+		{39DEAFE8-AE29-48E5-A67D-73776D70FC82}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{39DEAFE8-AE29-48E5-A67D-73776D70FC82}.Debug|x86.Build.0 = Debug|Any CPU
+		{39DEAFE8-AE29-48E5-A67D-73776D70FC82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39DEAFE8-AE29-48E5-A67D-73776D70FC82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39DEAFE8-AE29-48E5-A67D-73776D70FC82}.Release|x64.ActiveCfg = Release|Any CPU
+		{39DEAFE8-AE29-48E5-A67D-73776D70FC82}.Release|x64.Build.0 = Release|Any CPU
+		{39DEAFE8-AE29-48E5-A67D-73776D70FC82}.Release|x86.ActiveCfg = Release|Any CPU
+		{39DEAFE8-AE29-48E5-A67D-73776D70FC82}.Release|x86.Build.0 = Release|Any CPU
+		{FD86C676-3D80-4971-8D8C-B0729B2251F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD86C676-3D80-4971-8D8C-B0729B2251F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD86C676-3D80-4971-8D8C-B0729B2251F6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FD86C676-3D80-4971-8D8C-B0729B2251F6}.Debug|x64.Build.0 = Debug|Any CPU
+		{FD86C676-3D80-4971-8D8C-B0729B2251F6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FD86C676-3D80-4971-8D8C-B0729B2251F6}.Debug|x86.Build.0 = Debug|Any CPU
+		{FD86C676-3D80-4971-8D8C-B0729B2251F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD86C676-3D80-4971-8D8C-B0729B2251F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD86C676-3D80-4971-8D8C-B0729B2251F6}.Release|x64.ActiveCfg = Release|Any CPU
+		{FD86C676-3D80-4971-8D8C-B0729B2251F6}.Release|x64.Build.0 = Release|Any CPU
+		{FD86C676-3D80-4971-8D8C-B0729B2251F6}.Release|x86.ActiveCfg = Release|Any CPU
+		{FD86C676-3D80-4971-8D8C-B0729B2251F6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -427,6 +469,9 @@ Global
 		{7FC5DFA3-6F66-4FD8-820D-81E93856F252} = {026FBC6C-AF76-4568-9B87-EC73457899FD}
 		{77F98215-3085-422E-B99D-4C404C2114CF} = {24B15015-62E5-42E1-9BA0-ECE6BE7AA15F}
 		{3BA4F9B9-3D90-44B5-B09C-28D98E0B4225} = {24B15015-62E5-42E1-9BA0-ECE6BE7AA15F}
+		{617FCA5D-A2DE-4083-B373-ADCA9901059F} = {7A2B7ADD-ECB5-4D00-AA6A-D45BD11C97CF}
+		{39DEAFE8-AE29-48E5-A67D-73776D70FC82} = {026FBC6C-AF76-4568-9B87-EC73457899FD}
+		{FD86C676-3D80-4971-8D8C-B0729B2251F6} = {24B15015-62E5-42E1-9BA0-ECE6BE7AA15F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2421882-8F0A-4905-928F-B550B192F9A4}

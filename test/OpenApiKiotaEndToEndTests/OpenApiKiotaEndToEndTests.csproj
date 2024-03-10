@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <Import Project="..\..\package-versions.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi.Client.Kiota\JsonApiDotNetCore.OpenApi.Client.Kiota.csproj" />
+    <ProjectReference Include="..\OpenApiTests\OpenApiTests.csproj" />
+    <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All" />
+    <PackageReference Include="GitHubActionsTestLogger" Version="$(GitHubActionsTestLoggerVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Abstractions" Version="$(KiotaVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="$(KiotaVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Form" Version="$(KiotaVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Json" Version="$(KiotaVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Multipart" Version="$(KiotaVersion)" />
+    <PackageReference Include="Microsoft.Kiota.Serialization.Text" Version="$(KiotaVersion)" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
+  </ItemGroup>
+
+  <Target Name="KiotaRunTool" BeforeTargets="BeforeCompile;CoreCompile" Condition="$(DesignTimeBuild) != true And $(BuildingProject) == true">
+    <Exec
+      Command="dotnet kiota generate --language CSharp --class-name HeadersClient --namespace-name OpenApiKiotaEndToEndTests.Headers.GeneratedCode --output ./Headers/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/Headers/GeneratedSwagger/swagger.g.json" />
+    <Exec
+      Command="dotnet kiota generate --language CSharp --class-name QueryStringsClient --namespace-name OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode --output ./QueryStrings/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/QueryStrings/GeneratedSwagger/swagger.g.json" />
+
+    <ItemGroup>
+      <!-- This isn't entirely reliable: may require a second build after the source swagger.json has changed, to get rid of compile errors. -->
+      <Compile Remove="**\GeneratedCode\**\*.cs" />
+      <Compile Include="**\GeneratedCode\**\*.cs" />
+    </ItemGroup>
+  </Target>
+</Project>

@@ -5,6 +5,7 @@
     <DemystifierFrozenVersion>0.4.1</DemystifierFrozenVersion>
     <HumanizerFrozenVersion>2.14.1</HumanizerFrozenVersion>
     <SwashbuckleFrozenVersion>6.5.0</SwashbuckleFrozenVersion>
+    <NewtonsoftJsonFrozenVersion>13.0.3</NewtonsoftJsonFrozenVersion>
 
     <!-- Non-published dependencies (these are safe to update, won't cause a breaking change) -->
     <ApiDescriptionServerVersion>8.0.*</ApiDescriptionServerVersion>
@@ -17,6 +18,7 @@
     <FluentAssertionsVersion>6.12.*</FluentAssertionsVersion>
     <GitHubActionsTestLoggerVersion>2.3.*</GitHubActionsTestLoggerVersion>
     <InheritDocVersion>2.0.*</InheritDocVersion>
+    <KiotaVersion>1.*</KiotaVersion>
     <MicrosoftApiClientVersion>8.0.*</MicrosoftApiClientVersion>
     <NSwagApiClientVersion>13.20.*</NSwagApiClientVersion>
     <NewtonsoftJsonVersion>13.0.*</NewtonsoftJsonVersion>

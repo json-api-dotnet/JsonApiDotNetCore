@@ -17,7 +17,7 @@ public sealed class ClientIdGenerationModesTests
         testContext.UseController<GamesController>();
         testContext.UseController<PlayerGroupsController>();
 
-        testContext.SwaggerDocumentOutputDirectory = "test/OpenApiEndToEndTests/ClientIdGenerationModes";
+        testContext.SwaggerDocumentOutputDirectory = $"{GetType().Namespace!.Replace('.', '/')}/GeneratedSwagger";
     }
 
     [Fact]
