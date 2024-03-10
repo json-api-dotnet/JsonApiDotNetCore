@@ -202,6 +202,9 @@ public sealed class ResponseTests
 
         const string responseBody = $$"""
             {
+              "links": {
+                "self": "http://localhost/api/flights/ZvuH1"
+              },
               "errors": [
                 {
                   "id": "f1a520ac-02a0-466b-94ea-86cbaa86f02f",

@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents;
 
 internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 {
-    private static readonly Type[] JsonApiDocumentOpenTypes =
+    private static readonly Type[] JsonApiDocumentTypes =
     [
         typeof(ResourceCollectionResponseDocument<>),
         typeof(PrimaryResourceResponseDocument<>),
@@ -20,7 +20,8 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
         typeof(ResourcePatchRequestDocument<>),
         typeof(ResourceIdentifierCollectionResponseDocument<>),
         typeof(ResourceIdentifierResponseDocument<>),
-        typeof(NullableResourceIdentifierResponseDocument<>)
+        typeof(NullableResourceIdentifierResponseDocument<>),
+        typeof(ErrorResponseDocument)
     ];
 
     private static readonly OpenApiSchema IdTypeSchema = new()
@@ -77,6 +78,7 @@ internal sealed class JsonApiSchemaGenerator : ISchemaGenerator
 
     private static bool IsJsonApiDocument(Type type)
     {
-        return type.IsConstructedGenericType && JsonApiDocumentOpenTypes.Contains(type.GetGenericTypeDefinition());
+        Type documentType = type.IsConstructedGenericType ? type.GetGenericTypeDefinition() : type;
+        return JsonApiDocumentTypes.Contains(documentType);
     }
 }

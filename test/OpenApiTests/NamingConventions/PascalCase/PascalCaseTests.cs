@@ -560,5 +560,6 @@ public sealed class PascalCaseTests
 
         // Assert
         document.Should().ContainPath("components.schemas.ErrorResponseDocument");
+        document.Should().ContainPath("components.schemas.LinksInErrorDocument");
     }
 }

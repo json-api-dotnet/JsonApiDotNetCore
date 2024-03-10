@@ -559,5 +559,6 @@ public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseN
 
         // Assert
         document.Should().ContainPath("components.schemas.errorResponseDocument");
+        document.Should().ContainPath("components.schemas.linksInErrorDocument");
     }
 }

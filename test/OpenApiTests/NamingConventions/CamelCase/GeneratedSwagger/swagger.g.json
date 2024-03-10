@@ -2582,14 +2582,36 @@
       },
       "errorResponseDocument": {
         "required": [
-          "errors"
+          "errors",
+          "links"
         ],
         "type": "object",
         "properties": {
+          "jsonapi": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/jsonapi"
+              }
+            ]
+          },
+          "links": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/linksInErrorDocument"
+              }
+            ]
+          },
           "errors": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/errorObject"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "nullable": true
             }
           }
         },
@@ -2637,6 +2659,22 @@
               "type": "object",
               "nullable": true
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "linksInErrorDocument": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
           }
         },
         "additionalProperties": false
