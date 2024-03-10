@@ -3204,6 +3204,16 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/JsonApiDotNetCore.Serialization.Response.IETagGenerator.yml",
       "output": {
         ".html": {
@@ -3298,6 +3308,16 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Response.MetaBuilder.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider.html"
         }
       },
       "version": ""

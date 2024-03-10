@@ -19730,6 +19730,25 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Response.EmptyResponseMeta.GetMeta
   nameWithType: EmptyResponseMeta.GetMeta
+- uid: JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider
+  name: IDocumentDescriptionLinkProvider
+  href: api/JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider.html
+  commentId: T:JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider
+  fullName: JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider
+  nameWithType: IDocumentDescriptionLinkProvider
+- uid: JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider.GetUrl
+  name: GetUrl()
+  href: api/JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider.html#JsonApiDotNetCore_Serialization_Response_IDocumentDescriptionLinkProvider_GetUrl
+  commentId: M:JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider.GetUrl
+  fullName: JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider.GetUrl()
+  nameWithType: IDocumentDescriptionLinkProvider.GetUrl()
+- uid: JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider.GetUrl*
+  name: GetUrl
+  href: api/JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider.html#JsonApiDotNetCore_Serialization_Response_IDocumentDescriptionLinkProvider_GetUrl_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider.GetUrl
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider.GetUrl
+  nameWithType: IDocumentDescriptionLinkProvider.GetUrl
 - uid: JsonApiDotNetCore.Serialization.Response.IETagGenerator
   name: IETagGenerator
   href: api/JsonApiDotNetCore.Serialization.Response.IETagGenerator.html
@@ -19964,15 +19983,15 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Response.LinkBuilder
   fullName: JsonApiDotNetCore.Serialization.Response.LinkBuilder
   nameWithType: LinkBuilder
-- uid: JsonApiDotNetCore.Serialization.Response.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Queries.IPaginationContext,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.AspNetCore.Routing.LinkGenerator,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Queries.Parsing.IPaginationParser)
-  name: LinkBuilder(IJsonApiOptions, IJsonApiRequest, IPaginationContext, IHttpContextAccessor, LinkGenerator, IControllerResourceMapping, IPaginationParser)
-  href: api/JsonApiDotNetCore.Serialization.Response.LinkBuilder.html#JsonApiDotNetCore_Serialization_Response_LinkBuilder__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Queries_IPaginationContext_Microsoft_AspNetCore_Http_IHttpContextAccessor_Microsoft_AspNetCore_Routing_LinkGenerator_JsonApiDotNetCore_Middleware_IControllerResourceMapping_JsonApiDotNetCore_Queries_Parsing_IPaginationParser_
-  commentId: M:JsonApiDotNetCore.Serialization.Response.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Queries.IPaginationContext,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.AspNetCore.Routing.LinkGenerator,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Queries.Parsing.IPaginationParser)
-  name.vb: New(IJsonApiOptions, IJsonApiRequest, IPaginationContext, IHttpContextAccessor, LinkGenerator, IControllerResourceMapping, IPaginationParser)
-  fullName: JsonApiDotNetCore.Serialization.Response.LinkBuilder.LinkBuilder(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Queries.IPaginationContext, Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Routing.LinkGenerator, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Queries.Parsing.IPaginationParser)
-  fullName.vb: JsonApiDotNetCore.Serialization.Response.LinkBuilder.New(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Queries.IPaginationContext, Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Routing.LinkGenerator, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Queries.Parsing.IPaginationParser)
-  nameWithType: LinkBuilder.LinkBuilder(IJsonApiOptions, IJsonApiRequest, IPaginationContext, IHttpContextAccessor, LinkGenerator, IControllerResourceMapping, IPaginationParser)
-  nameWithType.vb: LinkBuilder.New(IJsonApiOptions, IJsonApiRequest, IPaginationContext, IHttpContextAccessor, LinkGenerator, IControllerResourceMapping, IPaginationParser)
+- uid: JsonApiDotNetCore.Serialization.Response.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Queries.IPaginationContext,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.AspNetCore.Routing.LinkGenerator,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Queries.Parsing.IPaginationParser,JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider)
+  name: LinkBuilder(IJsonApiOptions, IJsonApiRequest, IPaginationContext, IHttpContextAccessor, LinkGenerator, IControllerResourceMapping, IPaginationParser, IDocumentDescriptionLinkProvider)
+  href: api/JsonApiDotNetCore.Serialization.Response.LinkBuilder.html#JsonApiDotNetCore_Serialization_Response_LinkBuilder__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Queries_IPaginationContext_Microsoft_AspNetCore_Http_IHttpContextAccessor_Microsoft_AspNetCore_Routing_LinkGenerator_JsonApiDotNetCore_Middleware_IControllerResourceMapping_JsonApiDotNetCore_Queries_Parsing_IPaginationParser_JsonApiDotNetCore_Serialization_Response_IDocumentDescriptionLinkProvider_
+  commentId: M:JsonApiDotNetCore.Serialization.Response.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Queries.IPaginationContext,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.AspNetCore.Routing.LinkGenerator,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Queries.Parsing.IPaginationParser,JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider)
+  name.vb: New(IJsonApiOptions, IJsonApiRequest, IPaginationContext, IHttpContextAccessor, LinkGenerator, IControllerResourceMapping, IPaginationParser, IDocumentDescriptionLinkProvider)
+  fullName: JsonApiDotNetCore.Serialization.Response.LinkBuilder.LinkBuilder(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Queries.IPaginationContext, Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Routing.LinkGenerator, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Queries.Parsing.IPaginationParser, JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider)
+  fullName.vb: JsonApiDotNetCore.Serialization.Response.LinkBuilder.New(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Queries.IPaginationContext, Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Routing.LinkGenerator, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Queries.Parsing.IPaginationParser, JsonApiDotNetCore.Serialization.Response.IDocumentDescriptionLinkProvider)
+  nameWithType: LinkBuilder.LinkBuilder(IJsonApiOptions, IJsonApiRequest, IPaginationContext, IHttpContextAccessor, LinkGenerator, IControllerResourceMapping, IPaginationParser, IDocumentDescriptionLinkProvider)
+  nameWithType.vb: LinkBuilder.New(IJsonApiOptions, IJsonApiRequest, IPaginationContext, IHttpContextAccessor, LinkGenerator, IControllerResourceMapping, IPaginationParser, IDocumentDescriptionLinkProvider)
 - uid: JsonApiDotNetCore.Serialization.Response.LinkBuilder.#ctor*
   name: LinkBuilder
   href: api/JsonApiDotNetCore.Serialization.Response.LinkBuilder.html#JsonApiDotNetCore_Serialization_Response_LinkBuilder__ctor_
@@ -20092,6 +20111,25 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Response.MetaBuilder.Build
   nameWithType: MetaBuilder.Build
+- uid: JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider
+  name: NoDocumentDescriptionLinkProvider
+  href: api/JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider.html
+  commentId: T:JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider
+  fullName: JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider
+  nameWithType: NoDocumentDescriptionLinkProvider
+- uid: JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider.GetUrl
+  name: GetUrl()
+  href: api/JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider.html#JsonApiDotNetCore_Serialization_Response_NoDocumentDescriptionLinkProvider_GetUrl
+  commentId: M:JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider.GetUrl
+  fullName: JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider.GetUrl()
+  nameWithType: NoDocumentDescriptionLinkProvider.GetUrl()
+- uid: JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider.GetUrl*
+  name: GetUrl
+  href: api/JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider.html#JsonApiDotNetCore_Serialization_Response_NoDocumentDescriptionLinkProvider_GetUrl_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider.GetUrl
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Response.NoDocumentDescriptionLinkProvider.GetUrl
+  nameWithType: NoDocumentDescriptionLinkProvider.GetUrl
 - uid: JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter
   name: ResponseModelAdapter
   href: api/JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.html
