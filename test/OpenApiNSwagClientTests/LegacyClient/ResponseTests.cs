@@ -203,7 +203,8 @@ public sealed class ResponseTests
         const string responseBody = $$"""
             {
               "links": {
-                "self": "http://localhost/api/flights/ZvuH1"
+                "self": "http://localhost/api/flights/ZvuH1",
+                "describedby": "swagger/v1/swagger.json"
               },
               "errors": [
                 {
@@ -225,6 +226,9 @@ public sealed class ResponseTests
         // Assert
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        exception.Result.Links.ShouldNotBeNull();
+        exception.Result.Links.Self.Should().Be("http://localhost/api/flights/ZvuH1");
+        exception.Result.Links.Describedby.Should().Be("swagger/v1/swagger.json");
         exception.Result.Errors.ShouldHaveCount(1);
 
         ErrorObject? error = exception.Result.Errors.ElementAt(0);
