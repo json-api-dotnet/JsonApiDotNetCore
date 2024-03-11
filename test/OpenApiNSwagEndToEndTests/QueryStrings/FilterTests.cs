@@ -127,6 +127,8 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
         response.Meta.ShouldNotBeNull();
         response.Meta.ShouldContainKey("total").With(total => total.Should().Be(1));
+        response.Links.ShouldNotBeNull();
+        response.Links.Describedby.Should().Be("swagger/v1/swagger.json");
     }
 
     [Fact]
@@ -148,6 +150,8 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
         ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
         exception.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
         exception.Message.Should().Be("HTTP 400: The query string is invalid.");
+        exception.Result.Links.ShouldNotBeNull();
+        exception.Result.Links.Describedby.Should().Be("swagger/v1/swagger.json");
         exception.Result.Errors.ShouldHaveCount(1);
 
         ErrorObject error = exception.Result.Errors.ElementAt(0);

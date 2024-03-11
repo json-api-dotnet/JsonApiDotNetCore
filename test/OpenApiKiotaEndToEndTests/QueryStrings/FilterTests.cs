@@ -139,6 +139,8 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
             response.Data.ElementAt(0).Id.Should().Be(node.Children.ElementAt(1).StringId);
             response.Meta.ShouldNotBeNull();
             response.Meta.AdditionalData.ShouldContainKey("total").With(total => total.Should().Be(1));
+            response.Links.ShouldNotBeNull();
+            response.Links.Describedby.Should().Be("swagger/v1/swagger.json");
         }
     }
 
@@ -162,6 +164,8 @@ public sealed class FilterTests : IClassFixture<IntegrationTestContext<OpenApiSt
             // Assert
             ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
             exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+            exception.Links.ShouldNotBeNull();
+            exception.Links.Describedby.Should().Be("swagger/v1/swagger.json");
             exception.Errors.ShouldHaveCount(1);
 
             ErrorObject error = exception.Errors[0];

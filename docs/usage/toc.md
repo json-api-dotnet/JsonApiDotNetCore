@@ -26,6 +26,7 @@
 # [Common Pitfalls](common-pitfalls.md)
 
 # [OpenAPI](openapi.md)
+## [Documentation](openapi-documentation.md)
 ## [Clients](openapi-client.md)
 
 # Extensibility

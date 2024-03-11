@@ -24,8 +24,36 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
             set { BackingStore?.Set("errors", value); }
         }
 #endif
+        /// <summary>The links property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public LinksInErrorDocument? Links {
+            get { return BackingStore?.Get<LinksInErrorDocument?>("links"); }
+            set { BackingStore?.Set("links", value); }
+        }
+#nullable restore
+#else
+        public LinksInErrorDocument Links {
+            get { return BackingStore?.Get<LinksInErrorDocument>("links"); }
+            set { BackingStore?.Set("links", value); }
+        }
+#endif
         /// <summary>The primary error message.</summary>
         public override string Message { get => base.Message; }
+        /// <summary>The meta property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public ErrorResponseDocument_meta? Meta {
+            get { return BackingStore?.Get<ErrorResponseDocument_meta?>("meta"); }
+            set { BackingStore?.Set("meta", value); }
+        }
+#nullable restore
+#else
+        public ErrorResponseDocument_meta Meta {
+            get { return BackingStore?.Get<ErrorResponseDocument_meta>("meta"); }
+            set { BackingStore?.Set("meta", value); }
+        }
+#endif
         /// <summary>
         /// Instantiates a new errorResponseDocument and sets the default values.
         /// </summary>
@@ -46,6 +74,8 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         public virtual IDictionary<string, Action<IParseNode>> GetFieldDeserializers() {
             return new Dictionary<string, Action<IParseNode>> {
                 {"errors", n => { Errors = n.GetCollectionOfObjectValues<ErrorObject>(ErrorObject.CreateFromDiscriminatorValue)?.ToList(); } },
+                {"links", n => { Links = n.GetObjectValue<LinksInErrorDocument>(LinksInErrorDocument.CreateFromDiscriminatorValue); } },
+                {"meta", n => { Meta = n.GetObjectValue<ErrorResponseDocument_meta>(ErrorResponseDocument_meta.CreateFromDiscriminatorValue); } },
             };
         }
         /// <summary>
@@ -55,6 +85,8 @@ namespace OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode.Models {
         public virtual void Serialize(ISerializationWriter writer) {
             _ = writer ?? throw new ArgumentNullException(nameof(writer));
             writer.WriteCollectionOfObjectValues<ErrorObject>("errors", Errors);
+            writer.WriteObjectValue<LinksInErrorDocument>("links", Links);
+            writer.WriteObjectValue<ErrorResponseDocument_meta>("meta", Meta);
         }
     }
 }

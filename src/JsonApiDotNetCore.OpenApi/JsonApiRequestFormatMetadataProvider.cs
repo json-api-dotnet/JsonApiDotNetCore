@@ -36,7 +36,8 @@ internal sealed class JsonApiRequestFormatMetadataProvider : IInputFormatter, IA
         ArgumentGuard.NotNullNorEmpty(contentType);
         ArgumentGuard.NotNull(objectType);
 
-        if (contentType == HeaderConstants.MediaType && objectType.IsGenericType && JsonApiRequestOpenTypes.Contains(objectType.GetGenericTypeDefinition()))
+        if (contentType == HeaderConstants.MediaType && objectType.IsConstructedGenericType &&
+            JsonApiRequestOpenTypes.Contains(objectType.GetGenericTypeDefinition()))
         {
             return new MediaTypeCollection
             {

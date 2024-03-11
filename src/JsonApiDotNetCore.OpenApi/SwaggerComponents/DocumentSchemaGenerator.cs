@@ -59,13 +59,11 @@ internal sealed class DocumentSchemaGenerator
         ArgumentGuard.NotNull(modelType);
         ArgumentGuard.NotNull(schemaRepository);
 
-        OpenApiSchema referenceSchemaForDocument = GenerateJsonApiDocumentSchema(modelType, schemaRepository);
-        OpenApiSchema fullSchemaForDocument = schemaRepository.Schemas[referenceSchemaForDocument.Reference.Id];
+        OpenApiSchema referenceSchemaForDocument = modelType.IsConstructedGenericType
+            ? GenerateJsonApiDocumentSchema(modelType, schemaRepository)
+            : _defaultSchemaGenerator.GenerateSchema(modelType, schemaRepository);
 
-        if (IsDataPropertyNullableInDocument(modelType))
-        {
-            SetDataSchemaToNullable(fullSchemaForDocument);
-        }
+        OpenApiSchema fullSchemaForDocument = schemaRepository.Schemas[referenceSchemaForDocument.Reference.Id];
 
         fullSchemaForDocument.SetValuesInMetaToNullable();
 
@@ -96,6 +94,11 @@ internal sealed class DocumentSchemaGenerator
         fullSchemaForDocument.Properties[JsonApiPropertyName.Data] = IsManyDataDocument(documentType)
             ? CreateArrayTypeDataSchema(referenceSchemaForResourceData)
             : CreateExtendedReferenceSchema(referenceSchemaForResourceData);
+
+        if (IsDataPropertyNullableInDocument(documentType))
+        {
+            SetDataSchemaToNullable(fullSchemaForDocument);
+        }
 
         fullSchemaForDocument.ReorderProperties(DocumentPropertyNamesInOrder);
 

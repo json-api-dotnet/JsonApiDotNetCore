@@ -60,6 +60,7 @@ public sealed class GeneratedTypesTests
         _ = nameof(StaffMemberSecondaryResponseDocument);
         _ = nameof(NullableStaffMemberSecondaryResponseDocument);
         _ = nameof(NullableStaffMemberIdentifierResponseDocument);
+        _ = nameof(ErrorResponseDocument);
     }
 
     [Fact]
@@ -71,6 +72,7 @@ public sealed class GeneratedTypesTests
         _ = nameof(LinksInResourceIdentifierDocument);
         _ = nameof(LinksInResourceData);
         _ = nameof(LinksInRelationship);
+        _ = nameof(LinksInErrorDocument);
     }
 
     [Fact]

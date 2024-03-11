@@ -1,5 +1,6 @@
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 using JsonApiDotNetCore.OpenApi.SwaggerComponents;
+using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
@@ -75,6 +76,7 @@ public static class ServiceCollectionExtensions
         AddSchemaGenerators(services);
 
         services.TryAddSingleton<RelationshipTypeFactory>();
+        services.AddSingleton<IDocumentDescriptionLinkProvider, OpenApiDescriptionLinkProvider>();
 
         services.AddSwaggerGen();
         services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();

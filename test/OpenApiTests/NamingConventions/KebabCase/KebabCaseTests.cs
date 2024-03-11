@@ -561,5 +561,6 @@ public sealed class KebabCaseTests : IClassFixture<OpenApiTestContext<KebabCaseN
 
         // Assert
         document.Should().ContainPath("components.schemas.error-response-document");
+        document.Should().ContainPath("components.schemas.links-in-error-document");
     }
 }
