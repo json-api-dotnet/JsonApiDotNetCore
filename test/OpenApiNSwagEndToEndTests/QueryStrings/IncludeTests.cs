@@ -8,13 +8,13 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.QueryStrings;
 
-public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext>>
+public sealed class IncludeTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
 {
-    private readonly IntegrationTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext> _testContext;
+    private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
     private readonly QueryStringFakers _fakers = new();
 
-    public IncludeTests(IntegrationTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext> testContext, ITestOutputHelper testOutputHelper)
+    public IncludeTests(IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
         _logHttpMessageHandler = new XUnitLogHttpMessageHandler(testOutputHelper);

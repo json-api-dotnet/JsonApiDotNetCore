@@ -2,11 +2,11 @@ using System.Globalization;
 using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
-using OpenApiNSwagClientTests.LegacyClient.GeneratedCode;
+using OpenApiNSwagClientTests.LegacyOpenApi.GeneratedCode;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace OpenApiNSwagClientTests.LegacyClient;
+namespace OpenApiNSwagClientTests.LegacyOpenApi;
 
 public sealed class ResponseTests
 {
@@ -95,7 +95,7 @@ public sealed class ResponseTests
             """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         FlightCollectionResponseDocument document = await apiClient.GetFlightCollectionAsync(null, null);
@@ -176,7 +176,7 @@ public sealed class ResponseTests
             """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         FlightPrimaryResponseDocument document = await apiClient.GetFlightAsync(flightId, null, null);
@@ -218,7 +218,7 @@ public sealed class ResponseTests
             """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NotFound, responseBody);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         Func<Task<FlightPrimaryResponseDocument>> action = () => apiClient.GetFlightAsync(flightId, null, null);
@@ -293,7 +293,7 @@ public sealed class ResponseTests
             """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.Created, responseBody);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         FlightPrimaryResponseDocument document = await apiClient.PostFlightAsync(null, new FlightPostRequestDocument
@@ -347,7 +347,7 @@ public sealed class ResponseTests
             """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         FlightPrimaryResponseDocument document = await apiClient.PatchFlightAsync(flightId, null, new FlightPatchRequestDocument
@@ -370,7 +370,7 @@ public sealed class ResponseTests
         // Arrange
         const string flightId = "ZvuH1";
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         FlightPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PatchFlightAsync(flightId, null,
@@ -392,7 +392,7 @@ public sealed class ResponseTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         Func<Task> action = () => apiClient.DeleteFlightAsync("ZvuH1");
@@ -450,7 +450,7 @@ public sealed class ResponseTests
             """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         FlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightPurserAsync(flightId, null, null);
@@ -482,7 +482,7 @@ public sealed class ResponseTests
             """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         NullableFlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightBackupPurserAsync(flightId, null, null);
@@ -508,7 +508,7 @@ public sealed class ResponseTests
             """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         FlightAttendantCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersAsync(flightId, null, null);
@@ -534,7 +534,7 @@ public sealed class ResponseTests
             """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         NullableFlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightBackupPurserRelationshipAsync(flightId, null, null);
@@ -564,7 +564,7 @@ public sealed class ResponseTests
             """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         FlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightPurserRelationshipAsync(flightId, null, null);
@@ -580,7 +580,7 @@ public sealed class ResponseTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         await apiClient.PatchFlightPurserRelationshipAsync("ZvuH1", new ToOneFlightAttendantInRequest
@@ -620,7 +620,7 @@ public sealed class ResponseTests
             """;
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         FlightAttendantIdentifierCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId, null, null);
@@ -638,7 +638,7 @@ public sealed class ResponseTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         Func<Task> action = () => apiClient.PostFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
@@ -667,7 +667,7 @@ public sealed class ResponseTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         Func<Task> action = () => apiClient.PatchFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest
@@ -696,7 +696,7 @@ public sealed class ResponseTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         Func<Task> action = () => apiClient.DeleteFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantInRequest

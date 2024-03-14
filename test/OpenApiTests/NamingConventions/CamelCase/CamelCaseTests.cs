@@ -4,11 +4,11 @@ using Xunit;
 
 namespace OpenApiTests.NamingConventions.CamelCase;
 
-public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext>>
+public sealed class CamelCaseTests : IClassFixture<OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext>>
 {
-    private readonly OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext> _testContext;
+    private readonly OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> _testContext;
 
-    public CamelCaseTests(OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext> testContext)
+    public CamelCaseTests(OpenApiTestContext<CamelCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> testContext)
     {
         _testContext = testContext;
 

@@ -11,13 +11,13 @@ using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.Headers;
 
-public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext>>
+public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext>>
 {
-    private readonly IntegrationTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext> _testContext;
+    private readonly IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> _testContext;
     private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
     private readonly HeaderFakers _fakers = new();
 
-    public ETagTests(IntegrationTestContext<OpenApiStartup<HeadersDbContext>, HeadersDbContext> testContext, ITestOutputHelper testOutputHelper)
+    public ETagTests(IntegrationTestContext<OpenApiStartup<HeaderDbContext>, HeaderDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
         _logHttpMessageHandler = new XUnitLogHttpMessageHandler(testOutputHelper);

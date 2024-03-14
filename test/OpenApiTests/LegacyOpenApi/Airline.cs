@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace OpenApiTests.LegacyOpenApiIntegration;
+namespace OpenApiTests.LegacyOpenApi;
 
 /// <summary>
 /// Lists the various airlines used in this API.

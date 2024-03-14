@@ -5,7 +5,7 @@ using TestBuildingBlocks;
 namespace OpenApiTests.NamingConventions;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class NamingConventionsDbContext(DbContextOptions<NamingConventionsDbContext> options) : TestableDbContext(options)
+public sealed class NamingConventionDbContext(DbContextOptions<NamingConventionDbContext> options) : TestableDbContext(options)
 {
     public DbSet<Supermarket> Supermarkets => Set<Supermarket>();
 }

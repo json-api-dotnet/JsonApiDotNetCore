@@ -3,10 +3,10 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests.LegacyOpenApiIntegration;
+namespace OpenApiTests.LegacyOpenApi;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-[Resource(ControllerNamespace = "OpenApiTests.LegacyOpenApiIntegration")]
+[Resource(ControllerNamespace = "OpenApiTests.LegacyOpenApi")]
 public sealed class Passenger : Identifiable<string>
 {
     [Attr(PublicName = "document-number", Capabilities = AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]

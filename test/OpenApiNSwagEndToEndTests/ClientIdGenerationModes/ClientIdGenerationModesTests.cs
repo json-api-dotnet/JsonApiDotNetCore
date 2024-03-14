@@ -11,12 +11,12 @@ using Xunit;
 namespace OpenApiNSwagEndToEndTests.ClientIdGenerationModes;
 
 public sealed class ClientIdGenerationModesTests
-    : IClassFixture<IntegrationTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext>>
+    : IClassFixture<IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext>>
 {
-    private readonly IntegrationTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext> _testContext;
-    private readonly ClientIdGenerationModesFakers _fakers = new();
+    private readonly IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> _testContext;
+    private readonly ClientIdGenerationFakers _fakers = new();
 
-    public ClientIdGenerationModesTests(IntegrationTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext> testContext)
+    public ClientIdGenerationModesTests(IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> testContext)
     {
         _testContext = testContext;
 

@@ -4,11 +4,11 @@ using FluentAssertions;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace OpenApiTests.LegacyOpenApiIntegration;
+namespace OpenApiTests.LegacyOpenApi;
 
-public sealed class LegacyOpenApiIntegrationTests : OpenApiTestContext<LegacyOpenApiIntegrationStartup<LegacyIntegrationDbContext>, LegacyIntegrationDbContext>
+public sealed class LegacyTests : OpenApiTestContext<LegacyStartup<LegacyIntegrationDbContext>, LegacyIntegrationDbContext>
 {
-    public LegacyOpenApiIntegrationTests()
+    public LegacyTests()
     {
         UseController<AirplanesController>();
         UseController<FlightsController>();
@@ -32,7 +32,7 @@ public sealed class LegacyOpenApiIntegrationTests : OpenApiTestContext<LegacyOpe
 
     private async Task<string> GetExpectedSwaggerDocumentAsync()
     {
-        string embeddedResourceName = $"{GetType().Namespace!.Replace('/', '.')}.swagger.json";
+        string embeddedResourceName = $"{GetType().Namespace!.Replace('/', '.')}.expected-swagger.json";
         var assembly = Assembly.GetExecutingAssembly();
 
         await using Stream? stream = assembly.GetManifestResourceStream(embeddedResourceName);

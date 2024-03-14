@@ -8,7 +8,7 @@ using TestBuildingBlocks;
 namespace OpenApiTests.ClientIdGenerationModes;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-public sealed class ClientIdGenerationModesFakers : FakerContainer
+public sealed class ClientIdGenerationFakers : FakerContainer
 {
     private readonly Lazy<Faker<Player>> _lazyPlayerFaker = new(() => new Faker<Player>()
         .UseSeed(GetFakerSeed())

@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace OpenApiTests.LegacyOpenApiIntegration;
+namespace OpenApiTests.NamingConventions.KebabCase;
 
 // Based on https://github.com/J0rgeSerran0/JsonNamingPolicy
 internal sealed class JsonKebabCaseNamingPolicy : JsonNamingPolicy

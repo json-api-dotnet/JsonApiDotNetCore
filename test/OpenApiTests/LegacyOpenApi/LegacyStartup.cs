@@ -2,12 +2,13 @@ using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
+using OpenApiTests.NamingConventions.KebabCase;
 using TestBuildingBlocks;
 
-namespace OpenApiTests.LegacyOpenApiIntegration;
+namespace OpenApiTests.LegacyOpenApi;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class LegacyOpenApiIntegrationStartup<TDbContext> : OpenApiStartup<TDbContext>
+public sealed class LegacyStartup<TDbContext> : OpenApiStartup<TDbContext>
     where TDbContext : TestableDbContext
 {
     protected override void SetJsonApiOptions(JsonApiOptions options)

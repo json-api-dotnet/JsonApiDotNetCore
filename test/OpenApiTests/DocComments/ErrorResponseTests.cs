@@ -5,13 +5,13 @@ using Xunit;
 
 namespace OpenApiTests.DocComments;
 
-public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<DocCommentsStartup<DocCommentsDbContext>, DocCommentsDbContext>>
+public sealed class ErrorResponseTests : IClassFixture<OpenApiTestContext<DocCommentStartup<DocCommentDbContext>, DocCommentDbContext>>
 {
     private const string EscapedJsonApiMediaType = "['application/vnd.api+json']";
 
-    private readonly OpenApiTestContext<DocCommentsStartup<DocCommentsDbContext>, DocCommentsDbContext> _testContext;
+    private readonly OpenApiTestContext<DocCommentStartup<DocCommentDbContext>, DocCommentDbContext> _testContext;
 
-    public ErrorResponseTests(OpenApiTestContext<DocCommentsStartup<DocCommentsDbContext>, DocCommentsDbContext> testContext)
+    public ErrorResponseTests(OpenApiTestContext<DocCommentStartup<DocCommentDbContext>, DocCommentDbContext> testContext)
     {
         _testContext = testContext;
 

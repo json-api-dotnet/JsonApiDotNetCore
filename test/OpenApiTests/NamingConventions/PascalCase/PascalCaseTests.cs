@@ -4,12 +4,11 @@ using Xunit;
 
 namespace OpenApiTests.NamingConventions.PascalCase;
 
-public sealed class PascalCaseTests
-    : IClassFixture<OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext>>
+public sealed class PascalCaseTests : IClassFixture<OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext>>
 {
-    private readonly OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext> _testContext;
+    private readonly OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> _testContext;
 
-    public PascalCaseTests(OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionsDbContext>, NamingConventionsDbContext> testContext)
+    public PascalCaseTests(OpenApiTestContext<PascalCaseNamingConventionStartup<NamingConventionDbContext>, NamingConventionDbContext> testContext)
     {
         _testContext = testContext;
 

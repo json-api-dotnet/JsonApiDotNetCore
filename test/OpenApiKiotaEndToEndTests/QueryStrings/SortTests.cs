@@ -11,13 +11,13 @@ using Xunit.Abstractions;
 
 namespace OpenApiKiotaEndToEndTests.QueryStrings;
 
-public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext>>
+public sealed class SortTests : IClassFixture<IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext>>
 {
-    private readonly IntegrationTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext> _testContext;
+    private readonly IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
     private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
     private readonly QueryStringFakers _fakers = new();
 
-    public SortTests(IntegrationTestContext<OpenApiStartup<QueryStringsDbContext>, QueryStringsDbContext> testContext, ITestOutputHelper testOutputHelper)
+    public SortTests(IntegrationTestContext<OpenApiStartup<QueryStringDbContext>, QueryStringDbContext> testContext, ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
         _requestAdapterFactory = new TestableHttpClientRequestAdapterFactory(testOutputHelper);

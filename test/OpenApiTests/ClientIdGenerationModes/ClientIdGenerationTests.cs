@@ -4,12 +4,11 @@ using Xunit;
 
 namespace OpenApiTests.ClientIdGenerationModes;
 
-public sealed class ClientIdGenerationModesTests
-    : IClassFixture<OpenApiTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext>>
+public sealed class ClientIdGenerationTests : IClassFixture<OpenApiTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext>>
 {
-    private readonly OpenApiTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext> _testContext;
+    private readonly OpenApiTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> _testContext;
 
-    public ClientIdGenerationModesTests(OpenApiTestContext<OpenApiStartup<ClientIdGenerationModesDbContext>, ClientIdGenerationModesDbContext> testContext)
+    public ClientIdGenerationTests(OpenApiTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> testContext)
     {
         _testContext = testContext;
 

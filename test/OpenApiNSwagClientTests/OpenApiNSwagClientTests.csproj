@@ -23,10 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="..\OpenApiTests\LegacyOpenApiIntegration\GeneratedSwagger\swagger.g.json">
-      <Namespace>OpenApiNSwagClientTests.LegacyClient.GeneratedCode</Namespace>
-      <ClassName>OpenApiClient</ClassName>
-      <OutputPath>OpenApiClient.cs</OutputPath>
+    <OpenApiReference Include="..\OpenApiTests\LegacyOpenApi\GeneratedSwagger\swagger.g.json">
+      <Namespace>OpenApiNSwagClientTests.LegacyOpenApi.GeneratedCode</Namespace>
+      <ClassName>LegacyClient</ClassName>
+      <OutputPath>LegacyClient.cs</OutputPath>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/GenerateClientInterfaces:true /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:JsonApiDotNetCore.OpenApi.Client.NSwag</Options>
     </OpenApiReference>

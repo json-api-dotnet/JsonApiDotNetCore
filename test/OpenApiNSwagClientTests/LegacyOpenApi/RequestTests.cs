@@ -5,11 +5,11 @@ using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
 using Microsoft.Net.Http.Headers;
-using OpenApiNSwagClientTests.LegacyClient.GeneratedCode;
+using OpenApiNSwagClientTests.LegacyOpenApi.GeneratedCode;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace OpenApiNSwagClientTests.LegacyClient;
+namespace OpenApiNSwagClientTests.LegacyOpenApi;
 
 public sealed class RequestTests
 {
@@ -20,7 +20,7 @@ public sealed class RequestTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightCollectionAsync(null, null));
@@ -40,7 +40,7 @@ public sealed class RequestTests
         const string flightId = "ZvuH1";
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightAsync(flightId, null, null));
@@ -58,7 +58,7 @@ public sealed class RequestTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         var requestDocument = new FlightPostRequestDocument
         {
@@ -127,7 +127,7 @@ public sealed class RequestTests
     {
         // Arrange
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         const char euroSign = '\x20AC';
         const char checkMark = '\x2713';
@@ -193,7 +193,7 @@ public sealed class RequestTests
         var lastServicedAt = 1.January(2021).At(15, 23, 5, 33).ToDateTimeOffset(4.Hours());
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         var requestDocument = new AirplanePatchRequestDocument
         {
@@ -247,7 +247,7 @@ public sealed class RequestTests
         const string flightId = "ZvuH1";
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         await apiClient.DeleteFlightAsync(flightId);
@@ -266,7 +266,7 @@ public sealed class RequestTests
         const string flightId = "ZvuH1";
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightPurserAsync(flightId, null, null));
@@ -286,7 +286,7 @@ public sealed class RequestTests
         const string flightId = "ZvuH1";
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightCabinCrewMembersAsync(flightId, null, null));
@@ -306,7 +306,7 @@ public sealed class RequestTests
         const string flightId = "ZvuH1";
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightPurserRelationshipAsync(flightId, null, null));
@@ -326,7 +326,7 @@ public sealed class RequestTests
         const string flightId = "ZvuH1";
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         var requestDocument = new ToOneFlightAttendantInRequest
         {
@@ -365,7 +365,7 @@ public sealed class RequestTests
         const string flightId = "ZvuH1";
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         // Act
         _ = await ApiResponse.TranslateAsync(() => apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId, null, null));
@@ -385,7 +385,7 @@ public sealed class RequestTests
         const string flightId = "ZvuH1";
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         var requestDocument = new ToManyFlightAttendantInRequest
         {
@@ -438,7 +438,7 @@ public sealed class RequestTests
         const string flightId = "ZvuH1";
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         var requestDocument = new ToManyFlightAttendantInRequest
         {
@@ -491,7 +491,7 @@ public sealed class RequestTests
         const string flightId = "ZvuH1";
 
         using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-        IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
+        ILegacyClient apiClient = new LegacyClient(wrapper.HttpClient);
 
         var requestDocument = new ToManyFlightAttendantInRequest
         {

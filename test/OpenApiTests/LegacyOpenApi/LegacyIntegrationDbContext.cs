@@ -4,7 +4,7 @@ using TestBuildingBlocks;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace OpenApiTests.LegacyOpenApiIntegration;
+namespace OpenApiTests.LegacyOpenApi;
 
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class LegacyIntegrationDbContext(DbContextOptions<LegacyIntegrationDbContext> options) : TestableDbContext(options)

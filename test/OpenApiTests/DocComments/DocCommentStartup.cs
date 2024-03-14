@@ -8,7 +8,7 @@ using TestBuildingBlocks;
 namespace OpenApiTests.DocComments;
 
 [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-public sealed class DocCommentsStartup<TDbContext> : OpenApiStartup<TDbContext>
+public sealed class DocCommentStartup<TDbContext> : OpenApiStartup<TDbContext>
     where TDbContext : TestableDbContext
 {
     protected override void SetJsonApiOptions(JsonApiOptions options)
