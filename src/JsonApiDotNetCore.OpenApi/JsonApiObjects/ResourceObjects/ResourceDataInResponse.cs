@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Links;
@@ -16,7 +15,7 @@ internal sealed class ResourceDataInResponse<TResource> : ResourceData
     [JsonPropertyName("relationships")]
     public RelationshipsInResponse<TResource> Relationships { get; set; } = null!;
 
-    [Required]
+    // This would normally be { "self": "/people/5" } for GET /todoItems/1/assignee, but it is null when PeopleController is unavailable.
     [JsonPropertyName("links")]
     public LinksInResourceData Links { get; set; } = null!;
 

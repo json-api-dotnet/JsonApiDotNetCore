@@ -3402,9 +3402,6 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
-            "required": [
-              "links"
-            ],
             "type": "object",
             "properties": {
               "links": {
@@ -4145,9 +4142,6 @@
             "$ref": "#/components/schemas/dataInResponse"
           },
           {
-            "required": [
-              "links"
-            ],
             "type": "object",
             "properties": {
               "attributes": {

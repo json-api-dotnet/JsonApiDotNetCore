@@ -6047,9 +6047,6 @@
             "$ref": "#/components/schemas/data-in-response"
           },
           {
-            "required": [
-              "links"
-            ],
             "type": "object",
             "properties": {
               "attributes": {
@@ -6532,9 +6529,6 @@
             "$ref": "#/components/schemas/data-in-response"
           },
           {
-            "required": [
-              "links"
-            ],
             "type": "object",
             "properties": {
               "attributes": {
@@ -7009,9 +7003,6 @@
             "$ref": "#/components/schemas/data-in-response"
           },
           {
-            "required": [
-              "links"
-            ],
             "type": "object",
             "properties": {
               "attributes": {
@@ -7727,9 +7718,6 @@
             "$ref": "#/components/schemas/data-in-response"
           },
           {
-            "required": [
-              "links"
-            ],
             "type": "object",
             "properties": {
               "attributes": {
