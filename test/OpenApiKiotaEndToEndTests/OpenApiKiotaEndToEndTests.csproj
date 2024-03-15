@@ -32,6 +32,8 @@
       Command="dotnet kiota generate --language CSharp --class-name QueryStringsClient --namespace-name OpenApiKiotaEndToEndTests.QueryStrings.GeneratedCode --output ./QueryStrings/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/QueryStrings/GeneratedSwagger/swagger.g.json" />
     <Exec
       Command="dotnet kiota generate --language CSharp --class-name ClientIdGenerationModesClient --namespace-name OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode --output ./ClientIdGenerationModes/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/ClientIdGenerationModes/GeneratedSwagger/swagger.g.json" />
+    <Exec
+      Command="dotnet kiota generate --language CSharp --class-name RestrictedControllersClient --namespace-name OpenApiKiotaEndToEndTests.RestrictedControllers.GeneratedCode --output ./RestrictedControllers/GeneratedCode --backing-store --exclude-backward-compatible --clean-output --clear-cache --log-level Error --openapi ../OpenApiTests/RestrictedControllers/GeneratedSwagger/swagger.g.json" />
 
     <ItemGroup>
       <!-- This isn't entirely reliable: may require a second build after the source swagger.json has changed, to get rid of compile errors. -->
