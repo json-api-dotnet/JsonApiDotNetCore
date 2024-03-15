@@ -1,24 +1,28 @@
+using System.Net;
 using FluentAssertions;
-using FluentAssertions.Specialized;
-using JsonApiDotNetCore.OpenApi.Client.NSwag;
-using Newtonsoft.Json;
-using OpenApiNSwagEndToEndTests.ClientIdGenerationModes.GeneratedCode;
+using Microsoft.Kiota.Http.HttpClientLibrary;
+using OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode;
+using OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Models;
 using OpenApiTests;
 using OpenApiTests.ClientIdGenerationModes;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
-namespace OpenApiNSwagEndToEndTests.ClientIdGenerationModes;
+namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes;
 
 public sealed class ClientIdGenerationModesTests
     : IClassFixture<IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext>>
 {
     private readonly IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> _testContext;
+    private readonly TestableHttpClientRequestAdapterFactory _requestAdapterFactory;
     private readonly ClientIdGenerationFakers _fakers = new();
 
-    public ClientIdGenerationModesTests(IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> testContext)
+    public ClientIdGenerationModesTests(IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> testContext,
+        ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
+        _requestAdapterFactory = new TestableHttpClientRequestAdapterFactory(testOutputHelper);
 
         testContext.UseController<PlayersController>();
         testContext.UseController<GamesController>();
@@ -31,13 +35,14 @@ public sealed class ClientIdGenerationModesTests
         // Arrange
         Player newPlayer = _fakers.Player.Generate();
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
-        ClientIdGenerationModesClient apiClient = new(httpClient);
+        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
+        ClientIdGenerationModesClient apiClient = new(requestAdapter);
 
         var requestBody = new PlayerPostRequestDocument
         {
             Data = new PlayerDataInPostRequest
             {
+                Type = PlayerResourceType.Players,
                 Attributes = new PlayerAttributesInPostRequest
                 {
                     UserName = newPlayer.UserName
@@ -46,11 +51,19 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        Func<Task<PlayerPrimaryResponseDocument?>> action = () => ApiResponse.TranslateAsync(() => apiClient.PostPlayerAsync(null, requestBody));
+        Func<Task> action = async () => _ = await apiClient.Players.PostAsync(requestBody);
 
         // Assert
-        ExceptionAssertions<JsonSerializationException> assertion = await action.Should().ThrowExactlyAsync<JsonSerializationException>();
-        assertion.Which.Message.Should().Be("Cannot write a null value for property 'id'. Property requires a value. Path 'data'.");
+        ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
+        exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        exception.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Errors[0];
+        error.Status.Should().Be("422");
+        error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
+        error.Detail.Should().BeNull();
+        error.Source.ShouldNotBeNull();
+        error.Source.Pointer.Should().Be("/data");
     }
 
     [Fact]
@@ -60,14 +73,15 @@ public sealed class ClientIdGenerationModesTests
         Player newPlayer = _fakers.Player.Generate();
         newPlayer.Id = Guid.NewGuid();
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
-        ClientIdGenerationModesClient apiClient = new(httpClient);
+        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
+        ClientIdGenerationModesClient apiClient = new(requestAdapter);
 
         var requestBody = new PlayerPostRequestDocument
         {
             Data = new PlayerDataInPostRequest
             {
-                Id = newPlayer.StringId!,
+                Type = PlayerResourceType.Players,
+                Id = newPlayer.StringId,
                 Attributes = new PlayerAttributesInPostRequest
                 {
                     UserName = newPlayer.UserName
@@ -76,7 +90,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PostPlayerAsync(null, requestBody));
+        PlayerPrimaryResponseDocument? document = await apiClient.Players.PostAsync(requestBody);
 
         // Assert
         document.Should().BeNull();
@@ -95,13 +109,14 @@ public sealed class ClientIdGenerationModesTests
         // Arrange
         Game newGame = _fakers.Game.Generate();
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
-        ClientIdGenerationModesClient apiClient = new(httpClient);
+        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
+        ClientIdGenerationModesClient apiClient = new(requestAdapter);
 
         var requestBody = new GamePostRequestDocument
         {
             Data = new GameDataInPostRequest
             {
+                Type = GameResourceType.Games,
                 Attributes = new GameAttributesInPostRequest
                 {
                     Title = newGame.Title,
@@ -111,10 +126,11 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, requestBody));
+        GamePrimaryResponseDocument? document = await apiClient.Games.PostAsync(requestBody);
 
         // Assert
         document.ShouldNotBeNull();
+        document.Data.ShouldNotBeNull();
         document.Data.Id.ShouldNotBeNullOrEmpty();
 
         Guid newGameId = Guid.Parse(document.Data.Id);
@@ -135,14 +151,15 @@ public sealed class ClientIdGenerationModesTests
         Game newGame = _fakers.Game.Generate();
         newGame.Id = Guid.NewGuid();
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
-        ClientIdGenerationModesClient apiClient = new(httpClient);
+        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
+        ClientIdGenerationModesClient apiClient = new(requestAdapter);
 
         var requestBody = new GamePostRequestDocument
         {
             Data = new GameDataInPostRequest
             {
-                Id = newGame.StringId!,
+                Type = GameResourceType.Games,
+                Id = newGame.StringId,
                 Attributes = new GameAttributesInPostRequest
                 {
                     Title = newGame.Title,
@@ -152,7 +169,7 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        GamePrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PostGameAsync(null, requestBody));
+        GamePrimaryResponseDocument? document = await apiClient.Games.PostAsync(requestBody);
 
         // Assert
         document.Should().BeNull();
@@ -172,13 +189,14 @@ public sealed class ClientIdGenerationModesTests
         // Arrange
         PlayerGroup newPlayerGroup = _fakers.Group.Generate();
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
-        ClientIdGenerationModesClient apiClient = new(httpClient);
+        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
+        ClientIdGenerationModesClient apiClient = new(requestAdapter);
 
         var requestBody = new PlayerGroupPostRequestDocument
         {
             Data = new PlayerGroupDataInPostRequest
             {
+                Type = PlayerGroupResourceType.PlayerGroups,
                 Attributes = new PlayerGroupAttributesInPostRequest
                 {
                     Name = newPlayerGroup.Name
@@ -187,10 +205,11 @@ public sealed class ClientIdGenerationModesTests
         };
 
         // Act
-        PlayerGroupPrimaryResponseDocument? document = await ApiResponse.TranslateAsync(() => apiClient.PostPlayerGroupAsync(null, requestBody));
+        PlayerGroupPrimaryResponseDocument? document = await apiClient.PlayerGroups.PostAsync(requestBody);
 
         // Assert
         document.ShouldNotBeNull();
+        document.Data.ShouldNotBeNull();
         document.Data.Id.ShouldNotBeNullOrEmpty();
 
         long newPlayerGroupId = long.Parse(document.Data.Id);
