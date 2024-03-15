@@ -55,7 +55,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         // Assert
         response.Should().BeNullOrEmpty();
 
-        headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+        string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Match("\"*\"");
     }
 
     [Fact]
@@ -85,7 +87,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         // Assert
         response.ShouldNotBeNull();
 
-        headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+        string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Match("\"*\"");
     }
 
     [Fact]
@@ -126,8 +130,7 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
             InspectResponseHeaders = true
         };
 
-        // Act
-        CountryPrimaryResponseDocument? response = await apiClient.Countries.PostAsync(new CountryPostRequestDocument
+        var requestBody = new CountryPostRequestDocument
         {
             Data = new CountryDataInPostRequest
             {
@@ -138,7 +141,11 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
                     Population = newCountry.Population
                 }
             }
-        }, configuration => configuration.Options.Add(headerInspector));
+        };
+
+        // Act
+        CountryPrimaryResponseDocument? response =
+            await apiClient.Countries.PostAsync(requestBody, configuration => configuration.Options.Add(headerInspector));
 
         // Assert
         response.ShouldNotBeNull();
@@ -183,7 +190,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         ApiException exception = (await action.Should().ThrowExactlyAsync<ApiException>()).Which;
         exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.NotModified);
 
-        headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().Equal([responseETag]);
+        string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Be(responseETag);
     }
 
     [Fact]
@@ -217,6 +226,8 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         // Assert
         response.ShouldNotBeNull();
 
-        headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+        string[] eTagHeaderValues = headerInspector.ResponseHeaders.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Match("\"*\"");
     }
 }

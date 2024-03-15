@@ -47,7 +47,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-        response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+        string[] eTagHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Match("\"*\"");
     }
 
     [Fact]
@@ -72,7 +74,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-        response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+        string[] eTagHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Match("\"*\"");
 
         response.Result.ShouldNotBeNull();
     }
@@ -103,19 +107,20 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         var apiClient = new HeadersClient(httpClient);
 
-        // Act
-        ApiResponse<CountryPrimaryResponseDocument?> response = await ApiResponse.TranslateAsync(() => apiClient.PostCountryAsync(null,
-            new CountryPostRequestDocument
+        var requestBody = new CountryPostRequestDocument
+        {
+            Data = new CountryDataInPostRequest
             {
-                Data = new CountryDataInPostRequest
+                Attributes = new CountryAttributesInPostRequest
                 {
-                    Attributes = new CountryAttributesInPostRequest
-                    {
-                        Name = newCountry.Name,
-                        Population = newCountry.Population
-                    }
+                    Name = newCountry.Name,
+                    Population = newCountry.Population
                 }
-            }));
+            }
+        };
+
+        // Act
+        ApiResponse<CountryPrimaryResponseDocument?> response = await ApiResponse.TranslateAsync(() => apiClient.PostCountryAsync(null, requestBody));
 
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.Created);
@@ -152,7 +157,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         // Assert
         response2.StatusCode.Should().Be((int)HttpStatusCode.NotModified);
 
-        response2.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().Equal([responseETag]);
+        string[] eTagHeaderValues = response2.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Be(responseETag);
 
         response2.Result.Should().BeNull();
     }
@@ -180,7 +187,9 @@ public sealed class ETagTests : IClassFixture<IntegrationTestContext<OpenApiStar
         // Assert
         response.StatusCode.Should().Be((int)HttpStatusCode.OK);
 
-        response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.Should().NotBeNullOrEmpty();
+        string[] eTagHeaderValues = response.Headers.Should().ContainKey(HeaderNames.ETag).WhoseValue.ToArray();
+        eTagHeaderValues.ShouldHaveCount(1);
+        eTagHeaderValues[0].Should().Match("\"*\"");
 
         response.Result.ShouldNotBeNull();
     }
