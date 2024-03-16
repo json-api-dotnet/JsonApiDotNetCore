@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources;
@@ -42,13 +43,13 @@ public abstract class ObfuscatedIdentifiableController<TResource>(
     }
 
     [HttpPost]
-    public override Task<IActionResult> PostAsync([FromBody] TResource resource, CancellationToken cancellationToken)
+    public override Task<IActionResult> PostAsync([FromBody] [Required] TResource resource, CancellationToken cancellationToken)
     {
         return base.PostAsync(resource, cancellationToken);
     }
 
     [HttpPost("{id}/relationships/{relationshipName}")]
-    public Task<IActionResult> PostRelationshipAsync(string id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
+    public Task<IActionResult> PostRelationshipAsync(string id, string relationshipName, [FromBody] [Required] ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
@@ -56,14 +57,14 @@ public abstract class ObfuscatedIdentifiableController<TResource>(
     }
 
     [HttpPatch("{id}")]
-    public Task<IActionResult> PatchAsync(string id, [FromBody] TResource resource, CancellationToken cancellationToken)
+    public Task<IActionResult> PatchAsync(string id, [FromBody] [Required] TResource resource, CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
         return base.PatchAsync(idValue, resource, cancellationToken);
     }
 
     [HttpPatch("{id}/relationships/{relationshipName}")]
-    public Task<IActionResult> PatchRelationshipAsync(string id, string relationshipName, [FromBody] object rightValue, CancellationToken cancellationToken)
+    public Task<IActionResult> PatchRelationshipAsync(string id, string relationshipName, [FromBody] object? rightValue, CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
         return base.PatchRelationshipAsync(idValue, relationshipName, rightValue, cancellationToken);
@@ -77,7 +78,7 @@ public abstract class ObfuscatedIdentifiableController<TResource>(
     }
 
     [HttpDelete("{id}/relationships/{relationshipName}")]
-    public Task<IActionResult> DeleteRelationshipAsync(string id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
+    public Task<IActionResult> DeleteRelationshipAsync(string id, string relationshipName, [FromBody] [Required] ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
