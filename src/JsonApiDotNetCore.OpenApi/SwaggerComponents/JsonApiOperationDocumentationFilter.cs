@@ -35,7 +35,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
     private const string TextQueryStringBad = "The query string is invalid.";
     private const string TextRequestBodyBad = "The request body is missing or malformed.";
     private const string TextQueryStringOrRequestBodyBad = "The query string is invalid or the request body is missing or malformed.";
-    private const string TextRequestBodyIncompatibleType = "A resource type in the request body is incompatible.";
+    private const string TextConflict = "The request body contains conflicting information or another resource with the same ID already exists.";
     private const string TextRequestBodyIncompatibleIdOrType = "A resource type or identifier in the request body is incompatible.";
     private const string TextRequestBodyValidationFailed = "Validation of the request body failed.";
     private const string TextRequestBodyClientId = "Client-generated IDs cannot be used at this endpoint.";
@@ -241,7 +241,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             SetResponseDescription(operation.Responses, HttpStatusCode.Forbidden, TextRequestBodyClientId);
         }
 
-        SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextRequestBodyIncompatibleType);
+        SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextConflict);
         SetResponseDescription(operation.Responses, HttpStatusCode.UnprocessableEntity, TextRequestBodyValidationFailed);
     }
 
@@ -374,7 +374,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
-        SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextRequestBodyIncompatibleType);
+        SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextConflict);
     }
 
     private void ApplyPatchRelationship(OpenApiOperation operation, RelationshipAttribute relationship)
@@ -407,7 +407,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
-        SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextRequestBodyIncompatibleType);
+        SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextConflict);
     }
 
     private void ApplyDeleteRelationship(OpenApiOperation operation, RelationshipAttribute relationship)
@@ -424,7 +424,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
 
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyBad);
         SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
-        SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextRequestBodyIncompatibleType);
+        SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextConflict);
     }
 
     private static RelationshipAttribute GetRelationshipFromRoute(ApiDescription apiDescription, ResourceType resourceType)

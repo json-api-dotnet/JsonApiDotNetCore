@@ -233,7 +233,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -967,7 +967,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1383,7 +1383,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1799,7 +1799,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2215,7 +2215,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2631,7 +2631,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2699,7 +2699,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2767,7 +2767,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -3183,7 +3183,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -3251,7 +3251,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -3319,7 +3319,7 @@
             }
           },
           "409": {
-            "description": "A resource type in the request body is incompatible.",
+            "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
