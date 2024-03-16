@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
@@ -102,7 +103,8 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     /// }
     /// ]]></code>
     /// </example>
-    public virtual async Task<IActionResult> PostOperationsAsync([FromBody] IList<OperationContainer> operations, CancellationToken cancellationToken)
+    public virtual async Task<IActionResult> PostOperationsAsync([FromBody] [Required] IList<OperationContainer> operations,
+        CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {

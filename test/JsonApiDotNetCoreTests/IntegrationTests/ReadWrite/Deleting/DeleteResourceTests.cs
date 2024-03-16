@@ -45,9 +45,9 @@ public sealed class DeleteResourceTests : IClassFixture<IntegrationTestContext<T
 
         await _testContext.RunOnDatabaseAsync(async dbContext =>
         {
-            WorkItem? workItemsInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
+            WorkItem? workItemInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
 
-            workItemsInDatabase.Should().BeNull();
+            workItemInDatabase.Should().BeNull();
         });
     }
 

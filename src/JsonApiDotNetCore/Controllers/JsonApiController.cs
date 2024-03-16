@@ -72,14 +72,14 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
 
     /// <inheritdoc />
     [HttpPost]
-    public override Task<IActionResult> PostAsync([FromBody] TResource resource, CancellationToken cancellationToken)
+    public override Task<IActionResult> PostAsync(TResource resource, CancellationToken cancellationToken)
     {
         return base.PostAsync(resource, cancellationToken);
     }
 
     /// <inheritdoc />
     [HttpPost("{id}/relationships/{relationshipName}")]
-    public override Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
+    public override Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
         return base.PostRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
@@ -87,7 +87,7 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
 
     /// <inheritdoc />
     [HttpPatch("{id}")]
-    public override Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource, CancellationToken cancellationToken)
+    public override Task<IActionResult> PatchAsync(TId id, TResource resource, CancellationToken cancellationToken)
     {
         return base.PatchAsync(id, resource, cancellationToken);
     }
@@ -109,7 +109,7 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
 
     /// <inheritdoc />
     [HttpDelete("{id}/relationships/{relationshipName}")]
-    public override Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
+    public override Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
         return base.DeleteRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
