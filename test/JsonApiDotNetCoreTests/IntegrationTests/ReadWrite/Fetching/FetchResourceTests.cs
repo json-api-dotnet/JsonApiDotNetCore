@@ -230,7 +230,7 @@ public sealed class FetchResourceTests : IClassFixture<IntegrationTestContext<Te
     }
 
     [Fact]
-    public async Task Can_get_unknown_secondary_OneToMany_resource()
+    public async Task Can_get_unknown_secondary_OneToMany_resources()
     {
         // Arrange
         UserAccount userAccount = _fakers.UserAccount.Generate();
