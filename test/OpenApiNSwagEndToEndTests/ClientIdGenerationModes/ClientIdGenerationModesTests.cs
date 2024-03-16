@@ -1,3 +1,4 @@
+using System.Net;
 using FluentAssertions;
 using FluentAssertions.Specialized;
 using JsonApiDotNetCore.OpenApi.Client.NSwag;
@@ -7,6 +8,7 @@ using OpenApiTests;
 using OpenApiTests.ClientIdGenerationModes;
 using TestBuildingBlocks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace OpenApiNSwagEndToEndTests.ClientIdGenerationModes;
 
@@ -14,11 +16,14 @@ public sealed class ClientIdGenerationModesTests
     : IClassFixture<IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext>>
 {
     private readonly IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> _testContext;
+    private readonly XUnitLogHttpMessageHandler _logHttpMessageHandler;
     private readonly ClientIdGenerationFakers _fakers = new();
 
-    public ClientIdGenerationModesTests(IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> testContext)
+    public ClientIdGenerationModesTests(IntegrationTestContext<OpenApiStartup<ClientIdGenerationDbContext>, ClientIdGenerationDbContext> testContext,
+        ITestOutputHelper testOutputHelper)
     {
         _testContext = testContext;
+        _logHttpMessageHandler = new XUnitLogHttpMessageHandler(testOutputHelper);
 
         testContext.UseController<PlayersController>();
         testContext.UseController<GamesController>();
@@ -31,7 +36,7 @@ public sealed class ClientIdGenerationModesTests
         // Arrange
         Player newPlayer = _fakers.Player.Generate();
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
         var requestBody = new PlayerPostRequestDocument
@@ -60,7 +65,7 @@ public sealed class ClientIdGenerationModesTests
         Player newPlayer = _fakers.Player.Generate();
         newPlayer.Id = Guid.NewGuid();
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
         var requestBody = new PlayerPostRequestDocument
@@ -95,7 +100,7 @@ public sealed class ClientIdGenerationModesTests
         // Arrange
         Game newGame = _fakers.Game.Generate();
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
         var requestBody = new GamePostRequestDocument
@@ -135,7 +140,7 @@ public sealed class ClientIdGenerationModesTests
         Game newGame = _fakers.Game.Generate();
         newGame.Id = Guid.NewGuid();
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
         var requestBody = new GamePostRequestDocument
@@ -167,12 +172,55 @@ public sealed class ClientIdGenerationModesTests
     }
 
     [Fact]
+    public async Task Cannot_create_resource_with_existing_ID_when_supplying_ID_is_allowed()
+    {
+        // Arrange
+        Game existingGame = _fakers.Game.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Games.Add(existingGame);
+            await dbContext.SaveChangesAsync();
+        });
+
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
+        ClientIdGenerationModesClient apiClient = new(httpClient);
+
+        var requestBody = new GamePostRequestDocument
+        {
+            Data = new GameDataInPostRequest
+            {
+                Id = existingGame.StringId!,
+                Attributes = new GameAttributesInPostRequest
+                {
+                    Title = existingGame.Title,
+                    PurchasePrice = (double)existingGame.PurchasePrice
+                }
+            }
+        };
+
+        // Act
+        Func<Task> action = async () => _ = await apiClient.PostGameAsync(null, requestBody);
+
+        // Assert
+        ApiException<ErrorResponseDocument> exception = (await action.Should().ThrowExactlyAsync<ApiException<ErrorResponseDocument>>()).Which;
+        exception.StatusCode.Should().Be((int)HttpStatusCode.Conflict);
+        exception.Message.Should().Be("HTTP 409: The request body contains conflicting information or another resource with the same ID already exists.");
+        exception.Result.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Result.Errors.ElementAt(0);
+        error.Status.Should().Be("409");
+        error.Title.Should().Be("Another resource with the specified ID already exists.");
+        error.Detail.Should().Be($"Another resource of type 'games' with ID '{existingGame.StringId}' already exists.");
+    }
+
+    [Fact]
     public async Task Can_create_resource_without_ID_when_supplying_ID_is_forbidden()
     {
         // Arrange
         PlayerGroup newPlayerGroup = _fakers.Group.Generate();
 
-        using HttpClient httpClient = _testContext.Factory.CreateClient();
+        using HttpClient httpClient = _testContext.Factory.CreateDefaultClient(_logHttpMessageHandler);
         ClientIdGenerationModesClient apiClient = new(httpClient);
 
         var requestBody = new PlayerGroupPostRequestDocument

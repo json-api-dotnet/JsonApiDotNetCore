@@ -184,6 +184,49 @@ public sealed class ClientIdGenerationModesTests
     }
 
     [Fact]
+    public async Task Cannot_create_resource_with_existing_ID_when_supplying_ID_is_allowed()
+    {
+        // Arrange
+        Game existingGame = _fakers.Game.Generate();
+
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            dbContext.Games.Add(existingGame);
+            await dbContext.SaveChangesAsync();
+        });
+
+        using HttpClientRequestAdapter requestAdapter = _requestAdapterFactory.CreateAdapter(_testContext.Factory);
+        ClientIdGenerationModesClient apiClient = new(requestAdapter);
+
+        var requestBody = new GamePostRequestDocument
+        {
+            Data = new GameDataInPostRequest
+            {
+                Type = GameResourceType.Games,
+                Id = existingGame.StringId,
+                Attributes = new GameAttributesInPostRequest
+                {
+                    Title = existingGame.Title,
+                    PurchasePrice = (double)existingGame.PurchasePrice
+                }
+            }
+        };
+
+        // Act
+        Func<Task> action = async () => _ = await apiClient.Games.PostAsync(requestBody);
+
+        // Assert
+        ErrorResponseDocument exception = (await action.Should().ThrowExactlyAsync<ErrorResponseDocument>()).Which;
+        exception.ResponseStatusCode.Should().Be((int)HttpStatusCode.Conflict);
+        exception.Errors.ShouldHaveCount(1);
+
+        ErrorObject error = exception.Errors.ElementAt(0);
+        error.Status.Should().Be("409");
+        error.Title.Should().Be("Another resource with the specified ID already exists.");
+        error.Detail.Should().Be($"Another resource of type 'games' with ID '{existingGame.StringId}' already exists.");
+    }
+
+    [Fact]
     public async Task Can_create_resource_without_ID_when_supplying_ID_is_forbidden()
     {
         // Arrange
