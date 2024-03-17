@@ -20,10 +20,7 @@ internal static class ActionDescriptorExtensions
     {
         ArgumentGuard.NotNull(descriptor);
 
-        IFilterMetadata? filterMetadata = descriptor.FilterDescriptors.Select(filterDescriptor => filterDescriptor.Filter)
-            .OfType<TFilterMetaData>().FirstOrDefault();
-
-        return (TFilterMetaData?)filterMetadata;
+        return descriptor.FilterDescriptors.Select(filterDescriptor => filterDescriptor.Filter).OfType<TFilterMetaData>().FirstOrDefault();
     }
 
     public static ControllerParameterDescriptor? GetBodyParameterDescriptor(this ActionDescriptor descriptor)

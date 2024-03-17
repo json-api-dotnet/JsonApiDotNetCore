@@ -1,4 +1,3 @@
-using System.Reflection;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 using Microsoft.AspNetCore.Mvc;
@@ -154,14 +153,7 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
         }
 
         requestBodyDescriptor.ParameterType = documentType;
-        ParameterInfo replacementParameterInfo = requestBodyDescriptor.ParameterInfo.WithParameterType(documentType);
-
-        if (parameterName != null)
-        {
-            replacementParameterInfo = replacementParameterInfo.WithName(parameterName);
-        }
-
-        requestBodyDescriptor.ParameterInfo = replacementParameterInfo;
+        requestBodyDescriptor.ParameterInfo = new ParameterInfoWrapper(requestBodyDescriptor.ParameterInfo, documentType, parameterName);
     }
 
     private static ActionDescriptor Clone(ActionDescriptor descriptor)
