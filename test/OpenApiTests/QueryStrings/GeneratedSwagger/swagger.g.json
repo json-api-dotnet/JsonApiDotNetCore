@@ -185,7 +185,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "201": {
@@ -469,7 +470,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -937,7 +939,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "204": {
@@ -1151,7 +1154,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "201": {
@@ -1435,7 +1439,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -1903,7 +1908,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "204": {
@@ -1970,7 +1976,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "204": {
@@ -2037,7 +2044,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "204": {
@@ -2452,7 +2460,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "204": {
@@ -2867,7 +2876,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "204": {
@@ -2934,7 +2944,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "204": {
@@ -3001,7 +3012,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "204": {

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -17,7 +18,7 @@ public abstract class JsonApiOperationsController(
 {
     /// <inheritdoc />
     [HttpPost]
-    public override Task<IActionResult> PostOperationsAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
+    public override Task<IActionResult> PostOperationsAsync([FromBody] [Required] IList<OperationContainer> operations, CancellationToken cancellationToken)
     {
         return base.PostOperationsAsync(operations, cancellationToken);
     }

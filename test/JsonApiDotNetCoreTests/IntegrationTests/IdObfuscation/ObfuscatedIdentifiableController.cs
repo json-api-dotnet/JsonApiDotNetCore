@@ -22,21 +22,21 @@ public abstract class ObfuscatedIdentifiableController<TResource>(
     }
 
     [HttpGet("{id}")]
-    public Task<IActionResult> GetAsync(string id, CancellationToken cancellationToken)
+    public Task<IActionResult> GetAsync([Required] string id, CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
         return base.GetAsync(idValue, cancellationToken);
     }
 
     [HttpGet("{id}/{relationshipName}")]
-    public Task<IActionResult> GetSecondaryAsync(string id, string relationshipName, CancellationToken cancellationToken)
+    public Task<IActionResult> GetSecondaryAsync([Required] string id, [Required] string relationshipName, CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
         return base.GetSecondaryAsync(idValue, relationshipName, cancellationToken);
     }
 
     [HttpGet("{id}/relationships/{relationshipName}")]
-    public Task<IActionResult> GetRelationshipAsync(string id, string relationshipName, CancellationToken cancellationToken)
+    public Task<IActionResult> GetRelationshipAsync([Required] string id, [Required] string relationshipName, CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
         return base.GetRelationshipAsync(idValue, relationshipName, cancellationToken);
@@ -49,37 +49,39 @@ public abstract class ObfuscatedIdentifiableController<TResource>(
     }
 
     [HttpPost("{id}/relationships/{relationshipName}")]
-    public Task<IActionResult> PostRelationshipAsync(string id, string relationshipName, [FromBody] [Required] ISet<IIdentifiable> rightResourceIds,
-        CancellationToken cancellationToken)
+    public Task<IActionResult> PostRelationshipAsync([Required] string id, [Required] string relationshipName,
+        [FromBody] [Required] ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
         return base.PostRelationshipAsync(idValue, relationshipName, rightResourceIds, cancellationToken);
     }
 
     [HttpPatch("{id}")]
-    public Task<IActionResult> PatchAsync(string id, [FromBody] [Required] TResource resource, CancellationToken cancellationToken)
+    public Task<IActionResult> PatchAsync([Required] string id, [FromBody] [Required] TResource resource, CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
         return base.PatchAsync(idValue, resource, cancellationToken);
     }
 
     [HttpPatch("{id}/relationships/{relationshipName}")]
-    public Task<IActionResult> PatchRelationshipAsync(string id, string relationshipName, [FromBody] object? rightValue, CancellationToken cancellationToken)
+    // Parameter `[Required] object? rightValue` makes Swashbuckle generate the OpenAPI request body as required. We don't actually validate ModelState, so it doesn't hurt.
+    public Task<IActionResult> PatchRelationshipAsync([Required] string id, [Required] string relationshipName, [FromBody] [Required] object? rightValue,
+        CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
         return base.PatchRelationshipAsync(idValue, relationshipName, rightValue, cancellationToken);
     }
 
     [HttpDelete("{id}")]
-    public Task<IActionResult> DeleteAsync(string id, CancellationToken cancellationToken)
+    public Task<IActionResult> DeleteAsync([Required] string id, CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
         return base.DeleteAsync(idValue, cancellationToken);
     }
 
     [HttpDelete("{id}/relationships/{relationshipName}")]
-    public Task<IActionResult> DeleteRelationshipAsync(string id, string relationshipName, [FromBody] [Required] ISet<IIdentifiable> rightResourceIds,
-        CancellationToken cancellationToken)
+    public Task<IActionResult> DeleteRelationshipAsync([Required] string id, [Required] string relationshipName,
+        [FromBody] [Required] ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
         int idValue = _codec.Decode(id);
         return base.DeleteRelationshipAsync(idValue, relationshipName, rightResourceIds, cancellationToken);
