@@ -44,6 +44,7 @@ namespace OpenApiKiotaEndToEndTests.ClientIdGenerationModes.GeneratedCode.Games 
             var requestInfo = ToPostRequestInformation(body, requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>> {
                 {"400", ErrorResponseDocument.CreateFromDiscriminatorValue},
+                {"404", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"409", ErrorResponseDocument.CreateFromDiscriminatorValue},
                 {"422", ErrorResponseDocument.CreateFromDiscriminatorValue},
             };

@@ -186,12 +186,14 @@ internal sealed class OpenApiEndpointConvention : IActionModelConvention
             [
                 HttpStatusCode.BadRequest,
                 HttpStatusCode.Forbidden,
+                HttpStatusCode.NotFound,
                 HttpStatusCode.Conflict,
                 HttpStatusCode.UnprocessableEntity
             ],
             JsonApiEndpoint.Post =>
             [
                 HttpStatusCode.BadRequest,
+                HttpStatusCode.NotFound,
                 HttpStatusCode.Conflict,
                 HttpStatusCode.UnprocessableEntity
             ],

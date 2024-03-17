@@ -232,6 +232,16 @@
               }
             }
           },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
@@ -957,7 +967,7 @@
             }
           },
           "404": {
-            "description": "The nameValuePair does not exist.",
+            "description": "The nameValuePair or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1193,6 +1203,16 @@
           },
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1926,7 +1946,7 @@
             }
           },
           "404": {
-            "description": "The node does not exist.",
+            "description": "The node or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1994,7 +2014,7 @@
             }
           },
           "404": {
-            "description": "The node does not exist.",
+            "description": "The node or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2062,7 +2082,7 @@
             }
           },
           "404": {
-            "description": "The node does not exist.",
+            "description": "The node or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2478,7 +2498,7 @@
             }
           },
           "404": {
-            "description": "The node does not exist.",
+            "description": "The node or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2894,7 +2914,7 @@
             }
           },
           "404": {
-            "description": "The node does not exist.",
+            "description": "The node or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2962,7 +2982,7 @@
             }
           },
           "404": {
-            "description": "The node does not exist.",
+            "description": "The node or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -3030,7 +3050,7 @@
             }
           },
           "404": {
-            "description": "The node does not exist.",
+            "description": "The node or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {

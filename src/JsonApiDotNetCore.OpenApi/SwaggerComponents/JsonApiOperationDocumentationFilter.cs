@@ -241,6 +241,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             SetResponseDescription(operation.Responses, HttpStatusCode.Forbidden, TextRequestBodyClientId);
         }
 
+        SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, "A related resource does not exist.");
         SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextConflict);
         SetResponseDescription(operation.Responses, HttpStatusCode.UnprocessableEntity, TextRequestBodyValidationFailed);
     }
@@ -373,7 +374,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             $"The {rightName} were successfully added, which did not result in additional changes.");
 
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyBad);
-        SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
+        SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} or a related resource does not exist.");
         SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextConflict);
     }
 
@@ -406,7 +407,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             $"The {relationship} relationship was successfully updated, which did not result in additional changes.");
 
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyBad);
-        SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
+        SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} or a related resource does not exist.");
         SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextConflict);
     }
 
@@ -423,7 +424,7 @@ internal sealed class JsonApiOperationDocumentationFilter : IOperationFilter
             $"The {rightName} were successfully removed, which did not result in additional changes.");
 
         SetResponseDescription(operation.Responses, HttpStatusCode.BadRequest, TextRequestBodyBad);
-        SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} does not exist.");
+        SetResponseDescription(operation.Responses, HttpStatusCode.NotFound, $"The {singularLeftName} or a related resource does not exist.");
         SetResponseDescription(operation.Responses, HttpStatusCode.Conflict, TextConflict);
     }
 

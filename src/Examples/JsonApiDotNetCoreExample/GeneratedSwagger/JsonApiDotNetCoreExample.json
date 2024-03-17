@@ -232,6 +232,16 @@
               }
             }
           },
+          "404": {
+            "description": "A related resource does not exist.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
           "409": {
             "description": "The request body contains conflicting information or another resource with the same ID already exists.",
             "content": {
@@ -957,7 +967,7 @@
             }
           },
           "404": {
-            "description": "The person does not exist.",
+            "description": "The person or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1025,7 +1035,7 @@
             }
           },
           "404": {
-            "description": "The person does not exist.",
+            "description": "The person or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1093,7 +1103,7 @@
             }
           },
           "404": {
-            "description": "The person does not exist.",
+            "description": "The person or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1509,7 +1519,7 @@
             }
           },
           "404": {
-            "description": "The person does not exist.",
+            "description": "The person or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1577,7 +1587,7 @@
             }
           },
           "404": {
-            "description": "The person does not exist.",
+            "description": "The person or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1645,7 +1655,7 @@
             }
           },
           "404": {
-            "description": "The person does not exist.",
+            "description": "The person or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -1881,6 +1891,16 @@
           },
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2614,7 +2634,7 @@
             }
           },
           "404": {
-            "description": "The tag does not exist.",
+            "description": "The tag or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2682,7 +2702,7 @@
             }
           },
           "404": {
-            "description": "The tag does not exist.",
+            "description": "The tag or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2750,7 +2770,7 @@
             }
           },
           "404": {
-            "description": "The tag does not exist.",
+            "description": "The tag or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -2986,6 +3006,16 @@
           },
           "403": {
             "description": "Client-generated IDs cannot be used at this endpoint.",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponseDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -3719,7 +3749,7 @@
             }
           },
           "404": {
-            "description": "The todoItem does not exist.",
+            "description": "The todoItem or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -4135,7 +4165,7 @@
             }
           },
           "404": {
-            "description": "The todoItem does not exist.",
+            "description": "The todoItem or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -4551,7 +4581,7 @@
             }
           },
           "404": {
-            "description": "The todoItem does not exist.",
+            "description": "The todoItem or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -4619,7 +4649,7 @@
             }
           },
           "404": {
-            "description": "The todoItem does not exist.",
+            "description": "The todoItem or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
@@ -4687,7 +4717,7 @@
             }
           },
           "404": {
-            "description": "The todoItem does not exist.",
+            "description": "The todoItem or a related resource does not exist.",
             "content": {
               "application/vnd.api+json": {
                 "schema": {
