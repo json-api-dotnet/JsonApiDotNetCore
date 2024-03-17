@@ -44,7 +44,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "201": {
@@ -137,7 +138,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "201": {
@@ -240,7 +242,8 @@
                 ]
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "201": {
