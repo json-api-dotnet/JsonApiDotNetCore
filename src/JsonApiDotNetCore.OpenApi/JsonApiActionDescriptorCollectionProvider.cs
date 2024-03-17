@@ -1,3 +1,5 @@
+using System.Reflection;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.JsonApiMetadata;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +40,8 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
         foreach (ActionDescriptor endpoint in endpoints)
         {
-            JsonApiEndpointMetadataContainer endpointMetadataContainer = _jsonApiEndpointMetadataProvider.Get(endpoint.GetActionMethod());
+            MethodInfo actionMethod = endpoint.GetActionMethod();
+            JsonApiEndpointMetadataContainer endpointMetadataContainer = _jsonApiEndpointMetadataProvider.Get(actionMethod);
 
             List<ActionDescriptor> replacementDescriptorsForEndpoint =
             [
@@ -148,8 +151,10 @@ internal sealed class JsonApiActionDescriptorCollectionProvider : IActionDescrip
 
         if (requestBodyDescriptor == null)
         {
-            // ASP.NET model binding picks up on [FromBody] in base classes, so even when it is left out in an override, this should not be reachable.
-            throw new UnreachableCodeException();
+            MethodInfo actionMethod = endpoint.GetActionMethod();
+
+            throw new InvalidConfigurationException(
+                $"The action method '{actionMethod}' on type '{actionMethod.ReflectedType?.FullName}' contains no parameter with a [FromBody] attribute.");
         }
 
         requestBodyDescriptor.ParameterType = documentType;
