@@ -16,7 +16,7 @@ internal sealed class EndpointResolver
             return null;
         }
 
-        HttpMethodAttribute? method = controllerAction.GetCustomAttributes(true).OfType<HttpMethodAttribute>().FirstOrDefault();
+        HttpMethodAttribute? method = Attribute.GetCustomAttributes(controllerAction, true).OfType<HttpMethodAttribute>().FirstOrDefault();
 
         return ResolveJsonApiEndpoint(method);
     }
