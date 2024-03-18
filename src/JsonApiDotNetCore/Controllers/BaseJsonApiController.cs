@@ -185,7 +185,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// POST /articles HTTP/1.1
     /// ]]></code>
     /// </summary>
-    public virtual async Task<IActionResult> PostAsync(TResource resource, CancellationToken cancellationToken)
+    public virtual async Task<IActionResult> PostAsync([FromBody] TResource resource, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -235,7 +235,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// <param name="cancellationToken">
     /// Propagates notification that request handling should be canceled.
     /// </param>
-    public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, ISet<IIdentifiable> rightResourceIds,
+    public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
@@ -264,7 +264,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// PATCH /articles/1 HTTP/1.1
     /// ]]></code>
     /// </summary>
-    public virtual async Task<IActionResult> PatchAsync(TId id, TResource resource, CancellationToken cancellationToken)
+    public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -310,7 +310,8 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// <param name="cancellationToken">
     /// Propagates notification that request handling should be canceled.
     /// </param>
-    public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, object? rightValue, CancellationToken cancellationToken)
+    public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object? rightValue,
+        CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
@@ -370,7 +371,7 @@ public abstract class BaseJsonApiController<TResource, TId> : CoreJsonApiControl
     /// <param name="cancellationToken">
     /// Propagates notification that request handling should be canceled.
     /// </param>
-    public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, ISet<IIdentifiable> rightResourceIds,
+    public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
         CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new

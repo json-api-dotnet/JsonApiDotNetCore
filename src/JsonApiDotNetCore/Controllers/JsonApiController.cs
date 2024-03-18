@@ -73,7 +73,7 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
 
     /// <inheritdoc />
     [HttpPost]
-    public override Task<IActionResult> PostAsync([FromBody] [Required] TResource resource, CancellationToken cancellationToken)
+    public override Task<IActionResult> PostAsync([Required] TResource resource, CancellationToken cancellationToken)
     {
         return base.PostAsync(resource, cancellationToken);
     }
@@ -81,14 +81,14 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
     /// <inheritdoc />
     [HttpPost("{id}/relationships/{relationshipName}")]
     public override Task<IActionResult> PostRelationshipAsync([Required] TId id, [Required] string relationshipName,
-        [FromBody] [Required] ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
+        [Required] ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
         return base.PostRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
     }
 
     /// <inheritdoc />
     [HttpPatch("{id}")]
-    public override Task<IActionResult> PatchAsync([Required] TId id, [FromBody] [Required] TResource resource, CancellationToken cancellationToken)
+    public override Task<IActionResult> PatchAsync([Required] TId id, [Required] TResource resource, CancellationToken cancellationToken)
     {
         return base.PatchAsync(id, resource, cancellationToken);
     }
@@ -96,7 +96,7 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
     /// <inheritdoc />
     [HttpPatch("{id}/relationships/{relationshipName}")]
     // Parameter `[Required] object? rightValue` makes Swashbuckle generate the OpenAPI request body as required. We don't actually validate ModelState, so it doesn't hurt.
-    public override Task<IActionResult> PatchRelationshipAsync([Required] TId id, [Required] string relationshipName, [FromBody] [Required] object? rightValue,
+    public override Task<IActionResult> PatchRelationshipAsync([Required] TId id, [Required] string relationshipName, [Required] object? rightValue,
         CancellationToken cancellationToken)
     {
         return base.PatchRelationshipAsync(id, relationshipName, rightValue, cancellationToken);
@@ -112,7 +112,7 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
     /// <inheritdoc />
     [HttpDelete("{id}/relationships/{relationshipName}")]
     public override Task<IActionResult> DeleteRelationshipAsync([Required] TId id, [Required] string relationshipName,
-        [FromBody] [Required] ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
+        [Required] ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
         return base.DeleteRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
     }
