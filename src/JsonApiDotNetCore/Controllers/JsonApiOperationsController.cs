@@ -18,7 +18,7 @@ public abstract class JsonApiOperationsController(
 {
     /// <inheritdoc />
     [HttpPost]
-    public override Task<IActionResult> PostOperationsAsync([FromBody] [Required] IList<OperationContainer> operations, CancellationToken cancellationToken)
+    public override Task<IActionResult> PostOperationsAsync([Required] IList<OperationContainer> operations, CancellationToken cancellationToken)
     {
         return base.PostOperationsAsync(operations, cancellationToken);
     }

@@ -102,7 +102,7 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     /// }
     /// ]]></code>
     /// </example>
-    public virtual async Task<IActionResult> PostOperationsAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
+    public virtual async Task<IActionResult> PostOperationsAsync([FromBody] IList<OperationContainer> operations, CancellationToken cancellationToken)
     {
         _traceWriter.LogMethodStart(new
         {
