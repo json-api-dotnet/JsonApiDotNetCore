@@ -18,11 +18,11 @@ public sealed class CreateMusicTrackOperationsController(
     IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor, IJsonApiRequest request,
     ITargetedFields targetedFields) : JsonApiOperationsController(options, resourceGraph, loggerFactory, processor, request, targetedFields)
 {
-    public override Task<IActionResult> PostOperationsAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
+    public override async Task<IActionResult> PostOperationsAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
     {
         AssertOnlyCreatingMusicTracks(operations);
 
-        return base.PostOperationsAsync(operations, cancellationToken);
+        return await base.PostOperationsAsync(operations, cancellationToken);
     }
 
     private static void AssertOnlyCreatingMusicTracks(IEnumerable<OperationContainer> operations)

@@ -42,7 +42,10 @@ public sealed class AtomicSerializationResourceDefinitionTests
 
         List<RecordCompany> newCompanies = _fakers.RecordCompany.Generate(2);
 
-        await _testContext.RunOnDatabaseAsync(dbContext => dbContext.ClearTableAsync<RecordCompany>());
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await dbContext.ClearTableAsync<RecordCompany>();
+        });
 
         var requestBody = new
         {

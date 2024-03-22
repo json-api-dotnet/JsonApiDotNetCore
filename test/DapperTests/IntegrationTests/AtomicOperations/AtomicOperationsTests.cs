@@ -421,7 +421,10 @@ public sealed class AtomicOperationsTests : IClassFixture<DapperTestContext>
 
         const string personLocalId = "new-person";
 
-        await _testContext.RunOnDatabaseAsync(dbContext => _testContext.ClearAllTablesAsync(dbContext));
+        await _testContext.RunOnDatabaseAsync(async dbContext =>
+        {
+            await _testContext.ClearAllTablesAsync(dbContext);
+        });
 
         var requestBody = new
         {
