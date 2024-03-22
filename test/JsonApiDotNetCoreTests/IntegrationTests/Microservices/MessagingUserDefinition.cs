@@ -113,8 +113,8 @@ public abstract class MessagingUserDefinition(IResourceGraph resourceGraph, DbSe
 
     protected abstract Task FlushMessageAsync(OutgoingMessage message, CancellationToken cancellationToken);
 
-    protected virtual Task<DomainUser?> GetUserToDeleteAsync(Guid userId, CancellationToken cancellationToken)
+    protected virtual async Task<DomainUser?> GetUserToDeleteAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return _userSet.Include(domainUser => domainUser.Group).FirstOrDefaultAsync(domainUser => domainUser.Id == userId, cancellationToken);
+        return await _userSet.Include(domainUser => domainUser.Group).FirstOrDefaultAsync(domainUser => domainUser.Id == userId, cancellationToken);
     }
 }

@@ -42,78 +42,78 @@ public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<
     /// <inheritdoc />
     [HttpGet]
     [HttpHead]
-    public override Task<IActionResult> GetAsync(CancellationToken cancellationToken)
+    public override async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
     {
-        return base.GetAsync(cancellationToken);
+        return await base.GetAsync(cancellationToken);
     }
 
     /// <inheritdoc />
     [HttpGet("{id}")]
     [HttpHead("{id}")]
-    public override Task<IActionResult> GetAsync([Required] TId id, CancellationToken cancellationToken)
+    public override async Task<IActionResult> GetAsync([Required] TId id, CancellationToken cancellationToken)
     {
-        return base.GetAsync(id, cancellationToken);
+        return await base.GetAsync(id, cancellationToken);
     }
 
     /// <inheritdoc />
     [HttpGet("{id}/{relationshipName}")]
     [HttpHead("{id}/{relationshipName}")]
-    public override Task<IActionResult> GetSecondaryAsync([Required] TId id, [Required] string relationshipName, CancellationToken cancellationToken)
+    public override async Task<IActionResult> GetSecondaryAsync([Required] TId id, [Required] string relationshipName, CancellationToken cancellationToken)
     {
-        return base.GetSecondaryAsync(id, relationshipName, cancellationToken);
+        return await base.GetSecondaryAsync(id, relationshipName, cancellationToken);
     }
 
     /// <inheritdoc />
     [HttpGet("{id}/relationships/{relationshipName}")]
     [HttpHead("{id}/relationships/{relationshipName}")]
-    public override Task<IActionResult> GetRelationshipAsync([Required] TId id, [Required] string relationshipName, CancellationToken cancellationToken)
+    public override async Task<IActionResult> GetRelationshipAsync([Required] TId id, [Required] string relationshipName, CancellationToken cancellationToken)
     {
-        return base.GetRelationshipAsync(id, relationshipName, cancellationToken);
+        return await base.GetRelationshipAsync(id, relationshipName, cancellationToken);
     }
 
     /// <inheritdoc />
     [HttpPost]
-    public override Task<IActionResult> PostAsync([Required] TResource resource, CancellationToken cancellationToken)
+    public override async Task<IActionResult> PostAsync([Required] TResource resource, CancellationToken cancellationToken)
     {
-        return base.PostAsync(resource, cancellationToken);
+        return await base.PostAsync(resource, cancellationToken);
     }
 
     /// <inheritdoc />
     [HttpPost("{id}/relationships/{relationshipName}")]
-    public override Task<IActionResult> PostRelationshipAsync([Required] TId id, [Required] string relationshipName,
+    public override async Task<IActionResult> PostRelationshipAsync([Required] TId id, [Required] string relationshipName,
         [Required] ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
-        return base.PostRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
+        return await base.PostRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
     }
 
     /// <inheritdoc />
     [HttpPatch("{id}")]
-    public override Task<IActionResult> PatchAsync([Required] TId id, [Required] TResource resource, CancellationToken cancellationToken)
+    public override async Task<IActionResult> PatchAsync([Required] TId id, [Required] TResource resource, CancellationToken cancellationToken)
     {
-        return base.PatchAsync(id, resource, cancellationToken);
+        return await base.PatchAsync(id, resource, cancellationToken);
     }
 
     /// <inheritdoc />
     [HttpPatch("{id}/relationships/{relationshipName}")]
     // Parameter `[Required] object? rightValue` makes Swashbuckle generate the OpenAPI request body as required. We don't actually validate ModelState, so it doesn't hurt.
-    public override Task<IActionResult> PatchRelationshipAsync([Required] TId id, [Required] string relationshipName, [Required] object? rightValue,
+    public override async Task<IActionResult> PatchRelationshipAsync([Required] TId id, [Required] string relationshipName, [Required] object? rightValue,
         CancellationToken cancellationToken)
     {
-        return base.PatchRelationshipAsync(id, relationshipName, rightValue, cancellationToken);
+        return await base.PatchRelationshipAsync(id, relationshipName, rightValue, cancellationToken);
     }
 
     /// <inheritdoc />
     [HttpDelete("{id}")]
-    public override Task<IActionResult> DeleteAsync([Required] TId id, CancellationToken cancellationToken)
+    public override async Task<IActionResult> DeleteAsync([Required] TId id, CancellationToken cancellationToken)
     {
-        return base.DeleteAsync(id, cancellationToken);
+        return await base.DeleteAsync(id, cancellationToken);
     }
 
     /// <inheritdoc />
     [HttpDelete("{id}/relationships/{relationshipName}")]
-    public override Task<IActionResult> DeleteRelationshipAsync([Required] TId id, [Required] string relationshipName,
+    public override async Task<IActionResult> DeleteRelationshipAsync([Required] TId id, [Required] string relationshipName,
         [Required] ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
     {
-        return base.DeleteRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
+        return await base.DeleteRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
     }
 }
